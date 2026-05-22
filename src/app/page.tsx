@@ -378,13 +378,12 @@ export default function BgRemoverPage() {
 
   return (
     <div style={s.root}>
-      {/* Header */}
+      {/* Page toolbar */}
       <header style={s.header}>
         <div style={s.headerInner}>
-          <div style={s.logo} onClick={reset}>
-            <span style={s.logoEmoji}>✂️</span>
-            <span style={s.logoText}>JPT Background Remover</span>
-            <span style={s.gemBadge}>✨ Gemini AI</span>
+          <div style={s.pageTitle}>
+            <span>✂️</span>
+            <span style={s.pageTitleText}>Background Remover</span>
           </div>
           <div style={s.headerRight}>
             {step === "result" && !showHistory && (
@@ -851,11 +850,9 @@ const s: Record<string, React.CSSProperties> = {
   root: { minHeight: "100vh", background: "#F6F7FB", fontFamily: "system-ui,-apple-system,sans-serif", color: "#111" },
 
   header: { position: "sticky", top: 0, zIndex: 100, background: "rgba(255,255,255,0.96)", backdropFilter: "blur(12px)", borderBottom: "1px solid #EAECF0" },
-  headerInner: { maxWidth: 1200, margin: "0 auto", padding: "12px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 },
-  logo: { display: "flex", alignItems: "center", gap: 10, cursor: "pointer", flexShrink: 0 },
-  logoEmoji: { fontSize: 22 },
-  logoText: { fontSize: 16, fontWeight: 800, letterSpacing: "-0.4px" },
-  gemBadge: { fontSize: 11, fontWeight: 700, background: "#F0F4FF", color: "#4285F4", border: "1px solid #C8D8FF", borderRadius: 6, padding: "3px 8px" },
+  headerInner: { maxWidth: 1200, margin: "0 auto", padding: "10px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 },
+  pageTitle: { display: "flex", alignItems: "center", gap: 8, flexShrink: 0 },
+  pageTitleText: { fontSize: 15, fontWeight: 700, color: "#222", letterSpacing: "-0.3px" },
   headerRight: { display: "flex", gap: 8, alignItems: "center" },
   ghostBtn: { background: "none", border: "1px solid #E0E0E8", borderRadius: 8, padding: "7px 14px", fontSize: 13, cursor: "pointer", color: "#555", display: "flex", alignItems: "center", gap: 6, transition: "background 0.15s" },
   dlHeaderBtn: { background: "#111", color: "#fff", border: "none", borderRadius: 8, padding: "7px 16px", fontSize: 13, fontWeight: 700, cursor: "pointer" },

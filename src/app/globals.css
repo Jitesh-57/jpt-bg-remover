@@ -1,6 +1,46 @@
 * { box-sizing: border-box; }
 body { margin: 0; padding: 0; }
 
+/* ── Shared Nav ─────────────────────────────────────────────────────────── */
+.jpt-nav {
+  position: sticky; top: 0; z-index: 200;
+  background: #0C0C14;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(12px);
+}
+.jpt-nav-inner {
+  max-width: 1280px; margin: 0 auto;
+  padding: 0 24px; height: 52px;
+  display: flex; align-items: center; gap: 14px;
+}
+.jpt-brand {
+  display: flex; align-items: center; gap: 7px;
+  text-decoration: none; flex-shrink: 0;
+}
+.jpt-brand-icon { font-size: 17px; color: #818CF8; }
+.jpt-brand-text { font-size: 15px; font-weight: 800; color: #fff; letter-spacing: -0.3px; }
+.jpt-nav-divider { width: 1px; height: 18px; background: rgba(255,255,255,0.12); flex-shrink: 0; }
+.jpt-section-label {
+  font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.3);
+  text-transform: uppercase; letter-spacing: 0.1em; flex-shrink: 0;
+}
+.jpt-nav-links { display: flex; align-items: center; gap: 2px; }
+.jpt-nav-link {
+  display: flex; align-items: center; gap: 6px;
+  padding: 5px 12px; border-radius: 8px;
+  font-size: 13px; font-weight: 600;
+  color: rgba(255,255,255,0.6);
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+.jpt-nav-link:hover { background: rgba(255,255,255,0.08); color: #fff; }
+.jpt-gem-badge {
+  font-size: 11px; font-weight: 700; color: #818CF8;
+  background: rgba(129,140,248,0.12);
+  border: 1px solid rgba(129,140,248,0.25);
+  border-radius: 6px; padding: 3px 9px; flex-shrink: 0;
+}
+
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
