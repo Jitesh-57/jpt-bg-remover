@@ -1,0 +1,57 @@
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes lbFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes lbScaleIn {
+  from { opacity: 0; transform: scale(0.94); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.hs-lightbox {
+  animation: lbFadeIn 0.18s ease;
+}
+
+.hs-lightbox-img {
+  animation: lbScaleIn 0.18s ease;
+}
+
+.hs-card:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.14) !important;
+}
+
+.hs-card:hover .hs-hover {
+  opacity: 1 !important;
+}
+
+.cb:hover:not(:disabled) {
+  transform: scale(1.18) !important;
+}
+
+.hs-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #BBB;
+}
+.hs-divider::before,
+.hs-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #E8E8F0;
+}
+
+.hs-prompt-box:focus {
+  border-color: #6366F1 !important;
+  background: #fff !important;
+}
+
+.hs-dl-btn:hover:not(:disabled) {
+  background: #333 !important;
+}

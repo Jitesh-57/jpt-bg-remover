@@ -1,484 +1,939 @@
 "use client";
 
-import { useRef, useState } from "react";
+import "./headshot.css";
+import { useRef, useState, useCallback, useEffect } from "react";
+import { WOMEN_STYLES, MEN_STYLES } from "@/lib/headshot-prompts";
 
-type AttireKey = "keep" | "business-formal" | "smart-casual";
-type CropKey = "head-and-shoulders" | "upper-body";
-type AspectRatioKey = "1:1" | "4:5";
-type Status = "idle" | "ready" | "processing" | "done" | "error";
+const PRESET_COLORS = [
+  { label: "White", color: "#FFFFFF" },
+  { label: "Light Gray", color: "#F0F0F0" },
+  { label: "Cream", color: "#F5ECD7" },
+  { label: "Beige", color: "#E8DCC8" },
+  { label: "Sky Blue", color: "#B8D4E8" },
+  { label: "Navy", color: "#1A2B4A" },
+  { label: "Forest", color: "#2D5A3D" },
+  { label: "Burgundy", color: "#722F37" },
+  { label: "Dark Red", color: "#8B2500" },
+  { label: "Terracotta", color: "#C04A1E" },
+  { label: "Charcoal", color: "#2C2C2C" },
+  { label: "Black", color: "#000000" },
+];
 
-const BACKGROUNDS = [
-  { key: "light-gray-studio", name: "Light Gray", tone: "Studio", color: "#D8D8D8" },
-  { key: "executive-office",  name: "Executive Office", tone: "Warm", color: "#C8A882" },
-  { key: "glass-boardroom",   name: "Boardroom", tone: "Formal", color: "#7A9EBB" },
-  { key: "city-window",       name: "City Window", tone: "Urban", color: "#8DAFC8" },
-  { key: "brand-gradient",    name: "Brand Gradient", tone: "Custom", color: "#5B7AA8" },
-  { key: "outdoor-campus",    name: "Campus", tone: "Natural", color: "#7BAF7A" },
-] as const;
+interface GeneratedImage { id: number; name: string; tag: string; url: string; }
+interface LibraryItem { id: string; url: string; name: string; tag: string; type: "generated" | "edited"; savedAt: number; }
+interface LightboxItem { url: string; name: string; tag: string; onEdit?: () => void; onDelete?: () => void; }
+interface PendingColor { color: string; label: string; }
+interface PixelbinCredits { total: number; used: number; remaining: number; }
+interface PixelbinSession {
+  connected: boolean;
+  accountName?: string | null;
+  cloudName?: string | null;
+  credits?: PixelbinCredits | null;
+  error?: string;
+}
 
-type BackgroundKey = typeof BACKGROUNDS[number]["key"];
+type Step = "upload" | "styles" | "gallery" | "edit";
+type Gender = "women" | "men";
 
-const ATTIRE_LABELS: Record<AttireKey, string> = {
-  keep: "Keep Outfit",
-  "business-formal": "Business Formal",
-  "smart-casual": "Smart Casual",
-};
+const STORAGE_KEY = "hs-library";
+const PIXELBIN_TOKENS_URL = "https://console.pixelbin.io/organization/settings/api-tokens";
+const PIXELBIN_GENERATION_CREDITS = 2;
+const PIXELBIN_EDIT_CREDITS = 2;
 
-const CROP_LABELS: Record<CropKey, string> = {
-  "head-and-shoulders": "Headshot",
-  "upper-body": "Upper Body",
-};
+function loadLibrary(): LibraryItem[] {
+  if (typeof window === "undefined") return [];
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); } catch { return []; }
+}
+function saveItemsToLibrary(items: LibraryItem[]) {
+  if (typeof window === "undefined") return;
+  const existing = loadLibrary();
+  const ids = new Set(items.map((i) => i.id));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify([...items, ...existing.filter((e) => !ids.has(e.id))]));
+}
+function removeLibraryItems(shouldRemove: (item: LibraryItem) => boolean) {
+  if (typeof window === "undefined") return [];
+  const remaining = loadLibrary().filter((item) => !shouldRemove(item));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(remaining));
+  return remaining;
+}
 
-function downloadDataUrl(dataUrl: string, filename: string) {
-  const a = document.createElement("a");
-  a.href = dataUrl;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+async function downloadImage(url: string, filename: string) {
+  try {
+    const res = await fetch(url);
+    const blob = await res.blob();
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  } catch { window.open(url, "_blank"); }
+}
+
+function formatCredits(value?: number | null) {
+  if (value === null || value === undefined || !Number.isFinite(value)) return null;
+  return new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(Math.floor(value));
 }
 
 export default function HeadshotPage() {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const bgFileInputRef = useRef<HTMLInputElement>(null);
 
-  const [file, setFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [resultDataUrl, setResultDataUrl] = useState<string | null>(null);
-  const [status, setStatus] = useState<Status>("idle");
-  const [errorMsg, setErrorMsg] = useState("");
+  const [step, setStep] = useState<Step>("upload");
+  const [gender, setGender] = useState<Gender>("women");
+  const [sourcePreview, setSourcePreview] = useState<string | null>(null);
+  const [sourceUrl, setSourceUrl] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [selectedStyleIds, setSelectedStyleIds] = useState<number[]>([1, 2, 3, 4]);
+  const [generating, setGenerating] = useState(false);
+  const [progress, setProgress] = useState("");
+  const [images, setImages] = useState<GeneratedImage[]>([]);
+  const [selectedImage, setSelectedImage] = useState<GeneratedImage | null>(null);
+  const [editedUrl, setEditedUrl] = useState<string | null>(null);
+  const [editingBg, setEditingBg] = useState(false);
+  const [customColor, setCustomColor] = useState("#4A90D9");
+  const [pendingColor, setPendingColor] = useState<PendingColor | null>(null);
+  const [pendingBgFile, setPendingBgFile] = useState<File | null>(null);
+  const [pendingBgFileName, setPendingBgFileName] = useState("");
+  const [promptInput, setPromptInput] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [dragOver, setDragOver] = useState(false);
+  const [pixelbinSession, setPixelbinSession] = useState<PixelbinSession | null>(null);
+  const [pixelbinTokenInput, setPixelbinTokenInput] = useState("");
+  const [connectingPixelbin, setConnectingPixelbin] = useState(false);
+  const [connectError, setConnectError] = useState<string | null>(null);
+  const [library, setLibrary] = useState<LibraryItem[]>([]);
+  const [showLibrary, setShowLibrary] = useState(false);
+  const [libFilter, setLibFilter] = useState<"all" | "generated" | "edited">("all");
+  const [downloading, setDownloading] = useState<string | null>(null);
+  const [lightboxItems, setLightboxItems] = useState<LightboxItem[]>([]);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [showLightbox, setShowLightbox] = useState(false);
 
-  const [backgroundKey, setBackgroundKey] = useState<BackgroundKey>("light-gray-studio");
-  const [customBg, setCustomBg] = useState("");
-  const [attire, setAttire] = useState<AttireKey>("business-formal");
-  const [crop, setCrop] = useState<CropKey>("head-and-shoulders");
-  const [aspectRatio, setAspectRatio] = useState<AspectRatioKey>("1:1");
-  const [showOriginal, setShowOriginal] = useState(false);
+  useEffect(() => {
+    setLibrary(loadLibrary());
+    fetch("/api/headshot/pixelbin/session")
+      .then((res) => res.json())
+      .then((data: PixelbinSession) => setPixelbinSession(data))
+      .catch(() => setPixelbinSession({ connected: false }));
+  }, []);
 
-  function handleFile(f: File) {
-    if (previewUrl) URL.revokeObjectURL(previewUrl);
-    setFile(f);
-    setPreviewUrl(URL.createObjectURL(f));
-    setResultDataUrl(null);
-    setStatus("ready");
-    setErrorMsg("");
-    setShowOriginal(false);
-  }
+  useEffect(() => {
+    if (!showLightbox) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setShowLightbox(false);
+      if (e.key === "ArrowRight") setLightboxIndex((i) => Math.min(i + 1, lightboxItems.length - 1));
+      if (e.key === "ArrowLeft") setLightboxIndex((i) => Math.max(i - 1, 0));
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [showLightbox, lightboxItems.length]);
 
-  async function generate() {
-    if (!file) return;
-    setStatus("processing");
-    setErrorMsg("");
-    setResultDataUrl(null);
-    setShowOriginal(false);
+  const openLightbox = (items: LightboxItem[], index = 0) => { setLightboxItems(items); setLightboxIndex(index); setShowLightbox(true); };
+  const closeLightbox = () => setShowLightbox(false);
+  const refreshLibrary = () => setLibrary(loadLibrary());
 
-    const fd = new FormData();
-    fd.append("image", file);
-    fd.append("backgroundKey", backgroundKey);
-    fd.append("customBackground", customBg);
-    fd.append("attire", attire);
-    fd.append("crop", crop);
-    fd.append("aspectRatio", aspectRatio);
-
-    try {
-      const res = await fetch("/api/headshot", { method: "POST", body: fd });
-      const data = (await res.json()) as { data?: string; mimeType?: string; error?: string };
-      if (!res.ok || !data.data) throw new Error(data.error || "Generation failed");
-      setResultDataUrl(`data:${data.mimeType || "image/png"};base64,${data.data}`);
-      setStatus("done");
-    } catch (err) {
-      setErrorMsg((err as Error).message);
-      setStatus("error");
+  const connectPixelbin = async () => {
+    const apiToken = pixelbinTokenInput.trim();
+    if (!apiToken) {
+      setConnectError("Paste your PixelBin API token to continue.");
+      return;
     }
-  }
 
-  const displayUrl = showOriginal ? previewUrl : (resultDataUrl || previewUrl);
-  const selectedBg = BACKGROUNDS.find((b) => b.key === backgroundKey) ?? BACKGROUNDS[0];
+    setConnectingPixelbin(true);
+    setConnectError(null);
+    try {
+      const res = await fetch("/api/headshot/pixelbin/session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ apiToken }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Could not connect PixelBin.");
+      setPixelbinSession(data);
+      setPixelbinTokenInput("");
+      setError(null);
+    } catch (e) {
+      setConnectError((e as Error).message);
+    } finally {
+      setConnectingPixelbin(false);
+    }
+  };
+
+  const disconnectPixelbin = async () => {
+    await fetch("/api/headshot/pixelbin/session", { method: "DELETE" }).catch(() => null);
+    setPixelbinSession({ connected: false });
+    reset();
+  };
+
+  const handlePixelbinAuthError = (res: Response, message?: string) => {
+    if (res.status === 401) setPixelbinSession({ connected: false });
+    return new Error(message || (res.status === 401 ? "Connect your PixelBin account first." : `Request failed (${res.status})`));
+  };
+
+  const clearPending = () => { setPendingColor(null); setPendingBgFile(null); setPendingBgFileName(""); };
+
+  const activeStyles = gender === "women" ? WOMEN_STYLES : MEN_STYLES;
+  const switchGender = (g: Gender) => { setGender(g); setSelectedStyleIds([1, 2, 3, 4]); };
+
+  const handleFile = useCallback(async (file: File) => {
+    setError(null);
+    setSourcePreview(URL.createObjectURL(file));
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/headshot/upload", { method: "POST", body: fd });
+      const text = await res.text();
+      const data = text ? JSON.parse(text) : {};
+      if (!res.ok || !data.url) throw handlePixelbinAuthError(res, data.error || `Upload failed (${res.status})`);
+      setSourceUrl(data.url);
+      setStep("styles");
+    } catch (e) { setError((e as Error).message); setSourcePreview(null); }
+    finally { setUploading(false); }
+  }, []);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith("image/")) handleFile(file);
+  }, [handleFile]);
+
+  const toggleStyle = (id: number) =>
+    setSelectedStyleIds((prev) => prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]);
+
+  const handleGenerate = async () => {
+    if (!sourceUrl || selectedStyleIds.length === 0) return;
+    setGenerating(true);
+    setError(null);
+    setImages([]);
+    setProgress(`Generating ${selectedStyleIds.length} headshot${selectedStyleIds.length > 1 ? "s" : ""}…`);
+    try {
+      const res = await fetch("/api/headshot/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ imageUrl: sourceUrl, styleIds: selectedStyleIds, gender }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw handlePixelbinAuthError(res, data.error || "Generation failed");
+      if (!data.images || data.images.length === 0) throw new Error(data.errors?.[0] || "No images generated");
+      setImages(data.images);
+      setStep("gallery");
+      const now = Date.now();
+      saveItemsToLibrary(data.images.map((img: GeneratedImage, i: number) => ({
+        id: `gen-${img.id}-${now + i}`, url: img.url, name: img.name, tag: img.tag, type: "generated" as const, savedAt: now + i,
+      })));
+      refreshLibrary();
+    } catch (e) { setError((e as Error).message); }
+    finally { setGenerating(false); setProgress(""); }
+  };
+
+  const handleSelectImage = (img: GeneratedImage) => {
+    setSelectedImage(img);
+    setEditedUrl(null);
+    setPromptInput("");
+    clearPending();
+    setStep("edit");
+  };
+
+  const handleEditFromLibrary = (item: LibraryItem) => {
+    const img: GeneratedImage = { id: 0, url: item.url, name: item.name, tag: item.tag };
+    setImages([img]);
+    setSelectedImage(img);
+    setEditedUrl(null);
+    setPromptInput("");
+    clearPending();
+    setShowLibrary(false);
+    setShowLightbox(false);
+    setStep("edit");
+  };
+
+  const persistEdit = (url: string, name: string, tag: string) => {
+    const item: LibraryItem = { id: `edit-${Date.now()}`, url, name, tag, type: "edited", savedAt: Date.now() };
+    saveItemsToLibrary([item]);
+    refreshLibrary();
+  };
+
+  // Called when user clicks Apply (for pending color or pending bg image)
+  const handleApplyBackground = async () => {
+    if (!selectedImage || editingBg) return;
+    setEditingBg(true);
+    setEditedUrl(null);
+    setError(null);
+
+    if (pendingColor) {
+      const { color, label } = pendingColor;
+      setPendingColor(null);
+      try {
+        const res = await fetch("/api/headshot/edit-bg", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ imageUrl: selectedImage.url, bgType: "color", bgColor: color, bgLabel: label }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw handlePixelbinAuthError(res, data.error || "Edit failed");
+        setEditedUrl(data.url);
+        persistEdit(data.url, `${selectedImage.name} · ${label}`, "Color Edit");
+      } catch (e) { setError((e as Error).message); }
+    } else if (pendingBgFile) {
+      const file = pendingBgFile;
+      setPendingBgFile(null);
+      setPendingBgFileName("");
+      try {
+        const fd = new FormData();
+        fd.append("file", file);
+        const upRes = await fetch("/api/headshot/upload", { method: "POST", body: fd });
+        const upData = await upRes.json();
+        if (!upRes.ok || !upData.url) throw handlePixelbinAuthError(upRes, upData.error || "Background upload failed");
+        const res = await fetch("/api/headshot/edit-bg", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ imageUrl: selectedImage.url, bgType: "image", bgImageUrl: upData.url }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw handlePixelbinAuthError(res, data.error || "Edit failed");
+        setEditedUrl(data.url);
+        persistEdit(data.url, `${selectedImage.name} · Custom BG`, "Image Edit");
+      } catch (e) { setError((e as Error).message); }
+    }
+    setEditingBg(false);
+  };
+
+  const handleEditByPrompt = async () => {
+    if (!selectedImage || !promptInput.trim()) return;
+    setEditingBg(true);
+    setEditedUrl(null);
+    clearPending();
+    setError(null);
+    try {
+      const res = await fetch("/api/headshot/edit-bg", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ imageUrl: selectedImage.url, bgType: "prompt", customPrompt: promptInput.trim() }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw handlePixelbinAuthError(res, data.error || "Edit failed");
+      setEditedUrl(data.url);
+      persistEdit(data.url, `${selectedImage.name} · AI Edit`, "Prompt Edit");
+    } catch (e) { setError((e as Error).message); }
+    finally { setEditingBg(false); }
+  };
+
+  const handleDownload = async (url: string, name: string, id: string) => {
+    setDownloading(id);
+    await downloadImage(url, `${name.replace(/[^a-z0-9]/gi, "-").toLowerCase()}.jpg`);
+    setDownloading(null);
+  };
+
+  const handleDeleteLibraryItem = (item: LibraryItem) => {
+    if (!window.confirm("Delete this image from My Library?")) return;
+    const remaining = removeLibraryItems((entry) => entry.id === item.id);
+    setLibrary(remaining);
+    setShowLightbox(false);
+
+    if (editedUrl === item.url) setEditedUrl(null);
+    if (selectedImage?.url === item.url && step === "edit") {
+      setSelectedImage(null);
+      setEditedUrl(null);
+      clearPending();
+      setStep(images.length > 0 ? "gallery" : "upload");
+    }
+  };
+
+  const handleDeleteGalleryImage = (img: GeneratedImage) => {
+    if (!window.confirm("Delete this image from this session and My Library?")) return;
+    const remainingImages = images.filter((image) => image.url !== img.url);
+    const remainingLibrary = removeLibraryItems((entry) => entry.type === "generated" && entry.url === img.url);
+
+    setImages(remainingImages);
+    setLibrary(remainingLibrary);
+    setShowLightbox(false);
+
+    if (selectedImage?.url === img.url) {
+      setSelectedImage(null);
+      setEditedUrl(null);
+      clearPending();
+      setStep(remainingImages.length > 0 ? "gallery" : "upload");
+    } else if (step === "gallery" && remainingImages.length === 0) {
+      setStep("upload");
+    }
+  };
+
+  const reset = () => {
+    setStep("upload");
+    setSourcePreview(null);
+    setSourceUrl(null);
+    setImages([]);
+    setSelectedImage(null);
+    setEditedUrl(null);
+    setError(null);
+    setSelectedStyleIds([1, 2, 3, 4]);
+    setShowLibrary(false);
+    setShowLightbox(false);
+    clearPending();
+  };
+
+  const displayUrl = editedUrl || selectedImage?.url || null;
+  const filteredLibrary = libFilter === "all" ? library : library.filter((i) => i.type === libFilter);
+  const sortedLibrary = [...filteredLibrary].sort((a, b) => b.savedAt - a.savedAt);
+  const galleryLbItems: LightboxItem[] = images.map((img) => ({ url: img.url, name: img.name, tag: img.tag, onEdit: () => handleSelectImage(img), onDelete: () => handleDeleteGalleryImage(img) }));
+  const libraryLbItems: LightboxItem[] = sortedLibrary.map((item) => ({ url: item.url, name: item.name, tag: item.tag, onEdit: () => handleEditFromLibrary(item), onDelete: () => handleDeleteLibraryItem(item) }));
+  const lbCurrent = lightboxItems[lightboxIndex];
+
+  const pixelbinConnected = pixelbinSession?.connected === true;
+  const checkingPixelbin = pixelbinSession === null;
+  const hasPending = !!pendingColor || !!pendingBgFile;
+  const generationCreditCost = selectedStyleIds.length * PIXELBIN_GENERATION_CREDITS;
 
   return (
-    <div style={s.page}>
-      <div style={s.bgDots} />
-
-      <div style={s.workspace}>
-        {/* ── Left Panel ──────────────────────────────────────────────── */}
-        <aside style={s.leftPanel}>
-          <div style={s.panelCard}>
-            <p style={s.panelLabel}>Portrait Photo</p>
-            <button style={s.uploadBtn} onClick={() => inputRef.current?.click()}>
-              {file ? "↺ Replace Photo" : "⬆ Upload Photo"}
-            </button>
-            <input
-              ref={inputRef}
-              type="file"
-              accept="image/jpeg,image/png,image/webp"
-              style={{ display: "none" }}
-              onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])}
-            />
-            {file && <p style={s.fileName}>{file.name}</p>}
-          </div>
-
-          <div style={s.panelCard}>
-            <p style={s.panelLabel}>Wardrobe</p>
-            <div style={s.segmented}>
-              {(["business-formal", "smart-casual", "keep"] as AttireKey[]).map((opt) => (
-                <button
-                  key={opt}
-                  style={{ ...s.segBtn, ...(attire === opt ? s.segActive : {}) }}
-                  onClick={() => setAttire(opt)}
-                >
-                  {ATTIRE_LABELS[opt]}
-                </button>
-              ))}
+    <div style={s.root}>
+      {/* ── LIGHTBOX ── */}
+      {showLightbox && lbCurrent && (
+        <div className="hs-lightbox" style={s.lbOverlay} onClick={closeLightbox}>
+          <div style={s.lbModal} onClick={(e) => e.stopPropagation()}>
+            <div style={s.lbTopBar}>
+              {lightboxItems.length > 1 && <span style={s.lbCounter}>{lightboxIndex + 1} / {lightboxItems.length}</span>}
+              <div style={{ flex: 1 }} />
+              <button style={s.lbClose} onClick={closeLightbox}>✕</button>
             </div>
-          </div>
-
-          <div style={s.panelCard}>
-            <p style={s.panelLabel}>Composition</p>
-            <div style={s.twoGrid}>
-              {(["head-and-shoulders", "upper-body"] as CropKey[]).map((opt) => (
-                <button
-                  key={opt}
-                  style={{ ...s.optBtn, ...(crop === opt ? s.optActive : {}) }}
-                  onClick={() => setCrop(opt)}
-                >
-                  {CROP_LABELS[opt]}
-                </button>
-              ))}
+            <div style={s.lbImgRow}>
+              <button style={{ ...s.lbNav, opacity: lightboxIndex === 0 ? 0.2 : 1, pointerEvents: lightboxIndex === 0 ? "none" : "auto" }} onClick={() => setLightboxIndex((i) => Math.max(i - 1, 0))}>‹</button>
+              <img key={lightboxIndex} className="hs-lightbox-img" src={lbCurrent.url} alt={lbCurrent.name} style={s.lbImg} />
+              <button style={{ ...s.lbNav, opacity: lightboxIndex === lightboxItems.length - 1 ? 0.2 : 1, pointerEvents: lightboxIndex === lightboxItems.length - 1 ? "none" : "auto" }} onClick={() => setLightboxIndex((i) => Math.min(i + 1, lightboxItems.length - 1))}>›</button>
             </div>
-          </div>
-
-          <div style={s.panelCard}>
-            <p style={s.panelLabel}>Aspect Ratio</p>
-            <div style={s.twoGrid}>
-              {(["1:1", "4:5"] as AspectRatioKey[]).map((opt) => (
-                <button
-                  key={opt}
-                  style={{ ...s.optBtn, ...(aspectRatio === opt ? s.optActive : {}) }}
-                  onClick={() => setAspectRatio(opt)}
-                >
-                  {opt}
-                </button>
-              ))}
-            </div>
-          </div>
-        </aside>
-
-        {/* ── Center Preview ──────────────────────────────────────────── */}
-        <section style={s.centerCol}>
-          <div style={s.previewHeader}>
-            <h1 style={s.pageTitle}>AI Headshot Generator</h1>
-            <p style={s.pageSub}>Upload a portrait photo and generate a professional corporate headshot</p>
-          </div>
-
-          <div style={s.previewGrid}>
-            {/* Original */}
-            <div style={s.imgCard}>
-              <div style={s.imgCardTop}>
-                <span style={s.cardLabel}>Reference</span>
-                {file && <span style={s.cardBadge}>{file.type.replace("image/", "").toUpperCase()}</span>}
+            <div style={s.lbFooter}>
+              <div>
+                <div style={s.lbName}>{lbCurrent.name}</div>
+                <div style={s.lbTag}>{lbCurrent.tag}</div>
               </div>
-              {previewUrl ? (
-                <img src={previewUrl} alt="original" style={s.cardImg} />
-              ) : (
-                <button style={s.emptyCard} onClick={() => inputRef.current?.click()}>
-                  <span style={{ fontSize: 36, marginBottom: 10 }}>🖼</span>
-                  <span style={s.emptyLabel}>Add portrait photo</span>
-                  <span style={s.emptyHint}>JPG · PNG · WEBP</span>
+              <div style={{ display: "flex", gap: 10, flexShrink: 0 }}>
+                {lbCurrent.onEdit && (
+                  <button style={s.lbEditBtn} onClick={() => { closeLightbox(); lbCurrent.onEdit?.(); }}>✏️ Edit Background</button>
+                )}
+                {lbCurrent.onDelete && (
+                  <button style={s.lbDeleteBtn} onClick={() => lbCurrent.onDelete?.()}>Delete</button>
+                )}
+                <button style={{ ...s.lbDlBtn, ...(downloading === "lb" ? { opacity: 0.6 } : {}) }} disabled={downloading === "lb"} onClick={() => handleDownload(lbCurrent.url, lbCurrent.name, "lb")}>
+                  {downloading === "lb" ? "Saving…" : "⬇ Download"}
                 </button>
-              )}
-            </div>
-
-            {/* Result */}
-            <div style={s.imgCard}>
-              <div style={s.imgCardTop}>
-                <span style={s.cardLabel}>Generated</span>
-                {status === "done" && <span style={{ ...s.cardBadge, background: "#D1FAE5", color: "#059669" }}>✓ Ready</span>}
               </div>
-              {status === "processing" ? (
-                <div style={s.processingState}>
-                  <div style={s.spinner} />
-                  <p style={s.processingText}>Gemini is generating your headshot…</p>
-                  <p style={s.processingHint}>Takes 15–30 seconds</p>
-                </div>
-              ) : resultDataUrl ? (
-                <div style={{ position: "relative" }}>
-                  <img src={resultDataUrl} alt="generated headshot" style={s.cardImg} />
-                </div>
-              ) : (
-                <div style={s.emptyResult}>
-                  <span style={{ fontSize: 36, marginBottom: 10, opacity: 0.4 }}>✨</span>
-                  <span style={s.emptyLabel}>Headshot will appear here</span>
-                </div>
-              )}
             </div>
-          </div>
-
-          {/* Status bar */}
-          <div style={s.statusBar}>
-            <div style={{ ...s.statusDot, background: status === "done" ? "#10B981" : status === "processing" ? "#F59E0B" : status === "error" ? "#EF4444" : "#D1D5DB" }} />
-            <span style={s.statusText}>
-              {status === "idle" ? "Upload a portrait photo to begin" :
-               status === "ready" ? "Photo ready — configure your options and generate" :
-               status === "processing" ? "Generating professional headshot with Gemini AI…" :
-               status === "done" ? "Headshot generated successfully" :
-               `Error: ${errorMsg}`}
-            </span>
-          </div>
-
-          {status === "error" && (
-            <div style={s.errorBox}>{errorMsg}</div>
-          )}
-
-          {/* Action buttons */}
-          {status === "done" && resultDataUrl && (
-            <div style={s.actionRow}>
-              <button style={s.dlBtn} onClick={() => downloadDataUrl(resultDataUrl, "headshot.png")}>
-                ⬇ Download PNG
-              </button>
-              <button style={s.newBtn} onClick={() => { setResultDataUrl(null); setStatus(file ? "ready" : "idle"); }}>
-                ↺ Generate Again
-              </button>
-            </div>
-          )}
-        </section>
-
-        {/* ── Right Panel (Backgrounds) ───────────────────────────────── */}
-        <aside style={s.rightPanel}>
-          <div style={s.panelCard}>
-            <div style={s.bgPanelHeader}>
-              <p style={s.panelLabel}>Background</p>
-              <span style={s.bgToneBadge}>{selectedBg.tone}</span>
-            </div>
-            <div style={s.bgList}>
-              {BACKGROUNDS.map((bg) => (
-                <button
-                  key={bg.key}
-                  style={{ ...s.bgBtn, ...(backgroundKey === bg.key ? s.bgBtnActive : {}) }}
-                  onClick={() => setBackgroundKey(bg.key)}
-                >
-                  <span style={{ ...s.bgSwatch, background: bg.color }} />
-                  <span style={s.bgBtnName}>{bg.name}</span>
-                  {backgroundKey === bg.key && <span style={s.checkmark}>✓</span>}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div style={s.panelCard}>
-            <p style={s.panelLabel}>Custom Background</p>
-            <textarea
-              value={customBg}
-              onChange={(e) => setCustomBg(e.target.value)}
-              placeholder="Describe a custom background, e.g. 'Soft white marble studio with warm side lighting'"
-              style={s.textarea}
-              rows={3}
-            />
-            {customBg.trim() && (
-              <p style={s.customNote}>Custom description overrides the background selection above.</p>
+            {lightboxItems.length > 1 && (
+              <div style={s.lbStrip}>
+                {lightboxItems.map((item, i) => (
+                  <img key={i} src={item.url} alt={item.name} onClick={() => setLightboxIndex(i)}
+                    style={{ ...s.lbThumb, outline: i === lightboxIndex ? "2px solid #6366F1" : "2px solid transparent", opacity: i === lightboxIndex ? 1 : 0.55 }} />
+                ))}
+              </div>
             )}
           </div>
+        </div>
+      )}
 
-          <div style={s.generateSection}>
-            <button
-              style={{ ...s.generateBtn, ...(!file || status === "processing" ? s.generateOff : {}) }}
-              disabled={!file || status === "processing"}
-              onClick={generate}
-            >
-              {status === "processing" ? (
-                <span style={s.btnInner}><span style={s.btnSpinner} /> Generating…</span>
-              ) : (
-                <span style={s.btnInner}>✨ Generate Headshot</span>
-              )}
-            </button>
-            <p style={s.generateHint}>
-              Powered by Gemini · ~15–30 seconds
-            </p>
+      {/* Header */}
+      <header style={s.header}>
+        <div style={s.headerInner}>
+          <div style={s.logo} onClick={reset}><span>⚡</span><span style={s.logoText}>Headshot AI</span></div>
+          {pixelbinConnected && !showLibrary && (
+            <div style={s.stepBar}>
+              {(["upload", "styles", "gallery", "edit"] as Step[]).map((st, i) => (
+                <div key={st} style={s.stepItem}>
+                  <div style={{ ...s.stepDot, ...(step === st ? s.stepDotActive : steps.indexOf(step) > i ? s.stepDotDone : {}) }}>{steps.indexOf(step) > i ? "✓" : i + 1}</div>
+                  <span style={{ ...s.stepLabel, ...(step === st ? { color: "#6366F1", fontWeight: 700 } : {}) }}>{["Upload", "Choose Styles", "Gallery", "Edit"][i]}</span>
+                  {i < 3 && <div style={s.stepLine} />}
+                </div>
+              ))}
+            </div>
+          )}
+          <div style={s.headerActions}>
+            {pixelbinConnected && (
+              <div style={s.connectedChip}>
+                <span style={s.connectedDot}>●</span>
+                <span style={s.accountText}>
+                  <span style={s.accountName}>{pixelbinSession?.accountName || "PixelBin account"}</span>
+                  {formatCredits(pixelbinSession?.credits?.remaining) && (
+                    <span style={s.accountCredits}>{formatCredits(pixelbinSession?.credits?.remaining)} credits left</span>
+                  )}
+                </span>
+              </div>
+            )}
+            {pixelbinConnected && (
+              <button style={{ ...s.ghostBtn, ...(showLibrary ? { background: "#EEEEFF", borderColor: "#6366F1", color: "#6366F1" } : {}) }} onClick={() => setShowLibrary((v) => !v)}>
+                📁 My Library {library.length > 0 && <span style={s.libBadge}>{library.length}</span>}
+              </button>
+            )}
+            {pixelbinConnected && !showLibrary && step !== "upload" && <button style={s.ghostBtn} onClick={reset}>New Session</button>}
+            {pixelbinConnected && !showLibrary && step === "edit" && <button style={s.ghostBtn} onClick={() => setStep("gallery")}>← Gallery</button>}
+            {pixelbinConnected && <button style={s.ghostBtn} onClick={disconnectPixelbin}>Sign out</button>}
           </div>
-        </aside>
-      </div>
+        </div>
+      </header>
+
+      <main style={s.canvas}>
+        <div style={s.dots} />
+
+        {checkingPixelbin && (
+          <div style={s.connectCard}>
+            <span style={s.spinDark} />
+            <p style={{ margin: "12px 0 0", color: "#666", fontSize: 14 }}>Checking PixelBin connection…</p>
+          </div>
+        )}
+
+        {!checkingPixelbin && !pixelbinConnected && (
+          <div style={s.connectCard}>
+            <div style={s.connectIcon}>⚡</div>
+            <h1 style={s.h1}>Connect your PixelBin account</h1>
+            <p style={s.sub}>
+              This app uses your PixelBin account for uploads, NanoBanana Pro generations, edits, and permanent CDN storage.
+              Your PixelBin credits are used directly by PixelBin.
+            </p>
+            <div style={s.connectSteps}>
+              <a href={PIXELBIN_TOKENS_URL} target="_blank" rel="noreferrer" style={s.consoleBtn}>
+                Open PixelBin and create API token
+              </a>
+              <input
+                type="password"
+                value={pixelbinTokenInput}
+                onChange={(e) => setPixelbinTokenInput(e.target.value)}
+                placeholder="Paste PixelBin API token"
+                style={s.tokenInput}
+                onKeyDown={(e) => { if (e.key === "Enter") connectPixelbin(); }}
+              />
+              <button style={{ ...s.primaryBtn, ...(connectingPixelbin ? s.btnOff : {}) }} onClick={connectPixelbin} disabled={connectingPixelbin}>
+                {connectingPixelbin ? "Connecting…" : "Connect and continue"}
+              </button>
+            </div>
+            <p style={s.connectHint}>The token is stored in an HttpOnly cookie for this app and is only sent to your server routes when creating headshots.</p>
+            {connectError && <div style={s.err}>{connectError}</div>}
+          </div>
+        )}
+
+        {/* ── LIBRARY ── */}
+        {pixelbinConnected && showLibrary && (
+          <div style={s.galleryLayout}>
+            <div style={s.galleryHeader}>
+              <div><h2 style={s.h2}>My Library</h2><p style={s.sub2}>All your generated and edited headshots — saved automatically</p></div>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" as const }}>
+                {(["all", "generated", "edited"] as const).map((f) => (
+                  <button key={f} style={{ ...s.tinyBtn, ...(libFilter === f ? { background: "#EEEEFF", borderColor: "#6366F1", color: "#6366F1", fontWeight: 700 } : {}) }} onClick={() => setLibFilter(f)}>
+                    {f === "all" ? `All (${library.length})` : f === "generated" ? `Generated (${library.filter(i => i.type === "generated").length})` : `Edited (${library.filter(i => i.type === "edited").length})`}
+                  </button>
+                ))}
+              </div>
+            </div>
+            {filteredLibrary.length === 0 ? (
+              <div style={s.emptyLib}>
+                <div style={{ fontSize: 48, marginBottom: 12 }}>🖼</div>
+                <p style={{ margin: 0, fontWeight: 700, fontSize: 16 }}>No headshots yet</p>
+                <p style={{ margin: "6px 0 0", color: "#888", fontSize: 13 }}>Generate headshots and they'll appear here automatically</p>
+                <button style={{ ...s.primaryBtn, marginTop: 20, width: "auto", padding: "12px 24px" }} onClick={() => setShowLibrary(false)}>✨ Generate Headshots</button>
+              </div>
+            ) : (
+              <div style={s.imageGrid}>
+                {sortedLibrary.map((item, idx) => (
+                  <div key={item.id} style={s.imgCard} className="hs-card">
+                    <div style={{ position: "relative", cursor: "zoom-in" }} onClick={() => openLightbox(libraryLbItems, idx)}>
+                      <img src={item.url} alt={item.name} style={s.cardImg} />
+                      <div className="hs-hover" style={s.cardHover}>🔍 Preview</div>
+                    </div>
+                    <div style={s.cardMeta}>
+                      <div style={{ display: "flex", flexDirection: "column" as const, gap: 2, minWidth: 0 }}>
+                        <span style={{ ...s.cardName, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const }}>{item.name}</span>
+                        <span style={{ ...s.cardTag, alignSelf: "flex-start", background: item.type === "edited" ? "#FFF0E8" : "#EEEEF8", color: item.type === "edited" ? "#C05A00" : "#6366F1" }}>{item.tag}</span>
+                      </div>
+                      <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
+                        <button style={{ ...s.dlIconBtn, background: "#EEEEFF", borderColor: "#C4C4F0", color: "#6366F1" }} title="Edit" onClick={() => handleEditFromLibrary(item)}>✏️</button>
+                        <button style={s.dlIconBtn} title="Download" onClick={() => handleDownload(item.url, item.name, item.id)} disabled={downloading === item.id}>
+                          {downloading === item.id ? <span style={{ ...s.spin, width: 14, height: 14 }} /> : "⬇"}
+                        </button>
+                        <button style={s.dangerIconBtn} title="Delete" onClick={() => handleDeleteLibraryItem(item)}>×</button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── STEP 1: Upload ── */}
+        {pixelbinConnected && !showLibrary && step === "upload" && (
+          <div style={s.card}>
+            <h1 style={s.h1}>Generate Professional Headshots</h1>
+            <p style={s.sub}>Upload your photo — AI will create stunning headshot variants in your chosen styles</p>
+            <div style={{ ...s.dropzone, ...(dragOver ? s.dropActive : {}) }} onDragOver={(e) => { e.preventDefault(); setDragOver(true); }} onDragLeave={() => setDragOver(false)} onDrop={handleDrop} onClick={() => fileInputRef.current?.click()}>
+              <input ref={fileInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} />
+              {sourcePreview ? (
+                <div style={s.previewBox}>
+                  <img src={sourcePreview} alt="preview" style={s.previewImg} />
+                  {uploading && <div style={s.overlay}><span style={s.spin} /><span style={{ color: "#fff", fontSize: 13, marginTop: 8 }}>Uploading…</span></div>}
+                </div>
+              ) : (
+                <div style={s.dropContent}>
+                  <div style={{ fontSize: 48, marginBottom: 12 }}>📸</div>
+                  <p style={s.dropTitle}>Drop your photo here or click to browse</p>
+                  <p style={s.dropHint}>JPG, PNG, WEBP — best results with a clear face photo</p>
+                </div>
+              )}
+            </div>
+            {error && <div style={s.err}>{error}</div>}
+          </div>
+        )}
+
+        {/* ── STEP 2: Choose Styles ── */}
+        {pixelbinConnected && !showLibrary && step === "styles" && (
+          <div style={s.stylesLayout}>
+            <div style={s.sourceThumb}>
+              {sourcePreview && <img src={sourcePreview} alt="source" style={s.srcImg} />}
+              <p style={s.srcLabel}>Your photo</p>
+            </div>
+            <div style={s.stylesPanel}>
+              <div style={s.stylesPanelHeader}>
+                <div>
+                  <h2 style={s.h2}>Choose Headshot Styles</h2>
+                  <p style={s.sub2}>Select the styles you want to generate ({selectedStyleIds.length} selected)</p>
+                </div>
+                <div style={s.quickBtns}>
+                  <button style={s.tinyBtn} onClick={() => setSelectedStyleIds(activeStyles.map(st => st.id))}>All</button>
+                  <button style={s.tinyBtn} onClick={() => setSelectedStyleIds([])}>None</button>
+                </div>
+              </div>
+              <div style={s.genderRow}>
+                <button style={{ ...s.genderBtn, ...(gender === "women" ? s.genderBtnActive : {}) }} onClick={() => switchGender("women")}>👩 Women</button>
+                <button style={{ ...s.genderBtn, ...(gender === "men" ? s.genderBtnActive : {}) }} onClick={() => switchGender("men")}>👨 Men</button>
+              </div>
+              <div style={s.styleGrid}>
+                {activeStyles.map((style) => {
+                  const sel = selectedStyleIds.includes(style.id);
+                  return (
+                    <button key={style.id} style={{ ...s.styleCard, ...(sel ? s.styleCardSel : {}) }} onClick={() => toggleStyle(style.id)}>
+                      <div style={s.styleNum}>{sel ? "✓" : style.id}</div>
+                      <div style={s.styleName}>{style.name}</div>
+                      <div style={s.styleTag}>{style.tag}</div>
+                    </button>
+                  );
+                })}
+              </div>
+              {error && <div style={s.err}>{error}</div>}
+              <button
+                style={{ ...s.primaryBtn, ...(selectedStyleIds.length === 0 || generating ? s.btnOff : {}) }}
+                onClick={handleGenerate}
+                disabled={selectedStyleIds.length === 0 || generating}
+              >
+                {generating ? (
+                  <span style={{ display: "flex", alignItems: "center", gap: 10, justifyContent: "center" }}>
+                    <span style={s.spin} />{progress || "Generating…"}
+                  </span>
+                ) : (
+                  <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}>
+                    <span>✨ Generate {selectedStyleIds.length} Headshot{selectedStyleIds.length !== 1 ? "s" : ""}</span>
+                    <span style={s.costBadge}>
+                      {generationCreditCost} credits{selectedStyleIds.length > 1 ? ` · ${PIXELBIN_GENERATION_CREDITS} each` : ""}
+                    </span>
+                  </span>
+                )}
+              </button>
+              {generating && <p style={s.progressNote}>This takes 1–2 min per style. Please keep the tab open.</p>}
+            </div>
+          </div>
+        )}
+
+        {/* ── STEP 3: Gallery ── */}
+        {pixelbinConnected && !showLibrary && step === "gallery" && (
+          <div style={s.galleryLayout}>
+            <div style={s.galleryHeader}>
+              <div><h2 style={s.h2}>Your Headshots</h2><p style={s.sub2}>Click any image to preview · use ✏️ to edit background</p></div>
+              {sourcePreview && <img src={sourcePreview} alt="source" style={s.galleryThumb} />}
+            </div>
+            <div style={s.imageGrid}>
+              {images.map((img, idx) => (
+                <div key={img.id} className="hs-card" style={s.imgCard}>
+                  <div style={{ position: "relative", cursor: "zoom-in" }} onClick={() => openLightbox(galleryLbItems, idx)}>
+                    <img src={img.url} alt={img.name} style={s.cardImg} />
+                    <div className="hs-hover" style={s.cardHover}>🔍 Preview</div>
+                  </div>
+                  <div style={s.cardMeta}>
+                    <div style={{ display: "flex", flexDirection: "column" as const, gap: 2 }}>
+                      <span style={s.cardName}>{img.name}</span>
+                      <span style={{ ...s.cardTag, alignSelf: "flex-start" }}>{img.tag}</span>
+                    </div>
+                    <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
+                      <button style={{ ...s.dlIconBtn, background: "#EEEEFF", borderColor: "#C4C4F0", color: "#6366F1" }} title="Edit Background" onClick={() => handleSelectImage(img)}>✏️</button>
+                      <button style={s.dlIconBtn} title="Download" onClick={() => handleDownload(img.url, img.name, String(img.id))} disabled={downloading === String(img.id)}>
+                        {downloading === String(img.id) ? <span style={{ ...s.spin, width: 14, height: 14 }} /> : "⬇"}
+                      </button>
+                      <button style={s.dangerIconBtn} title="Delete" onClick={() => handleDeleteGalleryImage(img)}>×</button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── STEP 4: Edit ── */}
+        {pixelbinConnected && !showLibrary && step === "edit" && selectedImage && (
+          <div style={s.editLayout}>
+            <div style={s.previewCol}>
+              <p style={s.colLabel}>{editedUrl ? "Result" : "Selected"}</p>
+              <div style={{ ...s.previewFrame, cursor: "zoom-in" }} onClick={() => openLightbox([{ url: displayUrl!, name: selectedImage.name + (editedUrl ? " (edited)" : ""), tag: editedUrl ? "Result" : selectedImage.tag }])}>
+                <img src={displayUrl!} alt="headshot" style={s.bigImg} />
+                {editingBg && <div style={s.overlay}><span style={s.spin} /><span style={{ color: "#fff", fontSize: 13, marginTop: 10 }}>Applying…</span></div>}
+                {!editingBg && <div style={s.zoomHint}>🔍</div>}
+              </div>
+              <button style={{ ...s.dlBtn, ...(downloading === "preview" ? { opacity: 0.6 } : {}) }} disabled={downloading === "preview"} onClick={() => handleDownload(displayUrl!, selectedImage.name + (editedUrl ? "-edited" : ""), "preview")}>
+                {downloading === "preview" ? "Downloading…" : "⬇ Download"}
+              </button>
+              {editedUrl && <button style={s.ghostBtn2} onClick={() => setEditedUrl(null)}>↺ Reset to Original</button>}
+            </div>
+
+            <div style={s.editPanel}>
+              <h2 style={s.h2}>Edit with AI</h2>
+              <p style={s.sub2}>{selectedImage.name} · {selectedImage.tag}</p>
+
+              {/* AI Prompt */}
+              <div style={s.section}>
+                <p style={s.sLabel}>AI Prompt</p>
+                <textarea value={promptInput} onChange={(e) => setPromptInput(e.target.value)}
+                  placeholder="Describe what you want… e.g. 'Place me in front of a modern office', 'Sunset rooftop background'"
+                  className="hs-prompt-box" style={s.promptBox} rows={3} disabled={editingBg} />
+                <button
+                  style={{ ...s.primaryBtn, ...(editingBg || !promptInput.trim() ? s.btnOff : {}), fontSize: 13, padding: "10px 18px" }}
+                  onClick={handleEditByPrompt}
+                  disabled={editingBg || !promptInput.trim()}
+                >
+                  {editingBg ? <span style={{ display: "flex", alignItems: "center", gap: 8, justifyContent: "center" }}><span style={s.spin} />Generating…</span>
+                    : <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}><span>✨ Generate with Prompt</span><span style={s.costBadge}>{PIXELBIN_EDIT_CREDITS} credits</span></span>}
+                </button>
+              </div>
+
+              <div className="hs-divider" style={{ fontSize: 11, color: "#BBB", fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: 1 }}>or choose background</div>
+
+              {/* Preset colors — click to select (not generate) */}
+              <div style={s.section}>
+                <p style={s.sLabel}>Preset Colors</p>
+                <div style={s.colorGrid}>
+                  {PRESET_COLORS.map((c) => (
+                    <button
+                      key={c.label}
+                      title={c.label}
+                      className="cb"
+                      disabled={editingBg}
+                      style={{
+                        ...s.colorBtn,
+                        background: c.color,
+                        border: c.color === "#FFFFFF" ? "2px solid #DDD" : `2px solid ${c.color}`,
+                        outline: pendingColor?.color === c.color ? "3px solid #6366F1" : "none",
+                        outlineOffset: 2,
+                      }}
+                      onClick={() => { setPendingColor({ color: c.color, label: c.label }); setPendingBgFile(null); setPendingBgFileName(""); }}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Custom color — picker + Select button */}
+              <div style={s.section}>
+                <p style={s.sLabel}>Custom Color</p>
+                <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                  <input type="color" value={customColor} onChange={(e) => setCustomColor(e.target.value)} style={s.colorPicker} />
+                  <span style={{ fontSize: 13, color: "#666" }}>{customColor}</span>
+                  <button
+                    style={{ ...s.applyBtn, ...(editingBg ? s.btnOff : {}), background: pendingColor?.color === customColor ? "#10B981" : "#6366F1" }}
+                    onClick={() => { setPendingColor({ color: customColor, label: "Custom" }); setPendingBgFile(null); setPendingBgFileName(""); }}
+                    disabled={editingBg}
+                  >
+                    {pendingColor?.color === customColor ? "✓ Selected" : "Select"}
+                  </button>
+                </div>
+              </div>
+
+              {/* Background image — pick file (not generate) */}
+              <div style={s.section}>
+                <p style={s.sLabel}>Background Image</p>
+                <input ref={bgFileInputRef} type="file" accept="image/*" style={{ display: "none" }}
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) { setPendingBgFile(f); setPendingBgFileName(f.name); setPendingColor(null); }
+                  }} />
+                <button style={{ ...s.uploadBgBtn, ...(editingBg ? s.btnOff : {}), ...(pendingBgFile ? { borderColor: "#6366F1", background: "#EEEEFF", color: "#6366F1" } : {}) }}
+                  onClick={() => bgFileInputRef.current?.click()} disabled={editingBg}>
+                  {pendingBgFile ? `✓ ${pendingBgFileName}` : "🖼 Upload Background Image"}
+                </button>
+                <p style={s.bgLockNote}>Uploaded backgrounds are locked. The edit only places the headshot onto your image and will not add shadows.</p>
+              </div>
+
+              {/* Pending selection preview + Apply button */}
+              {hasPending && (
+                <div style={s.pendingRow}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
+                    {pendingColor && <div style={{ width: 22, height: 22, borderRadius: 5, background: pendingColor.color, border: "2px solid #E0E0EE", flexShrink: 0 }} />}
+                    {pendingBgFile && <span style={{ fontSize: 18 }}>🖼</span>}
+                    <span style={{ fontSize: 13, fontWeight: 600, color: "#444", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const }}>
+                      {pendingColor ? pendingColor.label : pendingBgFileName}
+                    </span>
+                  </div>
+                  <button style={s.clearBtn} onClick={clearPending}>✕</button>
+                </div>
+              )}
+
+              <button
+                style={{ ...s.primaryBtn, ...(!hasPending || editingBg ? s.btnOff : {}), fontSize: 13, padding: "12px 18px" }}
+                onClick={handleApplyBackground}
+                disabled={!hasPending || editingBg}
+              >
+                {editingBg
+                  ? <span style={{ display: "flex", alignItems: "center", gap: 8, justifyContent: "center" }}><span style={s.spin} />Applying…</span>
+                  : <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}><span>Apply Background</span><span style={s.costBadge}>{PIXELBIN_EDIT_CREDITS} credits</span></span>}
+              </button>
+
+              {error && <div style={s.err}>{error}</div>}
+
+              <div style={s.section}>
+                <p style={s.sLabel}>Switch Headshot</p>
+                <div style={s.thumbRow}>
+                  {images.map((img) => (
+                    <img key={img.id} src={img.url} alt={img.name} title={img.name}
+                      style={{ ...s.thumb, border: selectedImage.id === img.id ? "2px solid #6366F1" : "2px solid transparent" }}
+                      onClick={() => { setSelectedImage(img); setEditedUrl(null); setPromptInput(""); clearPending(); }} />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </main>
     </div>
   );
 }
 
+const steps: Step[] = ["upload", "styles", "gallery", "edit"];
+
 const s: Record<string, React.CSSProperties> = {
-  page: {
-    minHeight: "calc(100vh - 52px)",
-    background: "#F5F6FA",
-    position: "relative",
-    fontFamily: "system-ui, -apple-system, sans-serif",
-  },
-  bgDots: {
-    position: "absolute", inset: 0, pointerEvents: "none",
-    backgroundImage: "radial-gradient(#C8CAD8 1px, transparent 1px)",
-    backgroundSize: "24px 24px", opacity: 0.3,
-  },
+  root: { minHeight: "100vh", background: "#F7F8FC", fontFamily: "system-ui, -apple-system, sans-serif", color: "#111" },
+  header: { position: "sticky", top: 0, zIndex: 100, background: "rgba(255,255,255,0.95)", backdropFilter: "blur(10px)", borderBottom: "1px solid #EAECF0" },
+  headerInner: { maxWidth: 1200, margin: "0 auto", padding: "12px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 },
+  logo: { display: "flex", alignItems: "center", gap: 8, cursor: "pointer", flexShrink: 0 },
+  logoText: { fontSize: 17, fontWeight: 800, letterSpacing: "-0.4px" },
+  stepBar: { display: "flex", alignItems: "center", gap: 0 },
+  stepItem: { display: "flex", alignItems: "center", gap: 6 },
+  stepDot: { width: 26, height: 26, borderRadius: "50%", background: "#E8E8F0", color: "#888", fontSize: 12, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 },
+  stepDotActive: { background: "#6366F1", color: "#fff" },
+  stepDotDone: { background: "#10B981", color: "#fff" },
+  stepLabel: { fontSize: 12, color: "#999", whiteSpace: "nowrap" as const },
+  stepLine: { width: 32, height: 1, background: "#E0E0E8", margin: "0 4px" },
+  headerActions: { display: "flex", gap: 8, alignItems: "center", flexShrink: 0 },
+  ghostBtn: { background: "none", border: "1px solid #E0E0E8", borderRadius: 8, padding: "6px 14px", fontSize: 13, cursor: "pointer", color: "#555", display: "flex", alignItems: "center", gap: 6 },
+  libBadge: { background: "#6366F1", color: "#fff", borderRadius: 10, padding: "1px 7px", fontSize: 11, fontWeight: 700 },
+  connectedChip: { display: "flex", alignItems: "center", gap: 7, background: "#ECFDF5", border: "1px solid #A7F3D0", borderRadius: 8, padding: "6px 12px", color: "#047857", fontSize: 12, fontWeight: 700 },
+  connectedDot: { color: "#10B981", fontSize: 10 },
+  accountText: { display: "flex", flexDirection: "column" as const, minWidth: 0, lineHeight: 1.15 },
+  accountName: { maxWidth: 180, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const },
+  accountCredits: { color: "#065F46", fontSize: 11, fontWeight: 650, opacity: 0.9 },
+  costBadge: { background: "rgba(255,255,255,0.22)", borderRadius: 6, padding: "2px 8px", fontSize: 12, fontWeight: 700 },
+  creditWarn: { background: "#FFF8E8", border: "1px solid #F5D060", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#92400E", fontWeight: 600 },
 
-  workspace: {
-    position: "relative", zIndex: 1,
-    maxWidth: 1280, margin: "0 auto",
-    padding: "28px 20px",
-    display: "flex", gap: 20, alignItems: "flex-start",
-  },
+  canvas: { position: "relative", minHeight: "calc(100vh - 57px)", display: "flex", alignItems: "flex-start", justifyContent: "center", padding: "40px 24px" },
+  dots: { position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle, #CACAD8 1px, transparent 1px)", backgroundSize: "24px 24px", opacity: 0.4, pointerEvents: "none" as const },
 
-  leftPanel: { width: 220, flexShrink: 0, display: "flex", flexDirection: "column", gap: 12 },
-  rightPanel: { width: 260, flexShrink: 0, display: "flex", flexDirection: "column", gap: 12 },
-  centerCol: { flex: 1, display: "flex", flexDirection: "column", gap: 16, minWidth: 0 },
+  connectCard: { position: "relative", zIndex: 1, background: "#fff", borderRadius: 20, padding: "40px 48px", maxWidth: 560, width: "100%", boxShadow: "0 4px 32px rgba(0,0,0,0.08)", display: "flex", flexDirection: "column" as const, gap: 18, alignItems: "stretch" },
+  connectIcon: { width: 48, height: 48, borderRadius: 14, background: "#EEEEFF", color: "#6366F1", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24 },
+  connectSteps: { display: "flex", flexDirection: "column" as const, gap: 10 },
+  consoleBtn: { display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none", background: "#111", color: "#fff", borderRadius: 12, padding: "13px 18px", fontSize: 14, fontWeight: 750 },
+  tokenInput: { width: "100%", borderRadius: 12, border: "1.5px solid #E0E0EE", padding: "13px 14px", fontSize: 14, fontFamily: "inherit", outline: "none", boxSizing: "border-box" as const, color: "#111", background: "#FAFAFA" },
+  connectHint: { margin: 0, color: "#777", fontSize: 12, lineHeight: 1.5 },
+  spinDark: { display: "inline-block", width: 22, height: 22, border: "2.5px solid rgba(99,102,241,0.18)", borderTopColor: "#6366F1", borderRadius: "50%", animation: "spin 0.8s linear infinite" },
 
-  panelCard: {
-    background: "#fff", borderRadius: 14,
-    padding: "16px 18px",
-    boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-    display: "flex", flexDirection: "column", gap: 10,
-  },
-  panelLabel: {
-    margin: 0, fontSize: 10, fontWeight: 700,
-    textTransform: "uppercase", letterSpacing: "0.1em", color: "#888",
-  },
+  card: { position: "relative", zIndex: 1, background: "#fff", borderRadius: 20, padding: "40px 48px", maxWidth: 520, width: "100%", boxShadow: "0 4px 32px rgba(0,0,0,0.08)", display: "flex", flexDirection: "column" as const, gap: 20 },
+  h1: { margin: 0, fontSize: 28, fontWeight: 800, letterSpacing: "-0.6px" },
+  sub: { margin: 0, fontSize: 15, color: "#666", lineHeight: 1.5 },
+  dropzone: { border: "2px dashed #D0D0E0", borderRadius: 14, minHeight: 220, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", transition: "all 0.2s" },
+  dropActive: { borderColor: "#6366F1", background: "#F0F0FF" },
+  previewBox: { position: "relative", width: "100%", height: "100%" },
+  previewImg: { width: "100%", maxHeight: 300, objectFit: "cover" as const, display: "block" },
+  overlay: { position: "absolute", inset: 0, background: "rgba(0,0,0,0.55)", display: "flex", flexDirection: "column" as const, alignItems: "center", justifyContent: "center" },
+  spin: { display: "inline-block", width: 20, height: 20, border: "2.5px solid rgba(255,255,255,0.3)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin 0.8s linear infinite" },
+  dropContent: { textAlign: "center" as const, padding: 32 },
+  dropTitle: { margin: "0 0 6px", fontWeight: 700, fontSize: 15 },
+  dropHint: { margin: 0, fontSize: 13, color: "#999" },
+  err: { background: "#FFF1F0", border: "1px solid #FFC4C4", borderRadius: 10, padding: "10px 14px", fontSize: 13, color: "#C00" },
+  primaryBtn: { background: "linear-gradient(135deg, #6366F1, #8B5CF6)", color: "#fff", border: "none", borderRadius: 12, padding: "14px 24px", fontSize: 15, fontWeight: 700, cursor: "pointer", width: "100%" },
+  btnOff: { opacity: 0.45, cursor: "not-allowed" as const },
+  progressNote: { margin: 0, fontSize: 12, color: "#888", textAlign: "center" as const },
 
-  uploadBtn: {
-    background: "#6366F1", color: "#fff",
-    border: "none", borderRadius: 9,
-    padding: "9px 14px", fontSize: 13, fontWeight: 700,
-    cursor: "pointer", width: "100%",
-  },
-  fileName: { margin: 0, fontSize: 11, color: "#888", wordBreak: "break-all" },
+  stylesLayout: { position: "relative", zIndex: 1, display: "flex", gap: 28, alignItems: "flex-start", maxWidth: 1100, width: "100%" },
+  sourceThumb: { flexShrink: 0, display: "flex", flexDirection: "column" as const, alignItems: "center", gap: 8 },
+  srcImg: { width: 120, borderRadius: 14, boxShadow: "0 4px 20px rgba(0,0,0,0.14)", objectFit: "cover" as const },
+  srcLabel: { margin: 0, fontSize: 11, color: "#888", fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: 0.8 },
+  stylesPanel: { flex: 1, background: "#fff", borderRadius: 20, padding: "28px 32px", boxShadow: "0 4px 24px rgba(0,0,0,0.07)", display: "flex", flexDirection: "column" as const, gap: 20 },
+  stylesPanelHeader: { display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 },
+  h2: { margin: 0, fontSize: 20, fontWeight: 800, letterSpacing: "-0.3px" },
+  sub2: { margin: "4px 0 0", fontSize: 13, color: "#777" },
+  quickBtns: { display: "flex", gap: 6, flexShrink: 0 },
+  tinyBtn: { background: "#F0F0F8", border: "1px solid #E0E0EE", borderRadius: 6, padding: "4px 12px", fontSize: 12, cursor: "pointer", color: "#555" },
+  genderRow: { display: "flex", gap: 10 },
+  genderBtn: { flex: 1, padding: "10px 16px", borderRadius: 10, border: "2px solid #E0E0EE", background: "#F7F8FC", fontSize: 14, fontWeight: 600, cursor: "pointer", color: "#666", transition: "all 0.15s" },
+  genderBtnActive: { background: "#EEEEFF", borderColor: "#6366F1", color: "#6366F1" },
+  styleGrid: { display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 10 },
+  styleCard: { background: "#F7F8FC", border: "2px solid transparent", borderRadius: 12, padding: "14px 10px", cursor: "pointer", display: "flex", flexDirection: "column" as const, alignItems: "center", gap: 6, transition: "all 0.15s", textAlign: "center" as const },
+  styleCardSel: { background: "#EEEEFF", border: "2px solid #6366F1" },
+  styleNum: { width: 28, height: 28, borderRadius: "50%", background: "#E8E8F4", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, color: "#6366F1" },
+  styleName: { fontSize: 12, fontWeight: 700, color: "#1A1A2E", lineHeight: 1.3 },
+  styleTag: { fontSize: 10, color: "#888", background: "#EEEEF8", borderRadius: 4, padding: "2px 6px", textTransform: "uppercase" as const, letterSpacing: 0.5 },
 
-  segmented: { display: "flex", flexDirection: "column", gap: 4 },
-  segBtn: {
-    padding: "8px 12px", border: "1.5px solid #E8E8F0",
-    borderRadius: 8, background: "#fff", fontSize: 12,
-    fontWeight: 600, cursor: "pointer", color: "#555",
-    textAlign: "left", transition: "all 0.15s",
-  },
-  segActive: { background: "#EEF0FF", borderColor: "#6366F1", color: "#6366F1" },
+  galleryLayout: { position: "relative", zIndex: 1, display: "flex", flexDirection: "column" as const, gap: 20, maxWidth: 1100, width: "100%" },
+  galleryHeader: { background: "#fff", borderRadius: 16, padding: "20px 28px", boxShadow: "0 2px 12px rgba(0,0,0,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap" as const, gap: 12 },
+  galleryThumb: { width: 56, height: 72, objectFit: "cover" as const, borderRadius: 8, border: "2px solid #E8E8F0" },
+  imageGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 16 },
+  imgCard: { position: "relative", borderRadius: 14, overflow: "hidden", background: "#fff", boxShadow: "0 2px 12px rgba(0,0,0,0.09)", transition: "all 0.15s" },
+  cardImg: { width: "100%", aspectRatio: "3/4", objectFit: "cover" as const, display: "block" },
+  cardMeta: { padding: "10px 12px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8 },
+  cardName: { fontSize: 12, fontWeight: 700, color: "#222" },
+  cardTag: { fontSize: 10, background: "#EEEEF8", color: "#6366F1", borderRadius: 4, padding: "2px 6px", fontWeight: 600 },
+  cardHover: { position: "absolute", inset: 0, background: "rgba(99,102,241,0.14)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 800, color: "#fff", opacity: 0, transition: "opacity 0.15s", backdropFilter: "blur(2px)", textShadow: "0 1px 4px rgba(0,0,0,0.4)" },
+  dlIconBtn: { flexShrink: 0, width: 32, height: 32, borderRadius: 8, border: "1px solid #E0E0EE", background: "#F7F8FC", cursor: "pointer", fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center", color: "#555" },
+  dangerIconBtn: { flexShrink: 0, width: 32, height: 32, borderRadius: 8, border: "1px solid #FFD0D0", background: "#FFF1F1", cursor: "pointer", fontSize: 20, lineHeight: 1, display: "flex", alignItems: "center", justifyContent: "center", color: "#C62828" },
+  emptyLib: { background: "#fff", borderRadius: 20, padding: "60px 40px", textAlign: "center" as const, boxShadow: "0 2px 12px rgba(0,0,0,0.06)", display: "flex", flexDirection: "column" as const, alignItems: "center" },
 
-  twoGrid: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 },
-  optBtn: {
-    padding: "8px 6px", border: "1.5px solid #E8E8F0",
-    borderRadius: 8, background: "#fff", fontSize: 12,
-    fontWeight: 600, cursor: "pointer", color: "#555",
-    transition: "all 0.15s", textAlign: "center",
-  },
-  optActive: { background: "#EEF0FF", borderColor: "#6366F1", color: "#6366F1" },
+  editLayout: { position: "relative", zIndex: 1, display: "flex", gap: 28, alignItems: "flex-start", maxWidth: 1000, width: "100%" },
+  previewCol: { flexShrink: 0, width: 240, display: "flex", flexDirection: "column" as const, gap: 12 },
+  colLabel: { margin: 0, fontSize: 11, fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: 1, color: "#888" },
+  previewFrame: { position: "relative", borderRadius: 16, overflow: "hidden", boxShadow: "0 6px 28px rgba(0,0,0,0.16)" },
+  bigImg: { width: "100%", display: "block" },
+  zoomHint: { position: "absolute", bottom: 10, right: 10, background: "rgba(0,0,0,0.45)", color: "#fff", borderRadius: 8, padding: "4px 8px", fontSize: 16, pointerEvents: "none" as const },
+  dlBtn: { display: "block", textAlign: "center" as const, padding: "11px 16px", background: "#111", color: "#fff", borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: "pointer", border: "none", width: "100%" },
+  ghostBtn2: { background: "none", border: "1px solid #E0E0E8", borderRadius: 10, padding: "9px 16px", fontSize: 13, cursor: "pointer", color: "#555", width: "100%" },
+  editPanel: { flex: 1, background: "#fff", borderRadius: 20, padding: "28px 32px", boxShadow: "0 4px 24px rgba(0,0,0,0.07)", display: "flex", flexDirection: "column" as const, gap: 20 },
+  section: { display: "flex", flexDirection: "column" as const, gap: 10 },
+  sLabel: { margin: 0, fontSize: 11, fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: 1, color: "#888" },
+  promptBox: { width: "100%", borderRadius: 10, border: "1.5px solid #E0E0EE", padding: "10px 12px", fontSize: 13, fontFamily: "inherit", resize: "vertical" as const, outline: "none", boxSizing: "border-box" as const, lineHeight: 1.5, color: "#222", background: "#FAFAFA" },
+  colorGrid: { display: "flex", flexWrap: "wrap" as const, gap: 8 },
+  colorBtn: { width: 34, height: 34, borderRadius: 8, cursor: "pointer", transition: "transform 0.1s" },
+  colorPicker: { width: 42, height: 42, border: "2px solid #E0E0E8", borderRadius: 8, cursor: "pointer", padding: 2 },
+  applyBtn: { background: "#6366F1", color: "#fff", border: "none", borderRadius: 8, padding: "9px 16px", fontSize: 13, fontWeight: 700, cursor: "pointer", marginLeft: "auto", transition: "background 0.2s" },
+  uploadBgBtn: { background: "#F4F4FA", border: "1px solid #E0E0EE", borderRadius: 10, padding: "12px 16px", fontSize: 13, fontWeight: 600, cursor: "pointer", color: "#333", textAlign: "left" as const, transition: "all 0.15s" },
+  bgLockNote: { margin: "-2px 0 0", fontSize: 12, color: "#666", lineHeight: 1.45 },
+  pendingRow: { display: "flex", alignItems: "center", justifyContent: "space-between", background: "#F0F0FF", border: "1.5px solid #C4C4F0", borderRadius: 10, padding: "10px 14px", gap: 10 },
+  clearBtn: { background: "none", border: "none", color: "#999", cursor: "pointer", fontSize: 14, padding: 4, flexShrink: 0 },
+  thumbRow: { display: "flex", flexWrap: "wrap" as const, gap: 8 },
+  thumb: { width: 60, height: 76, objectFit: "cover" as const, borderRadius: 8, cursor: "pointer", transition: "border-color 0.15s" },
 
-  previewHeader: { marginBottom: 4 },
-  pageTitle: { margin: "0 0 4px", fontSize: 22, fontWeight: 800, letterSpacing: "-0.4px" },
-  pageSub: { margin: 0, fontSize: 13, color: "#666" },
-
-  previewGrid: {
-    display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16,
-  },
-  imgCard: {
-    background: "#fff", borderRadius: 16,
-    boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-    overflow: "hidden", display: "flex", flexDirection: "column",
-  },
-  imgCardTop: {
-    padding: "12px 16px", display: "flex",
-    justifyContent: "space-between", alignItems: "center",
-    borderBottom: "1px solid #F0F0F6",
-  },
-  cardLabel: { fontSize: 12, fontWeight: 700, color: "#444" },
-  cardBadge: {
-    fontSize: 10, fontWeight: 700, background: "#F0F0F8",
-    color: "#777", borderRadius: 5, padding: "2px 7px",
-  },
-  cardImg: { width: "100%", display: "block", aspectRatio: "1", objectFit: "cover" },
-  emptyCard: {
-    flex: 1, display: "flex", flexDirection: "column",
-    alignItems: "center", justifyContent: "center",
-    border: "none", background: "#FAFAFC",
-    cursor: "pointer", padding: "40px 20px", minHeight: 200,
-  },
-  emptyResult: {
-    flex: 1, display: "flex", flexDirection: "column",
-    alignItems: "center", justifyContent: "center",
-    background: "#FAFAFC", padding: "40px 20px", minHeight: 200,
-  },
-  emptyLabel: { fontSize: 13, fontWeight: 600, color: "#888" },
-  emptyHint: { fontSize: 11, color: "#AAA", marginTop: 4 },
-
-  processingState: {
-    flex: 1, display: "flex", flexDirection: "column",
-    alignItems: "center", justifyContent: "center",
-    padding: "40px 20px", minHeight: 200, gap: 12,
-  },
-  spinner: {
-    width: 36, height: 36,
-    border: "3px solid rgba(99,102,241,0.2)",
-    borderTopColor: "#6366F1",
-    borderRadius: "50%", animation: "spin 0.8s linear infinite",
-  },
-  processingText: { margin: 0, fontWeight: 700, fontSize: 13, color: "#333" },
-  processingHint: { margin: 0, fontSize: 12, color: "#999" },
-
-  statusBar: {
-    display: "flex", alignItems: "center", gap: 8,
-    background: "#fff", borderRadius: 10, padding: "10px 14px",
-    boxShadow: "0 1px 6px rgba(0,0,0,0.05)",
-  },
-  statusDot: { width: 8, height: 8, borderRadius: "50%", flexShrink: 0 },
-  statusText: { fontSize: 13, color: "#555" },
-  errorBox: {
-    background: "#FFF1F0", border: "1px solid #FFC4C4",
-    borderRadius: 10, padding: "10px 14px",
-    fontSize: 13, color: "#C00", lineHeight: 1.5,
-  },
-  actionRow: { display: "flex", gap: 10 },
-  dlBtn: {
-    flex: 1, background: "#111", color: "#fff",
-    border: "none", borderRadius: 10,
-    padding: "11px 16px", fontSize: 13, fontWeight: 700,
-    cursor: "pointer",
-  },
-  newBtn: {
-    flex: 1, background: "#fff", color: "#444",
-    border: "1.5px solid #E0E0EA", borderRadius: 10,
-    padding: "11px 16px", fontSize: 13, fontWeight: 700,
-    cursor: "pointer",
-  },
-
-  bgPanelHeader: { display: "flex", justifyContent: "space-between", alignItems: "center" },
-  bgToneBadge: {
-    fontSize: 10, fontWeight: 700, background: "#F0F0F8",
-    color: "#6366F1", borderRadius: 5, padding: "2px 7px",
-  },
-  bgList: { display: "flex", flexDirection: "column", gap: 4 },
-  bgBtn: {
-    display: "flex", alignItems: "center", gap: 10,
-    padding: "8px 10px", border: "1.5px solid transparent",
-    borderRadius: 9, background: "transparent",
-    cursor: "pointer", fontSize: 12, fontWeight: 600, color: "#444",
-    transition: "all 0.15s", textAlign: "left",
-  },
-  bgBtnActive: { background: "#EEF0FF", borderColor: "#6366F1", color: "#6366F1" },
-  bgSwatch: { width: 20, height: 20, borderRadius: 6, flexShrink: 0, border: "1px solid rgba(0,0,0,0.08)" },
-  bgBtnName: { flex: 1 },
-  checkmark: { fontSize: 12, color: "#6366F1", flexShrink: 0 },
-
-  textarea: {
-    width: "100%", border: "1.5px solid #E0E0EE",
-    borderRadius: 9, padding: "9px 11px",
-    fontSize: 12, fontFamily: "inherit", resize: "vertical",
-    outline: "none", lineHeight: 1.6, color: "#222",
-    background: "#FAFAFA", boxSizing: "border-box",
-  },
-  customNote: { margin: 0, fontSize: 11, color: "#6366F1", fontWeight: 600 },
-
-  generateSection: { display: "flex", flexDirection: "column", gap: 8 },
-  generateBtn: {
-    width: "100%", background: "linear-gradient(135deg, #6366F1, #8B5CF6)",
-    color: "#fff", border: "none", borderRadius: 12,
-    padding: "14px 20px", fontSize: 14, fontWeight: 800,
-    cursor: "pointer", transition: "opacity 0.2s",
-    letterSpacing: "-0.2px",
-  },
-  generateOff: { opacity: 0.45, cursor: "not-allowed" },
-  btnInner: { display: "flex", alignItems: "center", justifyContent: "center", gap: 8 },
-  btnSpinner: {
-    display: "inline-block", width: 15, height: 15,
-    border: "2.5px solid rgba(255,255,255,0.3)",
-    borderTopColor: "#fff", borderRadius: "50%",
-    animation: "spin 0.8s linear infinite",
-  },
-  generateHint: { margin: 0, fontSize: 11, color: "#AAA", textAlign: "center" },
+  lbOverlay: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.92)", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 },
+  lbModal: { display: "flex", flexDirection: "column" as const, alignItems: "center", gap: 16, maxWidth: "90vw", maxHeight: "95vh" },
+  lbTopBar: { width: "100%", display: "flex", alignItems: "center", gap: 12 },
+  lbCounter: { color: "rgba(255,255,255,0.5)", fontSize: 13, fontWeight: 600 },
+  lbClose: { width: 36, height: 36, borderRadius: "50%", background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", fontSize: 16, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" },
+  lbImgRow: { display: "flex", alignItems: "center", gap: 20 },
+  lbImg: { maxHeight: "68vh", maxWidth: "75vw", objectFit: "contain" as const, borderRadius: 14, display: "block", boxShadow: "0 8px 60px rgba(0,0,0,0.6)" },
+  lbNav: { width: 48, height: 48, borderRadius: "50%", background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", fontSize: 26, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, backdropFilter: "blur(4px)", transition: "background 0.15s" },
+  lbFooter: { width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16 },
+  lbName: { color: "#fff", fontWeight: 700, fontSize: 15 },
+  lbTag: { color: "rgba(255,255,255,0.45)", fontSize: 12, marginTop: 3 },
+  lbEditBtn: { background: "#6366F1", color: "#fff", border: "none", borderRadius: 8, padding: "9px 16px", fontSize: 13, fontWeight: 700, cursor: "pointer" },
+  lbDeleteBtn: { background: "rgba(220,38,38,0.16)", color: "#FCA5A5", border: "1px solid rgba(248,113,113,0.35)", borderRadius: 8, padding: "9px 16px", fontSize: 13, fontWeight: 700, cursor: "pointer" },
+  lbDlBtn: { background: "rgba(255,255,255,0.1)", color: "#fff", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 8, padding: "9px 16px", fontSize: 13, fontWeight: 600, cursor: "pointer" },
+  lbStrip: { display: "flex", gap: 8, overflowX: "auto" as const, maxWidth: "80vw", paddingBottom: 4 },
+  lbThumb: { width: 52, height: 66, objectFit: "cover" as const, borderRadius: 6, cursor: "pointer", flexShrink: 0, transition: "opacity 0.15s, outline 0.1s" },
 };
