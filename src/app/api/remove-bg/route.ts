@@ -97,19 +97,16 @@ export async function POST(req: Request) {
     if (!imageData)
       return NextResponse.json({ error: "imageData required" }, { status: 400 });
 
-    // Primary: Hugging Face RMBG-2.0 (free, purpose-built for background removal)
-    const hfResult = await removeWithHuggingFace(imageData, mimeType);
-    if (hfResult) return NextResponse.json(hfResult);
-
-    // Fallback: Gemini (for users with paid quota)
+    // Primary: Gemini (with billing enabled)
     const geminiResult = await removeWithGemini(imageData, mimeType);
     if (geminiResult) return NextResponse.json(geminiResult);
 
+    // Fallback: Hugging Face RMBG-2.0
+    const hfResult = await removeWithHuggingFace(imageData, mimeType);
+    if (hfResult) return NextResponse.json(hfResult);
+
     return NextResponse.json(
-      {
-        error:
-          "Background removal failed. Add a free HF_TOKEN from huggingface.co to fix this.",
-      },
+      { error: "Background removal failed. Please try again." },
       { status: 500 }
     );
   } catch (err) {
