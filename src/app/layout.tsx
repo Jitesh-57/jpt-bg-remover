@@ -19,7 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <div className="jpt-nav-divider" />
             <span className="jpt-section-label">AI Tools</span>
             <div className="jpt-nav-links">
-              <a href="/" className="jpt-nav-link">
+              <a href="/editor" className="jpt-nav-link">
                 <span>🖼️</span> AI Image Editor
               </a>
               <a href="/headshot" className="jpt-nav-link">
