@@ -3,7 +3,6 @@ import axios from "axios";
 import {
   createUserPixelbinClient,
   getPixelbinAuthHeader,
-  getPixelbinToken,
 } from "@/lib/headshot-pixelbin-auth";
 
 export const runtime = "nodejs";
@@ -52,9 +51,9 @@ const NO_SHADOW_INSTRUCTIONS =
   "Do not darken the background around the person. Blend the person cleanly with natural edges only.";
 
 export async function POST(req: NextRequest) {
-  const apiToken = getPixelbinToken(req);
+  const apiToken = process.env.PIXELBIN_API_TOKEN;
   if (!apiToken) {
-    return NextResponse.json({ error: "Connect your PixelBin account first" }, { status: 401 });
+    return NextResponse.json({ error: "Server not configured: PIXELBIN_API_TOKEN missing" }, { status: 500 });
   }
 
   const { imageUrl, bgType, bgColor, bgImageUrl, bgLabel, customPrompt } = await req.json();

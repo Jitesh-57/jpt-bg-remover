@@ -23,20 +23,11 @@ interface GeneratedImage { id: number; name: string; tag: string; url: string; }
 interface LibraryItem { id: string; url: string; name: string; tag: string; type: "generated" | "edited"; savedAt: number; }
 interface LightboxItem { url: string; name: string; tag: string; onEdit?: () => void; onDelete?: () => void; }
 interface PendingColor { color: string; label: string; }
-interface PixelbinCredits { total: number; used: number; remaining: number; }
-interface PixelbinSession {
-  connected: boolean;
-  accountName?: string | null;
-  cloudName?: string | null;
-  credits?: PixelbinCredits | null;
-  error?: string;
-}
 
 type Step = "upload" | "styles" | "gallery" | "edit";
 type Gender = "women" | "men";
 
 const STORAGE_KEY = "hs-library";
-const PIXELBIN_TOKENS_URL = "https://console.pixelbin.io/organization/settings/api-tokens";
 const PIXELBIN_GENERATION_CREDITS = 2;
 const PIXELBIN_EDIT_CREDITS = 2;
 
@@ -71,11 +62,6 @@ async function downloadImage(url: string, filename: string) {
   } catch { window.open(url, "_blank"); }
 }
 
-function formatCredits(value?: number | null) {
-  if (value === null || value === undefined || !Number.isFinite(value)) return null;
-  return new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(Math.floor(value));
-}
-
 export default function HeadshotPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const bgFileInputRef = useRef<HTMLInputElement>(null);
@@ -99,10 +85,6 @@ export default function HeadshotPage() {
   const [promptInput, setPromptInput] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
-  const [pixelbinSession, setPixelbinSession] = useState<PixelbinSession | null>(null);
-  const [pixelbinTokenInput, setPixelbinTokenInput] = useState("");
-  const [connectingPixelbin, setConnectingPixelbin] = useState(false);
-  const [connectError, setConnectError] = useState<string | null>(null);
   const [library, setLibrary] = useState<LibraryItem[]>([]);
   const [showLibrary, setShowLibrary] = useState(false);
   const [libFilter, setLibFilter] = useState<"all" | "generated" | "edited">("all");
@@ -113,10 +95,6 @@ export default function HeadshotPage() {
 
   useEffect(() => {
     setLibrary(loadLibrary());
-    fetch("/api/headshot/pixelbin/session")
-      .then((res) => res.json())
-      .then((data: PixelbinSession) => setPixelbinSession(data))
-      .catch(() => setPixelbinSession({ connected: false }));
   }, []);
 
   useEffect(() => {
@@ -134,42 +112,8 @@ export default function HeadshotPage() {
   const closeLightbox = () => setShowLightbox(false);
   const refreshLibrary = () => setLibrary(loadLibrary());
 
-  const connectPixelbin = async () => {
-    const apiToken = pixelbinTokenInput.trim();
-    if (!apiToken) {
-      setConnectError("Paste your PixelBin API token to continue.");
-      return;
-    }
-
-    setConnectingPixelbin(true);
-    setConnectError(null);
-    try {
-      const res = await fetch("/api/headshot/pixelbin/session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ apiToken }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Could not connect PixelBin.");
-      setPixelbinSession(data);
-      setPixelbinTokenInput("");
-      setError(null);
-    } catch (e) {
-      setConnectError((e as Error).message);
-    } finally {
-      setConnectingPixelbin(false);
-    }
-  };
-
-  const disconnectPixelbin = async () => {
-    await fetch("/api/headshot/pixelbin/session", { method: "DELETE" }).catch(() => null);
-    setPixelbinSession({ connected: false });
-    reset();
-  };
-
-  const handlePixelbinAuthError = (res: Response, message?: string) => {
-    if (res.status === 401) setPixelbinSession({ connected: false });
-    return new Error(message || (res.status === 401 ? "Connect your PixelBin account first." : `Request failed (${res.status})`));
+  const throwOnError = (res: Response, message?: string) => {
+    return new Error(message || `Request failed (${res.status})`);
   };
 
   const clearPending = () => { setPendingColor(null); setPendingBgFile(null); setPendingBgFileName(""); };
@@ -187,7 +131,7 @@ export default function HeadshotPage() {
       const res = await fetch("/api/headshot/upload", { method: "POST", body: fd });
       const text = await res.text();
       const data = text ? JSON.parse(text) : {};
-      if (!res.ok || !data.url) throw handlePixelbinAuthError(res, data.error || `Upload failed (${res.status})`);
+      if (!res.ok || !data.url) throw throwOnError(res, data.error || `Upload failed (${res.status})`);
       setSourceUrl(data.url);
       setStep("styles");
     } catch (e) { setError((e as Error).message); setSourcePreview(null); }
@@ -217,7 +161,7 @@ export default function HeadshotPage() {
         body: JSON.stringify({ imageUrl: sourceUrl, styleIds: selectedStyleIds, gender }),
       });
       const data = await res.json();
-      if (!res.ok) throw handlePixelbinAuthError(res, data.error || "Generation failed");
+      if (!res.ok) throw throwOnError(res, data.error || "Generation failed");
       if (!data.images || data.images.length === 0) throw new Error(data.errors?.[0] || "No images generated");
       setImages(data.images);
       setStep("gallery");
@@ -256,7 +200,6 @@ export default function HeadshotPage() {
     refreshLibrary();
   };
 
-  // Called when user clicks Apply (for pending color or pending bg image)
   const handleApplyBackground = async () => {
     if (!selectedImage || editingBg) return;
     setEditingBg(true);
@@ -273,7 +216,7 @@ export default function HeadshotPage() {
           body: JSON.stringify({ imageUrl: selectedImage.url, bgType: "color", bgColor: color, bgLabel: label }),
         });
         const data = await res.json();
-        if (!res.ok) throw handlePixelbinAuthError(res, data.error || "Edit failed");
+        if (!res.ok) throw throwOnError(res, data.error || "Edit failed");
         setEditedUrl(data.url);
         persistEdit(data.url, `${selectedImage.name} · ${label}`, "Color Edit");
       } catch (e) { setError((e as Error).message); }
@@ -286,14 +229,14 @@ export default function HeadshotPage() {
         fd.append("file", file);
         const upRes = await fetch("/api/headshot/upload", { method: "POST", body: fd });
         const upData = await upRes.json();
-        if (!upRes.ok || !upData.url) throw handlePixelbinAuthError(upRes, upData.error || "Background upload failed");
+        if (!upRes.ok || !upData.url) throw throwOnError(upRes, upData.error || "Background upload failed");
         const res = await fetch("/api/headshot/edit-bg", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ imageUrl: selectedImage.url, bgType: "image", bgImageUrl: upData.url }),
         });
         const data = await res.json();
-        if (!res.ok) throw handlePixelbinAuthError(res, data.error || "Edit failed");
+        if (!res.ok) throw throwOnError(res, data.error || "Edit failed");
         setEditedUrl(data.url);
         persistEdit(data.url, `${selectedImage.name} · Custom BG`, "Image Edit");
       } catch (e) { setError((e as Error).message); }
@@ -314,7 +257,7 @@ export default function HeadshotPage() {
         body: JSON.stringify({ imageUrl: selectedImage.url, bgType: "prompt", customPrompt: promptInput.trim() }),
       });
       const data = await res.json();
-      if (!res.ok) throw handlePixelbinAuthError(res, data.error || "Edit failed");
+      if (!res.ok) throw throwOnError(res, data.error || "Edit failed");
       setEditedUrl(data.url);
       persistEdit(data.url, `${selectedImage.name} · AI Edit`, "Prompt Edit");
     } catch (e) { setError((e as Error).message); }
@@ -382,8 +325,6 @@ export default function HeadshotPage() {
   const libraryLbItems: LightboxItem[] = sortedLibrary.map((item) => ({ url: item.url, name: item.name, tag: item.tag, onEdit: () => handleEditFromLibrary(item), onDelete: () => handleDeleteLibraryItem(item) }));
   const lbCurrent = lightboxItems[lightboxIndex];
 
-  const pixelbinConnected = pixelbinSession?.connected === true;
-  const checkingPixelbin = pixelbinSession === null;
   const hasPending = !!pendingColor || !!pendingBgFile;
   const generationCreditCost = selectedStyleIds.length * PIXELBIN_GENERATION_CREDITS;
 
@@ -436,7 +377,7 @@ export default function HeadshotPage() {
       <header style={s.header}>
         <div style={s.headerInner}>
           <div style={s.logo} onClick={reset}><span>⚡</span><span style={s.logoText}>Headshot AI</span></div>
-          {pixelbinConnected && !showLibrary && (
+          {!showLibrary && (
             <div style={s.stepBar}>
               {(["upload", "styles", "gallery", "edit"] as Step[]).map((st, i) => (
                 <div key={st} style={s.stepItem}>
@@ -448,25 +389,11 @@ export default function HeadshotPage() {
             </div>
           )}
           <div style={s.headerActions}>
-            {pixelbinConnected && (
-              <div style={s.connectedChip}>
-                <span style={s.connectedDot}>●</span>
-                <span style={s.accountText}>
-                  <span style={s.accountName}>{pixelbinSession?.accountName || "PixelBin account"}</span>
-                  {formatCredits(pixelbinSession?.credits?.remaining) && (
-                    <span style={s.accountCredits}>{formatCredits(pixelbinSession?.credits?.remaining)} credits left</span>
-                  )}
-                </span>
-              </div>
-            )}
-            {pixelbinConnected && (
-              <button style={{ ...s.ghostBtn, ...(showLibrary ? { background: "#EEEEFF", borderColor: "#6366F1", color: "#6366F1" } : {}) }} onClick={() => setShowLibrary((v) => !v)}>
-                📁 My Library {library.length > 0 && <span style={s.libBadge}>{library.length}</span>}
-              </button>
-            )}
-            {pixelbinConnected && !showLibrary && step !== "upload" && <button style={s.ghostBtn} onClick={reset}>New Session</button>}
-            {pixelbinConnected && !showLibrary && step === "edit" && <button style={s.ghostBtn} onClick={() => setStep("gallery")}>← Gallery</button>}
-            {pixelbinConnected && <button style={s.ghostBtn} onClick={disconnectPixelbin}>Sign out</button>}
+            <button style={{ ...s.ghostBtn, ...(showLibrary ? { background: "#EEEEFF", borderColor: "#6366F1", color: "#6366F1" } : {}) }} onClick={() => setShowLibrary((v) => !v)}>
+              📁 My Library {library.length > 0 && <span style={s.libBadge}>{library.length}</span>}
+            </button>
+            {!showLibrary && step !== "upload" && <button style={s.ghostBtn} onClick={reset}>New Session</button>}
+            {!showLibrary && step === "edit" && <button style={s.ghostBtn} onClick={() => setStep("gallery")}>← Gallery</button>}
           </div>
         </div>
       </header>
@@ -474,44 +401,8 @@ export default function HeadshotPage() {
       <main style={s.canvas}>
         <div style={s.dots} />
 
-        {checkingPixelbin && (
-          <div style={s.connectCard}>
-            <span style={s.spinDark} />
-            <p style={{ margin: "12px 0 0", color: "#666", fontSize: 14 }}>Checking PixelBin connection…</p>
-          </div>
-        )}
-
-        {!checkingPixelbin && !pixelbinConnected && (
-          <div style={s.connectCard}>
-            <div style={s.connectIcon}>⚡</div>
-            <h1 style={s.h1}>Connect your PixelBin account</h1>
-            <p style={s.sub}>
-              This app uses your PixelBin account for uploads, NanoBanana Pro generations, edits, and permanent CDN storage.
-              Your PixelBin credits are used directly by PixelBin.
-            </p>
-            <div style={s.connectSteps}>
-              <a href={PIXELBIN_TOKENS_URL} target="_blank" rel="noreferrer" style={s.consoleBtn}>
-                Open PixelBin and create API token
-              </a>
-              <input
-                type="password"
-                value={pixelbinTokenInput}
-                onChange={(e) => setPixelbinTokenInput(e.target.value)}
-                placeholder="Paste PixelBin API token"
-                style={s.tokenInput}
-                onKeyDown={(e) => { if (e.key === "Enter") connectPixelbin(); }}
-              />
-              <button style={{ ...s.primaryBtn, ...(connectingPixelbin ? s.btnOff : {}) }} onClick={connectPixelbin} disabled={connectingPixelbin}>
-                {connectingPixelbin ? "Connecting…" : "Connect and continue"}
-              </button>
-            </div>
-            <p style={s.connectHint}>The token is stored in an HttpOnly cookie for this app and is only sent to your server routes when creating headshots.</p>
-            {connectError && <div style={s.err}>{connectError}</div>}
-          </div>
-        )}
-
         {/* ── LIBRARY ── */}
-        {pixelbinConnected && showLibrary && (
+        {showLibrary && (
           <div style={s.galleryLayout}>
             <div style={s.galleryHeader}>
               <div><h2 style={s.h2}>My Library</h2><p style={s.sub2}>All your generated and edited headshots — saved automatically</p></div>
@@ -527,7 +418,7 @@ export default function HeadshotPage() {
               <div style={s.emptyLib}>
                 <div style={{ fontSize: 48, marginBottom: 12 }}>🖼</div>
                 <p style={{ margin: 0, fontWeight: 700, fontSize: 16 }}>No headshots yet</p>
-                <p style={{ margin: "6px 0 0", color: "#888", fontSize: 13 }}>Generate headshots and they'll appear here automatically</p>
+                <p style={{ margin: "6px 0 0", color: "#888", fontSize: 13 }}>Generate headshots and they&apos;ll appear here automatically</p>
                 <button style={{ ...s.primaryBtn, marginTop: 20, width: "auto", padding: "12px 24px" }} onClick={() => setShowLibrary(false)}>✨ Generate Headshots</button>
               </div>
             ) : (
@@ -559,7 +450,7 @@ export default function HeadshotPage() {
         )}
 
         {/* ── STEP 1: Upload ── */}
-        {pixelbinConnected && !showLibrary && step === "upload" && (
+        {!showLibrary && step === "upload" && (
           <div style={s.card}>
             <h1 style={s.h1}>Generate Professional Headshots</h1>
             <p style={s.sub}>Upload your photo — AI will create stunning headshot variants in your chosen styles</p>
@@ -583,7 +474,7 @@ export default function HeadshotPage() {
         )}
 
         {/* ── STEP 2: Choose Styles ── */}
-        {pixelbinConnected && !showLibrary && step === "styles" && (
+        {!showLibrary && step === "styles" && (
           <div style={s.stylesLayout}>
             <div style={s.sourceThumb}>
               {sourcePreview && <img src={sourcePreview} alt="source" style={s.srcImg} />}
@@ -641,7 +532,7 @@ export default function HeadshotPage() {
         )}
 
         {/* ── STEP 3: Gallery ── */}
-        {pixelbinConnected && !showLibrary && step === "gallery" && (
+        {!showLibrary && step === "gallery" && (
           <div style={s.galleryLayout}>
             <div style={s.galleryHeader}>
               <div><h2 style={s.h2}>Your Headshots</h2><p style={s.sub2}>Click any image to preview · use ✏️ to edit background</p></div>
@@ -674,7 +565,7 @@ export default function HeadshotPage() {
         )}
 
         {/* ── STEP 4: Edit ── */}
-        {pixelbinConnected && !showLibrary && step === "edit" && selectedImage && (
+        {!showLibrary && step === "edit" && selectedImage && (
           <div style={s.editLayout}>
             <div style={s.previewCol}>
               <p style={s.colLabel}>{editedUrl ? "Result" : "Selected"}</p>
@@ -711,7 +602,7 @@ export default function HeadshotPage() {
 
               <div className="hs-divider" style={{ fontSize: 11, color: "#BBB", fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: 1 }}>or choose background</div>
 
-              {/* Preset colors — click to select (not generate) */}
+              {/* Preset colors */}
               <div style={s.section}>
                 <p style={s.sLabel}>Preset Colors</p>
                 <div style={s.colorGrid}>
@@ -734,7 +625,7 @@ export default function HeadshotPage() {
                 </div>
               </div>
 
-              {/* Custom color — picker + Select button */}
+              {/* Custom color */}
               <div style={s.section}>
                 <p style={s.sLabel}>Custom Color</p>
                 <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
@@ -750,7 +641,7 @@ export default function HeadshotPage() {
                 </div>
               </div>
 
-              {/* Background image — pick file (not generate) */}
+              {/* Background image */}
               <div style={s.section}>
                 <p style={s.sLabel}>Background Image</p>
                 <input ref={bgFileInputRef} type="file" accept="image/*" style={{ display: "none" }}
@@ -827,24 +718,10 @@ const s: Record<string, React.CSSProperties> = {
   headerActions: { display: "flex", gap: 8, alignItems: "center", flexShrink: 0 },
   ghostBtn: { background: "none", border: "1px solid #E0E0E8", borderRadius: 8, padding: "6px 14px", fontSize: 13, cursor: "pointer", color: "#555", display: "flex", alignItems: "center", gap: 6 },
   libBadge: { background: "#6366F1", color: "#fff", borderRadius: 10, padding: "1px 7px", fontSize: 11, fontWeight: 700 },
-  connectedChip: { display: "flex", alignItems: "center", gap: 7, background: "#ECFDF5", border: "1px solid #A7F3D0", borderRadius: 8, padding: "6px 12px", color: "#047857", fontSize: 12, fontWeight: 700 },
-  connectedDot: { color: "#10B981", fontSize: 10 },
-  accountText: { display: "flex", flexDirection: "column" as const, minWidth: 0, lineHeight: 1.15 },
-  accountName: { maxWidth: 180, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const },
-  accountCredits: { color: "#065F46", fontSize: 11, fontWeight: 650, opacity: 0.9 },
   costBadge: { background: "rgba(255,255,255,0.22)", borderRadius: 6, padding: "2px 8px", fontSize: 12, fontWeight: 700 },
-  creditWarn: { background: "#FFF8E8", border: "1px solid #F5D060", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#92400E", fontWeight: 600 },
 
   canvas: { position: "relative", minHeight: "calc(100vh - 57px)", display: "flex", alignItems: "flex-start", justifyContent: "center", padding: "40px 24px" },
   dots: { position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle, #CACAD8 1px, transparent 1px)", backgroundSize: "24px 24px", opacity: 0.4, pointerEvents: "none" as const },
-
-  connectCard: { position: "relative", zIndex: 1, background: "#fff", borderRadius: 20, padding: "40px 48px", maxWidth: 560, width: "100%", boxShadow: "0 4px 32px rgba(0,0,0,0.08)", display: "flex", flexDirection: "column" as const, gap: 18, alignItems: "stretch" },
-  connectIcon: { width: 48, height: 48, borderRadius: 14, background: "#EEEEFF", color: "#6366F1", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24 },
-  connectSteps: { display: "flex", flexDirection: "column" as const, gap: 10 },
-  consoleBtn: { display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none", background: "#111", color: "#fff", borderRadius: 12, padding: "13px 18px", fontSize: 14, fontWeight: 750 },
-  tokenInput: { width: "100%", borderRadius: 12, border: "1.5px solid #E0E0EE", padding: "13px 14px", fontSize: 14, fontFamily: "inherit", outline: "none", boxSizing: "border-box" as const, color: "#111", background: "#FAFAFA" },
-  connectHint: { margin: 0, color: "#777", fontSize: 12, lineHeight: 1.5 },
-  spinDark: { display: "inline-block", width: 22, height: 22, border: "2.5px solid rgba(99,102,241,0.18)", borderTopColor: "#6366F1", borderRadius: "50%", animation: "spin 0.8s linear infinite" },
 
   card: { position: "relative", zIndex: 1, background: "#fff", borderRadius: 20, padding: "40px 48px", maxWidth: 520, width: "100%", boxShadow: "0 4px 32px rgba(0,0,0,0.08)", display: "flex", flexDirection: "column" as const, gap: 20 },
   h1: { margin: 0, fontSize: 28, fontWeight: 800, letterSpacing: "-0.6px" },

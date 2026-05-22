@@ -4,7 +4,6 @@ import axios from "axios";
 import {
   createUserPixelbinClient,
   getPixelbinAuthHeader,
-  getPixelbinToken,
 } from "@/lib/headshot-pixelbin-auth";
 
 export const runtime = "nodejs";
@@ -49,9 +48,9 @@ async function saveToPermanentStorage(tempUrl: string, name: string, apiToken: s
 }
 
 export async function POST(req: NextRequest) {
-  const apiToken = getPixelbinToken(req);
+  const apiToken = process.env.PIXELBIN_API_TOKEN;
   if (!apiToken) {
-    return NextResponse.json({ error: "Connect your PixelBin account first" }, { status: 401 });
+    return NextResponse.json({ error: "Server not configured: PIXELBIN_API_TOKEN missing" }, { status: 500 });
   }
 
   let imageUrl: string, styleIds: number[], gender: string;

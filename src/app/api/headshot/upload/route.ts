@@ -1,16 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import FormDataNode from "form-data";
 import axios from "axios";
-import { getPixelbinAuthHeader, getPixelbinToken } from "@/lib/headshot-pixelbin-auth";
+import { getPixelbinAuthHeader } from "@/lib/headshot-pixelbin-auth";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
 
 export async function POST(req: NextRequest) {
   try {
-    const apiToken = getPixelbinToken(req);
+    const apiToken = process.env.PIXELBIN_API_TOKEN;
     if (!apiToken) {
-      return NextResponse.json({ error: "Connect your PixelBin account first" }, { status: 401 });
+      return NextResponse.json({ error: "Server not configured: PIXELBIN_API_TOKEN missing" }, { status: 500 });
     }
 
     const formData = await req.formData();
