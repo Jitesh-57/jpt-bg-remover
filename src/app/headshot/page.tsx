@@ -27,38 +27,29 @@ interface PendingColor { color: string; label: string; }
 type Step = "upload" | "styles" | "gallery" | "edit";
 type Gender = "women" | "men";
 
-const STORAGE_KEY = "hs-library";
 const PIXELBIN_GENERATION_CREDITS = 2;
 const PIXELBIN_EDIT_CREDITS = 2;
 
-function loadLibrary(): LibraryItem[] {
-  if (typeof window === "undefined") return [];
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); } catch { return []; }
-}
-function saveItemsToLibrary(items: LibraryItem[]) {
-  if (typeof window === "undefined") return;
-  const existing = loadLibrary();
-  const ids = new Set(items.map((i) => i.id));
-  localStorage.setItem(STORAGE_KEY, JSON.stringify([...items, ...existing.filter((e) => !ids.has(e.id))]));
-}
-function removeLibraryItems(shouldRemove: (item: LibraryItem) => boolean) {
-  if (typeof window === "undefined") return [];
-  const remaining = loadLibrary().filter((item) => !shouldRemove(item));
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(remaining));
-  return remaining;
-}
-
 async function downloadImage(url: string, filename: string) {
   try {
-    const res = await fetch(url);
-    const blob = await res.blob();
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+    if (url.startsWith("data:")) {
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } else {
+      const res = await fetch(url);
+      const blob = await res.blob();
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+    }
   } catch { window.open(url, "_blank"); }
 }
 
@@ -94,10 +85,6 @@ export default function HeadshotPage() {
   const [showLightbox, setShowLightbox] = useState(false);
 
   useEffect(() => {
-    setLibrary(loadLibrary());
-  }, []);
-
-  useEffect(() => {
     if (!showLightbox) return;
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") setShowLightbox(false);
@@ -110,11 +97,10 @@ export default function HeadshotPage() {
 
   const openLightbox = (items: LightboxItem[], index = 0) => { setLightboxItems(items); setLightboxIndex(index); setShowLightbox(true); };
   const closeLightbox = () => setShowLightbox(false);
-  const refreshLibrary = () => setLibrary(loadLibrary());
 
-  const throwOnError = (res: Response, message?: string) => {
-    return new Error(message || `Request failed (${res.status})`);
-  };
+  const addToLibrary = (items: LibraryItem[]) => setLibrary((prev) => [...items, ...prev]);
+  const removeFromLibrary = (predicate: (item: LibraryItem) => boolean) =>
+    setLibrary((prev) => prev.filter((item) => !predicate(item)));
 
   const clearPending = () => { setPendingColor(null); setPendingBgFile(null); setPendingBgFileName(""); };
 
@@ -129,9 +115,8 @@ export default function HeadshotPage() {
       const fd = new FormData();
       fd.append("file", file);
       const res = await fetch("/api/headshot/upload", { method: "POST", body: fd });
-      const text = await res.text();
-      const data = text ? JSON.parse(text) : {};
-      if (!res.ok || !data.url) throw throwOnError(res, data.error || `Upload failed (${res.status})`);
+      const data = await res.json();
+      if (!res.ok || !data.url) throw new Error(data.error || `Upload failed (${res.status})`);
       setSourceUrl(data.url);
       setStep("styles");
     } catch (e) { setError((e as Error).message); setSourcePreview(null); }
@@ -161,15 +146,14 @@ export default function HeadshotPage() {
         body: JSON.stringify({ imageUrl: sourceUrl, styleIds: selectedStyleIds, gender }),
       });
       const data = await res.json();
-      if (!res.ok) throw throwOnError(res, data.error || "Generation failed");
+      if (!res.ok) throw new Error(data.error || "Generation failed");
       if (!data.images || data.images.length === 0) throw new Error(data.errors?.[0] || "No images generated");
       setImages(data.images);
       setStep("gallery");
       const now = Date.now();
-      saveItemsToLibrary(data.images.map((img: GeneratedImage, i: number) => ({
+      addToLibrary(data.images.map((img: GeneratedImage, i: number) => ({
         id: `gen-${img.id}-${now + i}`, url: img.url, name: img.name, tag: img.tag, type: "generated" as const, savedAt: now + i,
       })));
-      refreshLibrary();
     } catch (e) { setError((e as Error).message); }
     finally { setGenerating(false); setProgress(""); }
   };
@@ -195,9 +179,7 @@ export default function HeadshotPage() {
   };
 
   const persistEdit = (url: string, name: string, tag: string) => {
-    const item: LibraryItem = { id: `edit-${Date.now()}`, url, name, tag, type: "edited", savedAt: Date.now() };
-    saveItemsToLibrary([item]);
-    refreshLibrary();
+    addToLibrary([{ id: `edit-${Date.now()}`, url, name, tag, type: "edited", savedAt: Date.now() }]);
   };
 
   const handleApplyBackground = async () => {
@@ -216,7 +198,7 @@ export default function HeadshotPage() {
           body: JSON.stringify({ imageUrl: selectedImage.url, bgType: "color", bgColor: color, bgLabel: label }),
         });
         const data = await res.json();
-        if (!res.ok) throw throwOnError(res, data.error || "Edit failed");
+        if (!res.ok) throw new Error(data.error || "Edit failed");
         setEditedUrl(data.url);
         persistEdit(data.url, `${selectedImage.name} · ${label}`, "Color Edit");
       } catch (e) { setError((e as Error).message); }
@@ -229,14 +211,14 @@ export default function HeadshotPage() {
         fd.append("file", file);
         const upRes = await fetch("/api/headshot/upload", { method: "POST", body: fd });
         const upData = await upRes.json();
-        if (!upRes.ok || !upData.url) throw throwOnError(upRes, upData.error || "Background upload failed");
+        if (!upRes.ok || !upData.url) throw new Error(upData.error || "Background upload failed");
         const res = await fetch("/api/headshot/edit-bg", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ imageUrl: selectedImage.url, bgType: "image", bgImageUrl: upData.url }),
         });
         const data = await res.json();
-        if (!res.ok) throw throwOnError(res, data.error || "Edit failed");
+        if (!res.ok) throw new Error(data.error || "Edit failed");
         setEditedUrl(data.url);
         persistEdit(data.url, `${selectedImage.name} · Custom BG`, "Image Edit");
       } catch (e) { setError((e as Error).message); }
@@ -257,7 +239,7 @@ export default function HeadshotPage() {
         body: JSON.stringify({ imageUrl: selectedImage.url, bgType: "prompt", customPrompt: promptInput.trim() }),
       });
       const data = await res.json();
-      if (!res.ok) throw throwOnError(res, data.error || "Edit failed");
+      if (!res.ok) throw new Error(data.error || "Edit failed");
       setEditedUrl(data.url);
       persistEdit(data.url, `${selectedImage.name} · AI Edit`, "Prompt Edit");
     } catch (e) { setError((e as Error).message); }
@@ -272,10 +254,8 @@ export default function HeadshotPage() {
 
   const handleDeleteLibraryItem = (item: LibraryItem) => {
     if (!window.confirm("Delete this image from My Library?")) return;
-    const remaining = removeLibraryItems((entry) => entry.id === item.id);
-    setLibrary(remaining);
+    removeFromLibrary((entry) => entry.id === item.id);
     setShowLightbox(false);
-
     if (editedUrl === item.url) setEditedUrl(null);
     if (selectedImage?.url === item.url && step === "edit") {
       setSelectedImage(null);
@@ -288,12 +268,9 @@ export default function HeadshotPage() {
   const handleDeleteGalleryImage = (img: GeneratedImage) => {
     if (!window.confirm("Delete this image from this session and My Library?")) return;
     const remainingImages = images.filter((image) => image.url !== img.url);
-    const remainingLibrary = removeLibraryItems((entry) => entry.type === "generated" && entry.url === img.url);
-
     setImages(remainingImages);
-    setLibrary(remainingLibrary);
+    removeFromLibrary((entry) => entry.type === "generated" && entry.url === img.url);
     setShowLightbox(false);
-
     if (selectedImage?.url === img.url) {
       setSelectedImage(null);
       setEditedUrl(null);
@@ -405,7 +382,7 @@ export default function HeadshotPage() {
         {showLibrary && (
           <div style={s.galleryLayout}>
             <div style={s.galleryHeader}>
-              <div><h2 style={s.h2}>My Library</h2><p style={s.sub2}>All your generated and edited headshots — saved automatically</p></div>
+              <div><h2 style={s.h2}>My Library</h2><p style={s.sub2}>All generated and edited headshots from this session</p></div>
               <div style={{ display: "flex", gap: 8, flexWrap: "wrap" as const }}>
                 {(["all", "generated", "edited"] as const).map((f) => (
                   <button key={f} style={{ ...s.tinyBtn, ...(libFilter === f ? { background: "#EEEEFF", borderColor: "#6366F1", color: "#6366F1", fontWeight: 700 } : {}) }} onClick={() => setLibFilter(f)}>
@@ -584,7 +561,6 @@ export default function HeadshotPage() {
               <h2 style={s.h2}>Edit with AI</h2>
               <p style={s.sub2}>{selectedImage.name} · {selectedImage.tag}</p>
 
-              {/* AI Prompt */}
               <div style={s.section}>
                 <p style={s.sLabel}>AI Prompt</p>
                 <textarea value={promptInput} onChange={(e) => setPromptInput(e.target.value)}
@@ -602,7 +578,6 @@ export default function HeadshotPage() {
 
               <div className="hs-divider" style={{ fontSize: 11, color: "#BBB", fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: 1 }}>or choose background</div>
 
-              {/* Preset colors */}
               <div style={s.section}>
                 <p style={s.sLabel}>Preset Colors</p>
                 <div style={s.colorGrid}>
@@ -625,7 +600,6 @@ export default function HeadshotPage() {
                 </div>
               </div>
 
-              {/* Custom color */}
               <div style={s.section}>
                 <p style={s.sLabel}>Custom Color</p>
                 <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
@@ -641,7 +615,6 @@ export default function HeadshotPage() {
                 </div>
               </div>
 
-              {/* Background image */}
               <div style={s.section}>
                 <p style={s.sLabel}>Background Image</p>
                 <input ref={bgFileInputRef} type="file" accept="image/*" style={{ display: "none" }}
@@ -656,7 +629,6 @@ export default function HeadshotPage() {
                 <p style={s.bgLockNote}>Uploaded backgrounds are locked. The edit only places the headshot onto your image and will not add shadows.</p>
               </div>
 
-              {/* Pending selection preview + Apply button */}
               {hasPending && (
                 <div style={s.pendingRow}>
                   <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>

@@ -1,117 +1,103 @@
-import { NextRequest, NextResponse } from "next/server";
-import axios from "axios";
-import {
-  createUserPixelbinClient,
-  getPixelbinAuthHeader,
-} from "@/lib/headshot-pixelbin-auth";
+import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
 
-function extractUrl(result: unknown): string | null {
-  if (!result || typeof result !== "object") return null;
-  const r = result as Record<string, unknown>;
-  if (r.status !== "SUCCESS") return null;
-  const output = r.output;
-  if (!output) return null;
-  if (Array.isArray(output)) {
-    return (output.find((v) => typeof v === "string" && v.startsWith("http")) as string) ?? null;
-  }
-  if (typeof output === "object") {
-    const o = output as Record<string, unknown>;
-    if (typeof o.url === "string") return o.url;
-    if (Array.isArray(o.urls)) return (o.urls.find((v) => typeof v === "string") as string) ?? null;
-    for (const val of Object.values(o)) {
-      if (typeof val === "string" && val.startsWith("http")) return val;
-      if (Array.isArray(val)) {
-        const found = val.find((v) => typeof v === "string" && (v as string).startsWith("http"));
-        if (found) return found as string;
-      }
-    }
-  }
-  return null;
-}
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
-async function saveToPermanentStorage(tempUrl: string, name: string, apiToken: string): Promise<string> {
-  const res = await axios.post(
-    "https://api.pixelbin.io/service/platform/assets/v1.0/upload/url",
-    { url: tempUrl, path: "headshots/edited", name, access: "public-read", overwrite: false },
-    {
-      headers: {
-        Authorization: getPixelbinAuthHeader(apiToken),
-        "Content-Type": "application/json",
-      },
-    }
-  );
-  return res.data?.url as string;
-}
+type GeminiPart = { text: string } | { inlineData: { mimeType: string; data: string } };
+type GeminiResponse = {
+  candidates?: { content?: { parts?: GeminiPart[] } }[];
+  error?: { message: string };
+};
 
 const NO_SHADOW_INSTRUCTIONS =
   "Do not add any new shadows, drop shadows, cast shadows, contact shadows, glow, vignette, halo, dark edge, or artificial grounding effect. " +
   "Do not darken the background around the person. Blend the person cleanly with natural edges only.";
 
-export async function POST(req: NextRequest) {
-  const apiToken = process.env.PIXELBIN_API_TOKEN;
-  if (!apiToken) {
-    return NextResponse.json({ error: "Server not configured: PIXELBIN_API_TOKEN missing" }, { status: 500 });
+function parseDataUrl(dataUrl: string): { data: string; mimeType: string } | null {
+  const match = dataUrl.match(/^data:([^;]+);base64,(.+)$/);
+  if (!match) return null;
+  return { mimeType: match[1], data: match[2] };
+}
+
+async function geminiEdit(parts: GeminiPart[]): Promise<string | null> {
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${GEMINI_API_KEY}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts }],
+        generationConfig: { responseModalities: ["IMAGE", "TEXT"] },
+      }),
+    }
+  );
+
+  const result = (await res.json()) as GeminiResponse;
+  if (result.error) {
+    console.error("Gemini edit-bg error:", result.error.message);
+    return null;
+  }
+
+  const resParts = result.candidates?.[0]?.content?.parts;
+  if (!resParts) return null;
+  for (const part of resParts) {
+    if ("inlineData" in part && part.inlineData?.data) {
+      return `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
+    }
+  }
+  return null;
+}
+
+export async function POST(req: Request) {
+  if (!GEMINI_API_KEY) {
+    return NextResponse.json({ error: "Server not configured: GEMINI_API_KEY missing" }, { status: 500 });
   }
 
   const { imageUrl, bgType, bgColor, bgImageUrl, bgLabel, customPrompt } = await req.json();
-
   if (!imageUrl) return NextResponse.json({ error: "imageUrl required" }, { status: 400 });
 
+  const parsed = parseDataUrl(imageUrl);
+  if (!parsed) return NextResponse.json({ error: "imageUrl must be a data URL" }, { status: 400 });
+
   let prompt: string;
-  let imageInput: string | string[];
+  let apiParts: GeminiPart[];
 
   if (bgType === "color") {
     const colorName = bgLabel || bgColor || "white";
     prompt =
-      `Take the person from the reference photo and place them in front of a solid ${colorName} color background. ` +
+      `Take the person from this photo and place them in front of a solid ${colorName} color background. ` +
       `Keep the person's face, hair, clothing, and pose exactly the same. ` +
-      `${NO_SHADOW_INSTRUCTIONS} ` +
-      `Clean, professional corporate headshot. Sharp and polished result.`;
-    imageInput = imageUrl;
+      `${NO_SHADOW_INSTRUCTIONS} Clean, professional corporate headshot. Sharp and polished result.`;
+    apiParts = [{ inlineData: { mimeType: parsed.mimeType, data: parsed.data } }, { text: prompt }];
   } else if (bgType === "image") {
     if (!bgImageUrl) return NextResponse.json({ error: "bgImageUrl required" }, { status: 400 });
+    const parsedBg = parseDataUrl(bgImageUrl);
+    if (!parsedBg) return NextResponse.json({ error: "bgImageUrl must be a data URL" }, { status: 400 });
     prompt =
-      `Use the second image as a locked background plate. Do not alter, regenerate, blur, crop, replace, retouch, recolor, relight, stylize, remove, or add anything to the background image. ` +
-      `Keep every background object, line, texture, color, text, perspective, and framing exactly as it appears in the second image. ` +
+      `Use the second image as a locked background plate. Do not alter, regenerate, blur, or replace the background image. ` +
       `Only extract the person from the first image and composite them onto the locked background. ` +
       `Keep the person's face, hair, clothing, and pose exactly the same. ` +
-      `${NO_SHADOW_INSTRUCTIONS} ` +
-      `Professional headshot portrait quality.`;
-    imageInput = [imageUrl, bgImageUrl];
+      `${NO_SHADOW_INSTRUCTIONS} Professional headshot portrait quality.`;
+    apiParts = [
+      { inlineData: { mimeType: parsed.mimeType, data: parsed.data } },
+      { inlineData: { mimeType: parsedBg.mimeType, data: parsedBg.data } },
+      { text: prompt },
+    ];
   } else if (bgType === "prompt") {
     if (!customPrompt) return NextResponse.json({ error: "customPrompt required" }, { status: 400 });
-    prompt = `${customPrompt}. ${NO_SHADOW_INSTRUCTIONS}`;
-    imageInput = imageUrl;
+    prompt =
+      `${customPrompt}. ` +
+      `Keep the person's face, hair, clothing, and pose exactly the same. ` +
+      `${NO_SHADOW_INSTRUCTIONS}`;
+    apiParts = [{ inlineData: { mimeType: parsed.mimeType, data: parsed.data } }, { text: prompt }];
   } else {
     return NextResponse.json({ error: "bgType must be 'color', 'image', or 'prompt'" }, { status: 400 });
   }
 
-  const pixelbin = createUserPixelbinClient(apiToken);
-  const input: Record<string, unknown> = {
-    prompt,
-    image: imageInput,
-    output_resolution: "1K",
-  };
+  const dataUrl = await geminiEdit(apiParts);
+  if (!dataUrl) return NextResponse.json({ error: "Edit failed — no output from Gemini" }, { status: 500 });
 
-  if (bgType !== "image") {
-    input.aspect_ratio = "3:4";
-  }
-
-  const result = await pixelbin.predictions.createAndWait({
-    name: "nanoBananaPro_generate",
-    input,
-  });
-
-  const tempUrl = extractUrl(result);
-  console.log("Edit-bg temp URL:", tempUrl);
-  if (!tempUrl) return NextResponse.json({ error: "Generation failed — no output URL" }, { status: 500 });
-
-  const storageName = `headshot-edit-${Date.now()}`;
-  const permanentUrl = await saveToPermanentStorage(tempUrl, storageName, apiToken);
-  console.log("Edit-bg permanent URL:", permanentUrl);
-
-  return NextResponse.json({ url: permanentUrl || tempUrl });
+  return NextResponse.json({ url: dataUrl });
 }
