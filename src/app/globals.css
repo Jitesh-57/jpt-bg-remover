@@ -1,0 +1,38 @@
+* { box-sizing: border-box; }
+body { margin: 0; padding: 0; }
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.14) !important;
+}
+.img-card:hover .card-overlay {
+  opacity: 1 !important;
+}
+.tab-btn:hover {
+  background: rgba(99,102,241,0.06) !important;
+}
+.swatch:hover {
+  transform: scale(1.12);
+}
+.chip-btn:hover {
+  background: #DDDEFA !important;
+}
+.ghost-btn:hover {
+  background: #F4F4FA !important;
+}
+.drop-zone:hover {
+  border-color: #6366F1 !important;
+  background: #FAFAFF !important;
+}
