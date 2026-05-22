@@ -4,11 +4,50 @@ export const runtime = "nodejs";
 export const maxDuration = 60;
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY!;
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 
 const BG_SUFFIX =
   "Landscape orientation. Beautiful, photorealistic, high-quality. " +
   "Suitable as a portrait or product photography background. " +
   "No text, no watermarks, no people, no logos.";
+
+async function enhancePromptWithGPT(prompt: string): Promise<string> {
+  if (!GITHUB_TOKEN) return prompt;
+  try {
+    const res = await fetch(
+      "https://models.inference.ai.azure.com/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${GITHUB_TOKEN}`,
+        },
+        body: JSON.stringify({
+          model: "gpt-4o",
+          messages: [
+            {
+              role: "system",
+              content:
+                "You are a professional photographer and prompt engineer. Enhance the given background description for high-quality photorealistic image generation. Add lighting, atmosphere, depth, and professional photography details. Return only the enhanced prompt, nothing else. Keep it under 150 words.",
+            },
+            {
+              role: "user",
+              content: `Enhance this background prompt for image generation: "${prompt}"`,
+            },
+          ],
+          max_tokens: 200,
+        }),
+      }
+    );
+    if (!res.ok) return prompt;
+    const data = (await res.json()) as {
+      choices?: { message?: { content?: string } }[];
+    };
+    return data.choices?.[0]?.message?.content?.trim() || prompt;
+  } catch {
+    return prompt;
+  }
+}
 
 export async function POST(req: Request) {
   try {
@@ -17,8 +56,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "prompt required" }, { status: 400 });
     }
 
-    const fullPrompt = `${prompt.trim()}. ${BG_SUFFIX}`;
+    // Use GPT-4o (GitHub Models) to enhance the prompt
+    const enhancedPrompt = await enhancePromptWithGPT(prompt.trim());
+    const fullPrompt = `${enhancedPrompt}. ${BG_SUFFIX}`;
 
+    // Imagen 4 for image generation
     const imagenRes = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${GEMINI_API_KEY}`,
       {
@@ -49,6 +91,7 @@ export async function POST(req: Request) {
       }
     }
 
+    // Fallback: Gemini 2.5-flash-image
     const geminiRes = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${GEMINI_API_KEY}`,
       {
