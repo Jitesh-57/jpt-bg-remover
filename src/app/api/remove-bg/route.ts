@@ -4,74 +4,63 @@ import { checkAuth, withCredits } from "@/lib/google-drive";
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const HF_TOKEN = process.env.HF_TOKEN;
 
-type GeminiPart = { text: string } | { inlineData: { mimeType: string; data: string } };
-type GeminiResponse = {
-  candidates?: { content?: { parts?: GeminiPart[] } }[];
-  error?: { message: string };
-};
+// HuggingFace endpoints — ordered by reliability
+// RMBG-2.0 and BiRefNet are dedicated bg-removal models (return true transparent PNG)
+const HF_ENDPOINTS = [
+  "https://router.huggingface.co/hf-inference/models/briaai/RMBG-2.0",
+  "https://api-inference.huggingface.co/models/briaai/RMBG-2.0",
+  "https://router.huggingface.co/hf-inference/models/ZhengPeng7/BiRefNet",
+  "https://api-inference.huggingface.co/models/ZhengPeng7/BiRefNet",
+];
 
-// Primary: Gemini 2.5 Flash Image with explicit transparency request
-async function removeWithGemini(imageData: string, mimeType: string): Promise<{ data: string; mimeType: string } | null> {
-  if (!GEMINI_API_KEY) return null;
+async function removeBackground(
+  imageData: string,
+  mimeType: string
+): Promise<{ data: string; mimeType: string } | null> {
+  const imageBuffer = Buffer.from(imageData, "base64");
 
-  const prompt =
-    "You are a professional background removal tool. Remove the background from this image completely. " +
-    "Output ONLY the main subject (person, product, or object) on a fully transparent background. " +
-    "The output must be a PNG with proper alpha channel — where the background was, use full transparency (alpha=0). " +
-    "Keep all fine details: hair, fur, soft edges, semi-transparent areas. " +
-    "Do not add any color to the background — use pure transparency. Professional quality result.";
-
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-preview-image-generation:generateContent?key=${GEMINI_API_KEY}`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: [{ inlineData: { mimeType, data: imageData } }, { text: prompt }] }],
-        generationConfig: { responseModalities: ["IMAGE", "TEXT"] },
-      }),
-    }
-  );
-
-  const data = (await res.json()) as GeminiResponse;
-  if (data.error) { console.error("Gemini remove-bg:", data.error.message); return null; }
-
-  const parts = data.candidates?.[0]?.content?.parts;
-  if (!parts) return null;
-  for (const part of parts) {
-    if ("inlineData" in part && part.inlineData?.data) {
-      return { data: part.inlineData.data, mimeType: part.inlineData.mimeType || "image/png" };
-    }
-  }
-  return null;
-}
-
-// Fallback: HuggingFace RMBG-2.0 (returns true transparent PNG)
-async function removeWithHF(imageData: string, mimeType: string): Promise<{ data: string; mimeType: string } | null> {
-  const headers: Record<string, string> = { "Content-Type": mimeType };
+  const headers: Record<string, string> = {
+    "Content-Type": "application/octet-stream",
+  };
   if (HF_TOKEN) headers["Authorization"] = `Bearer ${HF_TOKEN}`;
 
-  // Try direct endpoint first, then router
-  const endpoints = [
-    "https://api-inference.huggingface.co/models/briaai/RMBG-2.0",
-    "https://router.huggingface.co/hf-inference/models/briaai/RMBG-2.0",
-  ];
-
-  for (const url of endpoints) {
+  for (const url of HF_ENDPOINTS) {
     try {
+      console.log(`[remove-bg] Trying ${url}`);
       const res = await fetch(url, {
         method: "POST",
         headers,
-        body: Buffer.from(imageData, "base64"),
-        signal: AbortSignal.timeout(30000),
+        body: imageBuffer,
+        signal: AbortSignal.timeout(55000), // 55s — within Vercel's 60s limit
       });
-      if (!res.ok) continue;
+
+      if (res.status === 503) {
+        // Model is loading on HF — skip to next endpoint instead of waiting
+        const body = await res.text().catch(() => "");
+        console.log(`[remove-bg] 503 at ${url}: ${body.slice(0, 100)}`);
+        continue;
+      }
+
+      if (!res.ok) {
+        const body = await res.text().catch(() => "");
+        console.log(`[remove-bg] ${res.status} at ${url}: ${body.slice(0, 200)}`);
+        continue;
+      }
+
       const buf = await res.arrayBuffer();
+      if (buf.byteLength < 500) {
+        console.log(`[remove-bg] Empty/tiny response (${buf.byteLength}B) from ${url}`);
+        continue;
+      }
+
+      console.log(`[remove-bg] ✓ Success from ${url} — ${buf.byteLength} bytes`);
       return { data: Buffer.from(buf).toString("base64"), mimeType: "image/png" };
-    } catch { continue; }
+    } catch (e) {
+      console.log(`[remove-bg] Error at ${url}:`, (e as Error).message);
+      continue;
+    }
   }
   return null;
 }
@@ -81,20 +70,23 @@ export async function POST(req: NextRequest) {
   if (error) return error;
 
   try {
-    const { imageData, mimeType } = (await req.json()) as { imageData: string; mimeType: string };
-    if (!imageData) return NextResponse.json({ error: "imageData required" }, { status: 400 });
+    const { imageData, mimeType } = (await req.json()) as {
+      imageData: string;
+      mimeType: string;
+    };
+    if (!imageData) {
+      return NextResponse.json({ error: "imageData required" }, { status: 400 });
+    }
 
-    // Try Gemini first (best quality, handles transparency)
-    const geminiResult = await removeWithGemini(imageData, mimeType || "image/jpeg");
-    if (geminiResult) return withCredits(geminiResult, session!);
+    const result = await removeBackground(imageData, mimeType || "image/jpeg");
+    if (result) return withCredits(result, session!);
 
-    // Fallback: HF RMBG-2.0 (reliable transparent PNG)
-    const hfResult = await removeWithHF(imageData, mimeType || "image/jpeg");
-    if (hfResult) return withCredits(hfResult, session!);
-
-    return NextResponse.json({ error: "Background removal failed. Please try again." }, { status: 500 });
+    return NextResponse.json(
+      { error: "Background removal failed — AI model may be loading, please try again in 10 seconds." },
+      { status: 500 }
+    );
   } catch (err) {
-    console.error("remove-bg error:", err);
+    console.error("[remove-bg] Unexpected error:", err);
     return NextResponse.json({ error: String(err) }, { status: 500 });
   }
 }

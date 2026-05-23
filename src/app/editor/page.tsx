@@ -552,9 +552,16 @@ export default function ImageEditorPage() {
                 <div style={s.creditNote}>Uses {CREDIT_COST} credits · {creditsLeft} remaining</div>
 
                 {!removedBg ? (
-                  <button style={{ ...s.primaryBtn, ...(processing ? s.btnOff : {}) }} disabled={processing} onClick={handleRemoveBg}>
-                    {processing ? <span style={s.btnRow}><span style={s.spin} />Removing…</span> : "Remove Background"}
-                  </button>
+                  <>
+                    <button style={{ ...s.primaryBtn, ...(processing ? s.btnOff : {}) }} disabled={processing} onClick={handleRemoveBg}>
+                      {processing ? <span style={s.btnRow}><span style={s.spin} />Removing… (up to 30s)</span> : "✂️ Remove Background"}
+                    </button>
+                    {error && (
+                      <div style={s.retryNote}>
+                        ⚠️ AI model is warming up — please <button style={s.retryLink} onClick={handleRemoveBg}>try again</button>
+                      </div>
+                    )}
+                  </>
                 ) : (
                   <>
                     <div style={s.successNote}>✓ Background removed — add a new one:</div>
@@ -903,6 +910,8 @@ const s: Record<string, React.CSSProperties> = {
   creditNote: { fontSize: 11, color: "#6366F1", fontWeight: 700, background: "#EEEEFF", borderRadius: 6, padding: "4px 8px", display: "inline-block", alignSelf: "flex-start" },
 
   successNote: { background: "#ECFDF5", border: "1px solid #A7F3D0", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#047857", fontWeight: 600 },
+  retryNote: { background: "#FFF7ED", border: "1px solid #FED7AA", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#92400E" },
+  retryLink: { background: "none", border: "none", color: "#7C3AED", fontWeight: 700, cursor: "pointer", textDecoration: "underline", padding: 0, fontSize: 12 },
   tabBar: { display: "flex", gap: 2, background: "#F0F0F8", borderRadius: 8, padding: 2 },
   tabBtn: { flex: 1, padding: "5px 2px", borderRadius: 6, border: "none", background: "none", fontSize: 10, fontWeight: 700, cursor: "pointer", color: "#888" },
   tabActive: { background: "#fff", color: "#6366F1", boxShadow: "0 1px 4px rgba(0,0,0,0.08)" },
