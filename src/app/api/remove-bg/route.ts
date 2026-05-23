@@ -1,116 +1,100 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { checkAuth, withCredits } from "@/lib/google-drive";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
-const HF_TOKEN = process.env.HF_TOKEN;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const HF_TOKEN = process.env.HF_TOKEN;
 
-type GeminiPart =
-  | { text: string }
-  | { inlineData: { mimeType: string; data: string } };
-
+type GeminiPart = { text: string } | { inlineData: { mimeType: string; data: string } };
 type GeminiResponse = {
   candidates?: { content?: { parts?: GeminiPart[] } }[];
-  error?: { message: string; code?: number };
+  error?: { message: string };
 };
 
-async function removeWithHuggingFace(
-  imageData: string,
-  mimeType: string
-): Promise<{ data: string; mimeType: string } | null> {
-  const headers: Record<string, string> = { "Content-Type": mimeType };
-  if (HF_TOKEN) headers["Authorization"] = `Bearer ${HF_TOKEN}`;
-
-  const res = await fetch(
-    "https://router.huggingface.co/hf-inference/models/briaai/RMBG-2.0",
-    { method: "POST", headers, body: Buffer.from(imageData, "base64") }
-  );
-
-  if (!res.ok) {
-    const text = await res.text();
-    console.error("HF RMBG error:", res.status, text.slice(0, 200));
-    return null;
-  }
-
-  const resultBuffer = await res.arrayBuffer();
-  return {
-    data: Buffer.from(resultBuffer).toString("base64"),
-    mimeType: "image/png",
-  };
-}
-
-async function removeWithGemini(
-  imageData: string,
-  mimeType: string
-): Promise<{ data: string; mimeType: string } | null> {
+// Primary: Gemini 2.5 Flash Image with explicit transparency request
+async function removeWithGemini(imageData: string, mimeType: string): Promise<{ data: string; mimeType: string } | null> {
   if (!GEMINI_API_KEY) return null;
 
   const prompt =
-    "Remove the background from this image completely. " +
-    "Isolate the main subject (person, product, or object) with clean, sharp edges. " +
-    "Replace the background with pure white (#FFFFFF). " +
-    "Do not alter the subject in any way. High quality, professional result.";
+    "You are a professional background removal tool. Remove the background from this image completely. " +
+    "Output ONLY the main subject (person, product, or object) on a fully transparent background. " +
+    "The output must be a PNG with proper alpha channel — where the background was, use full transparency (alpha=0). " +
+    "Keep all fine details: hair, fur, soft edges, semi-transparent areas. " +
+    "Do not add any color to the background — use pure transparency. Professional quality result.";
 
   const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${GEMINI_API_KEY}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${GEMINI_API_KEY}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        contents: [
-          {
-            parts: [
-              { inlineData: { mimeType, data: imageData } },
-              { text: prompt },
-            ],
-          },
-        ],
+        contents: [{ parts: [{ inlineData: { mimeType, data: imageData } }, { text: prompt }] }],
         generationConfig: { responseModalities: ["IMAGE", "TEXT"] },
       }),
     }
   );
 
   const data = (await res.json()) as GeminiResponse;
-  if (data.error) {
-    console.error("Gemini remove-bg error:", data.error.message);
-    return null;
-  }
+  if (data.error) { console.error("Gemini remove-bg:", data.error.message); return null; }
 
   const parts = data.candidates?.[0]?.content?.parts;
   if (!parts) return null;
   for (const part of parts) {
     if ("inlineData" in part && part.inlineData?.data) {
-      return { data: part.inlineData.data, mimeType: part.inlineData.mimeType };
+      return { data: part.inlineData.data, mimeType: part.inlineData.mimeType || "image/png" };
     }
   }
   return null;
 }
 
-export async function POST(req: Request) {
+// Fallback: HuggingFace RMBG-2.0 (returns true transparent PNG)
+async function removeWithHF(imageData: string, mimeType: string): Promise<{ data: string; mimeType: string } | null> {
+  const headers: Record<string, string> = { "Content-Type": mimeType };
+  if (HF_TOKEN) headers["Authorization"] = `Bearer ${HF_TOKEN}`;
+
+  // Try direct endpoint first, then router
+  const endpoints = [
+    "https://api-inference.huggingface.co/models/briaai/RMBG-2.0",
+    "https://router.huggingface.co/hf-inference/models/briaai/RMBG-2.0",
+  ];
+
+  for (const url of endpoints) {
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers,
+        body: Buffer.from(imageData, "base64"),
+        signal: AbortSignal.timeout(30000),
+      });
+      if (!res.ok) continue;
+      const buf = await res.arrayBuffer();
+      return { data: Buffer.from(buf).toString("base64"), mimeType: "image/png" };
+    } catch { continue; }
+  }
+  return null;
+}
+
+export async function POST(req: NextRequest) {
+  const { session, error } = checkAuth(req);
+  if (error) return error;
+
   try {
-    const { imageData, mimeType } = (await req.json()) as {
-      imageData: string;
-      mimeType: string;
-    };
+    const { imageData, mimeType } = (await req.json()) as { imageData: string; mimeType: string };
+    if (!imageData) return NextResponse.json({ error: "imageData required" }, { status: 400 });
 
-    if (!imageData)
-      return NextResponse.json({ error: "imageData required" }, { status: 400 });
+    // Try Gemini first (best quality, handles transparency)
+    const geminiResult = await removeWithGemini(imageData, mimeType || "image/jpeg");
+    if (geminiResult) return withCredits(geminiResult, session!);
 
-    // Primary: Gemini (with billing enabled)
-    const geminiResult = await removeWithGemini(imageData, mimeType);
-    if (geminiResult) return NextResponse.json(geminiResult);
+    // Fallback: HF RMBG-2.0 (reliable transparent PNG)
+    const hfResult = await removeWithHF(imageData, mimeType || "image/jpeg");
+    if (hfResult) return withCredits(hfResult, session!);
 
-    // Fallback: Hugging Face RMBG-2.0
-    const hfResult = await removeWithHuggingFace(imageData, mimeType);
-    if (hfResult) return NextResponse.json(hfResult);
-
-    return NextResponse.json(
-      { error: "Background removal failed. Please try again." },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Background removal failed. Please try again." }, { status: 500 });
   } catch (err) {
-    console.error("remove-bg route error:", err);
+    console.error("remove-bg error:", err);
     return NextResponse.json({ error: String(err) }, { status: 500 });
   }
 }

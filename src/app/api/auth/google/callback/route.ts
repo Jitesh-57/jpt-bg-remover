@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { setSession } from "@/lib/google-drive";
+import { setSession, FREE_CREDITS } from "@/lib/google-drive";
 
 export const runtime = "nodejs";
 
@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
 
   const tokens = (await tokenRes.json()) as {
     access_token: string;
-    refresh_token: string;
+    refresh_token?: string;
     expires_in: number;
   };
 
@@ -42,11 +42,12 @@ export async function GET(req: NextRequest) {
   const res = NextResponse.redirect(`${origin}${next}`);
   setSession(res, {
     access_token: tokens.access_token,
-    refresh_token: tokens.refresh_token,
+    refresh_token: tokens.refresh_token || "",
     email: user.email,
     name: user.name,
     picture: user.picture,
     expires_at: Date.now() + (tokens.expires_in - 60) * 1000,
+    credits: FREE_CREDITS, // new users always start with 10 free credits
   });
   return res;
 }
