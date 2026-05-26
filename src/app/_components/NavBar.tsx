@@ -97,7 +97,7 @@ export default function NavBar() {
                   <div style={{ fontSize: 12, color: "#666", marginTop: 2 }}>{user.email}</div>
                 </div>
                 <div style={{ padding: "8px 0" }}>
-                  <a href="/editor" style={{ display: "block", padding: "10px 14px", fontSize: 13, color: "#333", textDecoration: "none", borderBottom: "1px solid #E5E7EB" }} onClick={() => setShowMenu(false)}>
+                  <a href="/history" style={{ display: "block", padding: "10px 14px", fontSize: 13, color: "#333", textDecoration: "none", borderBottom: "1px solid #E5E7EB" }} onClick={() => setShowMenu(false)}>
                     📊 View History
                   </a>
                   <button

@@ -136,7 +136,7 @@ async function applyFiltersToCanvas(dataUrl: string, brightness: number, contras
 
 // Remove a chroma-key colour from an image using canvas pixel manipulation.
 // Used after Gemini bg-removal (subject on magenta #FF00FF) to produce transparent PNG.
-async function applyChromaKey(dataUrl: string, hexColor: string, tolerance = 80): Promise<string> {
+async function applyChromaKey(dataUrl: string, hexColor: string, tolerance = 50): Promise<string> {
   const img = await loadImg(dataUrl);
   const W = img.naturalWidth, H = img.naturalHeight;
   const canvas = document.createElement("canvas");
@@ -148,11 +148,19 @@ async function applyChromaKey(dataUrl: string, hexColor: string, tolerance = 80)
   const tR = parseInt(hexColor.slice(0, 2), 16);
   const tG = parseInt(hexColor.slice(2, 4), 16);
   const tB = parseInt(hexColor.slice(4, 6), 16);
+
   for (let i = 0; i < d.length; i += 4) {
-    const dist = Math.abs(d[i] - tR) + Math.abs(d[i + 1] - tG) + Math.abs(d[i + 2] - tB);
+    const r = d[i], g = d[i + 1], b = d[i + 2];
+    // Calculate distance using Euclidean distance
+    const dist = Math.sqrt(Math.pow(r - tR, 2) + Math.pow(g - tG, 2) + Math.pow(b - tB, 2));
+
     if (dist < tolerance) {
-      // Soft-edge: partial transparency near boundary
-      d[i + 3] = dist < tolerance / 2 ? 0 : Math.round((dist / tolerance) * 255);
+      // Full transparency for exact matches, soft edges for near matches
+      if (dist < tolerance * 0.4) {
+        d[i + 3] = 0; // Fully transparent
+      } else {
+        d[i + 3] = Math.round(((dist - tolerance * 0.4) / (tolerance * 0.6)) * 255);
+      }
     }
   }
   ctx.putImageData(imageData, 0, 0);
@@ -523,12 +531,7 @@ export default function ImageEditorPage() {
           <div style={s.pageHeaderRight}>
             {hasImage && (
               <>
-                {working && (
-                  <>
-                    <button style={s.dlBtn} onClick={handleDownload}>⬇ Download</button>
-                    {user && <button style={s.dlBtn} onClick={handleSaveToDrive}>☁️ Save to Drive</button>}
-                  </>
-                )}
+                {working && <button style={s.dlBtn} onClick={handleDownload}>⬇ Download</button>}
                 <button style={s.ghostBtn} onClick={resetAll}>+ New Image</button>
               </>
             )}
