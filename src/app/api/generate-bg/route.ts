@@ -14,8 +14,8 @@ type GeminiResponse = {
 
 async function generateWithGemini(prompt: string): Promise<{ data: string; mimeType: string } | null> {
   if (!GEMINI_API_KEY) {
-    console.error("GEMINI_API_KEY not set");
-    return null;
+    console.error("GEMINI_API_KEY not configured - check environment variables");
+    throw new Error("GEMINI_API_KEY_MISSING");
   }
 
   try {
@@ -74,12 +74,16 @@ export async function POST(req: NextRequest) {
   try {
     const result = await generateWithGemini(prompt);
     if (!result) {
-      return NextResponse.json({ error: "Image generation failed. Please try again." }, { status: 500 });
+      return NextResponse.json({ error: "Gemini image generation failed. Try again in a moment." }, { status: 500 });
     }
 
     return withCredits({ data: result.data, mimeType: result.mimeType }, session);
-  } catch (e) {
+  } catch (e: any) {
     console.error("Background generation error:", e);
-    return NextResponse.json({ error: "Generation failed" }, { status: 500 });
+    const errorMsg = e?.message || "Unknown error";
+    if (errorMsg.includes("GEMINI_API_KEY")) {
+      return NextResponse.json({ error: "GEMINI_API_KEY not set in environment" }, { status: 500 });
+    }
+    return NextResponse.json({ error: `Generation error: ${errorMsg.substring(0, 50)}` }, { status: 500 });
   }
 }
