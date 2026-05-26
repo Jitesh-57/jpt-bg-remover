@@ -310,6 +310,7 @@ export default function ImageEditorPage() {
         raw = await applyChromaKey(raw, data.chromaKey);
       }
       setRemovedBg(raw); setWorking(raw);
+      autoSaveToDrive(raw, "remove-bg"); // Auto-save history
     } catch (e) { setError((e as Error).message); }
     finally { setProcessing(false); setProcessingLabel(""); }
   };
@@ -357,6 +358,7 @@ export default function ImageEditorPage() {
       const bgSrc = `data:${data.mimeType || "image/png"};base64,${data.data}`;
       const result = await compositeOnCanvas(src, { type: "image", src: bgSrc });
       setWorking(result);
+      autoSaveToDrive(result, "ai-background"); // Auto-save history
     } catch (e) { setError((e as Error).message); }
     finally { setProcessing(false); setProcessingLabel(""); }
   };
@@ -367,8 +369,10 @@ export default function ImageEditorPage() {
     setProcessing(true); setProcessingLabel("Upscaling image…"); setError(null);
     try {
       const data = await callApi<{ dataUrl: string }>("/api/upscale", { dataUrl: src });
-      if (data?.dataUrl) setWorking(data.dataUrl);
-      else throw new Error("Upscale failed");
+      if (data?.dataUrl) {
+        setWorking(data.dataUrl);
+        autoSaveToDrive(data.dataUrl, "upscale"); // Auto-save history
+      } else throw new Error("Upscale failed");
     } catch (e) { setError((e as Error).message); }
     finally { setProcessing(false); setProcessingLabel(""); }
   };
@@ -416,8 +420,11 @@ export default function ImageEditorPage() {
     setProcessing(true); setProcessingLabel("Editing with JPT AI…"); setError(null);
     try {
       const data = await callApi<{ dataUrl: string }>("/api/ai-edit", { dataUrl: src, prompt: prompt.trim() });
-      if (data?.dataUrl) { setWorking(data.dataUrl); setPrompt(""); }
-      else throw new Error("Edit failed");
+      if (data?.dataUrl) {
+        setWorking(data.dataUrl);
+        autoSaveToDrive(data.dataUrl, "ai-edit"); // Auto-save history
+        setPrompt("");
+      } else throw new Error("Edit failed");
     } catch (e) { setError((e as Error).message); }
     finally { setProcessing(false); setProcessingLabel(""); }
   };
@@ -431,6 +438,24 @@ export default function ImageEditorPage() {
     const a = document.createElement("a");
     a.href = url; a.download = `${original?.name || "image"}-edited.${url.includes("image/png") ? "png" : "jpg"}`;
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  };
+
+  // Auto-save to Drive in background (no UI interruption)
+  const autoSaveToDrive = async (imageUrl: string, toolUsed: string) => {
+    if (!user) return;
+    try {
+      await fetch("/api/drive/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          dataUrl: imageUrl,
+          name: `JPT-${toolUsed}-${Date.now()}`,
+          meta: { tool: toolUsed, timestamp: new Date().toISOString(), auto: "true" },
+        }),
+      });
+    } catch (e) {
+      console.log("Auto-save failed (non-critical):", (e as Error).message);
+    }
   };
 
   const handleSaveToDrive = async () => {
