@@ -131,6 +131,31 @@ async function applyFiltersToCanvas(dataUrl: string, brightness: number, contras
   return canvas.toDataURL("image/png");
 }
 
+// Remove a chroma-key colour from an image using canvas pixel manipulation.
+// Used after Gemini bg-removal (subject on magenta #FF00FF) to produce transparent PNG.
+async function applyChromaKey(dataUrl: string, hexColor: string, tolerance = 80): Promise<string> {
+  const img = await loadImg(dataUrl);
+  const W = img.naturalWidth, H = img.naturalHeight;
+  const canvas = document.createElement("canvas");
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext("2d")!;
+  ctx.drawImage(img, 0, 0);
+  const imageData = ctx.getImageData(0, 0, W, H);
+  const d = imageData.data;
+  const tR = parseInt(hexColor.slice(0, 2), 16);
+  const tG = parseInt(hexColor.slice(2, 4), 16);
+  const tB = parseInt(hexColor.slice(4, 6), 16);
+  for (let i = 0; i < d.length; i += 4) {
+    const dist = Math.abs(d[i] - tR) + Math.abs(d[i + 1] - tG) + Math.abs(d[i + 2] - tB);
+    if (dist < tolerance) {
+      // Soft-edge: partial transparency near boundary
+      d[i + 3] = dist < tolerance / 2 ? 0 : Math.round((dist / tolerance) * 255);
+    }
+  }
+  ctx.putImageData(imageData, 0, 0);
+  return canvas.toDataURL("image/png");
+}
+
 async function resizeOnCanvas(dataUrl: string, w: number, h: number): Promise<string> {
   const img = await loadImg(dataUrl);
   const canvas = document.createElement("canvas");
@@ -269,10 +294,17 @@ export default function ImageEditorPage() {
       const match = src.match(/^data:([^;]+);base64,(.+)$/);
       if (!match) throw new Error("Invalid image");
       const [, mimeType, base64] = match;
-      const data = await callApi<{ data: string; mimeType: string }>("/api/remove-bg", { imageData: base64, mimeType });
+      const data = await callApi<{ data: string; mimeType: string; chromaKey?: string }>(
+        "/api/remove-bg", { imageData: base64, mimeType }
+      );
       if (!data?.data) throw new Error("Removal failed");
-      const result = `data:${data.mimeType || "image/png"};base64,${data.data}`;
-      setRemovedBg(result); setWorking(result);
+      let raw = `data:${data.mimeType || "image/png"};base64,${data.data}`;
+      // If Gemini returned a chroma-key image, strip the colour client-side → transparent PNG
+      if (data.chromaKey) {
+        setProcessingLabel("Applying transparency…");
+        raw = await applyChromaKey(raw, data.chromaKey);
+      }
+      setRemovedBg(raw); setWorking(raw);
     } catch (e) { setError((e as Error).message); }
     finally { setProcessing(false); setProcessingLabel(""); }
   };
