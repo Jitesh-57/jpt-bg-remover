@@ -433,6 +433,34 @@ export default function ImageEditorPage() {
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
   };
 
+  const handleSaveToDrive = async () => {
+    const url = working || original?.dataUrl;
+    if (!url || !user) return;
+    setProcessing(true); setProcessingLabel("Saving to Google Drive…"); setError(null);
+    try {
+      const res = await fetch("/api/drive/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          dataUrl: url,
+          name: `${original?.name || "image"}-edited-${Date.now()}`,
+          meta: { tool: activeTool || "editor", timestamp: new Date().toISOString() },
+        }),
+      });
+      const data = await res.json() as { ok?: boolean; error?: string };
+      if (data.ok) {
+        setError(null);
+        alert("✓ Saved to Google Drive!");
+      } else {
+        setError(data.error || "Save failed");
+      }
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setProcessing(false); setProcessingLabel("");
+    }
+  };
+
   const resetAll = () => {
     setOriginal(null); setWorking(null); setRemovedBg(null);
     setActiveTool(null); setError(null); setShowOriginal(false);
@@ -470,7 +498,12 @@ export default function ImageEditorPage() {
           <div style={s.pageHeaderRight}>
             {hasImage && (
               <>
-                {working && <button style={s.dlBtn} onClick={handleDownload}>⬇ Download</button>}
+                {working && (
+                  <>
+                    <button style={s.dlBtn} onClick={handleDownload}>⬇ Download</button>
+                    {user && <button style={s.dlBtn} onClick={handleSaveToDrive}>☁️ Save to Drive</button>}
+                  </>
+                )}
                 <button style={s.ghostBtn} onClick={resetAll}>+ New Image</button>
               </>
             )}
