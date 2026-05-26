@@ -194,7 +194,9 @@ export default function ImageEditorPage() {
   const [error, setError] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
   const [showCropMode, setShowCropMode] = useState(false);
+  const [cropBox, setCropBox] = useState<CropBox | null>(null);
   const [cropStart, setCropStart] = useState<{ x: number; y: number } | null>(null);
+  const imgWrapRef = useRef<HTMLDivElement>(null);
 
   // Remove BG sub-state
   const [bgMode, setBgMode] = useState<BgMode>("color");
@@ -403,7 +405,37 @@ export default function ImageEditorPage() {
     finally { setProcessing(false); }
   };
 
-  const handleCrop = async (cropBox: CropBox) => {
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!showCropMode || !imgWrapRef.current) return;
+    const rect = imgWrapRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    setCropStart({ x, y });
+    setCropBox(null);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!showCropMode || !cropStart || !imgWrapRef.current) return;
+    const rect = imgWrapRef.current.getBoundingClientRect();
+    const x2 = e.clientX - rect.left;
+    const y2 = e.clientY - rect.top;
+
+    const x = Math.min(cropStart.x, x2);
+    const y = Math.min(cropStart.y, y2);
+    const w = Math.abs(x2 - cropStart.x);
+    const h = Math.abs(y2 - cropStart.y);
+
+    if (w > 10 && h > 10) {
+      setCropBox({ x, y, w, h });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setCropStart(null);
+  };
+
+  const applyCropBox = async () => {
+    if (!cropBox) return;
     const src = working || original?.dataUrl;
     if (!src || processing) return;
     setProcessing(true); setError(null);
@@ -414,8 +446,11 @@ export default function ImageEditorPage() {
       canvas.height = cropBox.h;
       const ctx = canvas.getContext("2d")!;
       ctx.drawImage(img, cropBox.x, cropBox.y, cropBox.w, cropBox.h, 0, 0, cropBox.w, cropBox.h);
-      setWorking(canvas.toDataURL("image/jpeg", 0.92));
+      const cropped = canvas.toDataURL("image/jpeg", 0.92);
+      setWorking(cropped);
+      autoSaveToDrive(cropped, "crop"); // Auto-save history
       setShowCropMode(false);
+      setCropBox(null);
       setResizeW(cropBox.w);
       setResizeH(cropBox.h);
     } catch { setError("Crop failed."); }
@@ -604,13 +639,40 @@ export default function ImageEditorPage() {
           {/* Image Canvas */}
           {hasImage && (
             <div style={s.canvasInner}>
-              <div style={s.imgWrap}>
+              <div
+                ref={imgWrapRef}
+                style={s.imgWrap}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseUp}
+              >
                 {!showOriginal && (working?.includes("image/png") || removedBg) && <div style={s.checker} />}
                 <img
                   src={currentDisplay || ""}
                   alt="working"
-                  style={{ ...s.mainImg, ...(processing ? { opacity: 0.5 } : {}), filter: activeTool === "adjust" && !processing ? adjustFilter : undefined }}
+                  style={{ ...s.mainImg, ...(processing ? { opacity: 0.5 } : {}), filter: activeTool === "adjust" && !processing ? adjustFilter : undefined, userSelect: "none" }}
                 />
+                {/* Crop Box Overlay */}
+                {showCropMode && cropBox && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: cropBox.x,
+                      top: cropBox.y,
+                      width: cropBox.w,
+                      height: cropBox.h,
+                      border: "2px solid #6366F1",
+                      background: "rgba(99, 102, 241, 0.1)",
+                      pointerEvents: "none",
+                      zIndex: 10,
+                    }}
+                  >
+                    <div style={{ position: "absolute", top: -20, left: 0, color: "#6366F1", fontSize: 12, fontWeight: 600 }}>
+                      {cropBox.w} × {cropBox.h}
+                    </div>
+                  </div>
+                )}
                 {processing && (
                   <div style={s.imgOverlay}>
                     <div style={s.spinner} />
@@ -848,20 +910,32 @@ export default function ImageEditorPage() {
               <div style={s.panelContent}>
                 <div style={s.panelTitle}>📐 Crop Image</div>
                 <p style={s.panelSub}>Draw a crop box on the image · no credits used</p>
-                <div style={{ padding: "12px", background: "#F0F0F0", borderRadius: 8, fontSize: 12, color: "#666", marginBottom: 12 }}>
-                  💡 Drag on the image to select crop area, then click "Apply Crop"
-                </div>
-                <button style={{ ...s.primaryBtn, ...(processing ? s.btnOff : {}) }} disabled={processing || !showCropMode} onClick={() => {
-                  if (original && showCropMode && cropStart) {
-                    const rect = document.querySelector("img[alt='working']")?.getBoundingClientRect();
-                    if (rect) {
-                      handleCrop({ x: 0, y: 0, w: original.w, h: original.h });
-                    }
-                  }
-                }}>
-                  {processing ? <span style={s.btnRow}><span style={s.spin} />Cropping…</span> : "Apply Crop"}
-                </button>
-                <button style={{ ...s.ghostBtn, width: "100%", marginTop: 8 }} onClick={() => { setShowCropMode(false); setCropStart(null); }}>
+                {!showCropMode ? (
+                  <button style={{ ...s.primaryBtn }} onClick={() => { setShowCropMode(true); setCropBox(null); }}>
+                    📐 Start Cropping
+                  </button>
+                ) : (
+                  <>
+                    <div style={{ padding: "12px", background: "#F0F0F0", borderRadius: 8, fontSize: 12, color: "#666", marginBottom: 12 }}>
+                      💡 Drag on the image to select crop area
+                    </div>
+                    <button
+                      style={{ ...s.primaryBtn, ...(processing || !cropBox ? s.btnOff : {}) }}
+                      disabled={processing || !cropBox}
+                      onClick={applyCropBox}
+                    >
+                      {processing ? <span style={s.btnRow}><span style={s.spin} />Cropping…</span> : "✓ Apply Crop"}
+                    </button>
+                  </>
+                )}
+                <button
+                  style={{ ...s.ghostBtn, width: "100%", marginTop: 8 }}
+                  onClick={() => {
+                    setShowCropMode(false);
+                    setCropBox(null);
+                    setCropStart(null);
+                  }}
+                >
                   Cancel
                 </button>
               </div>
