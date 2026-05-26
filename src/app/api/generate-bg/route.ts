@@ -2,32 +2,62 @@ import { NextRequest, NextResponse } from "next/server";
 import { checkAuth, withCredits } from "@/lib/google-drive";
 
 export const runtime = "nodejs";
+export const maxDuration = 60;
 
-async function generateWithHuggingFace(prompt: string): Promise<{ data: string; mimeType: string } | null> {
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+
+type GeminiPart = { inlineData?: { mimeType: string; data: string }; text?: string };
+type GeminiResponse = {
+  candidates?: { content?: { parts?: GeminiPart[] } }[];
+  error?: { message: string };
+};
+
+async function generateWithGemini(prompt: string): Promise<{ data: string; mimeType: string } | null> {
+  if (!GEMINI_API_KEY) {
+    console.error("GEMINI_API_KEY not set");
+    return null;
+  }
+
   try {
     const enhancedPrompt = `Professional background image. ${prompt}. High quality, suitable as a background behind a person or product. Professional lighting, clean composition, no text, no watermarks.`;
 
-    // Using Hugging Face's free inference API with Stable Diffusion XL
     const res = await fetch(
-      "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0",
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${GEMINI_API_KEY}`,
       {
-        headers: { Accept: "image/png" },
         method: "POST",
-        body: JSON.stringify({ inputs: enhancedPrompt }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: enhancedPrompt }] }],
+          generationConfig: { responseModalities: ["IMAGE"] },
+        }),
       }
     );
 
     if (!res.ok) {
-      const errorText = await res.text();
-      console.error("Hugging Face API error:", res.status, errorText);
+      const errorData = await res.json().catch(() => ({}));
+      console.error("Gemini API error:", res.status, errorData);
       return null;
     }
 
-    const buffer = await res.arrayBuffer();
-    const base64 = Buffer.from(buffer).toString("base64");
-    return { data: base64, mimeType: "image/png" };
+    const data = (await res.json()) as GeminiResponse;
+    if (data.error) {
+      console.error("Gemini error:", data.error.message);
+      return null;
+    }
+
+    const parts = data.candidates?.[0]?.content?.parts;
+    if (parts) {
+      for (const part of parts) {
+        if ("inlineData" in part && part.inlineData?.data) {
+          return { data: part.inlineData.data, mimeType: part.inlineData.mimeType || "image/png" };
+        }
+      }
+    }
+
+    console.error("No image output from Gemini");
+    return null;
   } catch (e) {
-    console.error("Hugging Face generation error:", e);
+    console.error("Gemini generation error:", e);
     return null;
   }
 }
@@ -42,7 +72,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const result = await generateWithHuggingFace(prompt);
+    const result = await generateWithGemini(prompt);
     if (!result) {
       return NextResponse.json({ error: "Image generation failed. Please try again." }, { status: 500 });
     }
