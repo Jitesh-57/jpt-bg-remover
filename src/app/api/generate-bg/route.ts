@@ -3,10 +3,76 @@ import { checkAuth, withCredits } from "@/lib/google-drive";
 
 export const runtime = "nodejs";
 
+async function generateWithGoogle(prompt: string): Promise<{ data: string; mimeType: string } | null> {
+  const apiKey = process.env.GOOGLE_GEMINI_API_KEY;
+  if (!apiKey) {
+    console.error("GOOGLE_GEMINI_API_KEY not set, falling back to Replicate");
+    return generateWithReplicate(prompt);
+  }
+
+  try {
+    const enhancedPrompt = `Professional background image. ${prompt}. High quality, suitable as a background behind a person or product. Professional lighting, clean composition, no text, no watermarks.`;
+
+    // Using Google's Vertex AI Imagen API via generativelanguage.googleapis.com
+    // This endpoint works with Google API keys that have image generation enabled
+    const res = await fetch("https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-001:generateContent", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-goog-api-key": apiKey,
+      },
+      body: JSON.stringify({
+        contents: [{
+          parts: [{ text: enhancedPrompt }]
+        }],
+      }),
+    });
+
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      console.error("Google API error:", res.status, errData);
+      console.log("Falling back to Replicate API");
+      return generateWithReplicate(prompt);
+    }
+
+    const response = (await res.json()) as {
+      candidates?: Array<{
+        content?: {
+          parts?: Array<{
+            inlineData?: {
+              mimeType: string;
+              data: string;
+            };
+          }>;
+        };
+      }>;
+      error?: any;
+    };
+
+    if (response.error) {
+      console.error("Google API error response:", response.error);
+      console.log("Falling back to Replicate API");
+      return generateWithReplicate(prompt);
+    }
+
+    const imageData = response.candidates?.[0]?.content?.parts?.[0]?.inlineData;
+    if (imageData) {
+      return { data: imageData.data, mimeType: imageData.mimeType || "image/png" };
+    }
+
+    console.log("No image data in Google response, falling back to Replicate");
+    return generateWithReplicate(prompt);
+  } catch (e) {
+    console.error("Google generation error:", e);
+    console.log("Falling back to Replicate API");
+    return generateWithReplicate(prompt);
+  }
+}
+
 async function generateWithReplicate(prompt: string): Promise<{ data: string; mimeType: string } | null> {
   const apiKey = process.env.REPLICATE_API_TOKEN;
   if (!apiKey) {
-    console.error("REPLICATE_API_TOKEN not set");
+    console.error("Neither GOOGLE_GEMINI_API_KEY nor REPLICATE_API_TOKEN configured");
     return null;
   }
 
@@ -92,9 +158,9 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const result = await generateWithReplicate(prompt);
+    const result = await generateWithGoogle(prompt);
     if (!result) {
-      return NextResponse.json({ error: "Image generation failed. Please set REPLICATE_API_TOKEN in environment variables." }, { status: 500 });
+      return NextResponse.json({ error: "Image generation failed. Please configure GOOGLE_GEMINI_API_KEY or REPLICATE_API_TOKEN in environment variables." }, { status: 500 });
     }
 
     return withCredits({ data: result.data, mimeType: result.mimeType }, session);
