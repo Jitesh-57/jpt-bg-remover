@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// Only basic profile scopes — no drive.file → any Google user can sign in, no app verification needed
-const SCOPES = ["openid", "email", "profile"].join(" ");
+// Include Drive scope to save transformations to user's Google Drive
+const SCOPES = ["openid", "email", "profile", "https://www.googleapis.com/auth/drive.file"].join(" ");
 
 export async function GET(req: NextRequest) {
   const origin = process.env.NEXT_PUBLIC_APP_URL || new URL(req.url).origin;

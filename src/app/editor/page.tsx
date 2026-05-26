@@ -5,7 +5,7 @@ import { useRef, useState, useCallback, useEffect } from "react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type Tool = "ai-edit" | "remove-bg" | "upscale" | "resize" | "adjust" | "crop" | null;
+type Tool = "ai-edit" | "generate-bg" | "upscale" | "resize" | "adjust" | "crop" | null;
 type BgMode = "color" | "gradient" | "image" | "ai";
 
 interface GradientPreset { label: string; from: string; to: string; angle: number }
@@ -33,14 +33,20 @@ const GRADIENTS: GradientPreset[] = [
   { label: "Golden Hour", from: "#F7971E", to: "#FFD200", angle: 135 },
 ];
 
-const AI_BG_SUGGESTIONS = [
-  "Soft studio bokeh", "Mountain sunset", "City skyline at night",
-  "Forest with sunlight", "Ocean beach waves", "Abstract gradient",
+const BG_TEMPLATES = [
+  { id: "blur-white", label: "Blur White", prompt: "Soft blurred white background, professional studio style", icon: "⚪" },
+  { id: "gradient-blue", label: "Gradient Blue", prompt: "Light blue to dark blue gradient background", icon: "🔵" },
+  { id: "gradient-sunset", label: "Sunset", prompt: "Warm sunset gradient with orange and pink colors", icon: "🌅" },
+  { id: "bokeh-warm", label: "Warm Bokeh", prompt: "Soft warm bokeh background with golden lights", icon: "✨" },
+  { id: "dark-minimal", label: "Dark Minimal", prompt: "Dark professional background, minimalist style", icon: "⬛" },
+  { id: "nature-blur", label: "Nature Blur", prompt: "Blurred green nature background with plants", icon: "🌿" },
+  { id: "gradient-purple", label: "Purple Gradient", prompt: "Purple to pink gradient background, modern aesthetic", icon: "💜" },
+  { id: "abstract-art", label: "Abstract Art", prompt: "Abstract colorful art background with brush strokes", icon: "🎨" },
 ];
 
 const TOOLS: { id: Tool; icon: string; label: string }[] = [
   { id: "ai-edit", icon: "✨", label: "AI Edit" },
-  { id: "remove-bg", icon: "✂️", label: "Remove BG" },
+  { id: "generate-bg", icon: "🌅", label: "Generate BG" },
   { id: "upscale", icon: "🔍", label: "Upscale" },
   { id: "resize", icon: "↔️", label: "Resize" },
   { id: "adjust", icon: "🎨", label: "Adjust" },
@@ -179,12 +185,10 @@ async function resizeOnCanvas(dataUrl: string, w: number, h: number): Promise<st
 
 export default function ImageEditorPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const bgFileRef = useRef<HTMLInputElement>(null);
 
   // Image state
   const [original, setOriginal] = useState<{ dataUrl: string; w: number; h: number; name: string } | null>(null);
   const [working, setWorking] = useState<string | null>(null);
-  const [removedBg, setRemovedBg] = useState<string | null>(null);
 
   // UI state
   const [activeTool, setActiveTool] = useState<Tool>(null);
@@ -198,13 +202,9 @@ export default function ImageEditorPage() {
   const [cropStart, setCropStart] = useState<{ x: number; y: number } | null>(null);
   const imgWrapRef = useRef<HTMLDivElement>(null);
 
-  // Remove BG sub-state
-  const [bgMode, setBgMode] = useState<BgMode>("color");
-  const [pendingColor, setPendingColor] = useState<string | null>(null);
-  const [customColor, setCustomColor] = useState("#6366F1");
-  const [pendingGrad, setPendingGrad] = useState<GradientPreset | null>(null);
-  const [bgImageUrl, setBgImageUrl] = useState<string | null>(null);
-  const [aiBgPrompt, setAiBgPrompt] = useState("");
+  // Generate BG sub-state
+  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
+  const [customBgPrompt, setCustomBgPrompt] = useState("");
 
   // Resize / Adjust
   const [resizeW, setResizeW] = useState(0);
@@ -286,8 +286,8 @@ export default function ImageEditorPage() {
 
   const handleFile = useCallback(async (file: File) => {
     if (!file.type.startsWith("image/")) return;
-    setError(null); setWorking(null); setRemovedBg(null);
-    setActiveTool(null); setShowOriginal(false);
+    setError(null); setWorking(null);
+    setActiveTool(null); setShowOriginal(true);
     resetAdjust();
     try {
       const p = await prepareImage(file);
@@ -301,74 +301,17 @@ export default function ImageEditorPage() {
 
   // ── Tool handlers ─────────────────────────────────────────────────────────────
 
-  const handleRemoveBg = async () => {
+  const handleGenerateBg = async (templateOrPrompt: string) => {
     const src = working || original?.dataUrl;
     if (!src || processing) return;
-    setProcessing(true); setProcessingLabel("Removing background…"); setError(null);
+    setProcessing(true); setProcessingLabel("Generating background…"); setError(null);
     try {
-      const match = src.match(/^data:([^;]+);base64,(.+)$/);
-      if (!match) throw new Error("Invalid image");
-      const [, mimeType, base64] = match;
-      const data = await callApi<{ data: string; mimeType: string; chromaKey?: string }>(
-        "/api/remove-bg", { imageData: base64, mimeType }
-      );
-      if (!data?.data) throw new Error("Removal failed");
-      let raw = `data:${data.mimeType || "image/png"};base64,${data.data}`;
-      // If Gemini returned a chroma-key image, strip the colour client-side → transparent PNG
-      if (data.chromaKey) {
-        setProcessingLabel("Applying transparency…");
-        raw = await applyChromaKey(raw, data.chromaKey);
-      }
-      setRemovedBg(raw); setWorking(raw);
-      autoSaveToDrive(raw, "remove-bg"); // Auto-save history
-    } catch (e) { setError((e as Error).message); }
-    finally { setProcessing(false); setProcessingLabel(""); }
-  };
-
-  const handleApplyColorBg = async (hex: string) => {
-    const src = removedBg || working || original?.dataUrl;
-    if (!src || processing) return;
-    setProcessing(true); setError(null);
-    try {
-      const result = await compositeOnCanvas(src, { type: "color", value: hex });
-      setWorking(result); setPendingColor(null);
-    } catch { setError("Failed to apply background."); }
-    finally { setProcessing(false); }
-  };
-
-  const handleApplyGradientBg = async (g: GradientPreset) => {
-    const src = removedBg || working || original?.dataUrl;
-    if (!src || processing) return;
-    setProcessing(true); setError(null);
-    try {
-      const result = await compositeOnCanvas(src, { type: "gradient", preset: g });
-      setWorking(result); setPendingGrad(null);
-    } catch { setError("Failed to apply gradient."); }
-    finally { setProcessing(false); }
-  };
-
-  const handleApplyImageBg = async () => {
-    const src = removedBg || working || original?.dataUrl;
-    if (!src || !bgImageUrl || processing) return;
-    setProcessing(true); setError(null);
-    try {
-      const result = await compositeOnCanvas(src, { type: "image", src: bgImageUrl });
-      setWorking(result);
-    } catch { setError("Failed to apply background."); }
-    finally { setProcessing(false); }
-  };
-
-  const handleApplyAiBg = async () => {
-    const src = removedBg || working || original?.dataUrl;
-    if (!src || !aiBgPrompt.trim() || processing) return;
-    setProcessing(true); setProcessingLabel("Generating background with AI…"); setError(null);
-    try {
-      const data = await callApi<{ data: string; mimeType: string }>("/api/ai-background", { prompt: aiBgPrompt.trim() });
+      const data = await callApi<{ data: string; mimeType: string }>("/api/generate-bg", { prompt: templateOrPrompt });
       if (!data?.data) throw new Error("Generation failed");
       const bgSrc = `data:${data.mimeType || "image/png"};base64,${data.data}`;
       const result = await compositeOnCanvas(src, { type: "image", src: bgSrc });
       setWorking(result);
-      autoSaveToDrive(result, "ai-background"); // Auto-save history
+      autoSaveToDrive(result, "generate-bg"); // Auto-save history
     } catch (e) { setError((e as Error).message); }
     finally { setProcessing(false); setProcessingLabel(""); }
   };
@@ -530,10 +473,9 @@ export default function ImageEditorPage() {
   };
 
   const resetAll = () => {
-    setOriginal(null); setWorking(null); setRemovedBg(null);
-    setActiveTool(null); setError(null); setShowOriginal(false);
-    setPendingColor(null); setPendingGrad(null);
-    setBgImageUrl(null); setAiBgPrompt(""); setPrompt("");
+    setOriginal(null); setWorking(null);
+    setActiveTool(null); setError(null); setShowOriginal(true);
+    setSelectedTemplate(null); setCustomBgPrompt(""); setPrompt("");
     resetAdjust();
   };
 
@@ -726,7 +668,7 @@ export default function ImageEditorPage() {
                     </div>
                     <div style={{ display: "flex", gap: 8 }}>
                       <button style={s.dlBtn} onClick={handleDownload}>⬇️ Download</button>
-                      <button style={s.ghostBtn} onClick={() => { setWorking(null); setRemovedBg(null); }}>↺ Reset</button>
+                      <button style={s.ghostBtn} onClick={() => { setWorking(null); setSelectedTemplate(null); setCustomBgPrompt(""); }}>↺ Reset</button>
                     </div>
                   </div>
                 )}
@@ -746,100 +688,79 @@ export default function ImageEditorPage() {
         {activeTool && hasImage && (
           <div style={s.toolPanel}>
 
-            {/* Remove BG */}
-            {activeTool === "remove-bg" && (
+            {/* Generate Background */}
+            {activeTool === "generate-bg" && (
               <div style={s.panelContent}>
-                <div style={s.panelTitle}>✂️ Remove Background</div>
-                <p style={s.panelSub}>JPT AI removes backgrounds with pixel precision</p>
+                <div style={s.panelTitle}>🌅 Generate Background</div>
+                <p style={s.panelSub}>Choose a template or describe your own background</p>
                 <div style={s.creditNote}>Uses {CREDIT_COST} credits · {creditsLeft} remaining</div>
 
-                {!removedBg ? (
-                  <>
-                    <button style={{ ...s.primaryBtn, ...(processing ? s.btnOff : {}) }} disabled={processing} onClick={handleRemoveBg}>
-                      {processing ? <span style={s.btnRow}><span style={s.spin} />Removing… (up to 30s)</span> : "✂️ Remove Background"}
+                {/* Background Templates Grid */}
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 14 }}>
+                  {BG_TEMPLATES.map((tpl) => (
+                    <button
+                      key={tpl.id}
+                      disabled={processing}
+                      onClick={() => setSelectedTemplate(selectedTemplate === tpl.id ? null : tpl.id)}
+                      style={{
+                        padding: "10px",
+                        borderRadius: 8,
+                        border: selectedTemplate === tpl.id ? "2px solid #6366F1" : "1.5px solid #E0E0EE",
+                        background: selectedTemplate === tpl.id ? "#EEEEFF" : "#FAFAFC",
+                        cursor: "pointer",
+                        fontSize: 12,
+                        fontWeight: 600,
+                        color: "#333",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 6,
+                        transition: "all 0.2s",
+                      }}
+                    >
+                      <span style={{ fontSize: 16 }}>{tpl.icon}</span>
+                      <span>{tpl.label}</span>
                     </button>
-                    {error && (
-                      <div style={s.retryNote}>
-                        ⚠️ AI model is warming up — please <button style={s.retryLink} onClick={handleRemoveBg}>try again</button>
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    <div style={s.successNote}>✓ Background removed — add a new one:</div>
-                    <div style={s.tabBar}>
-                      {(["color", "gradient", "image", "ai"] as BgMode[]).map((m) => (
-                        <button key={m} style={{ ...s.tabBtn, ...(bgMode === m ? s.tabActive : {}) }} onClick={() => setBgMode(m)}>
-                          {{ color: "🎨 Color", gradient: "🌈 Gradient", image: "🖼 Image", ai: "✨ AI" }[m]}
-                        </button>
-                      ))}
-                    </div>
+                  ))}
+                </div>
 
-                    {bgMode === "color" && (
-                      <div style={s.panelSection}>
-                        <div style={s.swatchGrid}>
-                          {SOLID_COLORS.map((c) => (
-                            <button key={c.hex} title={c.label} disabled={processing}
-                              style={{ ...s.swatch, background: c.hex, border: c.hex === "#FFFFFF" ? "2px solid #DDD" : `2px solid ${c.hex}`, outline: pendingColor === c.hex ? "3px solid #6366F1" : "none", outlineOffset: 2 }}
-                              onClick={() => setPendingColor(c.hex)} />
-                          ))}
-                        </div>
-                        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                          <input type="color" value={customColor} onChange={(e) => setCustomColor(e.target.value)} style={s.colorPicker} />
-                          <span style={{ fontSize: 12, color: "#666", fontFamily: "monospace" }}>{customColor}</span>
-                          <button style={{ ...s.smallBtn, ...(pendingColor === customColor ? { background: "#10B981" } : {}) }} onClick={() => setPendingColor(customColor)}>
-                            {pendingColor === customColor ? "✓" : "Select"}
-                          </button>
-                        </div>
-                        {pendingColor && <div style={s.pendingRow}><div style={{ width: 18, height: 18, borderRadius: 4, background: pendingColor, border: "2px solid #DDD" }} /><span style={{ fontSize: 12, fontWeight: 600 }}>Selected</span><button style={s.xBtn} onClick={() => setPendingColor(null)}>✕</button></div>}
-                        <button style={{ ...s.primaryBtn, ...(!pendingColor || processing ? s.btnOff : {}) }} disabled={!pendingColor || processing} onClick={() => pendingColor && handleApplyColorBg(pendingColor)}>
-                          {processing ? <span style={s.btnRow}><span style={s.spin} />Applying…</span> : "Apply Color Background"}
-                        </button>
-                      </div>
-                    )}
+                {/* Generate Selected Template */}
+                {selectedTemplate && (
+                  <button
+                    style={{ ...s.primaryBtn, marginBottom: 12, ...(processing ? s.btnOff : {}) }}
+                    disabled={processing}
+                    onClick={() => {
+                      const tpl = BG_TEMPLATES.find(t => t.id === selectedTemplate);
+                      if (tpl) handleGenerateBg(tpl.prompt);
+                    }}
+                  >
+                    {processing ? <span style={s.btnRow}><span style={s.spin} />Generating…</span> : "🎨 Generate Selected"}
+                  </button>
+                )}
 
-                    {bgMode === "gradient" && (
-                      <div style={s.panelSection}>
-                        <div style={s.gradGrid}>
-                          {GRADIENTS.map((g) => (
-                            <button key={g.label} disabled={processing}
-                              style={{ ...s.gradSwatch, background: `linear-gradient(${g.angle}deg,${g.from},${g.to})`, outline: pendingGrad?.label === g.label ? "3px solid #6366F1" : "none", outlineOffset: 2 }}
-                              onClick={() => setPendingGrad(g)}>
-                              <span style={s.gradLabel}>{g.label}</span>
-                            </button>
-                          ))}
-                        </div>
-                        {pendingGrad && <div style={s.pendingRow}><div style={{ width: 18, height: 18, borderRadius: 4, background: `linear-gradient(${pendingGrad.angle}deg,${pendingGrad.from},${pendingGrad.to})` }} /><span style={{ fontSize: 12, fontWeight: 600 }}>{pendingGrad.label}</span><button style={s.xBtn} onClick={() => setPendingGrad(null)}>✕</button></div>}
-                        <button style={{ ...s.primaryBtn, ...(!pendingGrad || processing ? s.btnOff : {}) }} disabled={!pendingGrad || processing} onClick={() => pendingGrad && handleApplyGradientBg(pendingGrad)}>
-                          {processing ? <span style={s.btnRow}><span style={s.spin} />Applying…</span> : "Apply Gradient"}
-                        </button>
-                      </div>
-                    )}
+                {/* Custom Prompt */}
+                <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid #E0E0EE" }}>
+                  <label style={{ ...s.inputLabel, marginBottom: 6, display: "block" }}>Or create custom:</label>
+                  <textarea
+                    value={customBgPrompt}
+                    onChange={(e) => setCustomBgPrompt(e.target.value)}
+                    placeholder={'Describe a background…\ne.g. "Warm golden sunset beach"\n"Modern minimalist office"\n"Galaxy with stars"'}
+                    style={s.textarea}
+                    rows={3}
+                    disabled={processing}
+                  />
+                  <button
+                    style={{ ...s.primaryBtn, background: "linear-gradient(135deg,#4285F4,#8B5CF6)", marginTop: 10, ...(customBgPrompt.trim().length === 0 || processing ? s.btnOff : {}) }}
+                    disabled={customBgPrompt.trim().length === 0 || processing}
+                    onClick={() => handleGenerateBg(customBgPrompt.trim())}
+                  >
+                    {processing ? <span style={s.btnRow}><span style={s.spin} />Generating…</span> : "✨ Generate Custom"}
+                  </button>
+                </div>
 
-                    {bgMode === "image" && (
-                      <div style={s.panelSection}>
-                        <input ref={bgFileRef} type="file" accept="image/*" style={{ display: "none" }}
-                          onChange={(e) => { const f = e.target.files?.[0]; if (!f) return; const r = new FileReader(); r.onloadend = () => setBgImageUrl(r.result as string); r.readAsDataURL(f); }} />
-                        {bgImageUrl
-                          ? <div style={{ position: "relative", borderRadius: 8, overflow: "hidden", height: 80 }}><img src={bgImageUrl} alt="bg" style={{ width: "100%", height: "100%", objectFit: "cover" }} /><button style={s.changeBgBtn} onClick={() => bgFileRef.current?.click()}>Change</button></div>
-                          : <button style={s.uploadBgBtn} onClick={() => bgFileRef.current?.click()}>🖼 Choose Background Image</button>}
-                        <button style={{ ...s.primaryBtn, ...(!bgImageUrl || processing ? s.btnOff : {}) }} disabled={!bgImageUrl || processing} onClick={handleApplyImageBg}>
-                          {processing ? <span style={s.btnRow}><span style={s.spin} />Applying…</span> : "Apply Image Background"}
-                        </button>
-                      </div>
-                    )}
-
-                    {bgMode === "ai" && (
-                      <div style={s.panelSection}>
-                        <span style={s.aiBadge}>✨ AI Background · {CREDIT_COST} credits</span>
-                        <textarea value={aiBgPrompt} onChange={(e) => setAiBgPrompt(e.target.value)} placeholder={'Describe a background…\ne.g. "Warm golden sunset"\n"Modern office with plants"'} style={s.textarea} rows={3} disabled={processing} />
-                        <div style={s.suggestions}>{AI_BG_SUGGESTIONS.map((sug) => <button key={sug} style={s.chip} onClick={() => setAiBgPrompt(sug)} disabled={processing}>{sug}</button>)}</div>
-                        <button style={{ ...s.primaryBtn, background: "linear-gradient(135deg,#4285F4,#8B5CF6)", ...(!aiBgPrompt.trim() || processing ? s.btnOff : {}) }} disabled={!aiBgPrompt.trim() || processing} onClick={handleApplyAiBg}>
-                          {processing ? <span style={s.btnRow}><span style={s.spin} />Generating…</span> : "✨ Generate Background"}
-                        </button>
-                      </div>
-                    )}
-                  </>
+                {error && (
+                  <div style={s.retryNote}>
+                    ⚠️ Generation failed — please <button style={s.retryLink} onClick={() => selectedTemplate ? handleGenerateBg(BG_TEMPLATES.find(t => t.id === selectedTemplate)?.prompt || "") : handleGenerateBg(customBgPrompt.trim())}>try again</button>
+                  </div>
                 )}
               </div>
             )}
@@ -1014,9 +935,8 @@ export default function ImageEditorPage() {
             <div style={s.usageGrid}>
               {[
                 { icon: "✨", label: "AI Edit", cost: CREDIT_COST },
-                { icon: "✂️", label: "Remove BG", cost: CREDIT_COST },
+                { icon: "🌅", label: "Generate BG", cost: CREDIT_COST },
                 { icon: "🔍", label: "Upscale", cost: CREDIT_COST },
-                { icon: "🌅", label: "AI Background", cost: CREDIT_COST },
                 { icon: "↔️", label: "Resize", cost: 0 },
                 { icon: "🎨", label: "Adjust", cost: 0 },
                 { icon: "📐", label: "Crop", cost: 0 },
@@ -1049,7 +969,7 @@ export default function ImageEditorPage() {
             <div style={s.modalTitle}>Sign in to use AI tools</div>
             <p style={s.modalSub}>Create a free account with Google. You get <strong>10 free credits</strong> to start editing right away.</p>
             <div style={s.modalFeatures}>
-              {["✂️ Remove Background", "🔍 Upscale Image", "✨ AI Edit", "🌅 AI Background", "↔️ Resize (free)", "🎨 Adjust (free)", "📐 Crop (free)"].map((f) => (
+              {["🌅 Generate Background", "🔍 Upscale Image", "✨ AI Edit", "↔️ Resize (free)", "🎨 Adjust (free)", "📐 Crop (free)"].map((f) => (
                 <div key={f} style={s.modalFeatureRow}><span style={{ color: "#10B981", fontWeight: 700 }}>✓</span> {f}</div>
               ))}
             </div>
