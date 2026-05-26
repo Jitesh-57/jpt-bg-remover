@@ -4,7 +4,7 @@ import { checkAuth, withCredits } from "@/lib/google-drive";
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GEMINI_API_KEY = process.env.GOOGLE_GEMINI_API_KEY || process.env.GEMINI_API_KEY;
 
 type GeminiPart = { inlineData?: { mimeType: string; data: string }; text?: string };
 type GeminiResponse = {
