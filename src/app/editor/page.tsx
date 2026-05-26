@@ -581,28 +581,6 @@ export default function ImageEditorPage() {
           {/* Image Canvas */}
           {hasImage && (
             <div style={s.canvasInner}>
-              {/* AI Edit Prompt - Always Visible */}
-              <div style={{ background: "#F9FAFB", borderBottom: "1px solid #EAECF0", padding: "16px", marginBottom: 16 }}>
-                <div style={{ display: "flex", gap: 8, maxWidth: "100%" }}>
-                  <input
-                    type="text"
-                    value={prompt}
-                    onChange={(e) => setPrompt(e.target.value)}
-                    onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); if (requireSignIn()) return; handleAiEdit(); } }}
-                    placeholder="✨ Describe what you want… 'Remove background', 'Make it cinematic', 'Add sunset'"
-                    style={{ ...s.promptInput, flex: 1 }}
-                    disabled={processing || !hasImage}
-                  />
-                  <button
-                    style={{ ...s.sendBtn, minWidth: 100, ...(processing ? { opacity: 0.7 } : {}) }}
-                    disabled={processing || !hasImage}
-                    onClick={() => { if (requireSignIn()) return; handleAiEdit(); }}
-                  >
-                    {processing && activeTool === "ai-edit" ? <span style={s.btnRow}><span style={s.spin} />Generating</span> : "✨ Generate"}
-                  </button>
-                </div>
-              </div>
-
               {/* Error */}
               {error && <div style={{ ...s.errBox, maxWidth: "100%", marginBottom: 16 }}>{error}</div>}
 
@@ -674,10 +652,32 @@ export default function ImageEditorPage() {
                 )}
               </div>
 
+              {/* AI Edit Prompt - Below Images */}
+              <div style={{ background: "#F9FAFB", borderTop: "1px solid #EAECF0", borderBottom: "1px solid #EAECF0", padding: "16px", marginTop: 16, marginBottom: 16, maxWidth: "100%" }}>
+                <div style={{ display: "flex", gap: 8, maxWidth: "100%" }}>
+                  <input
+                    type="text"
+                    value={prompt}
+                    onChange={(e) => setPrompt(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); if (requireSignIn()) return; handleAiEdit(); } }}
+                    placeholder="✨ Describe what you want… 'Remove background', 'Make it cinematic', 'Add sunset'"
+                    style={{ ...s.promptInput, flex: 1 }}
+                    disabled={processing || !hasImage}
+                  />
+                  <button
+                    style={{ ...s.sendBtn, minWidth: 100, ...(processing ? { opacity: 0.7 } : {}) }}
+                    disabled={processing || !hasImage}
+                    onClick={() => { if (requireSignIn()) return; handleAiEdit(); }}
+                  >
+                    {processing && activeTool === "ai-edit" ? <span style={s.btnRow}><span style={s.spin} />Generating</span> : "✨ Generate"}
+                  </button>
+                </div>
+              </div>
+
               {/* Show hint if no result yet */}
               {!working && (
                 <div style={{ textAlign: "center", padding: "40px 20px", color: "#999" }}>
-                  <p style={{ fontSize: 14 }}>👆 Use the tools on the left or describe what you want above to start editing</p>
+                  <p style={{ fontSize: 14 }}>👆 Use the tools on the left to start editing</p>
                 </div>
               )}
             </div>
