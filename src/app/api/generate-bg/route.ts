@@ -3,37 +3,45 @@ import { checkAuth, withCredits } from "@/lib/google-drive";
 
 export const runtime = "nodejs";
 
-const GEMINI_MODELS = [
-  "gemini-2.0-flash-exp",
-  "gemini-1.5-pro",
-  "gemini-1.5-flash",
-];
-
-async function generateWithGemini(prompt: string): Promise<{ data: string; mimeType: string } | null> {
-  const apiKey = process.env.GOOGLE_GEMINI_API_KEY;
+async function generateWithNanoBanana(prompt: string): Promise<{ data: string; mimeType: string } | null> {
+  const apiKey = process.env.NANOBANNA_API_KEY;
   if (!apiKey) return null;
 
-  for (const model of GEMINI_MODELS) {
-    try {
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateImage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
-        body: JSON.stringify({
-          prompt: `Generate a professional background image. ${prompt}. High quality, 1200x1200 pixels, suitable as a background behind a person or product. Professional lighting, clean composition.`,
-          generationConfig: { outputMimeType: "image/png" },
-        }),
-      });
+  try {
+    const res = await fetch("https://api.nanobanna.com/api/v1/imagine", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        prompt: `Professional background image. ${prompt}. High quality, 1200x1200 pixels, suitable as a background behind a person or product. Professional lighting, clean composition.`,
+        model: "nanobanna-pro",
+        num_inference_steps: 20,
+        guidance_scale: 7.5,
+        height: 1200,
+        width: 1200,
+      }),
+    });
 
-      if (res.status === 429 || res.status === 503) continue;
-      if (!res.ok) continue;
-
-      const d = (await res.json()) as { images?: Array<{ imageBytes: string }> };
-      if (d.images?.[0]?.imageBytes) {
-        return { data: d.images[0].imageBytes, mimeType: "image/png" };
-      }
-    } catch {
-      continue;
+    if (res.status === 429 || res.status === 503) {
+      console.warn("Nano Banana API rate limited or temporarily unavailable");
+      return null;
     }
+
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      console.error("Nano Banana API error:", res.status, errData);
+      return null;
+    }
+
+    const d = (await res.json()) as { images?: string[] };
+    if (d.images?.[0]) {
+      // Base64 string is returned, not imageBytes
+      return { data: d.images[0], mimeType: "image/png" };
+    }
+  } catch (e) {
+    console.error("Nano Banana generation error:", e);
   }
 
   return null;
@@ -49,7 +57,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const result = await generateWithGemini(prompt);
+    const result = await generateWithNanoBanana(prompt);
     if (!result) {
       return NextResponse.json({ error: "Image generation failed. Please try again." }, { status: 500 });
     }
