@@ -3,53 +3,80 @@ import { checkAuth, withCredits } from "@/lib/google-drive";
 
 export const runtime = "nodejs";
 
-async function generateWithNanoBanana(prompt: string): Promise<{ data: string; mimeType: string } | null> {
-  const apiKey = process.env.NANOBANNA_API_KEY;
+async function generateWithReplicate(prompt: string): Promise<{ data: string; mimeType: string } | null> {
+  const apiKey = process.env.REPLICATE_API_TOKEN;
   if (!apiKey) {
-    console.error("NANOBANNA_API_KEY not set");
+    console.error("REPLICATE_API_TOKEN not set");
     return null;
   }
 
   try {
-    const res = await fetch("https://api.nanobanna.com/api/v1/imagine", {
+    const enhancedPrompt = `Professional background image. ${prompt}. High quality, suitable as a background behind a person or product. Professional lighting, clean composition, no text, no watermarks.`;
+
+    // Using Stable Diffusion XL on Replicate
+    const res = await fetch("https://api.replicate.com/v1/predictions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${apiKey}`,
+        "Authorization": `Token ${apiKey}`,
       },
       body: JSON.stringify({
-        prompt: `Professional background image. ${prompt}. High quality, 1200x1200 pixels, suitable as a background behind a person or product. Professional lighting, clean composition.`,
-        model: "nanobanna-pro",
-        num_inference_steps: 20,
-        guidance_scale: 7.5,
-        height: 1200,
-        width: 1200,
+        model: "stability-ai/sdxl",
+        input: {
+          prompt: enhancedPrompt,
+          image_dimensions: "1024x1024",
+          num_outputs: 1,
+          scheduler: "K_EULER",
+          num_inference_steps: 25,
+          guidance_scale: 7.5,
+          prompt_strength: 0.8,
+        },
       }),
     });
 
-    console.log("Nano Banana response status:", res.status);
-
-    if (res.status === 429 || res.status === 503) {
-      console.warn("Nano Banana API rate limited or temporarily unavailable");
-      return null;
-    }
-
     if (!res.ok) {
       const errData = await res.json().catch(() => ({}));
-      console.error("Nano Banana API error:", res.status, errData);
+      console.error("Replicate API error:", res.status, errData);
       return null;
     }
 
-    const d = (await res.json()) as { images?: string[]; image?: string };
-    const imageData = d.images?.[0] || d.image;
+    const prediction = (await res.json()) as {
+      id: string;
+      status: string;
+      output?: string[];
+      error?: string;
+    };
 
-    if (imageData) {
-      return { data: imageData, mimeType: "image/png" };
+    if (prediction.error) {
+      console.error("Replicate error:", prediction.error);
+      return null;
     }
 
-    console.error("No image data in response:", d);
+    // Poll for completion if needed
+    let currentPrediction = prediction;
+    let attempts = 0;
+    while (currentPrediction.status === "processing" && attempts < 60) {
+      await new Promise(r => setTimeout(r, 1000));
+      const checkRes = await fetch(`https://api.replicate.com/v1/predictions/${prediction.id}`, {
+        headers: { "Authorization": `Token ${apiKey}` },
+      });
+
+      if (!checkRes.ok) break;
+      currentPrediction = (await checkRes.json()) as typeof prediction;
+      attempts++;
+    }
+
+    if (currentPrediction.status === "succeeded" && currentPrediction.output?.[0]) {
+      // Fetch the image and convert to base64
+      const imageRes = await fetch(currentPrediction.output[0]);
+      const buffer = await imageRes.arrayBuffer();
+      const base64 = Buffer.from(buffer).toString("base64");
+      return { data: base64, mimeType: "image/png" };
+    }
+
+    console.error("Prediction not completed:", currentPrediction.status);
   } catch (e) {
-    console.error("Nano Banana generation error:", e);
+    console.error("Replicate generation error:", e);
   }
 
   return null;
@@ -65,9 +92,9 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const result = await generateWithNanoBanana(prompt);
+    const result = await generateWithReplicate(prompt);
     if (!result) {
-      return NextResponse.json({ error: "Image generation failed. Please try again." }, { status: 500 });
+      return NextResponse.json({ error: "Image generation failed. Please set REPLICATE_API_TOKEN in environment variables." }, { status: 500 });
     }
 
     return withCredits({ data: result.data, mimeType: result.mimeType }, session);
