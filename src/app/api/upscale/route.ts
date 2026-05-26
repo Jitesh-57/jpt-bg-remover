@@ -2,10 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { checkAuth, withCredits } from "@/lib/google-drive";
 
 export const runtime = "nodejs";
-export const maxDuration = 60;
+export const maxDuration = 120;
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const HF_TOKEN = process.env.HF_TOKEN;
+
+const IMAGE_MODELS = [
+  "gemini-2.5-flash-image",
+  "gemini-3.1-flash-image-preview",
+  "gemini-3-pro-image-preview",
+];
 
 type GeminiPart = { text: string } | { inlineData: { mimeType: string; data: string } };
 type GeminiResponse = {
@@ -13,48 +18,51 @@ type GeminiResponse = {
   error?: { message: string };
 };
 
-async function upscaleWithRealESRGAN(base64: string, mimeType: string): Promise<string | null> {
-  const headers: Record<string, string> = { "Content-Type": mimeType };
-  if (HF_TOKEN) headers["Authorization"] = `Bearer ${HF_TOKEN}`;
-  try {
-    const res = await fetch(
-      "https://router.huggingface.co/hf-inference/models/jasperai/Flux.1-dev-Controlnet-Upscaler",
-      { method: "POST", headers, body: Buffer.from(base64, "base64"), signal: AbortSignal.timeout(30000) }
-    );
-    if (!res.ok) return null;
-    const buf = await res.arrayBuffer();
-    return `data:image/png;base64,${Buffer.from(buf).toString("base64")}`;
-  } catch { return null; }
-}
-
-async function upscaleWithGemini(base64: string, mimeType: string): Promise<string | null> {
+async function upscaleWithGemini(imageData: string, mimeType: string): Promise<string | null> {
   if (!GEMINI_API_KEY) return null;
 
   const prompt =
-    "Upscale and enhance this image to higher resolution. Sharpen fine details, reduce noise, improve clarity, and enhance overall quality. " +
-    "Keep the original content, composition, colors, and subject matter exactly the same. Photorealistic high-quality result.";
+    "Upscale this image to 2-3x resolution while maintaining quality. Enhance details, sharpen fine features, reduce noise, " +
+    "and improve overall clarity. Keep the original content, composition, colors, and subject matter exactly the same. " +
+    "Photorealistic, high-quality result.";
 
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${GEMINI_API_KEY}`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: [{ inlineData: { mimeType, data: base64 } }, { text: prompt }] }],
-        generationConfig: { responseModalities: ["IMAGE", "TEXT"] },
-      }),
-    }
-  );
+  for (const model of IMAGE_MODELS) {
+    try {
+      console.log(`[upscale] trying Gemini ${model}`);
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{
+              parts: [
+                { inlineData: { mimeType, data: imageData } },
+                { text: prompt },
+              ],
+            }],
+            generationConfig: { responseModalities: ["IMAGE", "TEXT"] },
+          }),
+          signal: AbortSignal.timeout(90000),
+        }
+      );
 
-  const data = (await res.json()) as GeminiResponse;
-  if (data.error) { console.error("Gemini upscale error:", data.error.message); return null; }
-
-  const parts = data.candidates?.[0]?.content?.parts;
-  if (parts) {
-    for (const part of parts) {
-      if ("inlineData" in part && part.inlineData?.data) {
-        return `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
+      const json = (await res.json()) as GeminiResponse;
+      if (json.error) {
+        console.log(`[upscale] ${model} error: ${json.error.message}`);
+        continue;
       }
+
+      const parts = json.candidates?.[0]?.content?.parts ?? [];
+      for (const part of parts) {
+        if ("inlineData" in part && part.inlineData?.data) {
+          console.log(`[upscale] ✓ Gemini ${model} upscale successful`);
+          return `data:${part.inlineData.mimeType || "image/png"};base64,${part.inlineData.data}`;
+        }
+      }
+      console.log(`[upscale] ${model} no image in response`);
+    } catch (e) {
+      console.log(`[upscale] ${model} exception:`, (e as Error).message);
     }
   }
   return null;
@@ -71,11 +79,8 @@ export async function POST(req: NextRequest) {
   if (!match) return NextResponse.json({ error: "Invalid dataUrl" }, { status: 400 });
   const [, mimeType, base64] = match;
 
-  const hfResult = await upscaleWithRealESRGAN(base64, mimeType);
-  if (hfResult) return withCredits({ dataUrl: hfResult }, session!);
+  const result = await upscaleWithGemini(base64, mimeType);
+  if (result) return withCredits({ dataUrl: result }, session!);
 
-  const geminiResult = await upscaleWithGemini(base64, mimeType);
-  if (geminiResult) return withCredits({ dataUrl: geminiResult }, session!);
-
-  return NextResponse.json({ error: "Upscale failed" }, { status: 500 });
+  return NextResponse.json({ error: "Upscale failed. Please try again." }, { status: 500 });
 }
