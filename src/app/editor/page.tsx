@@ -639,82 +639,105 @@ export default function ImageEditorPage() {
           {/* Image Canvas */}
           {hasImage && (
             <div style={s.canvasInner}>
-              <div
-                ref={imgWrapRef}
-                style={s.imgWrap}
-                onMouseDown={handleMouseDown}
-                onMouseMove={handleMouseMove}
-                onMouseUp={handleMouseUp}
-                onMouseLeave={handleMouseUp}
-              >
-                {!showOriginal && (working?.includes("image/png") || removedBg) && <div style={s.checker} />}
-                <img
-                  src={currentDisplay || ""}
-                  alt="working"
-                  style={{ ...s.mainImg, ...(processing ? { opacity: 0.5 } : {}), filter: activeTool === "adjust" && !processing ? adjustFilter : undefined, userSelect: "none" }}
-                />
-                {/* Crop Box Overlay */}
-                {showCropMode && cropBox && (
-                  <div
-                    style={{
-                      position: "absolute",
-                      left: cropBox.x,
-                      top: cropBox.y,
-                      width: cropBox.w,
-                      height: cropBox.h,
-                      border: "2px solid #6366F1",
-                      background: "rgba(99, 102, 241, 0.1)",
-                      pointerEvents: "none",
-                      zIndex: 10,
-                    }}
+              {/* AI Edit Prompt - Always Visible */}
+              <div style={{ background: "#F9FAFB", borderBottom: "1px solid #EAECF0", padding: "16px", marginBottom: 16 }}>
+                <div style={{ display: "flex", gap: 8, maxWidth: "100%" }}>
+                  <input
+                    type="text"
+                    value={prompt}
+                    onChange={(e) => setPrompt(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); if (requireSignIn()) return; handleAiEdit(); } }}
+                    placeholder="✨ Describe what you want… 'Remove background', 'Make it cinematic', 'Add sunset'"
+                    style={{ ...s.promptInput, flex: 1 }}
+                    disabled={processing || !hasImage}
+                  />
+                  <button
+                    style={{ ...s.sendBtn, minWidth: 100, ...(processing ? { opacity: 0.7 } : {}) }}
+                    disabled={processing || !hasImage}
+                    onClick={() => { if (requireSignIn()) return; handleAiEdit(); }}
                   >
-                    <div style={{ position: "absolute", top: -20, left: 0, color: "#6366F1", fontSize: 12, fontWeight: 600 }}>
-                      {cropBox.w} × {cropBox.h}
+                    {processing && activeTool === "ai-edit" ? <span style={s.btnRow}><span style={s.spin} />Generating</span> : "✨ Generate"}
+                  </button>
+                </div>
+              </div>
+
+              {/* Error */}
+              {error && <div style={{ ...s.errBox, maxWidth: "100%", marginBottom: 16 }}>{error}</div>}
+
+              {/* Side-by-Side View: Original | Result */}
+              <div style={{ display: "flex", gap: 16, justifyContent: "center", alignItems: "flex-start", flexWrap: "wrap" }}>
+                {/* Original */}
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: "#666" }}>📌 Original</div>
+                  <div style={s.imgWrap}>
+                    <img
+                      src={original?.dataUrl || ""}
+                      alt="original"
+                      style={{ ...s.mainImg, filter: "none" }}
+                    />
+                  </div>
+                  <span style={s.dimLabel}>{original?.w} × {original?.h}px</span>
+                </div>
+
+                {/* Result */}
+                {working && (
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+                    <div style={{ fontSize: 12, fontWeight: 600, color: "#6366F1" }}>✨ Result</div>
+                    <div
+                      ref={imgWrapRef}
+                      style={s.imgWrap}
+                      onMouseDown={handleMouseDown}
+                      onMouseMove={handleMouseMove}
+                      onMouseUp={handleMouseUp}
+                      onMouseLeave={handleMouseUp}
+                    >
+                      {working?.includes("image/png") && <div style={s.checker} />}
+                      <img
+                        src={working || ""}
+                        alt="result"
+                        style={{ ...s.mainImg, ...(processing ? { opacity: 0.5 } : {}), filter: activeTool === "adjust" && !processing ? adjustFilter : undefined, userSelect: "none" }}
+                      />
+                      {/* Crop Box Overlay */}
+                      {showCropMode && cropBox && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            left: cropBox.x,
+                            top: cropBox.y,
+                            width: cropBox.w,
+                            height: cropBox.h,
+                            border: "2px solid #6366F1",
+                            background: "rgba(99, 102, 241, 0.1)",
+                            pointerEvents: "none",
+                            zIndex: 10,
+                          }}
+                        >
+                          <div style={{ position: "absolute", top: -20, left: 0, color: "#6366F1", fontSize: 12, fontWeight: 600 }}>
+                            {cropBox.w} × {cropBox.h}
+                          </div>
+                        </div>
+                      )}
+                      {processing && (
+                        <div style={s.imgOverlay}>
+                          <div style={s.spinner} />
+                          <span style={{ color: "#fff", fontSize: 13, marginTop: 10 }}>{processingLabel || "Processing…"}</span>
+                        </div>
+                      )}
+                    </div>
+                    <div style={{ display: "flex", gap: 8 }}>
+                      <button style={s.dlBtn} onClick={handleDownload}>⬇️ Download</button>
+                      <button style={s.ghostBtn} onClick={() => { setWorking(null); setRemovedBg(null); }}>↺ Reset</button>
                     </div>
                   </div>
                 )}
-                {processing && (
-                  <div style={s.imgOverlay}>
-                    <div style={s.spinner} />
-                    <span style={{ color: "#fff", fontSize: 13, marginTop: 10 }}>{processingLabel || "Processing…"}</span>
-                  </div>
-                )}
               </div>
 
-              <div style={s.imgControls}>
-                <div style={s.togglePill}>
-                  <button style={{ ...s.toggleBtn, ...(!showOriginal ? s.toggleActive : {}) }} onClick={() => setShowOriginal(false)}>Result</button>
-                  <button style={{ ...s.toggleBtn, ...(showOriginal ? s.toggleActive : {}) }} onClick={() => setShowOriginal(true)}>Original</button>
+              {/* Show hint if no result yet */}
+              {!working && (
+                <div style={{ textAlign: "center", padding: "40px 20px", color: "#999" }}>
+                  <p style={{ fontSize: 14 }}>👆 Use the tools on the left or describe what you want above to start editing</p>
                 </div>
-                {working && !showOriginal && <button style={s.ghostBtn} onClick={() => { setWorking(null); setRemovedBg(null); }}>↺ Reset</button>}
-                <span style={s.dimLabel}>{original?.w} × {original?.h}px</span>
-              </div>
-
-              {error && <div style={s.errBox}>{error}</div>}
-
-              {/* Prompt bar */}
-              <div style={s.promptBar}>
-                <button
-                  style={{ ...s.toolPillBtn, ...(activeTool === "ai-edit" ? s.toolPillActive : {}) }}
-                  onClick={() => { if (requireSignIn()) return; setActiveTool(activeTool === "ai-edit" ? null : "ai-edit"); }}
-                >✨</button>
-                <input
-                  type="text"
-                  value={prompt}
-                  onChange={(e) => setPrompt(e.target.value)}
-                  onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); if (requireSignIn()) return; handleAiEdit(); } }}
-                  placeholder="Describe what to change… e.g. 'Make background blurry', 'Change sky to sunset'"
-                  style={s.promptInput}
-                  disabled={processing || !hasImage}
-                />
-                <button
-                  style={{ ...s.sendBtn, ...(!prompt.trim() || processing || !hasImage ? { opacity: 0.4, cursor: "not-allowed" } : {}) }}
-                  disabled={!prompt.trim() || processing || !hasImage}
-                  onClick={() => { if (requireSignIn()) return; handleAiEdit(); }}
-                >
-                  {processing && activeTool === "ai-edit" ? "…" : "✨ Apply"}
-                </button>
-              </div>
+              )}
             </div>
           )}
         </div>
