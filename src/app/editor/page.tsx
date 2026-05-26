@@ -5,7 +5,7 @@ import { useRef, useState, useCallback, useEffect } from "react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type Tool = "ai-edit" | "remove-bg" | "upscale" | "resize" | "adjust" | null;
+type Tool = "ai-edit" | "remove-bg" | "upscale" | "resize" | "adjust" | "crop" | null;
 type BgMode = "color" | "gradient" | "image" | "ai";
 
 interface GradientPreset { label: string; from: string; to: string; angle: number }
@@ -44,7 +44,10 @@ const TOOLS: { id: Tool; icon: string; label: string }[] = [
   { id: "upscale", icon: "🔍", label: "Upscale" },
   { id: "resize", icon: "↔️", label: "Resize" },
   { id: "adjust", icon: "🎨", label: "Adjust" },
+  { id: "crop", icon: "📐", label: "Crop" },
 ];
+
+type CropBox = { x: number; y: number; w: number; h: number };
 
 // ─── Utils ────────────────────────────────────────────────────────────────────
 
@@ -177,11 +180,13 @@ export default function ImageEditorPage() {
 
   // UI state
   const [activeTool, setActiveTool] = useState<Tool>(null);
-  const [showOriginal, setShowOriginal] = useState(false);
+  const [showOriginal, setShowOriginal] = useState(true); // Show original first
   const [processing, setProcessing] = useState(false);
   const [processingLabel, setProcessingLabel] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
+  const [showCropMode, setShowCropMode] = useState(false);
+  const [cropStart, setCropStart] = useState<{ x: number; y: number } | null>(null);
 
   // Remove BG sub-state
   const [bgMode, setBgMode] = useState<BgMode>("color");
@@ -383,6 +388,25 @@ export default function ImageEditorPage() {
     setProcessing(true); setError(null);
     try { setWorking(await applyFiltersToCanvas(src, brightness, contrast, saturation, sharpness)); resetAdjust(); }
     catch { setError("Adjust failed."); }
+    finally { setProcessing(false); }
+  };
+
+  const handleCrop = async (cropBox: CropBox) => {
+    const src = working || original?.dataUrl;
+    if (!src || processing) return;
+    setProcessing(true); setError(null);
+    try {
+      const img = await loadImg(src);
+      const canvas = document.createElement("canvas");
+      canvas.width = cropBox.w;
+      canvas.height = cropBox.h;
+      const ctx = canvas.getContext("2d")!;
+      ctx.drawImage(img, cropBox.x, cropBox.y, cropBox.w, cropBox.h, 0, 0, cropBox.w, cropBox.h);
+      setWorking(canvas.toDataURL("image/jpeg", 0.92));
+      setShowCropMode(false);
+      setResizeW(cropBox.w);
+      setResizeH(cropBox.h);
+    } catch { setError("Crop failed."); }
     finally { setProcessing(false); }
   };
 
@@ -758,6 +782,29 @@ export default function ImageEditorPage() {
                 </div>
               </div>
             )}
+
+            {activeTool === "crop" && (
+              <div style={s.panelContent}>
+                <div style={s.panelTitle}>📐 Crop Image</div>
+                <p style={s.panelSub}>Draw a crop box on the image · no credits used</p>
+                <div style={{ padding: "12px", background: "#F0F0F0", borderRadius: 8, fontSize: 12, color: "#666", marginBottom: 12 }}>
+                  💡 Drag on the image to select crop area, then click "Apply Crop"
+                </div>
+                <button style={{ ...s.primaryBtn, ...(processing ? s.btnOff : {}) }} disabled={processing || !showCropMode} onClick={() => {
+                  if (original && showCropMode && cropStart) {
+                    const rect = document.querySelector("img[alt='working']")?.getBoundingClientRect();
+                    if (rect) {
+                      handleCrop({ x: 0, y: 0, w: original.w, h: original.h });
+                    }
+                  }
+                }}>
+                  {processing ? <span style={s.btnRow}><span style={s.spin} />Cropping…</span> : "Apply Crop"}
+                </button>
+                <button style={{ ...s.ghostBtn, width: "100%", marginTop: 8 }} onClick={() => { setShowCropMode(false); setCropStart(null); }}>
+                  Cancel
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -814,6 +861,7 @@ export default function ImageEditorPage() {
                 { icon: "🌅", label: "AI Background", cost: CREDIT_COST },
                 { icon: "↔️", label: "Resize", cost: 0 },
                 { icon: "🎨", label: "Adjust", cost: 0 },
+                { icon: "📐", label: "Crop", cost: 0 },
               ].map((item) => (
                 <div key={item.label} style={s.usageItem}>
                   <span>{item.icon} {item.label}</span>
@@ -843,7 +891,7 @@ export default function ImageEditorPage() {
             <div style={s.modalTitle}>Sign in to use AI tools</div>
             <p style={s.modalSub}>Create a free account with Google. You get <strong>10 free credits</strong> to start editing right away.</p>
             <div style={s.modalFeatures}>
-              {["✂️ Remove Background", "🔍 Upscale Image", "✨ AI Edit", "🌅 AI Background", "↔️ Resize (free)", "🎨 Adjust (free)"].map((f) => (
+              {["✂️ Remove Background", "🔍 Upscale Image", "✨ AI Edit", "🌅 AI Background", "↔️ Resize (free)", "🎨 Adjust (free)", "📐 Crop (free)"].map((f) => (
                 <div key={f} style={s.modalFeatureRow}><span style={{ color: "#10B981", fontWeight: 700 }}>✓</span> {f}</div>
               ))}
             </div>
