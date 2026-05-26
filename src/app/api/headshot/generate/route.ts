@@ -26,7 +26,7 @@ async function generateHeadshot(imageData: string, mimeType: string, stylePrompt
     `High quality, photorealistic result. Aspect ratio 3:4 portrait orientation.`;
 
   const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-preview-image-generation:generateContent?key=${GEMINI_API_KEY}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${GEMINI_API_KEY}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },

@@ -35,7 +35,7 @@ async function upscaleWithGemini(base64: string, mimeType: string): Promise<stri
     "Keep the original content, composition, colors, and subject matter exactly the same. Photorealistic high-quality result.";
 
   const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-preview-image-generation:generateContent?key=${GEMINI_API_KEY}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${GEMINI_API_KEY}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
