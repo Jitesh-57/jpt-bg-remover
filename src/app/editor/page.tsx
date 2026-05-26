@@ -652,25 +652,28 @@ export default function ImageEditorPage() {
                 )}
               </div>
 
-              {/* AI Edit Prompt - Below Images */}
-              <div style={{ background: "#F9FAFB", borderTop: "1px solid #EAECF0", borderBottom: "1px solid #EAECF0", padding: "16px", marginTop: 16, marginBottom: 16, maxWidth: "100%" }}>
-                <div style={{ display: "flex", gap: 8, maxWidth: "100%" }}>
-                  <input
-                    type="text"
-                    value={prompt}
-                    onChange={(e) => setPrompt(e.target.value)}
-                    onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); if (requireSignIn()) return; handleAiEdit(); } }}
-                    placeholder="✨ Describe what you want… 'Remove background', 'Make it cinematic', 'Add sunset'"
-                    style={{ ...s.promptInput, flex: 1 }}
-                    disabled={processing || !hasImage}
-                  />
-                  <button
-                    style={{ ...s.sendBtn, minWidth: 100, ...(processing ? { opacity: 0.7 } : {}) }}
-                    disabled={processing || !hasImage}
-                    onClick={() => { if (requireSignIn()) return; handleAiEdit(); }}
-                  >
-                    {processing && activeTool === "ai-edit" ? <span style={s.btnRow}><span style={s.spin} />Generating</span> : "✨ Generate"}
-                  </button>
+              {/* AI Edit Prompt - Below Images - Larger & Prominent */}
+              <div style={{ background: "linear-gradient(135deg, #F9FAFB 0%, #F3F4F8 100%)", borderTop: "2px solid #6366F1", borderBottom: "2px solid #6366F1", padding: "24px", marginTop: 24, marginBottom: 16, maxWidth: "100%", borderRadius: 12, boxShadow: "0 2px 8px rgba(99, 102, 241, 0.1)" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  <label style={{ fontSize: 14, fontWeight: 700, color: "#6366F1" }}>✨ Describe Your Edits:</label>
+                  <div style={{ display: "flex", gap: 12, width: "100%" }}>
+                    <input
+                      type="text"
+                      value={prompt}
+                      onChange={(e) => setPrompt(e.target.value)}
+                      onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); if (requireSignIn()) return; handleAiEdit(); } }}
+                      placeholder="✨ 'Make the background blurry', 'Change to black and white', 'Add dramatic lighting', 'Make it cinematic'"
+                      style={{ ...s.promptInput, flex: 1, padding: "14px 16px", fontSize: 15, minHeight: 50 }}
+                      disabled={processing || !hasImage}
+                    />
+                    <button
+                      style={{ ...s.sendBtn, minWidth: 140, padding: "14px 24px", fontSize: 15, fontWeight: 700, ...(processing ? { opacity: 0.7 } : {}) }}
+                      disabled={processing || !hasImage}
+                      onClick={() => { if (requireSignIn()) return; handleAiEdit(); }}
+                    >
+                      {processing && activeTool === "ai-edit" ? <span style={s.btnRow}><span style={s.spin} />Generating</span> : "✨ Generate"}
+                    </button>
+                  </div>
                 </div>
               </div>
 

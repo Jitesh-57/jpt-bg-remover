@@ -5,7 +5,10 @@ export const runtime = "nodejs";
 
 async function generateWithNanoBanana(prompt: string): Promise<{ data: string; mimeType: string } | null> {
   const apiKey = process.env.NANOBANNA_API_KEY;
-  if (!apiKey) return null;
+  if (!apiKey) {
+    console.error("NANOBANNA_API_KEY not set");
+    return null;
+  }
 
   try {
     const res = await fetch("https://api.nanobanna.com/api/v1/imagine", {
@@ -24,6 +27,8 @@ async function generateWithNanoBanana(prompt: string): Promise<{ data: string; m
       }),
     });
 
+    console.log("Nano Banana response status:", res.status);
+
     if (res.status === 429 || res.status === 503) {
       console.warn("Nano Banana API rate limited or temporarily unavailable");
       return null;
@@ -35,11 +40,14 @@ async function generateWithNanoBanana(prompt: string): Promise<{ data: string; m
       return null;
     }
 
-    const d = (await res.json()) as { images?: string[] };
-    if (d.images?.[0]) {
-      // Base64 string is returned, not imageBytes
-      return { data: d.images[0], mimeType: "image/png" };
+    const d = (await res.json()) as { images?: string[]; image?: string };
+    const imageData = d.images?.[0] || d.image;
+
+    if (imageData) {
+      return { data: imageData, mimeType: "image/png" };
     }
+
+    console.error("No image data in response:", d);
   } catch (e) {
     console.error("Nano Banana generation error:", e);
   }
