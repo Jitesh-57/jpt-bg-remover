@@ -6,12 +6,6 @@ export const maxDuration = 60;
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.GOOGLE_GEMINI_API_KEY;
 
-// Only models confirmed to support IMAGE output modality
-const UPSCALE_MODELS = [
-  "gemini-2.5-flash-image",   // Same as AI Edit — confirmed working
-  "gemini-2.0-flash-exp",     // Reliable fallback
-];
-
 type GeminiPart = { text: string } | { inlineData: { mimeType: string; data: string } };
 type GeminiResponse = {
   candidates?: { content?: { parts?: GeminiPart[] } }[];
@@ -20,72 +14,89 @@ type GeminiResponse = {
 
 async function upscaleWithGemini(imageData: string, mimeType: string): Promise<string | null> {
   if (!GEMINI_API_KEY) {
-    console.error("[upscale] No GEMINI_API_KEY found");
+    console.error("[upscale] No API key");
     return null;
   }
 
-  const prompt = `You are a professional photo retoucher. Transform this photo into a stunning high-quality enhanced version.
+  const prompt =
+    "Upscale this image to 2-3x resolution while maintaining quality. " +
+    "Enhance details, sharpen fine features, reduce noise, and improve overall clarity. " +
+    "Keep the original content, composition, colors, and subject matter exactly the same. " +
+    "Photorealistic, high-quality result.";
 
-Enhancements to apply:
-- SIGNIFICANTLY sharpen the entire image — make every detail crystal clear
-- Enhance facial features: smoother skin, brighter clearer eyes, defined lips, sharp eyebrows
-- Make hair look silky, glossy, and defined — each strand visible
-- Sharpen clothing details: fabric texture, embroidery, patterns, edges
-- Enhance background clarity and depth
-- Boost overall contrast and vibrancy — make colors richer and more vivid
-- Remove any blur, grain, or noise completely
-- Give the image a professional DSLR photograph look
-
-The result should look dramatically better than the input — like a professional photographer edited it.
-Same person, same pose, same scene — but visibly enhanced and more beautiful quality.`;
-
-  for (const model of UPSCALE_MODELS) {
-    try {
-      console.log(`[upscale] trying: ${model}`);
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{
-              parts: [
-                { inlineData: { mimeType, data: imageData } },
-                { text: prompt },
-              ],
-            }],
-            generationConfig: {
-              responseModalities: ["IMAGE", "TEXT"],
-            },
-          }),
-          signal: AbortSignal.timeout(25000), // 25s per attempt — 2 attempts fit in Vercel's 60s limit
-        }
-      );
-
-      if (!res.ok) {
-        const err = await res.text();
-        console.log(`[upscale] ${model} HTTP ${res.status}:`, err.substring(0, 200));
-        continue;
+  // Primary: gemini-2.5-flash-image — confirmed working for image editing
+  try {
+    console.log("[upscale] trying gemini-2.5-flash-image");
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{
+            parts: [
+              { inlineData: { mimeType, data: imageData } },
+              { text: prompt },
+            ],
+          }],
+          generationConfig: { responseModalities: ["IMAGE", "TEXT"] },
+        }),
+        signal: AbortSignal.timeout(50000), // 50s — fits in Vercel's 60s limit
       }
+    );
 
+    if (res.ok) {
       const json = (await res.json()) as GeminiResponse;
-
-      if (json.error) {
-        console.log(`[upscale] ${model} API error:`, json.error.message);
-        continue;
+      if (!json.error) {
+        const parts = json.candidates?.[0]?.content?.parts ?? [];
+        for (const part of parts) {
+          if ("inlineData" in part && part.inlineData?.data) {
+            console.log("[upscale] ✓ gemini-2.5-flash-image succeeded");
+            return `data:${part.inlineData.mimeType || "image/png"};base64,${part.inlineData.data}`;
+          }
+        }
       }
+      console.log("[upscale] gemini-2.5-flash-image error:", json.error?.message);
+    } else {
+      console.log("[upscale] gemini-2.5-flash-image HTTP:", res.status);
+    }
+  } catch (e) {
+    console.log("[upscale] gemini-2.5-flash-image exception:", (e as Error).message);
+  }
 
+  // Fallback: gemini-2.0-flash-exp
+  try {
+    console.log("[upscale] trying gemini-2.0-flash-exp");
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{
+            parts: [
+              { inlineData: { mimeType, data: imageData } },
+              { text: prompt },
+            ],
+          }],
+          generationConfig: { responseModalities: ["IMAGE", "TEXT"] },
+        }),
+        signal: AbortSignal.timeout(8000), // 8s remaining budget
+      }
+    );
+
+    if (res.ok) {
+      const json = (await res.json()) as GeminiResponse;
       const parts = json.candidates?.[0]?.content?.parts ?? [];
       for (const part of parts) {
         if ("inlineData" in part && part.inlineData?.data) {
-          console.log(`[upscale] ✓ ${model} succeeded`);
+          console.log("[upscale] ✓ gemini-2.0-flash-exp succeeded");
           return `data:${part.inlineData.mimeType || "image/png"};base64,${part.inlineData.data}`;
         }
       }
-      console.log(`[upscale] ${model} — no image in response`);
-    } catch (e) {
-      console.log(`[upscale] ${model} exception:`, (e as Error).message);
     }
+  } catch (e) {
+    console.log("[upscale] gemini-2.0-flash-exp exception:", (e as Error).message);
   }
 
   return null;
@@ -98,7 +109,6 @@ export async function POST(req: NextRequest) {
   const { dataUrl } = (await req.json()) as { dataUrl: string };
   if (!dataUrl) return NextResponse.json({ error: "dataUrl required" }, { status: 400 });
 
-  // Validate format
   const match = dataUrl.match(/^data:([^;]+);base64,(.+)$/);
   if (!match) return NextResponse.json({ error: "Invalid image format" }, { status: 400 });
   const [, mimeType, base64] = match;
@@ -106,5 +116,5 @@ export async function POST(req: NextRequest) {
   const result = await upscaleWithGemini(base64, mimeType);
   if (result) return withCredits({ dataUrl: result }, session!);
 
-  return NextResponse.json({ error: "Upscale failed. Please try again with a smaller image." }, { status: 500 });
+  return NextResponse.json({ error: "Upscale failed. Please try again." }, { status: 500 });
 }
