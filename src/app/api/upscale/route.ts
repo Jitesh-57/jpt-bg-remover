@@ -12,42 +12,18 @@ type GeminiResponse = {
   error?: { message: string };
 };
 
-async function callModel(model: string, imageData: string, mimeType: string, prompt: string, timeoutMs: number): Promise<string | null> {
-  try {
-    console.log(`[upscale] trying: ${model}`);
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{
-            parts: [
-              { inlineData: { mimeType, data: imageData } },
-              { text: prompt },
-            ],
-          }],
-          generationConfig: { responseModalities: ["IMAGE", "TEXT"] },
-        }),
-        signal: AbortSignal.timeout(timeoutMs),
-      }
-    );
-    if (!res.ok) { console.log(`[upscale] ${model} HTTP ${res.status}`); return null; }
-    const json = (await res.json()) as GeminiResponse;
-    if (json.error) { console.log(`[upscale] ${model} error:`, json.error.message); return null; }
-    const parts = json.candidates?.[0]?.content?.parts ?? [];
-    for (const part of parts) {
-      if ("inlineData" in part && part.inlineData?.data) {
-        console.log(`[upscale] ✓ ${model} succeeded`);
-        return `data:${part.inlineData.mimeType || "image/png"};base64,${part.inlineData.data}`;
-      }
-    }
-    console.log(`[upscale] ${model} — no image`);
-  } catch (e) {
-    console.log(`[upscale] ${model}:`, (e as Error).message);
-  }
-  return null;
-}
+// Best image models in quality order — tested working
+const MODELS = [
+  { id: "gemini-3.1-flash-image-preview", timeout: 40000 }, // Nano Banana 2 — newest, best
+  { id: "gemini-3-pro-image-preview",     timeout: 12000 }, // Nano Banana Pro
+  { id: "gemini-2.5-flash-image",         timeout: 5000  }, // Nano Banana — baseline
+];
+
+const PROMPT =
+  "Upscale this image to 2-3x resolution while maintaining quality. " +
+  "Enhance details, sharpen fine features, reduce noise, and improve overall clarity. " +
+  "Keep the original content, composition, colors, and subject matter exactly the same. " +
+  "Photorealistic, high-quality result.";
 
 export async function POST(req: NextRequest) {
   const { session, error } = checkAuth(req);
@@ -60,21 +36,33 @@ export async function POST(req: NextRequest) {
   if (!match) return NextResponse.json({ error: "Invalid image format" }, { status: 400 });
   const [, mimeType, base64] = match;
 
-  const prompt =
-    "Upscale this image to 2-3x resolution while maintaining quality. " +
-    "Enhance details, sharpen fine features, reduce noise, and improve overall clarity. " +
-    "Keep the original content, composition, colors, and subject matter exactly the same. " +
-    "Photorealistic, high-quality result.";
+  for (const { id, timeout } of MODELS) {
+    try {
+      console.log(`[upscale] ${id}`);
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${id}:generateContent?key=${GEMINI_API_KEY}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ inlineData: { mimeType, data: base64 } }, { text: PROMPT }] }],
+            generationConfig: { responseModalities: ["IMAGE", "TEXT"] },
+          }),
+          signal: AbortSignal.timeout(timeout),
+        }
+      );
+      if (!res.ok) { console.log(`[upscale] ${id} HTTP ${res.status}`); continue; }
+      const json = (await res.json()) as GeminiResponse;
+      if (json.error) { console.log(`[upscale] ${id} err:`, json.error.message); continue; }
+      const parts = json.candidates?.[0]?.content?.parts ?? [];
+      for (const p of parts) {
+        if ("inlineData" in p && p.inlineData?.data) {
+          console.log(`[upscale] ✓ ${id}`);
+          return withCredits({ dataUrl: `data:${p.inlineData.mimeType || "image/png"};base64,${p.inlineData.data}` }, session!);
+        }
+      }
+    } catch (e) { console.log(`[upscale] ${id}:`, (e as Error).message); }
+  }
 
-  // Nano Banana Pro — best quality upscaling model
-  let result = await callModel("gemini-3-pro-image-preview", base64, mimeType, prompt, 40000);
-
-  // Fallback: Nano Banana 2
-  if (!result) result = await callModel("gemini-3.1-flash-image-preview", base64, mimeType, prompt, 12000);
-
-  // Fallback: Nano Banana
-  if (!result) result = await callModel("gemini-2.5-flash-image", base64, mimeType, prompt, 5000);
-
-  if (result) return withCredits({ dataUrl: result }, session!);
   return NextResponse.json({ error: "Upscale failed. Please try again." }, { status: 500 });
 }
