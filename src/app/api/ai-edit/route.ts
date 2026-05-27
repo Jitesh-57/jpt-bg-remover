@@ -6,10 +6,10 @@ export const maxDuration = 60;
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.GOOGLE_GEMINI_API_KEY;
 
-// Valid image editing models in order of quality
+// Confirmed working image models (tested)
 const EDIT_MODELS = [
-  "gemini-2.5-flash-image",       // Primary — confirmed working
-  "gemini-2.0-flash-exp",         // Fallback
+  { name: "gemini-2.5-flash-image", timeout: 45000 },    // Nano Banana ✅
+  { name: "gemini-3-pro-image-preview", timeout: 12000 }, // Nano Banana Pro ✅
 ];
 
 type GeminiPart = { text: string } | { inlineData: { mimeType: string; data: string } };
@@ -18,7 +18,6 @@ type GeminiResponse = {
   error?: { message: string };
 };
 
-// Analyze image and create a more effective edit prompt
 async function enhancePrompt(userPrompt: string, imageData: string, mimeType: string): Promise<string> {
   if (!GEMINI_API_KEY) return userPrompt;
   try {
@@ -36,6 +35,7 @@ async function enhancePrompt(userPrompt: string, imageData: string, mimeType: st
           }],
           generationConfig: { responseModalities: ["TEXT"] },
         }),
+        signal: AbortSignal.timeout(8000),
       }
     );
     if (!res.ok) return userPrompt;
@@ -60,11 +60,11 @@ export async function POST(req: NextRequest) {
 
   const enhancedPrompt = await enhancePrompt(prompt, base64, mimeType);
 
-  for (const model of EDIT_MODELS) {
+  for (const { name, timeout } of EDIT_MODELS) {
     try {
-      console.log(`[ai-edit] trying model: ${model}`);
+      console.log(`[ai-edit] trying: ${name}`);
       const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/${name}:generateContent?key=${GEMINI_API_KEY}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -72,34 +72,29 @@ export async function POST(req: NextRequest) {
             contents: [{ parts: [{ inlineData: { mimeType, data: base64 } }, { text: enhancedPrompt }] }],
             generationConfig: { responseModalities: ["IMAGE", "TEXT"] },
           }),
-          signal: AbortSignal.timeout(50000),
+          signal: AbortSignal.timeout(timeout),
         }
       );
 
-      const data = (await res.json()) as GeminiResponse;
+      if (!res.ok) { console.log(`[ai-edit] ${name} HTTP ${res.status}`); continue; }
 
-      if (data.error) {
-        console.log(`[ai-edit] ${model} error: ${data.error.message}`);
-        continue;
-      }
+      const data = (await res.json()) as GeminiResponse;
+      if (data.error) { console.log(`[ai-edit] ${name} error:`, data.error.message); continue; }
 
       const parts = data.candidates?.[0]?.content?.parts;
       if (parts) {
         for (const part of parts) {
           if ("inlineData" in part && part.inlineData?.data) {
-            console.log(`[ai-edit] ✓ ${model} succeeded`);
-            return withCredits(
-              { dataUrl: `data:${part.inlineData.mimeType};base64,${part.inlineData.data}` },
-              session!
-            );
+            console.log(`[ai-edit] ✓ ${name} succeeded`);
+            return withCredits({ dataUrl: `data:${part.inlineData.mimeType};base64,${part.inlineData.data}` }, session!);
           }
         }
       }
-      console.log(`[ai-edit] ${model} — no image returned`);
+      console.log(`[ai-edit] ${name} — no image`);
     } catch (e) {
-      console.log(`[ai-edit] ${model} exception:`, (e as Error).message);
+      console.log(`[ai-edit] ${name} exception:`, (e as Error).message);
     }
   }
 
-  return NextResponse.json({ error: "AI edit failed. Please try a different prompt." }, { status: 500 });
+  return NextResponse.json({ error: "AI edit failed. Try a different prompt." }, { status: 500 });
 }

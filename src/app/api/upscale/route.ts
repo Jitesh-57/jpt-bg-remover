@@ -6,6 +6,12 @@ export const maxDuration = 60;
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.GOOGLE_GEMINI_API_KEY;
 
+// Confirmed working image models (tested)
+const UPSCALE_MODELS = [
+  { name: "gemini-2.5-flash-image", timeout: 45000 },   // Nano Banana ✅
+  { name: "gemini-3-pro-image-preview", timeout: 12000 }, // Nano Banana Pro ✅
+];
+
 type GeminiPart = { text: string } | { inlineData: { mimeType: string; data: string } };
 type GeminiResponse = {
   candidates?: { content?: { parts?: GeminiPart[] } }[];
@@ -13,10 +19,7 @@ type GeminiResponse = {
 };
 
 async function upscaleWithGemini(imageData: string, mimeType: string): Promise<string | null> {
-  if (!GEMINI_API_KEY) {
-    console.error("[upscale] No API key");
-    return null;
-  }
+  if (!GEMINI_API_KEY) return null;
 
   const prompt =
     "Upscale this image to 2-3x resolution while maintaining quality. " +
@@ -24,81 +27,50 @@ async function upscaleWithGemini(imageData: string, mimeType: string): Promise<s
     "Keep the original content, composition, colors, and subject matter exactly the same. " +
     "Photorealistic, high-quality result.";
 
-  // Primary: gemini-2.5-flash-image — confirmed working for image editing
-  try {
-    console.log("[upscale] trying gemini-2.5-flash-image");
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${GEMINI_API_KEY}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{
-            parts: [
-              { inlineData: { mimeType, data: imageData } },
-              { text: prompt },
-            ],
-          }],
-          generationConfig: { responseModalities: ["IMAGE", "TEXT"] },
-        }),
-        signal: AbortSignal.timeout(50000), // 50s — fits in Vercel's 60s limit
-      }
-    );
-
-    if (res.ok) {
-      const json = (await res.json()) as GeminiResponse;
-      if (!json.error) {
-        const parts = json.candidates?.[0]?.content?.parts ?? [];
-        for (const part of parts) {
-          if ("inlineData" in part && part.inlineData?.data) {
-            console.log("[upscale] ✓ gemini-2.5-flash-image succeeded");
-            return `data:${part.inlineData.mimeType || "image/png"};base64,${part.inlineData.data}`;
-          }
+  for (const { name, timeout } of UPSCALE_MODELS) {
+    try {
+      console.log(`[upscale] trying: ${name}`);
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${name}:generateContent?key=${GEMINI_API_KEY}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{
+              parts: [
+                { inlineData: { mimeType, data: imageData } },
+                { text: prompt },
+              ],
+            }],
+            generationConfig: { responseModalities: ["IMAGE", "TEXT"] },
+          }),
+          signal: AbortSignal.timeout(timeout),
         }
-      }
-      console.log("[upscale] gemini-2.5-flash-image error:", json.error?.message);
-    } else {
-      console.log("[upscale] gemini-2.5-flash-image HTTP:", res.status);
-    }
-  } catch (e) {
-    console.log("[upscale] gemini-2.5-flash-image exception:", (e as Error).message);
-  }
+      );
 
-  // Fallback: gemini-2.0-flash-exp
-  try {
-    console.log("[upscale] trying gemini-2.0-flash-exp");
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${GEMINI_API_KEY}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{
-            parts: [
-              { inlineData: { mimeType, data: imageData } },
-              { text: prompt },
-            ],
-          }],
-          generationConfig: { responseModalities: ["IMAGE", "TEXT"] },
-        }),
-        signal: AbortSignal.timeout(8000), // 8s remaining budget
+      if (!res.ok) {
+        console.log(`[upscale] ${name} HTTP ${res.status}`);
+        continue;
       }
-    );
 
-    if (res.ok) {
       const json = (await res.json()) as GeminiResponse;
+      if (json.error) {
+        console.log(`[upscale] ${name} error:`, json.error.message);
+        continue;
+      }
+
       const parts = json.candidates?.[0]?.content?.parts ?? [];
       for (const part of parts) {
         if ("inlineData" in part && part.inlineData?.data) {
-          console.log("[upscale] ✓ gemini-2.0-flash-exp succeeded");
+          console.log(`[upscale] ✓ ${name} succeeded`);
           return `data:${part.inlineData.mimeType || "image/png"};base64,${part.inlineData.data}`;
         }
       }
+      console.log(`[upscale] ${name} — no image in response`);
+    } catch (e) {
+      console.log(`[upscale] ${name} exception:`, (e as Error).message);
     }
-  } catch (e) {
-    console.log("[upscale] gemini-2.0-flash-exp exception:", (e as Error).message);
   }
-
   return null;
 }
 

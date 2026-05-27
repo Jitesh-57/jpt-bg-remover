@@ -4,35 +4,30 @@ import { checkAuth, withCredits } from "@/lib/google-drive";
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
-// Support both env var names
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.GOOGLE_GEMINI_API_KEY;
 
-// Models to try in order for text-to-image generation
-const IMAGE_GEN_MODELS = [
-  "gemini-2.0-flash-exp",
-  "gemini-2.0-flash-preview-image-generation",
-  "gemini-2.5-flash-preview-04-17",
+// Confirmed working image generation models (tested)
+const BG_MODELS = [
+  { name: "gemini-2.5-flash-image", timeout: 45000 },    // Nano Banana ✅
+  { name: "gemini-3-pro-image-preview", timeout: 12000 }, // Nano Banana Pro ✅
 ];
 
 type GeminiPart = { inlineData?: { mimeType: string; data: string }; text?: string };
 type GeminiResponse = {
   candidates?: { content?: { parts?: GeminiPart[] } }[];
-  error?: { message: string; code?: number };
+  error?: { message: string };
 };
 
 async function generateBackground(prompt: string): Promise<{ data: string; mimeType: string } | null> {
-  if (!GEMINI_API_KEY) {
-    console.error("[generate-bg] No API key found");
-    return null;
-  }
+  if (!GEMINI_API_KEY) return null;
 
-  const enhancedPrompt = `Professional background image for photo editing. ${prompt}. High quality, suitable as a background behind a person or product. Professional lighting, clean composition, no text, no watermarks, no people, 1024x1024 pixels.`;
+  const enhancedPrompt = `Professional background image for photo editing. ${prompt}. High quality, suitable as a background behind a person or product. Professional lighting, clean composition, no text, no watermarks, no people.`;
 
-  for (const model of IMAGE_GEN_MODELS) {
+  for (const { name, timeout } of BG_MODELS) {
     try {
-      console.log(`[generate-bg] Trying model: ${model}`);
+      console.log(`[generate-bg] trying: ${name}`);
       const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/${name}:generateContent?key=${GEMINI_API_KEY}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -40,30 +35,33 @@ async function generateBackground(prompt: string): Promise<{ data: string; mimeT
             contents: [{ parts: [{ text: enhancedPrompt }] }],
             generationConfig: { responseModalities: ["IMAGE", "TEXT"] },
           }),
-          signal: AbortSignal.timeout(50000),
+          signal: AbortSignal.timeout(timeout),
         }
       );
 
-      const json = (await res.json()) as GeminiResponse;
+      if (!res.ok) {
+        console.log(`[generate-bg] ${name} HTTP ${res.status}`);
+        continue;
+      }
 
+      const json = (await res.json()) as GeminiResponse;
       if (json.error) {
-        console.log(`[generate-bg] ${model} error: ${json.error.message}`);
+        console.log(`[generate-bg] ${name} error:`, json.error.message);
         continue;
       }
 
       const parts = json.candidates?.[0]?.content?.parts ?? [];
       for (const part of parts) {
         if (part.inlineData?.data) {
-          console.log(`[generate-bg] ✓ ${model} succeeded`);
+          console.log(`[generate-bg] ✓ ${name} succeeded`);
           return { data: part.inlineData.data, mimeType: part.inlineData.mimeType || "image/png" };
         }
       }
-      console.log(`[generate-bg] ${model} returned no image`);
+      console.log(`[generate-bg] ${name} — no image`);
     } catch (e) {
-      console.log(`[generate-bg] ${model} exception:`, (e as Error).message);
+      console.log(`[generate-bg] ${name} exception:`, (e as Error).message);
     }
   }
-
   return null;
 }
 
@@ -72,17 +70,10 @@ export async function POST(req: NextRequest) {
   if (authError) return authError;
 
   const { prompt } = (await req.json()) as { prompt: string };
-  if (!prompt?.trim()) {
-    return NextResponse.json({ error: "Prompt required" }, { status: 400 });
-  }
+  if (!prompt?.trim()) return NextResponse.json({ error: "Prompt required" }, { status: 400 });
 
   const result = await generateBackground(prompt);
-  if (!result) {
-    return NextResponse.json(
-      { error: "Background generation failed. Please try a different prompt." },
-      { status: 500 }
-    );
-  }
+  if (!result) return NextResponse.json({ error: "Background generation failed. Please try again." }, { status: 500 });
 
   return withCredits({ data: result.data, mimeType: result.mimeType }, session);
 }
