@@ -24,16 +24,20 @@ async function upscaleWithGemini(imageData: string, mimeType: string): Promise<s
     return null;
   }
 
-  const prompt = `Enhance and upscale this image to maximum quality.
+  const prompt = `You are a professional photo retoucher. Transform this photo into a stunning high-quality enhanced version.
 
-Requirements:
-- Make the image sharper, clearer, and higher resolution
-- Enhance fine details: skin texture, hair strands, fabric, edges
-- Remove blur, noise, grain, and compression artifacts
-- Sharpen facial features if present: eyes, eyelashes, lips
-- Keep exact same composition, colors, lighting, and subject
-- Do NOT change anything creative — only improve quality and sharpness
-- Output as a high-quality, sharp, detailed image`;
+Enhancements to apply:
+- SIGNIFICANTLY sharpen the entire image — make every detail crystal clear
+- Enhance facial features: smoother skin, brighter clearer eyes, defined lips, sharp eyebrows
+- Make hair look silky, glossy, and defined — each strand visible
+- Sharpen clothing details: fabric texture, embroidery, patterns, edges
+- Enhance background clarity and depth
+- Boost overall contrast and vibrancy — make colors richer and more vivid
+- Remove any blur, grain, or noise completely
+- Give the image a professional DSLR photograph look
+
+The result should look dramatically better than the input — like a professional photographer edited it.
+Same person, same pose, same scene — but visibly enhanced and more beautiful quality.`;
 
   for (const model of UPSCALE_MODELS) {
     try {
