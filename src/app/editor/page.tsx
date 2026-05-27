@@ -306,12 +306,12 @@ export default function ImageEditorPage() {
     if (!src || processing) return;
     setProcessing(true); setProcessingLabel("Generating background…"); setError(null);
     try {
-      const data = await callApi<{ data: string; mimeType: string }>("/api/generate-bg", { prompt: templateOrPrompt });
-      if (!data?.data) throw new Error("Generation failed");
-      const bgSrc = `data:${data.mimeType || "image/png"};base64,${data.data}`;
-      const result = await compositeOnCanvas(src, { type: "image", src: bgSrc });
-      setWorking(result);
-      autoSaveToDrive(result, "generate-bg"); // Auto-save history
+      // Use AI Edit to directly replace the background — keeps subject intact
+      const aiPrompt = `Replace the background of this image with: ${templateOrPrompt}. Keep the person/subject exactly as they are — same pose, appearance, clothing. Only change the background behind them.`;
+      const data = await callApi<{ dataUrl: string }>("/api/ai-edit", { dataUrl: src, prompt: aiPrompt });
+      if (!data?.dataUrl) throw new Error("Background generation failed");
+      setWorking(data.dataUrl);
+      autoSaveToDrive(data.dataUrl, "generate-bg");
     } catch (e) { setError((e as Error).message); }
     finally { setProcessing(false); setProcessingLabel(""); }
   };
