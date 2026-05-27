@@ -2,15 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { checkAuth, withCredits } from "@/lib/google-drive";
 
 export const runtime = "nodejs";
-export const maxDuration = 120;
+export const maxDuration = 60;
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.GOOGLE_GEMINI_API_KEY;
 
-// Valid models in order of quality — best first
+// Only models confirmed to support IMAGE output modality
 const UPSCALE_MODELS = [
-  "gemini-2.5-pro-preview-05-06",       // Highest quality
-  "gemini-2.5-flash-image",             // Same as AI Edit — confirmed working
-  "gemini-2.0-flash-exp",               // Good fallback
+  "gemini-2.5-flash-image",   // Same as AI Edit — confirmed working
+  "gemini-2.0-flash-exp",     // Reliable fallback
 ];
 
 type GeminiPart = { text: string } | { inlineData: { mimeType: string; data: string } };
@@ -20,26 +19,25 @@ type GeminiResponse = {
 };
 
 async function upscaleWithGemini(imageData: string, mimeType: string): Promise<string | null> {
-  if (!GEMINI_API_KEY) return null;
+  if (!GEMINI_API_KEY) {
+    console.error("[upscale] No GEMINI_API_KEY found");
+    return null;
+  }
 
-  const prompt = `You are a professional photo enhancer and upscaler. Enhance this image to the highest possible quality.
+  const prompt = `Enhance and upscale this image to maximum quality.
 
-ENHANCEMENT REQUIREMENTS:
-- Increase sharpness and clarity — make every pixel crisp and detailed
-- Enhance fine textures: skin pores, hair strands, fabric threads, surface details
-- Sharpen edges cleanly without halos or artifacts
-- Remove any blur, noise, grain, or compression artifacts
-- Enhance facial details if present: eyes, eyelashes, skin texture
-- Reconstruct and enhance background details with clarity
-- Maintain EXACT same composition, colors, lighting, shadows, and subject matter
-- Do NOT change poses, expressions, or creative elements
-- Output at maximum possible resolution and quality
-
-The result should look like a professional high-resolution photograph.`;
+Requirements:
+- Make the image sharper, clearer, and higher resolution
+- Enhance fine details: skin texture, hair strands, fabric, edges
+- Remove blur, noise, grain, and compression artifacts
+- Sharpen facial features if present: eyes, eyelashes, lips
+- Keep exact same composition, colors, lighting, and subject
+- Do NOT change anything creative — only improve quality and sharpness
+- Output as a high-quality, sharp, detailed image`;
 
   for (const model of UPSCALE_MODELS) {
     try {
-      console.log(`[upscale] trying model: ${model}`);
+      console.log(`[upscale] trying: ${model}`);
       const res = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`,
         {
@@ -56,14 +54,20 @@ The result should look like a professional high-resolution photograph.`;
               responseModalities: ["IMAGE", "TEXT"],
             },
           }),
-          signal: AbortSignal.timeout(90000),
+          signal: AbortSignal.timeout(25000), // 25s per attempt — 2 attempts fit in Vercel's 60s limit
         }
       );
+
+      if (!res.ok) {
+        const err = await res.text();
+        console.log(`[upscale] ${model} HTTP ${res.status}:`, err.substring(0, 200));
+        continue;
+      }
 
       const json = (await res.json()) as GeminiResponse;
 
       if (json.error) {
-        console.log(`[upscale] ${model} error: ${json.error.message}`);
+        console.log(`[upscale] ${model} API error:`, json.error.message);
         continue;
       }
 
@@ -74,7 +78,7 @@ The result should look like a professional high-resolution photograph.`;
           return `data:${part.inlineData.mimeType || "image/png"};base64,${part.inlineData.data}`;
         }
       }
-      console.log(`[upscale] ${model} — no image returned`);
+      console.log(`[upscale] ${model} — no image in response`);
     } catch (e) {
       console.log(`[upscale] ${model} exception:`, (e as Error).message);
     }
@@ -90,12 +94,13 @@ export async function POST(req: NextRequest) {
   const { dataUrl } = (await req.json()) as { dataUrl: string };
   if (!dataUrl) return NextResponse.json({ error: "dataUrl required" }, { status: 400 });
 
+  // Validate format
   const match = dataUrl.match(/^data:([^;]+);base64,(.+)$/);
-  if (!match) return NextResponse.json({ error: "Invalid dataUrl" }, { status: 400 });
+  if (!match) return NextResponse.json({ error: "Invalid image format" }, { status: 400 });
   const [, mimeType, base64] = match;
 
   const result = await upscaleWithGemini(base64, mimeType);
   if (result) return withCredits({ dataUrl: result }, session!);
 
-  return NextResponse.json({ error: "Upscale failed. Please try again." }, { status: 500 });
+  return NextResponse.json({ error: "Upscale failed. Please try again with a smaller image." }, { status: 500 });
 }
