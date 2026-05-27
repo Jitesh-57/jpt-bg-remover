@@ -4,12 +4,13 @@ import { checkAuth, withCredits } from "@/lib/google-drive";
 export const runtime = "nodejs";
 export const maxDuration = 120;
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.GOOGLE_GEMINI_API_KEY;
 
-const IMAGE_MODELS = [
-  "gemini-2.5-flash-image",
-  "gemini-3.1-flash-image-preview",
-  "gemini-3-pro-image-preview",
+// Valid models in order of quality — best first
+const UPSCALE_MODELS = [
+  "gemini-2.5-pro-preview-05-06",       // Highest quality
+  "gemini-2.5-flash-image",             // Same as AI Edit — confirmed working
+  "gemini-2.0-flash-exp",               // Good fallback
 ];
 
 type GeminiPart = { text: string } | { inlineData: { mimeType: string; data: string } };
@@ -21,14 +22,24 @@ type GeminiResponse = {
 async function upscaleWithGemini(imageData: string, mimeType: string): Promise<string | null> {
   if (!GEMINI_API_KEY) return null;
 
-  const prompt =
-    "Upscale this image to 2-3x resolution while maintaining quality. Enhance details, sharpen fine features, reduce noise, " +
-    "and improve overall clarity. Keep the original content, composition, colors, and subject matter exactly the same. " +
-    "Photorealistic, high-quality result.";
+  const prompt = `You are a professional photo enhancer and upscaler. Enhance this image to the highest possible quality.
 
-  for (const model of IMAGE_MODELS) {
+ENHANCEMENT REQUIREMENTS:
+- Increase sharpness and clarity — make every pixel crisp and detailed
+- Enhance fine textures: skin pores, hair strands, fabric threads, surface details
+- Sharpen edges cleanly without halos or artifacts
+- Remove any blur, noise, grain, or compression artifacts
+- Enhance facial details if present: eyes, eyelashes, skin texture
+- Reconstruct and enhance background details with clarity
+- Maintain EXACT same composition, colors, lighting, shadows, and subject matter
+- Do NOT change poses, expressions, or creative elements
+- Output at maximum possible resolution and quality
+
+The result should look like a professional high-resolution photograph.`;
+
+  for (const model of UPSCALE_MODELS) {
     try {
-      console.log(`[upscale] trying Gemini ${model}`);
+      console.log(`[upscale] trying model: ${model}`);
       const res = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`,
         {
@@ -41,13 +52,16 @@ async function upscaleWithGemini(imageData: string, mimeType: string): Promise<s
                 { text: prompt },
               ],
             }],
-            generationConfig: { responseModalities: ["IMAGE", "TEXT"] },
+            generationConfig: {
+              responseModalities: ["IMAGE", "TEXT"],
+            },
           }),
           signal: AbortSignal.timeout(90000),
         }
       );
 
       const json = (await res.json()) as GeminiResponse;
+
       if (json.error) {
         console.log(`[upscale] ${model} error: ${json.error.message}`);
         continue;
@@ -56,15 +70,16 @@ async function upscaleWithGemini(imageData: string, mimeType: string): Promise<s
       const parts = json.candidates?.[0]?.content?.parts ?? [];
       for (const part of parts) {
         if ("inlineData" in part && part.inlineData?.data) {
-          console.log(`[upscale] ✓ Gemini ${model} upscale successful`);
+          console.log(`[upscale] ✓ ${model} succeeded`);
           return `data:${part.inlineData.mimeType || "image/png"};base64,${part.inlineData.data}`;
         }
       }
-      console.log(`[upscale] ${model} no image in response`);
+      console.log(`[upscale] ${model} — no image returned`);
     } catch (e) {
       console.log(`[upscale] ${model} exception:`, (e as Error).message);
     }
   }
+
   return null;
 }
 

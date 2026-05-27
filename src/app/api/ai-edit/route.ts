@@ -4,7 +4,13 @@ import { checkAuth, withCredits } from "@/lib/google-drive";
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.GOOGLE_GEMINI_API_KEY;
+
+// Valid image editing models in order of quality
+const EDIT_MODELS = [
+  "gemini-2.5-flash-image",       // Primary — confirmed working
+  "gemini-2.0-flash-exp",         // Fallback
+];
 
 type GeminiPart = { text: string } | { inlineData: { mimeType: string; data: string } };
 type GeminiResponse = {
@@ -12,7 +18,7 @@ type GeminiResponse = {
   error?: { message: string };
 };
 
-// Use Gemini text model to understand image context and enhance the user's prompt
+// Analyze image and create a more effective edit prompt
 async function enhancePrompt(userPrompt: string, imageData: string, mimeType: string): Promise<string> {
   if (!GEMINI_API_KEY) return userPrompt;
   try {
@@ -52,34 +58,48 @@ export async function POST(req: NextRequest) {
   if (!match) return NextResponse.json({ error: "Invalid dataUrl" }, { status: 400 });
   const [, mimeType, base64] = match;
 
-  // Enhance the prompt with Gemini context analysis
   const enhancedPrompt = await enhancePrompt(prompt, base64, mimeType);
 
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${GEMINI_API_KEY}`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: [{ inlineData: { mimeType, data: base64 } }, { text: enhancedPrompt }] }],
-        generationConfig: { responseModalities: ["IMAGE", "TEXT"] },
-      }),
-    }
-  );
+  for (const model of EDIT_MODELS) {
+    try {
+      console.log(`[ai-edit] trying model: ${model}`);
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ inlineData: { mimeType, data: base64 } }, { text: enhancedPrompt }] }],
+            generationConfig: { responseModalities: ["IMAGE", "TEXT"] },
+          }),
+          signal: AbortSignal.timeout(50000),
+        }
+      );
 
-  const data = (await res.json()) as GeminiResponse;
-  if (data.error) return NextResponse.json({ error: data.error.message }, { status: 500 });
+      const data = (await res.json()) as GeminiResponse;
 
-  const parts = data.candidates?.[0]?.content?.parts;
-  if (parts) {
-    for (const part of parts) {
-      if ("inlineData" in part && part.inlineData?.data) {
-        return withCredits(
-          { dataUrl: `data:${part.inlineData.mimeType};base64,${part.inlineData.data}` },
-          session!
-        );
+      if (data.error) {
+        console.log(`[ai-edit] ${model} error: ${data.error.message}`);
+        continue;
       }
+
+      const parts = data.candidates?.[0]?.content?.parts;
+      if (parts) {
+        for (const part of parts) {
+          if ("inlineData" in part && part.inlineData?.data) {
+            console.log(`[ai-edit] ✓ ${model} succeeded`);
+            return withCredits(
+              { dataUrl: `data:${part.inlineData.mimeType};base64,${part.inlineData.data}` },
+              session!
+            );
+          }
+        }
+      }
+      console.log(`[ai-edit] ${model} — no image returned`);
+    } catch (e) {
+      console.log(`[ai-edit] ${model} exception:`, (e as Error).message);
     }
   }
-  return NextResponse.json({ error: "No image output from AI" }, { status: 500 });
+
+  return NextResponse.json({ error: "AI edit failed. Please try a different prompt." }, { status: 500 });
 }
