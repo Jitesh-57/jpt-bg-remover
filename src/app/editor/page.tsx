@@ -363,13 +363,12 @@ export default function ImageEditorPage() {
     if (!src || processing) return;
     setProcessing(true); setProcessingLabel(`Upscaling ${upscaleScale}…`); setError(null);
     try {
-      const data = await callApi<{ dataUrl: string }>("/api/upscale", { dataUrl: src, scale: upscaleScale });
-      if (data?.dataUrl) {
-        setEditHistory(prev => working ? [...prev, working] : prev);
-        setWorking(data.dataUrl);
-        autoSaveToDrive(data.dataUrl, "upscale", `${upscaleScale} Upscale`);
-      } else throw new Error("Upscale failed");
-    } catch (e) { setError((e as Error).message); }
+      const { upscaleImage } = await import("@/lib/upscale-client");
+      const out = await upscaleImage(src, upscaleScale);
+      setEditHistory(prev => working ? [...prev, working] : prev);
+      setWorking(out);
+      autoSaveToDrive(out, "upscale", `${upscaleScale} Upscale`);
+    } catch (e) { setError((e as Error).message || "Upscale failed. Please try again."); }
     finally { setProcessing(false); setProcessingLabel(""); }
   };
 
@@ -670,7 +669,7 @@ export default function ImageEditorPage() {
               key={t.id}
               disabled={!hasImage}
               onClick={() => { if (requireSignIn()) return; setActiveTool(activeTool === t.id ? null : t.id); }}
-              title={`${t.label} (${CREDIT_COST} credits)`}
+              title={`${t.label}${["upscale", "resize", "adjust"].includes(t.id ?? "") ? " (Free)" : ` (${CREDIT_COST} credits)`}`}
               style={{ ...s.toolBtn, ...(activeTool === t.id ? s.toolBtnActive : {}), ...(!hasImage ? { opacity: 0.35, cursor: "not-allowed" } : {}) }}
             >
               <span style={{ fontSize: 22 }}>{t.icon}</span>
@@ -925,7 +924,7 @@ export default function ImageEditorPage() {
               <div style={s.panelContent}>
                 <div style={s.panelTitle}>🔍 AI Upscale</div>
                 <p style={s.panelSub}>Enhance image quality, sharpness and detail with AI</p>
-                <div style={s.creditNote}>Uses {CREDIT_COST} credits · {creditsLeft} remaining</div>
+                <div style={s.creditNote}>Free · runs in your browser</div>
 
                 {/* 2x / 4x toggle */}
                 <div>
@@ -1093,7 +1092,7 @@ export default function ImageEditorPage() {
               {[
                 { icon: "✨", label: "AI Edit", cost: CREDIT_COST },
                 { icon: "🌅", label: "Generate BG", cost: CREDIT_COST },
-                { icon: "🔍", label: "Upscale", cost: CREDIT_COST },
+                { icon: "🔍", label: "Upscale", cost: 0 },
                 { icon: "↔️", label: "Resize", cost: 0 },
                 { icon: "🎨", label: "Adjust", cost: 0 },
               ].map((item) => (
