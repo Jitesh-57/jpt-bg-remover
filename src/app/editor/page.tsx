@@ -5,7 +5,7 @@ import { useRef, useState, useCallback, useEffect } from "react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type Tool = "ai-edit" | "generate-bg" | "upscale" | "resize" | "adjust" | "crop" | null;
+type Tool = "ai-edit" | "generate-bg" | "upscale" | "resize" | "adjust" | null;
 type BgMode = "color" | "gradient" | "image" | "ai";
 
 interface GradientPreset { label: string; from: string; to: string; angle: number }
@@ -50,10 +50,11 @@ const TOOLS: { id: Tool; icon: string; label: string }[] = [
   { id: "upscale", icon: "🔍", label: "Upscale" },
   { id: "resize", icon: "↔️", label: "Resize" },
   { id: "adjust", icon: "🎨", label: "Adjust" },
-  { id: "crop", icon: "📐", label: "Crop" },
 ];
 
-type CropBox = { x: number; y: number; w: number; h: number };
+const SESSION_KEY = "jpt_editor_session";
+const SESSION_TTL = 24 * 60 * 60 * 1000;
+interface SessionData { dataUrl: string; name: string; w: number; h: number; ts: number; }
 
 // ─── Utils ────────────────────────────────────────────────────────────────────
 
@@ -189,6 +190,8 @@ export default function ImageEditorPage() {
   // Image state
   const [original, setOriginal] = useState<{ dataUrl: string; w: number; h: number; name: string } | null>(null);
   const [working, setWorking] = useState<string | null>(null);
+  const [editHistory, setEditHistory] = useState<string[]>([]);
+  const [savedSession, setSavedSession] = useState<SessionData | null>(null);
 
   // UI state
   const [activeTool, setActiveTool] = useState<Tool>(null);
@@ -197,14 +200,13 @@ export default function ImageEditorPage() {
   const [processingLabel, setProcessingLabel] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
-  const [showCropMode, setShowCropMode] = useState(false);
-  const [cropBox, setCropBox] = useState<CropBox | null>(null);
-  const [cropStart, setCropStart] = useState<{ x: number; y: number } | null>(null);
-  const imgWrapRef = useRef<HTMLDivElement>(null);
 
   // Generate BG sub-state
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
   const [customBgPrompt, setCustomBgPrompt] = useState("");
+
+  // Upscale sub-state
+  const [upscaleScale, setUpscaleScale] = useState<"2x" | "4x">("2x");
 
   // Resize / Adjust
   const [resizeW, setResizeW] = useState(0);
@@ -224,26 +226,58 @@ export default function ImageEditorPage() {
   const [showAccountModal, setShowAccountModal] = useState(false);
   const [showNoCreditsModal, setShowNoCreditsModal] = useState(false);
 
+  // Email auth form state
+  const [authTab, setAuthTab] = useState<"google" | "email">("google");
+  const [authMode, setAuthMode] = useState<"login" | "signup">("login");
+  const [authEmail, setAuthEmail] = useState("");
+  const [authPassword, setAuthPassword] = useState("");
+  const [authName, setAuthName] = useState("");
+  const [authError, setAuthError] = useState("");
+  const [authLoading, setAuthLoading] = useState(false);
+
   // ── Effects ──────────────────────────────────────────────────────────────────
 
   useEffect(() => {
-    // Restore pending state from landing page
+    // 1. URL tool param — e.g. /editor?tool=upscale
+    const toolParam = new URLSearchParams(window.location.search).get("tool") as Tool;
+    if (toolParam && TOOLS.some(t => t.id === toolParam)) {
+      setActiveTool(toolParam);
+    }
+
+    // 2. Pending image/prompt from sessionStorage (from My Library "Open in Editor")
     try {
       const pp = sessionStorage.getItem("jpt_pending_prompt");
       const pi = sessionStorage.getItem("jpt_pending_image");
+      const pt = sessionStorage.getItem("jpt_pending_tool") as Tool | null;
       if (pp) { setPrompt(pp); setActiveTool("ai-edit"); sessionStorage.removeItem("jpt_pending_prompt"); }
       if (pi) {
         const img = new Image();
         img.onload = () => {
           setOriginal({ dataUrl: pi, w: img.naturalWidth, h: img.naturalHeight, name: "uploaded" });
           setResizeW(img.naturalWidth); setResizeH(img.naturalHeight);
+          if (pt && TOOLS.some(t => t.id === pt)) setActiveTool(pt);
         };
         img.src = pi;
         sessionStorage.removeItem("jpt_pending_image");
+        sessionStorage.removeItem("jpt_pending_tool");
+        return; // skip session restore if we have a pending image
       }
     } catch {}
 
-    // Load user + credits
+    // 3. Restore saved session (24h) from localStorage
+    try {
+      const raw = localStorage.getItem(SESSION_KEY);
+      if (raw) {
+        const s = JSON.parse(raw) as SessionData;
+        if (Date.now() - s.ts < SESSION_TTL) {
+          setSavedSession(s);
+        } else {
+          localStorage.removeItem(SESSION_KEY);
+        }
+      }
+    } catch {}
+
+    // 4. Load user + credits
     fetch("/api/auth/google/me")
       .then(r => r.json())
       .then((d: { authenticated: boolean; email?: string; name?: string; picture?: string; credits?: number }) => {
@@ -286,13 +320,20 @@ export default function ImageEditorPage() {
 
   const handleFile = useCallback(async (file: File) => {
     if (!file.type.startsWith("image/")) return;
-    setError(null); setWorking(null);
+    setError(null); setWorking(null); setEditHistory([]);
     setActiveTool(null); setShowOriginal(true);
+    setSavedSession(null);
     resetAdjust();
     try {
       const p = await prepareImage(file);
-      setOriginal({ dataUrl: p.dataUrl, w: p.w, h: p.h, name: file.name.replace(/\.[^.]+$/, "") || "image" });
+      const name = file.name.replace(/\.[^.]+$/, "") || "image";
+      setOriginal({ dataUrl: p.dataUrl, w: p.w, h: p.h, name });
       setResizeW(p.w); setResizeH(p.h);
+      // Persist session for 24h
+      try {
+        const sess: SessionData = { dataUrl: p.dataUrl, name, w: p.w, h: p.h, ts: Date.now() };
+        localStorage.setItem(SESSION_KEY, JSON.stringify(sess));
+      } catch { /* storage full, ignore */ }
     } catch { setError("Failed to load image."); }
   }, []);
 
@@ -310,8 +351,9 @@ export default function ImageEditorPage() {
       const aiPrompt = `Replace the background of this image with: ${templateOrPrompt}. Keep the person/subject exactly as they are — same pose, appearance, clothing. Only change the background behind them.`;
       const data = await callApi<{ dataUrl: string }>("/api/ai-edit", { dataUrl: src, prompt: aiPrompt });
       if (!data?.dataUrl) throw new Error("Background generation failed");
+      setEditHistory(prev => working ? [...prev, working] : prev);
       setWorking(data.dataUrl);
-      autoSaveToDrive(data.dataUrl, "generate-bg");
+      autoSaveToDrive(data.dataUrl, "generate-bg", templateOrPrompt.slice(0, 60));
     } catch (e) { setError((e as Error).message); }
     finally { setProcessing(false); setProcessingLabel(""); }
   };
@@ -319,22 +361,50 @@ export default function ImageEditorPage() {
   const handleUpscale = async () => {
     const src = working || original?.dataUrl;
     if (!src || processing) return;
-    setProcessing(true); setProcessingLabel("Upscaling image…"); setError(null);
+    setProcessing(true); setProcessingLabel(`Upscaling ${upscaleScale}…`); setError(null);
     try {
-      const data = await callApi<{ dataUrl: string }>("/api/upscale", { dataUrl: src });
+      const data = await callApi<{ dataUrl: string }>("/api/upscale", { dataUrl: src, scale: upscaleScale });
       if (data?.dataUrl) {
+        setEditHistory(prev => working ? [...prev, working] : prev);
         setWorking(data.dataUrl);
-        autoSaveToDrive(data.dataUrl, "upscale"); // Auto-save history
+        autoSaveToDrive(data.dataUrl, "upscale", `${upscaleScale} Upscale`);
       } else throw new Error("Upscale failed");
     } catch (e) { setError((e as Error).message); }
     finally { setProcessing(false); setProcessingLabel(""); }
+  };
+
+  const handleEmailAuth = async () => {
+    if (!authEmail.trim() || !authPassword.trim()) { setAuthError("Email and password required"); return; }
+    setAuthLoading(true); setAuthError("");
+    try {
+      const url  = authMode === "signup" ? "/api/auth/signup" : "/api/auth/login";
+      const body = authMode === "signup"
+        ? { email: authEmail.trim(), password: authPassword, name: authName.trim() }
+        : { email: authEmail.trim(), password: authPassword };
+      const res  = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+      const data = await res.json() as { ok?: boolean; email?: string; name?: string; credits?: number; error?: string };
+      if (!res.ok) {
+        if (res.status === 503) setAuthError("Email auth not yet enabled. Please use Google Sign-in.");
+        else setAuthError(data.error || "Authentication failed");
+        return;
+      }
+      setUser({ email: data.email!, name: data.name!, credits: data.credits ?? 10 });
+      setShowSignInModal(false);
+      setAuthEmail(""); setAuthPassword(""); setAuthName(""); setAuthError("");
+    } catch { setAuthError("Network error. Please try again."); }
+    finally { setAuthLoading(false); }
   };
 
   const handleResize = async () => {
     const src = working || original?.dataUrl;
     if (!src || !resizeW || !resizeH || processing) return;
     setProcessing(true); setError(null);
-    try { setWorking(await resizeOnCanvas(src, resizeW, resizeH)); }
+    try {
+      const result = await resizeOnCanvas(src, resizeW, resizeH);
+      setEditHistory(prev => working ? [...prev, working] : prev);
+      setWorking(result);
+      autoSaveToDrive(result, "resize", `${resizeW}×${resizeH}`);
+    }
     catch { setError("Resize failed."); }
     finally { setProcessing(false); }
   };
@@ -343,60 +413,14 @@ export default function ImageEditorPage() {
     const src = working || original?.dataUrl;
     if (!src || processing) return;
     setProcessing(true); setError(null);
-    try { setWorking(await applyFiltersToCanvas(src, brightness, contrast, saturation, sharpness)); resetAdjust(); }
-    catch { setError("Adjust failed."); }
-    finally { setProcessing(false); }
-  };
-
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!showCropMode || !imgWrapRef.current) return;
-    const rect = imgWrapRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    setCropStart({ x, y });
-    setCropBox(null);
-  };
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!showCropMode || !cropStart || !imgWrapRef.current) return;
-    const rect = imgWrapRef.current.getBoundingClientRect();
-    const x2 = e.clientX - rect.left;
-    const y2 = e.clientY - rect.top;
-
-    const x = Math.min(cropStart.x, x2);
-    const y = Math.min(cropStart.y, y2);
-    const w = Math.abs(x2 - cropStart.x);
-    const h = Math.abs(y2 - cropStart.y);
-
-    if (w > 10 && h > 10) {
-      setCropBox({ x, y, w, h });
-    }
-  };
-
-  const handleMouseUp = () => {
-    setCropStart(null);
-  };
-
-  const applyCropBox = async () => {
-    if (!cropBox) return;
-    const src = working || original?.dataUrl;
-    if (!src || processing) return;
-    setProcessing(true); setError(null);
     try {
-      const img = await loadImg(src);
-      const canvas = document.createElement("canvas");
-      canvas.width = cropBox.w;
-      canvas.height = cropBox.h;
-      const ctx = canvas.getContext("2d")!;
-      ctx.drawImage(img, cropBox.x, cropBox.y, cropBox.w, cropBox.h, 0, 0, cropBox.w, cropBox.h);
-      const cropped = canvas.toDataURL("image/jpeg", 0.92);
-      setWorking(cropped);
-      autoSaveToDrive(cropped, "crop"); // Auto-save history
-      setShowCropMode(false);
-      setCropBox(null);
-      setResizeW(cropBox.w);
-      setResizeH(cropBox.h);
-    } catch { setError("Crop failed."); }
+      const result = await applyFiltersToCanvas(src, brightness, contrast, saturation, sharpness);
+      setEditHistory(prev => working ? [...prev, working] : prev);
+      setWorking(result);
+      resetAdjust();
+      autoSaveToDrive(result, "adjust", "Color Adjustments");
+    }
+    catch { setError("Adjust failed."); }
     finally { setProcessing(false); }
   };
 
@@ -407,8 +431,9 @@ export default function ImageEditorPage() {
     try {
       const data = await callApi<{ dataUrl: string }>("/api/ai-edit", { dataUrl: src, prompt: prompt.trim() });
       if (data?.dataUrl) {
+        setEditHistory(prev => working ? [...prev, working] : prev);
         setWorking(data.dataUrl);
-        autoSaveToDrive(data.dataUrl, "ai-edit"); // Auto-save history
+        autoSaveToDrive(data.dataUrl, "ai-edit", prompt.trim().slice(0, 60));
         setPrompt("");
       } else throw new Error("Edit failed");
     } catch (e) { setError((e as Error).message); }
@@ -426,21 +451,111 @@ export default function ImageEditorPage() {
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
   };
 
-  // Auto-save to Drive in background (no UI interruption)
-  const autoSaveToDrive = async (imageUrl: string, toolUsed: string) => {
+  // Small fallback thumbnail (~150px, ~7-10KB base64) — stored in Edge Config for cross-device
+  const makeThumbnail = async (dataUrl: string): Promise<string> => {
+    try {
+      const img = await loadImg(dataUrl);
+      const SIZE = 150;
+      const ratio = Math.min(SIZE / img.naturalWidth, SIZE / img.naturalHeight);
+      const w = Math.max(1, Math.round(img.naturalWidth * ratio));
+      const h = Math.max(1, Math.round(img.naturalHeight * ratio));
+      const canvas = document.createElement("canvas");
+      canvas.width = w; canvas.height = h;
+      canvas.getContext("2d")!.drawImage(img, 0, 0, w, h);
+      return canvas.toDataURL("image/jpeg", 0.65);
+    } catch { return ""; }
+  };
+
+  // High-quality preview (~900px, ~150-250KB) — stored in localStorage, used for grid + full preview
+  const makePreview = async (dataUrl: string): Promise<string> => {
+    try {
+      const img = await loadImg(dataUrl);
+      const SIZE = 900;
+      const ratio = Math.min(SIZE / img.naturalWidth, SIZE / img.naturalHeight, 1); // never upscale
+      const w = Math.max(1, Math.round(img.naturalWidth * ratio));
+      const h = Math.max(1, Math.round(img.naturalHeight * ratio));
+      const canvas = document.createElement("canvas");
+      canvas.width = w; canvas.height = h;
+      canvas.getContext("2d")!.drawImage(img, 0, 0, w, h);
+      return canvas.toDataURL("image/jpeg", 0.88);
+    } catch { return ""; }
+  };
+
+  // Categorise tool: generate-bg/ai-background = "generation", rest = "edit"
+  const toolCategory = (tool: string): "generation" | "edit" =>
+    (tool === "generate-bg" || tool === "ai-background") ? "generation" : "edit";
+
+  // ── localStorage helpers ──────────────────────────────────────────────────────
+
+  const saveLocalGen = (item: {
+    id: string; tool: string; category: "generation" | "edit";
+    label: string; thumb: string; timestamp: number; originalName?: string;
+  }) => {
+    try {
+      const raw = localStorage.getItem("jpt_gens_v1");
+      const existing: typeof item[] = raw ? JSON.parse(raw) : [];
+      const updated = [item, ...existing.filter(i => i.id !== item.id)].slice(0, 30);
+      localStorage.setItem("jpt_gens_v1", JSON.stringify(updated));
+    } catch {
+      // storage full — evict 10 oldest and retry
+      try {
+        localStorage.setItem("jpt_gens_v1", JSON.stringify([item]));
+      } catch { /* silent */ }
+    }
+  };
+
+  const deleteLocalGen = (id: string) => {
+    try {
+      const raw = localStorage.getItem("jpt_gens_v1");
+      if (!raw) return;
+      const existing = JSON.parse(raw) as { id: string }[];
+      localStorage.setItem("jpt_gens_v1", JSON.stringify(existing.filter(i => i.id !== id)));
+      localStorage.removeItem(`jpt_img_${id}`);
+    } catch { /* silent */ }
+  };
+
+  // ── Auto-save to My Generations (PRIMARY: localStorage, SECONDARY: EC best-effort) ──
+
+  const autoSaveToDrive = async (imageUrl: string, toolUsed: string, label?: string) => {
     if (!user) return;
     try {
-      await fetch("/api/drive/save", {
+      const [thumb, preview] = await Promise.all([makeThumbnail(imageUrl), makePreview(imageUrl)]);
+      if (!thumb) return;
+
+      const id = `gen_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+      const item = {
+        id, tool: toolUsed,
+        category: toolCategory(toolUsed),
+        label: label || original?.name || "Image",
+        thumb, timestamp: Date.now(),
+        originalName: original?.name,
+      };
+
+      // 1. Save metadata to localStorage immediately — always works, no token needed
+      saveLocalGen(item);
+
+      // 2. Save 900px preview to localStorage
+      if (preview) {
+        try { localStorage.setItem(`jpt_img_${id}`, preview); }
+        catch {
+          try {
+            // Clear oldest previews to make space
+            Object.keys(localStorage).filter(k => k.startsWith("jpt_img_")).slice(0, 5)
+              .forEach(k => localStorage.removeItem(k));
+            localStorage.setItem(`jpt_img_${id}`, preview);
+          } catch { /* silent */ }
+        }
+      }
+
+      // 3. Also try Edge Config (best-effort — fails silently if token lacks permission)
+      fetch("/api/generations/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          dataUrl: imageUrl,
-          name: `JPT-${toolUsed}-${Date.now()}`,
-          meta: { tool: toolUsed, timestamp: new Date().toISOString(), auto: "true" },
-        }),
-      });
+        body: JSON.stringify({ tool: toolUsed, category: item.category, label: item.label, thumb, originalName: original?.name }),
+      }).catch(() => { /* EC not available — localStorage copy is the source of truth */ });
+
     } catch (e) {
-      console.log("Auto-save failed (non-critical):", (e as Error).message);
+      console.error("Generation save error:", (e as Error).message);
     }
   };
 
@@ -472,11 +587,24 @@ export default function ImageEditorPage() {
     }
   };
 
+  const restoreSession = (s: SessionData) => {
+    setOriginal({ dataUrl: s.dataUrl, w: s.w, h: s.h, name: s.name });
+    setResizeW(s.w); setResizeH(s.h);
+    setSavedSession(null);
+  };
+
+  const discardSession = () => {
+    try { localStorage.removeItem(SESSION_KEY); } catch {}
+    setSavedSession(null);
+  };
+
   const resetAll = () => {
-    setOriginal(null); setWorking(null);
+    setOriginal(null); setWorking(null); setEditHistory([]);
     setActiveTool(null); setError(null); setShowOriginal(true);
     setSelectedTemplate(null); setCustomBgPrompt(""); setPrompt("");
     resetAdjust();
+    try { localStorage.removeItem(SESSION_KEY); } catch {}
+    setSavedSession(null);
   };
 
   const hasImage = !!original;
@@ -495,7 +623,7 @@ export default function ImageEditorPage() {
         <div style={s.pageHeaderInner}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <span style={s.pageIcon}>🖼</span>
-            <span style={s.pageTitle}>AI Image Editor</span>
+            <span style={s.pageTitle}>JPT AI Editor</span>
           </div>
 
           {/* Low credits warning */}
@@ -523,10 +651,10 @@ export default function ImageEditorPage() {
                 </span>
               </button>
             ) : (
-              <a href="/api/auth/google?next=/editor" style={s.googleBtn}>
+              <button style={s.googleBtn} onClick={() => setShowSignInModal(true)}>
                 <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-                Sign in with Google
-              </a>
+                Sign in
+              </button>
             )}
           </div>
         </div>
@@ -554,6 +682,32 @@ export default function ImageEditorPage() {
         {/* ── Canvas Area ───────────────────────────────────────────────────── */}
         <div style={s.canvasArea}>
 
+          {/* Saved session banner */}
+          {!hasImage && savedSession && (
+            <div style={{ background: "linear-gradient(135deg,#EEF2FF,#F5F3FF)", border: "2px solid #6366F1", borderRadius: 14, padding: "20px 24px", marginBottom: 20, display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" as const }}>
+              <div style={{ flex: 1, minWidth: 200 }}>
+                <div style={{ fontWeight: 800, fontSize: 15, color: "#111", marginBottom: 4 }}>↩ Continue where you left off</div>
+                <div style={{ fontSize: 13, color: "#555" }}>
+                  <strong>{savedSession.name}</strong> · {savedSession.w}×{savedSession.h}px · saved {Math.round((Date.now() - savedSession.ts) / 60000)}m ago
+                </div>
+              </div>
+              <div style={{ display: "flex", gap: 10 }}>
+                <button
+                  onClick={() => restoreSession(savedSession)}
+                  style={{ padding: "10px 20px", background: "#6366F1", color: "#fff", border: "none", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer" }}
+                >
+                  Resume Editing
+                </button>
+                <button
+                  onClick={discardSession}
+                  style={{ padding: "10px 16px", background: "#fff", color: "#666", border: "1px solid #E0E0EE", borderRadius: 8, fontWeight: 600, fontSize: 14, cursor: "pointer" }}
+                >
+                  Discard
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* Upload Zone */}
           {!hasImage && (
             <div style={s.uploadZone}
@@ -571,7 +725,7 @@ export default function ImageEditorPage() {
               </div>
               {!user && (
                 <div style={s.signInHint}>
-                  <a href="/api/auth/google?next=/editor" style={{ color: "#6366F1", fontWeight: 600, textDecoration: "none" }}>Sign in with Google</a> to use AI tools — 10 free credits included
+                  <button onClick={() => setShowSignInModal(true)} style={{ color: "#6366F1", fontWeight: 600, textDecoration: "none", background: "none", border: "none", cursor: "pointer", padding: 0 }}>Sign in</button> to use AI tools — 10 free credits included
                 </div>
               )}
               {error && <div style={s.errBox}>{error}</div>}
@@ -603,40 +757,13 @@ export default function ImageEditorPage() {
                 {working && (
                   <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
                     <div style={{ fontSize: 12, fontWeight: 600, color: "#6366F1" }}>✨ Result</div>
-                    <div
-                      ref={imgWrapRef}
-                      style={s.imgWrap}
-                      onMouseDown={handleMouseDown}
-                      onMouseMove={handleMouseMove}
-                      onMouseUp={handleMouseUp}
-                      onMouseLeave={handleMouseUp}
-                    >
+                    <div style={s.imgWrap}>
                       {working?.includes("image/png") && <div style={s.checker} />}
                       <img
                         src={working || ""}
                         alt="result"
                         style={{ ...s.mainImg, ...(processing ? { opacity: 0.5 } : {}), filter: activeTool === "adjust" && !processing ? adjustFilter : undefined, userSelect: "none" }}
                       />
-                      {/* Crop Box Overlay */}
-                      {showCropMode && cropBox && (
-                        <div
-                          style={{
-                            position: "absolute",
-                            left: cropBox.x,
-                            top: cropBox.y,
-                            width: cropBox.w,
-                            height: cropBox.h,
-                            border: "2px solid #6366F1",
-                            background: "rgba(99, 102, 241, 0.1)",
-                            pointerEvents: "none",
-                            zIndex: 10,
-                          }}
-                        >
-                          <div style={{ position: "absolute", top: -20, left: 0, color: "#6366F1", fontSize: 12, fontWeight: 600 }}>
-                            {cropBox.w} × {cropBox.h}
-                          </div>
-                        </div>
-                      )}
                       {processing && (
                         <div style={s.imgOverlay}>
                           <div style={s.spinner} />
@@ -644,9 +771,16 @@ export default function ImageEditorPage() {
                         </div>
                       )}
                     </div>
-                    <div style={{ display: "flex", gap: 8 }}>
+                    <div style={{ display: "flex", gap: 8, flexWrap: "wrap" as const, justifyContent: "center" }}>
                       <button style={s.dlBtn} onClick={handleDownload}>⬇️ Download</button>
-                      <button style={s.ghostBtn} onClick={() => { setWorking(null); setSelectedTemplate(null); setCustomBgPrompt(""); }}>↺ Reset</button>
+                      {editHistory.length > 0 && (
+                        <button style={s.ghostBtn} onClick={() => {
+                          const prev = editHistory[editHistory.length - 1];
+                          setEditHistory(h => h.slice(0, -1));
+                          setWorking(prev ?? null);
+                        }}>↩ Undo</button>
+                      )}
+                      <button style={{ ...s.ghostBtn, color: "#EF4444", borderColor: "#FCA5A5" }} onClick={() => { setWorking(null); setEditHistory([]); setSelectedTemplate(null); setCustomBgPrompt(""); }}>⏮ Reset</button>
                     </div>
                   </div>
                 )}
@@ -789,17 +923,71 @@ export default function ImageEditorPage() {
             {/* Upscale */}
             {activeTool === "upscale" && (
               <div style={s.panelContent}>
-                <div style={s.panelTitle}>🔍 Upscale</div>
-                <p style={s.panelSub}>Enhance image quality and sharpness with AI</p>
+                <div style={s.panelTitle}>🔍 AI Upscale</div>
+                <p style={s.panelSub}>Enhance image quality, sharpness and detail with AI</p>
                 <div style={s.creditNote}>Uses {CREDIT_COST} credits · {creditsLeft} remaining</div>
+
+                {/* 2x / 4x toggle */}
+                <div>
+                  <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.8, color: "#888", marginBottom: 8 }}>Enhancement Level</div>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    {(["2x", "4x"] as const).map((sc) => (
+                      <button
+                        key={sc}
+                        onClick={() => setUpscaleScale(sc)}
+                        style={{
+                          flex: 1,
+                          padding: "12px 8px",
+                          borderRadius: 10,
+                          border: upscaleScale === sc ? "2px solid #6366F1" : "1.5px solid #E0E0EE",
+                          background: upscaleScale === sc ? "#EEEEFF" : "#FAFAFA",
+                          cursor: "pointer",
+                          fontWeight: 800,
+                          fontSize: 18,
+                          color: upscaleScale === sc ? "#6366F1" : "#999",
+                          transition: "all 0.15s",
+                        }}
+                      >
+                        {sc}
+                        <div style={{ fontSize: 10, fontWeight: 600, marginTop: 2, color: upscaleScale === sc ? "#6366F1" : "#AAA" }}>
+                          {sc === "2x" ? "Enhance" : "Ultra"}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 <div style={s.infoCard}>
-                  <div style={{ fontWeight: 700, marginBottom: 4 }}>What it does</div>
-                  <ul style={{ margin: 0, paddingLeft: 16, fontSize: 13, color: "#555", lineHeight: 1.8 }}>
-                    <li>Sharpens fine details</li><li>Reduces noise</li><li>Enhances clarity</li><li>Preserves original content</li>
+                  <div style={{ fontWeight: 700, marginBottom: 4 }}>
+                    {upscaleScale === "4x" ? "4x Ultra Enhancement" : "2x Enhancement"}
+                  </div>
+                  <ul style={{ margin: 0, paddingLeft: 16, fontSize: 12, color: "#555", lineHeight: 1.8 }}>
+                    {upscaleScale === "4x" ? (
+                      <>
+                        <li>Maximum sharpness &amp; fine detail</li>
+                        <li>Hair strands, skin pores, fabric texture</li>
+                        <li>Full noise &amp; artifact removal</li>
+                        <li>Vivid colors, punchy contrast</li>
+                      </>
+                    ) : (
+                      <>
+                        <li>Sharpens fine details</li>
+                        <li>Reduces noise &amp; blur</li>
+                        <li>Enhances clarity</li>
+                        <li>Preserves original content</li>
+                      </>
+                    )}
                   </ul>
                 </div>
-                <button style={{ ...s.primaryBtn, ...(processing ? s.btnOff : {}) }} disabled={processing} onClick={handleUpscale}>
-                  {processing ? <span style={s.btnRow}><span style={s.spin} />Upscaling…</span> : "🔍 Upscale Image"}
+
+                <button
+                  style={{ ...s.primaryBtn, ...(processing ? s.btnOff : {}), background: upscaleScale === "4x" ? "linear-gradient(135deg,#7C3AED,#EC4899)" : "linear-gradient(135deg,#6366F1,#8B5CF6)" }}
+                  disabled={processing}
+                  onClick={handleUpscale}
+                >
+                  {processing
+                    ? <span style={s.btnRow}><span style={s.spin} />Upscaling {upscaleScale}…</span>
+                    : `🔍 Upscale ${upscaleScale}`}
                 </button>
               </div>
             )}
@@ -853,40 +1041,6 @@ export default function ImageEditorPage() {
               </div>
             )}
 
-            {activeTool === "crop" && (
-              <div style={s.panelContent}>
-                <div style={s.panelTitle}>📐 Crop Image</div>
-                <p style={s.panelSub}>Draw a crop box on the image · no credits used</p>
-                {!showCropMode ? (
-                  <button style={{ ...s.primaryBtn }} onClick={() => { setShowCropMode(true); setCropBox(null); }}>
-                    📐 Start Cropping
-                  </button>
-                ) : (
-                  <>
-                    <div style={{ padding: "12px", background: "#F0F0F0", borderRadius: 8, fontSize: 12, color: "#666", marginBottom: 12 }}>
-                      💡 Drag on the image to select crop area
-                    </div>
-                    <button
-                      style={{ ...s.primaryBtn, ...(processing || !cropBox ? s.btnOff : {}) }}
-                      disabled={processing || !cropBox}
-                      onClick={applyCropBox}
-                    >
-                      {processing ? <span style={s.btnRow}><span style={s.spin} />Cropping…</span> : "✓ Apply Crop"}
-                    </button>
-                  </>
-                )}
-                <button
-                  style={{ ...s.ghostBtn, width: "100%", marginTop: 8 }}
-                  onClick={() => {
-                    setShowCropMode(false);
-                    setCropBox(null);
-                    setCropStart(null);
-                  }}
-                >
-                  Cancel
-                </button>
-              </div>
-            )}
           </div>
         )}
       </div>
@@ -942,7 +1096,6 @@ export default function ImageEditorPage() {
                 { icon: "🔍", label: "Upscale", cost: CREDIT_COST },
                 { icon: "↔️", label: "Resize", cost: 0 },
                 { icon: "🎨", label: "Adjust", cost: 0 },
-                { icon: "📐", label: "Crop", cost: 0 },
               ].map((item) => (
                 <div key={item.label} style={s.usageItem}>
                   <span>{item.icon} {item.label}</span>
@@ -957,7 +1110,7 @@ export default function ImageEditorPage() {
               🚀 Get More Credits — Coming Soon
             </button>
             <button style={{ ...s.ghostBtn, width: "100%", justifyContent: "center", marginTop: 8 }}
-              onClick={async () => { await fetch("/api/auth/google/logout", { method: "POST" }); setUser(null); setShowAccountModal(false); }}>
+              onClick={async () => { await fetch("/api/auth/google/logout", { method: "POST" }); setUser(null); setShowAccountModal(false); setAuthTab("google"); setAuthEmail(""); setAuthPassword(""); }}>
               Sign out
             </button>
           </div>
@@ -966,21 +1119,109 @@ export default function ImageEditorPage() {
 
       {/* ── Sign-in Modal ─────────────────────────────────────────────────── */}
       {showSignInModal && (
-        <div style={s.modalOverlay} onClick={() => setShowSignInModal(false)}>
-          <div style={s.modalBox} onClick={(e) => e.stopPropagation()}>
-            <div style={{ fontSize: 44, marginBottom: 12 }}>✨</div>
-            <div style={s.modalTitle}>Sign in to use AI tools</div>
-            <p style={s.modalSub}>Create a free account with Google. You get <strong>10 free credits</strong> to start editing right away.</p>
-            <div style={s.modalFeatures}>
-              {["🌅 Generate Background", "🔍 Upscale Image", "✨ AI Edit", "↔️ Resize (free)", "🎨 Adjust (free)", "📐 Crop (free)"].map((f) => (
-                <div key={f} style={s.modalFeatureRow}><span style={{ color: "#10B981", fontWeight: 700 }}>✓</span> {f}</div>
+        <div style={s.modalOverlay} onClick={() => { setShowSignInModal(false); setAuthError(""); }}>
+          <div style={{ ...s.modalBox, maxWidth: 460, textAlign: "left" as const }} onClick={(e) => e.stopPropagation()}>
+            <div style={{ textAlign: "center" as const, marginBottom: 20 }}>
+              <div style={{ fontSize: 40, marginBottom: 8 }}>✨</div>
+              <div style={{ ...s.modalTitle, fontSize: 20 }}>Sign in to JPT AI Editor</div>
+              <p style={{ ...s.modalSub, marginBottom: 0 }}>Get <strong>10 free AI credits</strong> to start editing</p>
+            </div>
+
+            {/* Tab bar */}
+            <div style={{ display: "flex", background: "#F0F0F8", borderRadius: 10, padding: 3, marginBottom: 20 }}>
+              {(["google", "email"] as const).map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => { setAuthTab(tab); setAuthError(""); }}
+                  style={{
+                    flex: 1, padding: "8px", borderRadius: 8, border: "none",
+                    background: authTab === tab ? "#fff" : "none",
+                    fontWeight: 700, fontSize: 13, cursor: "pointer",
+                    color: authTab === tab ? "#6366F1" : "#888",
+                    boxShadow: authTab === tab ? "0 1px 4px rgba(0,0,0,0.1)" : "none",
+                  }}
+                >
+                  {tab === "google" ? "🔵 Google" : "📧 Email"}
+                </button>
               ))}
             </div>
-            <a href="/api/auth/google?next=/editor" style={s.modalGoogleBtn}>
-              <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-              Sign in with Google — Free
-            </a>
-            <button style={s.modalDismiss} onClick={() => setShowSignInModal(false)}>Maybe later</button>
+
+            {/* Google tab */}
+            {authTab === "google" && (
+              <div style={{ display: "flex", flexDirection: "column" as const, gap: 12 }}>
+                <a href="/api/auth/google?next=/editor" style={{ ...s.modalGoogleBtn, justifyContent: "center" }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                  Continue with Google — Free
+                </a>
+                <div style={{ fontSize: 12, color: "#888", textAlign: "center" as const }}>
+                  Quick · No password needed · Works with any Google account
+                </div>
+              </div>
+            )}
+
+            {/* Email tab */}
+            {authTab === "email" && (
+              <div style={{ display: "flex", flexDirection: "column" as const, gap: 12 }}>
+                {/* Login / Signup toggle */}
+                <div style={{ display: "flex", gap: 4, fontSize: 13, justifyContent: "center" }}>
+                  <button
+                    onClick={() => { setAuthMode("login"); setAuthError(""); }}
+                    style={{ background: "none", border: "none", cursor: "pointer", fontWeight: authMode === "login" ? 800 : 400, color: authMode === "login" ? "#6366F1" : "#888", borderBottom: authMode === "login" ? "2px solid #6366F1" : "2px solid transparent", padding: "4px 12px" }}
+                  >Sign in</button>
+                  <button
+                    onClick={() => { setAuthMode("signup"); setAuthError(""); }}
+                    style={{ background: "none", border: "none", cursor: "pointer", fontWeight: authMode === "signup" ? 800 : 400, color: authMode === "signup" ? "#6366F1" : "#888", borderBottom: authMode === "signup" ? "2px solid #6366F1" : "2px solid transparent", padding: "4px 12px" }}
+                  >Create account</button>
+                </div>
+
+                {authMode === "signup" && (
+                  <input
+                    type="text"
+                    placeholder="Your name (optional)"
+                    value={authName}
+                    onChange={(e) => setAuthName(e.target.value)}
+                    style={{ border: "1.5px solid #E0E0EE", borderRadius: 8, padding: "10px 12px", fontSize: 14, fontFamily: "inherit", outline: "none", width: "100%", boxSizing: "border-box" as const }}
+                  />
+                )}
+                <input
+                  type="email"
+                  placeholder="Email address"
+                  value={authEmail}
+                  onChange={(e) => setAuthEmail(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleEmailAuth()}
+                  style={{ border: "1.5px solid #E0E0EE", borderRadius: 8, padding: "10px 12px", fontSize: 14, fontFamily: "inherit", outline: "none", width: "100%", boxSizing: "border-box" as const }}
+                />
+                <input
+                  type="password"
+                  placeholder="Password (min 6 characters)"
+                  value={authPassword}
+                  onChange={(e) => setAuthPassword(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleEmailAuth()}
+                  style={{ border: "1.5px solid #E0E0EE", borderRadius: 8, padding: "10px 12px", fontSize: 14, fontFamily: "inherit", outline: "none", width: "100%", boxSizing: "border-box" as const }}
+                />
+
+                {authError && (
+                  <div style={{ background: "#FFF1F0", border: "1px solid #FFC4C4", borderRadius: 8, padding: "8px 12px", fontSize: 13, color: "#C00" }}>
+                    {authError}
+                  </div>
+                )}
+
+                <button
+                  onClick={handleEmailAuth}
+                  disabled={authLoading}
+                  style={{ ...s.primaryBtn, opacity: authLoading ? 0.7 : 1 }}
+                >
+                  {authLoading
+                    ? <span style={s.btnRow}><span style={s.spin} />{authMode === "signup" ? "Creating account…" : "Signing in…"}</span>
+                    : authMode === "signup" ? "Create Account — Free" : "Sign In"
+                  }
+                </button>
+              </div>
+            )}
+
+            <button style={{ ...s.modalDismiss, display: "block", margin: "16px auto 0" }} onClick={() => { setShowSignInModal(false); setAuthError(""); }}>
+              Maybe later
+            </button>
           </div>
         </div>
       )}

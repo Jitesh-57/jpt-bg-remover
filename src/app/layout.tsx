@@ -3,8 +3,8 @@ import "./globals.css";
 import NavBar from "./_components/NavBar";
 
 export const metadata: Metadata = {
-  title: "JPT AI Tools",
-  description: "AI-powered image tools — Background Remover & AI Headshot Generator, powered by Gemini",
+  title: "JPT AI",
+  description: "JPT AI — All-in-one AI image editor. Remove backgrounds, upscale photos, generate AI backgrounds, and edit images with a simple text prompt.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

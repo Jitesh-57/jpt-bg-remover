@@ -27,8 +27,43 @@ interface PendingColor { color: string; label: string; }
 type Step = "upload" | "styles" | "gallery" | "edit";
 type Gender = "women" | "men";
 
-const PIXELBIN_GENERATION_CREDITS = 2;
-const PIXELBIN_EDIT_CREDITS = 2;
+const GENERATION_CREDITS = 2;
+const EDIT_CREDITS = 2;
+
+// ── Thumbnail helpers for My Generations ──────────────────────────────────────
+function makeThumbnail(dataUrl: string): Promise<string> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement("canvas");
+      const MAX = 150;
+      const ratio = Math.min(MAX / img.width, MAX / img.height);
+      c.width = Math.round(img.width * ratio);
+      c.height = Math.round(img.height * ratio);
+      c.getContext("2d")!.drawImage(img, 0, 0, c.width, c.height);
+      resolve(c.toDataURL("image/jpeg", 0.65));
+    };
+    img.onerror = () => resolve("");
+    img.src = dataUrl;
+  });
+}
+
+function makePreview(dataUrl: string): Promise<string> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement("canvas");
+      const MAX = 900;
+      const ratio = Math.min(MAX / img.width, MAX / img.height, 1);
+      c.width = Math.round(img.width * ratio);
+      c.height = Math.round(img.height * ratio);
+      c.getContext("2d")!.drawImage(img, 0, 0, c.width, c.height);
+      resolve(c.toDataURL("image/jpeg", 0.88));
+    };
+    img.onerror = () => resolve(dataUrl);
+    img.src = dataUrl;
+  });
+}
 
 async function downloadImage(url: string, filename: string) {
   try {
@@ -104,6 +139,37 @@ export default function HeadshotPage() {
 
   const clearPending = () => { setPendingColor(null); setPendingBgFile(null); setPendingBgFileName(""); };
 
+  // Save to My Generations (non-blocking — localStorage primary, EC best-effort)
+  const saveToGenerations = async (url: string, localId: string, tool: string, category: "generation" | "edit", label: string) => {
+    try {
+      const [thumb, preview] = await Promise.all([makeThumbnail(url), makePreview(url)]);
+      if (!thumb) return;
+
+      const id = localId || `gen_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+      const item = { id, tool, category, label, thumb, timestamp: Date.now() };
+
+      // 1. Save to localStorage immediately
+      try {
+        const raw = localStorage.getItem("jpt_gens_v1");
+        const existing = raw ? JSON.parse(raw) as typeof item[] : [];
+        const updated = [item, ...existing.filter(i => i.id !== id)].slice(0, 30);
+        localStorage.setItem("jpt_gens_v1", JSON.stringify(updated));
+      } catch { /* storage full */ }
+
+      // 2. Save 900px preview
+      if (preview) {
+        try { localStorage.setItem(`jpt_img_${id}`, preview); } catch { /* storage full */ }
+      }
+
+      // 3. Also try EC (best-effort)
+      fetch("/api/generations/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tool, category, label, thumb }),
+      }).catch(() => {});
+    } catch { /* non-critical */ }
+  };
+
   const activeStyles = gender === "women" ? WOMEN_STYLES : MEN_STYLES;
   const switchGender = (g: Gender) => { setGender(g); setSelectedStyleIds([1, 2, 3, 4]); };
 
@@ -154,6 +220,10 @@ export default function HeadshotPage() {
       addToLibrary(data.images.map((img: GeneratedImage, i: number) => ({
         id: `gen-${img.id}-${now + i}`, url: img.url, name: img.name, tag: img.tag, type: "generated" as const, savedAt: now + i,
       })));
+      // Save every generated headshot to My Generations
+      data.images.forEach((img: GeneratedImage) => {
+        saveToGenerations(img.url, String(img.id), "headshot", "generation", img.name || "Headshot");
+      });
     } catch (e) { setError((e as Error).message); }
     finally { setGenerating(false); setProgress(""); }
   };
@@ -179,7 +249,9 @@ export default function HeadshotPage() {
   };
 
   const persistEdit = (url: string, name: string, tag: string) => {
-    addToLibrary([{ id: `edit-${Date.now()}`, url, name, tag, type: "edited", savedAt: Date.now() }]);
+    const editId = `edit-${Date.now()}`;
+    addToLibrary([{ id: editId, url, name, tag, type: "edited", savedAt: Date.now() }]);
+    saveToGenerations(url, editId, "headshot-edit", "edit", name);
   };
 
   const handleApplyBackground = async () => {
@@ -303,7 +375,7 @@ export default function HeadshotPage() {
   const lbCurrent = lightboxItems[lightboxIndex];
 
   const hasPending = !!pendingColor || !!pendingBgFile;
-  const generationCreditCost = selectedStyleIds.length * PIXELBIN_GENERATION_CREDITS;
+  const generationCreditCost = selectedStyleIds.length * GENERATION_CREDITS;
 
   return (
     <div style={s.root}>
@@ -498,7 +570,7 @@ export default function HeadshotPage() {
                   <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}>
                     <span>✨ Generate {selectedStyleIds.length} Headshot{selectedStyleIds.length !== 1 ? "s" : ""}</span>
                     <span style={s.costBadge}>
-                      {generationCreditCost} credits{selectedStyleIds.length > 1 ? ` · ${PIXELBIN_GENERATION_CREDITS} each` : ""}
+                      {generationCreditCost} credits{selectedStyleIds.length > 1 ? ` · ${GENERATION_CREDITS} each` : ""}
                     </span>
                   </span>
                 )}
@@ -572,7 +644,7 @@ export default function HeadshotPage() {
                   disabled={editingBg || !promptInput.trim()}
                 >
                   {editingBg ? <span style={{ display: "flex", alignItems: "center", gap: 8, justifyContent: "center" }}><span style={s.spin} />Generating…</span>
-                    : <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}><span>✨ Generate with Prompt</span><span style={s.costBadge}>{PIXELBIN_EDIT_CREDITS} credits</span></span>}
+                    : <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}><span>✨ Generate with Prompt</span><span style={s.costBadge}>{EDIT_CREDITS} credits</span></span>}
                 </button>
               </div>
 
@@ -649,7 +721,7 @@ export default function HeadshotPage() {
               >
                 {editingBg
                   ? <span style={{ display: "flex", alignItems: "center", gap: 8, justifyContent: "center" }}><span style={s.spin} />Applying…</span>
-                  : <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}><span>Apply Background</span><span style={s.costBadge}>{PIXELBIN_EDIT_CREDITS} credits</span></span>}
+                  : <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}><span>Apply Background</span><span style={s.costBadge}>{EDIT_CREDITS} credits</span></span>}
               </button>
 
               {error && <div style={s.err}>{error}</div>}

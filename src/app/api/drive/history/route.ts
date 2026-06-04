@@ -13,7 +13,7 @@ export interface DriveHistoryItem {
 export async function GET(req: NextRequest) {
   const res = NextResponse.json([]);
   const s = getSession(req);
-  const token = await getToken(req, res);
+  const token = await getToken(req);
   if (!token || !s) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
 
   const folderId = await getDriveFolderId(token);
@@ -28,6 +28,6 @@ export async function GET(req: NextRequest) {
 
   const data = (await listRes.json()) as { files: DriveHistoryItem[] };
   const okRes = NextResponse.json(data.files || []);
-  if (token !== s.access_token) setSession(okRes, { ...s, access_token: token });
+  // Drive token refresh removed
   return okRes;
 }

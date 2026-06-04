@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { checkAuth, withCredits } from "@/lib/google-drive";
+import { checkAuth, withCredits } from "@/lib/auth";
 
-export const runtime = "nodejs";
+export const runtime  = "nodejs";
 export const maxDuration = 60;
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.GOOGLE_GEMINI_API_KEY;
@@ -12,15 +12,14 @@ type GeminiResponse = {
   error?: { message: string };
 };
 
-// Best image models in quality order — tested working
+// gemini-3-pro-image-preview is unresponsive — skip it
 const MODELS = [
-  { id: "gemini-3.1-flash-image-preview", timeout: 40000 }, // Nano Banana 2 — newest, best
-  { id: "gemini-3-pro-image-preview",     timeout: 12000 }, // Nano Banana Pro
-  { id: "gemini-2.5-flash-image",         timeout: 5000  }, // Nano Banana — baseline
+  { id: "gemini-3.1-flash-image-preview", timeout: 44000 }, // Nano Banana 2 — primary
+  { id: "gemini-2.5-flash-image",         timeout: 12000 }, // Nano Banana — fallback
 ];
 
 export async function POST(req: NextRequest) {
-  const { session, error: authError } = checkAuth(req);
+  const { session, error: authError } = await checkAuth(req);
   if (authError) return authError;
 
   const { prompt } = (await req.json()) as { prompt: string };
@@ -50,7 +49,10 @@ export async function POST(req: NextRequest) {
       for (const p of parts) {
         if (p.inlineData?.data) {
           console.log(`[generate-bg] ✓ ${id}`);
-          return withCredits({ data: p.inlineData.data, mimeType: p.inlineData.mimeType || "image/png" }, session);
+          return await withCredits(
+            { data: p.inlineData.data, mimeType: p.inlineData.mimeType || "image/png" },
+            session!
+          );
         }
       }
     } catch (e) { console.log(`[generate-bg] ${id}:`, (e as Error).message); }

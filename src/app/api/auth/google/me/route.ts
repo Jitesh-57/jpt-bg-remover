@@ -1,16 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSession, FREE_CREDITS } from "@/lib/google-drive";
+import { readToken, getKVUser, FREE_CREDITS, ecAvailable } from "@/lib/auth";
 
 export const runtime = "nodejs";
 
 export async function GET(req: NextRequest) {
-  const s = getSession(req);
-  if (!s) return NextResponse.json({ authenticated: false });
+  const token = readToken(req);
+  if (!token) return NextResponse.json({ authenticated: false });
+
+  // Get fresh credits from KV if available
+  let credits = token.credits;
+  if (ecAvailable) {
+    const kv = await getKVUser(token.email);
+    if (kv) credits = kv.credits;
+  }
+
   return NextResponse.json({
     authenticated: true,
-    email: s.email,
-    name: s.name,
-    picture: s.picture,
-    credits: s.credits ?? FREE_CREDITS,
+    email:   token.email,
+    name:    token.name,
+    picture: token.picture,
+    credits: credits ?? FREE_CREDITS,
+    kvEnabled: ecAvailable,
   });
 }

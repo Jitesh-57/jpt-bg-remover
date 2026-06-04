@@ -7,9 +7,9 @@ export const maxDuration = 30;
 export async function POST(req: NextRequest) {
   const res = NextResponse.json({ ok: false });
   const s = getSession(req);
-  const token = await getToken(req, res);
+  const token = await getToken(req);
   if (!token || !s) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-  if (token !== s.access_token) setSession(res, { ...s, access_token: token });
+  // Drive token refresh removed
 
   const { dataUrl, name, meta } = (await req.json()) as {
     dataUrl: string;
@@ -24,6 +24,6 @@ export async function POST(req: NextRequest) {
 
   const okRes = NextResponse.json({ ok: true, id: file.id, name: file.name });
   const s2 = getSession(req);
-  if (token !== s2?.access_token) setSession(okRes, { ...s!, access_token: token });
+  // Drive token refresh removed
   return okRes;
 }

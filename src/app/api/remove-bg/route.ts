@@ -116,7 +116,7 @@ async function removeWithHF(
 }
 
 export async function POST(req: NextRequest) {
-  const { session, error } = checkAuth(req);
+  const { session, error } = await checkAuth(req);
   if (error) return error;
 
   try {
@@ -125,11 +125,11 @@ export async function POST(req: NextRequest) {
 
     // 1️⃣ Gemini (primary) — chroma-key approach
     const geminiResult = await removeWithGemini(imageData, mimeType || "image/jpeg");
-    if (geminiResult) return withCredits(geminiResult, session!);
+    if (geminiResult) return await withCredits(geminiResult, session!);
 
     // 2️⃣ HuggingFace (fallback) — true transparent PNG
     const hfResult = await removeWithHF(imageData);
-    if (hfResult) return withCredits(hfResult, session!);
+    if (hfResult) return await withCredits(hfResult, session!);
 
     return NextResponse.json({ error: "Background removal failed. Please try again." }, { status: 500 });
   } catch (err) {
