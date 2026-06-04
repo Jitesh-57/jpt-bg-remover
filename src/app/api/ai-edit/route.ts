@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { checkAuth, withCredits } from "@/lib/google-drive";
+import { checkAuth, withCredits } from "@/lib/auth";
 
-export const runtime = "nodejs";
-export const maxDuration = 60;
+export const runtime  = "nodejs";
+export const maxDuration = 120;
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.GOOGLE_GEMINI_API_KEY;
 
@@ -12,11 +12,9 @@ type GeminiResponse = {
   error?: { message: string };
 };
 
-// Best image models in quality order — tested working
 const MODELS = [
-  { id: "gemini-3.1-flash-image-preview", timeout: 40000 }, // Nano Banana 2 — newest, best
-  { id: "gemini-3-pro-image-preview",     timeout: 12000 }, // Nano Banana Pro
-  { id: "gemini-2.5-flash-image",         timeout: 5000  }, // Nano Banana — baseline
+  { id: "gemini-3.1-flash-image-preview", timeout: 50000 }, // image-gen — primary
+  { id: "gemini-2.5-flash-image",         timeout: 50000 }, // image-gen — fallback
 ];
 
 async function enhancePrompt(userPrompt: string, imageData: string, mimeType: string): Promise<string> {
@@ -45,7 +43,7 @@ async function enhancePrompt(userPrompt: string, imageData: string, mimeType: st
 }
 
 export async function POST(req: NextRequest) {
-  const { session, error } = checkAuth(req);
+  const { session, error } = await checkAuth(req);
   if (error) return error;
   if (!GEMINI_API_KEY) return NextResponse.json({ error: "GEMINI_API_KEY not configured" }, { status: 500 });
 
@@ -80,7 +78,10 @@ export async function POST(req: NextRequest) {
       for (const p of parts) {
         if ("inlineData" in p && p.inlineData?.data) {
           console.log(`[ai-edit] ✓ ${id}`);
-          return withCredits({ dataUrl: `data:${p.inlineData.mimeType};base64,${p.inlineData.data}` }, session!);
+          return await withCredits(
+            { dataUrl: `data:${p.inlineData.mimeType};base64,${p.inlineData.data}` },
+            session!
+          );
         }
       }
     } catch (e) { console.log(`[ai-edit] ${id}:`, (e as Error).message); }
