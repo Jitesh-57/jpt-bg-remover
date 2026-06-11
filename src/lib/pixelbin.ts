@@ -1,6 +1,12 @@
 // src/lib/pixelbin.ts
 const PIXELBIN_API_TOKEN = process.env.PIXELBIN_API_TOKEN;
 
+// PixelBin platform API requires token base64-encoded with trailing colon
+function getAuthHeader() {
+  const token = Buffer.from(`${PIXELBIN_API_TOKEN}:`).toString("base64");
+  return `Bearer ${token}`;
+}
+
 export async function runPixelBinPrediction(
   imageBase64: string,         // full data URL e.g. data:image/png;base64,...
   plugin: string,              // e.g. "erase"
@@ -31,7 +37,7 @@ export async function runPixelBinPrediction(
     "https://api.pixelbin.io/service/platform/assets/v2/upload",
     {
       method: "POST",
-      headers: { Authorization: `Bearer ${PIXELBIN_API_TOKEN}` },
+      headers: { Authorization: getAuthHeader() },
       body: formData,
     }
   );
@@ -51,7 +57,7 @@ export async function runPixelBinPrediction(
     {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${PIXELBIN_API_TOKEN}`,
+        Authorization: getAuthHeader(),
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -81,7 +87,7 @@ export async function runPixelBinPrediction(
     const pollRes = await fetch(
       `https://api.pixelbin.io/service/platform/predict/v1/inference/${predictionId}`,
       {
-        headers: { Authorization: `Bearer ${PIXELBIN_API_TOKEN}` },
+        headers: { Authorization: getAuthHeader() },
       }
     );
 
