@@ -5,7 +5,9 @@ export const runtime = "nodejs";
 
 export async function GET(req: NextRequest) {
   const url = new URL(req.url);
-  const origin = process.env.NEXT_PUBLIC_APP_URL || url.origin;
+  // Always use the actual request origin so the PKCE verifier cookie and the
+  // OAuth redirect target live on the same domain (preview vs production safe).
+  const origin = url.origin;
   const next = url.searchParams.get("next") || "/editor";
 
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
