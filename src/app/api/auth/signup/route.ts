@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Password must be at least 6 characters" }, { status: 400 });
   }
 
-  const response = NextResponse.json({ ok: false });
+  const cookiesToApply: { name: string; value: string; options?: Record<string, unknown> }[] = [];
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -29,8 +29,8 @@ export async function POST(req: NextRequest) {
     {
       cookies: {
         getAll() { return req.cookies.getAll(); },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
+        setAll(list) {
+          list.forEach(({ name, value, options }) => cookiesToApply.push({ name, value, options }));
         },
       },
     }
@@ -67,14 +67,12 @@ export async function POST(req: NextRequest) {
     }, { onConflict: "id", ignoreDuplicates: true });
   }
 
-  const body = {
+  const finalResponse = NextResponse.json({
     ok: true,
     email: data.user.email,
     name: displayName,
     credits: FREE_CREDITS,
-  };
-
-  const finalResponse = NextResponse.json(body);
-  response.cookies.getAll().forEach(({ name, value }) => finalResponse.cookies.set(name, value));
+  });
+  cookiesToApply.forEach(({ name, value, options }) => finalResponse.cookies.set(name, value, options));
   return finalResponse;
 }
