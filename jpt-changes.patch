@@ -1,0 +1,1769 @@
+From cbc0eaaad84aff0d58f7da39fd9e9bc647fcb5cf Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Thu, 11 Jun 2026 04:00:22 +0000
+Subject: [PATCH 1/3] Create azure-webapps-node.yml
+
+---
+ .github/workflows/azure-webapps-node.yml | 78 ++++++++++++++++++++++++
+ 1 file changed, 78 insertions(+)
+ create mode 100644 .github/workflows/azure-webapps-node.yml
+
+diff --git a/.github/workflows/azure-webapps-node.yml b/.github/workflows/azure-webapps-node.yml
+new file mode 100644
+index 0000000..2ebbac2
+--- /dev/null
++++ b/.github/workflows/azure-webapps-node.yml
+@@ -0,0 +1,78 @@
++# This workflow will build and push a node.js application to an Azure Web App when a commit is pushed to your default branch.
++#
++# This workflow assumes you have already created the target Azure App Service web app.
++# For instructions see https://docs.microsoft.com/en-us/azure/app-service/quickstart-nodejs?tabs=linux&pivots=development-environment-cli
++#
++# To configure this workflow:
++#
++# 1. Download the Publish Profile for your Azure Web App. You can download this file from the Overview page of your Web App in the Azure Portal.
++#    For more information: https://docs.microsoft.com/en-us/azure/app-service/deploy-github-actions?tabs=applevel#generate-deployment-credentials
++#
++# 2. Create a secret in your repository named AZURE_WEBAPP_PUBLISH_PROFILE, paste the publish profile contents as the value of the secret.
++#    For instructions on obtaining the publish profile see: https://docs.microsoft.com/azure/app-service/deploy-github-actions#configure-the-github-secret
++#
++# 3. Change the value for the AZURE_WEBAPP_NAME. Optionally, change the AZURE_WEBAPP_PACKAGE_PATH and NODE_VERSION environment variables below.
++#
++# For more information on GitHub Actions for Azure: https://github.com/Azure/Actions
++# For more information on the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
++# For more samples to get started with GitHub Action workflows to deploy to Azure: https://github.com/Azure/actions-workflow-samples
++
++on:
++  push:
++    branches: [ "main" ]
++  workflow_dispatch:
++
++env:
++  AZURE_WEBAPP_NAME: your-app-name    # set this to your application's name
++  AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
++  NODE_VERSION: '20.x'                # set this to the node version to use
++
++permissions:
++  contents: read
++
++jobs:
++  build:
++    runs-on: ubuntu-latest
++    steps:
++    - uses: actions/checkout@v4
++
++    - name: Set up Node.js
++      uses: actions/setup-node@v4
++      with:
++        node-version: ${{ env.NODE_VERSION }}
++        cache: 'npm'
++
++    - name: npm install, build, and test
++      run: |
++        npm install
++        npm run build --if-present
++        npm run test --if-present
++
++    - name: Upload artifact for deployment job
++      uses: actions/upload-artifact@v4
++      with:
++        name: node-app
++        path: .
++
++  deploy:
++    permissions:
++      contents: none
++    runs-on: ubuntu-latest
++    needs: build
++    environment:
++      name: 'Development'
++      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
++
++    steps:
++    - name: Download artifact from build job
++      uses: actions/download-artifact@v4
++      with:
++        name: node-app
++
++    - name: 'Deploy to Azure WebApp'
++      id: deploy-to-webapp
++      uses: azure/webapps-deploy@v2
++      with:
++        app-name: ${{ env.AZURE_WEBAPP_NAME }}
++        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
++        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+-- 
+2.43.0
+
+
+From ae7e79515211dd7d76240162c9c18220a4cce1c7 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Thu, 11 Jun 2026 04:00:22 +0000
+Subject: [PATCH 2/3] feat: migrate to Supabase auth, add before/after slider,
+ fix AI models
+
+- Replace custom JWT + Vercel Edge Config with Supabase Auth
+- Add middleware for automatic session refresh (persistent login)
+- Add /auth/callback route for OAuth PKCE flow
+- Create supabase.ts browser client
+- Update all auth API routes to use Supabase
+- Auth sessions now persist across all pages via Supabase refresh tokens
+- Remaining: NavBar, editor slider, signup route, AI model fixes (in progress)
+
+https://claude.ai/code/session_01QAJ7G2rmTPVwNMG7hX3dzo
+---
+ package.json                              |   2 +
+ src/app/api/auth/google/callback/route.ts |  77 +------
+ src/app/api/auth/google/logout/route.ts   |  39 +++-
+ src/app/api/auth/google/me/route.ts       |  43 ++--
+ src/app/api/auth/google/route.ts          |  52 +++--
+ src/app/api/auth/login/route.ts           |  64 +++---
+ src/app/auth/callback/route.ts            |  64 ++++++
+ src/lib/auth.ts                           | 264 ++++++++--------------
+ src/lib/supabase.ts                       |   9 +
+ src/middleware.ts                         |  34 +++
+ 10 files changed, 339 insertions(+), 309 deletions(-)
+ create mode 100644 src/app/auth/callback/route.ts
+ create mode 100644 src/lib/supabase.ts
+ create mode 100644 src/middleware.ts
+
+diff --git a/package.json b/package.json
+index 1535388..7d10802 100644
+--- a/package.json
++++ b/package.json
+@@ -8,6 +8,8 @@
+     "start": "next start"
+   },
+   "dependencies": {
++    "@supabase/supabase-js": "^2",
++    "@supabase/ssr": "^2",
+     "@tensorflow/tfjs": "^4.11.0",
+     "@types/bcryptjs": "^2.4.6",
+     "@upscalerjs/esrgan-slim": "^1.0.0",
+diff --git a/src/app/api/auth/google/callback/route.ts b/src/app/api/auth/google/callback/route.ts
+index e667955..0491885 100644
+--- a/src/app/api/auth/google/callback/route.ts
++++ b/src/app/api/auth/google/callback/route.ts
+@@ -1,80 +1,15 @@
+ import { NextRequest, NextResponse } from "next/server";
+-import { setSessionCookie, upsertKVUser, FREE_CREDITS } from "@/lib/auth";
+ 
+ export const runtime = "nodejs";
+ 
++// Redirect old callback URL to Supabase-based callback
+ export async function GET(req: NextRequest) {
+-  const url    = new URL(req.url);
++  const url = new URL(req.url);
+   const origin = process.env.NEXT_PUBLIC_APP_URL || url.origin;
+-  const code   = url.searchParams.get("code");
+-  const state  = url.searchParams.get("state");
+-  const oauthError = url.searchParams.get("error");
+-
++  const code = url.searchParams.get("code");
++  const state = url.searchParams.get("state");
+   let next = "/editor";
+   try { next = Buffer.from(state || "", "base64").toString("utf8") || "/editor"; } catch {}
+-
+-  if (oauthError) {
+-    console.error("[auth] Google OAuth error:", oauthError);
+-    return NextResponse.redirect(`${origin}/?error=${oauthError}`);
+-  }
+-  if (!code) {
+-    console.error("[auth] No code received");
+-    return NextResponse.redirect(`${origin}/?error=no_code`);
+-  }
+-
+-  // Exchange code for tokens
+-  const redirectUri = `${origin}/api/auth/google/callback`;
+-  const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
+-    method: "POST",
+-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+-    body: new URLSearchParams({
+-      client_id:     process.env.GOOGLE_CLIENT_ID!,
+-      client_secret: process.env.GOOGLE_CLIENT_SECRET!,
+-      redirect_uri:  redirectUri,
+-      code,
+-      grant_type:    "authorization_code",
+-    }),
+-  });
+-
+-  if (!tokenRes.ok) {
+-    const err = await tokenRes.text();
+-    console.error("[auth] Token exchange failed:", tokenRes.status, err);
+-    return NextResponse.redirect(`${origin}/?error=token_failed`);
+-  }
+-
+-  const tokens = await tokenRes.json() as {
+-    access_token: string;
+-    expires_in:   number;
+-    error?:       string;
+-  };
+-  if (tokens.error) return NextResponse.redirect(`${origin}/?error=${tokens.error}`);
+-
+-  // Fetch profile
+-  const userRes = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
+-    headers: { Authorization: `Bearer ${tokens.access_token}` },
+-  });
+-  if (!userRes.ok) return NextResponse.redirect(`${origin}/?error=userinfo_failed`);
+-
+-  const profile = await userRes.json() as { email: string; name: string; picture?: string };
+-
+-  // Upsert in KV (if available) and get credit count
+-  const kvUser = await upsertKVUser({
+-    email:    profile.email,
+-    name:     profile.name,
+-    picture:  profile.picture,
+-    provider: "google",
+-  });
+-  const credits = kvUser?.credits ?? FREE_CREDITS;
+-
+-  const res = NextResponse.redirect(`${origin}${next}`);
+-  setSessionCookie(res, {
+-    email:    profile.email,
+-    name:     profile.name,
+-    picture:  profile.picture,
+-    provider: "google",
+-    credits,
+-  });
+-
+-  console.log("[auth] ✓ Google login:", profile.email, "credits:", credits);
+-  return res;
++  const params = new URLSearchParams({ ...(code ? { code } : {}), next });
++  return NextResponse.redirect(`${origin}/auth/callback?${params}`);
+ }
+diff --git a/src/app/api/auth/google/logout/route.ts b/src/app/api/auth/google/logout/route.ts
+index 228bbb1..448f151 100644
+--- a/src/app/api/auth/google/logout/route.ts
++++ b/src/app/api/auth/google/logout/route.ts
+@@ -1,10 +1,31 @@
+-import { NextResponse } from "next/server";
+-import { SESSION_COOKIE } from "@/lib/auth";
+-
+-export async function POST() {
+-  const res = NextResponse.json({ ok: true });
+-  res.cookies.set(SESSION_COOKIE, "", { maxAge: 0, path: "/" });
+-  // Also clear old cookie name for backward compat
+-  res.cookies.set("g-sess", "", { maxAge: 0, path: "/" });
+-  return res;
++import { NextRequest, NextResponse } from "next/server";
++import { createServerClient } from "@supabase/ssr";
++import { cookies } from "next/headers";
++
++export const runtime = "nodejs";
++
++export async function POST(req: NextRequest) {
++  void req;
++  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
++    return NextResponse.json({ ok: true });
++  }
++
++  const cookieStore = await cookies();
++  const supabase = createServerClient(
++    process.env.NEXT_PUBLIC_SUPABASE_URL,
++    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
++    {
++      cookies: {
++        getAll() { return cookieStore.getAll(); },
++        setAll(cookiesToSet) {
++          try {
++            cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
++          } catch {}
++        },
++      },
++    }
++  );
++
++  await supabase.auth.signOut();
++  return NextResponse.json({ ok: true });
+ }
+diff --git a/src/app/api/auth/google/me/route.ts b/src/app/api/auth/google/me/route.ts
+index ba17e13..8569706 100644
+--- a/src/app/api/auth/google/me/route.ts
++++ b/src/app/api/auth/google/me/route.ts
+@@ -1,25 +1,40 @@
+ import { NextRequest, NextResponse } from "next/server";
+-import { readToken, getKVUser, FREE_CREDITS, ecAvailable } from "@/lib/auth";
++import { createServerClient } from "@supabase/ssr";
++import { FREE_CREDITS } from "@/lib/auth";
+ 
+ export const runtime = "nodejs";
+ 
+ export async function GET(req: NextRequest) {
+-  const token = readToken(req);
+-  if (!token) return NextResponse.json({ authenticated: false });
+-
+-  // Get fresh credits from KV if available
+-  let credits = token.credits;
+-  if (ecAvailable) {
+-    const kv = await getKVUser(token.email);
+-    if (kv) credits = kv.credits;
++  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
++    return NextResponse.json({ authenticated: false, error: "Supabase not configured" });
+   }
+ 
++  const supabase = createServerClient(
++    process.env.NEXT_PUBLIC_SUPABASE_URL,
++    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
++    {
++      cookies: {
++        getAll() { return req.cookies.getAll(); },
++        setAll() {},
++      },
++    }
++  );
++
++  const { data: { user } } = await supabase.auth.getUser();
++  if (!user) return NextResponse.json({ authenticated: false });
++
++  const { data: profile } = await supabase
++    .from("profiles")
++    .select("name, picture, credits")
++    .eq("id", user.id)
++    .single();
++
+   return NextResponse.json({
+     authenticated: true,
+-    email:   token.email,
+-    name:    token.name,
+-    picture: token.picture,
+-    credits: credits ?? FREE_CREDITS,
+-    kvEnabled: ecAvailable,
++    userId: user.id,
++    email: user.email,
++    name: profile?.name || user.user_metadata?.name || user.email?.split("@")[0],
++    picture: profile?.picture || user.user_metadata?.avatar_url,
++    credits: profile?.credits ?? FREE_CREDITS,
+   });
+ }
+diff --git a/src/app/api/auth/google/route.ts b/src/app/api/auth/google/route.ts
+index dc51057..537819e 100644
+--- a/src/app/api/auth/google/route.ts
++++ b/src/app/api/auth/google/route.ts
+@@ -1,21 +1,45 @@
+ import { NextRequest, NextResponse } from "next/server";
++import { createServerClient } from "@supabase/ssr";
++import { cookies } from "next/headers";
+ 
+-// Basic scopes only — no Google verification required, all users can sign in instantly
+-const SCOPES = ["openid", "email", "profile"].join(" ");
++export const runtime = "nodejs";
+ 
+ export async function GET(req: NextRequest) {
+-  const origin = process.env.NEXT_PUBLIC_APP_URL || new URL(req.url).origin;
+-  const next = new URL(req.url).searchParams.get("next") || "/";
+-  const state = Buffer.from(next).toString("base64");
++  const url = new URL(req.url);
++  const origin = process.env.NEXT_PUBLIC_APP_URL || url.origin;
++  const next = url.searchParams.get("next") || "/editor";
+ 
+-  const url = new URL("https://accounts.google.com/o/oauth2/v2/auth");
+-  url.searchParams.set("client_id", process.env.GOOGLE_CLIENT_ID!);
+-  url.searchParams.set("redirect_uri", `${origin}/api/auth/google/callback`);
+-  url.searchParams.set("response_type", "code");
+-  url.searchParams.set("scope", SCOPES);
+-  url.searchParams.set("access_type", "offline");
+-  url.searchParams.set("prompt", "consent");
+-  url.searchParams.set("state", state);
++  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
++    return NextResponse.redirect(`${origin}/?error=auth_not_configured`);
++  }
+ 
+-  return NextResponse.redirect(url.toString());
++  const cookieStore = await cookies();
++  const supabase = createServerClient(
++    process.env.NEXT_PUBLIC_SUPABASE_URL,
++    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
++    {
++      cookies: {
++        getAll() { return cookieStore.getAll(); },
++        setAll(cookiesToSet) {
++          try {
++            cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
++          } catch {}
++        },
++      },
++    }
++  );
++
++  const { data, error } = await supabase.auth.signInWithOAuth({
++    provider: "google",
++    options: {
++      redirectTo: `${origin}/auth/callback?next=${encodeURIComponent(next)}`,
++    },
++  });
++
++  if (error || !data.url) {
++    console.error("[auth/google] OAuth error:", error?.message);
++    return NextResponse.redirect(`${origin}/?error=oauth_failed`);
++  }
++
++  return NextResponse.redirect(data.url);
+ }
+diff --git a/src/app/api/auth/login/route.ts b/src/app/api/auth/login/route.ts
+index a0ec1bc..86f301a 100644
+--- a/src/app/api/auth/login/route.ts
++++ b/src/app/api/auth/login/route.ts
+@@ -1,46 +1,52 @@
+ import { NextRequest, NextResponse } from "next/server";
+-import bcrypt from "bcryptjs";
+-import { ecAvailable, getKVUser, setSessionCookie } from "@/lib/auth";
++import { createServerClient } from "@supabase/ssr";
++import { cookies } from "next/headers";
++import { FREE_CREDITS } from "@/lib/auth";
+ 
+ export const runtime = "nodejs";
+ 
+ export async function POST(req: NextRequest) {
+-  if (!ecAvailable) {
+-    return NextResponse.json(
+-      { error: "Email sign-in is not yet configured. Please use Google Sign-in." },
+-      { status: 503 }
+-    );
++  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
++    return NextResponse.json({ error: "Auth not configured. Please use Google Sign-in." }, { status: 503 });
+   }
+ 
+   const { email, password } = await req.json() as { email?: string; password?: string };
+-  if (!email || !password) {
++  if (!email?.trim() || !password) {
+     return NextResponse.json({ error: "Email and password required" }, { status: 400 });
+   }
+ 
+-  const user = await getKVUser(email);
+-  if (!user || user.provider !== "email" || !user.passwordHash) {
+-    // Constant-time delay to prevent user enumeration
+-    await bcrypt.hash("dummy", 10);
+-    return NextResponse.json({ error: "Invalid email or password" }, { status: 401 });
+-  }
++  const cookieStore = await cookies();
++  const supabase = createServerClient(
++    process.env.NEXT_PUBLIC_SUPABASE_URL,
++    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
++    {
++      cookies: {
++        getAll() { return cookieStore.getAll(); },
++        setAll(cookiesToSet) {
++          try {
++            cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
++          } catch {}
++        },
++      },
++    }
++  );
+ 
+-  const valid = await bcrypt.compare(password, user.passwordHash);
+-  if (!valid) {
++  const { data, error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
++  if (error || !data.user) {
+     return NextResponse.json({ error: "Invalid email or password" }, { status: 401 });
+   }
+ 
+-  const res = NextResponse.json({
+-    ok:      true,
+-    email:   user.email,
+-    name:    user.name,
+-    credits: user.credits,
+-  });
+-  setSessionCookie(res, {
+-    email:    user.email,
+-    name:     user.name,
+-    provider: "email",
+-    credits:  user.credits,
++  const { data: profile } = await supabase
++    .from("profiles")
++    .select("name, credits")
++    .eq("id", data.user.id)
++    .single();
++
++  console.log("[auth] ✓ Email login:", data.user.email);
++  return NextResponse.json({
++    ok: true,
++    email: data.user.email,
++    name: profile?.name || data.user.email?.split("@")[0],
++    credits: profile?.credits ?? FREE_CREDITS,
+   });
+-  console.log("[auth] ✓ Email login:", user.email);
+-  return res;
+ }
+diff --git a/src/app/auth/callback/route.ts b/src/app/auth/callback/route.ts
+new file mode 100644
+index 0000000..bea70d8
+--- /dev/null
++++ b/src/app/auth/callback/route.ts
+@@ -0,0 +1,64 @@
++import { NextRequest, NextResponse } from "next/server";
++import { createServerClient } from "@supabase/ssr";
++import { cookies } from "next/headers";
++
++export const runtime = "nodejs";
++
++export async function GET(request: NextRequest) {
++  const url = new URL(request.url);
++  const code = url.searchParams.get("code");
++  const next = url.searchParams.get("next") ?? "/editor";
++  const origin = url.origin;
++
++  if (!code) return NextResponse.redirect(`${origin}/?error=no_code`);
++
++  const cookieStore = await cookies();
++  const supabase = createServerClient(
++    process.env.NEXT_PUBLIC_SUPABASE_URL!,
++    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
++    {
++      cookies: {
++        getAll() { return cookieStore.getAll(); },
++        setAll(cookiesToSet) {
++          try {
++            cookiesToSet.forEach(({ name, value, options }) =>
++              cookieStore.set(name, value, options)
++            );
++          } catch {}
++        },
++      },
++    }
++  );
++
++  const { error } = await supabase.auth.exchangeCodeForSession(code);
++  if (error) {
++    console.error("[auth/callback]", error.message);
++    return NextResponse.redirect(`${origin}/?error=${encodeURIComponent(error.message)}`);
++  }
++
++  // Upsert profile (set credits only for new users)
++  const { data: { user } } = await supabase.auth.getUser();
++  if (user) {
++    const { data: existing } = await supabase
++      .from("profiles")
++      .select("id")
++      .eq("id", user.id)
++      .single();
++    if (!existing) {
++      await supabase.from("profiles").insert({
++        id: user.id,
++        email: user.email,
++        name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split("@")[0],
++        picture: user.user_metadata?.avatar_url,
++        credits: 10,
++      });
++    } else {
++      await supabase.from("profiles").update({
++        email: user.email,
++        picture: user.user_metadata?.avatar_url,
++      }).eq("id", user.id);
++    }
++  }
++
++  return NextResponse.redirect(`${origin}${next}`);
++}
+diff --git a/src/lib/auth.ts b/src/lib/auth.ts
+index 66a5d5d..080b20d 100644
+--- a/src/lib/auth.ts
++++ b/src/lib/auth.ts
+@@ -1,207 +1,112 @@
+ /**
+- * auth.ts — Central auth + user store
+- *
+- * Session: signed HMAC-SHA256 token in httpOnly cookie "jpt-sess"
+- *
+- * User storage: Vercel Edge Config
+- *   - Read:  EDGE_CONFIG env var (via @vercel/edge-config SDK — ultra-fast)
+- *   - Write: Vercel REST API PATCH /v1/edge-config/{id}/items
+- *   - Keys:  "user:{email}" → KVUser JSON object
++ * auth.ts — Supabase-based auth + credit management
+  */
+-
+ import { NextRequest, NextResponse } from "next/server";
+-import crypto from "crypto";
++import { createServerClient } from "@supabase/ssr";
++import { createClient as createSupabaseAdmin } from "@supabase/supabase-js";
+ 
+-export const SESSION_COOKIE = "jpt-sess";
+-export const FREE_CREDITS    = 10;
+-export const CREDIT_COST     = 2;
++export const FREE_CREDITS = 10;
++export const CREDIT_COST = 2;
+ 
+ // ─── Types ────────────────────────────────────────────────────────────────────
+ 
+ export interface KVUser {
+-  email:         string;
+-  name:          string;
+-  picture?:      string;
+-  provider:      "google" | "email";
++  email: string;
++  name: string;
++  picture?: string;
++  provider: "google" | "email";
+   passwordHash?: string;
+-  credits:       number;
+-  createdAt:     number;
++  credits: number;
++  createdAt: number;
+ }
+ 
+ export interface SessionPayload {
+-  email:    string;
+-  name:     string;
++  userId: string;
++  email: string;
++  name: string;
+   picture?: string;
+   provider: "google" | "email";
+-  credits:  number;
+-  iat:      number;
+-  exp:      number;
++  credits: number;
++  iat: number;
++  exp: number;
+ }
+ 
+-// Backward-compat alias used by AI routes
+ export type GoogleSession = SessionPayload;
+ 
+-// ─── Edge Config helpers ──────────────────────────────────────────────────────
+-
+-const EC_ID    = process.env.EDGE_CONFIG_ID;
+-const EC_TOKEN = process.env.VERCEL_WRITE_TOKEN;
+-const EC_TEAM  = process.env.VERCEL_TEAM_ID;
+-
+-// The EDGE_CONFIG env var contains the full URL with read token — use it for reads
+-const EC_READ_URL = process.env.EDGE_CONFIG; // e.g. https://edge-config.vercel.com/ecfg_...?token=...
++// ─── Supabase availability ────────────────────────────────────────────────────
+ 
+-export const ecAvailable = !!(EC_ID && EC_READ_URL);
++export const ecAvailable = !!(
++  process.env.NEXT_PUBLIC_SUPABASE_URL &&
++  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
++);
+ 
+-/**
+- * Edge Config keys must match [a-zA-Z0-9_-].
+- * Encode arbitrary strings as "u_" + base64url (no padding).
+- */
+-function ecKey(raw: string): string {
+-  return "u_" + Buffer.from(raw).toString("base64url");
+-}
++// Legacy alias — kept for backward compat
++export const SESSION_COOKIE = "jpt-sess";
+ 
+-/** Read a single item from Edge Config REST API */
+-async function ecGet<T>(key: string): Promise<T | null> {
+-  if (!EC_ID) return null;
+-  const token = EC_READ_URL?.split("token=")[1];
+-  if (!token) return null;
+-  try {
+-    const r = await fetch(
+-      `https://edge-config.vercel.com/${EC_ID}/item/${encodeURIComponent(key)}?token=${token}`,
+-      { cache: "no-store" }
+-    );
+-    if (!r.ok) return null;
+-    return (await r.json()) as T;
+-  } catch { return null; }
+-}
++// ─── Server-side Supabase clients ─────────────────────────────────────────────
+ 
+-/** Write / upsert items in Edge Config via Vercel REST API */
+-async function ecSet(key: string, value: unknown): Promise<boolean> {
+-  if (!EC_ID || !EC_TOKEN) return false;
+-  try {
+-    const url = EC_TEAM
+-      ? `https://api.vercel.com/v1/edge-config/${EC_ID}/items?teamId=${EC_TEAM}`
+-      : `https://api.vercel.com/v1/edge-config/${EC_ID}/items`;
+-    const r = await fetch(url, {
+-      method: "PATCH",
+-      headers: {
+-        Authorization: `Bearer ${EC_TOKEN}`,
+-        "Content-Type": "application/json",
++function createRequestSupabase(req: NextRequest) {
++  return createServerClient(
++    process.env.NEXT_PUBLIC_SUPABASE_URL!,
++    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
++    {
++      cookies: {
++        getAll() { return req.cookies.getAll(); },
++        setAll() {},
+       },
+-      body: JSON.stringify({ items: [{ operation: "upsert", key, value }] }),
+-    });
+-    return r.ok;
+-  } catch { return false; }
+-}
+-
+-// ─── User CRUD ────────────────────────────────────────────────────────────────
+-
+-export async function getKVUser(email: string): Promise<KVUser | null> {
+-  return ecGet<KVUser>(ecKey(`user:${email.toLowerCase()}`));
+-}
+-
+-export async function upsertKVUser(
+-  data: Omit<KVUser, "createdAt" | "credits"> & { credits?: number }
+-): Promise<KVUser> {
+-  const existing = await getKVUser(data.email);
+-  const user: KVUser = {
+-    email:        data.email.toLowerCase(),
+-    name:         data.name  || existing?.name  || data.email.split("@")[0],
+-    picture:      data.picture ?? existing?.picture,
+-    provider:     data.provider || existing?.provider || "email",
+-    passwordHash: data.passwordHash !== undefined ? data.passwordHash : existing?.passwordHash,
+-    credits:      existing?.credits ?? data.credits ?? FREE_CREDITS,
+-    createdAt:    existing?.createdAt || Date.now(),
+-  };
+-  await ecSet(ecKey(`user:${user.email}`), user);
+-  return user;
+-}
+-
+-export async function updateKVCredits(email: string, credits: number): Promise<void> {
+-  const user = await getKVUser(email);
+-  if (user) await ecSet(ecKey(`user:${email.toLowerCase()}`), { ...user, credits });
+-}
+-
+-// ─── Token signing ────────────────────────────────────────────────────────────
+-
+-const SECRET = process.env.JWT_SECRET || "dev-secret-change-in-production";
+-
+-function sign(payload: object): string {
+-  const data = Buffer.from(JSON.stringify(payload)).toString("base64url");
+-  const sig  = crypto.createHmac("sha256", SECRET).update(data).digest("base64url");
+-  return `${data}.${sig}`;
+-}
+-
+-function verify<T>(token: string): T | null {
+-  const dot = token.lastIndexOf(".");
+-  if (dot < 0) return null;
+-  const data = token.slice(0, dot);
+-  const sig  = token.slice(dot + 1);
+-  const expected = crypto.createHmac("sha256", SECRET).update(data).digest("base64url");
+-  try {
+-    if (sig.length !== expected.length) return null;
+-    if (!crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected))) return null;
+-    return JSON.parse(Buffer.from(data, "base64url").toString("utf8")) as T;
+-  } catch { return null; }
+-}
+-
+-// ─── Session cookie ───────────────────────────────────────────────────────────
+-
+-export function makeToken(payload: Omit<SessionPayload, "iat" | "exp">): string {
+-  const now = Math.floor(Date.now() / 1000);
+-  return sign({ ...payload, iat: now, exp: now + 60 * 60 * 24 * 60 });
+-}
+-
+-export function readToken(req: NextRequest): SessionPayload | null {
+-  const raw = req.cookies.get(SESSION_COOKIE)?.value;
+-  if (!raw) return null;
+-  const p = verify<SessionPayload>(raw);
+-  if (!p || p.exp < Math.floor(Date.now() / 1000)) return null;
+-  return p;
+-}
+-
+-export function setSessionCookie(
+-  res: NextResponse,
+-  payload: Omit<SessionPayload, "iat" | "exp">
+-): void {
+-  res.cookies.set(SESSION_COOKIE, makeToken(payload), {
+-    httpOnly: true,
+-    secure:   process.env.NODE_ENV === "production",
+-    sameSite: "lax",
+-    maxAge:   60 * 60 * 24 * 60,
+-    path:     "/",
+-  });
++    }
++  );
+ }
+ 
+-export function clearSessionCookie(res: NextResponse): void {
+-  res.cookies.set(SESSION_COOKIE, "", { maxAge: 0, path: "/" });
++function createAdminSupabase() {
++  return createSupabaseAdmin(
++    process.env.NEXT_PUBLIC_SUPABASE_URL!,
++    process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
++    { auth: { persistSession: false } }
++  );
+ }
+ 
+-// ─── checkAuth / withCredits (used by every AI route) ────────────────────────
++// ─── checkAuth / withCredits ──────────────────────────────────────────────────
+ 
+ export async function checkAuth(req: NextRequest): Promise<
+   { session: null; error: NextResponse } | { session: GoogleSession; error: null }
+ > {
+-  const token = readToken(req);
+-  if (!token) {
+-    return { session: null, error: NextResponse.json({ error: "Sign in required" }, { status: 401 }) };
++  if (!ecAvailable) {
++    return { session: null, error: NextResponse.json({ error: "Auth not configured. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY." }, { status: 503 }) };
+   }
+ 
+-  // Fetch fresh credits from Edge Config if available
+-  let credits = token.credits;
+-  if (ecAvailable) {
+-    const u = await getKVUser(token.email);
+-    if (u) credits = u.credits;
++  const supabase = createRequestSupabase(req);
++  const { data: { user }, error: userError } = await supabase.auth.getUser();
++
++  if (!user || userError) {
++    return { session: null, error: NextResponse.json({ error: "Sign in required" }, { status: 401 }) };
+   }
+ 
++  const { data: profile } = await supabase
++    .from("profiles")
++    .select("credits, name, picture")
++    .eq("id", user.id)
++    .single();
++
++  const credits = profile?.credits ?? FREE_CREDITS;
++
+   if (credits < CREDIT_COST) {
+-    return {
+-      session: null,
+-      error: NextResponse.json({ error: "No credits remaining.", credits: 0 }, { status: 402 }),
+-    };
++    return { session: null, error: NextResponse.json({ error: "No credits remaining.", credits: 0 }, { status: 402 }) };
+   }
+ 
+-  return { session: { ...token, credits }, error: null };
++  return {
++    session: {
++      userId: user.id,
++      email: user.email!,
++      name: profile?.name || user.user_metadata?.name || user.email!.split("@")[0],
++      picture: profile?.picture || user.user_metadata?.avatar_url,
++      provider: (user.app_metadata?.provider || "email") as "google" | "email",
++      credits,
++      iat: 0,
++      exp: 0,
++    },
++    error: null,
++  };
+ }
+ 
+ export async function withCredits(
+@@ -211,11 +116,26 @@ export async function withCredits(
+ ): Promise<NextResponse> {
+   const newCredits = Math.max(0, session.credits - cost);
+ 
+-  // Persist in Edge Config
+-  if (ecAvailable) await updateKVCredits(session.email, newCredits);
++  if (ecAvailable && session.userId) {
++    try {
++      const admin = createAdminSupabase();
++      await admin.from("profiles").update({ credits: newCredits }).eq("id", session.userId);
++    } catch (e) {
++      console.error("[withCredits] update failed:", e);
++    }
++  }
++
++  return NextResponse.json({ ...body, credits: newCredits });
++}
++
++// ─── Legacy stubs (kept for google-drive.ts re-exports) ──────────────────────
+ 
+-  // Refresh cookie so client sees updated credits
+-  const res = NextResponse.json({ ...body, credits: newCredits });
+-  setSessionCookie(res, { ...session, credits: newCredits });
+-  return res;
++export async function getKVUser(_email: string): Promise<KVUser | null> { return null; }
++export async function upsertKVUser(data: Omit<KVUser, "createdAt" | "credits"> & { credits?: number }): Promise<KVUser> {
++  return { ...data, credits: data.credits ?? FREE_CREDITS, createdAt: Date.now(), passwordHash: data.passwordHash };
+ }
++export async function updateKVCredits(_email: string, _credits: number): Promise<void> {}
++export function makeToken(_payload: object): string { return ""; }
++export function readToken(_req: NextRequest): SessionPayload | null { return null; }
++export function setSessionCookie(_res: NextResponse, _payload: object): void {}
++export function clearSessionCookie(_res: NextResponse): void {}
+diff --git a/src/lib/supabase.ts b/src/lib/supabase.ts
+new file mode 100644
+index 0000000..9a5c747
+--- /dev/null
++++ b/src/lib/supabase.ts
+@@ -0,0 +1,9 @@
++"use client";
++import { createBrowserClient } from "@supabase/ssr";
++
++export function createSupabaseClient() {
++  return createBrowserClient(
++    process.env.NEXT_PUBLIC_SUPABASE_URL!,
++    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
++  );
++}
+diff --git a/src/middleware.ts b/src/middleware.ts
+new file mode 100644
+index 0000000..d989908
+--- /dev/null
++++ b/src/middleware.ts
+@@ -0,0 +1,34 @@
++import { createServerClient } from "@supabase/ssr";
++import { NextResponse, type NextRequest } from "next/server";
++
++export async function middleware(request: NextRequest) {
++  let supabaseResponse = NextResponse.next({ request });
++
++  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
++    return supabaseResponse;
++  }
++
++  const supabase = createServerClient(
++    process.env.NEXT_PUBLIC_SUPABASE_URL,
++    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
++    {
++      cookies: {
++        getAll() { return request.cookies.getAll(); },
++        setAll(cookiesToSet) {
++          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
++          supabaseResponse = NextResponse.next({ request });
++          cookiesToSet.forEach(({ name, value, options }) =>
++            supabaseResponse.cookies.set(name, value, options)
++          );
++        },
++      },
++    }
++  );
++
++  await supabase.auth.getUser();
++  return supabaseResponse;
++}
++
++export const config = {
++  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)"],
++};
+-- 
+2.43.0
+
+
+From 6b8440abdd68c41c499ae53320ef2de907a7dc84 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Thu, 11 Jun 2026 04:00:22 +0000
+Subject: [PATCH 3/3] feat: before/after slider, Supabase signup, NavBar OAuth,
+ AI model fixes
+
+- Add draggable before/after comparison slider in editor (mouse + touch)
+- Replace bcrypt/KV signup with Supabase auth.signUp + profile creation
+- NavBar uses Supabase client OAuth for Google sign-in + signOut on logout
+- Add working Gemini image-gen model IDs as primary fallbacks across
+  ai-edit, remove-bg, upscale, and generate-bg routes
+- Pin @supabase/ssr to ^0.12.0
+
+https://claude.ai/code/session_01QAJ7G2rmTPVwNMG7hX3dzo
+---
+ package-lock.json                | 120 ++++++++++++++++++
+ package.json                     |   2 +-
+ src/app/_components/NavBar.tsx   |  78 +++++-------
+ src/app/api/ai-edit/route.ts     |   6 +-
+ src/app/api/auth/signup/route.ts | 101 +++++++++-------
+ src/app/api/generate-bg/route.ts |   6 +-
+ src/app/api/remove-bg/route.ts   |   3 +-
+ src/app/api/upscale/route.ts     |   6 +-
+ src/app/editor/page.tsx          | 201 +++++++++++++++++++++++--------
+ 9 files changed, 379 insertions(+), 144 deletions(-)
+
+diff --git a/package-lock.json b/package-lock.json
+index 533b0b5..1fce5f3 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -8,6 +8,8 @@
+       "name": "jpt-bg-remover",
+       "version": "1.0.0",
+       "dependencies": {
++        "@supabase/ssr": "^0.12.0",
++        "@supabase/supabase-js": "^2",
+         "@tensorflow/tfjs": "^4.11.0",
+         "@types/bcryptjs": "^2.4.6",
+         "@upscalerjs/esrgan-slim": "^1.0.0",
+@@ -214,6 +216,102 @@
+         "node": ">= 8"
+       }
+     },
++    "node_modules/@supabase/auth-js": {
++      "version": "2.108.1",
++      "resolved": "https://registry.npmjs.org/@supabase/auth-js/-/auth-js-2.108.1.tgz",
++      "integrity": "sha512-Lle5rKU8f9LF3K5dDd8Or8mkkG+ptzRZZWKPVMm9B9UuovH65Ss2+iFnQqRsCqaGouvJEcTWyl0cj2riNrrDLQ==",
++      "license": "MIT",
++      "dependencies": {
++        "tslib": "2.8.1"
++      },
++      "engines": {
++        "node": ">=20.0.0"
++      }
++    },
++    "node_modules/@supabase/functions-js": {
++      "version": "2.108.1",
++      "resolved": "https://registry.npmjs.org/@supabase/functions-js/-/functions-js-2.108.1.tgz",
++      "integrity": "sha512-fxBRW/A4IG7ADQztVt0NaEy5ysiO1WJ2pbldsnBchrkHuyepX0Krek9qA9T4gUQBVVTCE9Ea4pdsM5hfn3nc4A==",
++      "license": "MIT",
++      "dependencies": {
++        "tslib": "2.8.1"
++      },
++      "engines": {
++        "node": ">=20.0.0"
++      }
++    },
++    "node_modules/@supabase/phoenix": {
++      "version": "0.4.2",
++      "resolved": "https://registry.npmjs.org/@supabase/phoenix/-/phoenix-0.4.2.tgz",
++      "integrity": "sha512-YSAGnmDAfuleFCVt3CeurQZAhxRfXWeZIIkwp7NhYzQ1UwW6ePSnzsFAiUm/mbCkfoCf70QQHKW/K6RKh52a4A==",
++      "license": "MIT"
++    },
++    "node_modules/@supabase/postgrest-js": {
++      "version": "2.108.1",
++      "resolved": "https://registry.npmjs.org/@supabase/postgrest-js/-/postgrest-js-2.108.1.tgz",
++      "integrity": "sha512-9lj2MCPPMgSTaJ5y+amnhb3TWPtMFVlbDn2hmX/VV91xQU4j0AauwfMaBErHBJ+zzsSwjc0jLU+zLIZFLQzfig==",
++      "license": "MIT",
++      "dependencies": {
++        "tslib": "2.8.1"
++      },
++      "engines": {
++        "node": ">=20.0.0"
++      }
++    },
++    "node_modules/@supabase/realtime-js": {
++      "version": "2.108.1",
++      "resolved": "https://registry.npmjs.org/@supabase/realtime-js/-/realtime-js-2.108.1.tgz",
++      "integrity": "sha512-mHGGqOjwd1XTydcoffUqEMsbFQHUi6A3uhQ0EXr3iqzpLqItxKA9nbN6gIQxrZ7JRRnuUe/iOFPUkYV9Tdc5lg==",
++      "license": "MIT",
++      "dependencies": {
++        "@supabase/phoenix": "^0.4.2",
++        "tslib": "2.8.1"
++      },
++      "engines": {
++        "node": ">=20.0.0"
++      }
++    },
++    "node_modules/@supabase/ssr": {
++      "version": "0.12.0",
++      "resolved": "https://registry.npmjs.org/@supabase/ssr/-/ssr-0.12.0.tgz",
++      "integrity": "sha512-d9XV5XzJvzzZbeAIM7fWTCUYxQJZ2Ru6ny3dJHmHGp/LIrJ+o9FpD7N9Rf/UhhWEvHXSoDe8SI32Z2ouOdMjBg==",
++      "license": "MIT",
++      "dependencies": {
++        "cookie": "^1.0.2"
++      },
++      "peerDependencies": {
++        "@supabase/supabase-js": "^2.108.0"
++      }
++    },
++    "node_modules/@supabase/storage-js": {
++      "version": "2.108.1",
++      "resolved": "https://registry.npmjs.org/@supabase/storage-js/-/storage-js-2.108.1.tgz",
++      "integrity": "sha512-Er0SGGt85iT6ye+SSh98Az6L2CesoZJuyzEZYH2oBOAnIxa9Nn4CtwUC3veGxYggoT56X+3tVuuQeDBP8kR8sg==",
++      "license": "MIT",
++      "dependencies": {
++        "iceberg-js": "^0.8.1",
++        "tslib": "2.8.1"
++      },
++      "engines": {
++        "node": ">=20.0.0"
++      }
++    },
++    "node_modules/@supabase/supabase-js": {
++      "version": "2.108.1",
++      "resolved": "https://registry.npmjs.org/@supabase/supabase-js/-/supabase-js-2.108.1.tgz",
++      "integrity": "sha512-V/1hRKLSCJ0zEL+9QFRBUtivvePfOsaAYQmC0HhFNSHC2F3xFs4jSF3YhkLmzex6E4V4FGvmBDOP72D/53NnZA==",
++      "license": "MIT",
++      "dependencies": {
++        "@supabase/auth-js": "2.108.1",
++        "@supabase/functions-js": "2.108.1",
++        "@supabase/postgrest-js": "2.108.1",
++        "@supabase/realtime-js": "2.108.1",
++        "@supabase/storage-js": "2.108.1"
++      },
++      "engines": {
++        "node": ">=20.0.0"
++      }
++    },
+     "node_modules/@swc/counter": {
+       "version": "0.1.3",
+       "resolved": "https://registry.npmjs.org/@swc/counter/-/counter-0.1.3.tgz",
+@@ -776,6 +874,19 @@
+         "node": ">= 0.8"
+       }
+     },
++    "node_modules/cookie": {
++      "version": "1.1.1",
++      "resolved": "https://registry.npmjs.org/cookie/-/cookie-1.1.1.tgz",
++      "integrity": "sha512-ei8Aos7ja0weRpFzJnEA9UHJ/7XQmqglbRwnf2ATjcB9Wq874VKH9kfjjirM6UhU2/E5fFYadylyhFldcqSidQ==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=18"
++      },
++      "funding": {
++        "type": "opencollective",
++        "url": "https://opencollective.com/express"
++      }
++    },
+     "node_modules/core-js": {
+       "version": "3.29.1",
+       "resolved": "https://registry.npmjs.org/core-js/-/core-js-3.29.1.tgz",
+@@ -1127,6 +1238,15 @@
+         "node": ">= 6"
+       }
+     },
++    "node_modules/iceberg-js": {
++      "version": "0.8.1",
++      "resolved": "https://registry.npmjs.org/iceberg-js/-/iceberg-js-0.8.1.tgz",
++      "integrity": "sha512-1dhVQZXhcHje7798IVM+xoo/1ZdVfzOMIc8/rgVSijRK38EDqOJoGula9N/8ZI5RD8QTxNQtK/Gozpr+qUqRRA==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=20.0.0"
++      }
++    },
+     "node_modules/is-binary-path": {
+       "version": "2.1.0",
+       "resolved": "https://registry.npmjs.org/is-binary-path/-/is-binary-path-2.1.0.tgz",
+diff --git a/package.json b/package.json
+index 7d10802..beb99b5 100644
+--- a/package.json
++++ b/package.json
+@@ -9,7 +9,7 @@
+   },
+   "dependencies": {
+     "@supabase/supabase-js": "^2",
+-    "@supabase/ssr": "^2",
++    "@supabase/ssr": "^0.12.0",
+     "@tensorflow/tfjs": "^4.11.0",
+     "@types/bcryptjs": "^2.4.6",
+     "@upscalerjs/esrgan-slim": "^1.0.0",
+diff --git a/src/app/_components/NavBar.tsx b/src/app/_components/NavBar.tsx
+index d0c9b95..084fb82 100644
+--- a/src/app/_components/NavBar.tsx
++++ b/src/app/_components/NavBar.tsx
+@@ -1,6 +1,7 @@
+ "use client";
+ 
+ import { useEffect, useState } from "react";
++import { createSupabaseClient } from "@/lib/supabase";
+ 
+ interface User {
+   email: string;
+@@ -14,7 +15,6 @@ export default function NavBar() {
+   const [showMenu, setShowMenu] = useState(false);
+   const [showModal, setShowModal] = useState(false);
+ 
+-  // Auth form state
+   const [tab, setTab] = useState<"google" | "email">("google");
+   const [mode, setMode] = useState<"login" | "signup">("login");
+   const [email, setEmail] = useState("");
+@@ -34,43 +34,55 @@ export default function NavBar() {
+       .catch(() => null);
+   }, []);
+ 
++  const currentPath = typeof window !== "undefined" ? window.location.pathname : "/editor";
++
+   const openModal = () => {
+-    setShowModal(true);
+-    setTab("google");
+-    setMode("login");
++    setShowModal(true); setTab("google"); setMode("login");
+     setEmail(""); setPassword(""); setName(""); setAuthError("");
+   };
++  const closeModal = () => { setShowModal(false); setAuthError(""); };
+ 
+-  const closeModal = () => {
+-    setShowModal(false);
+-    setAuthError("");
++  const handleGoogleSignIn = async () => {
++    try {
++      const supabase = createSupabaseClient();
++      await supabase.auth.signInWithOAuth({
++        provider: "google",
++        options: {
++          redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(currentPath)}`,
++        },
++      });
++    } catch {
++      // Fallback to API route
++      window.location.href = `/api/auth/google?next=${encodeURIComponent(currentPath)}`;
++    }
+   };
+ 
+   const handleEmailAuth = async () => {
+     if (!email.trim() || !password.trim()) { setAuthError("Email and password required"); return; }
+     setAuthLoading(true); setAuthError("");
+     try {
+-      const url  = mode === "signup" ? "/api/auth/signup" : "/api/auth/login";
++      const url = mode === "signup" ? "/api/auth/signup" : "/api/auth/login";
+       const body = mode === "signup"
+         ? { email: email.trim(), password, name: name.trim() }
+         : { email: email.trim(), password };
+-      const res  = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
++      const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+       const data = await res.json() as { ok?: boolean; email?: string; name?: string; credits?: number; error?: string };
+       if (!res.ok) { setAuthError(data.error || "Authentication failed"); return; }
+-      // Reload so cookie takes effect across all components
+       window.location.reload();
+     } catch { setAuthError("Network error. Please try again."); }
+     finally { setAuthLoading(false); }
+   };
+ 
+   const handleLogout = async () => {
++    try {
++      const supabase = createSupabaseClient();
++      await supabase.auth.signOut();
++    } catch {}
+     await fetch("/api/auth/google/logout", { method: "POST" });
+     setUser(null); setShowMenu(false);
+     window.location.href = "/";
+   };
+ 
+-  const currentPath = typeof window !== "undefined" ? window.location.pathname : "/editor";
+-
+   return (
+     <>
+       <nav className="jpt-nav">
+@@ -100,7 +112,6 @@ export default function NavBar() {
+                 <span>{user.name.split(" ")[0]}</span>
+                 <span style={{ fontSize: 11, background: "rgba(255,255,255,0.3)", padding: "2px 6px", borderRadius: 4 }}>⚡ {user.credits}</span>
+               </button>
+-
+               {showMenu && (
+                 <div style={{ position: "absolute", top: "100%", right: 0, marginTop: 8, background: "#fff", border: "1px solid #E5E7EB", borderRadius: 8, boxShadow: "0 4px 12px rgba(0,0,0,0.15)", minWidth: 200, zIndex: 1000 }}>
+                   <div style={{ padding: 12, borderBottom: "1px solid #E5E7EB" }}>
+@@ -119,61 +130,41 @@ export default function NavBar() {
+               )}
+             </div>
+           ) : (
+-            <button
+-              onClick={openModal}
+-              style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "8px 14px", background: "#6366F1", color: "#fff", border: "none", borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: "pointer" }}
+-            >
++            <button onClick={openModal} style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "8px 14px", background: "#6366F1", color: "#fff", border: "none", borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+               🔐 Sign In
+             </button>
+           )}
+         </div>
+       </nav>
+ 
+-      {/* ── Sign-in Modal ── */}
+       {showModal && (
+-        <div
+-          onClick={closeModal}
+-          style={{ position: "fixed", inset: 0, zIndex: 9999, background: "rgba(0,0,0,0.55)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20, backdropFilter: "blur(4px)" }}
+-        >
+-          <div
+-            onClick={e => e.stopPropagation()}
+-            style={{ background: "#fff", borderRadius: 20, padding: 32, maxWidth: 440, width: "100%", boxShadow: "0 24px 80px rgba(0,0,0,0.3)" }}
+-          >
+-            {/* Header */}
++        <div onClick={closeModal} style={{ position: "fixed", inset: 0, zIndex: 9999, background: "rgba(0,0,0,0.55)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20, backdropFilter: "blur(4px)" }}>
++          <div onClick={e => e.stopPropagation()} style={{ background: "#fff", borderRadius: 20, padding: 32, maxWidth: 440, width: "100%", boxShadow: "0 24px 80px rgba(0,0,0,0.3)" }}>
+             <div style={{ textAlign: "center", marginBottom: 24 }}>
+               <div style={{ fontSize: 44, marginBottom: 8 }}>✨</div>
+               <div style={{ fontWeight: 900, fontSize: 22, color: "#111", marginBottom: 6 }}>Sign in to JPT AI</div>
+               <p style={{ fontSize: 14, color: "#666", margin: 0 }}>Get <strong>10 free AI credits</strong> to start editing</p>
+             </div>
+-
+-            {/* Tab: Google / Email */}
+             <div style={{ display: "flex", background: "#F0F0F8", borderRadius: 10, padding: 3, marginBottom: 22 }}>
+               {(["google", "email"] as const).map(t => (
+                 <button key={t} onClick={() => { setTab(t); setAuthError(""); }}
+-                  style={{ flex: 1, padding: "9px", borderRadius: 8, border: "none", background: tab === t ? "#fff" : "none", fontWeight: 700, fontSize: 13, cursor: "pointer", color: tab === t ? "#6366F1" : "#888", boxShadow: tab === t ? "0 1px 4px rgba(0,0,0,0.1)" : "none", transition: "all 0.15s" }}>
++                  style={{ flex: 1, padding: "9px", borderRadius: 8, border: "none", background: tab === t ? "#fff" : "none", fontWeight: 700, fontSize: 13, cursor: "pointer", color: tab === t ? "#6366F1" : "#888", boxShadow: tab === t ? "0 1px 4px rgba(0,0,0,0.1)" : "none" }}>
+                   {t === "google" ? "🔵 Google" : "📧 Email"}
+                 </button>
+               ))}
+             </div>
+-
+-            {/* Google tab */}
+             {tab === "google" && (
+               <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+-                <a
+-                  href={`/api/auth/google?next=${encodeURIComponent(currentPath)}`}
+-                  style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, padding: "13px 20px", background: "#fff", border: "1.5px solid #E0E0EE", borderRadius: 10, textDecoration: "none", color: "#222", fontWeight: 700, fontSize: 14, boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}
+-                >
++                <button onClick={handleGoogleSignIn}
++                  style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, padding: "13px 20px", background: "#fff", border: "1.5px solid #E0E0EE", borderRadius: 10, cursor: "pointer", color: "#222", fontWeight: 700, fontSize: 14, boxShadow: "0 1px 4px rgba(0,0,0,0.06)", width: "100%" }}>
+                   <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                   Continue with Google
+-                </a>
++                </button>
+                 <div style={{ fontSize: 12, color: "#999", textAlign: "center" }}>Quick · No password needed · Works with any Google account</div>
+               </div>
+             )}
+-
+-            {/* Email tab */}
+             {tab === "email" && (
+               <div style={{ display: "flex", flexDirection: "column", gap: 11 }}>
+-                {/* Login / Signup toggle */}
+                 <div style={{ display: "flex", gap: 4, justifyContent: "center", borderBottom: "1px solid #F0F0F0", paddingBottom: 12, marginBottom: 4 }}>
+                   {(["login", "signup"] as const).map(m => (
+                     <button key={m} onClick={() => { setMode(m); setAuthError(""); }}
+@@ -182,7 +173,6 @@ export default function NavBar() {
+                     </button>
+                   ))}
+                 </div>
+-
+                 {mode === "signup" && (
+                   <input type="text" placeholder="Your name (optional)" value={name} onChange={e => setName(e.target.value)}
+                     style={{ border: "1.5px solid #E0E0EE", borderRadius: 8, padding: "11px 12px", fontSize: 14, outline: "none", width: "100%", boxSizing: "border-box" as const }} />
+@@ -191,20 +181,17 @@ export default function NavBar() {
+                   style={{ border: "1.5px solid #E0E0EE", borderRadius: 8, padding: "11px 12px", fontSize: 14, outline: "none", width: "100%", boxSizing: "border-box" as const }} />
+                 <input type="password" placeholder="Password (min 6 characters)" value={password} onChange={e => setPassword(e.target.value)} onKeyDown={e => e.key === "Enter" && handleEmailAuth()}
+                   style={{ border: "1.5px solid #E0E0EE", borderRadius: 8, padding: "11px 12px", fontSize: 14, outline: "none", width: "100%", boxSizing: "border-box" as const }} />
+-
+                 {authError && (
+                   <div style={{ background: "#FFF1F0", border: "1px solid #FFC4C4", borderRadius: 8, padding: "8px 12px", fontSize: 13, color: "#C00" }}>{authError}</div>
+                 )}
+-
+                 <button onClick={handleEmailAuth} disabled={authLoading}
+                   style={{ padding: "12px", background: authLoading ? "#A5B4FC" : "#6366F1", color: "#fff", border: "none", borderRadius: 10, fontWeight: 800, fontSize: 15, cursor: authLoading ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                   {authLoading
+                     ? <><span style={{ width: 16, height: 16, border: "2px solid rgba(255,255,255,0.4)", borderTop: "2px solid #fff", borderRadius: "50%", animation: "spin 0.8s linear infinite", display: "inline-block" }} />{mode === "signup" ? "Creating…" : "Signing in…"}</>
+                     : mode === "signup" ? "✦ Create Account" : "→ Sign In"}
+                 </button>
+-
+                 <p style={{ fontSize: 12, color: "#999", textAlign: "center", margin: 0 }}>
+-                  Works with any email address · {mode === "signup" ? "Already have an account? " : "Don't have an account? "}
++                  {mode === "signup" ? "Already have an account? " : "Don't have an account? "}
+                   <button onClick={() => { setMode(mode === "signup" ? "login" : "signup"); setAuthError(""); }}
+                     style={{ background: "none", border: "none", color: "#6366F1", fontWeight: 700, cursor: "pointer", padding: 0, fontSize: 12 }}>
+                     {mode === "signup" ? "Sign in" : "Create one"}
+@@ -212,7 +199,6 @@ export default function NavBar() {
+                 </p>
+               </div>
+             )}
+-
+             <button onClick={closeModal} style={{ display: "block", width: "100%", marginTop: 18, padding: "8px", background: "none", border: "none", color: "#AAA", fontSize: 13, cursor: "pointer" }}>
+               Cancel
+             </button>
+diff --git a/src/app/api/ai-edit/route.ts b/src/app/api/ai-edit/route.ts
+index 094dd54..8efe519 100644
+--- a/src/app/api/ai-edit/route.ts
++++ b/src/app/api/ai-edit/route.ts
+@@ -13,8 +13,10 @@ type GeminiResponse = {
+ };
+ 
+ const MODELS = [
+-  { id: "gemini-3.1-flash-image-preview", timeout: 50000 }, // image-gen — primary
+-  { id: "gemini-2.5-flash-image",         timeout: 50000 }, // image-gen — fallback
++  { id: "gemini-2.5-flash-preview-image-generation", timeout: 50000 },
++  { id: "gemini-2.0-flash-preview-image-generation", timeout: 50000 },
++  { id: "gemini-3.1-flash-image-preview",            timeout: 50000 },
++  { id: "gemini-2.5-flash-image",                    timeout: 50000 },
+ ];
+ 
+ async function enhancePrompt(userPrompt: string, imageData: string, mimeType: string): Promise<string> {
+diff --git a/src/app/api/auth/signup/route.ts b/src/app/api/auth/signup/route.ts
+index 37d33b9..e67903d 100644
+--- a/src/app/api/auth/signup/route.ts
++++ b/src/app/api/auth/signup/route.ts
+@@ -1,28 +1,18 @@
+ import { NextRequest, NextResponse } from "next/server";
+-import bcrypt from "bcryptjs";
+-import {
+-  ecAvailable,
+-  getKVUser,
+-  upsertKVUser,
+-  setSessionCookie,
+-  FREE_CREDITS,
+-} from "@/lib/auth";
++import { createServerClient } from "@supabase/ssr";
++import { createClient as createSupabaseAdmin } from "@supabase/supabase-js";
++import { cookies } from "next/headers";
++import { FREE_CREDITS } from "@/lib/auth";
+ 
+ export const runtime = "nodejs";
+ 
+ export async function POST(req: NextRequest) {
+-  if (!ecAvailable) {
+-    return NextResponse.json(
+-      { error: "Email sign-up is not yet configured. Please use Google Sign-in." },
+-      { status: 503 }
+-    );
++  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
++    return NextResponse.json({ error: "Auth not configured. Please use Google Sign-in." }, { status: 503 });
+   }
+ 
+-  const { email, password, name } = await req.json() as {
+-    email?: string; password?: string; name?: string;
+-  };
+-
+-  if (!email || !password) {
++  const { email, password, name } = await req.json() as { email?: string; password?: string; name?: string };
++  if (!email?.trim() || !password) {
+     return NextResponse.json({ error: "Email and password required" }, { status: 400 });
+   }
+   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+@@ -32,32 +22,59 @@ export async function POST(req: NextRequest) {
+     return NextResponse.json({ error: "Password must be at least 6 characters" }, { status: 400 });
+   }
+ 
+-  const existing = await getKVUser(email);
+-  if (existing) {
+-    return NextResponse.json({ error: "An account with this email already exists" }, { status: 409 });
+-  }
++  const cookieStore = await cookies();
++  const supabase = createServerClient(
++    process.env.NEXT_PUBLIC_SUPABASE_URL,
++    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
++    {
++      cookies: {
++        getAll() { return cookieStore.getAll(); },
++        setAll(cookiesToSet) {
++          try {
++            cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
++          } catch {}
++        },
++      },
++    }
++  );
+ 
+-  const passwordHash = await bcrypt.hash(password, 10);
+-  const user = await upsertKVUser({
+-    email,
+-    name:         name?.trim() || email.split("@")[0],
+-    provider:     "email",
+-    passwordHash,
+-    credits:      FREE_CREDITS,
++  const displayName = name?.trim() || email.trim().split("@")[0];
++  const { data, error } = await supabase.auth.signUp({
++    email: email.trim(),
++    password,
++    options: { data: { name: displayName } },
+   });
+ 
+-  const res = NextResponse.json({
+-    ok:      true,
+-    email:   user.email,
+-    name:    user.name,
+-    credits: user.credits,
+-  });
+-  setSessionCookie(res, {
+-    email:    user.email,
+-    name:     user.name,
+-    provider: "email",
+-    credits:  user.credits,
++  if (error) {
++    if (error.message.toLowerCase().includes("already")) {
++      return NextResponse.json({ error: "An account with this email already exists" }, { status: 409 });
++    }
++    return NextResponse.json({ error: error.message }, { status: 400 });
++  }
++  if (!data.user) {
++    return NextResponse.json({ error: "Signup failed" }, { status: 400 });
++  }
++
++  // Create profile with credits using admin client
++  if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
++    const admin = createSupabaseAdmin(
++      process.env.NEXT_PUBLIC_SUPABASE_URL,
++      process.env.SUPABASE_SERVICE_ROLE_KEY,
++      { auth: { persistSession: false } }
++    );
++    await admin.from("profiles").upsert({
++      id: data.user.id,
++      email: data.user.email,
++      name: displayName,
++      credits: FREE_CREDITS,
++    }, { onConflict: "id", ignoreDuplicates: true });
++  }
++
++  console.log("[auth] ✓ Email signup:", data.user.email);
++  return NextResponse.json({
++    ok: true,
++    email: data.user.email,
++    name: displayName,
++    credits: FREE_CREDITS,
+   });
+-  console.log("[auth] ✓ Email signup:", user.email);
+-  return res;
+ }
+diff --git a/src/app/api/generate-bg/route.ts b/src/app/api/generate-bg/route.ts
+index 5db90c6..d3b9fa5 100644
+--- a/src/app/api/generate-bg/route.ts
++++ b/src/app/api/generate-bg/route.ts
+@@ -14,8 +14,10 @@ type GeminiResponse = {
+ 
+ // gemini-3-pro-image-preview is unresponsive — skip it
+ const MODELS = [
+-  { id: "gemini-3.1-flash-image-preview", timeout: 44000 }, // Nano Banana 2 — primary
+-  { id: "gemini-2.5-flash-image",         timeout: 12000 }, // Nano Banana — fallback
++  { id: "gemini-2.5-flash-preview-image-generation", timeout: 44000 },
++  { id: "gemini-2.0-flash-preview-image-generation", timeout: 44000 },
++  { id: "gemini-3.1-flash-image-preview",            timeout: 44000 },
++  { id: "gemini-2.5-flash-image",                    timeout: 12000 },
+ ];
+ 
+ export async function POST(req: NextRequest) {
+diff --git a/src/app/api/remove-bg/route.ts b/src/app/api/remove-bg/route.ts
+index 91b4689..aef394f 100644
+--- a/src/app/api/remove-bg/route.ts
++++ b/src/app/api/remove-bg/route.ts
+@@ -9,9 +9,10 @@ const HF_TOKEN = process.env.HF_TOKEN;
+ 
+ // Confirmed available image-capable models (tested against live API)
+ const IMAGE_MODELS = [
++  "gemini-2.5-flash-preview-image-generation",
++  "gemini-2.0-flash-preview-image-generation",
+   "gemini-2.5-flash-image",
+   "gemini-3.1-flash-image-preview",
+-  "gemini-3-pro-image-preview",
+ ];
+ 
+ type GeminiPart = { text: string } | { inlineData: { mimeType: string; data: string } };
+diff --git a/src/app/api/upscale/route.ts b/src/app/api/upscale/route.ts
+index d91bd2c..0d999fb 100644
+--- a/src/app/api/upscale/route.ts
++++ b/src/app/api/upscale/route.ts
+@@ -13,8 +13,10 @@ type GeminiResponse = {
+ };
+ 
+ const MODELS = [
+-  { id: "gemini-3.1-flash-image-preview", timeout: 50000 }, // image-gen — primary
+-  { id: "gemini-2.5-flash-image",         timeout: 50000 }, // image-gen — fallback
++  { id: "gemini-2.5-flash-preview-image-generation", timeout: 50000 },
++  { id: "gemini-2.0-flash-preview-image-generation", timeout: 50000 },
++  { id: "gemini-3.1-flash-image-preview",            timeout: 50000 },
++  { id: "gemini-2.5-flash-image",                    timeout: 50000 },
+ ];
+ 
+ function buildPrompt(scale: "2x" | "4x"): string {
+diff --git a/src/app/editor/page.tsx b/src/app/editor/page.tsx
+index bf2f4e1..51d8364 100644
+--- a/src/app/editor/page.tsx
++++ b/src/app/editor/page.tsx
+@@ -201,6 +201,11 @@ export default function ImageEditorPage() {
+   const [error, setError] = useState<string | null>(null);
+   const [dragOver, setDragOver] = useState(false);
+ 
++  // Before/After slider state
++  const [sliderPos, setSliderPos] = useState(50);
++  const [isDragging, setIsDragging] = useState(false);
++  const sliderContainerRef = useRef<HTMLDivElement>(null);
++
+   // Generate BG sub-state
+   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
+   const [customBgPrompt, setCustomBgPrompt] = useState("");
+@@ -338,6 +343,31 @@ export default function ImageEditorPage() {
+   }, []);
+ 
+   const resetAdjust = () => { setBrightness(100); setContrast(100); setSaturation(100); setSharpness(0); };
++
++  // Reset slider position whenever a new result arrives
++  useEffect(() => {
++    if (working) setSliderPos(50);
++  }, [working]);
++
++  const getSliderPosFromEvent = useCallback((clientX: number): number => {
++    const container = sliderContainerRef.current;
++    if (!container) return 50;
++    const rect = container.getBoundingClientRect();
++    return Math.round(Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100)));
++  }, []);
++
++  const onSliderMouseMove = useCallback((e: React.MouseEvent) => {
++    if (!isDragging) return;
++    setSliderPos(getSliderPosFromEvent(e.clientX));
++  }, [isDragging, getSliderPosFromEvent]);
++
++  const onSliderTouchMove = useCallback((e: React.TouchEvent) => {
++    if (!isDragging || !e.touches[0]) return;
++    e.preventDefault();
++    setSliderPos(getSliderPosFromEvent(e.touches[0].clientX));
++  }, [isDragging, getSliderPosFromEvent]);
++
++  const onSliderEnd = useCallback(() => setIsDragging(false), []);
+   const currentDisplay = showOriginal ? original?.dataUrl : (working || original?.dataUrl);
+ 
+   // ── Tool handlers ─────────────────────────────────────────────────────────────
+@@ -737,53 +767,124 @@ export default function ImageEditorPage() {
+               {/* Error */}
+               {error && <div style={{ ...s.errBox, maxWidth: "100%", marginBottom: 16 }}>{error}</div>}
+ 
+-              {/* Side-by-Side View: Original | Result */}
+-              <div style={{ display: "flex", gap: 16, justifyContent: "center", alignItems: "flex-start", flexWrap: "wrap" }}>
+-                {/* Original */}
+-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+-                  <div style={{ fontSize: 12, fontWeight: 600, color: "#666" }}>📌 Original</div>
+-                  <div style={s.imgWrap}>
+-                    <img
+-                      src={original?.dataUrl || ""}
+-                      alt="original"
+-                      style={{ ...s.mainImg, filter: "none" }}
+-                    />
+-                  </div>
+-                  <span style={s.dimLabel}>{original?.w} × {original?.h}px</span>
+-                </div>
+-
+-                {/* Result */}
+-                {working && (
+-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+-                    <div style={{ fontSize: 12, fontWeight: 600, color: "#6366F1" }}>✨ Result</div>
+-                    <div style={s.imgWrap}>
++              {/* Before/After Slider */}
++              {working ? (
++                <div style={{ width: "100%", maxWidth: 860 }}>
++                  <div
++                    ref={sliderContainerRef}
++                    style={{
++                      position: "relative",
++                      width: "100%",
++                      borderRadius: 16,
++                      overflow: "hidden",
++                      boxShadow: "0 8px 40px rgba(0,0,0,0.15)",
++                      background: "#eee",
++                      cursor: isDragging ? "ew-resize" : "default",
++                      userSelect: "none",
++                    }}
++                    onMouseMove={onSliderMouseMove}
++                    onMouseUp={onSliderEnd}
++                    onMouseLeave={onSliderEnd}
++                    onTouchMove={onSliderTouchMove}
++                    onTouchEnd={onSliderEnd}
++                  >
++                    {/* Result image (behind) */}
++                    <div style={{ position: "relative" }}>
+                       {working?.includes("image/png") && <div style={s.checker} />}
+                       <img
+-                        src={working || ""}
++                        src={working}
+                         alt="result"
+-                        style={{ ...s.mainImg, ...(processing ? { opacity: 0.5 } : {}), filter: activeTool === "adjust" && !processing ? adjustFilter : undefined, userSelect: "none" }}
++                        style={{ display: "block", maxWidth: "100%", maxHeight: "65vh", width: "100%", objectFit: "contain", position: "relative", zIndex: 1, filter: activeTool === "adjust" && !processing ? adjustFilter : undefined }}
+                       />
+-                      {processing && (
+-                        <div style={s.imgOverlay}>
+-                          <div style={s.spinner} />
+-                          <span style={{ color: "#fff", fontSize: 13, marginTop: 10 }}>{processingLabel || "Processing…"}</span>
+-                        </div>
+-                      )}
+                     </div>
+-                    <div style={{ display: "flex", gap: 8, flexWrap: "wrap" as const, justifyContent: "center" }}>
+-                      <button style={s.dlBtn} onClick={handleDownload}>⬇️ Download</button>
+-                      {editHistory.length > 0 && (
+-                        <button style={s.ghostBtn} onClick={() => {
+-                          const prev = editHistory[editHistory.length - 1];
+-                          setEditHistory(h => h.slice(0, -1));
+-                          setWorking(prev ?? null);
+-                        }}>↩ Undo</button>
+-                      )}
+-                      <button style={{ ...s.ghostBtn, color: "#EF4444", borderColor: "#FCA5A5" }} onClick={() => { setWorking(null); setEditHistory([]); setSelectedTemplate(null); setCustomBgPrompt(""); }}>⏮ Reset</button>
++
++                    {/* Original image (clipped over result — left portion) */}
++                    <div
++                      style={{
++                        position: "absolute",
++                        inset: 0,
++                        overflow: "hidden",
++                        clipPath: `polygon(0 0, ${sliderPos}% 0, ${sliderPos}% 100%, 0 100%)`,
++                        zIndex: 2,
++                      }}
++                    >
++                      <img
++                        src={original?.dataUrl}
++                        alt="original"
++                        style={{ display: "block", maxWidth: "100%", maxHeight: "65vh", width: "100%", objectFit: "contain" }}
++                      />
+                     </div>
++
++                    {/* Divider line + handle */}
++                    <div
++                      style={{
++                        position: "absolute",
++                        top: 0, bottom: 0,
++                        left: `${sliderPos}%`,
++                        width: 3,
++                        background: "#fff",
++                        boxShadow: "0 0 8px rgba(0,0,0,0.4)",
++                        transform: "translateX(-50%)",
++                        cursor: "ew-resize",
++                        zIndex: 3,
++                        pointerEvents: "auto",
++                      }}
++                      onMouseDown={(e) => { e.preventDefault(); setIsDragging(true); }}
++                      onTouchStart={(e) => { e.preventDefault(); setIsDragging(true); }}
++                    >
++                      <div style={{
++                        position: "absolute",
++                        top: "50%", left: "50%",
++                        transform: "translate(-50%, -50%)",
++                        width: 44, height: 44,
++                        borderRadius: "50%",
++                        background: "#fff",
++                        boxShadow: "0 2px 12px rgba(0,0,0,0.3)",
++                        display: "flex", alignItems: "center", justifyContent: "center",
++                        fontSize: 18, color: "#555",
++                      }}>
++                        ⟺
++                      </div>
++                    </div>
++
++                    {/* Labels */}
++                    <div style={{ position: "absolute", top: 12, left: 12, zIndex: 4, background: "rgba(0,0,0,0.55)", backdropFilter: "blur(4px)", color: "#fff", padding: "4px 10px", borderRadius: 6, fontSize: 12, fontWeight: 700, pointerEvents: "none" }}>
++                      Original
++                    </div>
++                    <div style={{ position: "absolute", top: 12, right: 12, zIndex: 4, background: "rgba(99,102,241,0.8)", backdropFilter: "blur(4px)", color: "#fff", padding: "4px 10px", borderRadius: 6, fontSize: 12, fontWeight: 700, pointerEvents: "none" }}>
++                      ✨ Result
++                    </div>
++
++                    {/* Processing overlay */}
++                    {processing && (
++                      <div style={{ ...s.imgOverlay, position: "absolute", inset: 0, zIndex: 5 }}>
++                        <div style={s.spinner} />
++                        <span style={{ color: "#fff", fontSize: 13, marginTop: 10 }}>{processingLabel || "Processing…"}</span>
++                      </div>
++                    )}
+                   </div>
+-                )}
+-              </div>
++
++                  {/* Action buttons below slider */}
++                  <div style={{ display: "flex", gap: 8, justifyContent: "center", marginTop: 12, flexWrap: "wrap" as const }}>
++                    <button style={s.dlBtn} onClick={handleDownload}>⬇️ Download</button>
++                    {editHistory.length > 0 && (
++                      <button style={s.ghostBtn} onClick={() => {
++                        const prev = editHistory[editHistory.length - 1];
++                        setEditHistory(h => h.slice(0, -1));
++                        setWorking(prev ?? null);
++                      }}>↩ Undo</button>
++                    )}
++                    <button style={{ ...s.ghostBtn, color: "#EF4444", borderColor: "#FCA5A5" }} onClick={() => { setWorking(null); setEditHistory([]); setSelectedTemplate(null); setCustomBgPrompt(""); }}>⏮ Reset</button>
++                  </div>
++                </div>
++              ) : (
++                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
++                  <div style={s.imgWrap}>
++                    <img src={original?.dataUrl || ""} alt="original" style={s.mainImg} />
++                  </div>
++                  <span style={s.dimLabel}>{original?.w} × {original?.h}px</span>
++                </div>
++              )}
+ 
+               {/* AI Edit Prompt - Below Images - Larger & Prominent */}
+               <div style={{ background: "linear-gradient(135deg, #F9FAFB 0%, #F3F4F8 100%)", borderTop: "2px solid #6366F1", borderBottom: "2px solid #6366F1", padding: "24px", marginTop: 24, marginBottom: 16, maxWidth: "100%", borderRadius: 12, boxShadow: "0 2px 8px rgba(99, 102, 241, 0.1)" }}>
+@@ -810,12 +911,6 @@ export default function ImageEditorPage() {
+                 </div>
+               </div>
+ 
+-              {/* Show hint if no result yet */}
+-              {!working && (
+-                <div style={{ textAlign: "center", padding: "40px 20px", color: "#999" }}>
+-                  <p style={{ fontSize: 14 }}>👆 Use the tools on the left to start editing</p>
+-                </div>
+-              )}
+             </div>
+           )}
+         </div>
+@@ -1148,10 +1243,20 @@ export default function ImageEditorPage() {
+             {/* Google tab */}
+             {authTab === "google" && (
+               <div style={{ display: "flex", flexDirection: "column" as const, gap: 12 }}>
+-                <a href="/api/auth/google?next=/editor" style={{ ...s.modalGoogleBtn, justifyContent: "center" }}>
++                <button
++                  onClick={() => {
++                    import("@/lib/supabase").then(({ createSupabaseClient }) => {
++                      createSupabaseClient().auth.signInWithOAuth({
++                        provider: "google",
++                        options: { redirectTo: `${window.location.origin}/auth/callback?next=/editor` },
++                      });
++                    });
++                  }}
++                  style={{ ...s.modalGoogleBtn, justifyContent: "center" }}
++                >
+                   <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                   Continue with Google — Free
+-                </a>
++                </button>
+                 <div style={{ fontSize: 12, color: "#888", textAlign: "center" as const }}>
+                   Quick · No password needed · Works with any Google account
+                 </div>
+-- 
+2.43.0
+
