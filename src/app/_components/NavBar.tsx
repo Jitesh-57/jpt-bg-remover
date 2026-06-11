@@ -42,19 +42,8 @@ export default function NavBar() {
   };
   const closeModal = () => { setShowModal(false); setAuthError(""); };
 
-  const handleGoogleSignIn = async () => {
-    try {
-      const supabase = createSupabaseClient();
-      await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(currentPath)}`,
-        },
-      });
-    } catch {
-      // Fallback to API route
-      window.location.href = `/api/auth/google?next=${encodeURIComponent(currentPath)}`;
-    }
+  const handleGoogleSignIn = () => {
+    window.location.href = `/api/auth/google?next=${encodeURIComponent(currentPath)}`;
   };
 
   const handleEmailAuth = async () => {
