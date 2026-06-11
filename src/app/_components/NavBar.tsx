@@ -24,14 +24,32 @@ export default function NavBar() {
   const [authLoading, setAuthLoading] = useState(false);
 
   useEffect(() => {
-    fetch("/api/auth/google/me")
-      .then(r => r.json())
-      .then((d: { authenticated: boolean; email?: string; name?: string; picture?: string; credits?: number }) => {
-        if (d.authenticated && d.email) {
-          setUser({ email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? 10 });
-        }
-      })
-      .catch(() => null);
+    const supabase = createSupabaseClient();
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        fetch("/api/auth/google/me")
+          .then(r => r.json())
+          .then((d: { authenticated: boolean; email?: string; name?: string; picture?: string; credits?: number }) => {
+            if (d.authenticated && d.email) {
+              setUser({ email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? 10 });
+            }
+          }).catch(() => null);
+      }
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session?.user) {
+        fetch("/api/auth/google/me")
+          .then(r => r.json())
+          .then((d: { authenticated: boolean; email?: string; name?: string; picture?: string; credits?: number }) => {
+            if (d.authenticated && d.email) {
+              setUser({ email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? 10 });
+            }
+          }).catch(() => null);
+      } else if (event === "SIGNED_OUT") {
+        setUser(null);
+      }
+    });
+    return () => subscription.unsubscribe();
   }, []);
 
   const currentPath = typeof window !== "undefined" ? window.location.pathname : "/editor";
