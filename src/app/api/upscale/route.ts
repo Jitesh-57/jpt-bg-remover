@@ -13,8 +13,10 @@ type GeminiResponse = {
 };
 
 const MODELS = [
-  { id: "gemini-3.1-flash-image-preview", timeout: 50000 }, // image-gen — primary
-  { id: "gemini-2.5-flash-image",         timeout: 50000 }, // image-gen — fallback
+  { id: "gemini-2.5-flash-preview-image-generation", timeout: 50000 },
+  { id: "gemini-2.0-flash-preview-image-generation", timeout: 50000 },
+  { id: "gemini-3.1-flash-image-preview",            timeout: 50000 },
+  { id: "gemini-2.5-flash-image",                    timeout: 50000 },
 ];
 
 function buildPrompt(scale: "2x" | "4x"): string {

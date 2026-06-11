@@ -9,9 +9,10 @@ const HF_TOKEN = process.env.HF_TOKEN;
 
 // Confirmed available image-capable models (tested against live API)
 const IMAGE_MODELS = [
+  "gemini-2.5-flash-preview-image-generation",
+  "gemini-2.0-flash-preview-image-generation",
   "gemini-2.5-flash-image",
   "gemini-3.1-flash-image-preview",
-  "gemini-3-pro-image-preview",
 ];
 
 type GeminiPart = { text: string } | { inlineData: { mimeType: string; data: string } };

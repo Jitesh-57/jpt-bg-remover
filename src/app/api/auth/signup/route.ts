@@ -1,28 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
-import {
-  ecAvailable,
-  getKVUser,
-  upsertKVUser,
-  setSessionCookie,
-  FREE_CREDITS,
-} from "@/lib/auth";
+import { createServerClient } from "@supabase/ssr";
+import { createClient as createSupabaseAdmin } from "@supabase/supabase-js";
+import { cookies } from "next/headers";
+import { FREE_CREDITS } from "@/lib/auth";
 
 export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
-  if (!ecAvailable) {
-    return NextResponse.json(
-      { error: "Email sign-up is not yet configured. Please use Google Sign-in." },
-      { status: 503 }
-    );
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return NextResponse.json({ error: "Auth not configured. Please use Google Sign-in." }, { status: 503 });
   }
 
-  const { email, password, name } = await req.json() as {
-    email?: string; password?: string; name?: string;
-  };
-
-  if (!email || !password) {
+  const { email, password, name } = await req.json() as { email?: string; password?: string; name?: string };
+  if (!email?.trim() || !password) {
     return NextResponse.json({ error: "Email and password required" }, { status: 400 });
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -32,32 +22,59 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Password must be at least 6 characters" }, { status: 400 });
   }
 
-  const existing = await getKVUser(email);
-  if (existing) {
-    return NextResponse.json({ error: "An account with this email already exists" }, { status: 409 });
+  const cookieStore = await cookies();
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    {
+      cookies: {
+        getAll() { return cookieStore.getAll(); },
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
+          } catch {}
+        },
+      },
+    }
+  );
+
+  const displayName = name?.trim() || email.trim().split("@")[0];
+  const { data, error } = await supabase.auth.signUp({
+    email: email.trim(),
+    password,
+    options: { data: { name: displayName } },
+  });
+
+  if (error) {
+    if (error.message.toLowerCase().includes("already")) {
+      return NextResponse.json({ error: "An account with this email already exists" }, { status: 409 });
+    }
+    return NextResponse.json({ error: error.message }, { status: 400 });
+  }
+  if (!data.user) {
+    return NextResponse.json({ error: "Signup failed" }, { status: 400 });
   }
 
-  const passwordHash = await bcrypt.hash(password, 10);
-  const user = await upsertKVUser({
-    email,
-    name:         name?.trim() || email.split("@")[0],
-    provider:     "email",
-    passwordHash,
-    credits:      FREE_CREDITS,
-  });
+  // Create profile with credits using admin client
+  if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    const admin = createSupabaseAdmin(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_ROLE_KEY,
+      { auth: { persistSession: false } }
+    );
+    await admin.from("profiles").upsert({
+      id: data.user.id,
+      email: data.user.email,
+      name: displayName,
+      credits: FREE_CREDITS,
+    }, { onConflict: "id", ignoreDuplicates: true });
+  }
 
-  const res = NextResponse.json({
-    ok:      true,
-    email:   user.email,
-    name:    user.name,
-    credits: user.credits,
+  console.log("[auth] ✓ Email signup:", data.user.email);
+  return NextResponse.json({
+    ok: true,
+    email: data.user.email,
+    name: displayName,
+    credits: FREE_CREDITS,
   });
-  setSessionCookie(res, {
-    email:    user.email,
-    name:     user.name,
-    provider: "email",
-    credits:  user.credits,
-  });
-  console.log("[auth] ✓ Email signup:", user.email);
-  return res;
 }

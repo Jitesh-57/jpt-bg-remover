@@ -14,8 +14,10 @@ type GeminiResponse = {
 
 // gemini-3-pro-image-preview is unresponsive — skip it
 const MODELS = [
-  { id: "gemini-3.1-flash-image-preview", timeout: 44000 }, // Nano Banana 2 — primary
-  { id: "gemini-2.5-flash-image",         timeout: 12000 }, // Nano Banana — fallback
+  { id: "gemini-2.5-flash-preview-image-generation", timeout: 44000 },
+  { id: "gemini-2.0-flash-preview-image-generation", timeout: 44000 },
+  { id: "gemini-3.1-flash-image-preview",            timeout: 44000 },
+  { id: "gemini-2.5-flash-image",                    timeout: 12000 },
 ];
 
 export async function POST(req: NextRequest) {
