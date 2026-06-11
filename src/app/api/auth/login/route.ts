@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
 import { FREE_CREDITS } from "@/lib/auth";
 
 export const runtime = "nodejs";
@@ -15,17 +14,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Email and password required" }, { status: 400 });
   }
 
-  const cookieStore = await cookies();
+  const response = NextResponse.json({ ok: false });
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     {
       cookies: {
-        getAll() { return cookieStore.getAll(); },
+        getAll() { return req.cookies.getAll(); },
         setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
-          } catch {}
+          cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
         },
       },
     }
@@ -42,11 +40,15 @@ export async function POST(req: NextRequest) {
     .eq("id", data.user.id)
     .single();
 
-  console.log("[auth] ✓ Email login:", data.user.email);
-  return NextResponse.json({
+  const body = {
     ok: true,
     email: data.user.email,
     name: profile?.name || data.user.email?.split("@")[0],
     credits: profile?.credits ?? FREE_CREDITS,
-  });
+  };
+
+  // Return a fresh response with cookies + body
+  const finalResponse = NextResponse.json(body);
+  response.cookies.getAll().forEach(({ name, value }) => finalResponse.cookies.set(name, value));
+  return finalResponse;
 }

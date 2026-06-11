@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { createClient as createSupabaseAdmin } from "@supabase/supabase-js";
-import { cookies } from "next/headers";
 import { FREE_CREDITS } from "@/lib/auth";
 
 export const runtime = "nodejs";
@@ -22,17 +21,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Password must be at least 6 characters" }, { status: 400 });
   }
 
-  const cookieStore = await cookies();
+  const response = NextResponse.json({ ok: false });
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     {
       cookies: {
-        getAll() { return cookieStore.getAll(); },
+        getAll() { return req.cookies.getAll(); },
         setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
-          } catch {}
+          cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
         },
       },
     }
@@ -55,7 +53,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Signup failed" }, { status: 400 });
   }
 
-  // Create profile with credits using admin client
   if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
     const admin = createSupabaseAdmin(
       process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -70,11 +67,14 @@ export async function POST(req: NextRequest) {
     }, { onConflict: "id", ignoreDuplicates: true });
   }
 
-  console.log("[auth] ✓ Email signup:", data.user.email);
-  return NextResponse.json({
+  const body = {
     ok: true,
     email: data.user.email,
     name: displayName,
     credits: FREE_CREDITS,
-  });
+  };
+
+  const finalResponse = NextResponse.json(body);
+  response.cookies.getAll().forEach(({ name, value }) => finalResponse.cookies.set(name, value));
+  return finalResponse;
 }
