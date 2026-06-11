@@ -55,8 +55,9 @@ export default function NavBar() {
         ? { email: email.trim(), password, name: name.trim() }
         : { email: email.trim(), password };
       const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
-      const data = await res.json() as { ok?: boolean; email?: string; name?: string; credits?: number; error?: string };
+      const data = await res.json() as { ok?: boolean; email?: string; name?: string; credits?: number; error?: string; needsConfirmation?: boolean };
       if (!res.ok) { setAuthError(data.error || "Authentication failed"); return; }
+      if (data.needsConfirmation) { setAuthError("✅ Check your email and click the confirmation link, then sign in."); return; }
       window.location.reload();
     } catch { setAuthError("Network error. Please try again."); }
     finally { setAuthLoading(false); }

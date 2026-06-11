@@ -67,6 +67,11 @@ export async function POST(req: NextRequest) {
     }, { onConflict: "id", ignoreDuplicates: true });
   }
 
+  // If no session, Supabase requires email confirmation before login
+  if (!data.session) {
+    return NextResponse.json({ ok: true, needsConfirmation: true, email: data.user.email });
+  }
+
   const finalResponse = NextResponse.json({
     ok: true,
     email: data.user.email,
