@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, lazy, Suspense } from "react";
 import { createSupabaseClient } from "@/lib/supabase";
+
+const PricingModal = lazy(() => import("./PricingModal"));
 
 interface User {
   email: string;
@@ -14,6 +16,7 @@ export default function NavBar() {
   const [user, setUser] = useState<User | null>(null);
   const [showMenu, setShowMenu] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showPricing, setShowPricing] = useState(false);
 
   const [tab, setTab] = useState<"google" | "email">("google");
   const [mode, setMode] = useState<"login" | "signup">("login");
@@ -105,6 +108,7 @@ export default function NavBar() {
             <a href="/editor" className="jpt-nav-link"><span>🖼️</span> Image Editor</a>
             <a href="/headshot" className="jpt-nav-link"><span>🎯</span> AI Headshot</a>
             <a href="/generations" className="jpt-nav-link"><span>✦</span> My Generations</a>
+            <a href="/pricing" className="jpt-nav-link"><span>💳</span> Pricing</a>
           </div>
           <div style={{ flex: 1 }} />
 
@@ -130,6 +134,9 @@ export default function NavBar() {
                     <a href="/generations" style={{ display: "block", padding: "10px 14px", fontSize: 13, color: "#333", textDecoration: "none", borderBottom: "1px solid #E5E7EB" }} onClick={() => setShowMenu(false)}>
                       ✦ My Generations
                     </a>
+                    <button onClick={() => { setShowPricing(true); setShowMenu(false); }} style={{ width: "100%", padding: "10px 14px", background: "none", border: "none", textAlign: "left", fontSize: 13, color: "#6366F1", cursor: "pointer", fontWeight: 600, borderBottom: "1px solid #E5E7EB" }}>
+                      💳 Buy Credits
+                    </button>
                     <button onClick={handleLogout} style={{ width: "100%", padding: "10px 14px", background: "none", border: "none", textAlign: "left", fontSize: 13, color: "#EF4444", cursor: "pointer", fontWeight: 500 }}>
                       🚪 Sign Out
                     </button>
@@ -144,6 +151,12 @@ export default function NavBar() {
           )}
         </div>
       </nav>
+
+      {showPricing && (
+        <Suspense fallback={null}>
+          <PricingModal onClose={() => setShowPricing(false)} />
+        </Suspense>
+      )}
 
       {showModal && (
         <div onClick={closeModal} style={{ position: "fixed", inset: 0, zIndex: 9999, background: "rgba(0,0,0,0.55)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20, backdropFilter: "blur(4px)" }}>

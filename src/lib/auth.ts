@@ -7,6 +7,7 @@ import { createClient as createSupabaseAdmin } from "@supabase/supabase-js";
 
 export const FREE_CREDITS = 10;
 export const CREDIT_COST = 2;
+export const FREE_TOOLS = ["resize", "color-adjust", "basic-upscale"];
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -90,10 +91,6 @@ export async function checkAuth(req: NextRequest): Promise<
 
   const credits = profile?.credits ?? FREE_CREDITS;
 
-  if (credits < CREDIT_COST) {
-    return { session: null, error: NextResponse.json({ error: "No credits remaining.", credits: 0 }, { status: 402 }) };
-  }
-
   return {
     session: {
       userId: user.id,
@@ -114,6 +111,9 @@ export async function withCredits(
   session: GoogleSession,
   cost = CREDIT_COST
 ): Promise<NextResponse> {
+  if (session.credits < cost) {
+    return NextResponse.json({ error: "No credits remaining.", credits: session.credits }, { status: 402 });
+  }
   const newCredits = Math.max(0, session.credits - cost);
 
   if (ecAvailable && session.userId) {
