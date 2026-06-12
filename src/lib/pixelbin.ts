@@ -1,29 +1,22 @@
-// src/lib/pixelbin.ts
 const PIXELBIN_API_TOKEN = process.env.PIXELBIN_API_TOKEN;
 
-// PixelBin platform API requires token base64-encoded with trailing colon
 function getAuthHeader() {
-  const token = Buffer.from(`${PIXELBIN_API_TOKEN}:`).toString("base64");
-  return `Bearer ${token}`;
+  return `Bearer ${PIXELBIN_API_TOKEN}`;
 }
 
 export async function runPixelBinPrediction(
-  imageBase64: string,         // full data URL e.g. data:image/png;base64,...
-  plugin: string,              // e.g. "erase"
-  operation: string,           // e.g. "bg"
-  input?: Record<string, unknown>  // extra input fields merged with { image: <url> }
-): Promise<string> {           // returns output image URL
-  if (!PIXELBIN_API_TOKEN) throw new Error("PIXELBIN_API_TOKEN not configured");
+  imageBase64: string,
+  plugin: string,
+  operation: string,
+  input?: Record<string, unknown>
+): Promise<string> {
+  if (!PIXELBIN_API_TOKEN) throw new Error("AI service not configured");
 
-  // Extract mime type and base64 content from data URL
   const match = imageBase64.match(/^data:([^;]+);base64,(.+)$/);
   if (!match) throw new Error("Invalid image data URL");
   const [, mimeType, base64Content] = match;
 
-  // ── Step 1: Upload image via presigned upload endpoint ──────────────────────
   const fileBuffer = Buffer.from(base64Content, "base64");
-
-  // Get extension from mime type
   const ext = mimeType.split("/")[1] || "png";
   const fileName = `upload-${Date.now()}.${ext}`;
 
@@ -44,14 +37,14 @@ export async function runPixelBinPrediction(
 
   if (!uploadRes.ok) {
     const text = await uploadRes.text();
-    throw new Error(`PixelBin upload failed (${uploadRes.status}): ${text}`);
+    console.error(`[SJPT-AI] upload failed (${uploadRes.status}): ${text}`);
+    throw new Error(`Image upload failed (${uploadRes.status}). Please try again.`);
   }
 
   const uploadData = (await uploadRes.json()) as { url: string };
   const imageUrl = uploadData.url;
-  if (!imageUrl) throw new Error("PixelBin upload returned no URL");
+  if (!imageUrl) throw new Error("Image upload failed. Please try again.");
 
-  // ── Step 2: Create prediction ───────────────────────────────────────────────
   const inferenceRes = await fetch(
     "https://api.pixelbin.io/service/platform/predict/v1/inference",
     {
@@ -70,16 +63,16 @@ export async function runPixelBinPrediction(
 
   if (!inferenceRes.ok) {
     const text = await inferenceRes.text();
-    throw new Error(`PixelBin inference failed (${inferenceRes.status}): ${text}`);
+    console.error(`[SJPT-AI] inference failed (${inferenceRes.status}): ${text}`);
+    throw new Error(`AI processing failed (${inferenceRes.status}). Please try again.`);
   }
 
   const inferenceData = (await inferenceRes.json()) as { predictionId?: string; _id?: string };
   const predictionId = inferenceData.predictionId || inferenceData._id;
-  if (!predictionId) throw new Error("PixelBin inference returned no predictionId");
+  if (!predictionId) throw new Error("AI processing failed. Please try again.");
 
-  // ── Step 3: Poll for result ─────────────────────────────────────────────────
-  const pollInterval = 2000; // 2 seconds
-  const maxAttempts = 30;    // 60 seconds total
+  const pollInterval = 2000;
+  const maxAttempts = 30;
 
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     await new Promise(resolve => setTimeout(resolve, pollInterval));
@@ -93,7 +86,8 @@ export async function runPixelBinPrediction(
 
     if (!pollRes.ok) {
       const text = await pollRes.text();
-      throw new Error(`PixelBin poll failed (${pollRes.status}): ${text}`);
+      console.error(`[SJPT-AI] poll failed (${pollRes.status}): ${text}`);
+      throw new Error(`AI processing failed. Please try again.`);
     }
 
     const pollData = (await pollRes.json()) as {
@@ -103,23 +97,21 @@ export async function runPixelBinPrediction(
 
     if (pollData.status === "completed") {
       const output = pollData.output;
-      if (!output) throw new Error("PixelBin completed but no output");
-      // Try output.image, then output.url, then first value
+      if (!output) throw new Error("AI processing completed but returned no result.");
       const outputUrl =
         (output.image as string) ||
         (output.url as string) ||
         (Object.values(output)[0] as string);
-      if (!outputUrl) throw new Error("PixelBin output has no image URL");
+      if (!outputUrl) throw new Error("AI processing completed but returned no result.");
       return outputUrl;
     }
 
     if (pollData.status === "failed") {
-      throw new Error("PixelBin prediction failed");
+      throw new Error("AI processing failed. Please try again.");
     }
 
-    // status is "pending" or "processing" — keep polling
-    console.log(`[pixelbin] poll attempt ${attempt + 1}: status=${pollData.status}`);
+    console.log(`[SJPT-AI] processing... attempt ${attempt + 1}: ${pollData.status}`);
   }
 
-  throw new Error("PixelBin prediction timed out after 60 seconds");
+  throw new Error("AI processing timed out. Please try again with a smaller image.");
 }
