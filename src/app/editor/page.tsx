@@ -282,29 +282,23 @@ export default function ImageEditorPage() {
       }
     } catch {}
 
-    // 4. Load user via Supabase client (reads session from cookies/localStorage)
+    // 4. Always check server-side session on mount (cookies are the source of truth)
+    const loadUser = () =>
+      fetch("/api/auth/google/me")
+        .then(r => r.json())
+        .then((d: { authenticated: boolean; email?: string; name?: string; picture?: string; credits?: number }) => {
+          if (d.authenticated && d.email) {
+            setUser({ email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? FREE_CREDITS });
+          }
+        }).catch(() => null);
+
+    loadUser();
+
     import("@/lib/supabase").then(({ createSupabaseClient }) => {
       const supabase = createSupabaseClient();
-      supabase.auth.getSession().then(({ data: { session } }) => {
-        if (session?.user) {
-          fetch("/api/auth/google/me")
-            .then(r => r.json())
-            .then((d: { authenticated: boolean; email?: string; name?: string; picture?: string; credits?: number }) => {
-              if (d.authenticated && d.email) {
-                setUser({ email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? FREE_CREDITS });
-              }
-            }).catch(() => null);
-        }
-      });
       supabase.auth.onAuthStateChange((event, session) => {
         if (session?.user) {
-          fetch("/api/auth/google/me")
-            .then(r => r.json())
-            .then((d: { authenticated: boolean; email?: string; name?: string; picture?: string; credits?: number }) => {
-              if (d.authenticated && d.email) {
-                setUser({ email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? FREE_CREDITS });
-              }
-            }).catch(() => null);
+          loadUser();
         } else if (event === "SIGNED_OUT") {
           setUser(null);
         }
