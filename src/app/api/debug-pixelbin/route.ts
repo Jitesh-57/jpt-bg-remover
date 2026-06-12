@@ -8,7 +8,6 @@ export async function GET() {
 
   const formats = [
     { label: "raw-apiToken", header: `Bearer ${apiToken}` },
-    { label: "raw-accessKey", header: `Bearer ${accessKey}` },
     { label: "b64-apiToken-colon", header: `Bearer ${Buffer.from(apiToken + ":").toString("base64")}` },
     { label: "b64-accessKey-colon", header: `Bearer ${Buffer.from(accessKey + ":").toString("base64")}` },
     { label: "b64-accessKey-apiToken", header: `Bearer ${Buffer.from(accessKey + ":" + apiToken).toString("base64")}` },
@@ -21,13 +20,14 @@ export async function GET() {
     accessKeyPrefix: accessKey.slice(0, 8),
   };
 
-  // Test each format against the inference list endpoint
+  // Test assets endpoint (known to work via MCP)
   for (const fmt of formats) {
-    const res = await fetch("https://api.pixelbin.io/service/platform/predict/v1/inference", {
+    const res = await fetch("https://api.pixelbin.io/service/platform/assets/v2/listFiles", {
       method: "GET",
       headers: { Authorization: fmt.header },
     });
-    results[fmt.label] = res.status;
+    const body = await res.text();
+    results[`assets_${fmt.label}`] = `${res.status}: ${body.slice(0, 100)}`;
   }
 
   return NextResponse.json(results);
