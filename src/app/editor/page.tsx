@@ -201,6 +201,11 @@ export default function ImageEditorPage() {
   const [error, setError] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
 
+  // Before/After slider state
+  const [sliderPos, setSliderPos] = useState(50);
+  const [isDragging, setIsDragging] = useState(false);
+  const sliderContainerRef = useRef<HTMLDivElement>(null);
+
   // Generate BG sub-state
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
   const [customBgPrompt, setCustomBgPrompt] = useState("");
@@ -277,15 +282,34 @@ export default function ImageEditorPage() {
       }
     } catch {}
 
-    // 4. Load user + credits
-    fetch("/api/auth/google/me")
-      .then(r => r.json())
-      .then((d: { authenticated: boolean; email?: string; name?: string; picture?: string; credits?: number }) => {
-        if (d.authenticated && d.email) {
-          setUser({ email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? FREE_CREDITS });
+    // 4. Load user via Supabase client (reads session from cookies/localStorage)
+    import("@/lib/supabase").then(({ createSupabaseClient }) => {
+      const supabase = createSupabaseClient();
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session?.user) {
+          fetch("/api/auth/google/me")
+            .then(r => r.json())
+            .then((d: { authenticated: boolean; email?: string; name?: string; picture?: string; credits?: number }) => {
+              if (d.authenticated && d.email) {
+                setUser({ email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? FREE_CREDITS });
+              }
+            }).catch(() => null);
         }
-      })
-      .catch(() => null);
+      });
+      supabase.auth.onAuthStateChange((event, session) => {
+        if (session?.user) {
+          fetch("/api/auth/google/me")
+            .then(r => r.json())
+            .then((d: { authenticated: boolean; email?: string; name?: string; picture?: string; credits?: number }) => {
+              if (d.authenticated && d.email) {
+                setUser({ email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? FREE_CREDITS });
+              }
+            }).catch(() => null);
+        } else if (event === "SIGNED_OUT") {
+          setUser(null);
+        }
+      });
+    });
   }, []);
 
   // ── Auth gate ─────────────────────────────────────────────────────────────────
@@ -338,6 +362,31 @@ export default function ImageEditorPage() {
   }, []);
 
   const resetAdjust = () => { setBrightness(100); setContrast(100); setSaturation(100); setSharpness(0); };
+
+  // Reset slider position whenever a new result arrives
+  useEffect(() => {
+    if (working) setSliderPos(50);
+  }, [working]);
+
+  const getSliderPosFromEvent = useCallback((clientX: number): number => {
+    const container = sliderContainerRef.current;
+    if (!container) return 50;
+    const rect = container.getBoundingClientRect();
+    return Math.round(Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100)));
+  }, []);
+
+  const onSliderMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!isDragging) return;
+    setSliderPos(getSliderPosFromEvent(e.clientX));
+  }, [isDragging, getSliderPosFromEvent]);
+
+  const onSliderTouchMove = useCallback((e: React.TouchEvent) => {
+    if (!isDragging || !e.touches[0]) return;
+    e.preventDefault();
+    setSliderPos(getSliderPosFromEvent(e.touches[0].clientX));
+  }, [isDragging, getSliderPosFromEvent]);
+
+  const onSliderEnd = useCallback(() => setIsDragging(false), []);
   const currentDisplay = showOriginal ? original?.dataUrl : (working || original?.dataUrl);
 
   // ── Tool handlers ─────────────────────────────────────────────────────────────
@@ -381,15 +430,19 @@ export default function ImageEditorPage() {
         ? { email: authEmail.trim(), password: authPassword, name: authName.trim() }
         : { email: authEmail.trim(), password: authPassword };
       const res  = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
-      const data = await res.json() as { ok?: boolean; email?: string; name?: string; credits?: number; error?: string };
+      const data = await res.json() as { ok?: boolean; email?: string; name?: string; credits?: number; error?: string; needsConfirmation?: boolean };
       if (!res.ok) {
         if (res.status === 503) setAuthError("Email auth not yet enabled. Please use Google Sign-in.");
         else setAuthError(data.error || "Authentication failed");
         return;
       }
-      setUser({ email: data.email!, name: data.name!, credits: data.credits ?? 10 });
+      if (data.needsConfirmation) {
+        setAuthError("✅ Check your email and click the confirmation link, then sign in.");
+        return;
+      }
       setShowSignInModal(false);
       setAuthEmail(""); setAuthPassword(""); setAuthName(""); setAuthError("");
+      window.location.reload();
     } catch { setAuthError("Network error. Please try again."); }
     finally { setAuthLoading(false); }
   };
@@ -737,53 +790,124 @@ export default function ImageEditorPage() {
               {/* Error */}
               {error && <div style={{ ...s.errBox, maxWidth: "100%", marginBottom: 16 }}>{error}</div>}
 
-              {/* Side-by-Side View: Original | Result */}
-              <div style={{ display: "flex", gap: 16, justifyContent: "center", alignItems: "flex-start", flexWrap: "wrap" }}>
-                {/* Original */}
+              {/* Before/After Slider */}
+              {working ? (
+                <div style={{ width: "100%", maxWidth: 860 }}>
+                  <div
+                    ref={sliderContainerRef}
+                    style={{
+                      position: "relative",
+                      width: "100%",
+                      borderRadius: 16,
+                      overflow: "hidden",
+                      boxShadow: "0 8px 40px rgba(0,0,0,0.15)",
+                      background: "#eee",
+                      cursor: isDragging ? "ew-resize" : "default",
+                      userSelect: "none",
+                    }}
+                    onMouseMove={onSliderMouseMove}
+                    onMouseUp={onSliderEnd}
+                    onMouseLeave={onSliderEnd}
+                    onTouchMove={onSliderTouchMove}
+                    onTouchEnd={onSliderEnd}
+                  >
+                    {/* Result image (behind) */}
+                    <div style={{ position: "relative" }}>
+                      {working?.includes("image/png") && <div style={s.checker} />}
+                      <img
+                        src={working}
+                        alt="result"
+                        style={{ display: "block", maxWidth: "100%", maxHeight: "65vh", width: "100%", objectFit: "contain", position: "relative", zIndex: 1, filter: activeTool === "adjust" && !processing ? adjustFilter : undefined }}
+                      />
+                    </div>
+
+                    {/* Original image (clipped over result — left portion) */}
+                    <div
+                      style={{
+                        position: "absolute",
+                        inset: 0,
+                        overflow: "hidden",
+                        clipPath: `polygon(0 0, ${sliderPos}% 0, ${sliderPos}% 100%, 0 100%)`,
+                        zIndex: 2,
+                      }}
+                    >
+                      <img
+                        src={original?.dataUrl}
+                        alt="original"
+                        style={{ display: "block", maxWidth: "100%", maxHeight: "65vh", width: "100%", objectFit: "contain" }}
+                      />
+                    </div>
+
+                    {/* Divider line + handle */}
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: 0, bottom: 0,
+                        left: `${sliderPos}%`,
+                        width: 3,
+                        background: "#fff",
+                        boxShadow: "0 0 8px rgba(0,0,0,0.4)",
+                        transform: "translateX(-50%)",
+                        cursor: "ew-resize",
+                        zIndex: 3,
+                        pointerEvents: "auto",
+                      }}
+                      onMouseDown={(e) => { e.preventDefault(); setIsDragging(true); }}
+                      onTouchStart={(e) => { e.preventDefault(); setIsDragging(true); }}
+                    >
+                      <div style={{
+                        position: "absolute",
+                        top: "50%", left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        width: 44, height: 44,
+                        borderRadius: "50%",
+                        background: "#fff",
+                        boxShadow: "0 2px 12px rgba(0,0,0,0.3)",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        fontSize: 18, color: "#555",
+                      }}>
+                        ⟺
+                      </div>
+                    </div>
+
+                    {/* Labels */}
+                    <div style={{ position: "absolute", top: 12, left: 12, zIndex: 4, background: "rgba(0,0,0,0.55)", backdropFilter: "blur(4px)", color: "#fff", padding: "4px 10px", borderRadius: 6, fontSize: 12, fontWeight: 700, pointerEvents: "none" }}>
+                      Original
+                    </div>
+                    <div style={{ position: "absolute", top: 12, right: 12, zIndex: 4, background: "rgba(99,102,241,0.8)", backdropFilter: "blur(4px)", color: "#fff", padding: "4px 10px", borderRadius: 6, fontSize: 12, fontWeight: 700, pointerEvents: "none" }}>
+                      ✨ Result
+                    </div>
+
+                    {/* Processing overlay */}
+                    {processing && (
+                      <div style={{ ...s.imgOverlay, position: "absolute", inset: 0, zIndex: 5 }}>
+                        <div style={s.spinner} />
+                        <span style={{ color: "#fff", fontSize: 13, marginTop: 10 }}>{processingLabel || "Processing…"}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Action buttons below slider */}
+                  <div style={{ display: "flex", gap: 8, justifyContent: "center", marginTop: 12, flexWrap: "wrap" as const }}>
+                    <button style={s.dlBtn} onClick={handleDownload}>⬇️ Download</button>
+                    {editHistory.length > 0 && (
+                      <button style={s.ghostBtn} onClick={() => {
+                        const prev = editHistory[editHistory.length - 1];
+                        setEditHistory(h => h.slice(0, -1));
+                        setWorking(prev ?? null);
+                      }}>↩ Undo</button>
+                    )}
+                    <button style={{ ...s.ghostBtn, color: "#EF4444", borderColor: "#FCA5A5" }} onClick={() => { setWorking(null); setEditHistory([]); setSelectedTemplate(null); setCustomBgPrompt(""); }}>⏮ Reset</button>
+                  </div>
+                </div>
+              ) : (
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
-                  <div style={{ fontSize: 12, fontWeight: 600, color: "#666" }}>📌 Original</div>
                   <div style={s.imgWrap}>
-                    <img
-                      src={original?.dataUrl || ""}
-                      alt="original"
-                      style={{ ...s.mainImg, filter: "none" }}
-                    />
+                    <img src={original?.dataUrl || ""} alt="original" style={s.mainImg} />
                   </div>
                   <span style={s.dimLabel}>{original?.w} × {original?.h}px</span>
                 </div>
-
-                {/* Result */}
-                {working && (
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
-                    <div style={{ fontSize: 12, fontWeight: 600, color: "#6366F1" }}>✨ Result</div>
-                    <div style={s.imgWrap}>
-                      {working?.includes("image/png") && <div style={s.checker} />}
-                      <img
-                        src={working || ""}
-                        alt="result"
-                        style={{ ...s.mainImg, ...(processing ? { opacity: 0.5 } : {}), filter: activeTool === "adjust" && !processing ? adjustFilter : undefined, userSelect: "none" }}
-                      />
-                      {processing && (
-                        <div style={s.imgOverlay}>
-                          <div style={s.spinner} />
-                          <span style={{ color: "#fff", fontSize: 13, marginTop: 10 }}>{processingLabel || "Processing…"}</span>
-                        </div>
-                      )}
-                    </div>
-                    <div style={{ display: "flex", gap: 8, flexWrap: "wrap" as const, justifyContent: "center" }}>
-                      <button style={s.dlBtn} onClick={handleDownload}>⬇️ Download</button>
-                      {editHistory.length > 0 && (
-                        <button style={s.ghostBtn} onClick={() => {
-                          const prev = editHistory[editHistory.length - 1];
-                          setEditHistory(h => h.slice(0, -1));
-                          setWorking(prev ?? null);
-                        }}>↩ Undo</button>
-                      )}
-                      <button style={{ ...s.ghostBtn, color: "#EF4444", borderColor: "#FCA5A5" }} onClick={() => { setWorking(null); setEditHistory([]); setSelectedTemplate(null); setCustomBgPrompt(""); }}>⏮ Reset</button>
-                    </div>
-                  </div>
-                )}
-              </div>
+              )}
 
               {/* AI Edit Prompt - Below Images - Larger & Prominent */}
               <div style={{ background: "linear-gradient(135deg, #F9FAFB 0%, #F3F4F8 100%)", borderTop: "2px solid #6366F1", borderBottom: "2px solid #6366F1", padding: "24px", marginTop: 24, marginBottom: 16, maxWidth: "100%", borderRadius: 12, boxShadow: "0 2px 8px rgba(99, 102, 241, 0.1)" }}>
@@ -810,12 +934,6 @@ export default function ImageEditorPage() {
                 </div>
               </div>
 
-              {/* Show hint if no result yet */}
-              {!working && (
-                <div style={{ textAlign: "center", padding: "40px 20px", color: "#999" }}>
-                  <p style={{ fontSize: 14 }}>👆 Use the tools on the left to start editing</p>
-                </div>
-              )}
             </div>
           )}
         </div>
@@ -1148,10 +1266,13 @@ export default function ImageEditorPage() {
             {/* Google tab */}
             {authTab === "google" && (
               <div style={{ display: "flex", flexDirection: "column" as const, gap: 12 }}>
-                <a href="/api/auth/google?next=/editor" style={{ ...s.modalGoogleBtn, justifyContent: "center" }}>
+                <button
+                  onClick={() => { window.location.href = "/api/auth/google?next=/editor"; }}
+                  style={{ ...s.modalGoogleBtn, justifyContent: "center" }}
+                >
                   <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
                   Continue with Google — Free
-                </a>
+                </button>
                 <div style={{ fontSize: 12, color: "#888", textAlign: "center" as const }}>
                   Quick · No password needed · Works with any Google account
                 </div>

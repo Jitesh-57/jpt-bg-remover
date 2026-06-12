@@ -8,6 +8,8 @@
     "start": "next start"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2",
+    "@supabase/ssr": "^0.12.0",
     "@tensorflow/tfjs": "^4.11.0",
     "@types/bcryptjs": "^2.4.6",
     "@upscalerjs/esrgan-slim": "^1.0.0",

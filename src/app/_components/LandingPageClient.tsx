@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
@@ -137,6 +137,20 @@ export default function LandingPageClient() {
   const [showSignIn, setShowSignIn] = useState(false);
   const [pendingType, setPendingType] = useState<"upload" | "prompt" | null>(null);
   const [dragOver, setDragOver] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [authTab, setAuthTab] = useState<"google" | "email">("google");
+  const [authMode, setAuthMode] = useState<"login" | "signup">("signup");
+  const [authName, setAuthName] = useState("");
+  const [authEmail, setAuthEmail] = useState("");
+  const [authPassword, setAuthPassword] = useState("");
+  const [authError, setAuthError] = useState("");
+  const [authLoading, setAuthLoading] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/auth/google/me").then(r => r.json()).then((d: { authenticated?: boolean }) => {
+      if (d.authenticated) setIsLoggedIn(true);
+    }).catch(() => null);
+  }, []);
 
   const uploadRef = useRef<HTMLInputElement>(null);
   const refRef = useRef<HTMLInputElement>(null);
@@ -153,6 +167,11 @@ export default function LandingPageClient() {
     if (!file.type.startsWith("image/")) return;
     const url = await readFile(file);
     setUploadImage({ url, name: file.name.replace(/\.[^.]+$/, "") || "image" });
+    if (isLoggedIn) {
+      try { sessionStorage.setItem("jpt_pending_image", url); } catch {}
+      window.location.href = "/editor";
+      return;
+    }
     setPendingType("upload");
     setShowSignIn(true);
   };
@@ -169,16 +188,34 @@ export default function LandingPageClient() {
     setShowSignIn(true);
   };
 
-  const handleOAuthRedirect = () => {
+  const savePending = () => {
     try {
-      if (pendingType === "upload" && uploadImage) {
-        sessionStorage.setItem("jpt_pending_image", uploadImage.url);
-      } else if (pendingType === "prompt") {
+      if (pendingType === "upload" && uploadImage) sessionStorage.setItem("jpt_pending_image", uploadImage.url);
+      else if (pendingType === "prompt") {
         if (prompt.trim()) sessionStorage.setItem("jpt_pending_prompt", prompt.trim());
         if (refImage) sessionStorage.setItem("jpt_pending_image", refImage.url);
       }
     } catch {}
-    window.location.href = "/api/auth/google?next=/editor";
+  };
+
+  const handleOAuthRedirect = () => { savePending(); window.location.href = "/api/auth/google?next=/editor"; };
+
+  const handleEmailAuth = async () => {
+    if (!authEmail.trim() || !authPassword.trim()) { setAuthError("Email and password required"); return; }
+    setAuthLoading(true); setAuthError("");
+    try {
+      const url = authMode === "signup" ? "/api/auth/signup" : "/api/auth/login";
+      const body = authMode === "signup"
+        ? { email: authEmail.trim(), password: authPassword, name: authName.trim() }
+        : { email: authEmail.trim(), password: authPassword };
+      const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+      const data = await res.json() as { ok?: boolean; error?: string; needsConfirmation?: boolean };
+      if (!res.ok) { setAuthError(data.error || "Authentication failed"); return; }
+      if (data.needsConfirmation) { setAuthError("✅ Check your email for a confirmation link, then sign in."); return; }
+      savePending();
+      window.location.href = "/editor";
+    } catch { setAuthError("Network error. Please try again."); }
+    finally { setAuthLoading(false); }
   };
 
   return (
@@ -368,43 +405,63 @@ export default function LandingPageClient() {
 
       {/* ── Sign-in Modal ──────────────────────────────────────────────────── */}
       {showSignIn && (
-        <div style={s.modalOverlay} onClick={() => setShowSignIn(false)}>
-          <div style={s.modalBox} onClick={(e) => e.stopPropagation()}>
-            {pendingType === "upload" && uploadImage ? (
-              <div style={{ marginBottom: 16, borderRadius: 12, overflow: "hidden", maxHeight: 130 }}>
-                <img src={uploadImage.url} alt="preview" style={{ width: "100%", height: 130, objectFit: "cover" }} />
-              </div>
-            ) : (
-              <div style={{ fontSize: 44, marginBottom: 12 }}>✨</div>
-            )}
-
-            <div style={s.modalTitle}>
-              {pendingType === "upload" ? "Sign in to edit this image" : "Sign in to generate"}
+        <div style={s.modalOverlay} onClick={() => { setShowSignIn(false); setAuthError(""); }}>
+          <div style={{ ...s.modalBox, maxWidth: 440, textAlign: "left" as const }} onClick={(e) => e.stopPropagation()}>
+            <div style={{ textAlign: "center" as const, marginBottom: 20 }}>
+              {pendingType === "upload" && uploadImage
+                ? <div style={{ marginBottom: 12, borderRadius: 10, overflow: "hidden", maxHeight: 110 }}><img src={uploadImage.url} alt="preview" style={{ width: "100%", height: 110, objectFit: "cover" }} /></div>
+                : <div style={{ fontSize: 40, marginBottom: 8 }}>✨</div>}
+              <div style={{ fontWeight: 900, fontSize: 20, color: "#111" }}>Sign in to JPT AI</div>
+              <p style={{ fontSize: 13, color: "#666", margin: "4px 0 0" }}>Get <strong>10 free AI credits</strong> to start editing</p>
             </div>
-            <p style={s.modalSub}>
-              {pendingType === "upload"
-                ? "Your image is ready. Sign in with Google — it will be waiting in the editor."
-                : "Your prompt is ready. Sign in to process it with JPT AI — everything will be preserved."}
-            </p>
 
-            {pendingType === "prompt" && prompt && (
-              <div style={s.promptPreview}>&ldquo;{prompt}&rdquo;</div>
-            )}
-
-            <div style={s.modalFeatures}>
-              {["✂️ Remove Background", "🔍 Upscale Image", "✨ AI Edit", "↔️ Resize", "🎨 Adjust Colors", "📂 Drive History"].map((f) => (
-                <div key={f} style={s.modalFeatureRow}>
-                  <span style={{ color: "#10B981", fontWeight: 700, fontSize: 12 }}>✓</span>
-                  <span>{f}</span>
-                </div>
+            {/* Tab switcher */}
+            <div style={{ display: "flex", background: "#F0F0F8", borderRadius: 10, padding: 3, marginBottom: 18 }}>
+              {(["google", "email"] as const).map(t => (
+                <button key={t} onClick={() => { setAuthTab(t); setAuthError(""); }}
+                  style={{ flex: 1, padding: "8px", borderRadius: 8, border: "none", background: authTab === t ? "#fff" : "none", fontWeight: 700, fontSize: 13, cursor: "pointer", color: authTab === t ? "#6366F1" : "#888", boxShadow: authTab === t ? "0 1px 4px rgba(0,0,0,0.1)" : "none" }}>
+                  {t === "google" ? "🔵 Google" : "📧 Email"}
+                </button>
               ))}
             </div>
 
-            <button style={s.modalGoogleBtn} onClick={handleOAuthRedirect}>
-              <GoogleIcon />
-              Continue with Google
-            </button>
-            <button style={s.modalDismiss} onClick={() => setShowSignIn(false)}>Maybe later</button>
+            {authTab === "google" && (
+              <div style={{ display: "flex", flexDirection: "column" as const, gap: 10 }}>
+                <button style={s.modalGoogleBtn} onClick={handleOAuthRedirect}>
+                  <GoogleIcon />
+                  Continue with Google
+                </button>
+                <div style={{ fontSize: 12, color: "#999", textAlign: "center" as const }}>Quick · No password needed</div>
+              </div>
+            )}
+
+            {authTab === "email" && (
+              <div style={{ display: "flex", flexDirection: "column" as const, gap: 10 }}>
+                <div style={{ display: "flex", gap: 4, justifyContent: "center", borderBottom: "1px solid #F0F0F0", paddingBottom: 10, marginBottom: 4 }}>
+                  {(["signup", "login"] as const).map(m => (
+                    <button key={m} onClick={() => { setAuthMode(m); setAuthError(""); }}
+                      style={{ background: "none", border: "none", cursor: "pointer", fontWeight: authMode === m ? 800 : 400, color: authMode === m ? "#6366F1" : "#888", borderBottom: authMode === m ? "2px solid #6366F1" : "2px solid transparent", padding: "4px 14px", fontSize: 14 }}>
+                      {m === "signup" ? "Create account" : "Sign in"}
+                    </button>
+                  ))}
+                </div>
+                {authMode === "signup" && (
+                  <input type="text" placeholder="Your name (optional)" value={authName} onChange={e => setAuthName(e.target.value)}
+                    style={{ border: "1.5px solid #E0E0EE", borderRadius: 8, padding: "10px 12px", fontSize: 14, outline: "none", width: "100%", boxSizing: "border-box" as const }} />
+                )}
+                <input type="email" placeholder="Email address" value={authEmail} onChange={e => setAuthEmail(e.target.value)}
+                  style={{ border: "1.5px solid #E0E0EE", borderRadius: 8, padding: "10px 12px", fontSize: 14, outline: "none", width: "100%", boxSizing: "border-box" as const }} />
+                <input type="password" placeholder="Password (min 6 chars)" value={authPassword} onChange={e => setAuthPassword(e.target.value)} onKeyDown={e => e.key === "Enter" && handleEmailAuth()}
+                  style={{ border: "1.5px solid #E0E0EE", borderRadius: 8, padding: "10px 12px", fontSize: 14, outline: "none", width: "100%", boxSizing: "border-box" as const }} />
+                {authError && <div style={{ background: "#FFF1F0", border: "1px solid #FFC4C4", borderRadius: 8, padding: "8px 12px", fontSize: 13, color: "#C00" }}>{authError}</div>}
+                <button onClick={handleEmailAuth} disabled={authLoading}
+                  style={{ padding: "11px", background: authLoading ? "#A5B4FC" : "#6366F1", color: "#fff", border: "none", borderRadius: 10, fontWeight: 800, fontSize: 14, cursor: authLoading ? "not-allowed" : "pointer" }}>
+                  {authLoading ? "Please wait…" : authMode === "signup" ? "✦ Create Account — Free" : "→ Sign In"}
+                </button>
+              </div>
+            )}
+
+            <button style={{ ...s.modalDismiss, display: "block", margin: "14px auto 0" }} onClick={() => { setShowSignIn(false); setAuthError(""); }}>Maybe later</button>
           </div>
         </div>
       )}
