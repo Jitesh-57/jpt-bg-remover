@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(`${origin}/?error=auth_not_configured`);
   }
 
-  const response = NextResponse.redirect(origin);
+  const pendingCookies: { name: string; value: string; options?: Record<string, unknown> }[] = [];
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
       cookies: {
         getAll() { return req.cookies.getAll(); },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
+          cookiesToSet.forEach(c => pendingCookies.push(c));
         },
       },
     }
@@ -42,5 +42,8 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(`${origin}/?error=oauth_failed`);
   }
 
-  return NextResponse.redirect(data.url);
+  // Apply PKCE verifier cookie onto the actual redirect response
+  const response = NextResponse.redirect(data.url);
+  pendingCookies.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
+  return response;
 }
