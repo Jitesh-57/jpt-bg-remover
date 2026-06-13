@@ -25,9 +25,17 @@ export async function GET(req: NextRequest) {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("name, picture, credits")
+    .select("name, picture, credits, plan, daily_credits_reset_at")
     .eq("id", user.id)
-    .single();
+    .single() as { data: { name?: string; picture?: string; credits?: number; plan?: string; daily_credits_reset_at?: string } | null };
+
+  // Auto-reset daily credits for free users
+  let credits = profile?.credits ?? FREE_CREDITS;
+  const plan = profile?.plan || "free";
+  if (plan === "free" && profile?.daily_credits_reset_at) {
+    const hoursSince = (Date.now() - new Date(profile.daily_credits_reset_at).getTime()) / 3_600_000;
+    if (hoursSince >= 24) credits = FREE_CREDITS; // will be reset on next API call
+  }
 
   return NextResponse.json({
     authenticated: true,
@@ -35,6 +43,7 @@ export async function GET(req: NextRequest) {
     email: user.email,
     name: profile?.name || user.user_metadata?.name || user.email?.split("@")[0],
     picture: profile?.picture || user.user_metadata?.avatar_url,
-    credits: profile?.credits ?? FREE_CREDITS,
+    credits,
+    plan,
   });
 }

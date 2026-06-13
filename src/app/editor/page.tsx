@@ -9,7 +9,7 @@ type Tool = "ai-edit" | "generate-bg" | "upscale" | "resize" | "adjust" | null;
 type BgMode = "color" | "gradient" | "image" | "ai";
 
 interface GradientPreset { label: string; from: string; to: string; angle: number }
-interface User { email: string; name: string; picture?: string; credits: number }
+interface User { email: string; name: string; picture?: string; credits: number; plan?: string }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -242,6 +242,7 @@ export default function ImageEditorPage() {
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [showAccountModal, setShowAccountModal] = useState(false);
   const [showNoCreditsModal, setShowNoCreditsModal] = useState(false);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   // Email auth form state
   const [authTab, setAuthTab] = useState<"google" | "email">("google");
@@ -298,9 +299,9 @@ export default function ImageEditorPage() {
     const loadUser = () =>
       fetch("/api/auth/google/me")
         .then(r => r.json())
-        .then((d: { authenticated: boolean; email?: string; name?: string; picture?: string; credits?: number }) => {
+        .then((d: { authenticated: boolean; email?: string; name?: string; picture?: string; credits?: number; plan?: string }) => {
           if (d.authenticated && d.email) {
-            setUser({ email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? FREE_CREDITS });
+            setUser({ email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? FREE_CREDITS, plan: d.plan || "free" });
           }
         }).catch(() => null);
 
@@ -336,7 +337,11 @@ export default function ImageEditorPage() {
     const data = await res.json() as T & { error?: string; credits?: number };
 
     if (res.status === 401) { setShowSignInModal(true); return null; }
-    if (res.status === 402) { setShowNoCreditsModal(true); return null; }
+    if (res.status === 402) {
+      if (data.upgradeRequired) { setShowUpgradeModal(true); } else { setShowNoCreditsModal(true); }
+      return null;
+    }
+    if (res.status === 403) { setShowUpgradeModal(true); return null; }
     if (res.status === 429) { throw new Error("Too many requests. Please wait a minute and try again."); }
     if (!res.ok) { throw new Error(data.error || "Request failed"); }
 
@@ -422,8 +427,30 @@ export default function ImageEditorPage() {
   const handleUpscale = async () => {
     const src = working || original?.dataUrl;
     if (!src || processing) return;
+    if (requireSignIn()) return;
     setProcessing(true); setProcessingLabel(`Upscaling ${upscaleScale}…`); setError(null);
     try {
+      // Deduct 1 credit server-side before processing
+      const deductRes = await fetch("/api/credits/deduct", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tool: "basic-upscale" }),
+      });
+      const deductData = await deductRes.json() as { credits?: number; error?: string; upgradeRequired?: boolean };
+      if (!deductRes.ok) {
+        if (deductRes.status === 402) {
+          if (deductData.upgradeRequired) { setShowUpgradeModal(true); } else { setShowNoCreditsModal(true); }
+        } else if (deductRes.status === 401) {
+          setShowSignInModal(true);
+        } else {
+          setError(deductData.error || "Failed to deduct credits.");
+        }
+        return;
+      }
+      if (typeof deductData.credits === "number") {
+        setUser(u => u ? { ...u, credits: deductData.credits! } : u);
+      }
+
       const { upscaleImage } = await import("@/lib/upscale-client");
       const out = await upscaleImage(src, upscaleScale);
       setEditHistory(prev => working ? [...prev, working] : prev);
@@ -1235,8 +1262,13 @@ export default function ImageEditorPage() {
               ))}
             </div>
 
-            <button style={{ ...s.primaryBtn, background: "#111", marginTop: 4 }} disabled>
-              🚀 Get More Credits — Coming Soon
+            {user.plan === "free" && (
+              <div style={{ fontSize: 12, color: "#888", textAlign: "center" as const, marginBottom: 8 }}>
+                Free plan · 10 credits/day · resets every 24h
+              </div>
+            )}
+            <button style={{ ...s.primaryBtn, marginTop: 4 }} onClick={() => { setShowAccountModal(false); setShowUpgradeModal(true); }}>
+              🚀 {user.plan === "free" ? "Upgrade Plan" : "Get More Credits"}
             </button>
             <button style={{ ...s.ghostBtn, width: "100%", justifyContent: "center", marginTop: 8 }}
               onClick={async () => { await fetch("/api/auth/google/logout", { method: "POST" }); setUser(null); setShowAccountModal(false); setAuthTab("google"); setAuthEmail(""); setAuthPassword(""); }}>
@@ -1363,17 +1395,51 @@ export default function ImageEditorPage() {
         <div style={s.modalOverlay} onClick={() => setShowNoCreditsModal(false)}>
           <div style={s.modalBox} onClick={(e) => e.stopPropagation()}>
             <div style={{ fontSize: 48, marginBottom: 12 }}>⚡</div>
-            <div style={s.modalTitle}>You&apos;re out of credits</div>
-            <p style={s.modalSub}>You&apos;ve used all {FREE_CREDITS} free AI credits. Paid plans with more credits are coming soon!</p>
+            <div style={s.modalTitle}>Daily credits used up</div>
+            <p style={s.modalSub}>Your 10 free daily credits reset in 24 hours. Upgrade for unlimited AI access.</p>
             <div style={s.noCreditsInfo}>
-              <div style={{ fontWeight: 700, marginBottom: 8 }}>Free tools (no credits):</div>
-              <div>↔️ Resize — change any dimension</div>
-              <div>🎨 Adjust — brightness, contrast, saturation</div>
+              <div style={{ fontWeight: 700, marginBottom: 8 }}>Always free (no credits needed):</div>
+              <div>↔️ Resize &nbsp;·&nbsp; 🎨 Color Adjust</div>
             </div>
-            <button style={{ ...s.primaryBtn, background: "#111", opacity: 0.6, cursor: "not-allowed" }} disabled>
-              🚀 Upgrade Plan — Coming Soon
+            <button style={s.primaryBtn} onClick={() => { setShowNoCreditsModal(false); setShowUpgradeModal(true); }}>
+              🚀 Upgrade Plan
             </button>
-            <button style={s.modalDismiss} onClick={() => setShowNoCreditsModal(false)}>Continue with free tools</button>
+            <button style={s.modalDismiss} onClick={() => setShowNoCreditsModal(false)}>Wait for daily reset</button>
+          </div>
+        </div>
+      )}
+
+      {/* ── Upgrade Modal ─────────────────────────────────────────────────── */}
+      {showUpgradeModal && (
+        <div style={s.modalOverlay} onClick={() => setShowUpgradeModal(false)}>
+          <div style={{ ...s.modalBox, maxWidth: 560, padding: "36px 32px" }} onClick={(e) => e.stopPropagation()}>
+            <div style={{ fontSize: 44, marginBottom: 8, textAlign: "center" as const }}>🚀</div>
+            <div style={{ ...s.modalTitle, textAlign: "center" as const }}>Upgrade for AI Features</div>
+            <p style={{ ...s.modalSub, textAlign: "center" as const }}>Free users get resize & color adjust. Unlock AI transformations with a paid plan.</p>
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 12, margin: "24px 0" }}>
+              {[
+                { name: "Starter", price: "$5", credits: 50, color: "#6366F1" },
+                { name: "Creator", price: "$10", credits: 100, color: "#8B5CF6", popular: true },
+                { name: "Pro", price: "$25", credits: 300, color: "#7C3AED" },
+              ].map((plan) => (
+                <div key={plan.name} style={{ border: `2px solid ${plan.popular ? plan.color : "#E5E7EB"}`, borderRadius: 14, padding: "16px 12px", textAlign: "center" as const, position: "relative", background: plan.popular ? "#F5F3FF" : "#fff" }}>
+                  {plan.popular && <div style={{ position: "absolute", top: -12, left: "50%", transform: "translateX(-50%)", background: plan.color, color: "#fff", fontSize: 10, fontWeight: 800, padding: "2px 10px", borderRadius: 20 }}>POPULAR</div>}
+                  <div style={{ fontWeight: 800, fontSize: 13, color: "#555", marginBottom: 4 }}>{plan.name}</div>
+                  <div style={{ fontWeight: 900, fontSize: 26, color: "#111" }}>{plan.price}</div>
+                  <div style={{ fontWeight: 700, fontSize: 14, color: plan.color, margin: "6px 0" }}>{plan.credits} credits</div>
+                  <div style={{ fontSize: 11, color: "#888", marginBottom: 12 }}>Never expire</div>
+                  <a href="/pricing" style={{ display: "block", background: plan.color, color: "#fff", borderRadius: 8, padding: "8px 0", fontSize: 13, fontWeight: 700, textDecoration: "none" }}>
+                    Get Started
+                  </a>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ background: "#F9FAFB", borderRadius: 10, padding: "12px 16px", fontSize: 13, color: "#555", marginBottom: 16 }}>
+              <strong>All paid plans include:</strong> Background removal · AI editing · Generate backgrounds · AI upscale · Credits never expire
+            </div>
+            <button style={s.modalDismiss} onClick={() => setShowUpgradeModal(false)}>Maybe later</button>
           </div>
         </div>
       )}
