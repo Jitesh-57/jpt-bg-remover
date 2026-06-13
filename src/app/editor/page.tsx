@@ -231,6 +231,7 @@ export default function ImageEditorPage() {
 
   // Upscale sub-state
   const [upscaleScale, setUpscaleScale] = useState<"2x" | "4x">("2x");
+  const [appliedUpscale, setAppliedUpscale] = useState<"2x" | "4x" | null>(null);
 
   // Resize / Adjust
   const [resizeW, setResizeW] = useState(0);
@@ -373,7 +374,7 @@ export default function ImageEditorPage() {
     if (!file.type.startsWith("image/")) return;
     setError(null); setWorking(null); setEditHistory([]);
     setActiveTool(null); setShowOriginal(true);
-    setSavedSession(null);
+    setSavedSession(null); setAppliedUpscale(null);
     resetAdjust();
     try {
       const p = await prepareImage(file);
@@ -481,6 +482,7 @@ export default function ImageEditorPage() {
       const out = await upscaleImage(src, upscaleScale);
       setEditHistory(prev => working ? [...prev, working] : prev);
       setWorking(out);
+      setAppliedUpscale(upscaleScale);
       autoSaveToDrive(out, "upscale", `${upscaleScale} Upscale`);
     } catch (e) { setError((e as Error).message || "Upscale failed. Please try again."); }
     finally { setProcessing(false); setProcessingLabel(""); }
@@ -724,6 +726,7 @@ export default function ImageEditorPage() {
     setOriginal(null); setWorking(null); setEditHistory([]);
     setActiveTool(null); setError(null); setShowOriginal(true);
     setSelectedTemplate(null); setCustomBgPrompt(""); setPrompt("");
+    setAppliedUpscale(null);
     resetAdjust();
     try { localStorage.removeItem(SESSION_KEY); } catch {}
     setSavedSession(null);
@@ -1177,6 +1180,15 @@ export default function ImageEditorPage() {
                   </ul>
                 </div>
 
+                {appliedUpscale === upscaleScale && (
+                  <div style={{ background: "#FFFBEB", border: "1px solid #FDE68A", borderRadius: 10, padding: "10px 14px", marginBottom: 10, fontSize: 12, color: "#92400E", display: "flex", alignItems: "flex-start", gap: 8 }}>
+                    <span style={{ fontSize: 16, flexShrink: 0 }}>⚠️</span>
+                    <div>
+                      <div style={{ fontWeight: 700, marginBottom: 2 }}>Already upscaled {upscaleScale}</div>
+                      <div style={{ opacity: 0.8 }}>This image was already enhanced at {upscaleScale}. Upscaling again may reduce quality. Try {upscaleScale === "2x" ? "4x" : "2x"} instead or download the current result.</div>
+                    </div>
+                  </div>
+                )}
                 <button
                   style={{ ...s.primaryBtn, ...(processing ? s.btnOff : {}), background: upscaleScale === "4x" ? "linear-gradient(135deg,#7C3AED,#EC4899)" : "linear-gradient(135deg,#6366F1,#8B5CF6)" }}
                   disabled={processing}
