@@ -44,13 +44,19 @@ const BG_TEMPLATES = [
   { id: "abstract-art", label: "Abstract Art", prompt: "Abstract colorful art background with brush strokes", icon: "🎨" },
 ];
 
-const TOOLS: { id: Tool; icon: string; label: string }[] = [
-  { id: "ai-edit", icon: "✨", label: "AI Edit" },
-  { id: "generate-bg", icon: "🌅", label: "Generate BG" },
-  { id: "upscale", icon: "🔍", label: "Upscale" },
+const TOOLS: { id: Tool; icon: string; label: string; ai?: boolean }[] = [
+  { id: "ai-edit", icon: "✨", label: "AI Edit", ai: true },
+  { id: "generate-bg", icon: "🌅", label: "Generate BG", ai: true },
+  { id: "upscale", icon: "🔍", label: "Upscale", ai: true },
   { id: "resize", icon: "↔️", label: "Resize" },
   { id: "adjust", icon: "🎨", label: "Adjust" },
 ];
+
+const AI_TOOL_DESCRIPTIONS: Record<string, string> = {
+  "ai-edit": "AI Edit lets you transform images with text prompts — change backgrounds, add effects, relight scenes and more.",
+  "generate-bg": "Generate Background creates stunning AI-generated backgrounds behind your subject automatically.",
+  "upscale": "AI Upscale enhances your image to 2× or 4× resolution using super-resolution AI — crystal clear results.",
+};
 
 const SESSION_KEY = "jpt_editor_session";
 const SESSION_TTL = 24 * 60 * 60 * 1000;
@@ -243,6 +249,7 @@ export default function ImageEditorPage() {
   const [showAccountModal, setShowAccountModal] = useState(false);
   const [showNoCreditsModal, setShowNoCreditsModal] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [blockedTool, setBlockedTool] = useState<{ id: string | null; icon: string; label: string } | null>(null);
 
   // Email auth form state
   const [authTab, setAuthTab] = useState<"google" | "email">("google");
@@ -760,7 +767,15 @@ export default function ImageEditorPage() {
             <button
               key={t.id}
               disabled={!hasImage}
-              onClick={() => { if (requireSignIn()) return; setActiveTool(activeTool === t.id ? null : t.id); }}
+              onClick={() => {
+                if (requireSignIn()) return;
+                if (t.ai && user?.plan === "free") {
+                  setBlockedTool(t);
+                  setShowUpgradeModal(true);
+                  return;
+                }
+                setActiveTool(activeTool === t.id ? null : t.id);
+              }}
               title={`${t.label}${["upscale", "resize", "adjust"].includes(t.id ?? "") ? " (Free)" : ` (${CREDIT_COST} credits)`}`}
               style={{ ...s.toolBtn, ...(activeTool === t.id ? s.toolBtnActive : {}), ...(!hasImage ? { opacity: 0.35, cursor: "not-allowed" } : {}) }}
             >
@@ -1411,35 +1426,83 @@ export default function ImageEditorPage() {
 
       {/* ── Upgrade Modal ─────────────────────────────────────────────────── */}
       {showUpgradeModal && (
-        <div style={s.modalOverlay} onClick={() => setShowUpgradeModal(false)}>
-          <div style={{ ...s.modalBox, maxWidth: 560, padding: "36px 32px" }} onClick={(e) => e.stopPropagation()}>
-            <div style={{ fontSize: 44, marginBottom: 8, textAlign: "center" as const }}>🚀</div>
-            <div style={{ ...s.modalTitle, textAlign: "center" as const }}>Upgrade for AI Features</div>
-            <p style={{ ...s.modalSub, textAlign: "center" as const }}>Free users get resize & color adjust. Unlock AI transformations with a paid plan.</p>
+        <div style={s.modalOverlay} onClick={() => { setShowUpgradeModal(false); setBlockedTool(null); }}>
+          <div style={{ background: "#fff", borderRadius: 24, width: "100%", maxWidth: 580, maxHeight: "90vh", overflowY: "auto" as const, boxShadow: "0 24px 80px rgba(0,0,0,0.22)", position: "relative" }} onClick={(e) => e.stopPropagation()}>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 12, margin: "24px 0" }}>
-              {[
-                { name: "Starter", price: "$5", credits: 50, color: "#6366F1" },
-                { name: "Creator", price: "$10", credits: 100, color: "#8B5CF6", popular: true },
-                { name: "Pro", price: "$25", credits: 300, color: "#7C3AED" },
-              ].map((plan) => (
-                <div key={plan.name} style={{ border: `2px solid ${plan.popular ? plan.color : "#E5E7EB"}`, borderRadius: 14, padding: "16px 12px", textAlign: "center" as const, position: "relative", background: plan.popular ? "#F5F3FF" : "#fff" }}>
-                  {plan.popular && <div style={{ position: "absolute", top: -12, left: "50%", transform: "translateX(-50%)", background: plan.color, color: "#fff", fontSize: 10, fontWeight: 800, padding: "2px 10px", borderRadius: 20 }}>POPULAR</div>}
-                  <div style={{ fontWeight: 800, fontSize: 13, color: "#555", marginBottom: 4 }}>{plan.name}</div>
-                  <div style={{ fontWeight: 900, fontSize: 26, color: "#111" }}>{plan.price}</div>
-                  <div style={{ fontWeight: 700, fontSize: 14, color: plan.color, margin: "6px 0" }}>{plan.credits} credits</div>
-                  <div style={{ fontSize: 11, color: "#888", marginBottom: 12 }}>Never expire</div>
-                  <a href="/pricing" style={{ display: "block", background: plan.color, color: "#fff", borderRadius: 8, padding: "8px 0", fontSize: 13, fontWeight: 700, textDecoration: "none" }}>
-                    Get Started
-                  </a>
+            {/* Gradient header */}
+            <div style={{ background: "linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #A78BFA 100%)", borderRadius: "24px 24px 0 0", padding: "32px 32px 28px", color: "#fff", position: "relative" }}>
+              <button onClick={() => { setShowUpgradeModal(false); setBlockedTool(null); }} style={{ position: "absolute", top: 16, right: 16, background: "rgba(255,255,255,0.2)", border: "none", borderRadius: "50%", width: 32, height: 32, cursor: "pointer", color: "#fff", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center" }}>×</button>
+
+              {blockedTool && (
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.15)", borderRadius: 20, padding: "6px 14px", fontSize: 13, fontWeight: 600, marginBottom: 14 }}>
+                  <span>{blockedTool.icon}</span>
+                  <span>{blockedTool.label} requires AI credits</span>
                 </div>
-              ))}
+              )}
+
+              <div style={{ fontSize: 28, fontWeight: 900, marginBottom: 8, lineHeight: 1.2 }}>
+                {blockedTool ? `Unlock ${blockedTool.label}` : "Unlock AI Features"}
+              </div>
+              <div style={{ fontSize: 15, opacity: 0.9, lineHeight: 1.5 }}>
+                {blockedTool
+                  ? (blockedTool.id ? AI_TOOL_DESCRIPTIONS[blockedTool.id] : null) || "This AI tool requires a paid plan."
+                  : "You're on the free plan. Upgrade to access all AI transformations."}
+              </div>
+
+              {/* Free vs Paid comparison */}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 20 }}>
+                <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: 12, padding: "12px 14px" }}>
+                  <div style={{ fontWeight: 800, fontSize: 12, marginBottom: 8, opacity: 0.8 }}>✅ FREE (Your Plan)</div>
+                  {["↔️ Resize", "🎨 Color Adjust", "🔢 Basic Crop", "🔍 Basic Upscale (1 cr/day)"].map(f => (
+                    <div key={f} style={{ fontSize: 12, opacity: 0.9, marginBottom: 4 }}>{f}</div>
+                  ))}
+                </div>
+                <div style={{ background: "rgba(255,255,255,0.18)", borderRadius: 12, padding: "12px 14px", border: "1px solid rgba(255,255,255,0.3)" }}>
+                  <div style={{ fontWeight: 800, fontSize: 12, marginBottom: 8 }}>🚀 PAID PLANS</div>
+                  {["✨ AI Edit (prompts)", "🌅 Generate BG", "🗑️ Remove BG", "⬆️ AI Upscale (4K)"].map(f => (
+                    <div key={f} style={{ fontSize: 12, marginBottom: 4 }}>{f}</div>
+                  ))}
+                </div>
+              </div>
             </div>
 
-            <div style={{ background: "#F9FAFB", borderRadius: 10, padding: "12px 16px", fontSize: 13, color: "#555", marginBottom: 16 }}>
-              <strong>All paid plans include:</strong> Background removal · AI editing · Generate backgrounds · AI upscale · Credits never expire
+            {/* Pricing cards */}
+            <div style={{ padding: "24px 28px 28px" }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "#888", textAlign: "center" as const, marginBottom: 16, textTransform: "uppercase" as const, letterSpacing: 1 }}>Choose a plan · one-time payment · credits never expire</div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 12, marginBottom: 20 }}>
+                {[
+                  { name: "Starter", price: "$5", credits: 50, perCredit: "$0.10", color: "#6366F1", features: ["50 AI credits", "~25 transformations", "All AI tools", "No expiry"] },
+                  { name: "Creator", price: "$10", credits: 100, perCredit: "$0.10", color: "#7C3AED", popular: true, features: ["100 AI credits", "~50 transformations", "All AI tools", "No expiry"] },
+                  { name: "Pro", price: "$25", credits: 300, perCredit: "$0.08", color: "#5B21B6", features: ["300 AI credits", "~150 transformations", "All AI tools", "No expiry"] },
+                ].map((plan) => (
+                  <div key={plan.name} style={{ border: `2px solid ${plan.popular ? plan.color : "#E5E7EB"}`, borderRadius: 16, padding: "18px 14px", textAlign: "center" as const, position: "relative", background: plan.popular ? "#F5F3FF" : "#FAFAFA", transition: "transform 0.1s" }}>
+                    {plan.popular && (
+                      <div style={{ position: "absolute", top: -11, left: "50%", transform: "translateX(-50%)", background: plan.color, color: "#fff", fontSize: 9, fontWeight: 900, padding: "3px 12px", borderRadius: 20, whiteSpace: "nowrap" as const, letterSpacing: 0.5 }}>
+                        ✦ MOST POPULAR
+                      </div>
+                    )}
+                    <div style={{ fontWeight: 800, fontSize: 13, color: plan.popular ? plan.color : "#666", marginBottom: 6 }}>{plan.name}</div>
+                    <div style={{ fontWeight: 900, fontSize: 30, color: "#111", lineHeight: 1 }}>{plan.price}</div>
+                    <div style={{ fontSize: 11, color: "#999", marginBottom: 10 }}>{plan.perCredit}/credit</div>
+                    <div style={{ fontWeight: 800, fontSize: 20, color: plan.color, marginBottom: 4 }}>{plan.credits}</div>
+                    <div style={{ fontSize: 11, color: "#888", marginBottom: 14 }}>AI Credits</div>
+                    {plan.features.map(f => (
+                      <div key={f} style={{ fontSize: 11, color: "#555", marginBottom: 3, textAlign: "left" as const }}>✓ {f}</div>
+                    ))}
+                    <a href="/pricing" style={{ display: "block", marginTop: 14, background: plan.popular ? plan.color : "#111", color: "#fff", borderRadius: 10, padding: "10px 0", fontSize: 13, fontWeight: 700, textDecoration: "none", cursor: "pointer" }}>
+                      Get Started →
+                    </a>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ textAlign: "center" as const }}>
+                <button style={{ background: "none", border: "none", color: "#999", fontSize: 13, cursor: "pointer", textDecoration: "underline" }} onClick={() => { setShowUpgradeModal(false); setBlockedTool(null); }}>
+                  Maybe later — stay on free plan
+                </button>
+              </div>
             </div>
-            <button style={s.modalDismiss} onClick={() => setShowUpgradeModal(false)}>Maybe later</button>
           </div>
         </div>
       )}
