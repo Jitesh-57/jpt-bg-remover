@@ -1181,12 +1181,8 @@ export default function ImageEditorPage() {
                 </div>
 
                 {appliedUpscale === upscaleScale && (
-                  <div style={{ background: "#FFFBEB", border: "1px solid #FDE68A", borderRadius: 10, padding: "10px 14px", marginBottom: 10, fontSize: 12, color: "#92400E", display: "flex", alignItems: "flex-start", gap: 8 }}>
-                    <span style={{ fontSize: 16, flexShrink: 0 }}>⚠️</span>
-                    <div>
-                      <div style={{ fontWeight: 700, marginBottom: 2 }}>Already upscaled {upscaleScale}</div>
-                      <div style={{ opacity: 0.8 }}>This image was already enhanced at {upscaleScale}. Upscaling again may reduce quality. Try {upscaleScale === "2x" ? "4x" : "2x"} instead or download the current result.</div>
-                    </div>
+                  <div style={{ background: "#FFFBEB", border: "1px solid #FDE68A", borderRadius: 8, padding: "7px 12px", marginBottom: 10, fontSize: 12, color: "#92400E", display: "flex", alignItems: "center", gap: 6 }}>
+                    😅 Already upscaled {upscaleScale}
                   </div>
                 )}
                 <button
