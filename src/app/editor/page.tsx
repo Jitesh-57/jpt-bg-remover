@@ -237,9 +237,9 @@ export default function ImageEditorPage() {
   const [resizeH, setResizeH] = useState(0);
   const [lockAspect, setLockAspect] = useState(true);
   const [brightness, setBrightness] = useState(100);
-  const [contrast, setContrast] = useState(100);
-  const [saturation, setSaturation] = useState(100);
-  const [sharpness, setSharpness] = useState(0);
+  const [contrast, setContrast] = useState(103);
+  const [saturation, setSaturation] = useState(103);
+  const [sharpness, setSharpness] = useState(30);
 
   // Prompt
   const [prompt, setPrompt] = useState("");
@@ -388,7 +388,7 @@ export default function ImageEditorPage() {
     } catch { setError("Failed to load image."); }
   }, []);
 
-  const resetAdjust = () => { setBrightness(100); setContrast(100); setSaturation(100); setSharpness(0); };
+  const resetAdjust = () => { setBrightness(100); setContrast(103); setSaturation(103); setSharpness(30); };
 
   // Reset slider and measure result dimensions whenever a new result arrives
   useEffect(() => {
