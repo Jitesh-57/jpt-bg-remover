@@ -82,7 +82,6 @@ function PreviewModal({
   const handleDownload = async () => {
     try {
       if (item.imageUrl) {
-        // hosted URL — fetch as blob
         const res = await fetch(item.imageUrl);
         const blob = await res.blob();
         const a = document.createElement("a");
@@ -104,89 +103,144 @@ function PreviewModal({
       onClick={onClose}
       style={{
         position: "fixed", inset: 0, zIndex: 9999,
-        background: "rgba(0,0,0,0.90)",
+        background: "rgba(0,0,0,0.85)",
         display: "flex", alignItems: "center", justifyContent: "center",
-        padding: 20, backdropFilter: "blur(10px)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+        padding: "16px",
       }}
     >
       <div
         onClick={e => e.stopPropagation()}
         style={{
-          background: "#fff", borderRadius: 20, overflow: "hidden",
-          maxWidth: 900, width: "100%",
-          boxShadow: "0 32px 96px rgba(0,0,0,0.5)",
+          position: "relative",
+          maxWidth: 780, width: "100%",
+          maxHeight: "calc(100vh - 32px)",
           display: "flex", flexDirection: "column",
-          maxHeight: "calc(100vh - 40px)",
+          borderRadius: 24,
+          overflow: "hidden",
+          boxShadow: "0 40px 120px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.08)",
         }}
       >
-        {/* Header */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 20px", borderBottom: "1px solid #F3F4F6", flexShrink: 0 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ width: 38, height: 38, background: meta.bg, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>
-              {meta.icon}
-            </div>
-            <div>
-              <div style={{ fontWeight: 700, fontSize: 15, color: "#111" }}>{item.label || "Image"}</div>
-              <div style={{ fontSize: 12, color: "#9CA3AF" }}>
-                {meta.label} · {timeAgo(item.timestamp)}
-                {full && <span style={{ marginLeft: 8, background: "#ECFDF5", color: "#059669", padding: "2px 8px", borderRadius: 10, fontSize: 11, fontWeight: 700 }}>✓ Full Quality</span>}
-              </div>
-            </div>
-          </div>
-          <button onClick={onClose} style={{ background: "#F3F4F6", border: "none", borderRadius: 8, width: 34, height: 34, cursor: "pointer", fontSize: 16, color: "#374151", fontWeight: 700, flexShrink: 0 }}>✕</button>
-        </div>
+        {/* Close button — floating top-right */}
+        <button
+          onClick={onClose}
+          style={{
+            position: "absolute", top: 14, right: 14, zIndex: 10,
+            background: "rgba(0,0,0,0.55)", backdropFilter: "blur(8px)",
+            border: "1px solid rgba(255,255,255,0.15)",
+            borderRadius: "50%", width: 36, height: 36,
+            cursor: "pointer", fontSize: 14, color: "#fff",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            fontWeight: 700,
+          }}
+        >✕</button>
 
-        {/* Image — full quality, scrollable if needed */}
+        {/* Image area — dark bg, image fills naturally */}
         <div style={{
-          background: "#0A0A0A",
+          background: "linear-gradient(145deg, #111118, #0a0a12)",
           display: "flex", alignItems: "center", justifyContent: "center",
-          overflow: "auto", flexGrow: 1, padding: 16, minHeight: 200,
+          flexGrow: 1, overflow: "hidden",
+          minHeight: 320,
+          position: "relative",
         }}>
+          {/* Subtle blurred bg copy for visual depth */}
+          <img
+            src={src} alt=""
+            aria-hidden
+            style={{
+              position: "absolute", inset: 0, width: "100%", height: "100%",
+              objectFit: "cover", filter: "blur(40px) brightness(0.25) saturate(1.5)",
+              transform: "scale(1.1)",
+            }}
+          />
           <img
             src={src}
             alt={item.label}
             style={{
+              position: "relative", zIndex: 1,
               maxWidth: "100%",
-              maxHeight: "calc(100vh - 240px)",
+              maxHeight: "62vh",
+              minHeight: 200,
               objectFit: "contain",
-              borderRadius: 8,
+              borderRadius: 12,
+              boxShadow: "0 8px 40px rgba(0,0,0,0.5)",
               display: "block",
             }}
           />
         </div>
 
-        {!full && (
-          <div style={{ background: "#FFFBEB", padding: "10px 20px", fontSize: 12, color: "#92400E", borderTop: "1px solid #FDE68A", flexShrink: 0 }}>
-            ⚠️ Low-res preview — full quality available only on the device where this was edited
+        {/* Bottom bar — glass dark */}
+        <div style={{
+          background: "rgba(10,10,18,0.95)",
+          backdropFilter: "blur(20px)",
+          borderTop: "1px solid rgba(255,255,255,0.08)",
+          padding: "14px 18px",
+          flexShrink: 0,
+        }}>
+          {/* Meta row */}
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+            <div style={{
+              width: 34, height: 34, borderRadius: 9,
+              background: `${meta.color}22`, border: `1px solid ${meta.color}44`,
+              display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, flexShrink: 0,
+            }}>
+              {meta.icon}
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontWeight: 700, fontSize: 14, color: "#fff", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                {item.label || "Image"}
+              </div>
+              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.45)", display: "flex", alignItems: "center", gap: 6 }}>
+                <span style={{ color: meta.color, fontWeight: 600 }}>{meta.label}</span>
+                <span>·</span>
+                <span>{timeAgo(item.timestamp)}</span>
+                {full
+                  ? <span style={{ color: "#34D399", fontWeight: 700 }}>✓ Full Quality</span>
+                  : <span style={{ color: "#F59E0B" }}>⚠ Low-res preview</span>
+                }
+              </div>
+            </div>
           </div>
-        )}
 
-        {/* Actions */}
-        <div style={{ display: "flex", gap: 10, padding: "16px 20px", flexShrink: 0, flexWrap: "wrap" }}>
-          <button
-            onClick={() => onOpenInEditor(item)}
-            style={{
-              flex: 1, minWidth: 160, padding: "12px 20px",
-              background: "linear-gradient(135deg, #6366F1, #8B5CF6)",
-              color: "#fff", border: "none", borderRadius: 10,
-              fontWeight: 700, fontSize: 14, cursor: "pointer",
-              display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-            }}
-          >
-            🖼️ Open in AI Editor
-          </button>
-          <button
-            onClick={handleDownload}
-            style={{ flex: 1, minWidth: 130, padding: "12px 20px", background: "#EEF2FF", color: "#6366F1", border: "none", borderRadius: 10, fontWeight: 700, fontSize: 14, cursor: "pointer" }}
-          >
-            ⬇ Download
-          </button>
-          <button
-            onClick={() => { onClose(); onDelete(item.id); }}
-            style={{ padding: "12px 18px", background: "#FEF2F2", color: "#EF4444", border: "none", borderRadius: 10, fontWeight: 700, fontSize: 14, cursor: "pointer" }}
-          >
-            🗑 Delete
-          </button>
+          {/* Action buttons */}
+          <div style={{ display: "flex", gap: 8 }}>
+            <button
+              onClick={() => onOpenInEditor(item)}
+              style={{
+                flex: 2, padding: "11px 16px",
+                background: "linear-gradient(135deg, #6366F1, #8B5CF6)",
+                color: "#fff", border: "none", borderRadius: 12,
+                fontWeight: 700, fontSize: 13, cursor: "pointer",
+                display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+                boxShadow: "0 4px 14px rgba(99,102,241,0.4)",
+              }}
+            >
+              🖼️ Open in AI Editor
+            </button>
+            <button
+              onClick={handleDownload}
+              style={{
+                flex: 1, padding: "11px 12px",
+                background: "rgba(255,255,255,0.08)", color: "#fff",
+                border: "1px solid rgba(255,255,255,0.15)", borderRadius: 12,
+                fontWeight: 600, fontSize: 13, cursor: "pointer",
+              }}
+            >
+              ⬇ Download
+            </button>
+            <button
+              onClick={() => { onClose(); onDelete(item.id); }}
+              style={{
+                padding: "11px 14px",
+                background: "rgba(239,68,68,0.12)", color: "#F87171",
+                border: "1px solid rgba(239,68,68,0.25)", borderRadius: 12,
+                fontWeight: 600, fontSize: 13, cursor: "pointer",
+              }}
+            >
+              🗑
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -232,14 +286,17 @@ function ItemCard({
       {/* Thumbnail */}
       <div
         onClick={() => onPreview(item)}
-        style={{ position: "relative", aspectRatio: "1", background: "#F3F4F6", overflow: "hidden", cursor: "pointer" }}
+        style={{ position: "relative", aspectRatio: "4/3", background: "#111", overflow: "hidden", cursor: "pointer" }}
       >
+        {/* Blurred bg fill for letterboxed images */}
+        {cardImg && <img src={cardImg} alt="" aria-hidden style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "blur(14px) brightness(0.4) saturate(1.3)", transform: "scale(1.1)" }} />}
         {cardImg ? (
           <img
             src={cardImg}
             alt={item.label}
             style={{
-              width: "100%", height: "100%", objectFit: "cover",
+              position: "relative", zIndex: 1,
+              width: "100%", height: "100%", objectFit: "contain",
               transform: isHovered ? "scale(1.04)" : "scale(1)",
               transition: "transform 0.25s ease",
             }}
@@ -367,7 +424,7 @@ function Section({
           <p style={{ margin: 0, color: "#9CA3AF", fontSize: 14 }}>{emptyMsg}</p>
         </div>
       ) : (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 18 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))", gap: 16 }}>
           {items.map(item => (
             <ItemCard
               key={item.id} item={item}
