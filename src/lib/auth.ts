@@ -87,9 +87,9 @@ async function maybeResetDailyCredits(
 
   // If daily_credits_reset_at is null, just stamp it now — don't reset credits
   if (!profile.daily_credits_reset_at) {
-    await admin.from("profiles").update({
-      daily_credits_reset_at: new Date().toISOString(),
-    }).eq("id", userId);
+    await admin.from("profiles").upsert({
+      id: userId, daily_credits_reset_at: new Date().toISOString(),
+    }, { onConflict: "id" });
     return profile.credits;
   }
 
@@ -97,10 +97,9 @@ async function maybeResetDailyCredits(
   const hoursSince = (now - resetAt) / 3_600_000;
 
   if (hoursSince >= 24) {
-    await admin.from("profiles").update({
-      credits: DAILY_FREE_CREDITS,
-      daily_credits_reset_at: new Date().toISOString(),
-    }).eq("id", userId);
+    await admin.from("profiles").upsert({
+      id: userId, credits: DAILY_FREE_CREDITS, daily_credits_reset_at: new Date().toISOString(),
+    }, { onConflict: "id" });
     return DAILY_FREE_CREDITS;
   }
   return profile.credits;
@@ -129,11 +128,21 @@ export async function checkAuth(req: NextRequest): Promise<
     .single() as { data: ProfileRow | null };
 
   const plan: Plan = (profile?.plan as Plan) || "free";
-  // Only give FREE_CREDITS default when the profile row doesn't exist yet (brand-new user)
-  let credits = profile ? (profile.credits ?? 0) : DAILY_FREE_CREDITS;
+  let credits: number;
 
-  // Auto-reset daily credits for free users (only when profile exists)
-  if (profile) {
+  if (!profile) {
+    // No profile row — create one now so future updates have a target
+    credits = DAILY_FREE_CREDITS;
+    await admin.from("profiles").upsert({
+      id: user.id,
+      name: user.user_metadata?.name || user.email!.split("@")[0],
+      picture: user.user_metadata?.avatar_url || null,
+      credits: DAILY_FREE_CREDITS,
+      plan: "free",
+      daily_credits_reset_at: new Date().toISOString(),
+    }, { onConflict: "id" });
+  } else {
+    credits = profile.credits ?? 0;
     credits = await maybeResetDailyCredits(user.id, { ...profile, plan, credits }, admin);
   }
 
@@ -191,24 +200,20 @@ export async function withCredits(
 
   const newCredits = Math.max(0, session.credits - cost);
 
-  // Try service-role admin first (bypasses RLS — requires SUPABASE_SERVICE_ROLE_KEY)
+  // Upsert so it always writes even if the profile row doesn't exist yet
   const admin = createAdminSupabase();
   const { error: adminErr } = await admin
     .from("profiles")
-    .update({ credits: newCredits })
-    .eq("id", session.userId);
+    .upsert({ id: session.userId, credits: newCredits }, { onConflict: "id" });
 
-  // If admin write failed and we have the request, retry with the user's own auth context
-  // (works when profiles table has: CREATE POLICY "self update" ON profiles FOR UPDATE USING (auth.uid() = id))
   if (adminErr && req) {
-    console.warn("[withCredits] admin write failed, retrying with user auth:", adminErr.message);
+    console.warn("[withCredits] admin upsert failed, retrying with user auth:", adminErr.message);
     const userClient = createRequestSupabase(req);
     const { error: userErr } = await userClient
       .from("profiles")
-      .update({ credits: newCredits })
-      .eq("id", session.userId);
+      .upsert({ id: session.userId, credits: newCredits }, { onConflict: "id" });
     if (userErr) {
-      console.error("[withCredits] user-auth write also failed:", userErr.message);
+      console.error("[withCredits] user-auth upsert also failed:", userErr.message);
     }
   }
 
