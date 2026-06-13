@@ -65,11 +65,11 @@ export async function upscaleImage(dataUrl: string, scale: Scale): Promise<strin
   canvas2.width = W;
   canvas2.height = H;
   const ctx2 = canvas2.getContext("2d")!;
-  ctx2.filter = "contrast(104%) saturate(105%)";
+  ctx2.filter = "contrast(103%) saturate(103%)";
   ctx2.drawImage(canvas, 0, 0);
 
   // Step 3: Apply sharpness kernel at 50% strength (k = 0.5)
-  applySharpness(ctx2, W, H, 0.5);
+  applySharpness(ctx2, W, H, 0.6);
 
   // Return as high-quality JPEG (PNG for 4x to preserve detail)
   return canvas2.toDataURL(scale === "4x" ? "image/png" : "image/jpeg", 0.95);
