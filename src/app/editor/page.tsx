@@ -223,6 +223,7 @@ export default function ImageEditorPage() {
   const [sliderPos, setSliderPos] = useState(50);
   const [isDragging, setIsDragging] = useState(false);
   const sliderContainerRef = useRef<HTMLDivElement>(null);
+  const [workingSize, setWorkingSize] = useState<{ w: number; h: number } | null>(null);
 
   // Generate BG sub-state
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
@@ -389,9 +390,16 @@ export default function ImageEditorPage() {
 
   const resetAdjust = () => { setBrightness(100); setContrast(100); setSaturation(100); setSharpness(0); };
 
-  // Reset slider position whenever a new result arrives
+  // Reset slider and measure result dimensions whenever a new result arrives
   useEffect(() => {
-    if (working) setSliderPos(50);
+    if (working) {
+      setSliderPos(50);
+      const img = new Image();
+      img.onload = () => setWorkingSize({ w: img.naturalWidth, h: img.naturalHeight });
+      img.src = working;
+    } else {
+      setWorkingSize(null);
+    }
   }, [working]);
 
   const getSliderPosFromEvent = useCallback((clientX: number): number => {
@@ -941,11 +949,13 @@ export default function ImageEditorPage() {
                     </div>
 
                     {/* Labels */}
-                    <div style={{ position: "absolute", top: 12, left: 12, zIndex: 4, background: "rgba(0,0,0,0.55)", backdropFilter: "blur(4px)", color: "#fff", padding: "4px 10px", borderRadius: 6, fontSize: 12, fontWeight: 700, pointerEvents: "none" }}>
-                      Original
+                    <div style={{ position: "absolute", top: 12, left: 12, zIndex: 4, background: "rgba(0,0,0,0.55)", backdropFilter: "blur(4px)", color: "#fff", padding: "4px 10px", borderRadius: 6, pointerEvents: "none" }}>
+                      <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 0.3 }}>Original</div>
+                      {original && <div style={{ fontSize: 10, opacity: 0.75, marginTop: 1 }}>{original.w} × {original.h}px</div>}
                     </div>
-                    <div style={{ position: "absolute", top: 12, right: 12, zIndex: 4, background: "rgba(99,102,241,0.8)", backdropFilter: "blur(4px)", color: "#fff", padding: "4px 10px", borderRadius: 6, fontSize: 12, fontWeight: 700, pointerEvents: "none" }}>
-                      ✨ Result
+                    <div style={{ position: "absolute", top: 12, right: 12, zIndex: 4, background: "rgba(99,102,241,0.85)", backdropFilter: "blur(4px)", color: "#fff", padding: "4px 10px", borderRadius: 6, pointerEvents: "none" }}>
+                      <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 0.3 }}>✨ Result</div>
+                      {workingSize && <div style={{ fontSize: 10, opacity: 0.85, marginTop: 1 }}>{workingSize.w} × {workingSize.h}px</div>}
                     </div>
 
                     {/* Processing overlay */}
