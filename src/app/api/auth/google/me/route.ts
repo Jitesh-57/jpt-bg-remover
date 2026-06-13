@@ -30,7 +30,8 @@ export async function GET(req: NextRequest) {
     .single() as { data: { name?: string; picture?: string; credits?: number; plan?: string; daily_credits_reset_at?: string } | null };
 
   // Auto-reset daily credits for free users
-  let credits = profile?.credits ?? FREE_CREDITS;
+  // Only fall back to FREE_CREDITS when profile row doesn't exist yet (brand-new user)
+  let credits = profile ? (profile.credits ?? 0) : FREE_CREDITS;
   const plan = profile?.plan || "free";
   if (plan === "free" && profile?.daily_credits_reset_at) {
     const hoursSince = (Date.now() - new Date(profile.daily_credits_reset_at).getTime()) / 3_600_000;

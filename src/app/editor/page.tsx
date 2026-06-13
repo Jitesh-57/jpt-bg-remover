@@ -334,7 +334,8 @@ export default function ImageEditorPage() {
 
   const callApi = useCallback(async <T extends Record<string, unknown>>(
     url: string,
-    body: object
+    body: object,
+    onBlocked?: () => void
   ): Promise<T | null> => {
     const res = await fetch(url, {
       method: "POST",
@@ -343,12 +344,13 @@ export default function ImageEditorPage() {
     });
     const data = await res.json() as T & { error?: string; credits?: number };
 
-    if (res.status === 401) { setShowSignInModal(true); return null; }
+    if (res.status === 401) { onBlocked?.(); setShowSignInModal(true); return null; }
     if (res.status === 402) {
+      onBlocked?.();
       if (data.upgradeRequired) { setShowUpgradeModal(true); } else { setShowNoCreditsModal(true); }
       return null;
     }
-    if (res.status === 403) { setShowUpgradeModal(true); return null; }
+    if (res.status === 403) { onBlocked?.(); setShowUpgradeModal(true); return null; }
     if (res.status === 429) { throw new Error("Too many requests. Please wait a minute and try again."); }
     if (!res.ok) { throw new Error(data.error || "Request failed"); }
 
@@ -419,15 +421,20 @@ export default function ImageEditorPage() {
     const src = working || original?.dataUrl;
     if (!src || processing) return;
     setProcessing(true); setProcessingLabel("Generating background…"); setError(null);
+    const prevCreditsGBg = user?.credits ?? 0;
+    setUser(u => u ? { ...u, credits: Math.max(0, u.credits - CREDIT_COST) } : u);
     try {
       // Use AI Edit to directly replace the background — keeps subject intact
       const aiPrompt = `Replace the background of this image with: ${templateOrPrompt}. Keep the person/subject exactly as they are — same pose, appearance, clothing. Only change the background behind them.`;
-      const data = await callApi<{ dataUrl: string }>("/api/ai-edit", { dataUrl: src, prompt: aiPrompt });
+      const data = await callApi<{ dataUrl: string }>("/api/ai-edit", { dataUrl: src, prompt: aiPrompt }, () => setUser(u => u ? { ...u, credits: prevCreditsGBg } : u));
       if (!data?.dataUrl) throw new Error("Background generation failed");
       setEditHistory(prev => working ? [...prev, working] : prev);
       setWorking(data.dataUrl);
       autoSaveToDrive(data.dataUrl, "generate-bg", templateOrPrompt.slice(0, 60));
-    } catch (e) { setError((e as Error).message); }
+    } catch (e) {
+      setUser(u => u ? { ...u, credits: prevCreditsGBg } : u); // rollback on error
+      setError((e as Error).message);
+    }
     finally { setProcessing(false); setProcessingLabel(""); }
   };
 
@@ -436,6 +443,9 @@ export default function ImageEditorPage() {
     if (!src || processing) return;
     if (requireSignIn()) return;
     setProcessing(true); setProcessingLabel(`Upscaling ${upscaleScale}…`); setError(null);
+    // Optimistic deduction — immediately show -1 credit in UI
+    const prevCredits = user?.credits ?? 0;
+    setUser(u => u ? { ...u, credits: Math.max(0, u.credits - 1) } : u);
     try {
       // Deduct 1 credit server-side before processing
       const deductRes = await fetch("/api/credits/deduct", {
@@ -445,6 +455,7 @@ export default function ImageEditorPage() {
       });
       const deductData = await deductRes.json() as { credits?: number; error?: string; upgradeRequired?: boolean };
       if (!deductRes.ok) {
+        setUser(u => u ? { ...u, credits: prevCredits } : u); // rollback
         if (deductRes.status === 402) {
           if (deductData.upgradeRequired) { setShowUpgradeModal(true); } else { setShowNoCreditsModal(true); }
         } else if (deductRes.status === 401) {
@@ -526,15 +537,20 @@ export default function ImageEditorPage() {
     const src = working || original?.dataUrl;
     if (!src || !prompt.trim() || processing) return;
     setProcessing(true); setProcessingLabel("Editing with JPT AI…"); setError(null);
+    const prevCreditsAI = user?.credits ?? 0;
+    setUser(u => u ? { ...u, credits: Math.max(0, u.credits - CREDIT_COST) } : u);
     try {
-      const data = await callApi<{ dataUrl: string }>("/api/ai-edit", { dataUrl: src, prompt: prompt.trim() });
+      const data = await callApi<{ dataUrl: string }>("/api/ai-edit", { dataUrl: src, prompt: prompt.trim() }, () => setUser(u => u ? { ...u, credits: prevCreditsAI } : u));
       if (data?.dataUrl) {
         setEditHistory(prev => working ? [...prev, working] : prev);
         setWorking(data.dataUrl);
         autoSaveToDrive(data.dataUrl, "ai-edit", prompt.trim().slice(0, 60));
         setPrompt("");
       } else throw new Error("Edit failed");
-    } catch (e) { setError((e as Error).message); }
+    } catch (e) {
+      setUser(u => u ? { ...u, credits: prevCreditsAI } : u); // rollback on error
+      setError((e as Error).message);
+    }
     finally { setProcessing(false); setProcessingLabel(""); }
   };
 
