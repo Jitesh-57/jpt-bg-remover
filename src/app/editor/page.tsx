@@ -64,7 +64,7 @@ async function prepareImage(file: File): Promise<{ dataUrl: string; w: number; h
     const img = new Image();
     img.onload = () => {
       let { naturalWidth: w, naturalHeight: h } = img;
-      const MAX = 1536;
+      const MAX = 1024;
       if (w > MAX || h > MAX) { const sc = MAX / Math.max(w, h); w = Math.round(w * sc); h = Math.round(h * sc); }
       const canvas = document.createElement("canvas");
       canvas.width = w; canvas.height = h;
@@ -172,6 +172,18 @@ async function applyChromaKey(dataUrl: string, hexColor: string, tolerance = 50)
   }
   ctx.putImageData(imageData, 0, 0);
   return canvas.toDataURL("image/png");
+}
+
+// Fetch a CDN URL and convert to data URL in the browser (avoids sending large base64 over API)
+async function urlToDataUrl(url: string): Promise<string> {
+  const resp = await fetch(url);
+  const blob = await resp.blob();
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
 }
 
 async function resizeOnCanvas(dataUrl: string, w: number, h: number): Promise<string> {
@@ -325,11 +337,17 @@ export default function ImageEditorPage() {
 
     if (res.status === 401) { setShowSignInModal(true); return null; }
     if (res.status === 402) { setShowNoCreditsModal(true); return null; }
+    if (res.status === 429) { throw new Error("Too many requests. Please wait a minute and try again."); }
     if (!res.ok) { throw new Error(data.error || "Request failed"); }
 
-    // Update credits from any successful transformation response
     if (typeof data.credits === "number") {
       setUser(u => u ? { ...u, credits: data.credits as number } : u);
+    }
+
+    // If API returned a CDN URL, fetch it client-side (avoids Vercel memory/bandwidth)
+    if (typeof data.url === "string" && data.url.startsWith("http")) {
+      const dataUrlResult = await urlToDataUrl(data.url);
+      return { ...data, dataUrl: dataUrlResult, image: dataUrlResult } as T;
     }
     return data;
   }, []);

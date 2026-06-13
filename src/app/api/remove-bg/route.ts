@@ -13,12 +13,8 @@ export async function POST(req: NextRequest) {
   if (!image) return NextResponse.json({ error: "image required" }, { status: 400 });
 
   try {
-    const outputUrl = await runPixelBinPrediction(image, "erase", "bg");
-    // fetch the output and return as base64
-    const resp = await fetch(outputUrl);
-    const buf = Buffer.from(await resp.arrayBuffer());
-    const b64 = `data:image/png;base64,${buf.toString("base64")}`;
-    return withCredits({ image: b64 }, session!);
+    const url = await runPixelBinPrediction(image, "erase", "bg");
+    return withCredits({ url }, session!);
   } catch (e) {
     console.error("[remove-bg]", e);
     return NextResponse.json({ error: String(e) }, { status: 500 });
