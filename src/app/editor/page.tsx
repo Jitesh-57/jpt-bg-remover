@@ -47,7 +47,7 @@ const BG_TEMPLATES = [
 const TOOLS: { id: Tool; icon: string; label: string; ai?: boolean }[] = [
   { id: "ai-edit", icon: "✨", label: "AI Edit", ai: true },
   { id: "generate-bg", icon: "🌅", label: "Generate BG", ai: true },
-  { id: "upscale", icon: "🔍", label: "Upscale", ai: true },
+  { id: "upscale", icon: "🔍", label: "Upscale" },
   { id: "resize", icon: "↔️", label: "Resize" },
   { id: "adjust", icon: "🎨", label: "Adjust" },
 ];
