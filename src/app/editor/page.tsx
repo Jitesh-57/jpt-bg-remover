@@ -1186,12 +1186,14 @@ export default function ImageEditorPage() {
                   </div>
                 )}
                 <button
-                  style={{ ...s.primaryBtn, ...(processing ? s.btnOff : {}), background: upscaleScale === "4x" ? "linear-gradient(135deg,#7C3AED,#EC4899)" : "linear-gradient(135deg,#6366F1,#8B5CF6)" }}
-                  disabled={processing}
+                  style={{ ...s.primaryBtn, ...((processing || appliedUpscale === upscaleScale) ? s.btnOff : {}), background: upscaleScale === "4x" ? "linear-gradient(135deg,#7C3AED,#EC4899)" : "linear-gradient(135deg,#6366F1,#8B5CF6)" }}
+                  disabled={processing || appliedUpscale === upscaleScale}
                   onClick={handleUpscale}
                 >
                   {processing
                     ? <span style={s.btnRow}><span style={s.spin} />Upscaling {upscaleScale}…</span>
+                    : appliedUpscale === upscaleScale
+                    ? `✓ Already ${upscaleScale}`
                     : `🔍 Upscale ${upscaleScale}`}
                 </button>
               </div>
