@@ -62,9 +62,14 @@ function createRequestSupabase(req: NextRequest) {
 }
 
 export function createAdminSupabase() {
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!key) {
+    // Without the service role key, DB writes are blocked by RLS — credits won't save!
+    console.error("[auth] SUPABASE_SERVICE_ROLE_KEY is not set. Credit updates will fail silently.");
+  }
   return createSupabaseAdmin(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    key || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     { auth: { persistSession: false } }
   );
 }
@@ -79,9 +84,16 @@ async function maybeResetDailyCredits(
   if (profile.plan !== "free") return profile.credits;
 
   const now = Date.now();
-  const resetAt = profile.daily_credits_reset_at
-    ? new Date(profile.daily_credits_reset_at).getTime()
-    : 0;
+
+  // If daily_credits_reset_at is null, just stamp it now — don't reset credits
+  if (!profile.daily_credits_reset_at) {
+    await admin.from("profiles").update({
+      daily_credits_reset_at: new Date().toISOString(),
+    }).eq("id", userId);
+    return profile.credits;
+  }
+
+  const resetAt = new Date(profile.daily_credits_reset_at).getTime();
   const hoursSince = (now - resetAt) / 3_600_000;
 
   if (hoursSince >= 24) {
@@ -117,11 +129,12 @@ export async function checkAuth(req: NextRequest): Promise<
     .single() as { data: ProfileRow | null };
 
   const plan: Plan = (profile?.plan as Plan) || "free";
-  let credits = profile?.credits ?? DAILY_FREE_CREDITS;
+  // Only give FREE_CREDITS default when the profile row doesn't exist yet (brand-new user)
+  let credits = profile ? (profile.credits ?? 0) : DAILY_FREE_CREDITS;
 
-  // Auto-reset daily credits for free users
+  // Auto-reset daily credits for free users (only when profile exists)
   if (profile) {
-    credits = await maybeResetDailyCredits(user.id, { ...profile, plan }, admin);
+    credits = await maybeResetDailyCredits(user.id, { ...profile, plan, credits }, admin);
   }
 
   return {
