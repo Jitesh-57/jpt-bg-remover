@@ -14,5 +14,5 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ credits: session!.credits });
   }
 
-  return withCredits({}, session!, "basic");
+  return withCredits({}, session!, "basic", req);
 }

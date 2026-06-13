@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const url = await runPixelBinPrediction(dataUrl, "nanoBananaPro", "generate", { prompt });
-    return withCredits({ url }, session!, "ai");
+    return withCredits({ url }, session!, "ai", req);
   } catch (e) {
     console.error("[ai-edit]", e);
     return NextResponse.json({ error: String(e) }, { status: 500 });

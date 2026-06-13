@@ -162,7 +162,8 @@ export async function checkAuth(req: NextRequest): Promise<
 export async function withCredits(
   body: object,
   session: GoogleSession,
-  toolType: "free" | "basic" | "ai" = "ai"
+  toolType: "free" | "basic" | "ai" = "ai",
+  req?: NextRequest
 ): Promise<NextResponse> {
   if (toolType === "free") {
     return NextResponse.json({ ...body, credits: session.credits });
@@ -170,7 +171,6 @@ export async function withCredits(
 
   const cost = toolType === "ai" ? CREDIT_COST : BASIC_UPSCALE_COST;
 
-  // AI tools blocked for free plan
   if (toolType === "ai" && session.plan === "free") {
     return NextResponse.json({
       error: "This feature requires a paid plan. Upgrade to use AI transformations.",
@@ -191,11 +191,25 @@ export async function withCredits(
 
   const newCredits = Math.max(0, session.credits - cost);
 
-  try {
-    const admin = createAdminSupabase();
-    await admin.from("profiles").update({ credits: newCredits }).eq("id", session.userId);
-  } catch (e) {
-    console.error("[withCredits] update failed:", e);
+  // Try service-role admin first (bypasses RLS — requires SUPABASE_SERVICE_ROLE_KEY)
+  const admin = createAdminSupabase();
+  const { error: adminErr } = await admin
+    .from("profiles")
+    .update({ credits: newCredits })
+    .eq("id", session.userId);
+
+  // If admin write failed and we have the request, retry with the user's own auth context
+  // (works when profiles table has: CREATE POLICY "self update" ON profiles FOR UPDATE USING (auth.uid() = id))
+  if (adminErr && req) {
+    console.warn("[withCredits] admin write failed, retrying with user auth:", adminErr.message);
+    const userClient = createRequestSupabase(req);
+    const { error: userErr } = await userClient
+      .from("profiles")
+      .update({ credits: newCredits })
+      .eq("id", session.userId);
+    if (userErr) {
+      console.error("[withCredits] user-auth write also failed:", userErr.message);
+    }
   }
 
   return NextResponse.json({ ...body, credits: newCredits });

@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const url = await runPixelBinPrediction(image, "generate", "bg", { prompt: prompt.trim() });
-    return withCredits({ url }, session!, "ai");
+    return withCredits({ url }, session!, "ai", req);
   } catch (e) {
     console.error("[generate-bg]", e);
     return NextResponse.json({ error: String(e) }, { status: 500 });
