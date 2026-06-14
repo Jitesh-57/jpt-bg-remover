@@ -231,6 +231,7 @@ export default function ImageEditorPage() {
 
   // Upscale sub-state
   const [upscaleScale, setUpscaleScale] = useState<"2x" | "4x">("2x");
+  const [upscaleMode, setUpscaleMode] = useState<"normal" | "pro">("normal");
   const [appliedUpscale, setAppliedUpscale] = useState<"2x" | "4x" | null>(null);
 
   // Resize / Adjust
@@ -360,11 +361,12 @@ export default function ImageEditorPage() {
       setUser(u => u ? { ...u, credits: data.credits as number } : u);
     }
 
-    // If API returned a CDN URL, fetch it client-side (avoids Vercel memory/bandwidth)
+    // If API returned a CDN URL, fetch it client-side
     if (typeof data.url === "string" && data.url.startsWith("http")) {
       const dataUrlResult = await urlToDataUrl(data.url);
       return { ...data, dataUrl: dataUrlResult, image: dataUrlResult } as T;
     }
+    // dataUrl returned directly (Gemini routes)
     return data;
   }, []);
 
@@ -451,40 +453,59 @@ export default function ImageEditorPage() {
     const src = working || original?.dataUrl;
     if (!src || processing) return;
     if (requireSignIn()) return;
-    setProcessing(true); setProcessingLabel(`Upscaling ${upscaleScale}…`); setError(null);
-    // Optimistic deduction — immediately show -1 credit in UI
-    const prevCredits = user?.credits ?? 0;
-    setUser(u => u ? { ...u, credits: Math.max(0, u.credits - 1) } : u);
-    try {
-      // Deduct 1 credit server-side before processing
-      const deductRes = await fetch("/api/credits/deduct", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tool: "basic-upscale" }),
-      });
-      const deductData = await deductRes.json() as { credits?: number; error?: string; upgradeRequired?: boolean };
-      if (!deductRes.ok) {
-        setUser(u => u ? { ...u, credits: prevCredits } : u); // rollback
-        if (deductRes.status === 402) {
-          if (deductData.upgradeRequired) { setShowUpgradeModal(true); } else { setShowNoCreditsModal(true); }
-        } else if (deductRes.status === 401) {
-          setShowSignInModal(true);
-        } else {
-          setError(deductData.error || "Failed to deduct credits.");
-        }
-        return;
-      }
-      if (typeof deductData.credits === "number") {
-        setUser(u => u ? { ...u, credits: deductData.credits! } : u);
-      }
 
-      const { upscaleImage } = await import("@/lib/upscale-client");
-      const out = await upscaleImage(src, upscaleScale);
-      setEditHistory(prev => working ? [...prev, working] : prev);
-      setWorking(out);
-      setAppliedUpscale(upscaleScale);
-      autoSaveToDrive(out, "upscale", `${upscaleScale} Upscale`);
-    } catch (e) { setError((e as Error).message || "Upscale failed. Please try again."); }
+    const isPro = upscaleMode === "pro";
+    const creditCost = isPro ? CREDIT_COST : 1;
+    setProcessing(true); setProcessingLabel(`${isPro ? "AI Pro" : ""} Upscaling ${upscaleScale}…`); setError(null);
+    const prevCredits = user?.credits ?? 0;
+    setUser(u => u ? { ...u, credits: Math.max(0, u.credits - creditCost) } : u);
+
+    try {
+      if (isPro) {
+        // Pro: use Gemini AI — costs 2 credits, plan-gated
+        const data = await callApi<{ dataUrl: string }>(
+          "/api/upscale-pro",
+          { dataUrl: src, scale: upscaleScale },
+          () => setUser(u => u ? { ...u, credits: prevCredits } : u)
+        );
+        if (!data?.dataUrl) throw new Error("Pro upscale failed");
+        setEditHistory(prev => working ? [...prev, working] : prev);
+        setWorking(data.dataUrl);
+        setAppliedUpscale(upscaleScale);
+        autoSaveToDrive(data.dataUrl, "upscale", `${upscaleScale} Pro Upscale`);
+      } else {
+        // Normal: canvas upscale — costs 1 credit, free users allowed
+        const deductRes = await fetch("/api/credits/deduct", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ tool: "basic-upscale" }),
+        });
+        const deductData = await deductRes.json() as { credits?: number; error?: string; upgradeRequired?: boolean };
+        if (!deductRes.ok) {
+          setUser(u => u ? { ...u, credits: prevCredits } : u);
+          if (deductRes.status === 402) {
+            if (deductData.upgradeRequired) { setShowUpgradeModal(true); } else { setShowNoCreditsModal(true); }
+          } else if (deductRes.status === 401) {
+            setShowSignInModal(true);
+          } else {
+            setError(deductData.error || "Failed to deduct credits.");
+          }
+          return;
+        }
+        if (typeof deductData.credits === "number") {
+          setUser(u => u ? { ...u, credits: deductData.credits! } : u);
+        }
+        const { upscaleImage } = await import("@/lib/upscale-client");
+        const out = await upscaleImage(src, upscaleScale);
+        setEditHistory(prev => working ? [...prev, working] : prev);
+        setWorking(out);
+        setAppliedUpscale(upscaleScale);
+        autoSaveToDrive(out, "upscale", `${upscaleScale} Upscale`);
+      }
+    } catch (e) {
+      setUser(u => u ? { ...u, credits: prevCredits } : u);
+      setError((e as Error).message || "Upscale failed. Please try again.");
+    }
     finally { setProcessing(false); setProcessingLabel(""); }
   };
 
@@ -1123,29 +1144,45 @@ export default function ImageEditorPage() {
             {/* Upscale */}
             {activeTool === "upscale" && (
               <div style={s.panelContent}>
-                <div style={s.panelTitle}>🔍 AI Upscale</div>
-                <p style={s.panelSub}>Enhance image quality, sharpness and detail with AI</p>
-                <div style={s.creditNote}>Free · runs in your browser</div>
+                <div style={s.panelTitle}>🔍 Upscale</div>
+                <p style={s.panelSub}>Enhance image quality, sharpness and detail</p>
+
+                {/* Mode toggle: Normal / Pro AI */}
+                <div style={{ display: "flex", gap: 6, marginBottom: 14, background: "#F3F4F6", borderRadius: 10, padding: 4 }}>
+                  {([
+                    { key: "normal", label: "⚡ Normal", sub: "Free · 1 credit" },
+                    { key: "pro", label: "✨ Pro AI", sub: "2 credits · Gemini" },
+                  ] as const).map(m => (
+                    <button
+                      key={m.key}
+                      onClick={() => setUpscaleMode(m.key)}
+                      style={{
+                        flex: 1, padding: "8px 6px", borderRadius: 7, border: "none", cursor: "pointer",
+                        background: upscaleMode === m.key ? "#fff" : "transparent",
+                        boxShadow: upscaleMode === m.key ? "0 1px 6px rgba(0,0,0,0.10)" : "none",
+                        transition: "all 0.15s",
+                      }}
+                    >
+                      <div style={{ fontSize: 12, fontWeight: 700, color: upscaleMode === m.key ? "#6366F1" : "#888" }}>{m.label}</div>
+                      <div style={{ fontSize: 10, color: upscaleMode === m.key ? "#6366F1" : "#AAA", marginTop: 1 }}>{m.sub}</div>
+                    </button>
+                  ))}
+                </div>
 
                 {/* 2x / 4x toggle */}
-                <div>
-                  <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.8, color: "#888", marginBottom: 8 }}>Enhancement Level</div>
+                <div style={{ marginBottom: 12 }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: 0.8, color: "#888", marginBottom: 8 }}>Enhancement Level</div>
                   <div style={{ display: "flex", gap: 8 }}>
                     {(["2x", "4x"] as const).map((sc) => (
                       <button
                         key={sc}
                         onClick={() => setUpscaleScale(sc)}
                         style={{
-                          flex: 1,
-                          padding: "12px 8px",
-                          borderRadius: 10,
+                          flex: 1, padding: "12px 8px", borderRadius: 10,
                           border: upscaleScale === sc ? "2px solid #6366F1" : "1.5px solid #E0E0EE",
                           background: upscaleScale === sc ? "#EEEEFF" : "#FAFAFA",
-                          cursor: "pointer",
-                          fontWeight: 800,
-                          fontSize: 18,
-                          color: upscaleScale === sc ? "#6366F1" : "#999",
-                          transition: "all 0.15s",
+                          cursor: "pointer", fontWeight: 800, fontSize: 18,
+                          color: upscaleScale === sc ? "#6366F1" : "#999", transition: "all 0.15s",
                         }}
                       >
                         {sc}
@@ -1158,26 +1195,27 @@ export default function ImageEditorPage() {
                 </div>
 
                 <div style={s.infoCard}>
-                  <div style={{ fontWeight: 700, marginBottom: 4 }}>
-                    {upscaleScale === "4x" ? "4x Ultra Enhancement" : "2x Enhancement"}
-                  </div>
-                  <ul style={{ margin: 0, paddingLeft: 16, fontSize: 12, color: "#555", lineHeight: 1.8 }}>
-                    {upscaleScale === "4x" ? (
-                      <>
-                        <li>Maximum sharpness &amp; fine detail</li>
-                        <li>Hair strands, skin pores, fabric texture</li>
-                        <li>Full noise &amp; artifact removal</li>
-                        <li>Vivid colors, punchy contrast</li>
-                      </>
-                    ) : (
-                      <>
-                        <li>Sharpens fine details</li>
-                        <li>Reduces noise &amp; blur</li>
-                        <li>Enhances clarity</li>
-                        <li>Preserves original content</li>
-                      </>
-                    )}
-                  </ul>
+                  {upscaleMode === "pro" ? (
+                    <>
+                      <div style={{ fontWeight: 700, marginBottom: 4 }}>✨ Gemini Pro Upscale</div>
+                      <ul style={{ margin: 0, paddingLeft: 16, fontSize: 12, color: "#555", lineHeight: 1.8 }}>
+                        <li>AI-powered — real detail enhancement</li>
+                        <li>Hair strands, skin texture, fabric</li>
+                        <li>Noise removal &amp; artifact cleanup</li>
+                        <li>Vivid colors &amp; punchy contrast</li>
+                      </ul>
+                    </>
+                  ) : (
+                    <>
+                      <div style={{ fontWeight: 700, marginBottom: 4 }}>⚡ Normal Upscale</div>
+                      <ul style={{ margin: 0, paddingLeft: 16, fontSize: 12, color: "#555", lineHeight: 1.8 }}>
+                        <li>Canvas-based, instant result</li>
+                        <li>Sharpens edges &amp; reduces blur</li>
+                        <li>Contrast +3%, saturation +3%</li>
+                        <li>Runs fully in your browser</li>
+                      </ul>
+                    </>
+                  )}
                 </div>
 
                 {appliedUpscale === upscaleScale && (
@@ -1186,14 +1224,24 @@ export default function ImageEditorPage() {
                   </div>
                 )}
                 <button
-                  style={{ ...s.primaryBtn, ...((processing || appliedUpscale === upscaleScale) ? s.btnOff : {}), background: upscaleScale === "4x" ? "linear-gradient(135deg,#7C3AED,#EC4899)" : "linear-gradient(135deg,#6366F1,#8B5CF6)" }}
+                  style={{
+                    ...s.primaryBtn,
+                    ...((processing || appliedUpscale === upscaleScale) ? s.btnOff : {}),
+                    background: upscaleMode === "pro"
+                      ? "linear-gradient(135deg,#7C3AED,#EC4899)"
+                      : upscaleScale === "4x"
+                      ? "linear-gradient(135deg,#6366F1,#7C3AED)"
+                      : "linear-gradient(135deg,#6366F1,#8B5CF6)",
+                  }}
                   disabled={processing || appliedUpscale === upscaleScale}
                   onClick={handleUpscale}
                 >
                   {processing
-                    ? <span style={s.btnRow}><span style={s.spin} />Upscaling {upscaleScale}…</span>
+                    ? <span style={s.btnRow}><span style={s.spin} />{upscaleMode === "pro" ? "AI Processing…" : `Upscaling ${upscaleScale}…`}</span>
                     : appliedUpscale === upscaleScale
                     ? `✓ Already ${upscaleScale}`
+                    : upscaleMode === "pro"
+                    ? `✨ Pro Upscale ${upscaleScale}`
                     : `🔍 Upscale ${upscaleScale}`}
                 </button>
               </div>
