@@ -1,6 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+const MODEL = "gemini-1.5-flash";
 
 function dataUrlToPart(dataUrl: string) {
   const match = dataUrl.match(/^data:([^;]+);base64,(.+)$/);
@@ -14,7 +15,7 @@ function base64ToDataUrl(base64: string, mimeType = "image/png"): string {
 
 // AI image editing — returns edited image as data URL
 export async function geminiEditImage(dataUrl: string, prompt: string): Promise<string> {
-  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
+  const model = genAI.getGenerativeModel({ model: MODEL });
 
   const result = await model.generateContent([
     dataUrlToPart(dataUrl),
@@ -33,7 +34,7 @@ export async function geminiEditImage(dataUrl: string, prompt: string): Promise<
 
 // AI background generation — replace background with prompt
 export async function geminiGenerateBg(dataUrl: string, prompt: string): Promise<string> {
-  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
+  const model = genAI.getGenerativeModel({ model: MODEL });
 
   const result = await model.generateContent([
     dataUrlToPart(dataUrl),
@@ -52,7 +53,7 @@ export async function geminiGenerateBg(dataUrl: string, prompt: string): Promise
 
 // AI background removal — returns image with transparent/white background
 export async function geminiRemoveBg(dataUrl: string): Promise<string> {
-  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
+  const model = genAI.getGenerativeModel({ model: MODEL });
 
   const result = await model.generateContent([
     dataUrlToPart(dataUrl),
@@ -71,7 +72,7 @@ export async function geminiRemoveBg(dataUrl: string): Promise<string> {
 
 // Pro AI upscale — enhance and upscale using Gemini
 export async function geminiUpscale(dataUrl: string, scale: "2x" | "4x"): Promise<string> {
-  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
+  const model = genAI.getGenerativeModel({ model: MODEL });
 
   const result = await model.generateContent([
     dataUrlToPart(dataUrl),
