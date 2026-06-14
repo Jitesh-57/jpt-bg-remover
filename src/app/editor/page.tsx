@@ -903,9 +903,10 @@ export default function ImageEditorPage() {
                 <div style={{ width: "100%", maxWidth: 860 }}>
                   {/* Zoom controls */}
                   <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8, justifyContent: "flex-end" }}>
+                    {zoom > 1 && <span style={{ fontSize: 11, color: "#6366F1", fontWeight: 600 }}>Drag to pan · slider hidden while zoomed</span>}
                     <span style={{ fontSize: 11, color: "#888", fontWeight: 600 }}>🔍 {Math.round(zoom * 100)}%</span>
-                    <button onClick={() => { setZoom(z => Math.min(4, +(z + 0.25).toFixed(2))); }} style={{ padding: "4px 10px", borderRadius: 6, border: "1px solid #E0E0EE", background: "#fff", cursor: "pointer", fontSize: 14, fontWeight: 700, color: "#555" }}>+</button>
-                    <button onClick={() => { setZoom(z => Math.max(1, +(z - 0.25).toFixed(2))); if (zoom <= 1.25) { setPanX(0); setPanY(0); } }} style={{ padding: "4px 10px", borderRadius: 6, border: "1px solid #E0E0EE", background: "#fff", cursor: "pointer", fontSize: 14, fontWeight: 700, color: "#555" }}>−</button>
+                    <button onClick={() => setZoom(z => Math.min(4, +(z + 0.25).toFixed(2)))} style={{ padding: "4px 10px", borderRadius: 6, border: "1px solid #E0E0EE", background: "#fff", cursor: "pointer", fontSize: 14, fontWeight: 700, color: "#555" }}>+</button>
+                    <button onClick={() => { setZoom(z => { const nz = Math.max(1, +(z - 0.25).toFixed(2)); if (nz === 1) { setPanX(0); setPanY(0); } return nz; }); }} style={{ padding: "4px 10px", borderRadius: 6, border: "1px solid #E0E0EE", background: "#fff", cursor: "pointer", fontSize: 14, fontWeight: 700, color: "#555" }}>−</button>
                     {zoom > 1 && <button onClick={() => { setZoom(1); setPanX(0); setPanY(0); }} style={{ padding: "4px 10px", borderRadius: 6, border: "1px solid #E0E0EE", background: "#fff", cursor: "pointer", fontSize: 11, fontWeight: 600, color: "#6366F1" }}>Reset</button>}
                   </div>
                   <div
@@ -922,8 +923,8 @@ export default function ImageEditorPage() {
                     }}
                     onWheel={(e) => {
                       e.preventDefault();
-                      const delta = e.deltaY > 0 ? -0.15 : 0.15;
-                      setZoom(z => Math.max(1, Math.min(4, +(z + delta).toFixed(2))));
+                      const delta = e.deltaY > 0 ? -0.25 : 0.25;
+                      setZoom(z => { const nz = Math.max(1, Math.min(4, +(z + delta).toFixed(2))); if (nz === 1) { setPanX(0); setPanY(0); } return nz; });
                     }}
                     onMouseDown={(e) => {
                       if (zoom > 1) { setIsPanning(true); panStart.current = { x: e.clientX, y: e.clientY, px: panX, py: panY }; }
@@ -932,85 +933,54 @@ export default function ImageEditorPage() {
                       if (zoom > 1 && isPanning && panStart.current) {
                         setPanX(panStart.current.px + e.clientX - panStart.current.x);
                         setPanY(panStart.current.py + e.clientY - panStart.current.y);
-                      } else { onSliderMouseMove(e); }
+                      } else if (zoom === 1) {
+                        onSliderMouseMove(e);
+                      }
                     }}
                     onMouseUp={() => { setIsPanning(false); panStart.current = null; onSliderEnd(); }}
                     onMouseLeave={() => { setIsPanning(false); panStart.current = null; onSliderEnd(); }}
-                    onTouchMove={onSliderTouchMove}
+                    onTouchMove={zoom === 1 ? onSliderTouchMove : undefined}
                     onTouchEnd={onSliderEnd}
                   >
-                    {/* Zoom/pan wrapper */}
-                    <div style={{ transform: `scale(${zoom}) translate(${panX / zoom}px, ${panY / zoom}px)`, transformOrigin: "center center", transition: isPanning ? "none" : "transform 0.15s ease" }}>
-                    {/* Result image (behind) */}
-                    <div style={{ position: "relative" }}>
-                      {working?.includes("image/png") && <div style={s.checker} />}
-                      <img
-                        src={working}
-                        alt="result"
-                        style={{ display: "block", maxWidth: "100%", maxHeight: "65vh", width: "100%", objectFit: "contain", position: "relative", zIndex: 1, filter: activeTool === "adjust" && !processing ? adjustFilter : undefined }}
-                      />
-                    </div>
-
-                    {/* Original image (clipped over result — left portion) */}
-                    <div
-                      style={{
-                        position: "absolute",
-                        inset: 0,
-                        overflow: "hidden",
-                        clipPath: `polygon(0 0, ${sliderPos}% 0, ${sliderPos}% 100%, 0 100%)`,
-                        zIndex: 2,
-                      }}
-                    >
-                      <img
-                        src={original?.dataUrl}
-                        alt="original"
-                        style={{ display: "block", maxWidth: "100%", maxHeight: "65vh", width: "100%", objectFit: "contain" }}
-                      />
-                    </div>
-
-                    {/* Divider line + handle */}
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: 0, bottom: 0,
-                        left: `${sliderPos}%`,
-                        width: 3,
-                        background: "#fff",
-                        boxShadow: "0 0 8px rgba(0,0,0,0.4)",
-                        transform: "translateX(-50%)",
-                        cursor: "ew-resize",
-                        zIndex: 3,
-                        pointerEvents: "auto",
-                      }}
-                      onMouseDown={(e) => { e.preventDefault(); setIsDragging(true); }}
-                      onTouchStart={(e) => { e.preventDefault(); setIsDragging(true); }}
-                    >
-                      <div style={{
-                        position: "absolute",
-                        top: "50%", left: "50%",
-                        transform: "translate(-50%, -50%)",
-                        width: 44, height: 44,
-                        borderRadius: "50%",
-                        background: "#fff",
-                        boxShadow: "0 2px 12px rgba(0,0,0,0.3)",
-                        display: "flex", alignItems: "center", justifyContent: "center",
-                        fontSize: 18, color: "#555",
-                      }}>
-                        ⟺
+                    {/* When zoomed: show result only with pan */}
+                    {zoom > 1 ? (
+                      <div style={{ transform: `scale(${zoom}) translate(${panX / zoom}px, ${panY / zoom}px)`, transformOrigin: "center center" }}>
+                        <img src={working} alt="result" style={{ display: "block", maxWidth: "100%", maxHeight: "65vh", width: "100%", objectFit: "contain" }} />
                       </div>
-                    </div>
+                    ) : (
+                      <>
+                        {/* Result image (behind) */}
+                        <div style={{ position: "relative" }}>
+                          {working?.includes("image/png") && <div style={s.checker} />}
+                          <img src={working} alt="result" style={{ display: "block", maxWidth: "100%", maxHeight: "65vh", width: "100%", objectFit: "contain", position: "relative", zIndex: 1, filter: activeTool === "adjust" && !processing ? adjustFilter : undefined }} />
+                        </div>
+                        {/* Original image (clipped over result) */}
+                        <div style={{ position: "absolute", inset: 0, overflow: "hidden", clipPath: `polygon(0 0, ${sliderPos}% 0, ${sliderPos}% 100%, 0 100%)`, zIndex: 2 }}>
+                          <img src={original?.dataUrl} alt="original" style={{ display: "block", maxWidth: "100%", maxHeight: "65vh", width: "100%", objectFit: "contain" }} />
+                        </div>
+                        {/* Divider + handle */}
+                        <div
+                          style={{ position: "absolute", top: 0, bottom: 0, left: `${sliderPos}%`, width: 3, background: "#fff", boxShadow: "0 0 8px rgba(0,0,0,0.4)", transform: "translateX(-50%)", cursor: "ew-resize", zIndex: 3 }}
+                          onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); setIsDragging(true); }}
+                          onTouchStart={(e) => { e.preventDefault(); setIsDragging(true); }}
+                        >
+                          <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 44, height: 44, borderRadius: "50%", background: "#fff", boxShadow: "0 2px 12px rgba(0,0,0,0.3)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, color: "#555" }}>⟺</div>
+                        </div>
+                      </>
+                    )}
 
-                    </div>{/* end zoom/pan wrapper */}
-
-                    {/* Labels (outside zoom wrapper so they stay fixed) */}
+                    {/* Labels */}
                     <div style={{ position: "absolute", top: 12, left: 12, zIndex: 4, background: "rgba(0,0,0,0.55)", backdropFilter: "blur(4px)", color: "#fff", padding: "4px 10px", borderRadius: 6, pointerEvents: "none" }}>
-                      <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 0.3 }}>Original</div>
-                      {original && <div style={{ fontSize: 10, opacity: 0.75, marginTop: 1 }}>{original.w} × {original.h}px</div>}
+                      <div style={{ fontSize: 11, fontWeight: 700 }}>{zoom > 1 ? "✨ Result" : "Original"}</div>
+                      {original && zoom === 1 && <div style={{ fontSize: 10, opacity: 0.75, marginTop: 1 }}>{original.w} × {original.h}px</div>}
+                      {zoom > 1 && workingSize && <div style={{ fontSize: 10, opacity: 0.85, marginTop: 1 }}>{workingSize.w} × {workingSize.h}px</div>}
                     </div>
-                    <div style={{ position: "absolute", top: 12, right: 12, zIndex: 4, background: "rgba(99,102,241,0.85)", backdropFilter: "blur(4px)", color: "#fff", padding: "4px 10px", borderRadius: 6, pointerEvents: "none" }}>
-                      <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 0.3 }}>✨ Result</div>
-                      {workingSize && <div style={{ fontSize: 10, opacity: 0.85, marginTop: 1 }}>{workingSize.w} × {workingSize.h}px</div>}
-                    </div>
+                    {zoom === 1 && (
+                      <div style={{ position: "absolute", top: 12, right: 12, zIndex: 4, background: "rgba(99,102,241,0.85)", backdropFilter: "blur(4px)", color: "#fff", padding: "4px 10px", borderRadius: 6, pointerEvents: "none" }}>
+                        <div style={{ fontSize: 11, fontWeight: 700 }}>✨ Result</div>
+                        {workingSize && <div style={{ fontSize: 10, opacity: 0.85, marginTop: 1 }}>{workingSize.w} × {workingSize.h}px</div>}
+                      </div>
+                    )}
 
                     {/* Processing overlay */}
                     {processing && (

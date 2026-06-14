@@ -1,7 +1,7 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
-const MODEL = "gemini-1.5-flash";
+// Gemini image generation via direct REST (v1beta supports responseModalities)
+const API_KEY = () => process.env.GEMINI_API_KEY || "";
+const MODEL = "gemini-2.0-flash-preview-image-generation";
+const ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
 
 function dataUrlToPart(dataUrl: string) {
   const match = dataUrl.match(/^data:([^;]+);base64,(.+)$/);
@@ -9,82 +9,58 @@ function dataUrlToPart(dataUrl: string) {
   return { inlineData: { mimeType: match[1], data: match[2] } };
 }
 
-function base64ToDataUrl(base64: string, mimeType = "image/png"): string {
-  return `data:${mimeType};base64,${base64}`;
+async function callGemini(imagePart: object, text: string): Promise<string> {
+  const res = await fetch(`${ENDPOINT}?key=${API_KEY()}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      contents: [{ parts: [imagePart, { text }] }],
+      generationConfig: { responseModalities: ["TEXT", "IMAGE"] },
+    }),
+  });
+
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Gemini API error: ${err}`);
+  }
+
+  const json = await res.json() as {
+    candidates?: { content?: { parts?: { inlineData?: { data: string; mimeType: string } }[] } }[]
+  };
+
+  const parts = json.candidates?.[0]?.content?.parts || [];
+  for (const part of parts) {
+    if (part.inlineData?.data) {
+      return `data:${part.inlineData.mimeType || "image/png"};base64,${part.inlineData.data}`;
+    }
+  }
+  throw new Error("Gemini did not return an image. Check your API key and billing.");
 }
 
-// AI image editing — returns edited image as data URL
 export async function geminiEditImage(dataUrl: string, prompt: string): Promise<string> {
-  const model = genAI.getGenerativeModel({ model: MODEL });
-
-  const result = await model.generateContent([
+  return callGemini(
     dataUrlToPart(dataUrl),
-    { text: `You are a professional photo editor. Edit this image based on the following instruction. Return only the edited image, no text: ${prompt}` },
-  ]);
-
-  const response = result.response;
-  const parts = response.candidates?.[0]?.content?.parts || [];
-  for (const part of parts) {
-    if (part.inlineData?.data) {
-      return base64ToDataUrl(part.inlineData.data, part.inlineData.mimeType || "image/png");
-    }
-  }
-  throw new Error("Gemini did not return an image");
+    `You are a professional photo editor. Edit this image: ${prompt}. Return only the edited image.`
+  );
 }
 
-// AI background generation — replace background with prompt
 export async function geminiGenerateBg(dataUrl: string, prompt: string): Promise<string> {
-  const model = genAI.getGenerativeModel({ model: MODEL });
-
-  const result = await model.generateContent([
+  return callGemini(
     dataUrlToPart(dataUrl),
-    { text: `You are a professional photo editor. Replace the background of this image with: ${prompt}. Keep the subject (person/object) exactly as they are — same pose, appearance, and position. Only change the background behind them. Return only the edited image.` },
-  ]);
-
-  const response = result.response;
-  const parts = response.candidates?.[0]?.content?.parts || [];
-  for (const part of parts) {
-    if (part.inlineData?.data) {
-      return base64ToDataUrl(part.inlineData.data, part.inlineData.mimeType || "image/png");
-    }
-  }
-  throw new Error("Gemini did not return an image");
+    `Replace the background of this image with: ${prompt}. Keep the subject exactly as-is — same pose, clothing, appearance. Only change the background. Return only the edited image.`
+  );
 }
 
-// AI background removal — returns image with transparent/white background
 export async function geminiRemoveBg(dataUrl: string): Promise<string> {
-  const model = genAI.getGenerativeModel({ model: MODEL });
-
-  const result = await model.generateContent([
+  return callGemini(
     dataUrlToPart(dataUrl),
-    { text: "Remove the background from this image completely. Make the background fully transparent (PNG with alpha). Keep the subject perfectly intact with clean edges. Return only the resulting image." },
-  ]);
-
-  const response = result.response;
-  const parts = response.candidates?.[0]?.content?.parts || [];
-  for (const part of parts) {
-    if (part.inlineData?.data) {
-      return base64ToDataUrl(part.inlineData.data, part.inlineData.mimeType || "image/png");
-    }
-  }
-  throw new Error("Gemini did not return an image");
+    "Remove the background from this image completely. Make it transparent. Keep the subject with clean edges. Return only the resulting PNG image."
+  );
 }
 
-// Pro AI upscale — enhance and upscale using Gemini
 export async function geminiUpscale(dataUrl: string, scale: "2x" | "4x"): Promise<string> {
-  const model = genAI.getGenerativeModel({ model: MODEL });
-
-  const result = await model.generateContent([
+  return callGemini(
     dataUrlToPart(dataUrl),
-    { text: `Enhance this image to ${scale} resolution. Increase sharpness, detail, and clarity. Improve fine details like hair strands, skin texture, fabric texture. Remove noise and artifacts. Make colors more vivid and contrast punchy. Return only the enhanced high-resolution image.` },
-  ]);
-
-  const response = result.response;
-  const parts = response.candidates?.[0]?.content?.parts || [];
-  for (const part of parts) {
-    if (part.inlineData?.data) {
-      return base64ToDataUrl(part.inlineData.data, part.inlineData.mimeType || "image/png");
-    }
-  }
-  throw new Error("Gemini did not return an image");
+    `Enhance this image to ${scale} resolution. Increase sharpness, detail, and clarity. Improve hair strands, skin texture, fabric detail. Remove noise and artifacts. Make colors vivid with punchy contrast. Return only the enhanced image.`
+  );
 }
