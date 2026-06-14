@@ -224,6 +224,11 @@ export default function ImageEditorPage() {
   const [isDragging, setIsDragging] = useState(false);
   const sliderContainerRef = useRef<HTMLDivElement>(null);
   const [workingSize, setWorkingSize] = useState<{ w: number; h: number } | null>(null);
+  const [zoom, setZoom] = useState(1);
+  const [panX, setPanX] = useState(0);
+  const [panY, setPanY] = useState(0);
+  const [isPanning, setIsPanning] = useState(false);
+  const panStart = useRef<{ x: number; y: number; px: number; py: number } | null>(null);
 
   // Generate BG sub-state
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
@@ -397,6 +402,7 @@ export default function ImageEditorPage() {
   useEffect(() => {
     if (working) {
       setSliderPos(50);
+      setZoom(1); setPanX(0); setPanY(0);
       const img = new Image();
       img.onload = () => setWorkingSize({ w: img.naturalWidth, h: img.naturalHeight });
       img.src = working;
@@ -895,6 +901,13 @@ export default function ImageEditorPage() {
               {/* Before/After Slider */}
               {working ? (
                 <div style={{ width: "100%", maxWidth: 860 }}>
+                  {/* Zoom controls */}
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8, justifyContent: "flex-end" }}>
+                    <span style={{ fontSize: 11, color: "#888", fontWeight: 600 }}>🔍 {Math.round(zoom * 100)}%</span>
+                    <button onClick={() => { setZoom(z => Math.min(4, +(z + 0.25).toFixed(2))); }} style={{ padding: "4px 10px", borderRadius: 6, border: "1px solid #E0E0EE", background: "#fff", cursor: "pointer", fontSize: 14, fontWeight: 700, color: "#555" }}>+</button>
+                    <button onClick={() => { setZoom(z => Math.max(1, +(z - 0.25).toFixed(2))); if (zoom <= 1.25) { setPanX(0); setPanY(0); } }} style={{ padding: "4px 10px", borderRadius: 6, border: "1px solid #E0E0EE", background: "#fff", cursor: "pointer", fontSize: 14, fontWeight: 700, color: "#555" }}>−</button>
+                    {zoom > 1 && <button onClick={() => { setZoom(1); setPanX(0); setPanY(0); }} style={{ padding: "4px 10px", borderRadius: 6, border: "1px solid #E0E0EE", background: "#fff", cursor: "pointer", fontSize: 11, fontWeight: 600, color: "#6366F1" }}>Reset</button>}
+                  </div>
                   <div
                     ref={sliderContainerRef}
                     style={{
@@ -904,15 +917,30 @@ export default function ImageEditorPage() {
                       overflow: "hidden",
                       boxShadow: "0 8px 40px rgba(0,0,0,0.15)",
                       background: "#eee",
-                      cursor: isDragging ? "ew-resize" : "default",
+                      cursor: zoom > 1 ? (isPanning ? "grabbing" : "grab") : isDragging ? "ew-resize" : "default",
                       userSelect: "none",
                     }}
-                    onMouseMove={onSliderMouseMove}
-                    onMouseUp={onSliderEnd}
-                    onMouseLeave={onSliderEnd}
+                    onWheel={(e) => {
+                      e.preventDefault();
+                      const delta = e.deltaY > 0 ? -0.15 : 0.15;
+                      setZoom(z => Math.max(1, Math.min(4, +(z + delta).toFixed(2))));
+                    }}
+                    onMouseDown={(e) => {
+                      if (zoom > 1) { setIsPanning(true); panStart.current = { x: e.clientX, y: e.clientY, px: panX, py: panY }; }
+                    }}
+                    onMouseMove={(e) => {
+                      if (zoom > 1 && isPanning && panStart.current) {
+                        setPanX(panStart.current.px + e.clientX - panStart.current.x);
+                        setPanY(panStart.current.py + e.clientY - panStart.current.y);
+                      } else { onSliderMouseMove(e); }
+                    }}
+                    onMouseUp={() => { setIsPanning(false); panStart.current = null; onSliderEnd(); }}
+                    onMouseLeave={() => { setIsPanning(false); panStart.current = null; onSliderEnd(); }}
                     onTouchMove={onSliderTouchMove}
                     onTouchEnd={onSliderEnd}
                   >
+                    {/* Zoom/pan wrapper */}
+                    <div style={{ transform: `scale(${zoom}) translate(${panX / zoom}px, ${panY / zoom}px)`, transformOrigin: "center center", transition: isPanning ? "none" : "transform 0.15s ease" }}>
                     {/* Result image (behind) */}
                     <div style={{ position: "relative" }}>
                       {working?.includes("image/png") && <div style={s.checker} />}
@@ -972,7 +1000,9 @@ export default function ImageEditorPage() {
                       </div>
                     </div>
 
-                    {/* Labels */}
+                    </div>{/* end zoom/pan wrapper */}
+
+                    {/* Labels (outside zoom wrapper so they stay fixed) */}
                     <div style={{ position: "absolute", top: 12, left: 12, zIndex: 4, background: "rgba(0,0,0,0.55)", backdropFilter: "blur(4px)", color: "#fff", padding: "4px 10px", borderRadius: 6, pointerEvents: "none" }}>
                       <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 0.3 }}>Original</div>
                       {original && <div style={{ fontSize: 10, opacity: 0.75, marginTop: 1 }}>{original.w} × {original.h}px</div>}
@@ -1194,29 +1224,6 @@ export default function ImageEditorPage() {
                   </div>
                 </div>
 
-                <div style={s.infoCard}>
-                  {upscaleMode === "pro" ? (
-                    <>
-                      <div style={{ fontWeight: 700, marginBottom: 4 }}>✨ Gemini Pro Upscale</div>
-                      <ul style={{ margin: 0, paddingLeft: 16, fontSize: 12, color: "#555", lineHeight: 1.8 }}>
-                        <li>AI-powered — real detail enhancement</li>
-                        <li>Hair strands, skin texture, fabric</li>
-                        <li>Noise removal &amp; artifact cleanup</li>
-                        <li>Vivid colors &amp; punchy contrast</li>
-                      </ul>
-                    </>
-                  ) : (
-                    <>
-                      <div style={{ fontWeight: 700, marginBottom: 4 }}>⚡ Normal Upscale</div>
-                      <ul style={{ margin: 0, paddingLeft: 16, fontSize: 12, color: "#555", lineHeight: 1.8 }}>
-                        <li>Canvas-based, instant result</li>
-                        <li>Sharpens edges &amp; reduces blur</li>
-                        <li>Contrast +3%, saturation +3%</li>
-                        <li>Runs fully in your browser</li>
-                      </ul>
-                    </>
-                  )}
-                </div>
 
                 {appliedUpscale === upscaleScale && (
                   <div style={{ background: "#FFFBEB", border: "1px solid #FDE68A", borderRadius: 8, padding: "7px 12px", marginBottom: 10, fontSize: 12, color: "#92400E", display: "flex", alignItems: "center", gap: 6 }}>
