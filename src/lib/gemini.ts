@@ -1,6 +1,6 @@
 // Gemini image generation via direct REST (v1beta supports responseModalities)
 const API_KEY = () => process.env.GEMINI_API_KEY || "";
-const MODEL = "gemini-2.0-flash-preview-image-generation";
+const MODEL = "gemini-2.5-flash-image";
 const ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
 
 function dataUrlToPart(dataUrl: string) {
