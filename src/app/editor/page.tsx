@@ -769,6 +769,8 @@ export default function ImageEditorPage() {
 
   return (
     <div style={s.root}>
+      {/* Always-mounted file input so Upload New Image works after an image is loaded */}
+      <input ref={fileInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={(e) => { if (e.target.files?.[0]) { handleFile(e.target.files[0]); e.target.value = ""; } }} />
 
       {/* ── Page Header ──────────────────────────────────────────────────── */}
       <div style={s.pageHeader}>
@@ -876,7 +878,6 @@ export default function ImageEditorPage() {
               onDrop={(e) => { e.preventDefault(); setDragOver(false); const f = e.dataTransfer.files[0]; if (f) handleFile(f); }}
               onClick={() => fileInputRef.current?.click()}
             >
-              <input ref={fileInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} />
               <div style={{ fontSize: 60, marginBottom: 16 }}>🖼</div>
               <p style={s.uploadTitle}>Drop an image or <span style={{ color: "#6366F1", fontWeight: 700 }}>click to browse</span></p>
               <p style={s.uploadHint}>JPG · PNG · WEBP — choose a tool from the left</p>
