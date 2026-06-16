@@ -43,7 +43,7 @@ export default async function UpscalePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <LandingPage config={config} toolHref="/editor?tool=upscale" />
+      <LandingPage config={config} toolHref="/editor?tool=upscale" pageId="upscale" />
     </>
   )
 }

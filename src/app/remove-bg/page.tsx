@@ -43,7 +43,7 @@ export default async function RemoveBgPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <LandingPage config={config} toolHref="/editor?tool=remove-bg" />
+      <LandingPage config={config} toolHref="/editor?tool=remove-bg" pageId="remove-bg" />
     </>
   )
 }

@@ -43,7 +43,7 @@ export default async function AIHeadshotPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <LandingPage config={config} toolHref="/headshot" />
+      <LandingPage config={config} toolHref="/headshot" pageId="headshot" />
     </>
   )
 }

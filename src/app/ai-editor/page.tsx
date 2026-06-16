@@ -43,7 +43,7 @@ export default async function AIEditorPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <LandingPage config={config} toolHref="/editor" />
+      <LandingPage config={config} toolHref="/editor" pageId="ai-editor" />
     </>
   )
 }
