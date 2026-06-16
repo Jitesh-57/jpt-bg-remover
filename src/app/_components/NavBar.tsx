@@ -106,6 +106,7 @@ export default function NavBar() {
           <span className="jpt-section-label">AI Tools</span>
           <div className="jpt-nav-links">
             <a href="/editor" className="jpt-nav-link"><span>🖼️</span> Image Editor</a>
+            <a href="/batch-editor" className="jpt-nav-link"><span>⚡</span> Batch Editor</a>
             <a href="/headshot" className="jpt-nav-link"><span>🎯</span> AI Headshot</a>
             <a href="/generations" className="jpt-nav-link"><span>✦</span> My Generations</a>
             <button onClick={() => setShowPricing(true)} className="jpt-nav-link" style={{ background: "none", border: "none", cursor: "pointer" }}><span>💳</span> Pricing</button>
