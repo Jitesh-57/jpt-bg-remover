@@ -1013,37 +1013,14 @@ export default function ImageEditorPage() {
                 </div>
               )}
 
-              {/* Prompt + Upload Another Image */}
-              <div style={{ background: "linear-gradient(135deg, #F9FAFB 0%, #F3F4F8 100%)", borderTop: "2px solid #6366F1", borderBottom: "2px solid #6366F1", padding: "24px", marginTop: 24, marginBottom: 16, maxWidth: "100%", borderRadius: 12, boxShadow: "0 2px 8px rgba(99, 102, 241, 0.1)" }}>
-                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap" as const, gap: 8 }}>
-                    <label style={{ fontSize: 14, fontWeight: 700, color: "#6366F1" }}>✨ Describe Your Edits:</label>
-                    <button
-                      onClick={() => fileInputRef.current?.click()}
-                      style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", background: "#fff", border: "1.5px solid #6366F1", borderRadius: 8, color: "#6366F1", fontWeight: 700, fontSize: 13, cursor: "pointer" }}
-                    >
-                      🖼 Upload New Image
-                    </button>
-                  </div>
-                  <div style={{ display: "flex", gap: 12, width: "100%" }}>
-                    <input
-                      type="text"
-                      value={prompt}
-                      onChange={(e) => setPrompt(e.target.value)}
-                      onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); if (requireSignIn()) return; handleAiEdit(); } }}
-                      placeholder="✨ 'Make the background blurry', 'Change to black and white', 'Add dramatic lighting', 'Make it cinematic'"
-                      style={{ ...s.promptInput, flex: 1, padding: "14px 16px", fontSize: 15, minHeight: 50 }}
-                      disabled={processing || !hasImage}
-                    />
-                    <button
-                      style={{ ...s.sendBtn, minWidth: 140, padding: "14px 24px", fontSize: 15, fontWeight: 700, ...(processing ? { opacity: 0.7 } : {}) }}
-                      disabled={processing || !hasImage}
-                      onClick={() => { if (requireSignIn()) return; handleAiEdit(); }}
-                    >
-                      {processing && activeTool === "ai-edit" ? <span style={s.btnRow}><span style={s.spin} />Generating</span> : "✨ Generate"}
-                    </button>
-                  </div>
-                </div>
+              {/* Upload New Image button */}
+              <div style={{ display: "flex", justifyContent: "center", marginTop: 20, marginBottom: 8 }}>
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  style={{ display: "flex", alignItems: "center", gap: 8, padding: "11px 24px", background: "#fff", border: "2px solid #6366F1", borderRadius: 10, color: "#6366F1", fontWeight: 700, fontSize: 14, cursor: "pointer" }}
+                >
+                  🖼 Upload New Image
+                </button>
               </div>
 
             </div>
