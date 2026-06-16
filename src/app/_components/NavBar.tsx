@@ -154,7 +154,13 @@ export default function NavBar() {
 
       {showPricing && (
         <Suspense fallback={null}>
-          <PricingModal onClose={() => setShowPricing(false)} />
+          <PricingModal
+            onClose={() => setShowPricing(false)}
+            onPurchaseSuccess={(_, newCredits) => {
+              setUser(u => u ? { ...u, credits: newCredits } : u);
+              setShowPricing(false);
+            }}
+          />
         </Suspense>
       )}
 

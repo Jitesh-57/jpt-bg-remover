@@ -1,34 +1,119 @@
 "use client";
 
+import { useState } from "react";
+
 interface PricingModalProps {
   onClose: () => void;
+  onPurchaseSuccess?: (plan: string, newCredits: number) => void;
 }
 
 const plans = [
-  {
-    name: "Starter",
-    price: "$5",
-    credits: 50,
-    transformations: "~25",
-    popular: false,
-  },
-  {
-    name: "Creator",
-    price: "$10",
-    credits: 100,
-    transformations: "~50",
-    popular: false,
-  },
-  {
-    name: "Pro",
-    price: "$25",
-    credits: 300,
-    transformations: "~150",
-    popular: true,
-  },
+  { name: "Starter", planKey: "starter", price: "₹499", credits: 50,  transformations: "~25", popular: false },
+  { name: "Creator", planKey: "creator", price: "₹999", credits: 100, transformations: "~50", popular: false },
+  { name: "Pro",     planKey: "pro",     price: "₹2499", credits: 300, transformations: "~150", popular: true  },
 ];
 
-export default function PricingModal({ onClose }: PricingModalProps) {
+declare global {
+  interface Window {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Razorpay: new (opts: Record<string, unknown>) => { open(): void };
+  }
+}
+
+export default function PricingModal({ onClose, onPurchaseSuccess }: PricingModalProps) {
+  const [loading, setLoading] = useState<string | null>(null);
+  const [statusMsg, setStatusMsg] = useState<{ text: string; ok: boolean } | null>(null);
+
+  async function handleBuy(planKey: string) {
+    setLoading(planKey);
+    setStatusMsg(null);
+
+    try {
+      // Load Razorpay checkout.js if not already loaded
+      if (!window.Razorpay) {
+        await new Promise<void>((resolve, reject) => {
+          const s = document.createElement("script");
+          s.src = "https://checkout.razorpay.com/v1/checkout.js";
+          s.onload = () => resolve();
+          s.onerror = () => reject(new Error("Failed to load Razorpay script"));
+          document.head.appendChild(s);
+        });
+      }
+
+      // Step 1: Create order
+      const orderRes = await fetch("/api/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan: planKey }),
+      });
+      const orderData = await orderRes.json() as {
+        order_id?: string; amount?: number; currency?: string;
+        credits?: number; error?: string;
+      };
+
+      if (!orderRes.ok || !orderData.order_id) {
+        setStatusMsg({ text: orderData.error || "Failed to create order", ok: false });
+        setLoading(null);
+        return;
+      }
+
+      // Step 2: Open Razorpay modal
+      const rzp = new window.Razorpay({
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        order_id: orderData.order_id,
+        amount: orderData.amount,
+        currency: orderData.currency || "INR",
+        name: "JPT AI",
+        description: `${planKey.charAt(0).toUpperCase() + planKey.slice(1)} Plan — ${orderData.credits} credits`,
+        theme: { color: "#6366F1" },
+        modal: {
+          ondismiss() {
+            setStatusMsg({ text: "Payment cancelled", ok: false });
+            setLoading(null);
+          },
+        },
+        handler: async (response: {
+          razorpay_payment_id: string;
+          razorpay_order_id: string;
+          razorpay_signature: string;
+        }) => {
+          // Step 3: Verify signature + assign credits
+          try {
+            const verifyRes = await fetch("/api/verify-payment", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_signature: response.razorpay_signature,
+                plan: planKey,
+              }),
+            });
+            const verifyData = await verifyRes.json() as {
+              success?: boolean; credits?: number; error?: string;
+            };
+
+            if (verifyData.success) {
+              setStatusMsg({ text: `🎉 Payment successful! ${verifyData.credits} credits added.`, ok: true });
+              onPurchaseSuccess?.(planKey, verifyData.credits!);
+            } else {
+              setStatusMsg({ text: verifyData.error || "Verification failed", ok: false });
+            }
+          } catch {
+            setStatusMsg({ text: "Verification request failed", ok: false });
+          }
+          setLoading(null);
+        },
+        prefill: {},
+      });
+
+      rzp.open();
+    } catch (e) {
+      setStatusMsg({ text: String(e), ok: false });
+      setLoading(null);
+    }
+  }
+
   return (
     <div
       onClick={onClose}
@@ -66,6 +151,21 @@ export default function PricingModal({ onClose }: PricingModalProps) {
             Pay once, use anytime. No subscriptions.
           </p>
         </div>
+
+        {statusMsg && (
+          <div style={{
+            marginBottom: 20,
+            padding: "12px 16px",
+            borderRadius: 10,
+            background: statusMsg.ok ? "#ECFDF5" : "#FEF2F2",
+            color: statusMsg.ok ? "#065F46" : "#991B1B",
+            fontSize: 14,
+            fontWeight: 600,
+            textAlign: "center",
+          }}>
+            {statusMsg.text}
+          </div>
+        )}
 
         <div style={{ display: "flex", gap: 16, flexWrap: "wrap", justifyContent: "center", marginBottom: 32 }}>
           {plans.map(plan => (
@@ -127,25 +227,31 @@ export default function PricingModal({ onClose }: PricingModalProps) {
                 ))}
               </ul>
 
-              <a
-                href="/"
+              <button
+                onClick={() => handleBuy(plan.planKey)}
+                disabled={loading !== null}
                 style={{
                   display: "block",
+                  width: "100%",
                   textAlign: "center",
                   padding: "12px 20px",
-                  background: plan.popular ? "#fff" : "#6366F1",
+                  background: loading === plan.planKey
+                    ? "#9CA3AF"
+                    : plan.popular ? "#fff" : "#6366F1",
                   color: plan.popular ? "#6366F1" : "#fff",
                   borderRadius: 8,
                   fontWeight: 800,
                   fontSize: 14,
-                  textDecoration: "none",
+                  border: "none",
+                  cursor: loading !== null ? "not-allowed" : "pointer",
                   boxShadow: plan.popular
                     ? "0 4px 12px rgba(255,255,255,0.25)"
                     : "0 4px 12px rgba(99,102,241,0.25)",
+                  transition: "opacity 0.15s",
                 }}
               >
-                Get Started →
-              </a>
+                {loading === plan.planKey ? "Processing…" : "Buy Now →"}
+              </button>
             </div>
           ))}
         </div>
