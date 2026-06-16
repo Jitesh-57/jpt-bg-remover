@@ -1,3 +1,5 @@
+'use client'
+
 import FAQAccordion from './FAQAccordion'
 import { PageSEO } from '@/lib/page-config'
 
