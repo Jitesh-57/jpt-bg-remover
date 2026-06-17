@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkAuth, withCredits } from "@/lib/auth";
-import { geminiEditImage } from "@/lib/gemini";
+import { runPixelBinPredictionAsDataUrl } from "@/lib/pixelbin";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
   if (!dataUrl || !prompt) return NextResponse.json({ error: "dataUrl and prompt required" }, { status: 400 });
 
   try {
-    const resultDataUrl = await geminiEditImage(dataUrl, prompt);
+    const resultDataUrl = await runPixelBinPredictionAsDataUrl(dataUrl, "nanoBananaPro", "generate", { prompt });
     return withCredits({ dataUrl: resultDataUrl }, session!, "ai", req);
   } catch (e) {
     console.error("[ai-edit]", e);

@@ -171,14 +171,14 @@ export async function checkAuth(req: NextRequest): Promise<
 export async function withCredits(
   body: object,
   session: GoogleSession,
-  toolType: "free" | "basic" | "ai" = "ai",
+  toolType: "free" | "basic" | "standard" | "ai" = "ai",
   req?: NextRequest
 ): Promise<NextResponse> {
   if (toolType === "free") {
     return NextResponse.json({ ...body, credits: session.credits });
   }
 
-  const cost = toolType === "ai" ? CREDIT_COST : BASIC_UPSCALE_COST;
+  const cost = toolType === "ai" || toolType === "standard" ? CREDIT_COST : BASIC_UPSCALE_COST;
 
   if (toolType === "ai" && session.plan === "free") {
     return NextResponse.json({

@@ -599,52 +599,35 @@ export default function ImageEditorPage() {
     if (!src || processing) return;
     if (requireSignIn()) return;
 
-    // Deduct 2 credits before processing (browser does the work, credits still apply)
-    const prevCredits = user?.credits ?? 0;
-    setUser(u => u ? { ...u, credits: Math.max(0, u.credits - CREDIT_COST) } : u);
-    const deductRes = await fetch("/api/credits/deduct", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ tool: "remove-bg" }),
-    });
-    const deductData = await deductRes.json() as { credits?: number; error?: string; upgradeRequired?: boolean };
-    if (!deductRes.ok) {
-      setUser(u => u ? { ...u, credits: prevCredits } : u);
-      if (deductRes.status === 402) {
-        if (deductData.upgradeRequired) setShowUpgradeModal(true);
-        else setShowNoCreditsModal(true);
-      } else if (deductRes.status === 401) {
-        setShowSignInModal(true);
-      } else {
-        setError(deductData.error || "Failed to deduct credits.");
-      }
-      return;
-    }
-    if (typeof deductData.credits === "number") {
-      setUser(u => u ? { ...u, credits: deductData.credits! } : u);
-    }
-
-    setProcessing(true); setProcessingLabel("Removing background…"); setError(null); setRemoveBgProgress(5);
+    setProcessing(true); setProcessingLabel("Removing background…"); setError(null); setRemoveBgProgress(20);
     try {
-      const { removeBackground } = await import("@imgly/background-removal");
-      setRemoveBgProgress(10);
-      // Library calls .replace() internally — must pass a string URL, not a Blob
-      const resultBlob = await removeBackground(src, {
-        publicPath: "https://staticimgly.com/@imgly/background-removal-data/1.7.0/dist/",
+      const res = await fetch("/api/remove-bg", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ dataUrl: src }),
       });
       setRemoveBgProgress(90);
-      const resultUrl = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(resultBlob);
-      });
+      const data = await res.json() as { dataUrl?: string; credits?: number; error?: string; upgradeRequired?: boolean };
+      if (!res.ok) {
+        if (res.status === 402) {
+          if (data.upgradeRequired) setShowUpgradeModal(true);
+          else setShowNoCreditsModal(true);
+        } else if (res.status === 401) {
+          setShowSignInModal(true);
+        } else if (res.status === 403) {
+          setShowUpgradeModal(true);
+        } else {
+          setError(data.error || "Background removal failed");
+        }
+        return;
+      }
+      if (typeof data.credits === "number") setUser(u => u ? { ...u, credits: data.credits! } : u);
+      if (!data.dataUrl) { setError("No result returned"); return; }
       setEditHistory(prev => working ? [...prev, working] : prev);
-      setWorking(resultUrl);
+      setWorking(data.dataUrl);
       setRemoveBgProgress(100);
-      autoSaveToDrive(resultUrl, "remove-bg", "Background Removed");
+      autoSaveToDrive(data.dataUrl, "remove-bg", "Background Removed");
     } catch (e) {
-      setUser(u => u ? { ...u, credits: prevCredits } : u); // refund on error
       setError((e as Error).message || "Background removal failed");
     } finally {
       setProcessing(false); setProcessingLabel("");
