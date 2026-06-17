@@ -1181,7 +1181,7 @@ export default function ImageEditorPage() {
                 <div style={{ display: "flex", gap: 6, marginBottom: 14, background: "#F3F4F6", borderRadius: 10, padding: 4 }}>
                   {([
                     { key: "normal", label: "⚡ Normal", sub: "Free · 1 credit" },
-                    { key: "pro", label: "✨ Pro AI", sub: "2 credits · Gemini" },
+                    { key: "pro", label: "✨ Pro AI", sub: "2 credits · PixelBin" },
                   ] as const).map(m => (
                     <button
                       key={m.key}
