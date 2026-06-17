@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import NavBar from "./_components/NavBar";
+import Footer from "./_components/Footer";
 
 export const metadata: Metadata = {
   title: "JPT AI",
@@ -13,6 +14,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body style={{ margin: 0, padding: 0, fontFamily: "system-ui, -apple-system, sans-serif" }}>
         <NavBar />
         {children}
+        <Footer />
       </body>
     </html>
   );
