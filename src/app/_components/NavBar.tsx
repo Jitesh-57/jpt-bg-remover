@@ -1,22 +1,39 @@
 "use client";
 
-import { useEffect, useState, lazy, Suspense } from "react";
+import { useEffect, useState, lazy, Suspense, useRef } from "react";
 import { createSupabaseClient } from "@/lib/supabase";
 
 const PricingModal = lazy(() => import("./PricingModal"));
 
-interface User {
-  email: string;
-  name: string;
-  picture?: string;
-  credits: number;
-}
+interface User { email: string; name: string; picture?: string; credits: number; }
+
+const TOOLS = [
+  {
+    section: "AI Tools",
+    items: [
+      { icon: "🔍", label: "AI Upscale",     desc: "Enhance resolution up to 4×",           href: "/upscale" },
+      { icon: "🪄", label: "Remove BG",      desc: "Remove backgrounds instantly",          href: "/remove-bg" },
+      { icon: "🎯", label: "AI Headshot",    desc: "Professional headshots from any photo", href: "/ai-headshot" },
+      { icon: "✍️", label: "AI Editor",     desc: "Edit images with text prompts",         href: "/ai-editor" },
+    ],
+  },
+  {
+    section: "Tools",
+    items: [
+      { icon: "🖼️", label: "Image Editor",   desc: "Full-featured photo editor",           href: "/editor" },
+      { icon: "⚡",  label: "Batch Editor",   desc: "Process up to 100 images at once",     href: "/batch-editor" },
+      { icon: "✦",  label: "My Generations", desc: "View your saved edits",                href: "/generations" },
+    ],
+  },
+];
 
 export default function NavBar() {
   const [user, setUser] = useState<User | null>(null);
   const [showMenu, setShowMenu] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showPricing, setShowPricing] = useState(false);
+  const [showToolsDropdown, setShowToolsDropdown] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const [tab, setTab] = useState<"google" | "email">("google");
   const [mode, setMode] = useState<"login" | "signup">("login");
@@ -29,42 +46,35 @@ export default function NavBar() {
   useEffect(() => {
     const supabase = createSupabaseClient();
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        fetch("/api/auth/google/me")
-          .then(r => r.json())
-          .then((d: { authenticated: boolean; email?: string; name?: string; picture?: string; credits?: number }) => {
-            if (d.authenticated && d.email) {
-              setUser({ email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? 10 });
-            }
-          }).catch(() => null);
-      }
+      if (session?.user) fetchUser();
     });
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session?.user) {
-        fetch("/api/auth/google/me")
-          .then(r => r.json())
-          .then((d: { authenticated: boolean; email?: string; name?: string; picture?: string; credits?: number }) => {
-            if (d.authenticated && d.email) {
-              setUser({ email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? 10 });
-            }
-          }).catch(() => null);
-      } else if (event === "SIGNED_OUT") {
-        setUser(null);
-      }
+      if (session?.user) fetchUser();
+      else if (event === "SIGNED_OUT") setUser(null);
     });
-    return () => subscription.unsubscribe();
+    const onClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node))
+        setShowToolsDropdown(false);
+    };
+    document.addEventListener("mousedown", onClickOutside);
+    return () => { subscription.unsubscribe(); document.removeEventListener("mousedown", onClickOutside); };
   }, []);
 
-  const currentPath = typeof window !== "undefined" ? window.location.pathname : "/editor";
+  const fetchUser = () =>
+    fetch("/api/auth/google/me").then(r => r.json())
+      .then((d: { authenticated: boolean; email?: string; name?: string; picture?: string; credits?: number }) => {
+        if (d.authenticated && d.email) setUser({ email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? 10 });
+      }).catch(() => null);
 
-  const openModal = () => {
-    setShowModal(true); setTab("google"); setMode("login");
-    setEmail(""); setPassword(""); setName(""); setAuthError("");
-  };
+  const currentPath = typeof window !== "undefined" ? window.location.pathname : "/";
+  const openModal = () => { setShowModal(true); setTab("google"); setMode("login"); setEmail(""); setPassword(""); setName(""); setAuthError(""); };
   const closeModal = () => { setShowModal(false); setAuthError(""); };
-
-  const handleGoogleSignIn = () => {
-    window.location.href = `/api/auth/google?next=${encodeURIComponent(currentPath)}`;
+  const handleGoogleSignIn = () => { window.location.href = `/api/auth/google?next=${encodeURIComponent(currentPath)}`; };
+  const handleLogout = async () => {
+    try { await createSupabaseClient().auth.signOut(); } catch {}
+    await fetch("/api/auth/google/logout", { method: "POST" });
+    setUser(null); setShowMenu(false);
+    window.location.href = "/";
   };
 
   const handleEmailAuth = async () => {
@@ -72,11 +82,9 @@ export default function NavBar() {
     setAuthLoading(true); setAuthError("");
     try {
       const url = mode === "signup" ? "/api/auth/signup" : "/api/auth/login";
-      const body = mode === "signup"
-        ? { email: email.trim(), password, name: name.trim() }
-        : { email: email.trim(), password };
+      const body = mode === "signup" ? { email: email.trim(), password, name: name.trim() } : { email: email.trim(), password };
       const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
-      const data = await res.json() as { ok?: boolean; email?: string; name?: string; credits?: number; error?: string; needsConfirmation?: boolean };
+      const data = await res.json() as { ok?: boolean; error?: string; needsConfirmation?: boolean };
       if (!res.ok) { setAuthError(data.error || "Authentication failed"); return; }
       if (data.needsConfirmation) { setAuthError("✅ Check your email and click the confirmation link, then sign in."); return; }
       window.location.reload();
@@ -84,65 +92,100 @@ export default function NavBar() {
     finally { setAuthLoading(false); }
   };
 
-  const handleLogout = async () => {
-    try {
-      const supabase = createSupabaseClient();
-      await supabase.auth.signOut();
-    } catch {}
-    await fetch("/api/auth/google/logout", { method: "POST" });
-    setUser(null); setShowMenu(false);
-    window.location.href = "/";
-  };
-
   return (
     <>
-      <nav className="jpt-nav">
-        <div className="jpt-nav-inner">
-          <a href="/" className="jpt-brand">
-            <span className="jpt-brand-icon">✦</span>
-            <span className="jpt-brand-text">JPT AI</span>
+      <nav style={{ position: "sticky", top: 0, zIndex: 999, background: "#0F172A", borderBottom: "1px solid rgba(255,255,255,0.08)", height: 56, display: "flex", alignItems: "center", padding: "0 24px" }}>
+        <div style={{ maxWidth: 1200, width: "100%", margin: "0 auto", display: "flex", alignItems: "center", gap: 8 }}>
+
+          {/* Brand */}
+          <a href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none", marginRight: 8 }}>
+            <span style={{ fontSize: 18, fontWeight: 900, color: "#6366F1" }}>✦</span>
+            <span style={{ fontSize: 16, fontWeight: 900, color: "#fff", letterSpacing: "-0.02em" }}>JPT AI</span>
           </a>
-          <div className="jpt-nav-divider" />
-          <span className="jpt-section-label">AI Tools</span>
-          <div className="jpt-nav-links">
-            <a href="/upscale" className="jpt-nav-link"><span>🔍</span> AI Upscale</a>
-            <a href="/remove-bg" className="jpt-nav-link"><span>🪄</span> Remove BG</a>
-            <a href="/ai-headshot" className="jpt-nav-link"><span>🎯</span> AI Headshot</a>
-            <a href="/ai-editor" className="jpt-nav-link"><span>✍️</span> AI Editor</a>
-            <a href="/editor" className="jpt-nav-link"><span>🖼️</span> Image Editor</a>
-            <a href="/batch-editor" className="jpt-nav-link"><span>⚡</span> Batch Editor</a>
-            <a href="/headshot" className="jpt-nav-link"><span>🎯</span> Headshot Tool</a>
-            <a href="/generations" className="jpt-nav-link"><span>✦</span> My Generations</a>
-            <button onClick={() => setShowPricing(true)} className="jpt-nav-link" style={{ background: "none", border: "none", cursor: "pointer" }}><span>💳</span> Pricing</button>
+
+          {/* AI Tools Dropdown */}
+          <div ref={dropdownRef} style={{ position: "relative" }}>
+            <button
+              onClick={() => setShowToolsDropdown(v => !v)}
+              style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", background: showToolsDropdown ? "rgba(99,102,241,0.15)" : "transparent", border: "none", borderRadius: 8, color: "#E2E8F0", fontSize: 14, fontWeight: 600, cursor: "pointer" }}
+            >
+              AI Tools
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ transform: showToolsDropdown ? "rotate(180deg)" : "none", opacity: 0.7 }}>
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+
+            {showToolsDropdown && (
+              <div style={{ position: "absolute", top: "calc(100% + 12px)", left: 0, background: "#fff", borderRadius: 16, boxShadow: "0 20px 60px rgba(0,0,0,0.18)", border: "1px solid #F1F5F9", padding: "20px", minWidth: 580, zIndex: 1000, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 0 }}>
+                {TOOLS.map((group, gi) => (
+                  <div key={gi} style={{ padding: gi === 0 ? "0 20px 0 0" : "0 0 0 20px", borderRight: gi === 0 ? "1px solid #F1F5F9" : "none" }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: "#94A3B8", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 12 }}>{group.section}</div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                      {group.items.map(item => (
+                        <a key={item.href} href={item.href} onClick={() => setShowToolsDropdown(false)}
+                          style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 12px", borderRadius: 10, textDecoration: "none" }}
+                          onMouseEnter={e => (e.currentTarget.style.background = "#F5F5FF")}
+                          onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
+                        >
+                          <div style={{ width: 36, height: 36, background: "#EEF2FF", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }}>{item.icon}</div>
+                          <div>
+                            <div style={{ fontSize: 14, fontWeight: 700, color: "#111827" }}>{item.label}</div>
+                            <div style={{ fontSize: 12, color: "#6B7280", marginTop: 1 }}>{item.desc}</div>
+                          </div>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
+
+          {/* Pricing */}
+          <a href="/pricing" onClick={e => { e.preventDefault(); setShowPricing(true); }}
+            style={{ padding: "7px 14px", color: "#94A3B8", fontSize: 14, fontWeight: 600, textDecoration: "none", borderRadius: 8 }}
+            onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
+            onMouseLeave={e => (e.currentTarget.style.color = "#94A3B8")}>
+            Pricing
+          </a>
+
           <div style={{ flex: 1 }} />
 
+          {/* Auth */}
           {user ? (
             <div style={{ position: "relative" }}>
-              <button
-                onClick={() => setShowMenu(!showMenu)}
-                style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 12px", background: "#6366F1", color: "#fff", border: "none", borderRadius: 6, cursor: "pointer", fontSize: 13, fontWeight: 600 }}
-              >
+              <button onClick={() => setShowMenu(!showMenu)}
+                style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 10px 6px 6px", background: "rgba(99,102,241,0.15)", border: "1px solid rgba(99,102,241,0.3)", borderRadius: 24, cursor: "pointer" }}>
                 {user.picture
-                  ? <img src={user.picture} alt="" style={{ width: 24, height: 24, borderRadius: "50%" }} />
-                  : <div style={{ width: 24, height: 24, borderRadius: "50%", background: "#fff", color: "#6366F1", fontSize: 12, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>{user.name[0]}</div>}
-                <span>{user.name.split(" ")[0]}</span>
-                <span style={{ fontSize: 11, background: "rgba(255,255,255,0.3)", padding: "2px 6px", borderRadius: 4 }}>⚡ {user.credits}</span>
+                  ? <img src={user.picture} alt="" style={{ width: 28, height: 28, borderRadius: "50%", flexShrink: 0 }} />
+                  : <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#6366F1", color: "#fff", fontSize: 13, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>{user.name[0]}</div>}
+                <span style={{ fontSize: 13, fontWeight: 600, color: "#E2E8F0" }}>{user.name.split(" ")[0]}</span>
+                <span style={{ fontSize: 11, background: "#6366F1", color: "#fff", padding: "2px 8px", borderRadius: 12, fontWeight: 700 }}>⚡ {user.credits}</span>
               </button>
               {showMenu && (
-                <div style={{ position: "absolute", top: "100%", right: 0, marginTop: 8, background: "#fff", border: "1px solid #E5E7EB", borderRadius: 8, boxShadow: "0 4px 12px rgba(0,0,0,0.15)", minWidth: 200, zIndex: 1000 }}>
-                  <div style={{ padding: 12, borderBottom: "1px solid #E5E7EB" }}>
-                    <div style={{ fontWeight: 600, fontSize: 13 }}>{user.name}</div>
-                    <div style={{ fontSize: 12, color: "#666", marginTop: 2 }}>{user.email}</div>
+                <div style={{ position: "absolute", top: "calc(100% + 10px)", right: 0, background: "#fff", border: "1px solid #E5E7EB", borderRadius: 14, boxShadow: "0 8px 30px rgba(0,0,0,0.15)", minWidth: 220, zIndex: 1000, overflow: "hidden" }}>
+                  <div style={{ padding: "14px 16px", borderBottom: "1px solid #F3F4F6", background: "#F9FAFB" }}>
+                    <div style={{ fontWeight: 700, fontSize: 14, color: "#111" }}>{user.name}</div>
+                    <div style={{ fontSize: 12, color: "#6B7280", marginTop: 2 }}>{user.email}</div>
                   </div>
-                  <div style={{ padding: "8px 0" }}>
-                    <a href="/generations" style={{ display: "block", padding: "10px 14px", fontSize: 13, color: "#333", textDecoration: "none", borderBottom: "1px solid #E5E7EB" }} onClick={() => setShowMenu(false)}>
+                  <div style={{ padding: "6px 0" }}>
+                    <a href="/generations" onClick={() => setShowMenu(false)}
+                      style={{ display: "block", padding: "10px 16px", fontSize: 13, color: "#111", textDecoration: "none", fontWeight: 500 }}
+                      onMouseEnter={e => (e.currentTarget.style.background = "#F5F5FF")}
+                      onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
                       ✦ My Generations
                     </a>
-                    <button onClick={() => { setShowPricing(true); setShowMenu(false); }} style={{ width: "100%", padding: "10px 14px", background: "none", border: "none", textAlign: "left", fontSize: 13, color: "#6366F1", cursor: "pointer", fontWeight: 600, borderBottom: "1px solid #E5E7EB" }}>
+                    <button onClick={() => { setShowPricing(true); setShowMenu(false); }}
+                      style={{ width: "100%", padding: "10px 16px", background: "none", border: "none", textAlign: "left", fontSize: 13, color: "#6366F1", cursor: "pointer", fontWeight: 600 }}
+                      onMouseEnter={e => (e.currentTarget.style.background = "#F5F5FF")}
+                      onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
                       💳 Buy Credits
                     </button>
-                    <button onClick={handleLogout} style={{ width: "100%", padding: "10px 14px", background: "none", border: "none", textAlign: "left", fontSize: 13, color: "#EF4444", cursor: "pointer", fontWeight: 500 }}>
+                    <div style={{ borderTop: "1px solid #F3F4F6", margin: "4px 0" }} />
+                    <button onClick={handleLogout}
+                      style={{ width: "100%", padding: "10px 16px", background: "none", border: "none", textAlign: "left", fontSize: 13, color: "#EF4444", cursor: "pointer", fontWeight: 500 }}
+                      onMouseEnter={e => (e.currentTarget.style.background = "#FFF1F0")}
+                      onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
                       🚪 Sign Out
                     </button>
                   </div>
@@ -150,9 +193,14 @@ export default function NavBar() {
               )}
             </div>
           ) : (
-            <button onClick={openModal} style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "8px 14px", background: "#6366F1", color: "#fff", border: "none", borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
-              🔐 Sign In
-            </button>
+            <div style={{ display: "flex", gap: 8 }}>
+              <button onClick={openModal} style={{ padding: "7px 16px", background: "transparent", color: "#E2E8F0", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+                Sign In
+              </button>
+              <button onClick={openModal} style={{ padding: "7px 16px", background: "#6366F1", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer", boxShadow: "0 2px 8px rgba(99,102,241,0.4)" }}>
+                Get Started Free
+              </button>
+            </div>
           )}
         </div>
       </nav>
@@ -205,22 +253,15 @@ export default function NavBar() {
                     </button>
                   ))}
                 </div>
-                {mode === "signup" && (
-                  <input type="text" placeholder="Your name (optional)" value={name} onChange={e => setName(e.target.value)}
-                    style={{ border: "1.5px solid #E0E0EE", borderRadius: 8, padding: "11px 12px", fontSize: 14, outline: "none", width: "100%", boxSizing: "border-box" as const }} />
-                )}
-                <input type="email" placeholder="Email address" value={email} onChange={e => setEmail(e.target.value)} onKeyDown={e => e.key === "Enter" && handleEmailAuth()}
-                  style={{ border: "1.5px solid #E0E0EE", borderRadius: 8, padding: "11px 12px", fontSize: 14, outline: "none", width: "100%", boxSizing: "border-box" as const }} />
-                <input type="password" placeholder="Password (min 6 characters)" value={password} onChange={e => setPassword(e.target.value)} onKeyDown={e => e.key === "Enter" && handleEmailAuth()}
-                  style={{ border: "1.5px solid #E0E0EE", borderRadius: 8, padding: "11px 12px", fontSize: 14, outline: "none", width: "100%", boxSizing: "border-box" as const }} />
+                {mode === "signup" && <input type="text" placeholder="Your name (optional)" value={name} onChange={e => setName(e.target.value)} style={inputStyle} />}
+                <input type="email" placeholder="Email address" value={email} onChange={e => setEmail(e.target.value)} onKeyDown={e => e.key === "Enter" && handleEmailAuth()} style={inputStyle} />
+                <input type="password" placeholder="Password (min 6 characters)" value={password} onChange={e => setPassword(e.target.value)} onKeyDown={e => e.key === "Enter" && handleEmailAuth()} style={inputStyle} />
                 {authError && (
                   <div style={{ background: "#FFF1F0", border: "1px solid #FFC4C4", borderRadius: 8, padding: "8px 12px", fontSize: 13, color: "#C00" }}>{authError}</div>
                 )}
                 <button onClick={handleEmailAuth} disabled={authLoading}
-                  style={{ padding: "12px", background: authLoading ? "#A5B4FC" : "#6366F1", color: "#fff", border: "none", borderRadius: 10, fontWeight: 800, fontSize: 15, cursor: authLoading ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-                  {authLoading
-                    ? <><span style={{ width: 16, height: 16, border: "2px solid rgba(255,255,255,0.4)", borderTop: "2px solid #fff", borderRadius: "50%", animation: "spin 0.8s linear infinite", display: "inline-block" }} />{mode === "signup" ? "Creating…" : "Signing in…"}</>
-                    : mode === "signup" ? "✦ Create Account" : "→ Sign In"}
+                  style={{ padding: "12px", background: authLoading ? "#A5B4FC" : "#6366F1", color: "#fff", border: "none", borderRadius: 10, fontWeight: 800, fontSize: 15, cursor: authLoading ? "not-allowed" : "pointer" }}>
+                  {authLoading ? "Please wait…" : mode === "signup" ? "✦ Create Account" : "→ Sign In"}
                 </button>
                 <p style={{ fontSize: 12, color: "#999", textAlign: "center", margin: 0 }}>
                   {mode === "signup" ? "Already have an account? " : "Don't have an account? "}
@@ -240,3 +281,5 @@ export default function NavBar() {
     </>
   );
 }
+
+const inputStyle: React.CSSProperties = { border: "1.5px solid #E0E0EE", borderRadius: 8, padding: "11px 12px", fontSize: 14, outline: "none", width: "100%", boxSizing: "border-box" };
