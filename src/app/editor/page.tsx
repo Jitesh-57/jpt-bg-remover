@@ -630,11 +630,9 @@ export default function ImageEditorPage() {
       setRemoveBgProgress(10);
       // Library calls .replace() internally — must pass a string URL, not a Blob
       const resultBlob = await removeBackground(src, {
-        progress: (_key: string, current: number, total: number) => {
-          if (total > 0) setRemoveBgProgress(Math.round((current / total) * 85) + 10);
-        },
         publicPath: "https://staticimgly.com/@imgly/background-removal-data/1.7.0/dist/",
       });
+      setRemoveBgProgress(90);
       const resultUrl = await new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = () => resolve(reader.result as string);

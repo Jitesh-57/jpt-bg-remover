@@ -39,11 +39,9 @@ export default function BgRemoverPage() {
         reader.readAsDataURL(file)
       })
       const blob = await removeBackground(dataUrl, {
-        progress: (_key: string, current: number, total: number) => {
-          if (total > 0) setProgress(Math.round((current / total) * 85) + 10)
-        },
         publicPath: 'https://staticimgly.com/@imgly/background-removal-data/1.7.0/dist/',
       })
+      setProgress(90)
       const resultUrl = URL.createObjectURL(blob)
       setResult(resultUrl)
       setProgress(100)
