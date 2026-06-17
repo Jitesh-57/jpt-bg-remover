@@ -1,11 +1,11 @@
 const PIXELBIN_API_TOKEN = () => process.env.PIXELBIN_API_TOKEN || "";
 const PIXELBIN_ACCESS_KEY = () => process.env.PIXELBIN_ACCESS_KEY || "";
+const ORG_ID = "318452";
 
 function getAuthHeader(): string {
-  // PixelBin uses HTTP Basic Auth: base64(token:) as Bearer
-  const token = PIXELBIN_API_TOKEN() || PIXELBIN_ACCESS_KEY();
-  if (!token) throw new Error("PixelBin API token not configured");
-  return `Bearer ${Buffer.from(`${token}:`).toString("base64")}`;
+  const key = PIXELBIN_ACCESS_KEY() || PIXELBIN_API_TOKEN();
+  if (!key) throw new Error("PixelBin API token not configured");
+  return `Bearer ${Buffer.from(`${key}:`).toString("base64")}`;
 }
 
 async function urlToDataUrl(url: string): Promise<string> {
@@ -16,26 +16,54 @@ async function urlToDataUrl(url: string): Promise<string> {
   return `data:${mime};base64,${Buffer.from(buf).toString("base64")}`;
 }
 
-async function submitInference(
+function imageDataUrlToBlob(dataUrl: string): { blob: Blob; ext: string } {
+  const match = dataUrl.match(/^data:([^;]+);base64,(.+)$/);
+  if (!match) throw new Error("Invalid image data URL");
+  const [, mimeType, b64] = match;
+  const ext = mimeType.split("/")[1] || "png";
+  return { blob: new Blob([Buffer.from(b64, "base64")], { type: mimeType }), ext };
+}
+
+async function pollResult(predictionId: string): Promise<string> {
+  const pollUrl = `https://api.pixelbin.io/service/platform/playground/v1.0/${ORG_ID}/predict/${predictionId}`;
+  for (let attempt = 0; attempt < 30; attempt++) {
+    await new Promise(r => setTimeout(r, 2000));
+    const res = await fetch(pollUrl, { headers: { Authorization: getAuthHeader() } });
+    if (!res.ok) throw new Error("AI processing failed. Please try again.");
+    const data = (await res.json()) as { status: string; output?: Record<string, unknown> };
+    if (data.status === "completed" || data.status === "SUCCESS") {
+      const out = data.output;
+      if (!out) throw new Error("AI processing completed but returned no result.");
+      const url = (out.image as string) || (out.url as string) || (out.output as string) || (Object.values(out)[0] as string);
+      if (!url) throw new Error("AI processing completed but returned no result.");
+      return url;
+    }
+    if (data.status === "failed" || data.status === "FAILURE") throw new Error("AI processing failed. Please try again.");
+    console.log(`[pixelbin] attempt ${attempt + 1}: ${data.status}`);
+  }
+  throw new Error("AI processing timed out. Please try again with a smaller image.");
+}
+
+/** Run a PixelBin prediction — returns a CDN URL */
+export async function runPixelBinPrediction(
   imageDataUrl: string,
   plugin: string,
   operation: string,
   extra?: Record<string, string>
 ): Promise<string> {
-  const match = imageDataUrl.match(/^data:([^;]+);base64,(.+)$/);
-  if (!match) throw new Error("Invalid image data URL");
-  const [, mimeType, base64Content] = match;
-  const ext = mimeType.split("/")[1] || "png";
+  const { blob, ext } = imageDataUrlToBlob(imageDataUrl);
+
+  // nanoBananaPro uses "images" field; others use "image"
+  const imageField = plugin === "nanoBananaPro" ? "images" : "image";
 
   const formData = new FormData();
-  formData.append("plugin", plugin);
-  formData.append("operation", operation);
-  formData.append("image", new Blob([Buffer.from(base64Content, "base64")], { type: mimeType }), `image.${ext}`);
+  formData.append(imageField, blob, `image.${ext}`);
   if (extra) {
     for (const [k, v] of Object.entries(extra)) formData.append(k, v);
   }
 
-  const res = await fetch("https://api.pixelbin.io/service/platform/predict/v1/inference", {
+  const endpoint = `https://api.pixelbin.io/service/platform/playground/v1.0/${ORG_ID}/predict/${plugin}/${operation}`;
+  const res = await fetch(endpoint, {
     method: "POST",
     headers: { Authorization: getAuthHeader() },
     body: formData,
@@ -43,56 +71,28 @@ async function submitInference(
 
   if (!res.ok) {
     const text = await res.text();
-    console.error(`[pixelbin] inference failed (${res.status}):`, text);
+    console.error(`[pixelbin] ${plugin}/${operation} failed (${res.status}):`, text);
     throw new Error(`AI processing failed (${res.status}). Please try again.`);
   }
 
-  const data = (await res.json()) as { predictionId?: string; _id?: string };
-  const predictionId = data.predictionId || data._id;
-  if (!predictionId) throw new Error("AI processing failed. Please try again.");
-  return predictionId;
-}
+  const data = (await res.json()) as {
+    predictionId?: string; _id?: string;
+    status?: string; output?: Record<string, unknown>;
+  };
 
-async function pollResult(predictionId: string): Promise<string> {
-  for (let attempt = 0; attempt < 30; attempt++) {
-    await new Promise(r => setTimeout(r, 2000));
-
-    const res = await fetch(
-      `https://api.pixelbin.io/service/platform/predict/v1/inference/${predictionId}`,
-      { headers: { Authorization: getAuthHeader() } }
-    );
-
-    if (!res.ok) throw new Error("AI processing failed. Please try again.");
-
-    const data = (await res.json()) as { status: string; output?: Record<string, unknown> };
-
-    if (data.status === "completed") {
-      const out = data.output;
-      if (!out) throw new Error("AI processing completed but returned no result.");
-      const url = (out.image as string) || (out.url as string) || (Object.values(out)[0] as string);
-      if (!url) throw new Error("AI processing completed but returned no result.");
-      return url;
-    }
-
-    if (data.status === "failed") throw new Error("AI processing failed. Please try again.");
-    console.log(`[pixelbin] attempt ${attempt + 1}: ${data.status}`);
+  // Synchronous result
+  if (data.status === "completed" || data.status === "SUCCESS") {
+    const out = data.output;
+    const url = out && ((out.image as string) || (out.url as string) || (Object.values(out)[0] as string));
+    if (url) return url;
   }
 
-  throw new Error("AI processing timed out. Please try again with a smaller image.");
-}
-
-/** Returns a CDN URL string (permanent for 30 days) */
-export async function runPixelBinPrediction(
-  imageDataUrl: string,
-  plugin: string,
-  operation: string,
-  extra?: Record<string, string>
-): Promise<string> {
-  const predictionId = await submitInference(imageDataUrl, plugin, operation, extra);
+  const predictionId = data.predictionId || data._id;
+  if (!predictionId) throw new Error("AI processing failed. Please try again.");
   return pollResult(predictionId);
 }
 
-/** Returns a base64 data URL */
+/** Run a PixelBin prediction — returns a base64 data URL */
 export async function runPixelBinPredictionAsDataUrl(
   imageDataUrl: string,
   plugin: string,
