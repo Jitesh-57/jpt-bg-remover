@@ -31,16 +31,19 @@ export default function BgRemoverPage() {
       setStatus('processing')
       setProgress(10)
 
-      // Pass a URL string — the library calls .replace() internally and needs a string
-      const fileUrl = URL.createObjectURL(file)
-      const blob = await removeBackground(fileUrl, {
+      // Convert to base64 dataUrl — blob: URLs aren't accessible from Web Workers
+      const dataUrl = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = () => resolve(reader.result as string)
+        reader.onerror = reject
+        reader.readAsDataURL(file)
+      })
+      const blob = await removeBackground(dataUrl, {
         progress: (_key: string, current: number, total: number) => {
           if (total > 0) setProgress(Math.round((current / total) * 85) + 10)
         },
         publicPath: 'https://staticimgly.com/@imgly/background-removal-data/1.7.0/dist/',
       })
-      URL.revokeObjectURL(fileUrl)
-
       const resultUrl = URL.createObjectURL(blob)
       setResult(resultUrl)
       setProgress(100)
