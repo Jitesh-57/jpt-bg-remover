@@ -47,7 +47,7 @@ const BG_TEMPLATES = [
 const TOOLS: { id: Tool; icon: string; label: string; ai?: boolean; free?: boolean }[] = [
   { id: "ai-edit", icon: "✨", label: "AI Edit", ai: true },
   { id: "generate-bg", icon: "🌅", label: "Generate BG", ai: true },
-  { id: "remove-bg", icon: "🪄", label: "Remove BG", free: true },
+  { id: "remove-bg", icon: "🪄", label: "Remove BG" },
   { id: "upscale", icon: "🔍", label: "Upscale" },
   { id: "resize", icon: "↔️", label: "Resize" },
   { id: "adjust", icon: "🎨", label: "Adjust" },
@@ -597,6 +597,33 @@ export default function ImageEditorPage() {
   const handleRemoveBg = async () => {
     const src = working || original?.dataUrl;
     if (!src || processing) return;
+    if (requireSignIn()) return;
+
+    // Deduct 2 credits before processing (browser does the work, credits still apply)
+    const prevCredits = user?.credits ?? 0;
+    setUser(u => u ? { ...u, credits: Math.max(0, u.credits - CREDIT_COST) } : u);
+    const deductRes = await fetch("/api/credits/deduct", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tool: "remove-bg" }),
+    });
+    const deductData = await deductRes.json() as { credits?: number; error?: string; upgradeRequired?: boolean };
+    if (!deductRes.ok) {
+      setUser(u => u ? { ...u, credits: prevCredits } : u);
+      if (deductRes.status === 402) {
+        if (deductData.upgradeRequired) setShowUpgradeModal(true);
+        else setShowNoCreditsModal(true);
+      } else if (deductRes.status === 401) {
+        setShowSignInModal(true);
+      } else {
+        setError(deductData.error || "Failed to deduct credits.");
+      }
+      return;
+    }
+    if (typeof deductData.credits === "number") {
+      setUser(u => u ? { ...u, credits: deductData.credits! } : u);
+    }
+
     setProcessing(true); setProcessingLabel("Removing background…"); setError(null); setRemoveBgProgress(5);
     try {
       const { removeBackground } = await import("@imgly/background-removal");
@@ -607,7 +634,7 @@ export default function ImageEditorPage() {
         progress: (_key: string, current: number, total: number) => {
           if (total > 0) setRemoveBgProgress(Math.round((current / total) * 85) + 10);
         },
-        publicPath: "https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/dist/",
+        publicPath: "https://staticimgly.com/@imgly/background-removal-data/1.7.0/dist/",
       });
       const resultUrl = await new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
@@ -620,6 +647,7 @@ export default function ImageEditorPage() {
       setRemoveBgProgress(100);
       autoSaveToDrive(resultUrl, "remove-bg", "Background Removed");
     } catch (e) {
+      setUser(u => u ? { ...u, credits: prevCredits } : u); // refund on error
       setError((e as Error).message || "Background removal failed");
     } finally {
       setProcessing(false); setProcessingLabel("");
@@ -1271,6 +1299,7 @@ export default function ImageEditorPage() {
               <div style={s.panelContent}>
                 <div style={s.panelTitle}>🪄 Remove Background</div>
                 <p style={s.panelSub}>Automatically remove the background from any image</p>
+                <div style={s.creditNote}>Uses {CREDIT_COST} credits · {creditsLeft} remaining</div>
                 {processing && removeBgProgress > 0 && (
                   <div style={{ marginBottom: 14 }}>
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
