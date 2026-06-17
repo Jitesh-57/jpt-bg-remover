@@ -627,10 +627,9 @@ export default function ImageEditorPage() {
     setProcessing(true); setProcessingLabel("Removing background…"); setError(null); setRemoveBgProgress(5);
     try {
       const { removeBackground } = await import("@imgly/background-removal");
-      const res = await fetch(src);
-      const inputBlob = await res.blob();
       setRemoveBgProgress(10);
-      const resultBlob = await removeBackground(inputBlob, {
+      // Library calls .replace() internally — must pass a string URL, not a Blob
+      const resultBlob = await removeBackground(src, {
         progress: (_key: string, current: number, total: number) => {
           if (total > 0) setRemoveBgProgress(Math.round((current / total) * 85) + 10);
         },
