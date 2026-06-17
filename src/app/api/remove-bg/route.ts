@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const resultDataUrl = await geminiRemoveBg(src);
-    return withCredits({ dataUrl: resultDataUrl }, session!, "basic", req);
+    return withCredits({ dataUrl: resultDataUrl }, session!, "ai", req);
   } catch (e) {
     console.error("[remove-bg]", e);
     return NextResponse.json({ error: String(e) }, { status: 500 });

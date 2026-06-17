@@ -47,7 +47,7 @@ const BG_TEMPLATES = [
 const TOOLS: { id: Tool; icon: string; label: string; ai?: boolean; free?: boolean }[] = [
   { id: "ai-edit", icon: "✨", label: "AI Edit", ai: true },
   { id: "generate-bg", icon: "🌅", label: "Generate BG", ai: true },
-  { id: "remove-bg", icon: "🪄", label: "Remove BG" },
+  { id: "remove-bg", icon: "🪄", label: "Remove BG", free: true },
   { id: "upscale", icon: "🔍", label: "Upscale" },
   { id: "resize", icon: "↔️", label: "Resize" },
   { id: "adjust", icon: "🎨", label: "Adjust" },
@@ -592,25 +592,34 @@ export default function ImageEditorPage() {
     finally { setProcessing(false); setProcessingLabel(""); }
   };
 
+  const [removeBgProgress, setRemoveBgProgress] = useState(0);
+
   const handleRemoveBg = async () => {
     const src = working || original?.dataUrl;
     if (!src || processing) return;
-    if (requireSignIn()) return;
-    setProcessing(true); setProcessingLabel("Removing background…"); setError(null);
-    const prevCredits = user?.credits ?? 0;
-    setUser(u => u ? { ...u, credits: Math.max(0, u.credits - 1) } : u);
+    setProcessing(true); setProcessingLabel("Removing background…"); setError(null); setRemoveBgProgress(5);
     try {
-      const data = await callApi<{ dataUrl: string }>(
-        "/api/remove-bg",
-        { dataUrl: src },
-        () => setUser(u => u ? { ...u, credits: prevCredits } : u)
-      );
-      if (!data?.dataUrl) throw new Error("Background removal failed");
+      const { removeBackground } = await import("@imgly/background-removal");
+      const res = await fetch(src);
+      const inputBlob = await res.blob();
+      setRemoveBgProgress(10);
+      const resultBlob = await removeBackground(inputBlob, {
+        progress: (_key: string, current: number, total: number) => {
+          if (total > 0) setRemoveBgProgress(Math.round((current / total) * 85) + 10);
+        },
+        publicPath: "https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/dist/",
+      });
+      const resultUrl = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(resultBlob);
+      });
       setEditHistory(prev => working ? [...prev, working] : prev);
-      setWorking(data.dataUrl);
-      autoSaveToDrive(data.dataUrl, "remove-bg", "Background Removed");
+      setWorking(resultUrl);
+      setRemoveBgProgress(100);
+      autoSaveToDrive(resultUrl, "remove-bg", "Background Removed");
     } catch (e) {
-      setUser(u => u ? { ...u, credits: prevCredits } : u);
       setError((e as Error).message || "Background removal failed");
     } finally {
       setProcessing(false); setProcessingLabel("");
@@ -859,7 +868,7 @@ export default function ImageEditorPage() {
                 }
                 setActiveTool(activeTool === t.id ? null : t.id);
               }}
-              title={`${t.label}${t.free || ["resize", "adjust"].includes(t.id ?? "") ? " (Free)" : t.id === "remove-bg" ? " (1 credit)" : ` (${CREDIT_COST} credits)`}`}
+              title={`${t.label}${t.free || ["resize", "adjust"].includes(t.id ?? "") ? " (Free)" : ` (${CREDIT_COST} credits)`}`}
               style={{ ...s.toolBtn, ...(activeTool === t.id ? s.toolBtnActive : {}), ...(!hasImage ? { opacity: 0.35, cursor: "not-allowed" } : {}) }}
             >
               <span style={{ fontSize: 22 }}>{t.icon}</span>
@@ -1261,17 +1270,30 @@ export default function ImageEditorPage() {
             {activeTool === "remove-bg" && (
               <div style={s.panelContent}>
                 <div style={s.panelTitle}>🪄 Remove Background</div>
-                <p style={s.panelSub}>AI-powered background removal — clean transparent PNG output</p>
-                <div style={s.creditNote}>Uses 1 credit · {creditsLeft} remaining</div>
+                <p style={s.panelSub}>Automatically remove the background from any image</p>
+                {processing && removeBgProgress > 0 && (
+                  <div style={{ marginBottom: 14 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+                      <span style={{ fontSize: 13, color: "#374151", fontWeight: 600 }}>
+                        {removeBgProgress < 15 ? "Loading model…" : "Removing background…"}
+                      </span>
+                      <span style={{ fontSize: 13, color: "#6366F1", fontWeight: 700 }}>{removeBgProgress}%</span>
+                    </div>
+                    <div style={{ background: "#F1F5F9", borderRadius: 6, height: 8, overflow: "hidden" }}>
+                      <div style={{ height: "100%", background: "linear-gradient(90deg,#6366F1,#8B5CF6)", borderRadius: 6, width: `${removeBgProgress}%`, transition: "width 0.3s" }} />
+                    </div>
+                    {removeBgProgress < 15 && <p style={{ fontSize: 11, color: "#94A3B8", marginTop: 6, textAlign: "center" }}>First run may take ~10s to load the model</p>}
+                  </div>
+                )}
                 <button
                   style={{ ...s.primaryBtn, background: "linear-gradient(135deg,#6366F1,#8B5CF6)", ...(processing ? s.btnOff : {}) }}
                   disabled={processing}
                   onClick={handleRemoveBg}
                 >
-                  {processing ? <span style={s.btnRow}><span style={s.spin} />Removing background…</span> : "🪄 Remove Background"}
+                  {processing ? <span style={s.btnRow}><span style={s.spin} />Processing…</span> : "🪄 Remove Background"}
                 </button>
                 <p style={{ fontSize: 12, color: "#94A3B8", marginTop: 10, textAlign: "center" }}>
-                  Result is a transparent PNG. Use Generate BG to add a new background.
+                  Result is a transparent PNG. Use Generate BG to swap in a new background.
                 </p>
               </div>
             )}
