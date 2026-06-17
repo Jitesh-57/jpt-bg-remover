@@ -600,17 +600,12 @@ export default function ImageEditorPage() {
     if (!src || processing) return;
     setProcessing(true); setProcessingLabel("Removing background…"); setError(null); setRemoveBgProgress(0);
     try {
-      const { removeBackground } = await import("@imgly/background-removal");
+      const { removeBg } = await import("@/lib/bg-removal-cdn");
       // Convert dataUrl to Blob
       const res = await fetch(src);
       const inputBlob = await res.blob();
       setRemoveBgProgress(10);
-      const resultBlob = await removeBackground(inputBlob, {
-        progress: (_key: string, current: number, total: number) => {
-          if (total > 0) setRemoveBgProgress(Math.round((current / total) * 85) + 10);
-        },
-        publicPath: "https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/dist/",
-      });
+      const resultBlob = await removeBg(inputBlob, (pct) => setRemoveBgProgress(pct));
       const resultUrl = await new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = () => resolve(reader.result as string);

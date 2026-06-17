@@ -25,19 +25,13 @@ export default function BgRemoverPage() {
 
     try {
       setStatus('loading-model')
-      // Dynamic import so the heavy WASM bundle is only loaded when needed
-      const { removeBackground } = await import('@imgly/background-removal')
+      setProgress(5)
+      const { removeBg } = await import('@/lib/bg-removal-cdn')
 
       setStatus('processing')
       setProgress(10)
 
-      const blob = await removeBackground(file, {
-        progress: (key: string, current: number, total: number) => {
-          if (total > 0) setProgress(Math.round((current / total) * 90) + 10)
-        },
-        // Use CDN assets so we don't need to copy them to /public
-        publicPath: 'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/dist/',
-      })
+      const blob = await removeBg(file, (pct) => setProgress(pct))
 
       const resultUrl = URL.createObjectURL(blob)
       setResult(resultUrl)
