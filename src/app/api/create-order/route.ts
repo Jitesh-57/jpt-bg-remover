@@ -5,9 +5,9 @@ import { checkAuth } from "@/lib/auth";
 export const runtime = "nodejs";
 
 const PLANS: Record<string, { amountPaise: number; credits: number; planName: string }> = {
-  starter: { amountPaise: 500,  credits: 50,  planName: "starter" },
-  creator: { amountPaise: 1000, credits: 100, planName: "creator" },
-  pro:     { amountPaise: 2500, credits: 300, planName: "pro"     },
+  starter: { amountPaise: 49900,  credits: 50,  planName: "starter" },
+  creator: { amountPaise: 99900,  credits: 100, planName: "creator" },
+  pro:     { amountPaise: 249900, credits: 300, planName: "pro"     },
 };
 
 export async function POST(req: NextRequest) {
@@ -24,10 +24,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Amount too low" }, { status: 400 });
   }
 
-  const rzp = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID!,
-    key_secret: process.env.RAZORPAY_KEY_SECRET!,
-  });
+  const keyId = process.env.RAZORPAY_KEY_ID;
+  const keySecret = process.env.RAZORPAY_KEY_SECRET;
+  if (!keyId || !keySecret) {
+    console.error("[create-order] Razorpay keys missing", { hasId: !!keyId, hasSecret: !!keySecret });
+    return NextResponse.json({ error: "Payment gateway not configured" }, { status: 500 });
+  }
+
+  const rzp = new Razorpay({ key_id: keyId, key_secret: keySecret });
 
   try {
     const order = await rzp.orders.create({
@@ -49,7 +53,10 @@ export async function POST(req: NextRequest) {
       credits,
     });
   } catch (e) {
-    console.error("[create-order]", e);
-    return NextResponse.json({ error: "Failed to create order" }, { status: 500 });
+    // Razorpay errors carry a nested .error.description with the real reason
+    const err = e as { statusCode?: number; error?: { description?: string; code?: string } };
+    const detail = err?.error?.description || (e as Error).message || "Failed to create order";
+    console.error("[create-order]", JSON.stringify(err) || e);
+    return NextResponse.json({ error: `Failed to create order: ${detail}` }, { status: 500 });
   }
 }
