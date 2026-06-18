@@ -15,6 +15,7 @@ interface User { email: string; name: string; picture?: string; credits: number;
 
 const FREE_CREDITS = 10;
 const CREDIT_COST = 2;
+const BASIC_UPSCALE_COST = 1;
 
 const SOLID_COLORS = [
   { label: "White", hex: "#FFFFFF" }, { label: "Light Gray", hex: "#F2F2F2" },
@@ -805,7 +806,9 @@ export default function ImageEditorPage() {
   const hasImage = !!original;
   const adjustFilter = `brightness(${brightness}%) contrast(${contrast}%) saturate(${saturation}%)`;
   const creditsLeft = user?.credits ?? 0;
-  const creditsUsed = FREE_CREDITS - creditsLeft;
+  // Denominator scales up once a user buys more than the free allotment,
+  // so the bar/ratio never shows nonsense like "82 / 10" or negative "used".
+  const creditsTotal = Math.max(creditsLeft, FREE_CREDITS);
   const lowCredits = creditsLeft > 0 && creditsLeft <= CREDIT_COST * 2;
 
   // ── Render ────────────────────────────────────────────────────────────────────
@@ -1360,17 +1363,17 @@ export default function ImageEditorPage() {
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
                 <div style={{ fontWeight: 800, fontSize: 15 }}>⚡ AI Credits</div>
                 <div style={{ fontWeight: 900, fontSize: 20, color: creditsLeft === 0 ? "#EF4444" : "#6366F1" }}>
-                  {creditsLeft} <span style={{ fontSize: 13, color: "#999", fontWeight: 400 }}>/ {FREE_CREDITS}</span>
+                  {creditsLeft} <span style={{ fontSize: 13, color: "#999", fontWeight: 400 }}>/ {creditsTotal}</span>
                 </div>
               </div>
 
               {/* Progress bar */}
               <div style={s.creditBarBg}>
-                <div style={{ ...s.creditBarFill, width: `${(creditsLeft / FREE_CREDITS) * 100}%`, background: creditsLeft === 0 ? "#EF4444" : creditsLeft <= 4 ? "#F59E0B" : "#6366F1" }} />
+                <div style={{ ...s.creditBarFill, width: `${(creditsLeft / creditsTotal) * 100}%`, background: creditsLeft === 0 ? "#EF4444" : creditsLeft <= 4 ? "#F59E0B" : "#6366F1" }} />
               </div>
 
               <div style={{ fontSize: 12, color: "#888", marginTop: 8, lineHeight: 1.6 }}>
-                {creditsUsed} credits used · {creditsLeft} remaining
+                {creditsLeft} credit{creditsLeft === 1 ? "" : "s"} remaining
               </div>
 
               {creditsLeft === 0 && (
@@ -1388,7 +1391,9 @@ export default function ImageEditorPage() {
               {[
                 { icon: "✨", label: "AI Edit", cost: CREDIT_COST },
                 { icon: "🌅", label: "Generate BG", cost: CREDIT_COST },
-                { icon: "🔍", label: "Upscale", cost: 0 },
+                { icon: "🪄", label: "Remove BG", cost: CREDIT_COST },
+                { icon: "✨", label: "Upscale (Pro)", cost: CREDIT_COST },
+                { icon: "🔍", label: "Upscale (Normal)", cost: BASIC_UPSCALE_COST },
                 { icon: "↔️", label: "Resize", cost: 0 },
                 { icon: "🎨", label: "Adjust", cost: 0 },
               ].map((item) => (
