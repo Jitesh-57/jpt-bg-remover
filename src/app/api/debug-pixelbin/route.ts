@@ -1,40 +1,32 @@
 import { NextResponse } from "next/server";
+import { runPixelBinPrediction } from "@/lib/pixelbin";
 
 export const runtime = "nodejs";
+export const maxDuration = 60;
 
-const CLOUD_NAME = "misty-band-06f445";
+// A small public test image (data URL, ~1px is too small for erase.bg, use a real photo)
+const TEST_IMG = "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&q=80";
 
 export async function GET() {
   const results: Record<string, unknown> = {};
 
-  // Test public image to transform
-  const testImageUrl = "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&q=80";
+  try {
+    // Fetch a real test image and convert to data URL
+    const imgRes = await fetch(TEST_IMG);
+    const buf = await imgRes.arrayBuffer();
+    const dataUrl = `data:image/jpeg;base64,${Buffer.from(buf).toString("base64")}`;
 
-  // URL-safe base64 (no +/= issues in URLs)
-  const urlSafeB64 = Buffer.from(testImageUrl).toString("base64")
-    .replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
+    results["test_image_loaded"] = `${buf.byteLength} bytes`;
 
-  // Regular base64
-  const regularB64 = Buffer.from(testImageUrl).toString("base64");
-
-  // Test various CDN external URL formats
-  const cdnFormats = [
-    `https://cdn.pixelbin.io/v2/${CLOUD_NAME}/erase.bg()/__ext/${urlSafeB64}`,
-    `https://cdn.pixelbin.io/v2/${CLOUD_NAME}/erase.bg()/__ext/${regularB64}`,
-    `https://cdn.pixelbin.io/v2/${CLOUD_NAME}/t-erase.bg()/__ext/${urlSafeB64}`,
-    `https://cdn.pixelbin.io/v2/${CLOUD_NAME}/erase.bg()/fetch/${encodeURIComponent(testImageUrl)}`,
-    `https://cdn.pixelbin.io/v2/${CLOUD_NAME}/erase.bg()/${testImageUrl}`,
-    `https://cdn.pixelbin.io/v2/${CLOUD_NAME}/original/erase.bg()/__ext/${urlSafeB64}`,
-  ];
-
-  for (const url of cdnFormats) {
-    const key = url.replace(`https://cdn.pixelbin.io/v2/${CLOUD_NAME}/`, "").slice(0, 60);
-    try {
-      const res = await fetch(url, { method: "GET", redirect: "follow" });
-      const ct = res.headers.get("content-type") || "";
-      const body = ct.startsWith("image") ? "[IMAGE DATA]" : (await res.text()).slice(0, 150);
-      results[key] = `${res.status} ${ct} ${body}`;
-    } catch (e) { results[key] = `ERR: ${String(e).slice(0, 100)}`; }
+    // Run erase.bg via SDK
+    const start = Date.now();
+    const url = await runPixelBinPrediction(dataUrl, "erase", "bg");
+    results["erase_bg_result_url"] = url;
+    results["erase_bg_took_ms"] = Date.now() - start;
+    results["success"] = true;
+  } catch (e) {
+    results["error"] = (e as Error).message;
+    results["stack"] = (e as Error).stack?.slice(0, 500);
   }
 
   return NextResponse.json(results);
