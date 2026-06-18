@@ -186,14 +186,8 @@ export default function LandingPageClient() {
   const handleUpload = async (file: File) => {
     if (!file.type.startsWith("image/")) return;
     const url = await readFile(file);
-    setUploadImage({ url, name: file.name.replace(/\.[^.]+$/, "") || "image" });
-    if (isLoggedIn) {
-      try { sessionStorage.setItem("jpt_pending_image", url); } catch {}
-      window.location.href = "/editor";
-      return;
-    }
-    setPendingType("upload");
-    setShowSignIn(true);
+    try { sessionStorage.setItem("jpt_pending_image", url); } catch {}
+    window.location.href = "/editor";
   };
 
   const handleFeatureCardClick = (tool: string) => {
@@ -273,6 +267,8 @@ export default function LandingPageClient() {
           </p>
 
           {/* Upload Drop Zone */}
+          <input ref={featureFileRef} type="file" accept="image/*" style={{ display: "none" }}
+            onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFeatureFile(f); e.target.value = ""; }} />
           <div
             style={{ ...s.dropZone, ...(dragOver ? s.dropZoneActive : {}) }}
             onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
@@ -282,8 +278,6 @@ export default function LandingPageClient() {
           >
             <input ref={uploadRef} type="file" accept="image/*" style={{ display: "none" }}
               onChange={(e) => e.target.files?.[0] && handleUpload(e.target.files[0])} />
-            <input ref={featureFileRef} type="file" accept="image/*" style={{ display: "none" }}
-              onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFeatureFile(f); e.target.value = ""; }} />
             <span style={{ fontSize: 40 }}>🖼️</span>
             <div>
               <div style={s.dropTitle}>Drop an image here to start editing</div>
@@ -378,11 +372,11 @@ export default function LandingPageClient() {
 
       {/* ── How it works ───────────────────────────────────────────────────── */}
       <section style={{ ...s.section, background: "#F4F5FB" }}>
-        <div style={s.sectionInner}>
+        <div style={{ ...s.sectionInner, textAlign: "center" }}>
           <div style={s.sectionLabel}>HOW IT WORKS</div>
           <h2 style={s.h2}>Edit images in 3 simple steps</h2>
-          <p style={s.sectionSub}>From upload to download in seconds — no learning curve.</p>
-          <div style={s.stepsRow}>
+          <p style={{ ...s.sectionSub, maxWidth: 480, margin: "0 auto 48px" }}>From upload to download in seconds — no learning curve.</p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20, maxWidth: 780, margin: "0 auto" }}>
             {STEPS.map((step, i) => (
               <div key={i} style={s.stepCard}>
                 <div style={s.stepNum}>{i + 1}</div>
