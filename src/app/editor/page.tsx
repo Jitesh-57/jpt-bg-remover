@@ -5,7 +5,7 @@ import { useRef, useState, useCallback, useEffect } from "react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type Tool = "ai-edit" | "generate-bg" | "upscale" | "resize" | "adjust" | null;
+type Tool = "ai-edit" | "generate-bg" | "upscale" | "resize" | "adjust" | "remove-bg" | null;
 type BgMode = "color" | "gradient" | "image" | "ai";
 
 interface GradientPreset { label: string; from: string; to: string; angle: number }
@@ -44,9 +44,10 @@ const BG_TEMPLATES = [
   { id: "abstract-art", label: "Abstract Art", prompt: "Abstract colorful art background with brush strokes", icon: "🎨" },
 ];
 
-const TOOLS: { id: Tool; icon: string; label: string; ai?: boolean }[] = [
+const TOOLS: { id: Tool; icon: string; label: string; ai?: boolean; free?: boolean }[] = [
   { id: "ai-edit", icon: "✨", label: "AI Edit", ai: true },
   { id: "generate-bg", icon: "🌅", label: "Generate BG", ai: true },
+  { id: "remove-bg", icon: "🪄", label: "Remove BG" },
   { id: "upscale", icon: "🔍", label: "Upscale" },
   { id: "resize", icon: "↔️", label: "Resize" },
   { id: "adjust", icon: "🎨", label: "Adjust" },
@@ -591,6 +592,48 @@ export default function ImageEditorPage() {
     finally { setProcessing(false); setProcessingLabel(""); }
   };
 
+  const [removeBgProgress, setRemoveBgProgress] = useState(0);
+
+  const handleRemoveBg = async () => {
+    const src = working || original?.dataUrl;
+    if (!src || processing) return;
+    if (requireSignIn()) return;
+
+    setProcessing(true); setProcessingLabel("Removing background…"); setError(null); setRemoveBgProgress(20);
+    try {
+      const res = await fetch("/api/remove-bg", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ dataUrl: src }),
+      });
+      setRemoveBgProgress(90);
+      const data = await res.json() as { dataUrl?: string; credits?: number; error?: string; upgradeRequired?: boolean };
+      if (!res.ok) {
+        if (res.status === 402) {
+          if (data.upgradeRequired) setShowUpgradeModal(true);
+          else setShowNoCreditsModal(true);
+        } else if (res.status === 401) {
+          setShowSignInModal(true);
+        } else if (res.status === 403) {
+          setShowUpgradeModal(true);
+        } else {
+          setError(data.error || "Background removal failed");
+        }
+        return;
+      }
+      if (typeof data.credits === "number") setUser(u => u ? { ...u, credits: data.credits! } : u);
+      if (!data.dataUrl) { setError("No result returned"); return; }
+      setEditHistory(prev => working ? [...prev, working] : prev);
+      setWorking(data.dataUrl);
+      setRemoveBgProgress(100);
+      autoSaveToDrive(data.dataUrl, "remove-bg", "Background Removed");
+    } catch (e) {
+      setError((e as Error).message || "Background removal failed");
+    } finally {
+      setProcessing(false); setProcessingLabel("");
+    }
+  };
+
   const handleAspectW = (v: number) => { setResizeW(v); if (lockAspect && original) setResizeH(Math.round(v * original.h / original.w)); };
   const handleAspectH = (v: number) => { setResizeH(v); if (lockAspect && original) setResizeW(Math.round(v * original.w / original.h)); };
 
@@ -824,6 +867,7 @@ export default function ImageEditorPage() {
               key={t.id}
               disabled={!hasImage}
               onClick={() => {
+                if (t.free) { setActiveTool(activeTool === t.id ? null : t.id); return; }
                 if (requireSignIn()) return;
                 if (t.ai && user?.plan === "free") {
                   setBlockedTool(t);
@@ -832,7 +876,7 @@ export default function ImageEditorPage() {
                 }
                 setActiveTool(activeTool === t.id ? null : t.id);
               }}
-              title={`${t.label}${["upscale", "resize", "adjust"].includes(t.id ?? "") ? " (Free)" : ` (${CREDIT_COST} credits)`}`}
+              title={`${t.label}${t.free || ["resize", "adjust"].includes(t.id ?? "") ? " (Free)" : ` (${CREDIT_COST} credits)`}`}
               style={{ ...s.toolBtn, ...(activeTool === t.id ? s.toolBtnActive : {}), ...(!hasImage ? { opacity: 0.35, cursor: "not-allowed" } : {}) }}
             >
               <span style={{ fontSize: 22 }}>{t.icon}</span>
@@ -1137,7 +1181,7 @@ export default function ImageEditorPage() {
                 <div style={{ display: "flex", gap: 6, marginBottom: 14, background: "#F3F4F6", borderRadius: 10, padding: 4 }}>
                   {([
                     { key: "normal", label: "⚡ Normal", sub: "Free · 1 credit" },
-                    { key: "pro", label: "✨ Pro AI", sub: "2 credits · Gemini" },
+                    { key: "pro", label: "✨ Pro AI", sub: "2 credits · AI" },
                   ] as const).map(m => (
                     <button
                       key={m.key}
@@ -1227,6 +1271,39 @@ export default function ImageEditorPage() {
                 </div>
                 <div style={{ fontSize: 12, color: "#888" }}>Original: {original?.w} × {original?.h}px</div>
                 <button style={{ ...s.primaryBtn, ...(processing ? s.btnOff : {}) }} disabled={processing} onClick={handleResize}>↔️ Apply Resize</button>
+              </div>
+            )}
+
+            {/* Remove BG */}
+            {activeTool === "remove-bg" && (
+              <div style={s.panelContent}>
+                <div style={s.panelTitle}>🪄 Remove Background</div>
+                <p style={s.panelSub}>Automatically remove the background from any image</p>
+                <div style={s.creditNote}>Uses {CREDIT_COST} credits · {creditsLeft} remaining</div>
+                {processing && removeBgProgress > 0 && (
+                  <div style={{ marginBottom: 14 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+                      <span style={{ fontSize: 13, color: "#374151", fontWeight: 600 }}>
+                        {removeBgProgress < 15 ? "Loading model…" : "Removing background…"}
+                      </span>
+                      <span style={{ fontSize: 13, color: "#6366F1", fontWeight: 700 }}>{removeBgProgress}%</span>
+                    </div>
+                    <div style={{ background: "#F1F5F9", borderRadius: 6, height: 8, overflow: "hidden" }}>
+                      <div style={{ height: "100%", background: "linear-gradient(90deg,#6366F1,#8B5CF6)", borderRadius: 6, width: `${removeBgProgress}%`, transition: "width 0.3s" }} />
+                    </div>
+                    {removeBgProgress < 15 && <p style={{ fontSize: 11, color: "#94A3B8", marginTop: 6, textAlign: "center" }}>First run may take ~10s to load the model</p>}
+                  </div>
+                )}
+                <button
+                  style={{ ...s.primaryBtn, background: "linear-gradient(135deg,#6366F1,#8B5CF6)", ...(processing ? s.btnOff : {}) }}
+                  disabled={processing}
+                  onClick={handleRemoveBg}
+                >
+                  {processing ? <span style={s.btnRow}><span style={s.spin} />Processing…</span> : "🪄 Remove Background"}
+                </button>
+                <p style={{ fontSize: 12, color: "#94A3B8", marginTop: 10, textAlign: "center" }}>
+                  Result is a transparent PNG. Use Generate BG to swap in a new background.
+                </p>
               </div>
             )}
 

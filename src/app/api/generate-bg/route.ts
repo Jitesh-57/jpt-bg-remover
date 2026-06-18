@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkAuth, withCredits } from "@/lib/auth";
-import { geminiGenerateBg } from "@/lib/gemini";
+import { runPixelBinPredictionAsDataUrl } from "@/lib/pixelbin";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -15,7 +15,9 @@ export async function POST(req: NextRequest) {
   if (!src) return NextResponse.json({ error: "image required" }, { status: 400 });
 
   try {
-    const resultDataUrl = await geminiGenerateBg(src, prompt.trim());
+    const resultDataUrl = await runPixelBinPredictionAsDataUrl(src, "nanoBananaPro", "generate", {
+      prompt: `Replace the background with: ${prompt.trim()}. Keep the main subject exactly as-is.`,
+    });
     return withCredits({ dataUrl: resultDataUrl }, session!, "ai", req);
   } catch (e) {
     console.error("[generate-bg]", e);

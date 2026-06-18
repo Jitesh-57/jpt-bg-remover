@@ -1,0 +1,207 @@
+'use client'
+
+import { useRef, useState, useCallback } from 'react'
+
+type Status = 'idle' | 'processing' | 'done' | 'error' | 'auth-required'
+
+export default function BgRemoverPage() {
+  const [status, setStatus] = useState<Status>('idle')
+  const [original, setOriginal] = useState<string | null>(null)
+  const [result, setResult] = useState<string | null>(null)
+  const [error, setError] = useState('')
+  const [showOriginal, setShowOriginal] = useState(false)
+  const [dragging, setDragging] = useState(false)
+  const fileRef = useRef<HTMLInputElement>(null)
+
+  const processImage = useCallback(async (file: File) => {
+    if (!file.type.startsWith('image/')) return
+    const originalUrl = URL.createObjectURL(file)
+    setOriginal(originalUrl)
+    setResult(null)
+    setError('')
+    setShowOriginal(false)
+    setStatus('processing')
+
+    try {
+      // Convert to base64 dataUrl for API
+      const dataUrl = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = () => resolve(reader.result as string)
+        reader.onerror = reject
+        reader.readAsDataURL(file)
+      })
+
+      const res = await fetch('/api/remove-bg', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ dataUrl }),
+      })
+
+      const data = await res.json() as { dataUrl?: string; error?: string; upgradeRequired?: boolean }
+
+      if (!res.ok) {
+        if (res.status === 401) {
+          setStatus('auth-required')
+          return
+        }
+        setError(data.error || 'Background removal failed')
+        setStatus('error')
+        return
+      }
+
+      if (!data.dataUrl) { setError('No result returned'); setStatus('error'); return }
+      setResult(data.dataUrl)
+      setStatus('done')
+    } catch (e) {
+      setError(String(e))
+      setStatus('error')
+    }
+  }, [])
+
+  const handleFile = (file: File) => processImage(file)
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    setDragging(false)
+    const file = e.dataTransfer.files[0]
+    if (file) handleFile(file)
+  }
+
+  const downloadResult = () => {
+    if (!result) return
+    const a = document.createElement('a')
+    a.href = result
+    a.download = 'removed-bg.png'
+    a.click()
+  }
+
+  const reset = () => {
+    setStatus('idle')
+    setOriginal(null)
+    setResult(null)
+    setError('')
+  }
+
+  return (
+    <div style={{ minHeight: '100vh', background: '#F8FAFC', padding: '40px 24px' }}>
+      <div style={{ maxWidth: 900, margin: '0 auto' }}>
+
+        {/* Header */}
+        <div style={{ textAlign: 'center', marginBottom: 40 }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#EEF2FF', borderRadius: 20, padding: '6px 16px', marginBottom: 16 }}>
+            <span style={{ fontSize: 16 }}>🪄</span>
+            <span style={{ fontSize: 13, fontWeight: 700, color: '#6366F1' }}>AI-Powered · 2 Credits per Image</span>
+          </div>
+          <h1 style={{ fontSize: 40, fontWeight: 900, color: '#0F172A', margin: '0 0 12px', letterSpacing: '-0.02em' }}>
+            Remove Background
+          </h1>
+          <p style={{ fontSize: 17, color: '#64748B', margin: 0 }}>
+            AI-powered background removal with clean, precise edges.
+          </p>
+        </div>
+
+        {/* Upload zone */}
+        {status === 'idle' && (
+          <>
+            <div
+              onClick={() => fileRef.current?.click()}
+              onDragOver={e => { e.preventDefault(); setDragging(true) }}
+              onDragLeave={() => setDragging(false)}
+              onDrop={handleDrop}
+              style={{ border: `2px dashed ${dragging ? '#6366F1' : '#CBD5E1'}`, borderRadius: 20, padding: '60px 40px', textAlign: 'center', cursor: 'pointer', background: dragging ? '#EEF2FF' : '#fff', transition: 'all 0.2s' }}
+            >
+              <div style={{ fontSize: 52, marginBottom: 16 }}>🖼️</div>
+              <div style={{ fontSize: 20, fontWeight: 800, color: '#0F172A', marginBottom: 8 }}>Drop your image here</div>
+              <div style={{ fontSize: 15, color: '#64748B', marginBottom: 24 }}>or click to browse — JPG, PNG, WebP supported</div>
+              <div style={{ display: 'inline-block', padding: '12px 28px', background: '#6366F1', color: '#fff', borderRadius: 10, fontWeight: 700, fontSize: 15 }}>
+                Choose Image
+              </div>
+              <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); e.target.value = '' }} />
+            </div>
+            <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginTop: 32 }}>
+              {['✅ Sign in required', '🎯 AI-powered precision', '⚡ Results in seconds', '💰 2 credits per image', '🖼️ Transparent PNG output'].map(f => (
+                <div key={f} style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: 20, padding: '8px 16px', fontSize: 13, color: '#374151', fontWeight: 600 }}>{f}</div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {/* Sign-in required */}
+        {status === 'auth-required' && (
+          <div style={{ background: '#fff', borderRadius: 20, padding: 48, textAlign: 'center', boxShadow: '0 4px 20px rgba(0,0,0,0.06)' }}>
+            <div style={{ fontSize: 48, marginBottom: 16 }}>🔐</div>
+            <h2 style={{ fontSize: 24, fontWeight: 800, color: '#0F172A', margin: '0 0 12px' }}>Sign in to continue</h2>
+            <p style={{ fontSize: 16, color: '#64748B', margin: '0 0 24px' }}>Background removal uses AI credits. Sign in to use your free daily credits.</p>
+            <a href="/auth/signin" style={{ display: 'inline-block', padding: '14px 32px', background: '#6366F1', color: '#fff', borderRadius: 12, fontWeight: 800, fontSize: 16, textDecoration: 'none' }}>
+              Sign In
+            </a>
+            <button onClick={reset} style={{ display: 'block', margin: '16px auto 0', background: 'none', border: 'none', color: '#94A3B8', cursor: 'pointer', fontSize: 14 }}>
+              ← Try another image
+            </button>
+          </div>
+        )}
+
+        {/* Processing */}
+        {status === 'processing' && original && (
+          <div style={{ background: '#fff', borderRadius: 20, padding: 32, boxShadow: '0 4px 20px rgba(0,0,0,0.06)' }}>
+            <img src={original} alt="original" style={{ width: '100%', maxHeight: 400, objectFit: 'contain', borderRadius: 12, marginBottom: 24 }} />
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 12, padding: '16px 28px', background: '#EEF2FF', borderRadius: 12 }}>
+                <div style={{ width: 20, height: 20, border: '3px solid #6366F1', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+                <span style={{ fontSize: 15, fontWeight: 700, color: '#6366F1' }}>🪄 Removing background…</span>
+              </div>
+              <p style={{ fontSize: 13, color: '#94A3B8', marginTop: 12 }}>AI is processing your image. This takes 5–15 seconds.</p>
+            </div>
+            <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+          </div>
+        )}
+
+        {/* Error */}
+        {status === 'error' && (
+          <div style={{ background: '#fff', borderRadius: 20, padding: 32, boxShadow: '0 4px 20px rgba(0,0,0,0.06)', textAlign: 'center' }}>
+            {original && <img src={original} alt="original" style={{ width: '100%', maxHeight: 300, objectFit: 'contain', borderRadius: 12, marginBottom: 24 }} />}
+            <div style={{ background: '#FFF1F0', border: '1px solid #FCA5A5', borderRadius: 10, padding: 16, color: '#B91C1C', fontSize: 14, marginBottom: 16 }}>
+              <strong>Error:</strong> {error}
+            </div>
+            <button onClick={reset} style={{ padding: '12px 28px', background: '#6366F1', color: '#fff', border: 'none', borderRadius: 10, cursor: 'pointer', fontWeight: 700, fontSize: 15 }}>Try Again</button>
+          </div>
+        )}
+
+        {/* Result */}
+        {status === 'done' && original && result && (
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: 4, marginBottom: 20 }}>
+              {(['After', 'Before'] as const).map(label => (
+                <button key={label} onClick={() => setShowOriginal(label === 'Before')}
+                  style={{ padding: '8px 20px', borderRadius: 8, border: 'none', cursor: 'pointer', fontWeight: 700, fontSize: 14, background: (label === 'Before') === showOriginal ? '#6366F1' : '#F1F5F9', color: (label === 'Before') === showOriginal ? '#fff' : '#374151' }}>
+                  {label}
+                </button>
+              ))}
+            </div>
+
+            <div style={{ background: '#fff', borderRadius: 20, overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', marginBottom: 20 }}>
+              <div style={{ backgroundImage: showOriginal ? 'none' : 'repeating-conic-gradient(#e2e8f0 0% 25%, #fff 0% 50%) 0 0 / 20px 20px', background: showOriginal ? '#F8FAFC' : undefined, padding: 20, display: 'flex', justifyContent: 'center', minHeight: 300, alignItems: 'center' }}>
+                <img src={showOriginal ? original : result} alt={showOriginal ? 'original' : 'background removed'} style={{ maxWidth: '100%', maxHeight: 500, objectFit: 'contain', borderRadius: 8 }} />
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+              <button onClick={downloadResult}
+                style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '14px 32px', background: '#6366F1', color: '#fff', border: 'none', borderRadius: 12, fontWeight: 800, fontSize: 16, cursor: 'pointer', boxShadow: '0 4px 14px rgba(99,102,241,0.4)' }}>
+                ⬇ Download PNG
+              </button>
+              <button onClick={reset}
+                style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '14px 24px', background: '#F1F5F9', color: '#374151', border: 'none', borderRadius: 12, fontWeight: 700, fontSize: 16, cursor: 'pointer' }}>
+                🖼️ New Image
+              </button>
+            </div>
+
+            <p style={{ textAlign: 'center', fontSize: 13, color: '#94A3B8', marginTop: 16 }}>
+              Result is a transparent PNG — perfect for logos, product photos, and profile pictures.
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}

@@ -2,7 +2,8 @@
 
 const AI_TOOLS = [
   { label: "AI Upscale", href: "/upscale" },
-  { label: "Remove Background", href: "/remove-bg" },
+  { label: "Remove Background (Free)", href: "/bg-remover" },
+  { label: "Remove Background (AI)", href: "/remove-bg" },
   { label: "AI Headshot", href: "/ai-headshot" },
   { label: "AI Editor", href: "/ai-editor" },
 ];
