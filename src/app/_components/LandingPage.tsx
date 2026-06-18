@@ -2,6 +2,7 @@
 
 import FAQAccordion from './FAQAccordion'
 import { PageSEO } from '@/lib/page-config'
+import { PAGE_IMAGES } from '@/lib/landing-images'
 
 interface LandingPageProps {
   config: PageSEO
@@ -41,6 +42,7 @@ const PAGE_VISUALS: Record<string, { before: string; after: string; label: strin
 
 export default function LandingPage({ config, toolHref, pageId }: LandingPageProps) {
   const visual = PAGE_VISUALS[pageId] ?? PAGE_VISUALS['upscale']
+  const heroImg = PAGE_IMAGES[pageId]
 
   return (
     <div style={{ fontFamily: 'system-ui, -apple-system, sans-serif', color: '#111827', background: '#fff' }}>
@@ -69,19 +71,26 @@ export default function LandingPage({ config, toolHref, pageId }: LandingPagePro
           <div style={{ fontSize: 13, color: '#9CA3AF', marginTop: 12 }}>No credit card required · 10 free credits included</div>
         </div>
 
-        {/* Before / After visual */}
-        <div style={{ maxWidth: 820, margin: '56px auto 0', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, borderRadius: 24, overflow: 'hidden', boxShadow: '0 24px 80px rgba(0,0,0,0.12)' }}>
-          <div style={{ position: 'relative', height: 280, background: visual.before, display: 'flex', alignItems: 'flex-end' }}>
-            <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.04)' }} />
-            {/* Simulated photo noise */}
-            <div style={{ width: '100%', height: '100%', backgroundImage: 'repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 8px)', position: 'absolute' }} />
-            <span style={{ position: 'relative', padding: '10px 16px', background: 'rgba(0,0,0,0.5)', color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', borderTopRightRadius: 10 }}>Original</span>
+        {/* Showcase visual — real AI-generated image, gradient fallback */}
+        {heroImg ? (
+          <div style={{ maxWidth: 900, margin: '56px auto 0', borderRadius: 24, overflow: 'hidden', boxShadow: '0 24px 80px rgba(0,0,0,0.16)', position: 'relative' }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={heroImg} alt={`${visual.label} example`} style={{ display: 'block', width: '100%', height: 'auto' }} />
+            <span style={{ position: 'absolute', bottom: 16, right: 16, padding: '8px 16px', background: 'rgba(99,102,241,0.92)', color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', borderRadius: 10, boxShadow: '0 4px 16px rgba(0,0,0,0.2)' }}>✨ {visual.label}</span>
           </div>
-          <div style={{ position: 'relative', height: 280, background: visual.after, display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
-            <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(circle at 30% 40%, rgba(255,255,255,0.18) 0%, transparent 60%)' }} />
-            <span style={{ position: 'relative', padding: '10px 16px', background: 'rgba(99,102,241,0.85)', color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', borderTopLeftRadius: 10 }}>✨ {visual.label}</span>
+        ) : (
+          <div style={{ maxWidth: 820, margin: '56px auto 0', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, borderRadius: 24, overflow: 'hidden', boxShadow: '0 24px 80px rgba(0,0,0,0.12)' }}>
+            <div style={{ position: 'relative', height: 280, background: visual.before, display: 'flex', alignItems: 'flex-end' }}>
+              <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.04)' }} />
+              <div style={{ width: '100%', height: '100%', backgroundImage: 'repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 8px)', position: 'absolute' }} />
+              <span style={{ position: 'relative', padding: '10px 16px', background: 'rgba(0,0,0,0.5)', color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', borderTopRightRadius: 10 }}>Original</span>
+            </div>
+            <div style={{ position: 'relative', height: 280, background: visual.after, display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
+              <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(circle at 30% 40%, rgba(255,255,255,0.18) 0%, transparent 60%)' }} />
+              <span style={{ position: 'relative', padding: '10px 16px', background: 'rgba(99,102,241,0.85)', color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', borderTopLeftRadius: 10 }}>✨ {visual.label}</span>
+            </div>
           </div>
-        </div>
+        )}
       </section>
 
       {/* ── STATS BAR ────────────────────────────────────────────────────── */}
