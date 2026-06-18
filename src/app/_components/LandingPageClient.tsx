@@ -2,6 +2,11 @@
 
 import { useRef, useState, useEffect } from "react";
 
+// PixelBin CDN base — images served with on-the-fly resize + compress for speed.
+const PB = "https://cdn.pixelbin.io/v2/misty-band-06f445";
+const thumb = (path: string, w = 760) => `${PB}/t.resize(w:${w})~t.compress(q:75)/${path}`;
+const HERO_IMG = `${PB}/t.resize(w:1600)~t.compress(q:80)/landing/result_0.png`;
+
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
 const FEATURES = [
@@ -9,31 +14,37 @@ const FEATURES = [
     icon: "✂️",
     title: "Background Removal",
     desc: "Instantly remove any background with AI precision. Works on people, products, objects, and complex scenes — in seconds.",
+    img: thumb("landing/bg-removal/result_0.png"),
   },
   {
     icon: "✨",
     title: "AI Image Editing",
     desc: "Describe any change in plain English. Transform lighting, swap backgrounds, add effects, change colors — just type what you want.",
+    img: thumb("landing/ai-edit/result_0.png"),
   },
   {
     icon: "🔍",
     title: "Image Upscaling",
     desc: "Enhance photo resolution and sharpness with AI. Recover fine details, reduce noise, and get sharper results from any image.",
+    img: thumb("landing/upscale/result_0.png"),
   },
   {
     icon: "🌅",
     title: "AI Background Generation",
     desc: "Generate stunning, photorealistic backgrounds from a text description. Studio bokeh, mountain sunsets, cityscapes — anything you imagine.",
+    img: thumb("landing/bg-generate/result_0.png"),
   },
   {
     icon: "↔️",
     title: "Smart Resize",
     desc: "Resize to any dimension with aspect ratio lock. Optimise for Instagram, LinkedIn, print, or any custom size.",
+    img: thumb("landing/resize/result_0.png"),
   },
   {
     icon: "🎨",
     title: "Color & Light Adjustments",
     desc: "Fine-tune brightness, contrast, saturation, and sharpness with a real-time preview before saving.",
+    img: thumb("landing/color/result_0.png"),
   },
 ];
 
@@ -302,6 +313,12 @@ export default function LandingPageClient() {
               </div>
             ))}
           </div>
+
+          {/* Hero showcase — AI before/after */}
+          <div style={s.heroShowcase}>
+            <img src={HERO_IMG} alt="AI photo editing before and after" style={s.heroShowcaseImg} loading="eager" />
+            <div style={s.heroShowcaseBadge}>✦ Real result from JPT AI</div>
+          </div>
         </div>
       </section>
 
@@ -314,9 +331,14 @@ export default function LandingPageClient() {
           <div style={s.featureGrid}>
             {FEATURES.map((f) => (
               <div key={f.title} style={s.featureCard}>
-                <div style={s.featureIcon}>{f.icon}</div>
-                <div style={s.featureTitle}>{f.title}</div>
-                <p style={s.featureDesc}>{f.desc}</p>
+                <div style={s.featureImgWrap}>
+                  <img src={f.img} alt={f.title} style={s.featureImg} loading="lazy" />
+                </div>
+                <div style={s.featureBody}>
+                  <div style={s.featureIcon}>{f.icon}</div>
+                  <div style={s.featureTitle}>{f.title}</div>
+                  <p style={s.featureDesc}>{f.desc}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -512,11 +534,19 @@ const s: Record<string, React.CSSProperties> = {
   sectionSub: { margin: "0 0 48px", fontSize: 16, color: "#666", lineHeight: 1.6 },
 
   // Feature grid
-  featureGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 20 },
-  featureCard: { background: "#F7F8FC", borderRadius: 16, padding: "24px 22px", border: "1px solid #EAECF0" },
-  featureIcon: { fontSize: 30, marginBottom: 12 },
+  featureGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 22 },
+  featureCard: { background: "#fff", borderRadius: 18, border: "1px solid #EAECF0", overflow: "hidden", boxShadow: "0 2px 14px rgba(0,0,0,0.05)", display: "flex", flexDirection: "column" },
+  featureImgWrap: { width: "100%", aspectRatio: "16 / 9", overflow: "hidden", background: "#F0F0F8" },
+  featureImg: { width: "100%", height: "100%", objectFit: "cover", display: "block" },
+  featureBody: { padding: "20px 22px 24px" },
+  featureIcon: { fontSize: 28, marginBottom: 10 },
   featureTitle: { fontSize: 16, fontWeight: 800, marginBottom: 8 },
   featureDesc: { margin: 0, fontSize: 14, color: "#555", lineHeight: 1.65 },
+
+  // Hero showcase
+  heroShowcase: { position: "relative", width: "100%", maxWidth: 720, marginTop: 16, borderRadius: 20, overflow: "hidden", boxShadow: "0 20px 60px rgba(99,102,241,0.25)", border: "1px solid rgba(99,102,241,0.15)" },
+  heroShowcaseImg: { width: "100%", display: "block" },
+  heroShowcaseBadge: { position: "absolute", bottom: 14, right: 14, background: "rgba(15,23,42,0.85)", color: "#fff", fontSize: 12, fontWeight: 700, padding: "6px 12px", borderRadius: 100, backdropFilter: "blur(4px)" },
 
   // Steps
   stepsRow: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 20 },
