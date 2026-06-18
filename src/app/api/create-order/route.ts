@@ -32,7 +32,6 @@ export async function POST(req: NextRequest) {
   }
 
   const rzp = new Razorpay({ key_id: keyId, key_secret: keySecret });
-
   try {
     const order = await rzp.orders.create({
       amount: amountPaise,
