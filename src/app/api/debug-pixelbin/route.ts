@@ -2,58 +2,67 @@ import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
-const TINY_PNG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
-
+const CLOUD_NAME = "misty-band-06f445";
 const ORG_ID = "318452";
 
 export async function GET() {
   const t = process.env.PIXELBIN_API_TOKEN || "";
   const k = process.env.PIXELBIN_ACCESS_KEY || "";
-  const results: Record<string, unknown> = { orgId: ORG_ID };
+  const results: Record<string, unknown> = { cloudName: CLOUD_NAME };
 
-  const match = TINY_PNG.match(/^data:([^;]+);base64,(.+)$/)!;
-  const [, mimeType, b64] = match;
-
-  const authFormats = [
-    ["b64(key:)",       `Bearer ${Buffer.from(k + ":").toString("base64")}`],
-    ["b64(token:)",     `Bearer ${Buffer.from(t + ":").toString("base64")}`],
-    ["b64(key:token)",  `Bearer ${Buffer.from(k + ":" + t).toString("base64")}`],
-    ["raw-token",       `Bearer ${t}`],
-  ] as const;
-
-  // Test platform API with org ID in URL
-  const platformEndpoints = [
-    `https://api.pixelbin.io/service/platform/playground/v1.0/${ORG_ID}/predict/erase/bg`,
-    `https://api.pixelbin.io/service/platform/predict/v1/${ORG_ID}/inference`,
-    `https://api.pixelbin.io/service/platform/assets/v2.0/`,  // list files
+  // 1. Test CDN transformation on a public image (no auth needed?)
+  const publicImg = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/PNG_transparency_demonstration_1.png/280px-PNG_transparency_demonstration_1.png";
+  const cdnUrls = [
+    `https://cdn.pixelbin.io/v2/${CLOUD_NAME}/erase.bg()/${publicImg}`,
+    `https://cdn.pixelbin.io/v2/${CLOUD_NAME}/t-erase.bg()/__ext/${Buffer.from(publicImg).toString("base64")}`,
+    `https://cdn.pixelbin.io/v2/${CLOUD_NAME}/erase.bg()/__ext/${Buffer.from(publicImg).toString("base64")}`,
   ];
-
-  for (const ep of platformEndpoints) {
-    const short = ep.split("/").slice(-3).join("/");
-    for (const [label, auth] of authFormats) {
-      const fd = new FormData();
-      fd.append("image", new Blob([Buffer.from(b64, "base64")], { type: mimeType }), "test.png");
-      fd.append("prompt", "test");
-      const res = await fetch(ep, {
-        method: ep.includes("assets") ? "GET" : "POST",
-        headers: { Authorization: auth },
-        body: ep.includes("assets") ? undefined : fd,
-      });
-      results[`${short}__${label}`] = `${res.status}: ${(await res.text()).slice(0, 150)}`;
-    }
+  for (const url of cdnUrls) {
+    const res = await fetch(url, { method: "HEAD" });
+    results[`cdn_${url.split("__ext")[0].slice(-30)}`] = `${res.status} ${res.statusText}`;
   }
 
-  // Also test nanoBananaPro with images field (not image)
-  const nbEp = `https://api.pixelbin.io/service/platform/playground/v1.0/${ORG_ID}/predict/nanoBananaPro/generate`;
-  const fd2 = new FormData();
-  fd2.append("images", new Blob([Buffer.from(b64, "base64")], { type: mimeType }), "test.png");
-  fd2.append("prompt", "make it brighter");
-  const nbRes = await fetch(nbEp, {
+  // 2. Try presigned URL generation with different auth
+  const authVariants = [
+    ["x-ebz-token", t, "default"],
+    ["Authorization", `Bearer ${t}`, "bearer-raw"],
+    ["Authorization", `Bearer ${Buffer.from(t + ":").toString("base64")}`, "bearer-b64"],
+    ["x-api-key", t, "x-api-key"],
+  ];
+  for (const [headerName, headerVal, label] of authVariants) {
+    const res = await fetch(`https://api.pixelbin.io/service/platform/assets/v2.0/${ORG_ID}/presignedUploadUrl`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", [headerName]: headerVal },
+      body: JSON.stringify({ name: "test.png", path: "temp", format: "png", access: "public-read" }),
+    });
+    results[`presigned_${label}`] = `${res.status}: ${(await res.text()).slice(0, 150)}`;
+  }
+
+  // 3. Try erase.bg specific API
+  const eraseBgFormats = [
+    ["Authorization", `Bearer ${t}`],
+    ["X-API-Key", t],
+    ["Authorization", `Bearer ${Buffer.from(k + ":" + t).toString("base64")}`],
+  ];
+  const fd = new FormData();
+  fd.append("image_url", publicImg);
+  for (const [hName, hVal] of eraseBgFormats) {
+    const res = await fetch("https://api.erase.bg/v1/removebg", {
+      method: "POST", headers: { [hName]: hVal }, body: fd,
+    });
+    results[`erasebg_api_${hName}`] = `${res.status}: ${(await res.text()).slice(0, 150)}`;
+  }
+
+  // 4. Try PixelBin upload with x-ebz-token (their custom header)
+  const uploadFd = new FormData();
+  uploadFd.append("file", new Blob(["test"], { type: "image/png" }), "test.png");
+  uploadFd.append("path", "temp");
+  const uploadRes = await fetch(`https://api.pixelbin.io/service/platform/assets/v2.0/${ORG_ID}/upload`, {
     method: "POST",
-    headers: { Authorization: `Bearer ${Buffer.from(k + ":").toString("base64")}` },
-    body: fd2,
+    headers: { "x-ebz-token": t },
+    body: uploadFd,
   });
-  results["nanoBananaPro_images_field"] = `${nbRes.status}: ${(await nbRes.text()).slice(0, 200)}`;
+  results["upload_x-ebz-token"] = `${uploadRes.status}: ${(await uploadRes.text()).slice(0, 150)}`;
 
   return NextResponse.json(results);
 }
