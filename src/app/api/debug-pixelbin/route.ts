@@ -3,66 +3,39 @@ import { NextResponse } from "next/server";
 export const runtime = "nodejs";
 
 const CLOUD_NAME = "misty-band-06f445";
-const ORG_ID = "318452";
 
 export async function GET() {
-  const t = process.env.PIXELBIN_API_TOKEN || "";
-  const k = process.env.PIXELBIN_ACCESS_KEY || "";
-  const results: Record<string, unknown> = { cloudName: CLOUD_NAME };
+  const results: Record<string, unknown> = {};
 
-  // 1. Test CDN transformation on a public image (no auth needed?)
-  const publicImg = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/PNG_transparency_demonstration_1.png/280px-PNG_transparency_demonstration_1.png";
-  const cdnUrls = [
-    `https://cdn.pixelbin.io/v2/${CLOUD_NAME}/erase.bg()/${publicImg}`,
-    `https://cdn.pixelbin.io/v2/${CLOUD_NAME}/t-erase.bg()/__ext/${Buffer.from(publicImg).toString("base64")}`,
-    `https://cdn.pixelbin.io/v2/${CLOUD_NAME}/erase.bg()/__ext/${Buffer.from(publicImg).toString("base64")}`,
+  // Test public image to transform
+  const testImageUrl = "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&q=80";
+
+  // URL-safe base64 (no +/= issues in URLs)
+  const urlSafeB64 = Buffer.from(testImageUrl).toString("base64")
+    .replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
+
+  // Regular base64
+  const regularB64 = Buffer.from(testImageUrl).toString("base64");
+
+  // Test various CDN external URL formats
+  const cdnFormats = [
+    `https://cdn.pixelbin.io/v2/${CLOUD_NAME}/erase.bg()/__ext/${urlSafeB64}`,
+    `https://cdn.pixelbin.io/v2/${CLOUD_NAME}/erase.bg()/__ext/${regularB64}`,
+    `https://cdn.pixelbin.io/v2/${CLOUD_NAME}/t-erase.bg()/__ext/${urlSafeB64}`,
+    `https://cdn.pixelbin.io/v2/${CLOUD_NAME}/erase.bg()/fetch/${encodeURIComponent(testImageUrl)}`,
+    `https://cdn.pixelbin.io/v2/${CLOUD_NAME}/erase.bg()/${testImageUrl}`,
+    `https://cdn.pixelbin.io/v2/${CLOUD_NAME}/original/erase.bg()/__ext/${urlSafeB64}`,
   ];
-  for (const url of cdnUrls) {
-    const res = await fetch(url, { method: "HEAD" });
-    results[`cdn_${url.split("__ext")[0].slice(-30)}`] = `${res.status} ${res.statusText}`;
-  }
 
-  // 2. Try presigned URL generation with different auth
-  const authVariants = [
-    ["x-ebz-token", t, "default"],
-    ["Authorization", `Bearer ${t}`, "bearer-raw"],
-    ["Authorization", `Bearer ${Buffer.from(t + ":").toString("base64")}`, "bearer-b64"],
-    ["x-api-key", t, "x-api-key"],
-  ];
-  for (const [headerName, headerVal, label] of authVariants) {
-    const res = await fetch(`https://api.pixelbin.io/service/platform/assets/v2.0/${ORG_ID}/presignedUploadUrl`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", [headerName]: headerVal },
-      body: JSON.stringify({ name: "test.png", path: "temp", format: "png", access: "public-read" }),
-    });
-    results[`presigned_${label}`] = `${res.status}: ${(await res.text()).slice(0, 150)}`;
+  for (const url of cdnFormats) {
+    const key = url.replace(`https://cdn.pixelbin.io/v2/${CLOUD_NAME}/`, "").slice(0, 60);
+    try {
+      const res = await fetch(url, { method: "GET", redirect: "follow" });
+      const ct = res.headers.get("content-type") || "";
+      const body = ct.startsWith("image") ? "[IMAGE DATA]" : (await res.text()).slice(0, 150);
+      results[key] = `${res.status} ${ct} ${body}`;
+    } catch (e) { results[key] = `ERR: ${String(e).slice(0, 100)}`; }
   }
-
-  // 3. Try erase.bg specific API
-  const eraseBgFormats = [
-    ["Authorization", `Bearer ${t}`],
-    ["X-API-Key", t],
-    ["Authorization", `Bearer ${Buffer.from(k + ":" + t).toString("base64")}`],
-  ];
-  const fd = new FormData();
-  fd.append("image_url", publicImg);
-  for (const [hName, hVal] of eraseBgFormats) {
-    const res = await fetch("https://api.erase.bg/v1/removebg", {
-      method: "POST", headers: { [hName]: hVal }, body: fd,
-    });
-    results[`erasebg_api_${hName}`] = `${res.status}: ${(await res.text()).slice(0, 150)}`;
-  }
-
-  // 4. Try PixelBin upload with x-ebz-token (their custom header)
-  const uploadFd = new FormData();
-  uploadFd.append("file", new Blob(["test"], { type: "image/png" }), "test.png");
-  uploadFd.append("path", "temp");
-  const uploadRes = await fetch(`https://api.pixelbin.io/service/platform/assets/v2.0/${ORG_ID}/upload`, {
-    method: "POST",
-    headers: { "x-ebz-token": t },
-    body: uploadFd,
-  });
-  results["upload_x-ebz-token"] = `${uploadRes.status}: ${(await uploadRes.text()).slice(0, 150)}`;
 
   return NextResponse.json(results);
 }
