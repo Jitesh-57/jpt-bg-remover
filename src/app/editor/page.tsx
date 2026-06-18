@@ -527,6 +527,13 @@ export default function ImageEditorPage() {
     } catch {}
   };
 
+  // Expose the persist fn so the global NavBar's sign-in can preserve editor
+  // context (uploaded image + active tool) before its OAuth redirect / reload.
+  useEffect(() => {
+    (window as unknown as { __jptPersistContext?: () => void }).__jptPersistContext = persistContextForAuth;
+    return () => { delete (window as unknown as { __jptPersistContext?: () => void }).__jptPersistContext; };
+  });
+
   const handleGoogleSignIn = () => {
     persistContextForAuth();
     const next = window.location.pathname + window.location.search;
