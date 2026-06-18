@@ -1,5 +1,6 @@
 'use client'
 
+import { useRef } from 'react'
 import FAQAccordion from './FAQAccordion'
 import { PageSEO } from '@/lib/page-config'
 import { PAGE_IMAGES } from '@/lib/landing-images'
@@ -8,6 +9,22 @@ interface LandingPageProps {
   config: PageSEO
   toolHref: string
   pageId: string
+}
+
+// Map pageId → editor tool id (matches editor's Tool type)
+const PAGE_TOOL: Record<string, string> = {
+  'remove-bg': 'remove-bg',
+  upscale: 'upscale',
+  'ai-editor': 'ai-edit',
+}
+
+function readFileAsDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader()
+    r.onloadend = () => resolve(r.result as string)
+    r.onerror = reject
+    r.readAsDataURL(file)
+  })
 }
 
 const HOW_IT_WORKS = [
@@ -43,6 +60,32 @@ const PAGE_VISUALS: Record<string, { before: string; after: string; label: strin
 export default function LandingPage({ config, toolHref, pageId }: LandingPageProps) {
   const visual = PAGE_VISUALS[pageId] ?? PAGE_VISUALS['upscale']
   const heroImg = PAGE_IMAGES[pageId]
+  const fileRef = useRef<HTMLInputElement>(null)
+
+  const editorTool = PAGE_TOOL[pageId]
+
+  const handleUploadAndRedirect = async (file: File) => {
+    if (!file.type.startsWith('image/')) return
+    if (editorTool) {
+      const dataUrl = await readFileAsDataUrl(file)
+      try {
+        sessionStorage.setItem('jpt_pending_image', dataUrl)
+        sessionStorage.setItem('jpt_pending_tool', editorTool)
+      } catch {}
+      window.location.href = `/editor?tool=${editorTool}`
+    } else {
+      // headshot — just navigate, the headshot page has its own upload
+      window.location.href = toolHref
+    }
+  }
+
+  const handleCTAClick = () => {
+    if (editorTool) {
+      fileRef.current?.click()
+    } else {
+      window.location.href = toolHref
+    }
+  }
 
   return (
     <div style={{ fontFamily: 'system-ui, -apple-system, sans-serif', color: '#111827', background: '#fff' }}>
@@ -62,13 +105,19 @@ export default function LandingPage({ config, toolHref, pageId }: LandingPagePro
             {config.subtitle}
           </p>
 
-          <a
-            href={toolHref}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg, #6366F1, #8B5CF6)', color: '#fff', fontWeight: 800, fontSize: 16, padding: '16px 36px', borderRadius: 14, textDecoration: 'none', boxShadow: '0 8px 30px rgba(99,102,241,0.4)', letterSpacing: '-0.01em' }}
+          {/* Hidden file input for upload-then-redirect */}
+          <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }}
+            onChange={e => { const f = e.target.files?.[0]; if (f) handleUploadAndRedirect(f); e.target.value = ''; }} />
+
+          <button
+            onClick={handleCTAClick}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg, #6366F1, #8B5CF6)', color: '#fff', fontWeight: 800, fontSize: 16, padding: '16px 36px', borderRadius: 14, border: 'none', cursor: 'pointer', boxShadow: '0 8px 30px rgba(99,102,241,0.4)', letterSpacing: '-0.01em' }}
           >
-            {config.cta_text || 'Try It Free'} →
-          </a>
-          <div style={{ fontSize: 13, color: '#9CA3AF', marginTop: 12 }}>No credit card required · 10 free credits included</div>
+            {editorTool ? '📂 ' : ''}{config.cta_text || 'Try It Free'} →
+          </button>
+          <div style={{ fontSize: 13, color: '#9CA3AF', marginTop: 12 }}>
+            {editorTool ? 'Upload an image to get started · No credit card required' : 'No credit card required · 10 free credits included'}
+          </div>
         </div>
 
         {/* Showcase visual — real AI-generated image, gradient fallback */}

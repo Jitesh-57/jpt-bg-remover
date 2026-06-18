@@ -16,36 +16,42 @@ const FEATURES = [
     title: "Background Removal",
     desc: "Instantly remove any background with AI precision. Works on people, products, objects, and complex scenes — in seconds.",
     img: thumb("bg-removal.png"),
+    tool: "remove-bg",
   },
   {
     icon: "✨",
     title: "AI Image Editing",
     desc: "Describe any change in plain English. Transform lighting, swap backgrounds, add effects, change colors — just type what you want.",
     img: thumb("ai-edit.png"),
+    tool: "ai-edit",
   },
   {
     icon: "🔍",
     title: "Image Upscaling",
     desc: "Enhance photo resolution and sharpness with AI. Recover fine details, reduce noise, and get sharper results from any image.",
     img: thumb("upscale.png"),
+    tool: "upscale",
   },
   {
     icon: "🌅",
     title: "AI Background Generation",
     desc: "Generate stunning, photorealistic backgrounds from a text description. Studio bokeh, mountain sunsets, cityscapes — anything you imagine.",
     img: thumb("bg-generate.png"),
+    tool: "generate-bg",
   },
   {
     icon: "↔️",
     title: "Smart Resize",
     desc: "Resize to any dimension with aspect ratio lock. Optimise for Instagram, LinkedIn, print, or any custom size.",
     img: thumb("resize.png"),
+    tool: "resize",
   },
   {
     icon: "🎨",
     title: "Color & Light Adjustments",
     desc: "Fine-tune brightness, contrast, saturation, and sharpness with a real-time preview before saving.",
     img: thumb("color.png"),
+    tool: "adjust",
   },
 ];
 
@@ -166,6 +172,8 @@ export default function LandingPageClient() {
 
   const uploadRef = useRef<HTMLInputElement>(null);
   const refRef = useRef<HTMLInputElement>(null);
+  const featureFileRef = useRef<HTMLInputElement>(null);
+  const pendingFeatureTool = useRef<string>("");
 
   const readFile = (file: File): Promise<string> =>
     new Promise((res, rej) => {
@@ -186,6 +194,22 @@ export default function LandingPageClient() {
     }
     setPendingType("upload");
     setShowSignIn(true);
+  };
+
+  const handleFeatureCardClick = (tool: string) => {
+    pendingFeatureTool.current = tool;
+    featureFileRef.current?.click();
+  };
+
+  const handleFeatureFile = async (file: File) => {
+    if (!file.type.startsWith("image/")) return;
+    const url = await readFile(file);
+    const tool = pendingFeatureTool.current;
+    try {
+      sessionStorage.setItem("jpt_pending_image", url);
+      sessionStorage.setItem("jpt_pending_tool", tool);
+    } catch {}
+    window.location.href = `/editor?tool=${tool}`;
   };
 
   const handleRefFile = async (file: File) => {
@@ -258,6 +282,8 @@ export default function LandingPageClient() {
           >
             <input ref={uploadRef} type="file" accept="image/*" style={{ display: "none" }}
               onChange={(e) => e.target.files?.[0] && handleUpload(e.target.files[0])} />
+            <input ref={featureFileRef} type="file" accept="image/*" style={{ display: "none" }}
+              onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFeatureFile(f); e.target.value = ""; }} />
             <span style={{ fontSize: 40 }}>🖼️</span>
             <div>
               <div style={s.dropTitle}>Drop an image here to start editing</div>
@@ -331,7 +357,10 @@ export default function LandingPageClient() {
           <p style={s.sectionSub}>Six powerful tools in one editor — no plugins, no complex software.</p>
           <div style={s.featureGrid}>
             {FEATURES.map((f) => (
-              <div key={f.title} style={s.featureCard}>
+              <div key={f.title} style={{ ...s.featureCard, cursor: "pointer" }}
+                onClick={() => handleFeatureCardClick(f.tool)}
+                onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = "0 8px 32px rgba(99,102,241,0.18)"; (e.currentTarget as HTMLDivElement).style.transform = "translateY(-3px)"; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = "0 2px 14px rgba(0,0,0,0.05)"; (e.currentTarget as HTMLDivElement).style.transform = "none"; }}>
                 <div style={s.featureImgWrap}>
                   <img src={f.img} alt={f.title} style={s.featureImg} loading="lazy" />
                 </div>
@@ -339,6 +368,7 @@ export default function LandingPageClient() {
                   <div style={s.featureIcon}>{f.icon}</div>
                   <div style={s.featureTitle}>{f.title}</div>
                   <p style={s.featureDesc}>{f.desc}</p>
+                  <div style={{ fontSize: 12, color: "#6366F1", fontWeight: 700, marginTop: 8 }}>Upload image to try →</div>
                 </div>
               </div>
             ))}

@@ -12,7 +12,6 @@ const TOOLS = [
     section: "AI Tools",
     items: [
       { icon: "🔍", label: "AI Upscale",     desc: "Enhance resolution up to 4×",           href: "/upscale" },
-      { icon: "🪄", label: "Remove BG (Free)", desc: "Browser-based, no credits needed",      href: "/bg-remover" },
       { icon: "🪄", label: "Remove BG (AI)",  desc: "AI-powered, higher quality",            href: "/remove-bg" },
       { icon: "🎯", label: "AI Headshot",    desc: "Professional headshots from any photo", href: "/ai-headshot" },
       { icon: "✍️", label: "AI Editor",     desc: "Edit images with text prompts",         href: "/ai-editor" },
