@@ -75,7 +75,9 @@ export default function NavBar() {
   };
   const handleGoogleSignIn = () => {
     persistPageContext();
-    const next = window.location.pathname + window.location.search;
+    const current = window.location.pathname + window.location.search;
+    // On the homepage there's nothing to return to — send to the editor.
+    const next = current === "/" || current === "" ? "/editor" : current;
     window.location.href = `/api/auth/google?next=${encodeURIComponent(next)}`;
   };
   const handleLogout = async () => {
@@ -96,7 +98,8 @@ export default function NavBar() {
       if (!res.ok) { setAuthError(data.error || "Authentication failed"); return; }
       if (data.needsConfirmation) { setAuthError("✅ Check your email and click the confirmation link, then sign in."); return; }
       persistPageContext();
-      window.location.reload();
+      const current = window.location.pathname + window.location.search;
+      window.location.href = current === "/" || current === "" ? "/editor" : current;
     } catch { setAuthError("Network error. Please try again."); }
     finally { setAuthLoading(false); }
   };
