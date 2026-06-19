@@ -45,13 +45,16 @@ const BG_TEMPLATES = [
   { id: "abstract-art", label: "Abstract Art", prompt: "Abstract colorful art background with brush strokes", icon: "🎨" },
 ];
 
-const TOOLS: { id: Tool; icon: string; label: string; ai?: boolean; free?: boolean }[] = [
-  { id: "ai-edit", icon: "✨", label: "AI Edit", ai: true },
-  { id: "generate-bg", icon: "🌅", label: "Generate BG", ai: true },
-  { id: "remove-bg", icon: "🪄", label: "Remove BG" },
-  { id: "upscale", icon: "🔍", label: "Upscale" },
-  { id: "resize", icon: "↔️", label: "Resize" },
-  { id: "adjust", icon: "🎨", label: "Adjust" },
+// `paid` tools are unavailable on the free plan (show the payment popup).
+// `free` tools are always usable. Upscale is `free` because its Normal mode is
+// free — the Pro mode is gated separately inside the panel.
+const TOOLS: { id: Tool; icon: string; label: string; ai?: boolean; free?: boolean; paid?: boolean }[] = [
+  { id: "ai-edit", icon: "✨", label: "AI Edit", ai: true, paid: true },
+  { id: "generate-bg", icon: "🌅", label: "Generate BG", ai: true, paid: true },
+  { id: "remove-bg", icon: "🪄", label: "Remove BG", paid: true },
+  { id: "upscale", icon: "🔍", label: "Upscale", free: true },
+  { id: "resize", icon: "↔️", label: "Resize", free: true },
+  { id: "adjust", icon: "🎨", label: "Adjust", free: true },
 ];
 
 const AI_TOOL_DESCRIPTIONS: Record<string, string> = {
@@ -880,20 +883,16 @@ export default function ImageEditorPage() {
               key={t.id}
               disabled={!hasImage || !authChecked}
               onClick={() => {
-                // Free tools (resize, adjust): use immediately, no gate.
+                const isPaidUser = !!(user && user.plan && user.plan !== "free");
+                // Free tools (Upscale-Normal, Resize, Adjust): use immediately.
                 if (t.free) { setActiveTool(activeTool === t.id ? null : t.id); return; }
-                // AI tools: the payment popup is the conversion point — show it
-                // first for anyone not already on a paid plan (signed in or not).
-                if (t.ai) {
-                  if (user && user.plan && user.plan !== "free") {
-                    setActiveTool(activeTool === t.id ? null : t.id);
-                    return;
-                  }
+                // Paid-only tools (AI Edit, Generate BG, Remove BG): the payment
+                // popup is the conversion point for anyone not on a paid plan.
+                if (t.paid && !isPaidUser) {
                   setBlockedTool(t);
                   setShowUpgradeModal(true);
                   return;
                 }
-                // Other credit-based tools (remove-bg, upscale): just need sign-in.
                 if (requireSignIn()) return;
                 setActiveTool(activeTool === t.id ? null : t.id);
               }}
@@ -1206,7 +1205,15 @@ export default function ImageEditorPage() {
                   ] as const).map(m => (
                     <button
                       key={m.key}
-                      onClick={() => setUpscaleMode(m.key)}
+                      onClick={() => {
+                        // Pro upscale is paid-only — show the payment popup for free users.
+                        if (m.key === "pro" && !(user && user.plan && user.plan !== "free")) {
+                          setBlockedTool({ id: "upscale", icon: "✨", label: "Upscale (Pro)" });
+                          setShowUpgradeModal(true);
+                          return;
+                        }
+                        setUpscaleMode(m.key);
+                      }}
                       style={{
                         flex: 1, padding: "8px 6px", borderRadius: 7, border: "none", cursor: "pointer",
                         background: upscaleMode === m.key ? "#fff" : "transparent",
