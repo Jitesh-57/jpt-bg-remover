@@ -877,13 +877,21 @@ export default function ImageEditorPage() {
               key={t.id}
               disabled={!hasImage}
               onClick={() => {
+                // Free tools (resize, adjust): use immediately, no gate.
                 if (t.free) { setActiveTool(activeTool === t.id ? null : t.id); return; }
-                if (requireSignIn()) return;
-                if (t.ai && user?.plan === "free") {
+                // AI tools: the payment popup is the conversion point — show it
+                // first for anyone not already on a paid plan (signed in or not).
+                if (t.ai) {
+                  if (user && user.plan && user.plan !== "free") {
+                    setActiveTool(activeTool === t.id ? null : t.id);
+                    return;
+                  }
                   setBlockedTool(t);
                   setShowUpgradeModal(true);
                   return;
                 }
+                // Other credit-based tools (remove-bg, upscale): just need sign-in.
+                if (requireSignIn()) return;
                 setActiveTool(activeTool === t.id ? null : t.id);
               }}
               title={`${t.label}${t.free || ["resize", "adjust"].includes(t.id ?? "") ? " (Free)" : ` (${CREDIT_COST} credits)`}`}
