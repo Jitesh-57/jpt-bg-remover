@@ -32,7 +32,11 @@ export async function GET(req: NextRequest) {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: `${origin}/auth/callback?next=${encodeURIComponent(next)}`,
+      // Keep the callback URL clean (no query string). Supabase only honors
+      // redirect targets that match its allow-list — appending ?next=… can make
+      // it fall back to the Site URL (homepage), losing the destination. We pass
+      // `next` through a short-lived cookie instead.
+      redirectTo: `${origin}/auth/callback`,
       skipBrowserRedirect: true,
     },
   });
@@ -45,5 +49,7 @@ export async function GET(req: NextRequest) {
   // Apply PKCE verifier cookie onto the actual redirect response
   const response = NextResponse.redirect(data.url);
   pendingCookies.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
+  // Remember where to land after the OAuth round-trip.
+  response.cookies.set("jpt_auth_next", next, { path: "/", maxAge: 600, httpOnly: true, sameSite: "lax" });
   return response;
 }

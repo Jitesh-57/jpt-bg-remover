@@ -15,6 +15,7 @@ interface User { email: string; name: string; picture?: string; credits: number;
 
 const FREE_CREDITS = 10;
 const CREDIT_COST = 2;
+const BASIC_UPSCALE_COST = 1;
 
 const SOLID_COLORS = [
   { label: "White", hex: "#FFFFFF" }, { label: "Light Gray", hex: "#F2F2F2" },
@@ -254,6 +255,7 @@ export default function ImageEditorPage() {
 
   // Auth / credits
   const [user, setUser] = useState<User | null>(null);
+  const [authChecked, setAuthChecked] = useState(false);
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [showAccountModal, setShowAccountModal] = useState(false);
   const [showNoCreditsModal, setShowNoCreditsModal] = useState(false);
@@ -319,7 +321,7 @@ export default function ImageEditorPage() {
           if (d.authenticated && d.email) {
             setUser({ email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? FREE_CREDITS, plan: d.plan || "free" });
           }
-        }).catch(() => null);
+        }).catch(() => null).finally(() => setAuthChecked(true));
 
     loadUser();
 
@@ -337,7 +339,9 @@ export default function ImageEditorPage() {
 
   // ── Auth gate ─────────────────────────────────────────────────────────────────
 
-  const requireSignIn = () => { if (!user) { setShowSignInModal(true); return true; } return false; };
+  // Don't gate until the auth check has completed — avoids false sign-in
+  // prompts during the brief window after OAuth redirect while cookies resolve.
+  const requireSignIn = () => { if (!authChecked) return true; if (!user) { setShowSignInModal(true); return true; } return false; };
 
   // ── API call helper (handles 401 / 402 and updates credits) ──────────────────
 
@@ -516,6 +520,29 @@ export default function ImageEditorPage() {
     finally { setProcessing(false); setProcessingLabel(""); }
   };
 
+  // Persist the current image + active tool so they survive the sign-in
+  // round-trip (OAuth redirect or reload) and the editor reopens with context.
+  const persistContextForAuth = () => {
+    try {
+      const cur = working || original?.dataUrl;
+      if (cur) sessionStorage.setItem("jpt_pending_image", cur);
+      if (activeTool) sessionStorage.setItem("jpt_pending_tool", activeTool);
+    } catch {}
+  };
+
+  // Expose the persist fn so the global NavBar's sign-in can preserve editor
+  // context (uploaded image + active tool) before its OAuth redirect / reload.
+  useEffect(() => {
+    (window as unknown as { __jptPersistContext?: () => void }).__jptPersistContext = persistContextForAuth;
+    return () => { delete (window as unknown as { __jptPersistContext?: () => void }).__jptPersistContext; };
+  });
+
+  const handleGoogleSignIn = () => {
+    persistContextForAuth();
+    const next = window.location.pathname + window.location.search;
+    window.location.href = `/api/auth/google?next=${encodeURIComponent(next)}`;
+  };
+
   const handleEmailAuth = async () => {
     if (!authEmail.trim() || !authPassword.trim()) { setAuthError("Email and password required"); return; }
     setAuthLoading(true); setAuthError("");
@@ -537,6 +564,7 @@ export default function ImageEditorPage() {
       }
       setShowSignInModal(false);
       setAuthEmail(""); setAuthPassword(""); setAuthName(""); setAuthError("");
+      persistContextForAuth();
       window.location.reload();
     } catch { setAuthError("Network error. Please try again."); }
     finally { setAuthLoading(false); }
@@ -792,20 +820,13 @@ export default function ImageEditorPage() {
     setSavedSession(null);
   };
 
-  const resetAll = () => {
-    setOriginal(null); setWorking(null); setEditHistory([]);
-    setActiveTool(null); setError(null); setShowOriginal(true);
-    setSelectedTemplate(null); setCustomBgPrompt(""); setPrompt("");
-    setAppliedUpscale(null);
-    resetAdjust();
-    try { localStorage.removeItem(SESSION_KEY); } catch {}
-    setSavedSession(null);
-  };
 
   const hasImage = !!original;
   const adjustFilter = `brightness(${brightness}%) contrast(${contrast}%) saturate(${saturation}%)`;
   const creditsLeft = user?.credits ?? 0;
-  const creditsUsed = FREE_CREDITS - creditsLeft;
+  // Denominator scales up once a user buys more than the free allotment,
+  // so the bar/ratio never shows nonsense like "82 / 10" or negative "used".
+  const creditsTotal = Math.max(creditsLeft, FREE_CREDITS);
   const lowCredits = creditsLeft > 0 && creditsLeft <= CREDIT_COST * 2;
 
   // ── Render ────────────────────────────────────────────────────────────────────
@@ -831,13 +852,10 @@ export default function ImageEditorPage() {
           )}
 
           <div style={s.pageHeaderRight}>
-            {hasImage && (
-              <>
-                {working && <button style={s.dlBtn} onClick={handleDownload}>⬇ Download</button>}
-                <button style={s.ghostBtn} onClick={resetAll}>+ New Image</button>
-              </>
+            {hasImage && working && (
+              <button style={s.dlBtn} onClick={handleDownload}>⬇ Download</button>
             )}
-            {user ? (
+            {user && (
               <button style={s.userChip} onClick={() => setShowAccountModal(true)}>
                 {user.picture
                   ? <img src={user.picture} alt="" style={s.avatar} />
@@ -846,11 +864,6 @@ export default function ImageEditorPage() {
                 <span style={{ ...s.creditsBadge, ...(creditsLeft === 0 ? s.creditsEmpty : lowCredits ? s.creditsLow : {}) }}>
                   ⚡ {creditsLeft}
                 </span>
-              </button>
-            ) : (
-              <button style={s.googleBtn} onClick={() => setShowSignInModal(true)}>
-                <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-                Sign in
               </button>
             )}
           </div>
@@ -865,19 +878,27 @@ export default function ImageEditorPage() {
           {TOOLS.map((t) => (
             <button
               key={t.id}
-              disabled={!hasImage}
+              disabled={!hasImage || !authChecked}
               onClick={() => {
+                // Free tools (resize, adjust): use immediately, no gate.
                 if (t.free) { setActiveTool(activeTool === t.id ? null : t.id); return; }
-                if (requireSignIn()) return;
-                if (t.ai && user?.plan === "free") {
+                // AI tools: the payment popup is the conversion point — show it
+                // first for anyone not already on a paid plan (signed in or not).
+                if (t.ai) {
+                  if (user && user.plan && user.plan !== "free") {
+                    setActiveTool(activeTool === t.id ? null : t.id);
+                    return;
+                  }
                   setBlockedTool(t);
                   setShowUpgradeModal(true);
                   return;
                 }
+                // Other credit-based tools (remove-bg, upscale): just need sign-in.
+                if (requireSignIn()) return;
                 setActiveTool(activeTool === t.id ? null : t.id);
               }}
               title={`${t.label}${t.free || ["resize", "adjust"].includes(t.id ?? "") ? " (Free)" : ` (${CREDIT_COST} credits)`}`}
-              style={{ ...s.toolBtn, ...(activeTool === t.id ? s.toolBtnActive : {}), ...(!hasImage ? { opacity: 0.35, cursor: "not-allowed" } : {}) }}
+              style={{ ...s.toolBtn, ...(activeTool === t.id ? s.toolBtnActive : {}), ...((!hasImage || !authChecked) ? { opacity: 0.35, cursor: "not-allowed" } : {}) }}
             >
               <span style={{ fontSize: 22 }}>{t.icon}</span>
               <span style={s.toolLabel}>{t.label}</span>
@@ -1360,17 +1381,17 @@ export default function ImageEditorPage() {
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
                 <div style={{ fontWeight: 800, fontSize: 15 }}>⚡ AI Credits</div>
                 <div style={{ fontWeight: 900, fontSize: 20, color: creditsLeft === 0 ? "#EF4444" : "#6366F1" }}>
-                  {creditsLeft} <span style={{ fontSize: 13, color: "#999", fontWeight: 400 }}>/ {FREE_CREDITS}</span>
+                  {creditsLeft} <span style={{ fontSize: 13, color: "#999", fontWeight: 400 }}>/ {creditsTotal}</span>
                 </div>
               </div>
 
               {/* Progress bar */}
               <div style={s.creditBarBg}>
-                <div style={{ ...s.creditBarFill, width: `${(creditsLeft / FREE_CREDITS) * 100}%`, background: creditsLeft === 0 ? "#EF4444" : creditsLeft <= 4 ? "#F59E0B" : "#6366F1" }} />
+                <div style={{ ...s.creditBarFill, width: `${(creditsLeft / creditsTotal) * 100}%`, background: creditsLeft === 0 ? "#EF4444" : creditsLeft <= 4 ? "#F59E0B" : "#6366F1" }} />
               </div>
 
               <div style={{ fontSize: 12, color: "#888", marginTop: 8, lineHeight: 1.6 }}>
-                {creditsUsed} credits used · {creditsLeft} remaining
+                {creditsLeft} credit{creditsLeft === 1 ? "" : "s"} remaining
               </div>
 
               {creditsLeft === 0 && (
@@ -1388,7 +1409,9 @@ export default function ImageEditorPage() {
               {[
                 { icon: "✨", label: "AI Edit", cost: CREDIT_COST },
                 { icon: "🌅", label: "Generate BG", cost: CREDIT_COST },
-                { icon: "🔍", label: "Upscale", cost: 0 },
+                { icon: "🪄", label: "Remove BG", cost: CREDIT_COST },
+                { icon: "✨", label: "Upscale (Pro)", cost: CREDIT_COST },
+                { icon: "🔍", label: "Upscale (Normal)", cost: BASIC_UPSCALE_COST },
                 { icon: "↔️", label: "Resize", cost: 0 },
                 { icon: "🎨", label: "Adjust", cost: 0 },
               ].map((item) => (
@@ -1450,7 +1473,7 @@ export default function ImageEditorPage() {
             {authTab === "google" && (
               <div style={{ display: "flex", flexDirection: "column" as const, gap: 12 }}>
                 <button
-                  onClick={() => { window.location.href = "/api/auth/google?next=/editor"; }}
+                  onClick={handleGoogleSignIn}
                   style={{ ...s.modalGoogleBtn, justifyContent: "center" }}
                 >
                   <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>

@@ -12,7 +12,6 @@ const TOOLS = [
     section: "AI Tools",
     items: [
       { icon: "🔍", label: "AI Upscale",     desc: "Enhance resolution up to 4×",           href: "/upscale" },
-      { icon: "🪄", label: "Remove BG (Free)", desc: "Browser-based, no credits needed",      href: "/bg-remover" },
       { icon: "🪄", label: "Remove BG (AI)",  desc: "AI-powered, higher quality",            href: "/remove-bg" },
       { icon: "🎯", label: "AI Headshot",    desc: "Professional headshots from any photo", href: "/ai-headshot" },
       { icon: "✍️", label: "AI Editor",     desc: "Edit images with text prompts",         href: "/ai-editor" },
@@ -67,10 +66,18 @@ export default function NavBar() {
         if (d.authenticated && d.email) setUser({ email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? 10 });
       }).catch(() => null);
 
-  const currentPath = typeof window !== "undefined" ? window.location.pathname : "/";
   const openModal = () => { setShowModal(true); setTab("google"); setMode("login"); setEmail(""); setPassword(""); setName(""); setAuthError(""); };
   const closeModal = () => { setShowModal(false); setAuthError(""); };
-  const handleGoogleSignIn = () => { window.location.href = `/api/auth/google?next=${encodeURIComponent(currentPath)}`; };
+  // Let the current page (e.g. the editor) persist its in-memory context
+  // (uploaded image + active tool) so it survives the sign-in round-trip.
+  const persistPageContext = () => {
+    try { (window as unknown as { __jptPersistContext?: () => void }).__jptPersistContext?.(); } catch {}
+  };
+  const handleGoogleSignIn = () => {
+    persistPageContext();
+    const next = window.location.pathname + window.location.search;
+    window.location.href = `/api/auth/google?next=${encodeURIComponent(next)}`;
+  };
   const handleLogout = async () => {
     try { await createSupabaseClient().auth.signOut(); } catch {}
     await fetch("/api/auth/google/logout", { method: "POST" });
@@ -88,6 +95,7 @@ export default function NavBar() {
       const data = await res.json() as { ok?: boolean; error?: string; needsConfirmation?: boolean };
       if (!res.ok) { setAuthError(data.error || "Authentication failed"); return; }
       if (data.needsConfirmation) { setAuthError("✅ Check your email and click the confirmation link, then sign in."); return; }
+      persistPageContext();
       window.location.reload();
     } catch { setAuthError("Network error. Please try again."); }
     finally { setAuthLoading(false); }

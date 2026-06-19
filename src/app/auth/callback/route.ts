@@ -6,12 +6,18 @@ export const runtime = "nodejs";
 export async function GET(request: NextRequest) {
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
-  const next = url.searchParams.get("next") ?? "/editor";
+  // `next` is carried in a cookie (set in /api/auth/google) so the OAuth
+  // redirect URL stays clean and matches Supabase's allow-list. Fall back to
+  // the query param for backwards-compat, then /editor.
+  const next = request.cookies.get("jpt_auth_next")?.value
+    || url.searchParams.get("next")
+    || "/editor";
   const origin = url.origin;
 
   if (!code) return NextResponse.redirect(`${origin}/?error=no_code`);
 
   const response = NextResponse.redirect(`${origin}${next}`);
+  response.cookies.delete("jpt_auth_next");
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

@@ -2,10 +2,11 @@
 
 import { useRef, useState, useEffect } from "react";
 
-// PixelBin CDN base — images served with on-the-fly resize + compress for speed.
-const PB = "https://cdn.pixelbin.io/v2/misty-band-06f445";
-const thumb = (path: string, w = 760) => `${PB}/t.resize(w:${w})~t.compress(q:75)/${path}`;
-const HERO_IMG = `${PB}/t.resize(w:1600)~t.compress(q:80)/landing/result_0.png`;
+import { landingImg } from "@/lib/landing-images";
+
+// AI-generated landing images served from Supabase Storage (public "landing" bucket).
+const thumb = (file: string) => landingImg(file);
+const HERO_IMG = landingImg("hero.png");
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
@@ -14,37 +15,43 @@ const FEATURES = [
     icon: "✂️",
     title: "Background Removal",
     desc: "Instantly remove any background with AI precision. Works on people, products, objects, and complex scenes — in seconds.",
-    img: thumb("landing/bg-removal/result_0.png"),
+    img: thumb("bg-removal.png"),
+    tool: "remove-bg",
   },
   {
     icon: "✨",
     title: "AI Image Editing",
     desc: "Describe any change in plain English. Transform lighting, swap backgrounds, add effects, change colors — just type what you want.",
-    img: thumb("landing/ai-edit/result_0.png"),
+    img: thumb("ai-edit.png"),
+    tool: "ai-edit",
   },
   {
     icon: "🔍",
     title: "Image Upscaling",
     desc: "Enhance photo resolution and sharpness with AI. Recover fine details, reduce noise, and get sharper results from any image.",
-    img: thumb("landing/upscale/result_0.png"),
+    img: thumb("upscale.png"),
+    tool: "upscale",
   },
   {
     icon: "🌅",
     title: "AI Background Generation",
     desc: "Generate stunning, photorealistic backgrounds from a text description. Studio bokeh, mountain sunsets, cityscapes — anything you imagine.",
-    img: thumb("landing/bg-generate/result_0.png"),
+    img: thumb("bg-generate.png"),
+    tool: "generate-bg",
   },
   {
     icon: "↔️",
     title: "Smart Resize",
     desc: "Resize to any dimension with aspect ratio lock. Optimise for Instagram, LinkedIn, print, or any custom size.",
-    img: thumb("landing/resize/result_0.png"),
+    img: thumb("resize.png"),
+    tool: "resize",
   },
   {
     icon: "🎨",
     title: "Color & Light Adjustments",
     desc: "Fine-tune brightness, contrast, saturation, and sharpness with a real-time preview before saving.",
-    img: thumb("landing/color/result_0.png"),
+    img: thumb("color.png"),
+    tool: "adjust",
   },
 ];
 
@@ -165,6 +172,8 @@ export default function LandingPageClient() {
 
   const uploadRef = useRef<HTMLInputElement>(null);
   const refRef = useRef<HTMLInputElement>(null);
+  const featureFileRef = useRef<HTMLInputElement>(null);
+  const pendingFeatureTool = useRef<string>("");
 
   const readFile = (file: File): Promise<string> =>
     new Promise((res, rej) => {
@@ -177,14 +186,24 @@ export default function LandingPageClient() {
   const handleUpload = async (file: File) => {
     if (!file.type.startsWith("image/")) return;
     const url = await readFile(file);
-    setUploadImage({ url, name: file.name.replace(/\.[^.]+$/, "") || "image" });
-    if (isLoggedIn) {
-      try { sessionStorage.setItem("jpt_pending_image", url); } catch {}
-      window.location.href = "/editor";
-      return;
-    }
-    setPendingType("upload");
-    setShowSignIn(true);
+    try { sessionStorage.setItem("jpt_pending_image", url); } catch {}
+    window.location.href = "/editor";
+  };
+
+  const handleFeatureCardClick = (tool: string) => {
+    pendingFeatureTool.current = tool;
+    featureFileRef.current?.click();
+  };
+
+  const handleFeatureFile = async (file: File) => {
+    if (!file.type.startsWith("image/")) return;
+    const url = await readFile(file);
+    const tool = pendingFeatureTool.current;
+    try {
+      sessionStorage.setItem("jpt_pending_image", url);
+      sessionStorage.setItem("jpt_pending_tool", tool);
+    } catch {}
+    window.location.href = `/editor?tool=${tool}`;
   };
 
   const handleRefFile = async (file: File) => {
@@ -248,6 +267,8 @@ export default function LandingPageClient() {
           </p>
 
           {/* Upload Drop Zone */}
+          <input ref={featureFileRef} type="file" accept="image/*" style={{ display: "none" }}
+            onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFeatureFile(f); e.target.value = ""; }} />
           <div
             style={{ ...s.dropZone, ...(dragOver ? s.dropZoneActive : {}) }}
             onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
@@ -330,7 +351,10 @@ export default function LandingPageClient() {
           <p style={s.sectionSub}>Six powerful tools in one editor — no plugins, no complex software.</p>
           <div style={s.featureGrid}>
             {FEATURES.map((f) => (
-              <div key={f.title} style={s.featureCard}>
+              <div key={f.title} style={{ ...s.featureCard, cursor: "pointer" }}
+                onClick={() => handleFeatureCardClick(f.tool)}
+                onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = "0 8px 32px rgba(99,102,241,0.18)"; (e.currentTarget as HTMLDivElement).style.transform = "translateY(-3px)"; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = "0 2px 14px rgba(0,0,0,0.05)"; (e.currentTarget as HTMLDivElement).style.transform = "none"; }}>
                 <div style={s.featureImgWrap}>
                   <img src={f.img} alt={f.title} style={s.featureImg} loading="lazy" />
                 </div>
@@ -338,6 +362,7 @@ export default function LandingPageClient() {
                   <div style={s.featureIcon}>{f.icon}</div>
                   <div style={s.featureTitle}>{f.title}</div>
                   <p style={s.featureDesc}>{f.desc}</p>
+                  <div style={{ fontSize: 12, color: "#6366F1", fontWeight: 700, marginTop: 8 }}>Upload image to try →</div>
                 </div>
               </div>
             ))}
@@ -347,11 +372,11 @@ export default function LandingPageClient() {
 
       {/* ── How it works ───────────────────────────────────────────────────── */}
       <section style={{ ...s.section, background: "#F4F5FB" }}>
-        <div style={s.sectionInner}>
+        <div style={{ ...s.sectionInner, textAlign: "center" }}>
           <div style={s.sectionLabel}>HOW IT WORKS</div>
           <h2 style={s.h2}>Edit images in 3 simple steps</h2>
-          <p style={s.sectionSub}>From upload to download in seconds — no learning curve.</p>
-          <div style={s.stepsRow}>
+          <p style={{ ...s.sectionSub, maxWidth: 480, margin: "0 auto 48px" }}>From upload to download in seconds — no learning curve.</p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20, maxWidth: 780, margin: "0 auto" }}>
             {STEPS.map((step, i) => (
               <div key={i} style={s.stepCard}>
                 <div style={s.stepNum}>{i + 1}</div>
