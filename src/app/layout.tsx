@@ -6,6 +6,7 @@ import Footer from "./_components/Footer";
 export const metadata: Metadata = {
   title: "JPT AI",
   description: "JPT AI — All-in-one AI image editor. Remove backgrounds, upscale photos, generate AI backgrounds, and edit images with a simple text prompt.",
+  verification: { google: "oaUjZEOCATyjaE5OvAHr6gXTXGjt6wJnk436SYbf1O4" },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
