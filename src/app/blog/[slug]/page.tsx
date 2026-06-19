@@ -108,6 +108,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               <span>{post.readTime}</span>
             </div>
 
+            {/* Hero image */}
+            {post.image && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={post.image} alt={post.title} style={{ width: "100%", height: 360, objectFit: "cover", borderRadius: 16, marginBottom: 32, display: "block" }} loading="eager" />
+            )}
+
             {/* Intro box */}
             <div style={{ background: "linear-gradient(135deg, #EEF2FF, #F5F3FF)", border: "1px solid rgba(99,102,241,0.2)", borderRadius: 14, padding: "20px 24px", marginBottom: 40 }}>
               <p style={{ margin: 0, fontSize: 17, color: "#333", lineHeight: 1.7, fontStyle: "italic" }}>

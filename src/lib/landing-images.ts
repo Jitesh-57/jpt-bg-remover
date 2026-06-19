@@ -17,3 +17,11 @@ export const PAGE_IMAGES: Record<string, string> = {
   "ai-editor": landingImg("page-ai-editor.png"),
   headshot: landingImg("page-ai-headshot.png"),
 };
+
+// Before/after pairs for split-view showcases (PixelBin CDN, permanent).
+export const PAGE_BEFORE_AFTER: Record<string, { before: string; after: string }> = {
+  upscale: {
+    before: "https://cdn.pixelbin.io/v2/misty-band-06f445/original/landing/upscale-before.jpg",
+    after: "https://cdn.pixelbin.io/v2/misty-band-06f445/original/landing/upscale-after.jpg",
+  },
+};

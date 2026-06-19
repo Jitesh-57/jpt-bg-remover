@@ -10,11 +10,13 @@ export interface BlogPost {
   keywords: string[];
   toolHref: string;
   toolLabel: string;
+  image?: string;
   sections: { heading?: string; body: string }[];
 }
 
 export const POSTS: BlogPost[] = [
   {
+    image: "https://images.pexels.com/photos/5632397/pexels-photo-5632397.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "remove-background-from-image-online-free",
     title: "How to Remove Background from Image Online — Free & Instant",
     metaTitle: "How to Remove Background from Image Online Free | JPT AI",
@@ -59,6 +61,7 @@ export const POSTS: BlogPost[] = [
     ],
   },
   {
+    image: "https://images.pexels.com/photos/1261731/pexels-photo-1261731.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "ai-image-upscaler-enhance-photo-quality",
     title: "AI Image Upscaler: Enhance Any Photo to 4K Quality",
     metaTitle: "AI Image Upscaler — Enhance Photo Quality Online | JPT AI",
@@ -103,6 +106,7 @@ export const POSTS: BlogPost[] = [
     ],
   },
   {
+    image: "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "ai-headshot-generator-linkedin-professional",
     title: "AI Headshot Generator: Get a Professional LinkedIn Photo in Seconds",
     metaTitle: "AI Headshot Generator — Professional LinkedIn Photo Online | JPT AI",
@@ -147,6 +151,7 @@ export const POSTS: BlogPost[] = [
     ],
   },
   {
+    image: "https://images.pexels.com/photos/4792731/pexels-photo-4792731.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "how-to-edit-photos-with-ai-text-prompts",
     title: "How to Edit Photos with AI Text Prompts (No Photoshop Needed)",
     metaTitle: "How to Edit Photos with AI Text Prompts — No Photoshop Needed | JPT AI",

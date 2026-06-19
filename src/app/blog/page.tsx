@@ -48,25 +48,31 @@ export default function BlogIndexPage() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(480px, 1fr))", gap: 28 }}>
           {POSTS.map((post) => (
             <Link key={post.slug} href={`/blog/${post.slug}`} style={{ textDecoration: "none" }}>
-              <article style={{ background: "#fff", borderRadius: 18, border: "1px solid #E8EAF0", padding: "28px 30px", boxShadow: "0 2px 14px rgba(0,0,0,0.04)", cursor: "pointer" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
-                  <span style={{ background: CATEGORY_COLORS[post.category] || "#6366F1", color: "#fff", fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 20, letterSpacing: 0.5 }}>
-                    {post.category}
-                  </span>
-                </div>
-                <h2 style={{ margin: "0 0 12px", fontSize: 20, fontWeight: 800, color: "#111", lineHeight: 1.3, letterSpacing: "-0.3px" }}>
-                  {post.title}
-                </h2>
-                <p style={{ margin: "0 0 18px", fontSize: 14, color: "#555", lineHeight: 1.65 }}>
-                  {post.excerpt}
-                </p>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                  <div style={{ display: "flex", gap: 12, fontSize: 12, color: "#999" }}>
-                    <span>{new Date(post.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</span>
-                    <span>·</span>
-                    <span>{post.readTime}</span>
+              <article style={{ background: "#fff", borderRadius: 18, border: "1px solid #E8EAF0", overflow: "hidden", boxShadow: "0 2px 14px rgba(0,0,0,0.04)", cursor: "pointer" }}>
+                {post.image && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={post.image} alt={post.title} style={{ width: "100%", height: 200, objectFit: "cover", display: "block" }} loading="lazy" />
+                )}
+                <div style={{ padding: "24px 28px 28px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+                    <span style={{ background: CATEGORY_COLORS[post.category] || "#6366F1", color: "#fff", fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 20, letterSpacing: 0.5 }}>
+                      {post.category}
+                    </span>
                   </div>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: "#6366F1" }}>Read more →</span>
+                  <h2 style={{ margin: "0 0 10px", fontSize: 20, fontWeight: 800, color: "#111", lineHeight: 1.3, letterSpacing: "-0.3px" }}>
+                    {post.title}
+                  </h2>
+                  <p style={{ margin: "0 0 16px", fontSize: 14, color: "#555", lineHeight: 1.65 }}>
+                    {post.excerpt}
+                  </p>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div style={{ display: "flex", gap: 12, fontSize: 12, color: "#999" }}>
+                      <span>{new Date(post.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</span>
+                      <span>·</span>
+                      <span>{post.readTime}</span>
+                    </div>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: "#6366F1" }}>Read more →</span>
+                  </div>
                 </div>
               </article>
             </Link>
