@@ -6,7 +6,8 @@ import { landingImg } from "@/lib/landing-images";
 
 // AI-generated landing images served from Supabase Storage (public "landing" bucket).
 const thumb = (file: string) => landingImg(file);
-const HERO_IMG = landingImg("hero.png");
+const HERO_BEFORE = "https://cdn.pixelbin.io/v2/misty-band-06f445/original/landing/hero-before.jpg";
+const HERO_AFTER = "https://cdn.pixelbin.io/v2/misty-band-06f445/original/landing/hero-after.png";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
@@ -337,7 +338,17 @@ export default function LandingPageClient() {
 
           {/* Hero showcase — AI before/after */}
           <div style={s.heroShowcase}>
-            <img src={HERO_IMG} alt="AI photo editing before and after" style={s.heroShowcaseImg} loading="eager" />
+            <div style={{ position: "relative", width: "100%", borderRadius: 16, overflow: "hidden", display: "flex" }}>
+              <div style={{ position: "relative", flex: 1 }}>
+                <img src={HERO_BEFORE} alt="Before AI editing" style={{ ...s.heroShowcaseImg, borderRadius: 0 }} loading="eager" />
+                <div style={{ position: "absolute", bottom: 12, left: 12, background: "rgba(0,0,0,0.55)", color: "#fff", fontSize: 13, fontWeight: 700, padding: "4px 12px", borderRadius: 6, letterSpacing: 1 }}>BEFORE</div>
+              </div>
+              <div style={{ width: 3, background: "#fff", flexShrink: 0, zIndex: 2 }} />
+              <div style={{ position: "relative", flex: 1 }}>
+                <img src={HERO_AFTER} alt="After AI editing — sunny outdoor background" style={{ ...s.heroShowcaseImg, borderRadius: 0 }} loading="eager" />
+                <div style={{ position: "absolute", bottom: 12, right: 12, background: "rgba(0,0,0,0.55)", color: "#fff", fontSize: 13, fontWeight: 700, padding: "4px 12px", borderRadius: 6, letterSpacing: 1 }}>AFTER</div>
+              </div>
+            </div>
             <div style={s.heroShowcaseBadge}>✦ Real result from JPT AI</div>
           </div>
         </div>
