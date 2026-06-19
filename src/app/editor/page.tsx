@@ -255,6 +255,7 @@ export default function ImageEditorPage() {
 
   // Auth / credits
   const [user, setUser] = useState<User | null>(null);
+  const [authChecked, setAuthChecked] = useState(false);
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [showAccountModal, setShowAccountModal] = useState(false);
   const [showNoCreditsModal, setShowNoCreditsModal] = useState(false);
@@ -320,7 +321,7 @@ export default function ImageEditorPage() {
           if (d.authenticated && d.email) {
             setUser({ email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? FREE_CREDITS, plan: d.plan || "free" });
           }
-        }).catch(() => null);
+        }).catch(() => null).finally(() => setAuthChecked(true));
 
     loadUser();
 
@@ -338,7 +339,9 @@ export default function ImageEditorPage() {
 
   // ── Auth gate ─────────────────────────────────────────────────────────────────
 
-  const requireSignIn = () => { if (!user) { setShowSignInModal(true); return true; } return false; };
+  // Don't gate until the auth check has completed — avoids false sign-in
+  // prompts during the brief window after OAuth redirect while cookies resolve.
+  const requireSignIn = () => { if (!authChecked) return true; if (!user) { setShowSignInModal(true); return true; } return false; };
 
   // ── API call helper (handles 401 / 402 and updates credits) ──────────────────
 
@@ -875,7 +878,7 @@ export default function ImageEditorPage() {
           {TOOLS.map((t) => (
             <button
               key={t.id}
-              disabled={!hasImage}
+              disabled={!hasImage || !authChecked}
               onClick={() => {
                 // Free tools (resize, adjust): use immediately, no gate.
                 if (t.free) { setActiveTool(activeTool === t.id ? null : t.id); return; }
@@ -895,7 +898,7 @@ export default function ImageEditorPage() {
                 setActiveTool(activeTool === t.id ? null : t.id);
               }}
               title={`${t.label}${t.free || ["resize", "adjust"].includes(t.id ?? "") ? " (Free)" : ` (${CREDIT_COST} credits)`}`}
-              style={{ ...s.toolBtn, ...(activeTool === t.id ? s.toolBtnActive : {}), ...(!hasImage ? { opacity: 0.35, cursor: "not-allowed" } : {}) }}
+              style={{ ...s.toolBtn, ...(activeTool === t.id ? s.toolBtnActive : {}), ...((!hasImage || !authChecked) ? { opacity: 0.35, cursor: "not-allowed" } : {}) }}
             >
               <span style={{ fontSize: 22 }}>{t.icon}</span>
               <span style={s.toolLabel}>{t.label}</span>
