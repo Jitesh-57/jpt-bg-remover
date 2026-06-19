@@ -48,9 +48,7 @@ export default function BlogIndexPage() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(480px, 1fr))", gap: 28 }}>
           {POSTS.map((post) => (
             <Link key={post.slug} href={`/blog/${post.slug}`} style={{ textDecoration: "none" }}>
-              <article style={{ background: "#fff", borderRadius: 18, border: "1px solid #E8EAF0", padding: "28px 30px", boxShadow: "0 2px 14px rgba(0,0,0,0.04)", transition: "box-shadow 0.2s, transform 0.2s", cursor: "pointer" }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 32px rgba(99,102,241,0.15)"; (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"; }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = "0 2px 14px rgba(0,0,0,0.04)"; (e.currentTarget as HTMLElement).style.transform = "none"; }}>
+              <article style={{ background: "#fff", borderRadius: 18, border: "1px solid #E8EAF0", padding: "28px 30px", boxShadow: "0 2px 14px rgba(0,0,0,0.04)", cursor: "pointer" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
                   <span style={{ background: CATEGORY_COLORS[post.category] || "#6366F1", color: "#fff", fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 20, letterSpacing: 0.5 }}>
                     {post.category}
