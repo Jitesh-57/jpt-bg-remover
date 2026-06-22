@@ -29,7 +29,7 @@ const MAX_DIMENSION = 1024;
 const TRANSFORMS: { id: TransformType; label: string; icon: string; desc: string; creditsEach: number; aiOnly?: boolean }[] = [
   { id: "resize",      label: "Resize",       icon: "↔️", desc: "Resize to custom dimensions",                creditsEach: 0 },
   { id: "adjust",      label: "Color Adjust", icon: "🎨", desc: "Brightness / contrast / saturation",        creditsEach: 0 },
-  { id: "upscale",     label: "Upscale 2×",   icon: "🔍", desc: "Canvas super-resolution",                   creditsEach: 1 },
+  { id: "upscale",     label: "Upscale",      icon: "🔍", desc: "2× or 4× super-resolution",                 creditsEach: 1 },
   { id: "ai-edit",     label: "AI Edit",      icon: "✨", desc: "Transform with text prompt via Gemini",     creditsEach: 2, aiOnly: true },
   { id: "remove-bg",   label: "Remove BG",    icon: "🪄", desc: "Remove background via Gemini AI",           creditsEach: 2, aiOnly: true },
   { id: "generate-bg", label: "Generate BG",  icon: "🌅", desc: "Replace background with AI scene",          creditsEach: 2, aiOnly: true },
@@ -102,6 +102,11 @@ export default function BatchEditorPage() {
   const [saturation, setSaturation] = useState(100);
   const [aiPrompt, setAiPrompt] = useState("");
   const [bgPrompt, setBgPrompt] = useState("Soft blurred white background, professional studio style");
+  const [upscaleScale, setUpscaleScale] = useState<"2x" | "4x">("2x");
+  const [removeBgOutput, setRemoveBgOutput] = useState<"transparent" | "white" | "color" | "image">("transparent");
+  const [removeBgColor, setRemoveBgColor] = useState("#ffffff");
+  const [removeBgImageDataUrl, setRemoveBgImageDataUrl] = useState<string | null>(null);
+  const removeBgImageRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetch("/api/auth/google/me")
@@ -156,7 +161,7 @@ export default function BatchEditorPage() {
       const dd = await deductRes.json() as { credits?: number };
       if (typeof dd.credits === "number") setUser(u => u ? { ...u, credits: dd.credits! } : u);
       const { upscaleImage } = await import("@/lib/upscale-client");
-      return upscaleImage(src, "2x");
+      return upscaleImage(src, upscaleScale);
     }
     if (tool === "ai-edit") {
       const res = await fetch("/api/ai-edit", {
@@ -176,7 +181,23 @@ export default function BatchEditorPage() {
       const data = await res.json() as { dataUrl?: string; credits?: number; error?: string };
       if (!res.ok) throw new Error(data.error || "Remove BG failed");
       if (typeof data.credits === "number") setUser(u => u ? { ...u, credits: data.credits! } : u);
-      return data.dataUrl!;
+      const cutout = data.dataUrl!;
+      // Composite onto background if needed
+      if (removeBgOutput === "transparent") return cutout;
+      const bgImg = await loadImg(cutout);
+      const W = bgImg.naturalWidth, H = bgImg.naturalHeight;
+      const canvas = document.createElement("canvas");
+      canvas.width = W; canvas.height = H;
+      const ctx = canvas.getContext("2d")!;
+      if (removeBgOutput === "white" || removeBgOutput === "color") {
+        ctx.fillStyle = removeBgOutput === "white" ? "#ffffff" : removeBgColor;
+        ctx.fillRect(0, 0, W, H);
+      } else if (removeBgOutput === "image" && removeBgImageDataUrl) {
+        const bgSrc = await loadImg(removeBgImageDataUrl);
+        ctx.drawImage(bgSrc, 0, 0, W, H);
+      }
+      ctx.drawImage(bgImg, 0, 0);
+      return canvas.toDataURL("image/jpeg", 0.93);
     }
     if (tool === "generate-bg") {
       const res = await fetch("/api/ai-edit", {
@@ -378,8 +399,22 @@ export default function BatchEditorPage() {
 
               {selectedTools.has("upscale") && (
                 <div style={optionBox}>
-                  <div style={optionTitle}>🔍 Upscale 2×</div>
-                  <p style={{ fontSize: 12, color: "#9CA3AF", margin: 0 }}>Canvas super-resolution with sharpness. 1 credit per image.</p>
+                  <div style={optionTitle}>🔍 Upscale</div>
+                  <div style={optionLabel}>Resolution boost</div>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    {(["2x", "4x"] as const).map(s => (
+                      <button key={s} onClick={() => setUpscaleScale(s)} style={{
+                        flex: 1, padding: "9px 0", borderRadius: 8, border: upscaleScale === s ? "2px solid #6366F1" : "1.5px solid #E5E7EB",
+                        background: upscaleScale === s ? "#EEF2FF" : "#fff", color: upscaleScale === s ? "#6366F1" : "#6B7280",
+                        fontWeight: 800, fontSize: 14, cursor: "pointer",
+                      }}>
+                        {s === "2x" ? "2× Standard" : "4× Ultra HD"}
+                      </button>
+                    ))}
+                  </div>
+                  <p style={{ fontSize: 11, color: "#9CA3AF", margin: 0 }}>
+                    {upscaleScale === "2x" ? "2× — faster, 1 credit/image" : "4× — maximum detail, 1 credit/image"}
+                  </p>
                 </div>
               )}
 
@@ -396,7 +431,52 @@ export default function BatchEditorPage() {
               {selectedTools.has("remove-bg") && (
                 <div style={optionBox}>
                   <div style={optionTitle}>🪄 Remove BG</div>
-                  <p style={{ fontSize: 12, color: "#9CA3AF", margin: 0 }}>Removes background from every image using Gemini AI.</p>
+                  <div style={optionLabel}>Output background</div>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
+                    {([
+                      { val: "transparent", label: "⬜ Transparent", hint: "PNG with transparency" },
+                      { val: "white",       label: "◻ White",        hint: "White background" },
+                      { val: "color",       label: "🎨 Custom Color", hint: "Pick any color" },
+                      { val: "image",       label: "🖼 Custom Image",  hint: "Upload a background" },
+                    ] as const).map(opt => (
+                      <button key={opt.val} onClick={() => setRemoveBgOutput(opt.val)} style={{
+                        padding: "8px 6px", borderRadius: 8, border: removeBgOutput === opt.val ? "2px solid #6366F1" : "1.5px solid #E5E7EB",
+                        background: removeBgOutput === opt.val ? "#EEF2FF" : "#fff",
+                        color: removeBgOutput === opt.val ? "#6366F1" : "#374151",
+                        fontWeight: removeBgOutput === opt.val ? 800 : 600, fontSize: 11, cursor: "pointer", textAlign: "left",
+                      }}>
+                        <div>{opt.label}</div>
+                        <div style={{ fontSize: 10, color: "#9CA3AF", fontWeight: 400 }}>{opt.hint}</div>
+                      </button>
+                    ))}
+                  </div>
+                  {removeBgOutput === "color" && (
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 4 }}>
+                      <input type="color" value={removeBgColor} onChange={e => setRemoveBgColor(e.target.value)}
+                        style={{ width: 36, height: 36, borderRadius: 8, border: "1.5px solid #E5E7EB", cursor: "pointer", padding: 2 }} />
+                      <span style={{ fontSize: 12, color: "#6B7280" }}>{removeBgColor}</span>
+                    </div>
+                  )}
+                  {removeBgOutput === "image" && (
+                    <div style={{ marginTop: 4 }}>
+                      <input ref={removeBgImageRef} type="file" accept="image/*" style={{ display: "none" }}
+                        onChange={e => {
+                          const f = e.target.files?.[0]; if (!f) return;
+                          const r = new FileReader(); r.onloadend = () => setRemoveBgImageDataUrl(r.result as string); r.readAsDataURL(f);
+                          e.target.value = "";
+                        }} />
+                      {removeBgImageDataUrl ? (
+                        <div style={{ position: "relative", borderRadius: 8, overflow: "hidden", height: 60 }}>
+                          <img src={removeBgImageDataUrl} alt="bg" style={{ width: "100%", height: 60, objectFit: "cover" }} />
+                          <button onClick={() => setRemoveBgImageDataUrl(null)} style={{ position: "absolute", top: 4, right: 4, background: "rgba(0,0,0,0.5)", border: "none", borderRadius: "50%", width: 18, height: 18, color: "#fff", fontSize: 11, cursor: "pointer" }}>×</button>
+                        </div>
+                      ) : (
+                        <button onClick={() => removeBgImageRef.current?.click()} style={{ width: "100%", padding: "8px", border: "1.5px dashed #C7D2FE", borderRadius: 8, background: "#F5F3FF", color: "#6366F1", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
+                          + Upload background image
+                        </button>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
 
