@@ -295,10 +295,18 @@ export default function ImageEditorPage() {
           setOriginal({ dataUrl: pi, w: img.naturalWidth, h: img.naturalHeight, name: "uploaded" });
           setResizeW(img.naturalWidth); setResizeH(img.naturalHeight);
           if (pt && TOOLS.some(t => t.id === pt)) setActiveTool(pt);
+          // Persist to localStorage so context survives an OAuth sign-in redirect.
+          // Also keep sessionStorage items until here so persistContextForAuth works
+          // if the user clicks sign-in before this onload fires.
+          try {
+            localStorage.setItem(SESSION_KEY, JSON.stringify({ dataUrl: pi, name: "uploaded", w: img.naturalWidth, h: img.naturalHeight, ts: Date.now() }));
+          } catch {}
+          sessionStorage.removeItem("jpt_pending_image");
+          sessionStorage.removeItem("jpt_pending_tool");
         };
         img.src = pi;
-        sessionStorage.removeItem("jpt_pending_image");
-        sessionStorage.removeItem("jpt_pending_tool");
+        // Don't delete sessionStorage items here — do it in onload above so
+        // persistContextForAuth can still read them if sign-in is clicked quickly.
         return; // skip session restore if we have a pending image
       }
     } catch {}
@@ -318,9 +326,10 @@ export default function ImageEditorPage() {
     } catch {}
 
     // 4. Always check server-side session on mount (cookies are the source of truth).
-    // Retry up to 3 times with 1s delay — handles the case where the auth cookie
-    // isn't committed yet immediately after an OAuth redirect (first-login timing).
-    const loadUser = (retries = 3): Promise<void> =>
+    // Retry once with a short delay — handles the race where the auth cookie isn't
+    // committed yet right after an OAuth redirect. Keep delay short so non-logged-in
+    // users don't see the Loading... spinner for more than 300ms.
+    const loadUser = (retries = 1): Promise<void> =>
       fetch("/api/auth/google/me")
         .then(r => r.json())
         .then((d: { authenticated: boolean; email?: string; name?: string; picture?: string; credits?: number; plan?: string }) => {
@@ -328,7 +337,7 @@ export default function ImageEditorPage() {
             setUser({ email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? FREE_CREDITS, plan: d.plan || "free" });
             setAuthChecked(true);
           } else if (retries > 0) {
-            return new Promise<void>(res => setTimeout(() => loadUser(retries - 1).then(res), 1000));
+            return new Promise<void>(res => setTimeout(() => loadUser(retries - 1).then(res), 300));
           } else {
             setAuthChecked(true);
           }
