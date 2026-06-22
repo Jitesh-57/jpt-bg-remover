@@ -212,6 +212,12 @@ export default function HeadshotPage() {
 
   const handleGenerate = async () => {
     if (!sourceUrl || selectedStyleIds.length === 0) return;
+    // Check credits immediately before making any API call
+    const creditsRequired = selectedStyleIds.length * GENERATION_CREDITS;
+    if (!user || user.credits < creditsRequired) {
+      setShowPricingModal(true);
+      return;
+    }
     setGenerating(true);
     setError(null);
     setImages([]);
@@ -270,6 +276,7 @@ export default function HeadshotPage() {
 
   const handleApplyBackground = async () => {
     if (!selectedImage || editingBg) return;
+    if (!user || user.credits < EDIT_CREDITS) { setShowPricingModal(true); return; }
     setEditingBg(true);
     setEditedUrl(null);
     setError(null);
@@ -320,6 +327,7 @@ export default function HeadshotPage() {
 
   const handleEditByPrompt = async () => {
     if (!selectedImage || !promptInput.trim()) return;
+    if (!user || user.credits < EDIT_CREDITS) { setShowPricingModal(true); return; }
     setEditingBg(true);
     setEditedUrl(null);
     clearPending();
