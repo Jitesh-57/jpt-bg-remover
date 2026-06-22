@@ -16,7 +16,7 @@ const TOOLS = [
 const COMPANY = [
   { label: "Pricing", href: "/pricing" },
   { label: "Blog", href: "/blog" },
-  { label: "Contact", href: "mailto:jiteshpatil@gofynd.com" },
+  { label: "Contact", href: "mailto:patil.jitesh866@gmail.com" },
 ];
 
 export default function Footer() {
