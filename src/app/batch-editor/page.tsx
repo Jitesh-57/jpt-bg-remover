@@ -104,6 +104,7 @@ export default function BatchEditorPage() {
   const [aiPrompt, setAiPrompt] = useState("");
   const [bgPrompt, setBgPrompt] = useState("Soft blurred white background, professional studio style");
   const [upscaleScale, setUpscaleScale] = useState<"2x" | "4x">("2x");
+  const [upscaleMode, setUpscaleMode] = useState<"normal" | "pro">("normal");
   const [removeBgOutput, setRemoveBgOutput] = useState<"transparent" | "white" | "color" | "image">("transparent");
   const [removeBgColor, setRemoveBgColor] = useState("#ffffff");
   const [removeBgImageDataUrl, setRemoveBgImageDataUrl] = useState<string | null>(null);
@@ -120,6 +121,14 @@ export default function BatchEditorPage() {
   }, []);
 
   const toggleTool = (id: TransformType) => {
+    const transform = TRANSFORMS.find(t => t.id === id);
+    // If selecting a paid AI tool and user lacks plan/credits, show pricing modal
+    if (transform?.aiOnly && !selectedTools.has(id)) {
+      if (user?.plan === "free" || (user && user.credits < transform.creditsEach)) {
+        setShowPricingModal(true);
+        return;
+      }
+    }
     setSelectedTools(prev => {
       const next = new Set(prev);
       if (next.has(id)) {
@@ -146,10 +155,11 @@ export default function BatchEditorPage() {
     setItems(prev => [...prev, ...newItems]);
   }, [items.length]);
 
-  // Credits needed: sum of (creditsEach * images) for all selected AI tools
+  // Credits needed: sum of (creditsEach * images) for all selected tools
+  const effectiveCredits = (t: typeof TRANSFORMS[0]) => t.id === "upscale" && upscaleMode === "pro" ? 2 : t.creditsEach;
   const creditsNeeded = TRANSFORMS
     .filter(t => selectedTools.has(t.id))
-    .reduce((sum, t) => sum + t.creditsEach * items.filter(i => i.status === "pending").length, 0);
+    .reduce((sum, t) => sum + effectiveCredits(t) * items.filter(i => i.status === "pending").length, 0);
 
   const pendingItems = items.filter(i => i.status === "pending");
 
@@ -162,15 +172,26 @@ export default function BatchEditorPage() {
       return canvasAdjust(src, brightness, contrast, saturation);
     }
     if (tool === "upscale") {
-      const deductRes = await fetch("/api/credits/deduct", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tool: "basic-upscale" }),
-      });
-      if (!deductRes.ok) throw new Error("Not enough credits for upscale");
-      const dd = await deductRes.json() as { credits?: number };
-      if (typeof dd.credits === "number") setUser(u => u ? { ...u, credits: dd.credits! } : u);
-      const { upscaleImage } = await import("@/lib/upscale-client");
-      return upscaleImage(src, upscaleScale);
+      if (upscaleMode === "pro") {
+        const res = await fetch("/api/upscale-pro", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ dataUrl: src, scale: upscaleScale }),
+        });
+        const data = await res.json() as { dataUrl?: string; credits?: number; error?: string };
+        if (!res.ok) throw new Error(data.error || "Pro upscale failed");
+        if (typeof data.credits === "number") setUser(u => u ? { ...u, credits: data.credits! } : u);
+        return data.dataUrl!;
+      } else {
+        const deductRes = await fetch("/api/credits/deduct", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ tool: "basic-upscale" }),
+        });
+        if (!deductRes.ok) throw new Error("Not enough credits for upscale");
+        const dd = await deductRes.json() as { credits?: number };
+        if (typeof dd.credits === "number") setUser(u => u ? { ...u, credits: dd.credits! } : u);
+        const { upscaleImage } = await import("@/lib/upscale-client");
+        return upscaleImage(src, upscaleScale);
+      }
     }
     if (tool === "ai-edit") {
       const res = await fetch("/api/ai-edit", {
@@ -379,10 +400,10 @@ export default function BatchEditorPage() {
           {items.length > 0 && selectedTools.size > 0 && (
             <div style={{ background: creditsNeeded > (user?.credits ?? 0) && creditsNeeded > 0 ? "#FEF2F2" : "#F0FDF4", borderRadius: 10, padding: "12px 14px", border: `1px solid ${creditsNeeded > (user?.credits ?? 0) && creditsNeeded > 0 ? "#FECACA" : "#BBF7D0"}` }}>
               <div style={{ fontSize: 12, fontWeight: 700, color: "#374151", marginBottom: 6 }}>💳 Credit Summary</div>
-              {TRANSFORMS.filter(t => selectedTools.has(t.id) && t.creditsEach > 0).map(t => (
+              {TRANSFORMS.filter(t => selectedTools.has(t.id) && effectiveCredits(t) > 0).map(t => (
                 <div key={t.id} style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "#6B7280", marginBottom: 2 }}>
-                  <span>{t.icon} {t.label}</span>
-                  <span>{t.creditsEach} × {totalPending} = <strong>{t.creditsEach * totalPending}</strong></span>
+                  <span>{t.icon} {t.label}{t.id === "upscale" && upscaleMode === "pro" ? " (Pro)" : ""}</span>
+                  <span>{effectiveCredits(t)} × {totalPending} = <strong>{effectiveCredits(t) * totalPending}</strong></span>
                 </div>
               ))}
               <div style={{ borderTop: "1px solid #E5E7EB", marginTop: 6, paddingTop: 6, display: "flex", justifyContent: "space-between", fontSize: 13, fontWeight: 700 }}>
@@ -481,23 +502,54 @@ export default function BatchEditorPage() {
               )}
 
               {openOptionsFor === "upscale" && (
-                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                  <label style={optionLabel}>Resolution boost</label>
-                  <div style={{ display: "flex", gap: 8 }}>
-                    {(["2x", "4x"] as const).map(s => (
-                      <button key={s} onClick={() => setUpscaleScale(s)} style={{
-                        flex: 1, padding: "12px 0", borderRadius: 8,
-                        border: upscaleScale === s ? "2px solid #6366F1" : "1.5px solid #E5E7EB",
-                        background: upscaleScale === s ? "#EEF2FF" : "#fff",
-                        color: upscaleScale === s ? "#6366F1" : "#6B7280",
-                        fontWeight: 800, fontSize: 15, cursor: "pointer",
-                      }}>
-                        {s === "2x" ? "2×" : "4×"}
-                      </button>
-                    ))}
+                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  <div>
+                    <label style={optionLabel}>Mode</label>
+                    <div style={{ display: "flex", gap: 0, background: "#F3F4F6", borderRadius: 10, padding: 4, marginTop: 6 }}>
+                      {([
+                        { key: "normal", label: "⚡ Normal", sub: "1 credit/image" },
+                        { key: "pro", label: "✨ Pro AI", sub: "2 credits · AI" },
+                      ] as const).map(m => (
+                        <button key={m.key} onClick={() => {
+                          if (m.key === "pro" && (user?.plan === "free" || (user && user.credits < 2))) {
+                            setShowPricingModal(true); return;
+                          }
+                          setUpscaleMode(m.key);
+                        }} style={{
+                          flex: 1, padding: "8px 6px", borderRadius: 7, border: "none", cursor: "pointer",
+                          background: upscaleMode === m.key ? "#fff" : "transparent",
+                          boxShadow: upscaleMode === m.key ? "0 1px 6px rgba(0,0,0,0.10)" : "none",
+                          transition: "all 0.15s",
+                        }}>
+                          <div style={{ fontSize: 12, fontWeight: 700, color: upscaleMode === m.key ? "#6366F1" : "#888" }}>{m.label}</div>
+                          <div style={{ fontSize: 10, color: upscaleMode === m.key ? "#6366F1" : "#AAA", marginTop: 1 }}>{m.sub}</div>
+                        </button>
+                      ))}
+                    </div>
+                    {upscaleMode === "pro" && (
+                      <p style={{ fontSize: 11, color: "#7C3AED", margin: "6px 0 0", fontWeight: 600 }}>✨ AI-enhanced — sharper detail & texture recovery</p>
+                    )}
                   </div>
-                  <p style={{ fontSize: 12, color: "#9CA3AF", margin: 0 }}>
-                    {upscaleScale === "2x" ? "2× Standard — faster, 1 credit/image" : "4× Ultra HD — maximum detail, 1 credit/image"}
+                  <div>
+                    <label style={optionLabel}>Resolution boost</label>
+                    <div style={{ display: "flex", gap: 8, marginTop: 6 }}>
+                      {(["2x", "4x"] as const).map(s => (
+                        <button key={s} onClick={() => setUpscaleScale(s)} style={{
+                          flex: 1, padding: "12px 0", borderRadius: 8,
+                          border: upscaleScale === s ? "2px solid #6366F1" : "1.5px solid #E5E7EB",
+                          background: upscaleScale === s ? "#EEF2FF" : "#fff",
+                          color: upscaleScale === s ? "#6366F1" : "#6B7280",
+                          fontWeight: 800, fontSize: 15, cursor: "pointer",
+                        }}>
+                          {s === "2x" ? "2×" : "4×"}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <p style={{ fontSize: 11, color: "#9CA3AF", margin: 0 }}>
+                    {upscaleMode === "pro"
+                      ? `Pro ${upscaleScale} — AI texture recovery, 2 credits/image`
+                      : upscaleScale === "2x" ? "2× Standard — faster, 1 credit/image" : "4× Ultra HD — 1 credit/image"}
                   </p>
                 </div>
               )}
