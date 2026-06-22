@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-
+import FAQAccordion from "@/app/_components/FAQAccordion";
 import { landingImg } from "@/lib/landing-images";
 
 // AI-generated landing images served from Supabase Storage (public "landing" bucket).
@@ -601,17 +601,10 @@ export default function LandingPageClient() {
 
       {/* ── FAQ ────────────────────────────────────────────────────────────── */}
       <section style={{ ...s.section, background: "#fff" }}>
-        <div style={s.sectionInner}>
+        <div style={{ ...s.sectionInner, maxWidth: 780 }}>
           <div style={s.sectionLabel}>FAQ</div>
-          <h2 style={s.h2}>Frequently asked questions about JPT AI</h2>
-          <div style={s.faqGrid}>
-            {FAQS.map((item) => (
-              <div key={item.q} style={s.faqItem}>
-                <div style={s.faqQ}>{item.q}</div>
-                <p style={s.faqA}>{item.a}</p>
-              </div>
-            ))}
-          </div>
+          <h2 style={{ ...s.h2, marginBottom: 40 }}>Frequently asked questions about JPT AI</h2>
+          <FAQAccordion faqs={FAQS} />
         </div>
       </section>
 
