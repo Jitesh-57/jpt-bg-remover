@@ -5,6 +5,13 @@ import { useRef, useState, useCallback, useEffect } from "react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
+declare global {
+  interface Window {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Razorpay: new (opts: Record<string, unknown>) => { open(): void };
+  }
+}
+
 type Tool = "ai-edit" | "generate-bg" | "upscale" | "resize" | "adjust" | "remove-bg" | null;
 type BgMode = "color" | "gradient" | "image" | "ai";
 
@@ -264,6 +271,59 @@ export default function ImageEditorPage() {
   const [showNoCreditsModal, setShowNoCreditsModal] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [blockedTool, setBlockedTool] = useState<{ id: string | null; icon: string; label: string } | null>(null);
+  const [buyingPlan, setBuyingPlan] = useState<string | null>(null);
+
+  async function handleBuyPlan(planKey: string) {
+    setBuyingPlan(planKey);
+    try {
+      if (!window.Razorpay) {
+        await new Promise<void>((resolve, reject) => {
+          const s = document.createElement("script");
+          s.src = "https://checkout.razorpay.com/v1/checkout.js";
+          s.onload = () => resolve();
+          s.onerror = () => reject(new Error("Failed to load Razorpay"));
+          document.head.appendChild(s);
+        });
+      }
+      const orderRes = await fetch("/api/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan: planKey }),
+      });
+      const orderData = await orderRes.json() as { order_id?: string; amount?: number; currency?: string; credits?: number; error?: string };
+      if (!orderRes.ok || !orderData.order_id) { setBuyingPlan(null); return; }
+      const rzp = new window.Razorpay({
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        order_id: orderData.order_id,
+        amount: orderData.amount,
+        currency: orderData.currency || "INR",
+        name: "JPT AI",
+        description: `${planKey.charAt(0).toUpperCase() + planKey.slice(1)} Plan — ${orderData.credits} credits`,
+        theme: { color: "#6366F1" },
+        modal: { ondismiss() { setBuyingPlan(null); } },
+        handler: async (response: { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string }) => {
+          try {
+            const verifyRes = await fetch("/api/verify-payment", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ ...response, plan: planKey }),
+            });
+            const data = await verifyRes.json() as { success?: boolean; credits?: number };
+            if (data.success && data.credits) {
+              setUser(u => u ? { ...u, credits: data.credits!, plan: planKey } : u);
+              setShowUpgradeModal(false);
+              setBlockedTool(null);
+            }
+          } catch {}
+          setBuyingPlan(null);
+        },
+        prefill: {},
+      });
+      rzp.open();
+    } catch {
+      setBuyingPlan(null);
+    }
+  }
 
   // Email auth form state
   const [authTab, setAuthTab] = useState<"google" | "email">("google");
@@ -1648,9 +1708,9 @@ export default function ImageEditorPage() {
 
               <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 12, marginBottom: 20 }}>
                 {[
-                  { name: "Starter", price: "$5", credits: 50, perCredit: "$0.10", color: "#6366F1", features: ["50 AI credits", "~25 transformations", "All AI tools", "No expiry"] },
-                  { name: "Creator", price: "$10", credits: 100, perCredit: "$0.10", color: "#7C3AED", popular: true, features: ["100 AI credits", "~50 transformations", "All AI tools", "No expiry"] },
-                  { name: "Pro", price: "$25", credits: 300, perCredit: "$0.08", color: "#5B21B6", features: ["300 AI credits", "~150 transformations", "All AI tools", "No expiry"] },
+                  { name: "Starter", planKey: "starter", price: "₹499", credits: 50, perCredit: "₹9.98", color: "#6366F1", features: ["50 AI credits", "~25 transformations", "All AI tools", "No expiry"] },
+                  { name: "Creator", planKey: "creator", price: "₹999", credits: 100, perCredit: "₹9.99", color: "#7C3AED", popular: true, features: ["100 AI credits", "~50 transformations", "All AI tools", "No expiry"] },
+                  { name: "Pro", planKey: "pro", price: "₹2499", credits: 300, perCredit: "₹8.33", color: "#5B21B6", features: ["300 AI credits", "~150 transformations", "All AI tools", "No expiry"] },
                 ].map((plan) => (
                   <div key={plan.name} style={{ border: `2px solid ${plan.popular ? plan.color : "#E5E7EB"}`, borderRadius: 16, padding: "18px 14px", textAlign: "center" as const, position: "relative", background: plan.popular ? "#F5F3FF" : "#FAFAFA", transition: "transform 0.1s" }}>
                     {plan.popular && (
@@ -1666,9 +1726,13 @@ export default function ImageEditorPage() {
                     {plan.features.map(f => (
                       <div key={f} style={{ fontSize: 11, color: "#555", marginBottom: 3, textAlign: "left" as const }}>✓ {f}</div>
                     ))}
-                    <a href="/pricing" style={{ display: "block", marginTop: 14, background: plan.popular ? plan.color : "#111", color: "#fff", borderRadius: 10, padding: "10px 0", fontSize: 13, fontWeight: 700, textDecoration: "none", cursor: "pointer" }}>
-                      Get Started →
-                    </a>
+                    <button
+                      onClick={() => handleBuyPlan(plan.planKey)}
+                      disabled={buyingPlan !== null}
+                      style={{ display: "block", width: "100%", marginTop: 14, background: buyingPlan === plan.planKey ? "#9CA3AF" : plan.popular ? plan.color : "#111", color: "#fff", borderRadius: 10, padding: "10px 0", fontSize: 13, fontWeight: 700, border: "none", cursor: buyingPlan !== null ? "not-allowed" : "pointer" }}
+                    >
+                      {buyingPlan === plan.planKey ? "Processing…" : "Buy Now →"}
+                    </button>
                   </div>
                 ))}
               </div>

@@ -154,7 +154,7 @@ export default function NavBar() {
           </div>
 
           {/* Pricing */}
-          <a href="/pricing" onClick={e => { e.preventDefault(); setShowPricing(true); }}
+          <a href="/pricing"
             style={{ padding: "7px 14px", color: "#94A3B8", fontSize: 14, fontWeight: 600, textDecoration: "none", borderRadius: 8 }}
             onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
             onMouseLeave={e => (e.currentTarget.style.color = "#94A3B8")}>
