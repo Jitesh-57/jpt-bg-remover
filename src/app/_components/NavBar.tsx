@@ -225,6 +225,7 @@ export default function NavBar() {
               setUser(u => u ? { ...u, credits: newCredits } : u);
               setShowPricing(false);
             }}
+            prefillUser={user ? { name: user.name, email: user.email } : undefined}
           />
         </Suspense>
       )}

@@ -5,6 +5,7 @@ import { useState } from "react";
 interface PricingModalProps {
   onClose: () => void;
   onPurchaseSuccess?: (plan: string, newCredits: number) => void;
+  prefillUser?: { name?: string; email?: string };
 }
 
 const plans = [
@@ -20,7 +21,7 @@ declare global {
   }
 }
 
-export default function PricingModal({ onClose, onPurchaseSuccess }: PricingModalProps) {
+export default function PricingModal({ onClose, onPurchaseSuccess, prefillUser }: PricingModalProps) {
   const [loading, setLoading] = useState<string | null>(null);
   const [statusMsg, setStatusMsg] = useState<{ text: string; ok: boolean } | null>(null);
 
@@ -104,7 +105,7 @@ export default function PricingModal({ onClose, onPurchaseSuccess }: PricingModa
           }
           setLoading(null);
         },
-        prefill: {},
+        prefill: { name: prefillUser?.name || "", email: prefillUser?.email || "" },
       });
 
       rzp.open();

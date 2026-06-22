@@ -317,7 +317,7 @@ export default function ImageEditorPage() {
           } catch {}
           setBuyingPlan(null);
         },
-        prefill: {},
+        prefill: { name: user?.name || "", email: user?.email || "" },
       });
       rzp.open();
     } catch {

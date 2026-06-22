@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 declare global {
   interface Window {
@@ -18,6 +18,13 @@ const plans = [
 export default function PricingPage() {
   const [loading, setLoading] = useState<string | null>(null);
   const [statusMsg, setStatusMsg] = useState<{ text: string; ok: boolean } | null>(null);
+  const [prefillUser, setPrefillUser] = useState<{ name?: string; email?: string } | null>(null);
+
+  useEffect(() => {
+    fetch("/api/auth/google/me").then(r => r.json()).then((d: { authenticated?: boolean; name?: string; email?: string }) => {
+      if (d.authenticated) setPrefillUser({ name: d.name, email: d.email });
+    }).catch(() => {});
+  }, []);
 
   async function handleBuy(planKey: string) {
     setLoading(planKey);
@@ -81,7 +88,7 @@ export default function PricingPage() {
           }
           setLoading(null);
         },
-        prefill: {},
+        prefill: { name: prefillUser?.name || "", email: prefillUser?.email || "" },
       });
 
       rzp.open();
