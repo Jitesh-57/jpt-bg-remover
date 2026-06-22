@@ -407,6 +407,8 @@ export default function ImageEditorPage() {
         });
 
     loadUser();
+    // Safety net: always unblock the UI within 3s regardless of auth state
+    const authTimeout = setTimeout(() => setAuthChecked(true), 3000);
 
     import("@/lib/supabase").then(({ createSupabaseClient }) => {
       const supabase = createSupabaseClient();
@@ -418,6 +420,7 @@ export default function ImageEditorPage() {
         }
       });
     });
+    return () => clearTimeout(authTimeout);
   }, []);
 
   // ── Auth gate ─────────────────────────────────────────────────────────────────
