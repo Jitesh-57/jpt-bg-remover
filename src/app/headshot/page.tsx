@@ -2,6 +2,7 @@
 
 import "./headshot.css";
 import { useRef, useState, useCallback, useEffect } from "react";
+import PricingModal from "@/app/_components/PricingModal";
 import { WOMEN_STYLES, MEN_STYLES } from "@/lib/headshot-prompts";
 
 const PRESET_COLORS = [
@@ -118,6 +119,16 @@ export default function HeadshotPage() {
   const [lightboxItems, setLightboxItems] = useState<LightboxItem[]>([]);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [showLightbox, setShowLightbox] = useState(false);
+  const [showPricingModal, setShowPricingModal] = useState(false);
+  const [user, setUser] = useState<{ name: string; email: string; credits: number; plan?: string } | null>(null);
+
+  useEffect(() => {
+    fetch("/api/auth/google/me")
+      .then(r => r.json())
+      .then((d: { authenticated: boolean; email?: string; name?: string; credits?: number; plan?: string }) => {
+        if (d.authenticated && d.email) setUser({ email: d.email, name: d.name ?? "", credits: d.credits ?? 0, plan: d.plan });
+      }).catch(() => null);
+  }, []);
 
   useEffect(() => {
     if (!showLightbox) return;
@@ -212,7 +223,10 @@ export default function HeadshotPage() {
         body: JSON.stringify({ imageUrl: sourceUrl, styleIds: selectedStyleIds, gender }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Generation failed");
+      if (!res.ok) {
+        if (res.status === 402 || res.status === 403) { setShowPricingModal(true); return; }
+        throw new Error(data.error || "Generation failed");
+      }
       if (!data.images || data.images.length === 0) throw new Error(data.errors?.[0] || "No images generated");
       setImages(data.images);
       setStep("gallery");
@@ -270,7 +284,10 @@ export default function HeadshotPage() {
           body: JSON.stringify({ imageUrl: selectedImage.url, bgType: "color", bgColor: color, bgLabel: label }),
         });
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error || "Edit failed");
+        if (!res.ok) {
+          if (res.status === 402 || res.status === 403) { setShowPricingModal(true); return; }
+          throw new Error(data.error || "Edit failed");
+        }
         setEditedUrl(data.url);
         persistEdit(data.url, `${selectedImage.name} · ${label}`, "Color Edit");
       } catch (e) { setError((e as Error).message); }
@@ -290,7 +307,10 @@ export default function HeadshotPage() {
           body: JSON.stringify({ imageUrl: selectedImage.url, bgType: "image", bgImageUrl: upData.url }),
         });
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error || "Edit failed");
+        if (!res.ok) {
+          if (res.status === 402 || res.status === 403) { setShowPricingModal(true); return; }
+          throw new Error(data.error || "Edit failed");
+        }
         setEditedUrl(data.url);
         persistEdit(data.url, `${selectedImage.name} · Custom BG`, "Image Edit");
       } catch (e) { setError((e as Error).message); }
@@ -311,7 +331,10 @@ export default function HeadshotPage() {
         body: JSON.stringify({ imageUrl: selectedImage.url, bgType: "prompt", customPrompt: promptInput.trim() }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Edit failed");
+      if (!res.ok) {
+        if (res.status === 402 || res.status === 403) { setShowPricingModal(true); return; }
+        throw new Error(data.error || "Edit failed");
+      }
       setEditedUrl(data.url);
       persistEdit(data.url, `${selectedImage.name} · AI Edit`, "Prompt Edit");
     } catch (e) { setError((e as Error).message); }
@@ -379,6 +402,17 @@ export default function HeadshotPage() {
 
   return (
     <div style={s.root}>
+      {showPricingModal && (
+        <PricingModal
+          onClose={() => setShowPricingModal(false)}
+          onPurchaseSuccess={(_, newCredits) => {
+            setUser(u => u ? { ...u, credits: newCredits, plan: "paid" } : u);
+            setShowPricingModal(false);
+          }}
+          prefillUser={user ? { name: user.name, email: user.email } : undefined}
+        />
+      )}
+
       {/* ── LIGHTBOX ── */}
       {showLightbox && lbCurrent && (
         <div className="hs-lightbox" style={s.lbOverlay} onClick={closeLightbox}>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, useCallback, useEffect } from "react";
+import PricingModal from "@/app/_components/PricingModal";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -108,6 +109,7 @@ export default function BatchEditorPage() {
   const [removeBgImageDataUrl, setRemoveBgImageDataUrl] = useState<string | null>(null);
   const removeBgImageRef = useRef<HTMLInputElement>(null);
   const [openOptionsFor, setOpenOptionsFor] = useState<TransformType | null>(null);
+  const [showPricingModal, setShowPricingModal] = useState(false);
 
   useEffect(() => {
     fetch("/api/auth/google/me")
@@ -224,11 +226,11 @@ export default function BatchEditorPage() {
 
     const hasAiTool = TRANSFORMS.some(t => selectedTools.has(t.id) && t.aiOnly);
     if (hasAiTool && user?.plan === "free") {
-      alert("AI tools require a paid plan. Upgrade from the Pricing menu.");
+      setShowPricingModal(true);
       return;
     }
     if (creditsNeeded > (user?.credits ?? 0)) {
-      alert(`You need ${creditsNeeded} credits but only have ${user?.credits ?? 0}. Buy more from the Pricing menu.`);
+      setShowPricingModal(true);
       return;
     }
 
@@ -294,6 +296,17 @@ export default function BatchEditorPage() {
 
   return (
     <div style={{ minHeight: "100vh", background: "#F9FAFB", fontFamily: "system-ui, sans-serif" }}>
+
+      {showPricingModal && (
+        <PricingModal
+          onClose={() => setShowPricingModal(false)}
+          onPurchaseSuccess={(_, newCredits) => {
+            setUser(u => u ? { ...u, credits: newCredits, plan: "paid" } : u);
+            setShowPricingModal(false);
+          }}
+          prefillUser={user ? { name: user.name, email: user.email } : undefined}
+        />
+      )}
 
       {/* Header */}
       <div style={{ background: "#fff", borderBottom: "1px solid #E5E7EB", padding: "14px 28px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
