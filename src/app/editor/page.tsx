@@ -426,6 +426,25 @@ export default function ImageEditorPage() {
   // prompts during the brief window after OAuth redirect while cookies resolve.
   const requireSignIn = () => { if (!authChecked) return true; if (!user) { setShowSignInModal(true); return true; } return false; };
 
+  // ── Compress image to max 1024px before sending to API (avoids 4.5MB Vercel limit) ──
+  const compressForApi = async (dataUrl: string): Promise<string> => {
+    return new Promise(resolve => {
+      const img = new Image();
+      img.onload = () => {
+        const MAX = 1024;
+        const scale = Math.min(1, MAX / Math.max(img.naturalWidth, img.naturalHeight));
+        const w = Math.round(img.naturalWidth * scale);
+        const h = Math.round(img.naturalHeight * scale);
+        const canvas = document.createElement("canvas");
+        canvas.width = w; canvas.height = h;
+        canvas.getContext("2d")!.drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL("image/jpeg", 0.88));
+      };
+      img.onerror = () => resolve(dataUrl);
+      img.src = dataUrl;
+    });
+  };
+
   // ── API call helper (handles 401 / 402 and updates credits) ──────────────────
 
   const callApi = useCallback(async <T extends Record<string, unknown>>(
@@ -433,10 +452,15 @@ export default function ImageEditorPage() {
     body: object,
     onBlocked?: () => void
   ): Promise<T | null> => {
+    // Compress any dataUrl fields before sending
+    const compressedBody: Record<string, unknown> = { ...(body as Record<string, unknown>) };
+    if (typeof compressedBody.dataUrl === "string") {
+      compressedBody.dataUrl = await compressForApi(compressedBody.dataUrl as string);
+    }
     const res = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
+      body: JSON.stringify(compressedBody),
     });
     const data = await res.json() as T & { error?: string; credits?: number };
 
