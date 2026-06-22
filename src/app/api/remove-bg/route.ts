@@ -9,8 +9,8 @@ export async function POST(req: NextRequest) {
   const { session, error } = await checkAuth(req);
   if (error) return error;
 
-  const { dataUrl, image } = await req.json() as { dataUrl?: string; image?: string };
-  const src = dataUrl || image;
+  const { dataUrl, image, imageUrl } = await req.json() as { dataUrl?: string; image?: string; imageUrl?: string };
+  const src = imageUrl || dataUrl || image;
   if (!src) return NextResponse.json({ error: "image required" }, { status: 400 });
 
   try {

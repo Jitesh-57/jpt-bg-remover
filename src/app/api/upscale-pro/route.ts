@@ -9,11 +9,12 @@ export async function POST(req: NextRequest) {
   const { session, error } = await checkAuth(req);
   if (error) return error;
 
-  const { dataUrl } = await req.json() as { dataUrl?: string };
-  if (!dataUrl) return NextResponse.json({ error: "dataUrl required" }, { status: 400 });
+  const { dataUrl, imageUrl } = await req.json() as { dataUrl?: string; imageUrl?: string };
+  const src = imageUrl || dataUrl;
+  if (!src) return NextResponse.json({ error: "dataUrl or imageUrl required" }, { status: 400 });
 
   try {
-    const resultDataUrl = await runPixelBinPredictionAsDataUrl(dataUrl, "sr", "upscale");
+    const resultDataUrl = await runPixelBinPredictionAsDataUrl(src, "sr", "upscale");
     return withCredits({ dataUrl: resultDataUrl }, session!, "ai", req);
   } catch (e) {
     console.error("[upscale-pro]", e);
