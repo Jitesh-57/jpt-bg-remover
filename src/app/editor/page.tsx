@@ -303,28 +303,39 @@ export default function ImageEditorPage() {
       }
     } catch {}
 
-    // 3. Restore saved session (24h) from localStorage
+    // 3. Auto-restore saved session (24h) from localStorage — no prompt needed
     try {
       const raw = localStorage.getItem(SESSION_KEY);
       if (raw) {
         const s = JSON.parse(raw) as SessionData;
         if (Date.now() - s.ts < SESSION_TTL) {
-          setSavedSession(s);
+          setOriginal({ dataUrl: s.dataUrl, w: s.w, h: s.h, name: s.name });
+          setResizeW(s.w); setResizeH(s.h);
         } else {
           localStorage.removeItem(SESSION_KEY);
         }
       }
     } catch {}
 
-    // 4. Always check server-side session on mount (cookies are the source of truth)
-    const loadUser = () =>
+    // 4. Always check server-side session on mount (cookies are the source of truth).
+    // Retry up to 3 times with 1s delay — handles the case where the auth cookie
+    // isn't committed yet immediately after an OAuth redirect (first-login timing).
+    const loadUser = (retries = 3): Promise<void> =>
       fetch("/api/auth/google/me")
         .then(r => r.json())
         .then((d: { authenticated: boolean; email?: string; name?: string; picture?: string; credits?: number; plan?: string }) => {
           if (d.authenticated && d.email) {
             setUser({ email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? FREE_CREDITS, plan: d.plan || "free" });
+            setAuthChecked(true);
+          } else if (retries > 0) {
+            return new Promise<void>(res => setTimeout(() => loadUser(retries - 1).then(res), 1000));
+          } else {
+            setAuthChecked(true);
           }
-        }).catch(() => null).finally(() => setAuthChecked(true));
+        }).catch(() => {
+          if (retries > 0) return new Promise<void>(res => setTimeout(() => loadUser(retries - 1).then(res), 1000));
+          setAuthChecked(true);
+        });
 
     loadUser();
 
@@ -881,23 +892,23 @@ export default function ImageEditorPage() {
           {TOOLS.map((t) => (
             <button
               key={t.id}
-              disabled={!hasImage || !authChecked}
+              disabled={!hasImage}
               onClick={() => {
-                const isPaidUser = !!(user && user.plan && user.plan !== "free");
-                // Free tools (Upscale-Normal, Resize, Adjust): use immediately.
+                // Free tools: always usable immediately (no auth needed to select panel).
                 if (t.free) { setActiveTool(activeTool === t.id ? null : t.id); return; }
-                // Paid-only tools (AI Edit, Generate BG, Remove BG): the payment
-                // popup is the conversion point for anyone not on a paid plan.
+                // For paid tools, wait until auth is resolved before gating.
+                if (!authChecked) { setActiveTool(activeTool === t.id ? null : t.id); return; }
+                if (!user) { requireSignIn(); return; }
+                const isPaidUser = !!(user.plan && user.plan !== "free");
                 if (t.paid && !isPaidUser) {
                   setBlockedTool(t);
                   setShowUpgradeModal(true);
                   return;
                 }
-                if (requireSignIn()) return;
                 setActiveTool(activeTool === t.id ? null : t.id);
               }}
               title={`${t.label}${t.free || ["resize", "adjust"].includes(t.id ?? "") ? " (Free)" : ` (${CREDIT_COST} credits)`}`}
-              style={{ ...s.toolBtn, ...(activeTool === t.id ? s.toolBtnActive : {}), ...((!hasImage || !authChecked) ? { opacity: 0.35, cursor: "not-allowed" } : {}) }}
+              style={{ ...s.toolBtn, ...(activeTool === t.id ? s.toolBtnActive : {}), ...(!hasImage ? { opacity: 0.35, cursor: "not-allowed" } : {}) }}
             >
               <span style={{ fontSize: 22 }}>{t.icon}</span>
               <span style={s.toolLabel}>{t.label}</span>
@@ -1134,14 +1145,14 @@ export default function ImageEditorPage() {
                 {/* Generate Selected Template */}
                 {selectedTemplate && (
                   <button
-                    style={{ ...s.primaryBtn, marginBottom: 12, ...(processing ? s.btnOff : {}) }}
-                    disabled={processing}
+                    style={{ ...s.primaryBtn, marginBottom: 12, ...((processing || !authChecked) ? s.btnOff : {}) }}
+                    disabled={processing || !authChecked}
                     onClick={() => {
                       const tpl = BG_TEMPLATES.find(t => t.id === selectedTemplate);
                       if (tpl) handleGenerateBg(tpl.prompt);
                     }}
                   >
-                    {processing ? <span style={s.btnRow}><span style={s.spin} />Generating…</span> : "🎨 Generate Selected"}
+                    {processing ? <span style={s.btnRow}><span style={s.spin} />Generating…</span> : !authChecked ? <span style={s.btnRow}><span style={s.spin} />Loading…</span> : "🎨 Generate Selected"}
                   </button>
                 )}
 
@@ -1157,11 +1168,11 @@ export default function ImageEditorPage() {
                     disabled={processing}
                   />
                   <button
-                    style={{ ...s.primaryBtn, background: "linear-gradient(135deg,#4285F4,#8B5CF6)", marginTop: 10, ...(customBgPrompt.trim().length === 0 || processing ? s.btnOff : {}) }}
-                    disabled={customBgPrompt.trim().length === 0 || processing}
+                    style={{ ...s.primaryBtn, background: "linear-gradient(135deg,#4285F4,#8B5CF6)", marginTop: 10, ...(customBgPrompt.trim().length === 0 || processing || !authChecked ? s.btnOff : {}) }}
+                    disabled={customBgPrompt.trim().length === 0 || processing || !authChecked}
                     onClick={() => handleGenerateBg(customBgPrompt.trim())}
                   >
-                    {processing ? <span style={s.btnRow}><span style={s.spin} />Generating…</span> : "✨ Generate Custom"}
+                    {processing ? <span style={s.btnRow}><span style={s.spin} />Generating…</span> : !authChecked ? <span style={s.btnRow}><span style={s.spin} />Loading…</span> : "✨ Generate Custom"}
                   </button>
                 </div>
 
@@ -1185,8 +1196,8 @@ export default function ImageEditorPage() {
                     <button key={s2} style={s.chip} onClick={() => setPrompt(s2)} disabled={processing}>{s2}</button>
                   ))}
                 </div>
-                <button style={{ ...s.primaryBtn, ...(!prompt.trim() || processing ? s.btnOff : {}) }} disabled={!prompt.trim() || processing} onClick={handleAiEdit}>
-                  {processing ? <span style={s.btnRow}><span style={s.spin} />Editing…</span> : "✨ Apply Edit"}
+                <button style={{ ...s.primaryBtn, ...(!prompt.trim() || processing || !authChecked ? s.btnOff : {}) }} disabled={!prompt.trim() || processing || !authChecked} onClick={handleAiEdit}>
+                  {processing ? <span style={s.btnRow}><span style={s.spin} />Editing…</span> : !authChecked ? <span style={s.btnRow}><span style={s.spin} />Loading…</span> : "✨ Apply Edit"}
                 </button>
               </div>
             )}
@@ -1268,11 +1279,13 @@ export default function ImageEditorPage() {
                       ? "linear-gradient(135deg,#6366F1,#7C3AED)"
                       : "linear-gradient(135deg,#6366F1,#8B5CF6)",
                   }}
-                  disabled={processing || appliedUpscale === upscaleScale}
+                  disabled={processing || appliedUpscale === upscaleScale || !authChecked}
                   onClick={handleUpscale}
                 >
                   {processing
                     ? <span style={s.btnRow}><span style={s.spin} />{upscaleMode === "pro" ? "AI Processing…" : `Upscaling ${upscaleScale}…`}</span>
+                    : !authChecked
+                    ? <span style={s.btnRow}><span style={s.spin} />Loading…</span>
                     : appliedUpscale === upscaleScale
                     ? `✓ Already ${upscaleScale}`
                     : upscaleMode === "pro"
@@ -1323,11 +1336,11 @@ export default function ImageEditorPage() {
                   </div>
                 )}
                 <button
-                  style={{ ...s.primaryBtn, background: "linear-gradient(135deg,#6366F1,#8B5CF6)", ...(processing ? s.btnOff : {}) }}
-                  disabled={processing}
+                  style={{ ...s.primaryBtn, background: "linear-gradient(135deg,#6366F1,#8B5CF6)", ...((processing || !authChecked) ? s.btnOff : {}) }}
+                  disabled={processing || !authChecked}
                   onClick={handleRemoveBg}
                 >
-                  {processing ? <span style={s.btnRow}><span style={s.spin} />Processing…</span> : "🪄 Remove Background"}
+                  {processing ? <span style={s.btnRow}><span style={s.spin} />Processing…</span> : !authChecked ? <span style={s.btnRow}><span style={s.spin} />Loading…</span> : "🪄 Remove Background"}
                 </button>
                 <p style={{ fontSize: 12, color: "#94A3B8", marginTop: 10, textAlign: "center" }}>
                   Result is a transparent PNG. Use Generate BG to swap in a new background.
