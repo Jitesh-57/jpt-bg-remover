@@ -267,18 +267,42 @@ export default function LandingPage({ config, toolHref, pageId }: LandingPagePro
         )}
       </section>
 
-      {/* ── STATS BAR ────────────────────────────────────────────────────── */}
-      <section style={{ background: '#0F172A', padding: '28px 24px' }}>
-        <div style={{ maxWidth: 900, margin: '0 auto', display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', gap: 20 }}>
-          {[
-            { num: '10M+', label: 'Images Processed' },
-            { num: '< 5s', label: 'Average Processing Time' },
-            { num: '4×', label: 'Max Resolution Boost' },
-            { num: 'Free', label: 'To Get Started' },
-          ].map(s => (
-            <div key={s.label} style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: 28, fontWeight: 900, color: '#A5B4FC', letterSpacing: '-0.02em' }}>{s.num}</div>
-              <div style={{ fontSize: 13, color: '#94A3B8', marginTop: 4 }}>{s.label}</div>
+      {/* ── PRODUCT HIGHLIGHTS BAR ───────────────────────────────────────── */}
+      <section style={{ background: '#0F172A', padding: '20px 24px' }}>
+        <div style={{ maxWidth: 960, margin: '0 auto', display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', gap: 16 }}>
+          {({
+            upscale: [
+              { icon: '🔍', label: '2× & 4× Super-Resolution' },
+              { icon: '✨', label: 'AI Sharpening & Detail Recovery' },
+              { icon: '🖼️', label: 'Restore Old & Blurry Photos' },
+              { icon: '📤', label: 'No Watermark on Download' },
+              { icon: '⚡', label: 'Results in Seconds' },
+            ],
+            'remove-bg': [
+              { icon: '🪄', label: 'One-Click Background Removal' },
+              { icon: '👤', label: 'Perfect Hair & Edge Detection' },
+              { icon: '🛍️', label: 'White or Custom Backgrounds' },
+              { icon: '📤', label: 'Transparent PNG Export' },
+              { icon: '⚡', label: 'No Photoshop Needed' },
+            ],
+            headshot: [
+              { icon: '💼', label: 'LinkedIn-Ready Headshots' },
+              { icon: '🎨', label: 'Multiple Professional Styles' },
+              { icon: '📸', label: 'High-Resolution Output' },
+              { icon: '📤', label: 'No Watermark on Download' },
+              { icon: '⚡', label: 'Ready in Seconds' },
+            ],
+            'ai-editor': [
+              { icon: '✍️', label: 'Edit with Plain English Prompts' },
+              { icon: '🌅', label: 'AI Background Generation' },
+              { icon: '🎨', label: 'Style & Lighting Transfer' },
+              { icon: '📤', label: 'No Watermark on Download' },
+              { icon: '⚡', label: 'No Photoshop Skills Needed' },
+            ],
+          } as Record<string, { icon: string; label: string }[]>)[pageId]?.map(item => (
+            <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: 18 }}>{item.icon}</span>
+              <span style={{ fontSize: 13, fontWeight: 600, color: '#CBD5E1', whiteSpace: 'nowrap' }}>{item.label}</span>
             </div>
           ))}
         </div>
