@@ -452,10 +452,17 @@ export default function ImageEditorPage() {
     body: object,
     onBlocked?: () => void
   ): Promise<T | null> => {
-    // Compress any dataUrl fields before sending
     const compressedBody: Record<string, unknown> = { ...(body as Record<string, unknown>) };
     if (typeof compressedBody.dataUrl === "string") {
       compressedBody.dataUrl = await compressForApi(compressedBody.dataUrl as string);
+      // Upload to Supabase so we send a URL instead of base64 (avoids 4.5MB Vercel limit)
+      try {
+        const { uploadDataUrlToSupabase } = await import("@/lib/supabase-upload");
+        compressedBody.imageUrl = await uploadDataUrlToSupabase(compressedBody.dataUrl as string);
+        delete compressedBody.dataUrl;
+      } catch {
+        // fallback: keep sending as dataUrl
+      }
     }
     const res = await fetch(url, {
       method: "POST",

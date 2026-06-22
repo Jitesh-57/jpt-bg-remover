@@ -163,6 +163,18 @@ export default function BatchEditorPage() {
 
   const pendingItems = items.filter(i => i.status === "pending");
 
+  // Upload dataUrl to Supabase and return public URL (avoids 4.5MB Vercel body limit).
+  // Falls back to passing the dataUrl directly if upload fails.
+  const uploadOrFallback = async (dataUrl: string): Promise<{ imageUrl?: string; dataUrl?: string }> => {
+    try {
+      const { uploadDataUrlToSupabase } = await import("@/lib/supabase-upload");
+      const imageUrl = await uploadDataUrlToSupabase(dataUrl);
+      return { imageUrl };
+    } catch {
+      return { dataUrl };
+    }
+  };
+
   const applyToolToSrc = async (tool: TransformType, src: string, originalW: number, originalH: number): Promise<string> => {
     if (tool === "resize") {
       const targetH = lockAspect ? Math.round(resizeW * originalH / originalW) : resizeH;
@@ -173,9 +185,10 @@ export default function BatchEditorPage() {
     }
     if (tool === "upscale") {
       if (upscaleMode === "pro") {
+        const imgPayload = await uploadOrFallback(src);
         const res = await fetch("/api/upscale-pro", {
           method: "POST", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ dataUrl: src, scale: upscaleScale }),
+          body: JSON.stringify({ ...imgPayload, scale: upscaleScale }),
         });
         const data = await res.json() as { dataUrl?: string; credits?: number; error?: string };
         if (!res.ok) throw new Error(data.error || "Pro upscale failed");
@@ -194,9 +207,10 @@ export default function BatchEditorPage() {
       }
     }
     if (tool === "ai-edit") {
+      const imgPayload = await uploadOrFallback(src);
       const res = await fetch("/api/ai-edit", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ dataUrl: src, prompt: aiPrompt }),
+        body: JSON.stringify({ ...imgPayload, prompt: aiPrompt }),
       });
       const data = await res.json() as { dataUrl?: string; credits?: number; error?: string };
       if (!res.ok) throw new Error(data.error || "AI edit failed");
@@ -204,9 +218,10 @@ export default function BatchEditorPage() {
       return data.dataUrl!;
     }
     if (tool === "remove-bg") {
+      const imgPayload = await uploadOrFallback(src);
       const res = await fetch("/api/remove-bg", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ dataUrl: src }),
+        body: JSON.stringify(imgPayload),
       });
       const data = await res.json() as { dataUrl?: string; credits?: number; error?: string };
       if (!res.ok) throw new Error(data.error || "Remove BG failed");
@@ -230,9 +245,10 @@ export default function BatchEditorPage() {
       return canvas.toDataURL("image/jpeg", 0.93);
     }
     if (tool === "generate-bg") {
+      const imgPayload = await uploadOrFallback(src);
       const res = await fetch("/api/ai-edit", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ dataUrl: src, prompt: `Replace the background with: ${bgPrompt}. Keep the subject exactly as-is.` }),
+        body: JSON.stringify({ ...imgPayload, prompt: `Replace the background with: ${bgPrompt}. Keep the subject exactly as-is.` }),
       });
       const data = await res.json() as { dataUrl?: string; credits?: number; error?: string };
       if (!res.ok) throw new Error(data.error || "Generate BG failed");

@@ -9,8 +9,8 @@ export async function POST(req: NextRequest) {
   const { session, error: authError } = await checkAuth(req);
   if (authError) return authError;
 
-  const { dataUrl, image, prompt } = (await req.json()) as { dataUrl?: string; image?: string; prompt?: string };
-  const src = dataUrl || image;
+  const { dataUrl, image, imageUrl, prompt } = (await req.json()) as { dataUrl?: string; image?: string; imageUrl?: string; prompt?: string };
+  const src = imageUrl || dataUrl || image;
   if (!prompt?.trim()) return NextResponse.json({ error: "Prompt required" }, { status: 400 });
   if (!src) return NextResponse.json({ error: "image required" }, { status: 400 });
 

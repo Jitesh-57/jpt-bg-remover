@@ -70,7 +70,7 @@ function extractUrl(output: unknown): string | null {
  * "nanoBananaPro"/"generate", "sr"/"upscale". Returns a CDN URL.
  */
 export async function runPixelBinPrediction(
-  imageDataUrl: string,
+  imageSource: string, // base64 data URL or https:// URL
   plugin: string,
   operation: string,
   extra?: Record<string, string>
@@ -85,7 +85,18 @@ export async function runPixelBinPrediction(
     };
   };
 
-  const { buffer, ext } = dataUrlToBuffer(imageDataUrl);
+  let buffer: Buffer;
+  let ext: string;
+  if (imageSource.startsWith("http")) {
+    const res = await fetch(imageSource);
+    if (!res.ok) throw new Error(`Failed to fetch image: ${res.status}`);
+    const arrBuf = await res.arrayBuffer();
+    const mime = res.headers.get("content-type") || "image/jpeg";
+    buffer = Buffer.from(arrBuf);
+    ext = mime.split("/")[1]?.split(";")[0] || "jpg";
+  } else {
+    ({ buffer, ext } = dataUrlToBuffer(imageSource));
+  }
   // nanoBananaPro takes "images", everything else takes "image"
   const imageField = plugin === "nanoBananaPro" ? "images" : "image";
 

@@ -9,11 +9,12 @@ export async function POST(req: NextRequest) {
   const { session, error } = await checkAuth(req);
   if (error) return error;
 
-  const { dataUrl, prompt } = (await req.json()) as { dataUrl?: string; prompt?: string };
-  if (!dataUrl || !prompt) return NextResponse.json({ error: "dataUrl and prompt required" }, { status: 400 });
+  const { dataUrl, imageUrl, prompt } = (await req.json()) as { dataUrl?: string; imageUrl?: string; prompt?: string };
+  const src = imageUrl || dataUrl;
+  if (!src || !prompt) return NextResponse.json({ error: "image and prompt required" }, { status: 400 });
 
   try {
-    const resultDataUrl = await runPixelBinPredictionAsDataUrl(dataUrl, "nanoBananaPro", "generate", { prompt });
+    const resultDataUrl = await runPixelBinPredictionAsDataUrl(src, "nanoBananaPro", "generate", { prompt });
     return withCredits({ dataUrl: resultDataUrl }, session!, "ai", req);
   } catch (e) {
     console.error("[ai-edit]", e);
