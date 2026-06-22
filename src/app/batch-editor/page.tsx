@@ -107,6 +107,7 @@ export default function BatchEditorPage() {
   const [removeBgColor, setRemoveBgColor] = useState("#ffffff");
   const [removeBgImageDataUrl, setRemoveBgImageDataUrl] = useState<string | null>(null);
   const removeBgImageRef = useRef<HTMLInputElement>(null);
+  const [openOptionsFor, setOpenOptionsFor] = useState<TransformType | null>(null);
 
   useEffect(() => {
     fetch("/api/auth/google/me")
@@ -119,7 +120,13 @@ export default function BatchEditorPage() {
   const toggleTool = (id: TransformType) => {
     setSelectedTools(prev => {
       const next = new Set(prev);
-      if (next.has(id)) { next.delete(id); } else { next.add(id); }
+      if (next.has(id)) {
+        next.delete(id);
+        setOpenOptionsFor(p => p === id ? null : p);
+      } else {
+        next.add(id);
+        setOpenOptionsFor(id);
+      }
       return next;
     });
   };
@@ -325,11 +332,12 @@ export default function BatchEditorPage() {
             <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
               {TRANSFORMS.map(t => {
                 const active = selectedTools.has(t.id);
+                const optOpen = openOptionsFor === t.id;
                 return (
                   <button key={t.id} onClick={() => toggleTool(t.id)} style={{
                     padding: "10px 12px", borderRadius: 10, textAlign: "left", cursor: "pointer",
                     border: active ? "2px solid #6366F1" : "1.5px solid #E5E7EB",
-                    background: active ? "#EEF2FF" : "#FAFAFA",
+                    background: optOpen ? "#EEF2FF" : active ? "#F5F3FF" : "#FAFAFA",
                     display: "flex", alignItems: "center", gap: 10,
                   }}>
                     <div style={{
@@ -347,149 +355,12 @@ export default function BatchEditorPage() {
                         {t.aiOnly && " · Paid plan"}
                       </div>
                     </div>
+                    {active && <span style={{ fontSize: 14, color: "#6366F1", fontWeight: 700 }}>›</span>}
                   </button>
                 );
               })}
             </div>
           </div>
-
-          {/* Options for selected tools */}
-          {selectedTools.size > 0 && (
-            <div style={{ borderTop: "1px solid #F3F4F6", paddingTop: 16, display: "flex", flexDirection: "column", gap: 16 }}>
-              <div style={sectionLabel}>Tool Options</div>
-
-              {selectedTools.has("resize") && (
-                <div style={optionBox}>
-                  <div style={optionTitle}>↔️ Resize</div>
-                  <div style={{ display: "flex", gap: 8 }}>
-                    <div style={{ flex: 1 }}>
-                      <label style={optionLabel}>Width</label>
-                      <input type="number" value={resizeW} min={1} max={8000} onChange={e => setResizeW(+e.target.value)} style={inputStyle} />
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <label style={optionLabel}>Height</label>
-                      <input type="number" value={resizeH} min={1} max={8000} onChange={e => setResizeH(+e.target.value)} disabled={lockAspect} style={{ ...inputStyle, opacity: lockAspect ? 0.5 : 1 }} />
-                    </div>
-                  </div>
-                  <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#6B7280", cursor: "pointer", marginTop: 6 }}>
-                    <input type="checkbox" checked={lockAspect} onChange={e => setLockAspect(e.target.checked)} />
-                    Lock aspect ratio (height auto)
-                  </label>
-                </div>
-              )}
-
-              {selectedTools.has("adjust") && (
-                <div style={optionBox}>
-                  <div style={optionTitle}>🎨 Color Adjust</div>
-                  {[
-                    { label: "Brightness", value: brightness, set: setBrightness },
-                    { label: "Contrast",   value: contrast,   set: setContrast   },
-                    { label: "Saturation", value: saturation, set: setSaturation },
-                  ].map(({ label, value, set }) => (
-                    <div key={label} style={{ marginBottom: 8 }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
-                        <span style={{ fontSize: 12, fontWeight: 600, color: "#374151" }}>{label}</span>
-                        <span style={{ fontSize: 12, color: "#6366F1", fontWeight: 700 }}>{value}%</span>
-                      </div>
-                      <input type="range" min={0} max={200} value={value} onChange={e => set(+e.target.value)} style={{ width: "100%", accentColor: "#6366F1" }} />
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {selectedTools.has("upscale") && (
-                <div style={optionBox}>
-                  <div style={optionTitle}>🔍 Upscale</div>
-                  <div style={optionLabel}>Resolution boost</div>
-                  <div style={{ display: "flex", gap: 8 }}>
-                    {(["2x", "4x"] as const).map(s => (
-                      <button key={s} onClick={() => setUpscaleScale(s)} style={{
-                        flex: 1, padding: "9px 0", borderRadius: 8, border: upscaleScale === s ? "2px solid #6366F1" : "1.5px solid #E5E7EB",
-                        background: upscaleScale === s ? "#EEF2FF" : "#fff", color: upscaleScale === s ? "#6366F1" : "#6B7280",
-                        fontWeight: 800, fontSize: 14, cursor: "pointer",
-                      }}>
-                        {s === "2x" ? "2× Standard" : "4× Ultra HD"}
-                      </button>
-                    ))}
-                  </div>
-                  <p style={{ fontSize: 11, color: "#9CA3AF", margin: 0 }}>
-                    {upscaleScale === "2x" ? "2× — faster, 1 credit/image" : "4× — maximum detail, 1 credit/image"}
-                  </p>
-                </div>
-              )}
-
-              {selectedTools.has("ai-edit") && (
-                <div style={optionBox}>
-                  <div style={optionTitle}>✨ AI Edit</div>
-                  <label style={optionLabel}>Prompt (applied to all)</label>
-                  <textarea value={aiPrompt} onChange={e => setAiPrompt(e.target.value)}
-                    placeholder="e.g. Make the background blurry, add cinematic lighting"
-                    rows={3} style={{ ...inputStyle, resize: "vertical", lineHeight: 1.5 }} />
-                </div>
-              )}
-
-              {selectedTools.has("remove-bg") && (
-                <div style={optionBox}>
-                  <div style={optionTitle}>🪄 Remove BG</div>
-                  <div style={optionLabel}>Output background</div>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
-                    {([
-                      { val: "transparent", label: "⬜ Transparent", hint: "PNG with transparency" },
-                      { val: "white",       label: "◻ White",        hint: "White background" },
-                      { val: "color",       label: "🎨 Custom Color", hint: "Pick any color" },
-                      { val: "image",       label: "🖼 Custom Image",  hint: "Upload a background" },
-                    ] as const).map(opt => (
-                      <button key={opt.val} onClick={() => setRemoveBgOutput(opt.val)} style={{
-                        padding: "8px 6px", borderRadius: 8, border: removeBgOutput === opt.val ? "2px solid #6366F1" : "1.5px solid #E5E7EB",
-                        background: removeBgOutput === opt.val ? "#EEF2FF" : "#fff",
-                        color: removeBgOutput === opt.val ? "#6366F1" : "#374151",
-                        fontWeight: removeBgOutput === opt.val ? 800 : 600, fontSize: 11, cursor: "pointer", textAlign: "left",
-                      }}>
-                        <div>{opt.label}</div>
-                        <div style={{ fontSize: 10, color: "#9CA3AF", fontWeight: 400 }}>{opt.hint}</div>
-                      </button>
-                    ))}
-                  </div>
-                  {removeBgOutput === "color" && (
-                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 4 }}>
-                      <input type="color" value={removeBgColor} onChange={e => setRemoveBgColor(e.target.value)}
-                        style={{ width: 36, height: 36, borderRadius: 8, border: "1.5px solid #E5E7EB", cursor: "pointer", padding: 2 }} />
-                      <span style={{ fontSize: 12, color: "#6B7280" }}>{removeBgColor}</span>
-                    </div>
-                  )}
-                  {removeBgOutput === "image" && (
-                    <div style={{ marginTop: 4 }}>
-                      <input ref={removeBgImageRef} type="file" accept="image/*" style={{ display: "none" }}
-                        onChange={e => {
-                          const f = e.target.files?.[0]; if (!f) return;
-                          const r = new FileReader(); r.onloadend = () => setRemoveBgImageDataUrl(r.result as string); r.readAsDataURL(f);
-                          e.target.value = "";
-                        }} />
-                      {removeBgImageDataUrl ? (
-                        <div style={{ position: "relative", borderRadius: 8, overflow: "hidden", height: 60 }}>
-                          <img src={removeBgImageDataUrl} alt="bg" style={{ width: "100%", height: 60, objectFit: "cover" }} />
-                          <button onClick={() => setRemoveBgImageDataUrl(null)} style={{ position: "absolute", top: 4, right: 4, background: "rgba(0,0,0,0.5)", border: "none", borderRadius: "50%", width: 18, height: 18, color: "#fff", fontSize: 11, cursor: "pointer" }}>×</button>
-                        </div>
-                      ) : (
-                        <button onClick={() => removeBgImageRef.current?.click()} style={{ width: "100%", padding: "8px", border: "1.5px dashed #C7D2FE", borderRadius: 8, background: "#F5F3FF", color: "#6366F1", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
-                          + Upload background image
-                        </button>
-                      )}
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {selectedTools.has("generate-bg") && (
-                <div style={optionBox}>
-                  <div style={optionTitle}>🌅 Generate BG</div>
-                  <label style={optionLabel}>Background description</label>
-                  <textarea value={bgPrompt} onChange={e => setBgPrompt(e.target.value)}
-                    rows={3} style={{ ...inputStyle, resize: "vertical", lineHeight: 1.5 }} />
-                </div>
-              )}
-            </div>
-          )}
 
           {/* Credit summary */}
           {items.length > 0 && selectedTools.size > 0 && (
@@ -548,6 +419,146 @@ export default function BatchEditorPage() {
             </div>
           )}
         </div>
+
+        {/* ── Options Side Panel ───────────────────────────────────────────── */}
+        {openOptionsFor && (() => {
+          const t = TRANSFORMS.find(x => x.id === openOptionsFor)!;
+          return (
+            <div style={{ width: 270, minWidth: 250, background: "#fff", borderRight: "1px solid #E5E7EB", overflowY: "auto", padding: 20, display: "flex", flexDirection: "column", gap: 16 }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
+                <div style={{ fontWeight: 800, fontSize: 14, color: "#111" }}>{t.icon} {t.label} Options</div>
+                <button onClick={() => setOpenOptionsFor(null)} style={{ background: "none", border: "none", fontSize: 18, color: "#9CA3AF", cursor: "pointer", lineHeight: 1, padding: "0 2px" }}>×</button>
+              </div>
+
+              {openOptionsFor === "resize" && (
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <div style={{ flex: 1 }}>
+                      <label style={optionLabel}>Width</label>
+                      <input type="number" value={resizeW} min={1} max={8000} onChange={e => setResizeW(+e.target.value)} style={inputStyle} />
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <label style={optionLabel}>Height</label>
+                      <input type="number" value={resizeH} min={1} max={8000} onChange={e => setResizeH(+e.target.value)} disabled={lockAspect} style={{ ...inputStyle, opacity: lockAspect ? 0.5 : 1 }} />
+                    </div>
+                  </div>
+                  <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#6B7280", cursor: "pointer" }}>
+                    <input type="checkbox" checked={lockAspect} onChange={e => setLockAspect(e.target.checked)} />
+                    Lock aspect ratio (height auto)
+                  </label>
+                </div>
+              )}
+
+              {openOptionsFor === "adjust" && (
+                <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                  {[
+                    { label: "Brightness", value: brightness, set: setBrightness },
+                    { label: "Contrast",   value: contrast,   set: setContrast   },
+                    { label: "Saturation", value: saturation, set: setSaturation },
+                  ].map(({ label, value, set }) => (
+                    <div key={label} style={{ marginBottom: 10 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
+                        <span style={{ fontSize: 12, fontWeight: 600, color: "#374151" }}>{label}</span>
+                        <span style={{ fontSize: 12, color: "#6366F1", fontWeight: 700 }}>{value}%</span>
+                      </div>
+                      <input type="range" min={0} max={200} value={value} onChange={e => set(+e.target.value)} style={{ width: "100%", accentColor: "#6366F1" }} />
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {openOptionsFor === "upscale" && (
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  <label style={optionLabel}>Resolution boost</label>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    {(["2x", "4x"] as const).map(s => (
+                      <button key={s} onClick={() => setUpscaleScale(s)} style={{
+                        flex: 1, padding: "12px 0", borderRadius: 8,
+                        border: upscaleScale === s ? "2px solid #6366F1" : "1.5px solid #E5E7EB",
+                        background: upscaleScale === s ? "#EEF2FF" : "#fff",
+                        color: upscaleScale === s ? "#6366F1" : "#6B7280",
+                        fontWeight: 800, fontSize: 15, cursor: "pointer",
+                      }}>
+                        {s === "2x" ? "2×" : "4×"}
+                      </button>
+                    ))}
+                  </div>
+                  <p style={{ fontSize: 12, color: "#9CA3AF", margin: 0 }}>
+                    {upscaleScale === "2x" ? "2× Standard — faster, 1 credit/image" : "4× Ultra HD — maximum detail, 1 credit/image"}
+                  </p>
+                </div>
+              )}
+
+              {openOptionsFor === "ai-edit" && (
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  <label style={optionLabel}>Prompt (applied to all images)</label>
+                  <textarea value={aiPrompt} onChange={e => setAiPrompt(e.target.value)}
+                    placeholder="e.g. Make the background blurry, add cinematic lighting"
+                    rows={4} style={{ ...inputStyle, resize: "vertical", lineHeight: 1.5 }} />
+                </div>
+              )}
+
+              {openOptionsFor === "remove-bg" && (
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  <label style={optionLabel}>Output background</label>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
+                    {([
+                      { val: "transparent", label: "⬜ Transparent", hint: "PNG with transparency" },
+                      { val: "white",       label: "◻ White",        hint: "White background" },
+                      { val: "color",       label: "🎨 Custom Color", hint: "Pick any color" },
+                      { val: "image",       label: "🖼 Custom Image",  hint: "Upload a background" },
+                    ] as const).map(opt => (
+                      <button key={opt.val} onClick={() => setRemoveBgOutput(opt.val)} style={{
+                        padding: "10px 8px", borderRadius: 8, border: removeBgOutput === opt.val ? "2px solid #6366F1" : "1.5px solid #E5E7EB",
+                        background: removeBgOutput === opt.val ? "#EEF2FF" : "#fff",
+                        color: removeBgOutput === opt.val ? "#6366F1" : "#374151",
+                        fontWeight: removeBgOutput === opt.val ? 800 : 600, fontSize: 11, cursor: "pointer", textAlign: "left",
+                      }}>
+                        <div>{opt.label}</div>
+                        <div style={{ fontSize: 10, color: "#9CA3AF", fontWeight: 400 }}>{opt.hint}</div>
+                      </button>
+                    ))}
+                  </div>
+                  {removeBgOutput === "color" && (
+                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      <input type="color" value={removeBgColor} onChange={e => setRemoveBgColor(e.target.value)}
+                        style={{ width: 40, height: 40, borderRadius: 8, border: "1.5px solid #E5E7EB", cursor: "pointer", padding: 2 }} />
+                      <span style={{ fontSize: 12, color: "#6B7280" }}>{removeBgColor}</span>
+                    </div>
+                  )}
+                  {removeBgOutput === "image" && (
+                    <div>
+                      <input ref={removeBgImageRef} type="file" accept="image/*" style={{ display: "none" }}
+                        onChange={e => {
+                          const f = e.target.files?.[0]; if (!f) return;
+                          const r = new FileReader(); r.onloadend = () => setRemoveBgImageDataUrl(r.result as string); r.readAsDataURL(f);
+                          e.target.value = "";
+                        }} />
+                      {removeBgImageDataUrl ? (
+                        <div style={{ position: "relative", borderRadius: 8, overflow: "hidden", height: 70 }}>
+                          <img src={removeBgImageDataUrl} alt="bg" style={{ width: "100%", height: 70, objectFit: "cover" }} />
+                          <button onClick={() => setRemoveBgImageDataUrl(null)} style={{ position: "absolute", top: 4, right: 4, background: "rgba(0,0,0,0.5)", border: "none", borderRadius: "50%", width: 20, height: 20, color: "#fff", fontSize: 12, cursor: "pointer" }}>×</button>
+                        </div>
+                      ) : (
+                        <button onClick={() => removeBgImageRef.current?.click()} style={{ width: "100%", padding: "10px", border: "1.5px dashed #C7D2FE", borderRadius: 8, background: "#F5F3FF", color: "#6366F1", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
+                          + Upload background image
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {openOptionsFor === "generate-bg" && (
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  <label style={optionLabel}>Background description</label>
+                  <textarea value={bgPrompt} onChange={e => setBgPrompt(e.target.value)}
+                    rows={4} style={{ ...inputStyle, resize: "vertical", lineHeight: 1.5 }} />
+                </div>
+              )}
+            </div>
+          );
+        })()}
 
         {/* ── Right: Image Grid ─────────────────────────────────────────────── */}
         <div style={{ flex: 1, overflowY: "auto", padding: 24, display: "flex", flexDirection: "column", gap: 16 }}>
