@@ -416,19 +416,20 @@ export default function LandingPageClient() {
         </div>
       </section>
 
-      {/* ── Trust Stats Bar ────────────────────────────────────────────────── */}
-      <section style={{ background: "#0F172A", padding: "28px 24px" }}>
-        <div style={{ maxWidth: 960, margin: "0 auto", display: "flex", justifyContent: "space-around", flexWrap: "wrap", gap: 20 }}>
+      {/* ── Product Highlights Bar ─────────────────────────────────────────── */}
+      <section style={{ background: "#0F172A", padding: "20px 24px" }}>
+        <div style={{ maxWidth: 1000, margin: "0 auto", display: "flex", justifyContent: "space-around", flexWrap: "wrap", gap: 16 }}>
           {[
-            { num: "10M+", label: "Images Processed" },
-            { num: "< 5s", label: "Average Processing Time" },
-            { num: "4×", label: "Max Resolution Boost" },
-            { num: "No Watermark", label: "On Every Download" },
-            { num: "Free", label: "To Get Started" },
-          ].map(s2 => (
-            <div key={s2.label} style={{ textAlign: "center" }}>
-              <div style={{ fontSize: 24, fontWeight: 900, color: "#A5B4FC", letterSpacing: "-0.02em" }}>{s2.num}</div>
-              <div style={{ fontSize: 12, color: "#94A3B8", marginTop: 4 }}>{s2.label}</div>
+            { icon: "🪄", label: "AI Background Removal" },
+            { icon: "🔍", label: "4× Image Upscaling" },
+            { icon: "✨", label: "Text-Prompt Editing" },
+            { icon: "💼", label: "AI Headshot Generator" },
+            { icon: "⚡", label: "Batch Process 100 Images" },
+            { icon: "📤", label: "No Watermark on Download" },
+          ].map(item => (
+            <div key={item.label} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ fontSize: 18 }}>{item.icon}</span>
+              <span style={{ fontSize: 13, fontWeight: 600, color: "#CBD5E1", whiteSpace: "nowrap" }}>{item.label}</span>
             </div>
           ))}
         </div>
