@@ -935,6 +935,9 @@ export default function ImageEditorPage() {
           )}
 
           <div style={s.pageHeaderRight}>
+            <a href="/batch-editor" style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "6px 12px", background: "#F0F0FF", color: "#6366F1", border: "1.5px solid #C7D2FE", borderRadius: 20, fontSize: 12, fontWeight: 700, textDecoration: "none", whiteSpace: "nowrap" as const }}>
+              ⚡ Batch (100 images)
+            </a>
             {hasImage && working && (
               <button style={s.dlBtn} onClick={handleDownload}>⬇ Download</button>
             )}
