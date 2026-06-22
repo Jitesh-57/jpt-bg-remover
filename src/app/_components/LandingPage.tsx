@@ -33,6 +33,116 @@ const HOW_IT_WORKS = [
   { step: '03', title: 'Download Result', desc: 'Preview the result and download in full quality — PNG or JPEG, your choice.' },
 ]
 
+// ── Per-page SEO content ──────────────────────────────────────────────────────
+
+const PAGE_USE_CASES: Record<string, { icon: string; title: string; stat?: string; desc: string }[]> = {
+  upscale: [
+    { icon: '🛍️', title: 'E-commerce Product Photos', stat: '94% higher conversion', desc: 'Turn low-res product photos into crisp, high-definition images. High-quality product photos increase conversion rates by up to 94%.' },
+    { icon: '📸', title: 'Old Photo Restoration', desc: 'Bring blurry, pixelated family memories back to life. AI upscaling recovers fine details that traditional enlargement destroys.' },
+    { icon: '🎨', title: 'AI Art & Digital Content', desc: 'Upscale AI-generated images to print-quality resolution. Export at 4× for posters, merchandise, and large-format prints.' },
+    { icon: '🖥️', title: 'Web & Marketing Assets', desc: 'Fix low-resolution screenshots, logos, or assets for retina displays. Never compromise on image quality in campaigns.' },
+  ],
+  'remove-bg': [
+    { icon: '🛍️', title: 'E-commerce & Product Shots', stat: '94% higher conversion', desc: 'Create consistent, white-background product photos for Amazon, Shopify, and Flipkart. High-quality product images boost conversion rates significantly.' },
+    { icon: '💼', title: 'LinkedIn Headshots', stat: '21× more profile views', desc: 'Remove distracting backgrounds from profile photos. Professional headshots get 21× more LinkedIn profile views and 9× more connection requests.' },
+    { icon: '🎥', title: 'Content Creation', stat: '35% more shares', desc: 'Make YouTube thumbnails, social media posts, and banners pop. High-quality images with clean cutouts get 35% more shares.' },
+    { icon: '📣', title: 'Marketing & Advertising', desc: 'Produce on-brand visuals at scale. Remove backgrounds from product and lifestyle shots to use in any campaign or creative.' },
+  ],
+  headshot: [
+    { icon: '💼', title: 'LinkedIn Profiles', stat: '21× more profile views', desc: 'Profiles with professional headshots get 21× more profile views and 9× more connection requests than those without.' },
+    { icon: '🏢', title: 'Corporate Directories', desc: 'Get consistent, professional-looking headshots for your company website and team pages without expensive studio sessions.' },
+    { icon: '📄', title: 'Resumes & CVs', desc: 'Add a polished headshot to your resume or portfolio. Stand out from the crowd with a professional photo in seconds.' },
+    { icon: '🎤', title: 'Speaker Profiles & Media Kits', desc: 'Generate professional photos for conference bios, press releases, and media kits quickly.' },
+  ],
+  'ai-editor': [
+    { icon: '🛍️', title: 'E-commerce', stat: '94% higher conversion', desc: 'Generate studio-quality backgrounds, adjust lighting, and retouch product photos for marketplaces — without a photographer.' },
+    { icon: '🎥', title: 'Content Creators', stat: '35% more shares', desc: 'Create eye-catching thumbnails, social media images, and banners with AI edits using plain English descriptions.' },
+    { icon: '📣', title: 'Marketing Teams', desc: 'Produce on-brand campaign visuals at scale. Change backgrounds, apply styles, and relight images with simple text prompts.' },
+    { icon: '🎨', title: 'Designers', desc: 'Prototype ideas and explore creative directions faster. Use AI editing to iterate without committing to full production.' },
+  ],
+}
+
+const PAGE_TESTIMONIALS: Record<string, { name: string; role: string; avatar: string; quote: string; stars: number }[]> = {
+  upscale: [
+    { name: 'Arjun Verma', role: 'E-commerce Seller', avatar: 'AV', quote: 'I had hundreds of old product photos taken on a phone. After upscaling, they look like professional studio shots. Sales improved noticeably.', stars: 5 },
+    { name: 'Meera Nair', role: 'Photographer', avatar: 'MN', quote: 'The AI preserves texture and detail in a way no other online tool does. Hair, fabric, skin — it all looks natural after upscaling.', stars: 5 },
+    { name: 'Kiran Shah', role: 'Graphic Designer', avatar: 'KS', quote: 'I use it to upscale AI-generated art before printing. 4× boost and the results are ready for A2 poster prints. Incredible.', stars: 5 },
+  ],
+  'remove-bg': [
+    { name: 'Priya Sharma', role: 'E-commerce Owner', avatar: 'PS', quote: 'I was spending 30 minutes per product photo in Photoshop. Now I process 40 images before morning coffee. My store looks completely professional.', stars: 5 },
+    { name: 'Rahul Mehta', role: 'Freelance Photographer', avatar: 'RM', quote: 'Background removal on hair and fine details is flawless. My clients can\'t tell the difference from a manual Photoshop cutout.', stars: 5 },
+    { name: 'Sneha Patel', role: 'Social Media Manager', avatar: 'SP', quote: 'Switched from remove.bg — same quality, but JPT AI has all the other tools too. No watermarks, instant results. Perfect.', stars: 5 },
+  ],
+  headshot: [
+    { name: 'Aditya Kumar', role: 'Software Engineer', avatar: 'AK', quote: 'Updated my LinkedIn with a JPT AI headshot. Got 3 recruiter messages in the same week. The photo looks completely professional.', stars: 5 },
+    { name: 'Nisha Gupta', role: 'Marketing Manager', avatar: 'NG', quote: 'Used it for our entire team\'s company page. Saved us a ₹30,000 studio session. Everyone looks consistent and polished.', stars: 5 },
+    { name: 'Vivek Joshi', role: 'Freelance Consultant', avatar: 'VJ', quote: 'I needed a quick headshot for a conference speaker profile. Done in 2 minutes, looked better than my old studio photo.', stars: 5 },
+  ],
+  'ai-editor': [
+    { name: 'Pooja Reddy', role: 'Content Creator', avatar: 'PR', quote: 'I just type what I want — "add a sunset background", "make it look cinematic" — and it\'s done. No Photoshop skills needed at all.', stars: 5 },
+    { name: 'Suresh Bhat', role: 'Digital Marketer', avatar: 'SB', quote: 'Changed 50 product backgrounds for a campaign in one afternoon. What used to take a design agency 3 days now takes me hours.', stars: 5 },
+    { name: 'Kavya Singh', role: 'Graphic Designer', avatar: 'KS', quote: 'Perfect for rapid prototyping. I try 10 different styles with AI prompts before committing to one direction. Massive time saver.', stars: 5 },
+  ],
+}
+
+const PAGE_COMPARISON: Record<string, { feature: string; jpt: boolean; alt1: boolean; alt2: boolean; alt1name: string; alt2name: string }[]> = {
+  upscale: [
+    { feature: '4× AI Upscaling', jpt: true, alt1: false, alt2: true, alt1name: 'Photoshop', alt2name: "Let's Enhance" },
+    { feature: 'Free tier (no credit card)', jpt: true, alt1: false, alt2: false, alt1name: 'Photoshop', alt2name: "Let's Enhance" },
+    { feature: 'No watermark', jpt: true, alt1: true, alt2: false, alt1name: 'Photoshop', alt2name: "Let's Enhance" },
+    { feature: 'Works in browser', jpt: true, alt1: false, alt2: true, alt1name: 'Photoshop', alt2name: "Let's Enhance" },
+    { feature: 'AI editing + BG removal too', jpt: true, alt1: true, alt2: false, alt1name: 'Photoshop', alt2name: "Let's Enhance" },
+    { feature: 'No signup to try', jpt: true, alt1: false, alt2: false, alt1name: 'Photoshop', alt2name: "Let's Enhance" },
+  ],
+  'remove-bg': [
+    { feature: 'Free tier (no credit card)', jpt: true, alt1: false, alt2: true, alt1name: 'Photoshop', alt2name: 'remove.bg' },
+    { feature: 'No watermark on free tier', jpt: true, alt1: false, alt2: false, alt1name: 'Photoshop', alt2name: 'remove.bg' },
+    { feature: 'AI image editing too', jpt: true, alt1: true, alt2: false, alt1name: 'Photoshop', alt2name: 'remove.bg' },
+    { feature: 'AI upscaling too', jpt: true, alt1: true, alt2: false, alt1name: 'Photoshop', alt2name: 'remove.bg' },
+    { feature: 'Works in browser', jpt: true, alt1: false, alt2: true, alt1name: 'Photoshop', alt2name: 'remove.bg' },
+    { feature: 'No signup to try', jpt: true, alt1: false, alt2: true, alt1name: 'Photoshop', alt2name: 'remove.bg' },
+  ],
+  headshot: [
+    { feature: 'AI headshot generation', jpt: true, alt1: true, alt2: true, alt1name: 'Aragon AI', alt2name: 'Canva' },
+    { feature: 'Free tier available', jpt: true, alt1: false, alt2: true, alt1name: 'Aragon AI', alt2name: 'Canva' },
+    { feature: 'No watermark on free tier', jpt: true, alt1: false, alt2: false, alt1name: 'Aragon AI', alt2name: 'Canva' },
+    { feature: 'Background removal included', jpt: true, alt1: false, alt2: true, alt1name: 'Aragon AI', alt2name: 'Canva' },
+    { feature: 'AI image editing too', jpt: true, alt1: false, alt2: true, alt1name: 'Aragon AI', alt2name: 'Canva' },
+    { feature: 'Works in browser', jpt: true, alt1: true, alt2: true, alt1name: 'Aragon AI', alt2name: 'Canva' },
+  ],
+  'ai-editor': [
+    { feature: 'Text-prompt editing', jpt: true, alt1: false, alt2: true, alt1name: 'Photoshop', alt2name: 'Adobe Firefly' },
+    { feature: 'Free tier (no credit card)', jpt: true, alt1: false, alt2: true, alt1name: 'Photoshop', alt2name: 'Adobe Firefly' },
+    { feature: 'No watermark on free tier', jpt: true, alt1: false, alt2: false, alt1name: 'Photoshop', alt2name: 'Adobe Firefly' },
+    { feature: 'BG removal included', jpt: true, alt1: true, alt2: false, alt1name: 'Photoshop', alt2name: 'Adobe Firefly' },
+    { feature: '4× AI Upscaling', jpt: true, alt1: false, alt2: false, alt1name: 'Photoshop', alt2name: 'Adobe Firefly' },
+    { feature: 'Works in browser', jpt: true, alt1: false, alt2: true, alt1name: 'Photoshop', alt2name: 'Adobe Firefly' },
+  ],
+}
+
+const PAGE_SEO_CONTENT: Record<string, { heading: string; body: string }[]> = {
+  upscale: [
+    { heading: 'What is AI image upscaling?', body: 'AI image upscaling uses deep learning super-resolution to intelligently add detail when enlarging images — unlike traditional upscaling which just stretches pixels and creates blurry results. JPT AI\'s upscaler analyses textures, edges, and patterns to reconstruct sharp, high-resolution output up to 4× the original size.' },
+    { heading: 'Upscale images to 4K online for free', body: 'JPT AI lets you upscale any photo to 2× or 4× resolution directly in your browser — no software to install, no credit card required. Free users get daily credits to upscale images. Upgrade for unlimited 4K upscaling with priority processing.' },
+    { heading: 'Best for e-commerce, photography & print', body: 'Whether you\'re a seller needing high-resolution product photos, a photographer restoring old images, or a designer upscaling AI art for print — JPT AI delivers professional results in seconds. Works on portraits, products, landscapes, screenshots, and AI-generated images.' },
+  ],
+  'remove-bg': [
+    { heading: 'What is AI background removal?', body: 'AI background removal uses deep learning image segmentation to detect and separate the subject from the background automatically — no manual selection, no magic wand tool, no green screen required. JPT AI handles people, products, objects, animals, and complex edges like hair with pixel-level precision.' },
+    { heading: 'Remove background online free — no watermark', body: 'JPT AI removes backgrounds instantly in your browser. The output is a full-resolution transparent PNG — no watermarks, no quality degradation, free to use. Perfect for e-commerce product photos, LinkedIn headshots, YouTube thumbnails, and marketing materials.' },
+    { heading: 'The best remove.bg alternative for India', body: 'Unlike remove.bg, JPT AI gives you an all-in-one toolkit: remove backgrounds AND upscale, edit with AI prompts, generate new backgrounds, and resize — all in one place, with pricing in INR and no foreign card required.' },
+  ],
+  headshot: [
+    { heading: 'What is an AI headshot generator?', body: 'An AI headshot generator uses artificial intelligence to transform casual photos into professional-looking headshots. JPT AI analyses your photo and applies professional lighting, background removal, and image enhancement to produce corporate-quality portraits without a studio session.' },
+    { heading: 'Professional AI headshots for LinkedIn — free to try', body: 'LinkedIn profiles with professional headshots get 21× more profile views and 9× more connection requests. JPT AI generates LinkedIn-ready headshots in seconds — no photographer, no studio, no expensive session. Free credits included when you sign up.' },
+    { heading: 'AI headshots for companies and teams', body: 'Get consistent, professional headshots for your entire team without booking a studio. JPT AI delivers uniform lighting and style across all photos — ideal for company websites, directories, and corporate materials. Process multiple team members quickly with batch uploads.' },
+  ],
+  'ai-editor': [
+    { heading: 'Edit photos with text prompts — no Photoshop needed', body: 'JPT AI lets you describe any edit in plain English and applies it instantly. "Change the background to a sunset", "add soft studio lighting", "make it look cinematic" — no design skills, no complex tools, no learning curve. Just type and transform.' },
+    { heading: 'The best AI photo editor online free', body: 'Unlike Photoshop or Adobe Firefly, JPT AI is free to start with no credit card required. Edit images in your browser — remove backgrounds, generate new backgrounds, apply styles, and upscale quality all in one tool. No watermarks on free tier.' },
+    { heading: 'AI image editing for e-commerce and marketing', body: 'Create professional product photos, ad creatives, and social media visuals in minutes. Change backgrounds, adjust lighting, apply brand styles, and generate consistent imagery at scale — without a designer or agency. Perfect for Shopify, Amazon, Instagram, and paid ads.' },
+  ],
+}
+
 // Gradient hero image previews per page
 const PAGE_VISUALS: Record<string, { before: string; after: string; label: string }> = {
   upscale: {
@@ -243,6 +353,121 @@ export default function LandingPage({ config, toolHref, pageId }: LandingPagePro
           </div>
         </div>
       </section>
+
+      {/* ── Use Cases ────────────────────────────────────────────────────── */}
+      {PAGE_USE_CASES[pageId] && (
+        <section style={{ padding: '80px 24px', background: '#fff' }}>
+          <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+            <div style={{ textAlign: 'center', marginBottom: 48 }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: '#6366F1', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>Use Cases</div>
+              <h2 style={{ fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', fontWeight: 900, color: '#0F172A', margin: 0, letterSpacing: '-0.02em' }}>Built for every creative workflow</h2>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 20 }}>
+              {PAGE_USE_CASES[pageId].map(u => (
+                <div key={u.title} style={{ background: '#F7F8FC', borderRadius: 16, padding: '24px 22px', border: '1px solid #EAECF0' }}>
+                  <div style={{ fontSize: 28, marginBottom: 10 }}>{u.icon}</div>
+                  <div style={{ fontSize: 15, fontWeight: 800, color: '#111827', marginBottom: 6 }}>{u.title}</div>
+                  {u.stat && (
+                    <div style={{ display: 'inline-block', background: '#EEF2FF', color: '#6366F1', fontSize: 11, fontWeight: 800, borderRadius: 20, padding: '3px 10px', marginBottom: 8 }}>📈 {u.stat}</div>
+                  )}
+                  <p style={{ margin: 0, fontSize: 13, color: '#6B7280', lineHeight: 1.65 }}>{u.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ── Testimonials ─────────────────────────────────────────────────── */}
+      {PAGE_TESTIMONIALS[pageId] && (
+        <section style={{ padding: '80px 24px', background: 'linear-gradient(160deg, #F5F5FF 0%, #EEF2FF 100%)' }}>
+          <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+            <div style={{ textAlign: 'center', marginBottom: 48 }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: '#6366F1', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>Testimonials</div>
+              <h2 style={{ fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', fontWeight: 900, color: '#0F172A', margin: 0, letterSpacing: '-0.02em' }}>Loved by creators & businesses</h2>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
+              {PAGE_TESTIMONIALS[pageId].map(t => (
+                <div key={t.name} style={{ background: '#fff', borderRadius: 16, padding: '24px 22px', border: '1px solid #E5E7EF', boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}>
+                  <div style={{ display: 'flex', gap: 3, marginBottom: 14 }}>
+                    {Array.from({ length: t.stars }).map((_, i) => <span key={i} style={{ color: '#F59E0B', fontSize: 16 }}>★</span>)}
+                  </div>
+                  <p style={{ margin: '0 0 18px', fontSize: 14, color: '#374151', lineHeight: 1.7, fontStyle: 'italic' }}>&ldquo;{t.quote}&rdquo;</p>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'linear-gradient(135deg, #6366F1, #8B5CF6)', color: '#fff', fontSize: 14, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{t.avatar}</div>
+                    <div>
+                      <div style={{ fontSize: 14, fontWeight: 800, color: '#111' }}>{t.name}</div>
+                      <div style={{ fontSize: 12, color: '#6B7280' }}>{t.role}</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ── Comparison Table ─────────────────────────────────────────────── */}
+      {PAGE_COMPARISON[pageId] && (() => {
+        const rows = PAGE_COMPARISON[pageId]
+        const alt1 = rows[0].alt1name
+        const alt2 = rows[0].alt2name
+        return (
+          <section style={{ padding: '80px 24px', background: '#fff' }}>
+            <div style={{ maxWidth: 860, margin: '0 auto' }}>
+              <div style={{ textAlign: 'center', marginBottom: 48 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: '#6366F1', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>Comparison</div>
+                <h2 style={{ fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', fontWeight: 900, color: '#0F172A', margin: '0 0 12px', letterSpacing: '-0.02em' }}>JPT AI vs the alternatives</h2>
+                <p style={{ fontSize: 16, color: '#6B7280', margin: 0 }}>One tool. Everything included. No hidden paywalls.</p>
+              </div>
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
+                  <thead>
+                    <tr style={{ borderBottom: '2px solid #E5E7EB' }}>
+                      <th style={{ textAlign: 'left', padding: '12px 16px', color: '#6B7280', fontWeight: 700, fontSize: 13 }}>Feature</th>
+                      <th style={{ textAlign: 'center', padding: '12px 16px', color: '#6366F1', fontWeight: 900, fontSize: 13, background: '#EEF2FF' }}>✦ JPT AI</th>
+                      <th style={{ textAlign: 'center', padding: '12px 16px', color: '#6B7280', fontWeight: 700, fontSize: 13 }}>{alt1}</th>
+                      <th style={{ textAlign: 'center', padding: '12px 16px', color: '#6B7280', fontWeight: 700, fontSize: 13 }}>{alt2}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {rows.map((row, i) => (
+                      <tr key={row.feature} style={{ borderBottom: '1px solid #F3F4F6', background: i % 2 === 0 ? '#fff' : '#FAFAFA' }}>
+                        <td style={{ padding: '12px 16px', color: '#374151', fontWeight: 500 }}>{row.feature}</td>
+                        <td style={{ textAlign: 'center', padding: '12px 16px', background: '#EEF2FF' }}>
+                          <span style={{ color: row.jpt ? '#10B981' : '#EF4444', fontSize: 18, fontWeight: 900 }}>{row.jpt ? '✓' : '✗'}</span>
+                        </td>
+                        <td style={{ textAlign: 'center', padding: '12px 16px' }}>
+                          <span style={{ color: row.alt1 ? '#10B981' : '#EF4444', fontSize: 18, fontWeight: 900 }}>{row.alt1 ? '✓' : '✗'}</span>
+                        </td>
+                        <td style={{ textAlign: 'center', padding: '12px 16px' }}>
+                          <span style={{ color: row.alt2 ? '#10B981' : '#EF4444', fontSize: 18, fontWeight: 900 }}>{row.alt2 ? '✓' : '✗'}</span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        )
+      })()}
+
+      {/* ── SEO Content ──────────────────────────────────────────────────── */}
+      {PAGE_SEO_CONTENT[pageId] && (
+        <section style={{ padding: '80px 24px', background: '#F9FAFB' }}>
+          <div style={{ maxWidth: 860, margin: '0 auto' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: 36, fontSize: 15, color: '#4B5563', lineHeight: 1.8 }}>
+              {PAGE_SEO_CONTENT[pageId].map(block => (
+                <div key={block.heading}>
+                  <h3 style={{ fontSize: 17, fontWeight: 800, color: '#111827', marginBottom: 10, marginTop: 0 }}>{block.heading}</h3>
+                  <p style={{ margin: 0 }}>{block.body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ── FAQ ──────────────────────────────────────────────────────────── */}
       {config.faq?.length > 0 && (
