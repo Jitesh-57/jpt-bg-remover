@@ -337,58 +337,7 @@ export default function ImageEditorPage() {
   // ── Effects ──────────────────────────────────────────────────────────────────
 
   useEffect(() => {
-    // 1. URL tool param — e.g. /editor?tool=upscale
-    const toolParam = new URLSearchParams(window.location.search).get("tool") as Tool;
-    if (toolParam && TOOLS.some(t => t.id === toolParam)) {
-      setActiveTool(toolParam);
-    }
-
-    // 2. Pending image/prompt from sessionStorage (from My Library "Open in Editor")
-    try {
-      const pp = sessionStorage.getItem("jpt_pending_prompt");
-      const pi = sessionStorage.getItem("jpt_pending_image");
-      const pt = sessionStorage.getItem("jpt_pending_tool") as Tool | null;
-      if (pp) { setPrompt(pp); setActiveTool("ai-edit"); sessionStorage.removeItem("jpt_pending_prompt"); }
-      if (pi) {
-        const img = new Image();
-        img.onload = () => {
-          setOriginal({ dataUrl: pi, w: img.naturalWidth, h: img.naturalHeight, name: "uploaded" });
-          setResizeW(img.naturalWidth); setResizeH(img.naturalHeight);
-          if (pt && TOOLS.some(t => t.id === pt)) setActiveTool(pt);
-          // Persist to localStorage so context survives an OAuth sign-in redirect.
-          // Also keep sessionStorage items until here so persistContextForAuth works
-          // if the user clicks sign-in before this onload fires.
-          try {
-            localStorage.setItem(SESSION_KEY, JSON.stringify({ dataUrl: pi, name: "uploaded", w: img.naturalWidth, h: img.naturalHeight, ts: Date.now() }));
-          } catch {}
-          sessionStorage.removeItem("jpt_pending_image");
-          sessionStorage.removeItem("jpt_pending_tool");
-        };
-        img.src = pi;
-        // Don't delete sessionStorage items here — do it in onload above so
-        // persistContextForAuth can still read them if sign-in is clicked quickly.
-        return; // skip session restore if we have a pending image
-      }
-    } catch {}
-
-    // 3. Auto-restore saved session (24h) from localStorage — no prompt needed
-    try {
-      const raw = localStorage.getItem(SESSION_KEY);
-      if (raw) {
-        const s = JSON.parse(raw) as SessionData;
-        if (Date.now() - s.ts < SESSION_TTL) {
-          setOriginal({ dataUrl: s.dataUrl, w: s.w, h: s.h, name: s.name });
-          setResizeW(s.w); setResizeH(s.h);
-        } else {
-          localStorage.removeItem(SESSION_KEY);
-        }
-      }
-    } catch {}
-
-    // 4. Always check server-side session on mount (cookies are the source of truth).
-    // Retry once with a short delay — handles the race where the auth cookie isn't
-    // committed yet right after an OAuth redirect. Keep delay short so non-logged-in
-    // users don't see the Loading... spinner for more than 300ms.
+    // ── Auth init (must run unconditionally — never placed after an early return) ──
     const loadUser = (retries = 1): Promise<void> =>
       fetch("/api/auth/google/me")
         .then(r => r.json())
@@ -420,6 +369,52 @@ export default function ImageEditorPage() {
         }
       });
     });
+
+    // 1. URL tool param — e.g. /editor?tool=upscale
+    const toolParam = new URLSearchParams(window.location.search).get("tool") as Tool;
+    if (toolParam && TOOLS.some(t => t.id === toolParam)) {
+      setActiveTool(toolParam);
+    }
+
+    // 2. Pending image/prompt from sessionStorage (from My Library "Open in Editor")
+    try {
+      const pp = sessionStorage.getItem("jpt_pending_prompt");
+      const pi = sessionStorage.getItem("jpt_pending_image");
+      const pt = sessionStorage.getItem("jpt_pending_tool") as Tool | null;
+      if (pp) { setPrompt(pp); setActiveTool("ai-edit"); sessionStorage.removeItem("jpt_pending_prompt"); }
+      if (pi) {
+        const img = new Image();
+        img.onload = () => {
+          setOriginal({ dataUrl: pi, w: img.naturalWidth, h: img.naturalHeight, name: "uploaded" });
+          setResizeW(img.naturalWidth); setResizeH(img.naturalHeight);
+          if (pt && TOOLS.some(t => t.id === pt)) setActiveTool(pt);
+          try {
+            localStorage.setItem(SESSION_KEY, JSON.stringify({ dataUrl: pi, name: "uploaded", w: img.naturalWidth, h: img.naturalHeight, ts: Date.now() }));
+          } catch {}
+          sessionStorage.removeItem("jpt_pending_image");
+          sessionStorage.removeItem("jpt_pending_tool");
+        };
+        img.src = pi;
+        // Don't delete sessionStorage items here — do it in onload above so
+        // persistContextForAuth can still read them if sign-in is clicked quickly.
+        return () => clearTimeout(authTimeout); // skip localStorage restore, auth already started
+      }
+    } catch {}
+
+    // 3. Auto-restore saved session (24h) from localStorage — no prompt needed
+    try {
+      const raw = localStorage.getItem(SESSION_KEY);
+      if (raw) {
+        const s = JSON.parse(raw) as SessionData;
+        if (Date.now() - s.ts < SESSION_TTL) {
+          setOriginal({ dataUrl: s.dataUrl, w: s.w, h: s.h, name: s.name });
+          setResizeW(s.w); setResizeH(s.h);
+        } else {
+          localStorage.removeItem(SESSION_KEY);
+        }
+      }
+    } catch {}
+
     return () => clearTimeout(authTimeout);
   }, []);
 
