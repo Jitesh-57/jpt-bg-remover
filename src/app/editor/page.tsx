@@ -1051,7 +1051,7 @@ export default function ImageEditorPage() {
         </div>}
 
         {/* ── Canvas Area ───────────────────────────────────────────────────── */}
-        <div style={{ ...s.canvasArea, ...(isMobile ? { padding: "12px", paddingBottom: 72 } : {}) }}>
+        <div style={{ ...s.canvasArea, ...(isMobile ? { padding: "12px", paddingBottom: activeTool ? "calc(48vh + 72px)" : "72px" } : {}) }}>
 
           {/* Saved session banner */}
           {!hasImage && savedSession && (
@@ -1243,8 +1243,7 @@ export default function ImageEditorPage() {
             position: "fixed" as const, bottom: 0, left: 0, right: 0, zIndex: 150,
             background: "#fff", borderRadius: "18px 18px 0 0",
             boxShadow: "0 -6px 32px rgba(0,0,0,0.18)",
-            maxHeight: mobileSheetOpen ? "72vh" : 0,
-            overflow: "hidden", transition: "max-height 0.3s ease",
+            height: "48vh",
             display: "flex", flexDirection: "column" as const,
           } : s.toolPanel}>
 
@@ -1252,9 +1251,9 @@ export default function ImageEditorPage() {
             {isMobile && (
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 16px 4px", flexShrink: 0 }}>
                 <div style={{ flex: 1 }} />
-                <div style={{ width: 36, height: 4, borderRadius: 2, background: "#D0D0D0", cursor: "pointer" }} onClick={() => setMobileSheetOpen(false)} />
+                <div style={{ width: 36, height: 4, borderRadius: 2, background: "#D0D0D0", cursor: "pointer" }} onClick={() => setActiveTool(null)} />
                 <div style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
-                  <button onClick={() => { setMobileSheetOpen(false); setActiveTool(null); }} style={{ background: "none", border: "none", fontSize: 20, color: "#888", cursor: "pointer", padding: "0 4px" }}>×</button>
+                  <button onClick={() => setActiveTool(null)} style={{ background: "none", border: "none", fontSize: 20, color: "#888", cursor: "pointer", padding: "0 4px" }}>×</button>
                 </div>
               </div>
             )}
@@ -1572,14 +1571,12 @@ export default function ImageEditorPage() {
               disabled={!hasImage}
               onClick={() => {
                 if (!hasImage) return;
-                if (t.free) { const next = activeTool === t.id ? null : t.id; setActiveTool(next); setMobileSheetOpen(!!next); return; }
-                if (!authChecked) { const next = activeTool === t.id ? null : t.id; setActiveTool(next); setMobileSheetOpen(!!next); return; }
+                if (t.free) { setActiveTool(activeTool === t.id ? null : t.id); return; }
+                if (!authChecked) { setActiveTool(activeTool === t.id ? null : t.id); return; }
                 if (!user) { requireSignIn(); return; }
                 const isPaidUser = !!(user.plan && user.plan !== "free");
                 if (t.paid && !isPaidUser) { setBlockedTool(t); setShowUpgradeModal(true); return; }
-                const next = activeTool === t.id ? null : t.id;
-                setActiveTool(next);
-                setMobileSheetOpen(!!next);
+                setActiveTool(activeTool === t.id ? null : t.id);
               }}
               style={{ display: "flex", flexDirection: "column" as const, alignItems: "center", gap: 3, padding: "6px 10px", borderRadius: 10, border: "none", background: activeTool === t.id ? "#EEEEFF" : "transparent", cursor: "pointer", minWidth: 52, flexShrink: 0, opacity: !hasImage ? 0.35 : 1 }}
             >
