@@ -32,10 +32,10 @@ export async function GET(req: NextRequest) {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      // Keep the callback URL clean (no query string). Supabase only honors
-      // redirect targets that match its allow-list — appending ?next=… can make
-      // it fall back to the Site URL (homepage), losing the destination. We pass
-      // `next` through a short-lived cookie instead.
+      // Minimal scopes — only email + profile. No Drive, no other permissions.
+      // This prevents Google from showing the scary "access your Google Drive" screen.
+      scopes: "email profile",
+      queryParams: { access_type: "online", prompt: "select_account" },
       redirectTo: `${origin}/auth/callback`,
       skipBrowserRedirect: true,
     },
