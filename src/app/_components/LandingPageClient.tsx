@@ -320,13 +320,13 @@ export default function LandingPageClient() {
           <div style={s.badge}>✨ AI-Powered Image Editing — Free to Start</div>
 
           <h1 style={s.h1}>
-            Edit Any Image<br />
-            <span style={s.h1Accent}>with a Single Prompt</span>
+            Free AI Image Editor<br />
+            <span style={s.h1Accent}>Edit with a Single Prompt</span>
           </h1>
 
           <p style={s.heroPara}>
-            Remove backgrounds, upscale quality, generate AI backgrounds, resize, and transform
-            photos — all in one place, powered by JPT AI&apos;s intelligent image processing engine.
+            Remove backgrounds free, upscale photos to 4K, generate AI backgrounds, resize, and transform
+            images — all in one place. No watermark, no software needed.
           </p>
 
           {/* Upload Drop Zone */}

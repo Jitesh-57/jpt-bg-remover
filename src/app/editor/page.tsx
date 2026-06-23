@@ -24,7 +24,7 @@ const FREE_CREDITS = 10;
 const CREDIT_COST = 2;
 const BASIC_UPSCALE_COST = 1;
 const SUPPORTED_IMAGE_FORMATS = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
-const MAX_UPSCALE_OUTPUT_PX = 20000;
+const MAX_UPSCALE_OUTPUT_PX = 8000;
 
 const SOLID_COLORS = [
   { label: "White", hex: "#FFFFFF" }, { label: "Light Gray", hex: "#F2F2F2" },
@@ -1051,7 +1051,7 @@ export default function ImageEditorPage() {
         </div>}
 
         {/* ── Canvas Area ───────────────────────────────────────────────────── */}
-        <div style={{ ...s.canvasArea, ...(isMobile ? { padding: "12px", paddingBottom: activeTool ? "calc(48vh + 72px)" : "72px" } : {}) }}>
+        <div style={{ ...s.canvasArea, ...(isMobile ? { padding: "12px", paddingBottom: 72 } : {}) }}>
 
           {/* Saved session banner */}
           {!hasImage && savedSession && (
@@ -1081,7 +1081,7 @@ export default function ImageEditorPage() {
 
           {/* Upload Zone */}
           {!hasImage && (
-            <div style={{ ...s.uploadZone, padding: isMobile ? "24px 16px" : "60px 40px" }}
+            <div style={s.uploadZone}
               onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
               onDragLeave={() => setDragOver(false)}
               onDrop={(e) => { e.preventDefault(); setDragOver(false); const f = e.dataTransfer.files[0]; if (f) handleFile(f); }}
@@ -1243,7 +1243,8 @@ export default function ImageEditorPage() {
             position: "fixed" as const, bottom: 0, left: 0, right: 0, zIndex: 150,
             background: "#fff", borderRadius: "18px 18px 0 0",
             boxShadow: "0 -6px 32px rgba(0,0,0,0.18)",
-            height: "48vh",
+            maxHeight: mobileSheetOpen ? "72vh" : 0,
+            overflow: "hidden", transition: "max-height 0.3s ease",
             display: "flex", flexDirection: "column" as const,
           } : s.toolPanel}>
 
@@ -1251,9 +1252,9 @@ export default function ImageEditorPage() {
             {isMobile && (
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 16px 4px", flexShrink: 0 }}>
                 <div style={{ flex: 1 }} />
-                <div style={{ width: 36, height: 4, borderRadius: 2, background: "#D0D0D0", cursor: "pointer" }} onClick={() => setActiveTool(null)} />
+                <div style={{ width: 36, height: 4, borderRadius: 2, background: "#D0D0D0", cursor: "pointer" }} onClick={() => setMobileSheetOpen(false)} />
                 <div style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
-                  <button onClick={() => setActiveTool(null)} style={{ background: "none", border: "none", fontSize: 20, color: "#888", cursor: "pointer", padding: "0 4px" }}>×</button>
+                  <button onClick={() => { setMobileSheetOpen(false); setActiveTool(null); }} style={{ background: "none", border: "none", fontSize: 20, color: "#888", cursor: "pointer", padding: "0 4px" }}>×</button>
                 </div>
               </div>
             )}
@@ -1404,7 +1405,7 @@ export default function ImageEditorPage() {
                         <button
                           key={sc}
                           onClick={() => setUpscaleScale(sc)}
-                          title={tooLarge ? `Image too large for ${sc} upscaling (output would exceed 20,000px)` : undefined}
+                          title={tooLarge ? `Image too large for ${sc} upscaling (output would exceed 8000px)` : undefined}
                           style={{
                             flex: 1, padding: "12px 8px", borderRadius: 10,
                             border: upscaleScale === sc ? "2px solid #6366F1" : "1.5px solid #E0E0EE",
@@ -1432,8 +1433,8 @@ export default function ImageEditorPage() {
                       return (
                         <div style={{ marginTop: 8, background: "#FFF7ED", border: "1px solid #FED7AA", borderRadius: 8, padding: "7px 12px", fontSize: 12, color: "#92400E", display: "flex", alignItems: "flex-start", gap: 6 }}>
                           ⚠️ {tooLargeFor2x
-                            ? `Image is already very high-res (${curW}×${curH}px). Output would exceed the 20,000px limit — upscaling is not needed.`
-                            : `4× would produce ${curW * 4}×${curH * 4}px which exceeds the 20,000px limit. Use 2× instead.`}
+                            ? `Image is already very high-res (${curW}×${curH}px). Upscaling is not needed.`
+                            : `Image is too large for 4× upscale (output would be ${curW * 4}×${curH * 4}px). Use 2× instead.`}
                         </div>
                       );
                     }
@@ -1571,12 +1572,14 @@ export default function ImageEditorPage() {
               disabled={!hasImage}
               onClick={() => {
                 if (!hasImage) return;
-                if (t.free) { setActiveTool(activeTool === t.id ? null : t.id); return; }
-                if (!authChecked) { setActiveTool(activeTool === t.id ? null : t.id); return; }
+                if (t.free) { const next = activeTool === t.id ? null : t.id; setActiveTool(next); setMobileSheetOpen(!!next); return; }
+                if (!authChecked) { const next = activeTool === t.id ? null : t.id; setActiveTool(next); setMobileSheetOpen(!!next); return; }
                 if (!user) { requireSignIn(); return; }
                 const isPaidUser = !!(user.plan && user.plan !== "free");
                 if (t.paid && !isPaidUser) { setBlockedTool(t); setShowUpgradeModal(true); return; }
-                setActiveTool(activeTool === t.id ? null : t.id);
+                const next = activeTool === t.id ? null : t.id;
+                setActiveTool(next);
+                setMobileSheetOpen(!!next);
               }}
               style={{ display: "flex", flexDirection: "column" as const, alignItems: "center", gap: 3, padding: "6px 10px", borderRadius: 10, border: "none", background: activeTool === t.id ? "#EEEEFF" : "transparent", cursor: "pointer", minWidth: 52, flexShrink: 0, opacity: !hasImage ? 0.35 : 1 }}
             >
@@ -1590,7 +1593,7 @@ export default function ImageEditorPage() {
       {/* ── Account Modal ─────────────────────────────────────────────────── */}
       {showAccountModal && user && (
         <div style={s.modalOverlay} onClick={() => setShowAccountModal(false)}>
-          <div style={{ ...s.modalBox, width: isMobile ? "calc(100% - 32px)" : "100%" }} onClick={(e) => e.stopPropagation()}>
+          <div style={s.modalBox} onClick={(e) => e.stopPropagation()}>
             {/* Profile */}
             <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 20 }}>
               {user.picture
@@ -1669,7 +1672,7 @@ export default function ImageEditorPage() {
       {/* ── Sign-in Modal ─────────────────────────────────────────────────── */}
       {showSignInModal && (
         <div style={s.modalOverlay} onClick={() => { setShowSignInModal(false); setAuthError(""); }}>
-          <div style={{ ...s.modalBox, width: isMobile ? "calc(100% - 32px)" : "100%", maxWidth: isMobile ? 420 : 460, textAlign: "left" as const }} onClick={(e) => e.stopPropagation()}>
+          <div style={{ ...s.modalBox, maxWidth: 460, textAlign: "left" as const }} onClick={(e) => e.stopPropagation()}>
             <div style={{ textAlign: "center" as const, marginBottom: 20 }}>
               <div style={{ fontSize: 40, marginBottom: 8 }}>✨</div>
               <div style={{ ...s.modalTitle, fontSize: 20 }}>Sign in to JPT AI Editor</div>
@@ -1781,7 +1784,7 @@ export default function ImageEditorPage() {
       {/* ── No Credits Modal ──────────────────────────────────────────────── */}
       {showNoCreditsModal && (
         <div style={s.modalOverlay} onClick={() => setShowNoCreditsModal(false)}>
-          <div style={{ ...s.modalBox, width: isMobile ? "calc(100% - 32px)" : "100%" }} onClick={(e) => e.stopPropagation()}>
+          <div style={s.modalBox} onClick={(e) => e.stopPropagation()}>
             <div style={{ fontSize: 48, marginBottom: 12 }}>⚡</div>
             <div style={s.modalTitle}>Daily credits used up</div>
 
@@ -1815,7 +1818,7 @@ export default function ImageEditorPage() {
       {/* ── Upgrade Modal ─────────────────────────────────────────────────── */}
       {showUpgradeModal && (
         <div style={s.modalOverlay} onClick={() => { setShowUpgradeModal(false); setBlockedTool(null); }}>
-          <div style={{ background: "#fff", borderRadius: 24, width: isMobile ? "calc(100% - 32px)" : "100%", maxWidth: isMobile ? 420 : 580, maxHeight: "90vh", overflowY: "auto" as const, boxShadow: "0 24px 80px rgba(0,0,0,0.22)", position: "relative" }} onClick={(e) => e.stopPropagation()}>
+          <div style={{ background: "#fff", borderRadius: 24, width: "100%", maxWidth: 580, maxHeight: "90vh", overflowY: "auto" as const, boxShadow: "0 24px 80px rgba(0,0,0,0.22)", position: "relative" }} onClick={(e) => e.stopPropagation()}>
 
             {/* Gradient header */}
             <div style={{ background: "linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #A78BFA 100%)", borderRadius: "24px 24px 0 0", padding: "32px 32px 28px", color: "#fff", position: "relative" }}>

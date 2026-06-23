@@ -30,16 +30,16 @@ export interface PageSEO {
 export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
   upscale: {
     page_id: 'upscale',
-    title: 'AI Image Upscaler — Enhance Photo Resolution Online | JPT AI',
+    title: 'Free AI Image Upscaler — Enhance Photo Resolution to 4K Online | JPT AI',
     meta_description:
-      "Upscale images up to 4× without losing quality using JPT AI's super-resolution technology. Enhance photos, sharpen details, and improve clarity instantly.",
-    og_title: 'AI Image Upscaler | JPT AI',
-    og_description: 'Upscale images up to 4× without losing quality.',
+      'Free AI image upscaler online. Upscale photos to 4K without losing quality. Enhance resolution 2× or 4× instantly — no watermark, no software needed.',
+    og_title: 'Free AI Image Upscaler — 4K Photo Enhancement | JPT AI',
+    og_description: 'Upscale images to 4K for free. No watermark, no software. Powered by AI super-resolution.',
     og_image: '',
-    keywords: 'ai image upscaler, photo upscale, image resolution enhancer, super resolution',
-    h1: 'AI Image Upscaler',
+    keywords: 'free ai image upscaler, upscale image free, photo upscale online free, 4k image upscaler free, image resolution enhancer free',
+    h1: 'Free AI Image Upscaler',
     subtitle:
-      'Enhance any photo to 2× or 4× resolution in seconds. Crystal-clear results powered by AI super-resolution.',
+      'Upscale any photo to 2× or 4× resolution — free online. Crystal-clear results with no watermark, powered by AI super-resolution.',
     cta_text: 'Upscale Your Image Free',
     features: [
       {
@@ -68,16 +68,16 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
   },
   'remove-bg': {
     page_id: 'remove-bg',
-    title: 'Remove Image Background Free Online — AI Background Remover | JPT AI',
+    title: 'Free Background Remover Online — Remove Image Background Instantly | JPT AI',
     meta_description:
-      'Remove backgrounds from photos instantly using AI. Get transparent PNG in one click. Perfect for product photos, portraits, and e-commerce. Free online tool.',
-    og_title: 'AI Background Remover | JPT AI',
-    og_description: 'Remove backgrounds from photos instantly using AI. Get transparent PNG in one click.',
+      'Remove image backgrounds free online using AI. Get a transparent PNG in one click — no watermark, no software. Perfect for product photos, portraits, and e-commerce.',
+    og_title: 'Free AI Background Remover — Transparent PNG Instantly | JPT AI',
+    og_description: 'Remove image backgrounds free online. Transparent PNG in one click, no watermark.',
     og_image: '',
-    keywords: 'remove background, background remover, transparent background, png background removal',
-    h1: 'AI Background Remover',
+    keywords: 'remove background free, background remover free online, transparent background free, remove image background free, png background removal free',
+    h1: 'Free AI Background Remover',
     subtitle:
-      'Remove any background in one click. Get a clean transparent PNG — perfect for product photos, portraits, and more.',
+      'Remove any background in one click — free online. Get a clean transparent PNG with no watermark, perfect for product photos and portraits.',
     cta_text: 'Remove Background Free',
     features: [
       {
@@ -110,17 +110,17 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
   },
   headshot: {
     page_id: 'headshot',
-    title: 'AI Headshot Generator — Professional Photos Online | JPT AI',
+    title: 'Free AI Headshot Generator — Professional Photos Online | JPT AI',
     meta_description:
-      'Generate professional AI headshots from any photo. Perfect for LinkedIn, resumes, and corporate profiles. No photographer needed.',
-    og_title: 'AI Headshot Generator | JPT AI',
+      'Generate professional AI headshots free from any photo. Perfect for LinkedIn, resumes, and corporate profiles. No photographer needed, no watermark.',
+    og_title: 'Free AI Headshot Generator — LinkedIn Ready | JPT AI',
     og_description:
-      'Generate professional AI headshots from any photo. Perfect for LinkedIn and corporate profiles.',
+      'Generate professional AI headshots free online. LinkedIn-ready, no watermark.',
     og_image: '',
-    keywords: 'ai headshot, professional headshot generator, linkedin photo, corporate headshot',
-    h1: 'AI Headshot Generator',
+    keywords: 'free ai headshot generator, professional headshot free, linkedin photo free, ai headshot online free',
+    h1: 'Free AI Headshot Generator',
     subtitle:
-      'Turn any photo into a professional headshot. LinkedIn-ready, corporate-quality results in seconds.',
+      'Turn any photo into a professional headshot — free online. LinkedIn-ready, corporate-quality results in seconds with no watermark.',
     cta_text: 'Generate Your Headshot Free',
     features: [
       {
@@ -148,16 +148,16 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
   },
   'ai-editor': {
     page_id: 'ai-editor',
-    title: 'AI Photo Editor Online Free — Edit Images with Text Prompts | JPT AI',
+    title: 'Free AI Photo Editor Online — Edit Images with Text Prompts | JPT AI',
     meta_description:
-      'Edit photos with simple text prompts using JPT AI. Change backgrounds, add effects, relight scenes, and more. No Photoshop skills needed.',
-    og_title: 'AI Photo Editor | JPT AI',
-    og_description: 'Edit photos with simple text prompts. No Photoshop skills needed.',
+      'Free AI photo editor online. Edit photos with simple text prompts — change backgrounds, add effects, relight scenes. No Photoshop skills needed, no watermark.',
+    og_title: 'Free AI Photo Editor Online — Edit with Text Prompts | JPT AI',
+    og_description: 'Edit photos free with text prompts. No Photoshop, no watermark. Powered by AI.',
     og_image: '',
-    keywords: 'ai photo editor, text to image edit, ai image editing, online photo editor',
-    h1: 'AI Photo Editor',
+    keywords: 'free ai photo editor online, ai photo editor free, edit photos free online, ai image editor free, text prompt photo editor free',
+    h1: 'Free AI Photo Editor',
     subtitle:
-      'Describe your edit in plain English — our AI does the rest. Change backgrounds, add effects, relight scenes instantly.',
+      'Describe your edit in plain English — our AI does the rest for free. Change backgrounds, add effects, relight scenes instantly. No watermark.',
     cta_text: 'Start Editing Free',
     features: [
       { icon: '✍️', title: 'Text-to-Edit', desc: 'Just type what you want changed and AI handles the rest' },
