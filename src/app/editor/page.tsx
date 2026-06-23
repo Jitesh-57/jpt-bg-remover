@@ -24,7 +24,7 @@ const FREE_CREDITS = 10;
 const CREDIT_COST = 2;
 const BASIC_UPSCALE_COST = 1;
 const SUPPORTED_IMAGE_FORMATS = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
-const MAX_UPSCALE_OUTPUT_PX = 8000;
+const MAX_UPSCALE_OUTPUT_PX = 20000;
 
 const SOLID_COLORS = [
   { label: "White", hex: "#FFFFFF" }, { label: "Light Gray", hex: "#F2F2F2" },
@@ -1404,7 +1404,7 @@ export default function ImageEditorPage() {
                         <button
                           key={sc}
                           onClick={() => setUpscaleScale(sc)}
-                          title={tooLarge ? `Image too large for ${sc} upscaling (output would exceed 8000px)` : undefined}
+                          title={tooLarge ? `Image too large for ${sc} upscaling (output would exceed 20,000px)` : undefined}
                           style={{
                             flex: 1, padding: "12px 8px", borderRadius: 10,
                             border: upscaleScale === sc ? "2px solid #6366F1" : "1.5px solid #E0E0EE",
@@ -1432,8 +1432,8 @@ export default function ImageEditorPage() {
                       return (
                         <div style={{ marginTop: 8, background: "#FFF7ED", border: "1px solid #FED7AA", borderRadius: 8, padding: "7px 12px", fontSize: 12, color: "#92400E", display: "flex", alignItems: "flex-start", gap: 6 }}>
                           ⚠️ {tooLargeFor2x
-                            ? `Image is already very high-res (${curW}×${curH}px). Upscaling is not needed.`
-                            : `Image is too large for 4× upscale (output would be ${curW * 4}×${curH * 4}px). Use 2× instead.`}
+                            ? `Image is already very high-res (${curW}×${curH}px). Output would exceed the 20,000px limit — upscaling is not needed.`
+                            : `4× would produce ${curW * 4}×${curH * 4}px which exceeds the 20,000px limit. Use 2× instead.`}
                         </div>
                       );
                     }
