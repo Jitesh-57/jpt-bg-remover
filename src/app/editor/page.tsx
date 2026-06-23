@@ -273,6 +273,8 @@ export default function ImageEditorPage() {
   const [showNoCreditsModal, setShowNoCreditsModal] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [creditRenewCountdown, setCreditRenewCountdown] = useState("");
+  const [isMobile, setIsMobile] = useState(false);
+  const [mobileSheetOpen, setMobileSheetOpen] = useState(false);
   const [blockedTool, setBlockedTool] = useState<{ id: string | null; icon: string; label: string } | null>(null);
   const [buyingPlan, setBuyingPlan] = useState<string | null>(null);
 
@@ -418,7 +420,11 @@ export default function ImageEditorPage() {
       }
     } catch {}
 
-    return () => clearTimeout(authTimeout);
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    return () => { clearTimeout(authTimeout); window.removeEventListener("resize", checkMobile); };
   }, []);
 
   // ── Auth gate ─────────────────────────────────────────────────────────────────
@@ -1015,8 +1021,8 @@ export default function ImageEditorPage() {
       {/* ── Main Layout ───────────────────────────────────────────────────── */}
       <div style={s.layout}>
 
-        {/* ── Left Sidebar ─────────────────────────────────────────────────── */}
-        <div style={s.sidebar}>
+        {/* ── Left Sidebar (desktop only) ──────────────────────────────────── */}
+        {!isMobile && <div style={s.sidebar}>
           {TOOLS.map((t) => (
             <button
               key={t.id}
@@ -1042,10 +1048,10 @@ export default function ImageEditorPage() {
               <span style={s.toolLabel}>{t.label}</span>
             </button>
           ))}
-        </div>
+        </div>}
 
         {/* ── Canvas Area ───────────────────────────────────────────────────── */}
-        <div style={s.canvasArea}>
+        <div style={{ ...s.canvasArea, ...(isMobile ? { padding: "12px", paddingBottom: 72 } : {}) }}>
 
           {/* Saved session banner */}
           {!hasImage && savedSession && (
@@ -1233,7 +1239,26 @@ export default function ImageEditorPage() {
 
         {/* ── Right Tool Panel ─────────────────────────────────────────────── */}
         {activeTool && hasImage && (
-          <div style={s.toolPanel}>
+          <div style={isMobile ? {
+            position: "fixed" as const, bottom: 0, left: 0, right: 0, zIndex: 150,
+            background: "#fff", borderRadius: "18px 18px 0 0",
+            boxShadow: "0 -6px 32px rgba(0,0,0,0.18)",
+            maxHeight: mobileSheetOpen ? "72vh" : 0,
+            overflow: "hidden", transition: "max-height 0.3s ease",
+            display: "flex", flexDirection: "column" as const,
+          } : s.toolPanel}>
+
+            {/* Mobile sheet handle */}
+            {isMobile && (
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 16px 4px", flexShrink: 0 }}>
+                <div style={{ flex: 1 }} />
+                <div style={{ width: 36, height: 4, borderRadius: 2, background: "#D0D0D0", cursor: "pointer" }} onClick={() => setMobileSheetOpen(false)} />
+                <div style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
+                  <button onClick={() => { setMobileSheetOpen(false); setActiveTool(null); }} style={{ background: "none", border: "none", fontSize: 20, color: "#888", cursor: "pointer", padding: "0 4px" }}>×</button>
+                </div>
+              </div>
+            )}
+            <div style={isMobile ? { overflowY: "auto" as const, flex: 1, paddingBottom: 80 } : {}}>
 
             {/* Generate Background */}
             {activeTool === "generate-bg" && (
@@ -1533,9 +1558,37 @@ export default function ImageEditorPage() {
               </div>
             )}
 
+            </div>{/* end mobile scroll wrapper */}
           </div>
         )}
       </div>
+
+      {/* ── Mobile Bottom Tool Strip ──────────────────────────────────────── */}
+      {isMobile && (
+        <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 100, background: "#fff", borderTop: "1.5px solid #EAEAEA", display: "flex", overflowX: "auto", padding: "6px 8px 10px", gap: 4, WebkitOverflowScrolling: "touch" as React.CSSProperties["WebkitOverflowScrolling"] }}>
+          {TOOLS.filter(t => t.id !== null).map(t => (
+            <button
+              key={t.id}
+              disabled={!hasImage}
+              onClick={() => {
+                if (!hasImage) return;
+                if (t.free) { const next = activeTool === t.id ? null : t.id; setActiveTool(next); setMobileSheetOpen(!!next); return; }
+                if (!authChecked) { const next = activeTool === t.id ? null : t.id; setActiveTool(next); setMobileSheetOpen(!!next); return; }
+                if (!user) { requireSignIn(); return; }
+                const isPaidUser = !!(user.plan && user.plan !== "free");
+                if (t.paid && !isPaidUser) { setBlockedTool(t); setShowUpgradeModal(true); return; }
+                const next = activeTool === t.id ? null : t.id;
+                setActiveTool(next);
+                setMobileSheetOpen(!!next);
+              }}
+              style={{ display: "flex", flexDirection: "column" as const, alignItems: "center", gap: 3, padding: "6px 10px", borderRadius: 10, border: "none", background: activeTool === t.id ? "#EEEEFF" : "transparent", cursor: "pointer", minWidth: 52, flexShrink: 0, opacity: !hasImage ? 0.35 : 1 }}
+            >
+              <span style={{ fontSize: 20 }}>{t.icon}</span>
+              <span style={{ fontSize: 9, fontWeight: 700, color: activeTool === t.id ? "#6366F1" : "#888", whiteSpace: "nowrap" as const }}>{t.label}</span>
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* ── Account Modal ─────────────────────────────────────────────────── */}
       {showAccountModal && user && (
