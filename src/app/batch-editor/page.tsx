@@ -111,6 +111,14 @@ export default function BatchEditorPage() {
   const removeBgImageRef = useRef<HTMLInputElement>(null);
   const [openOptionsFor, setOpenOptionsFor] = useState<TransformType | null>(null);
   const [showPricingModal, setShowPricingModal] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   useEffect(() => {
     fetch("/api/auth/google/me")
@@ -370,10 +378,246 @@ export default function BatchEditorPage() {
         </div>
       </div>
 
-      <div style={{ display: "flex", height: "calc(100vh - 61px)" }}>
+      <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", height: isMobile ? undefined : "calc(100vh - 61px)", minHeight: isMobile ? "calc(100vh - 61px)" : undefined }}>
 
-        {/* ── Left Panel ───────────────────────────────────────────────────── */}
-        <div style={{ width: 300, minWidth: 280, background: "#fff", borderRight: "1px solid #E5E7EB", overflowY: "auto", padding: 20, display: "flex", flexDirection: "column", gap: 18 }}>
+        {/* ── Mobile: Tool Tab Strip ────────────────────────────────────────── */}
+        {isMobile && (
+          <div style={{ display: "flex", overflowX: "auto", background: "#fff", borderBottom: "1px solid #EAEAEA", padding: "8px 12px", gap: 8, WebkitOverflowScrolling: "touch" as unknown as React.CSSProperties["WebkitOverflowScrolling"], flexShrink: 0 }}>
+            {TRANSFORMS.map(t => {
+              const active = selectedTools.has(t.id);
+              return (
+                <button key={t.id} onClick={() => toggleTool(t.id)}
+                  style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4, padding: "8px 14px", borderRadius: 12, border: "2px solid", borderColor: active ? "#6366F1" : "transparent", background: active ? "#EEEEFF" : "#F5F5F5", cursor: "pointer", minWidth: 64, flexShrink: 0 }}>
+                  <span style={{ fontSize: 20 }}>{t.icon}</span>
+                  <span style={{ fontSize: 10, fontWeight: 600, color: active ? "#6366F1" : "#666", whiteSpace: "nowrap" }}>{t.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        {/* ── Mobile: Options Section ───────────────────────────────────────── */}
+        {isMobile && openOptionsFor && (() => {
+          const t = TRANSFORMS.find(x => x.id === openOptionsFor)!;
+          return (
+            <div style={{ width: "100%", background: "#fff", borderBottom: "1px solid #E5E7EB", padding: 16, display: "flex", flexDirection: "column", gap: 16 }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
+                <div style={{ fontWeight: 800, fontSize: 14, color: "#111" }}>{t.icon} {t.label} Options</div>
+                <button onClick={() => setOpenOptionsFor(null)} style={{ background: "none", border: "none", fontSize: 18, color: "#9CA3AF", cursor: "pointer", lineHeight: 1, padding: "0 2px" }}>×</button>
+              </div>
+
+              {openOptionsFor === "resize" && (
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <div style={{ flex: 1 }}>
+                      <label style={optionLabel}>Width</label>
+                      <input type="number" value={resizeW} min={1} max={8000} onChange={e => setResizeW(+e.target.value)} style={inputStyle} />
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <label style={optionLabel}>Height</label>
+                      <input type="number" value={resizeH} min={1} max={8000} onChange={e => setResizeH(+e.target.value)} disabled={lockAspect} style={{ ...inputStyle, opacity: lockAspect ? 0.5 : 1 }} />
+                    </div>
+                  </div>
+                  <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#6B7280", cursor: "pointer" }}>
+                    <input type="checkbox" checked={lockAspect} onChange={e => setLockAspect(e.target.checked)} />
+                    Lock aspect ratio (height auto)
+                  </label>
+                </div>
+              )}
+
+              {openOptionsFor === "adjust" && (
+                <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                  {[
+                    { label: "Brightness", value: brightness, set: setBrightness },
+                    { label: "Contrast",   value: contrast,   set: setContrast   },
+                    { label: "Saturation", value: saturation, set: setSaturation },
+                  ].map(({ label, value, set }) => (
+                    <div key={label} style={{ marginBottom: 10 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
+                        <span style={{ fontSize: 12, fontWeight: 600, color: "#374151" }}>{label}</span>
+                        <span style={{ fontSize: 12, color: "#6366F1", fontWeight: 700 }}>{value}%</span>
+                      </div>
+                      <input type="range" min={0} max={200} value={value} onChange={e => set(+e.target.value)} style={{ width: "100%", accentColor: "#6366F1" }} />
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {openOptionsFor === "upscale" && (
+                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  <div>
+                    <label style={optionLabel}>Mode</label>
+                    <div style={{ display: "flex", gap: 0, background: "#F3F4F6", borderRadius: 10, padding: 4, marginTop: 6 }}>
+                      {([
+                        { key: "normal", label: "⚡ Normal", sub: "1 credit/image" },
+                        { key: "pro", label: "✨ Pro AI", sub: "2 credits · AI" },
+                      ] as const).map(m => (
+                        <button key={m.key} onClick={() => {
+                          if (m.key === "pro" && (user?.plan === "free" || (user && user.credits < 2))) {
+                            setShowPricingModal(true); return;
+                          }
+                          setUpscaleMode(m.key);
+                        }} style={{
+                          flex: 1, padding: "8px 6px", borderRadius: 7, border: "none", cursor: "pointer",
+                          background: upscaleMode === m.key ? "#fff" : "transparent",
+                          boxShadow: upscaleMode === m.key ? "0 1px 6px rgba(0,0,0,0.10)" : "none",
+                          transition: "all 0.15s",
+                        }}>
+                          <div style={{ fontSize: 12, fontWeight: 700, color: upscaleMode === m.key ? "#6366F1" : "#888" }}>{m.label}</div>
+                          <div style={{ fontSize: 10, color: upscaleMode === m.key ? "#6366F1" : "#AAA", marginTop: 1 }}>{m.sub}</div>
+                        </button>
+                      ))}
+                    </div>
+                    {upscaleMode === "pro" && (
+                      <p style={{ fontSize: 11, color: "#7C3AED", margin: "6px 0 0", fontWeight: 600 }}>✨ AI-enhanced — sharper detail & texture recovery</p>
+                    )}
+                  </div>
+                  <div>
+                    <label style={optionLabel}>Resolution boost</label>
+                    <div style={{ display: "flex", gap: 8, marginTop: 6 }}>
+                      {(["2x", "4x"] as const).map(s => (
+                        <button key={s} onClick={() => setUpscaleScale(s)} style={{
+                          flex: 1, padding: "12px 0", borderRadius: 8,
+                          border: upscaleScale === s ? "2px solid #6366F1" : "1.5px solid #E5E7EB",
+                          background: upscaleScale === s ? "#EEF2FF" : "#fff",
+                          color: upscaleScale === s ? "#6366F1" : "#6B7280",
+                          fontWeight: 800, fontSize: 15, cursor: "pointer",
+                        }}>
+                          {s === "2x" ? "2×" : "4×"}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <p style={{ fontSize: 11, color: "#9CA3AF", margin: 0 }}>
+                    {upscaleMode === "pro"
+                      ? `Pro ${upscaleScale} — AI texture recovery, 2 credits/image`
+                      : upscaleScale === "2x" ? "2× Standard — faster, 1 credit/image" : "4× Ultra HD — 1 credit/image"}
+                  </p>
+                </div>
+              )}
+
+              {openOptionsFor === "ai-edit" && (
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  <label style={optionLabel}>Prompt (applied to all images)</label>
+                  <textarea value={aiPrompt} onChange={e => setAiPrompt(e.target.value)}
+                    placeholder="e.g. Make the background blurry, add cinematic lighting"
+                    rows={4} style={{ ...inputStyle, resize: "vertical", lineHeight: 1.5 }} />
+                </div>
+              )}
+
+              {openOptionsFor === "remove-bg" && (
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  <label style={optionLabel}>Output background</label>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
+                    {([
+                      { val: "transparent", label: "⬜ Transparent", hint: "PNG with transparency" },
+                      { val: "white",       label: "◻ White",        hint: "White background" },
+                      { val: "color",       label: "🎨 Custom Color", hint: "Pick any color" },
+                      { val: "image",       label: "🖼 Custom Image",  hint: "Upload a background" },
+                    ] as const).map(opt => (
+                      <button key={opt.val} onClick={() => setRemoveBgOutput(opt.val)} style={{
+                        padding: "10px 8px", borderRadius: 8, border: removeBgOutput === opt.val ? "2px solid #6366F1" : "1.5px solid #E5E7EB",
+                        background: removeBgOutput === opt.val ? "#EEF2FF" : "#fff",
+                        color: removeBgOutput === opt.val ? "#6366F1" : "#374151",
+                        fontWeight: removeBgOutput === opt.val ? 800 : 600, fontSize: 11, cursor: "pointer", textAlign: "left",
+                      }}>
+                        <div>{opt.label}</div>
+                        <div style={{ fontSize: 10, color: "#9CA3AF", fontWeight: 400 }}>{opt.hint}</div>
+                      </button>
+                    ))}
+                  </div>
+                  {removeBgOutput === "color" && (
+                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      <input type="color" value={removeBgColor} onChange={e => setRemoveBgColor(e.target.value)}
+                        style={{ width: 40, height: 40, borderRadius: 8, border: "1.5px solid #E5E7EB", cursor: "pointer", padding: 2 }} />
+                      <span style={{ fontSize: 12, color: "#6B7280" }}>{removeBgColor}</span>
+                    </div>
+                  )}
+                  {removeBgOutput === "image" && (
+                    <div>
+                      <input ref={removeBgImageRef} type="file" accept="image/*" style={{ display: "none" }}
+                        onChange={e => {
+                          const f = e.target.files?.[0]; if (!f) return;
+                          const r = new FileReader(); r.onloadend = () => setRemoveBgImageDataUrl(r.result as string); r.readAsDataURL(f);
+                          e.target.value = "";
+                        }} />
+                      {removeBgImageDataUrl ? (
+                        <div style={{ position: "relative", borderRadius: 8, overflow: "hidden", height: 70 }}>
+                          <img src={removeBgImageDataUrl} alt="bg" style={{ width: "100%", height: 70, objectFit: "cover" }} />
+                          <button onClick={() => setRemoveBgImageDataUrl(null)} style={{ position: "absolute", top: 4, right: 4, background: "rgba(0,0,0,0.5)", border: "none", borderRadius: "50%", width: 20, height: 20, color: "#fff", fontSize: 12, cursor: "pointer" }}>×</button>
+                        </div>
+                      ) : (
+                        <button onClick={() => removeBgImageRef.current?.click()} style={{ width: "100%", padding: "10px", border: "1.5px dashed #C7D2FE", borderRadius: 8, background: "#F5F3FF", color: "#6366F1", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
+                          + Upload background image
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {openOptionsFor === "generate-bg" && (
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  <label style={optionLabel}>Background description</label>
+                  <textarea value={bgPrompt} onChange={e => setBgPrompt(e.target.value)}
+                    rows={4} style={{ ...inputStyle, resize: "vertical", lineHeight: 1.5 }} />
+                </div>
+              )}
+            </div>
+          );
+        })()}
+
+        {/* ── Mobile: Run button + status ───────────────────────────────────── */}
+        {isMobile && (
+          <div style={{ background: "#fff", borderBottom: "1px solid #E5E7EB", padding: "12px 16px", display: "flex", flexDirection: "column", gap: 8, flexShrink: 0 }}>
+            {items.length > 0 && selectedTools.size > 0 && (
+              <div style={{ background: creditsNeeded > (user?.credits ?? 0) && creditsNeeded > 0 ? "#FEF2F2" : "#F0FDF4", borderRadius: 10, padding: "8px 12px", border: `1px solid ${creditsNeeded > (user?.credits ?? 0) && creditsNeeded > 0 ? "#FECACA" : "#BBF7D0"}`, fontSize: 12 }}>
+                {TRANSFORMS.filter(t => selectedTools.has(t.id) && effectiveCredits(t) > 0).map(t => (
+                  <div key={t.id} style={{ display: "flex", justifyContent: "space-between", color: "#6B7280", marginBottom: 2 }}>
+                    <span>{t.icon} {t.label}</span>
+                    <span>{effectiveCredits(t)} × {totalPending} = <strong>{effectiveCredits(t) * totalPending}</strong></span>
+                  </div>
+                ))}
+                <div style={{ borderTop: "1px solid #E5E7EB", marginTop: 4, paddingTop: 4, display: "flex", justifyContent: "space-between", fontWeight: 700 }}>
+                  <span>Total</span>
+                  <span style={{ color: creditsNeeded > (user?.credits ?? 0) ? "#EF4444" : "#10B981" }}>{creditsNeeded} credits</span>
+                </div>
+              </div>
+            )}
+            <button
+              onClick={runBatch}
+              disabled={processing || !totalPending || !selectedTools.size}
+              style={{
+                padding: "12px",
+                background: processing || !totalPending || !selectedTools.size ? "#C7D2FE" : "linear-gradient(135deg, #6366F1, #8B5CF6)",
+                color: "#fff", border: "none", borderRadius: 10, fontWeight: 800, fontSize: 15,
+                cursor: processing || !totalPending || !selectedTools.size ? "not-allowed" : "pointer",
+              }}
+            >
+              {processing
+                ? `Processing… ${processedCount}/${totalToProcess}`
+                : `⚡ Run on ${totalPending} Image${totalPending !== 1 ? "s" : ""}`}
+            </button>
+            {processing && (
+              <div>
+                <div style={{ height: 6, background: "#E5E7EB", borderRadius: 3, overflow: "hidden" }}>
+                  <div style={{ height: "100%", background: "linear-gradient(90deg, #6366F1, #8B5CF6)", width: `${totalToProcess ? Math.round((processedCount / totalToProcess) * 100) : 0}%`, transition: "width 0.4s" }} />
+                </div>
+                <div style={{ fontSize: 12, color: "#9CA3AF", marginTop: 5, textAlign: "center" }}>
+                  {totalToProcess ? Math.round((processedCount / totalToProcess) * 100) : 0}% — {processedCount}/{totalToProcess} images
+                </div>
+              </div>
+            )}
+            {!processing && doneCount > 0 && (
+              <div style={{ background: "#ECFDF5", borderRadius: 10, padding: "8px 12px", textAlign: "center" }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: "#065F46" }}>✅ {doneCount} done{errorCount > 0 ? ` · ${errorCount} failed` : ""}</div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── Desktop: Left Panel ───────────────────────────────────────────────────── */}
+        {!isMobile && <div style={{ width: 300, minWidth: 280, background: "#fff", borderRight: "1px solid #E5E7EB", overflowY: "auto", padding: 20, display: "flex", flexDirection: "column", gap: 18 }}>
 
           {/* Tool multi-select */}
           <div>
@@ -468,10 +712,10 @@ export default function BatchEditorPage() {
               <div style={{ fontSize: 14, fontWeight: 700, color: "#065F46" }}>✅ {doneCount} done{errorCount > 0 ? ` · ${errorCount} failed` : ""}</div>
             </div>
           )}
-        </div>
+        </div>}
 
-        {/* ── Options Side Panel ───────────────────────────────────────────── */}
-        {openOptionsFor && (() => {
+        {/* ── Desktop: Options Side Panel ───────────────────────────────────── */}
+        {!isMobile && openOptionsFor && (() => {
           const t = TRANSFORMS.find(x => x.id === openOptionsFor)!;
           return (
             <div style={{ width: 270, minWidth: 250, background: "#fff", borderRight: "1px solid #E5E7EB", overflowY: "auto", padding: 20, display: "flex", flexDirection: "column", gap: 16 }}>
