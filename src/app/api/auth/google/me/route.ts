@@ -46,5 +46,6 @@ export async function GET(req: NextRequest) {
     picture: profile?.picture || user.user_metadata?.avatar_url,
     credits,
     plan,
+    dailyCreditResetAt: profile?.daily_credits_reset_at || null,
   });
 }

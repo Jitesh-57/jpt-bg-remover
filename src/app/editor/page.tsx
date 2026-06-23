@@ -16,13 +16,15 @@ type Tool = "ai-edit" | "generate-bg" | "upscale" | "resize" | "adjust" | "remov
 type BgMode = "color" | "gradient" | "image" | "ai";
 
 interface GradientPreset { label: string; from: string; to: string; angle: number }
-interface User { email: string; name: string; picture?: string; credits: number; plan?: string }
+interface User { email: string; name: string; picture?: string; credits: number; plan?: string; dailyCreditResetAt?: string | null }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const FREE_CREDITS = 10;
 const CREDIT_COST = 2;
 const BASIC_UPSCALE_COST = 1;
+const SUPPORTED_IMAGE_FORMATS = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+const MAX_UPSCALE_OUTPUT_PX = 8000;
 
 const SOLID_COLORS = [
   { label: "White", hex: "#FFFFFF" }, { label: "Light Gray", hex: "#F2F2F2" },
@@ -270,6 +272,7 @@ export default function ImageEditorPage() {
   const [showAccountModal, setShowAccountModal] = useState(false);
   const [showNoCreditsModal, setShowNoCreditsModal] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [creditRenewCountdown, setCreditRenewCountdown] = useState("");
   const [blockedTool, setBlockedTool] = useState<{ id: string | null; icon: string; label: string } | null>(null);
   const [buyingPlan, setBuyingPlan] = useState<string | null>(null);
 
@@ -341,9 +344,9 @@ export default function ImageEditorPage() {
     const loadUser = (retries = 1): Promise<void> =>
       fetch("/api/auth/google/me")
         .then(r => r.json())
-        .then((d: { authenticated: boolean; email?: string; name?: string; picture?: string; credits?: number; plan?: string }) => {
+        .then((d: { authenticated: boolean; email?: string; name?: string; picture?: string; credits?: number; plan?: string; dailyCreditResetAt?: string | null }) => {
           if (d.authenticated && d.email) {
-            setUser({ email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? FREE_CREDITS, plan: d.plan || "free" });
+            setUser({ email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? FREE_CREDITS, plan: d.plan || "free", dailyCreditResetAt: d.dailyCreditResetAt });
             setAuthChecked(true);
           } else if (retries > 0) {
             return new Promise<void>(res => setTimeout(() => loadUser(retries - 1).then(res), 300));
@@ -492,10 +495,34 @@ export default function ImageEditorPage() {
     return data;
   }, []);
 
+  // ── Credit renewal countdown ─────────────────────────────────────────────────
+
+  useEffect(() => {
+    if (!showNoCreditsModal) return;
+    const tick = () => {
+      const resetAt = user?.dailyCreditResetAt;
+      if (!resetAt) { setCreditRenewCountdown(""); return; }
+      const renewsAt = new Date(resetAt).getTime() + 24 * 3600 * 1000;
+      const ms = Math.max(0, renewsAt - Date.now());
+      if (ms === 0) { setCreditRenewCountdown("now"); return; }
+      const h = Math.floor(ms / 3600000);
+      const m = Math.floor((ms % 3600000) / 60000);
+      const s = Math.floor((ms % 60000) / 1000);
+      setCreditRenewCountdown(`${h}h ${String(m).padStart(2, "0")}m ${String(s).padStart(2, "0")}s`);
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, [showNoCreditsModal, user?.dailyCreditResetAt]);
+
   // ── File upload ───────────────────────────────────────────────────────────────
 
   const handleFile = useCallback(async (file: File) => {
     if (!file.type.startsWith("image/")) return;
+    if (!SUPPORTED_IMAGE_FORMATS.includes(file.type)) {
+      setError(`Unsupported format: ${file.type.split("/")[1]?.toUpperCase() || "unknown"}. Please upload a JPG, PNG, or WEBP image.`);
+      return;
+    }
     setError(null); setWorking(null); setEditHistory([]);
     setActiveTool(null); setShowOriginal(true);
     setSavedSession(null); setAppliedUpscale(null);
@@ -1343,25 +1370,51 @@ export default function ImageEditorPage() {
                 <div style={{ marginBottom: 12 }}>
                   <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: 0.8, color: "#888", marginBottom: 8 }}>Enhancement Level</div>
                   <div style={{ display: "flex", gap: 8 }}>
-                    {(["2x", "4x"] as const).map((sc) => (
-                      <button
-                        key={sc}
-                        onClick={() => setUpscaleScale(sc)}
-                        style={{
-                          flex: 1, padding: "12px 8px", borderRadius: 10,
-                          border: upscaleScale === sc ? "2px solid #6366F1" : "1.5px solid #E0E0EE",
-                          background: upscaleScale === sc ? "#EEEEFF" : "#FAFAFA",
-                          cursor: "pointer", fontWeight: 800, fontSize: 18,
-                          color: upscaleScale === sc ? "#6366F1" : "#999", transition: "all 0.15s",
-                        }}
-                      >
-                        {sc}
-                        <div style={{ fontSize: 10, fontWeight: 600, marginTop: 2, color: upscaleScale === sc ? "#6366F1" : "#AAA" }}>
-                          {sc === "2x" ? "Enhance" : "Ultra"}
-                        </div>
-                      </button>
-                    ))}
+                    {(["2x", "4x"] as const).map((sc) => {
+                      const curW = workingSize?.w || original?.w || 0;
+                      const curH = workingSize?.h || original?.h || 0;
+                      const maxDim = Math.max(curW, curH);
+                      const mult = sc === "4x" ? 4 : 2;
+                      const tooLarge = maxDim > 0 && maxDim * mult > MAX_UPSCALE_OUTPUT_PX;
+                      return (
+                        <button
+                          key={sc}
+                          onClick={() => setUpscaleScale(sc)}
+                          title={tooLarge ? `Image too large for ${sc} upscaling (output would exceed 8000px)` : undefined}
+                          style={{
+                            flex: 1, padding: "12px 8px", borderRadius: 10,
+                            border: upscaleScale === sc ? "2px solid #6366F1" : "1.5px solid #E0E0EE",
+                            background: upscaleScale === sc ? "#EEEEFF" : "#FAFAFA",
+                            cursor: tooLarge ? "not-allowed" : "pointer", fontWeight: 800, fontSize: 18,
+                            color: tooLarge ? "#CCC" : upscaleScale === sc ? "#6366F1" : "#999", transition: "all 0.15s",
+                            opacity: tooLarge ? 0.5 : 1,
+                          }}
+                        >
+                          {sc}
+                          <div style={{ fontSize: 10, fontWeight: 600, marginTop: 2, color: tooLarge ? "#CCC" : upscaleScale === sc ? "#6366F1" : "#AAA" }}>
+                            {tooLarge ? "Too large" : sc === "2x" ? "Enhance" : "Ultra"}
+                          </div>
+                        </button>
+                      );
+                    })}
                   </div>
+                  {(() => {
+                    const curW = workingSize?.w || original?.w || 0;
+                    const curH = workingSize?.h || original?.h || 0;
+                    const maxDim = Math.max(curW, curH);
+                    const mult = upscaleScale === "4x" ? 4 : 2;
+                    if (maxDim > 0 && maxDim * mult > MAX_UPSCALE_OUTPUT_PX) {
+                      const tooLargeFor2x = maxDim * 2 > MAX_UPSCALE_OUTPUT_PX;
+                      return (
+                        <div style={{ marginTop: 8, background: "#FFF7ED", border: "1px solid #FED7AA", borderRadius: 8, padding: "7px 12px", fontSize: 12, color: "#92400E", display: "flex", alignItems: "flex-start", gap: 6 }}>
+                          ⚠️ {tooLargeFor2x
+                            ? `Image is already very high-res (${curW}×${curH}px). Upscaling is not needed.`
+                            : `Image is too large for 4× upscale (output would be ${curW * 4}×${curH * 4}px). Use 2× instead.`}
+                        </div>
+                      );
+                    }
+                    return null;
+                  })()}
                 </div>
 
 
@@ -1380,7 +1433,7 @@ export default function ImageEditorPage() {
                       ? "linear-gradient(135deg,#6366F1,#7C3AED)"
                       : "linear-gradient(135deg,#6366F1,#8B5CF6)",
                   }}
-                  disabled={processing || appliedUpscale === upscaleScale || !authChecked}
+                  disabled={processing || appliedUpscale === upscaleScale || !authChecked || (() => { const m = Math.max(workingSize?.w || original?.w || 0, workingSize?.h || original?.h || 0); return m > 0 && m * (upscaleScale === "4x" ? 4 : 2) > MAX_UPSCALE_OUTPUT_PX; })()}
                   onClick={handleUpscale}
                 >
                   {processing
@@ -1389,6 +1442,8 @@ export default function ImageEditorPage() {
                     ? <span style={s.btnRow}><span style={s.spin} />Loading…</span>
                     : appliedUpscale === upscaleScale
                     ? `✓ Already ${upscaleScale}`
+                    : (() => { const m = Math.max(workingSize?.w || original?.w || 0, workingSize?.h || original?.h || 0); return m > 0 && m * (upscaleScale === "4x" ? 4 : 2) > MAX_UPSCALE_OUTPUT_PX; })()
+                    ? `⚠️ Resolution Limit Reached`
                     : upscaleMode === "pro"
                     ? `✨ Pro Upscale ${upscaleScale}`
                     : `🔍 Upscale ${upscaleScale}`}
@@ -1679,15 +1734,30 @@ export default function ImageEditorPage() {
           <div style={s.modalBox} onClick={(e) => e.stopPropagation()}>
             <div style={{ fontSize: 48, marginBottom: 12 }}>⚡</div>
             <div style={s.modalTitle}>Daily credits used up</div>
-            <p style={s.modalSub}>Your 10 free daily credits reset in 24 hours. Upgrade for unlimited AI access.</p>
+
+            {/* Renewal timer */}
+            <div style={{ background: "#F5F3FF", border: "1.5px solid #C4B5FD", borderRadius: 12, padding: "14px 18px", marginBottom: 16, textAlign: "center" as const }}>
+              <div style={{ fontSize: 12, color: "#7C3AED", fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: 0.8, marginBottom: 6 }}>Free credits renew in</div>
+              <div style={{ fontSize: 28, fontWeight: 900, color: "#6366F1", letterSpacing: 1, fontVariantNumeric: "tabular-nums" }}>
+                {creditRenewCountdown || "calculating…"}
+              </div>
+              <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Your 10 free credits reset every 24 hours</div>
+            </div>
+
+            {/* Why wait CTA */}
+            <div style={{ fontSize: 13, color: "#555", lineHeight: 1.6, marginBottom: 16, textAlign: "center" as const }}>
+              Why wait? <strong>Buy a plan and unlock full AI features</strong> —<br />
+              unlimited transformations, no daily limits, credits never expire.
+            </div>
+
             <div style={s.noCreditsInfo}>
               <div style={{ fontWeight: 700, marginBottom: 8 }}>Always free (no credits needed):</div>
               <div>↔️ Resize &nbsp;·&nbsp; 🎨 Color Adjust</div>
             </div>
             <button style={s.primaryBtn} onClick={() => { setShowNoCreditsModal(false); setShowUpgradeModal(true); }}>
-              🚀 Upgrade Plan
+              🚀 Upgrade Plan — Unlock Everything
             </button>
-            <button style={s.modalDismiss} onClick={() => setShowNoCreditsModal(false)}>Wait for daily reset</button>
+            <button style={s.modalDismiss} onClick={() => setShowNoCreditsModal(false)}>I&apos;ll wait for the reset</button>
           </div>
         </div>
       )}
