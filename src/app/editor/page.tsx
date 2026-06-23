@@ -1081,7 +1081,7 @@ export default function ImageEditorPage() {
 
           {/* Upload Zone */}
           {!hasImage && (
-            <div style={s.uploadZone}
+            <div style={{ ...s.uploadZone, padding: isMobile ? "24px 16px" : "60px 40px" }}
               onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
               onDragLeave={() => setDragOver(false)}
               onDrop={(e) => { e.preventDefault(); setDragOver(false); const f = e.dataTransfer.files[0]; if (f) handleFile(f); }}
@@ -1593,7 +1593,7 @@ export default function ImageEditorPage() {
       {/* ── Account Modal ─────────────────────────────────────────────────── */}
       {showAccountModal && user && (
         <div style={s.modalOverlay} onClick={() => setShowAccountModal(false)}>
-          <div style={s.modalBox} onClick={(e) => e.stopPropagation()}>
+          <div style={{ ...s.modalBox, width: isMobile ? "calc(100% - 32px)" : "100%" }} onClick={(e) => e.stopPropagation()}>
             {/* Profile */}
             <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 20 }}>
               {user.picture
@@ -1672,7 +1672,7 @@ export default function ImageEditorPage() {
       {/* ── Sign-in Modal ─────────────────────────────────────────────────── */}
       {showSignInModal && (
         <div style={s.modalOverlay} onClick={() => { setShowSignInModal(false); setAuthError(""); }}>
-          <div style={{ ...s.modalBox, maxWidth: 460, textAlign: "left" as const }} onClick={(e) => e.stopPropagation()}>
+          <div style={{ ...s.modalBox, width: isMobile ? "calc(100% - 32px)" : "100%", maxWidth: isMobile ? 420 : 460, textAlign: "left" as const }} onClick={(e) => e.stopPropagation()}>
             <div style={{ textAlign: "center" as const, marginBottom: 20 }}>
               <div style={{ fontSize: 40, marginBottom: 8 }}>✨</div>
               <div style={{ ...s.modalTitle, fontSize: 20 }}>Sign in to JPT AI Editor</div>
@@ -1784,7 +1784,7 @@ export default function ImageEditorPage() {
       {/* ── No Credits Modal ──────────────────────────────────────────────── */}
       {showNoCreditsModal && (
         <div style={s.modalOverlay} onClick={() => setShowNoCreditsModal(false)}>
-          <div style={s.modalBox} onClick={(e) => e.stopPropagation()}>
+          <div style={{ ...s.modalBox, width: isMobile ? "calc(100% - 32px)" : "100%" }} onClick={(e) => e.stopPropagation()}>
             <div style={{ fontSize: 48, marginBottom: 12 }}>⚡</div>
             <div style={s.modalTitle}>Daily credits used up</div>
 
@@ -1818,7 +1818,7 @@ export default function ImageEditorPage() {
       {/* ── Upgrade Modal ─────────────────────────────────────────────────── */}
       {showUpgradeModal && (
         <div style={s.modalOverlay} onClick={() => { setShowUpgradeModal(false); setBlockedTool(null); }}>
-          <div style={{ background: "#fff", borderRadius: 24, width: "100%", maxWidth: 580, maxHeight: "90vh", overflowY: "auto" as const, boxShadow: "0 24px 80px rgba(0,0,0,0.22)", position: "relative" }} onClick={(e) => e.stopPropagation()}>
+          <div style={{ background: "#fff", borderRadius: 24, width: isMobile ? "calc(100% - 32px)" : "100%", maxWidth: isMobile ? 420 : 580, maxHeight: "90vh", overflowY: "auto" as const, boxShadow: "0 24px 80px rgba(0,0,0,0.22)", position: "relative" }} onClick={(e) => e.stopPropagation()}>
 
             {/* Gradient header */}
             <div style={{ background: "linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #A78BFA 100%)", borderRadius: "24px 24px 0 0", padding: "32px 32px 28px", color: "#fff", position: "relative" }}>
