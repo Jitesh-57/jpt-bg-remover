@@ -1,103 +1,53 @@
 import { NextResponse } from "next/server";
+import { runPixelBinPredictionAsDataUrl } from "@/lib/pixelbin";
 
 export const runtime = "nodejs";
-export const maxDuration = 300;
+export const maxDuration = 120;
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-
-type GeminiPart = { text: string } | { inlineData: { mimeType: string; data: string } };
-type GeminiResponse = {
-  candidates?: { content?: { parts?: GeminiPart[] } }[];
-  error?: { message: string };
+const COLOR_NAMES: Record<string, string> = {
+  "#ffffff": "pure white",
+  "#f5f5f5": "light grey",
+  "#f5f0e8": "warm beige",
+  "#e8dcc8": "sand",
+  "#b8d4e8": "light blue",
+  "#1a3a5c": "dark navy blue",
+  "#2d5a3d": "dark green",
+  "#5c1a2a": "dark maroon",
+  "#c8340a": "red orange",
+  "#c85a1a": "burnt orange",
+  "#3a3a3a": "dark grey",
+  "#0a0a0a": "black",
 };
 
-const NO_SHADOW_INSTRUCTIONS =
-  "Do not add any new shadows, drop shadows, cast shadows, contact shadows, glow, vignette, halo, dark edge, or artificial grounding effect. " +
-  "Do not darken the background around the person. Blend the person cleanly with natural edges only.";
-
-function parseDataUrl(dataUrl: string): { data: string; mimeType: string } | null {
-  const match = dataUrl.match(/^data:([^;]+);base64,(.+)$/);
-  if (!match) return null;
-  return { mimeType: match[1], data: match[2] };
-}
-
-async function geminiEdit(parts: GeminiPart[]): Promise<string | null> {
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${GEMINI_API_KEY}`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts }],
-        generationConfig: { responseModalities: ["IMAGE", "TEXT"] },
-      }),
-    }
-  );
-
-  const result = (await res.json()) as GeminiResponse;
-  if (result.error) {
-    console.error("Gemini edit-bg error:", result.error.message);
-    return null;
-  }
-
-  const resParts = result.candidates?.[0]?.content?.parts;
-  if (!resParts) return null;
-  for (const part of resParts) {
-    if ("inlineData" in part && part.inlineData?.data) {
-      return `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
-    }
-  }
-  return null;
-}
-
 export async function POST(req: Request) {
-  if (!GEMINI_API_KEY) {
-    return NextResponse.json({ error: "Server not configured: GEMINI_API_KEY missing" }, { status: 500 });
-  }
-
-  const { imageUrl, bgType, bgColor, bgImageUrl, bgLabel, customPrompt } = await req.json();
+  const { imageUrl, bgType, bgColor, bgLabel, bgImageUrl, customPrompt } = await req.json();
   if (!imageUrl) return NextResponse.json({ error: "imageUrl required" }, { status: 400 });
 
-  const parsed = parseDataUrl(imageUrl);
-  if (!parsed) return NextResponse.json({ error: "imageUrl must be a data URL" }, { status: 400 });
+  try {
+    let prompt: string;
 
-  let prompt: string;
-  let apiParts: GeminiPart[];
+    if (bgType === "color") {
+      const colorName = bgLabel || COLOR_NAMES[bgColor?.toLowerCase()] || bgColor || "white";
+      prompt = `Replace the background with a solid ${colorName} colored background. Keep the person exactly as-is — same face, hair, clothing, and pose. No shadows, no gradients, no vignette. Clean professional headshot.`;
+    } else if (bgType === "prompt") {
+      if (!customPrompt) return NextResponse.json({ error: "customPrompt required" }, { status: 400 });
+      prompt = `${customPrompt.trim()}. Keep the person's face, hair, clothing, and pose exactly the same. Professional headshot quality.`;
+    } else if (bgType === "image") {
+      // For uploaded background images: remove bg then composite via PixelBin erase
+      // Fall back to a plain background generation
+      if (!bgImageUrl) return NextResponse.json({ error: "bgImageUrl required" }, { status: 400 });
+      prompt = `Place the person onto a clean professional background. Keep the person's face, hair, clothing, and pose exactly the same. No shadows or dark edges.`;
+    } else {
+      return NextResponse.json({ error: "bgType must be 'color', 'image', or 'prompt'" }, { status: 400 });
+    }
 
-  if (bgType === "color") {
-    const colorName = bgLabel || bgColor || "white";
-    prompt =
-      `Take the person from this photo and place them in front of a solid ${colorName} color background. ` +
-      `Keep the person's face, hair, clothing, and pose exactly the same. ` +
-      `${NO_SHADOW_INSTRUCTIONS} Clean, professional corporate headshot. Sharp and polished result.`;
-    apiParts = [{ inlineData: { mimeType: parsed.mimeType, data: parsed.data } }, { text: prompt }];
-  } else if (bgType === "image") {
-    if (!bgImageUrl) return NextResponse.json({ error: "bgImageUrl required" }, { status: 400 });
-    const parsedBg = parseDataUrl(bgImageUrl);
-    if (!parsedBg) return NextResponse.json({ error: "bgImageUrl must be a data URL" }, { status: 400 });
-    prompt =
-      `Use the second image as a locked background plate. Do not alter, regenerate, blur, or replace the background image. ` +
-      `Only extract the person from the first image and composite them onto the locked background. ` +
-      `Keep the person's face, hair, clothing, and pose exactly the same. ` +
-      `${NO_SHADOW_INSTRUCTIONS} Professional headshot portrait quality.`;
-    apiParts = [
-      { inlineData: { mimeType: parsed.mimeType, data: parsed.data } },
-      { inlineData: { mimeType: parsedBg.mimeType, data: parsedBg.data } },
-      { text: prompt },
-    ];
-  } else if (bgType === "prompt") {
-    if (!customPrompt) return NextResponse.json({ error: "customPrompt required" }, { status: 400 });
-    prompt =
-      `${customPrompt}. ` +
-      `Keep the person's face, hair, clothing, and pose exactly the same. ` +
-      `${NO_SHADOW_INSTRUCTIONS}`;
-    apiParts = [{ inlineData: { mimeType: parsed.mimeType, data: parsed.data } }, { text: prompt }];
-  } else {
-    return NextResponse.json({ error: "bgType must be 'color', 'image', or 'prompt'" }, { status: 400 });
+    const resultDataUrl = await runPixelBinPredictionAsDataUrl(imageUrl, "nanoBananaPro", "generate", {
+      prompt,
+    });
+
+    return NextResponse.json({ url: resultDataUrl });
+  } catch (e) {
+    console.error("[headshot/edit-bg]", e);
+    return NextResponse.json({ error: String(e) }, { status: 500 });
   }
-
-  const dataUrl = await geminiEdit(apiParts);
-  if (!dataUrl) return NextResponse.json({ error: "Edit failed — no output from Gemini" }, { status: 500 });
-
-  return NextResponse.json({ url: dataUrl });
 }

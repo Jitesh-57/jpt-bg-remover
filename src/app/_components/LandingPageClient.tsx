@@ -448,7 +448,36 @@ export default function LandingPageClient() {
                 onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = "0 8px 32px rgba(99,102,241,0.18)"; (e.currentTarget as HTMLDivElement).style.transform = "translateY(-3px)"; }}
                 onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = "0 2px 14px rgba(0,0,0,0.05)"; (e.currentTarget as HTMLDivElement).style.transform = "none"; }}>
                 <div style={s.featureImgWrap}>
-                  <img src={f.img} alt={f.title} style={s.featureImg} loading="lazy" />
+                  {f.tool === "remove-bg" ? (
+                    <div style={{ width: "100%", height: "100%", display: "flex", position: "relative", overflow: "hidden" }}>
+                      {/* Left half — original with background */}
+                      <div style={{ width: "50%", height: "100%", overflow: "hidden", position: "relative" }}>
+                        <img
+                          src="https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=600"
+                          alt="Original with background"
+                          style={{ width: "200%", height: "100%", objectFit: "cover", objectPosition: "left center", display: "block" }}
+                          loading="lazy"
+                        />
+                      </div>
+                      {/* Right half — transparent checkerboard */}
+                      <div style={{ width: "50%", height: "100%", overflow: "hidden", position: "relative",
+                        backgroundImage: "linear-gradient(45deg,#ccc 25%,transparent 25%),linear-gradient(-45deg,#ccc 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#ccc 75%),linear-gradient(-45deg,transparent 75%,#ccc 75%)",
+                        backgroundSize: "16px 16px", backgroundPosition: "0 0,0 8px,8px -8px,-8px 0" }}>
+                        <img
+                          src="https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=600"
+                          alt="Background removed"
+                          style={{ width: "200%", height: "100%", objectFit: "cover", objectPosition: "left center", display: "block", marginLeft: "-100%",
+                            WebkitMaskImage: "radial-gradient(ellipse 80% 85% at 40% 45%, black 55%, transparent 100%)",
+                            maskImage: "radial-gradient(ellipse 80% 85% at 40% 45%, black 55%, transparent 100%)" }}
+                          loading="lazy"
+                        />
+                      </div>
+                      {/* Divider line */}
+                      <div style={{ position: "absolute", left: "50%", top: 0, bottom: 0, width: 2, background: "#fff", boxShadow: "0 0 6px rgba(0,0,0,0.3)" }} />
+                    </div>
+                  ) : (
+                    <img src={f.img} alt={f.title} style={s.featureImg} loading="lazy" />
+                  )}
                 </div>
                 <div style={s.featureBody}>
                   <div style={s.featureIcon}>{f.icon}</div>
