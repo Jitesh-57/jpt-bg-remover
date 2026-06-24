@@ -1,25 +1,34 @@
 'use client'
 
+import { useState } from "react";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { LANGUAGES } from "@/lib/i18n/translations";
+
 const AI_TOOLS = [
-  { label: "AI Upscale", href: "/upscale" },
-  { label: "Remove Background", href: "/remove-bg" },
-  { label: "AI Headshot", href: "/ai-headshot" },
-  { label: "AI Editor", href: "/ai-editor" },
+  { labelKey: "AI Upscale",         href: "/upscale" },
+  { labelKey: "Remove Background",  href: "/remove-bg" },
+  { labelKey: "AI Headshot",        href: "/ai-headshot" },
+  { labelKey: "AI Editor",          href: "/ai-editor" },
 ];
 
 const TOOLS = [
-  { label: "Image Editor", href: "/editor" },
-  { label: "Batch Editor", href: "/batch-editor" },
-  { label: "My Generations", href: "/generations" },
+  { labelKey: "Image Editor",    href: "/editor" },
+  { labelKey: "Batch Editor",    href: "/batch-editor" },
+  { labelKey: "My Generations",  href: "/generations" },
 ];
 
 const COMPANY = [
-  { label: "Pricing", href: "/pricing" },
-  { label: "Blog", href: "/blog" },
-  { label: "Contact", href: "mailto:patil.jitesh866@gmail.com" },
+  { labelKey: "Pricing", href: "/pricing" },
+  { labelKey: "Blog",    href: "/blog" },
+  { labelKey: "Contact", href: "mailto:patil.jitesh866@gmail.com" },
 ];
 
 export default function Footer() {
+  const { t, locale, setLocale } = useLanguage();
+  const [langOpen, setLangOpen] = useState(false);
+
+  const currentLang = LANGUAGES.find(l => l.code === locale) ?? LANGUAGES[0];
+
   return (
     <footer style={{ background: "#0F172A", color: "#94A3B8", padding: "60px 24px 32px" }}>
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
@@ -32,7 +41,7 @@ export default function Footer() {
               <span style={{ fontSize: 18, fontWeight: 900, color: "#fff", letterSpacing: "-0.02em" }}>JPT AI</span>
             </a>
             <p style={{ fontSize: 14, lineHeight: 1.7, color: "#64748B", margin: "0 0 20px", maxWidth: 260 }}>
-              All-in-one AI image editor. Remove backgrounds, upscale photos, and edit images with simple text prompts.
+              {t.footerTagline}
             </p>
             <div style={{ display: "flex", gap: 12 }}>
               <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter"
@@ -46,14 +55,14 @@ export default function Footer() {
 
           {/* AI Tools */}
           <div>
-            <div style={{ fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 16 }}>AI Tools</div>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 16 }}>{t.footerAiTools}</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {AI_TOOLS.map(l => (
                 <a key={l.href} href={l.href}
                   style={{ fontSize: 14, color: "#64748B", textDecoration: "none", transition: "color 0.15s" }}
                   onMouseEnter={e => (e.currentTarget.style.color = "#E2E8F0")}
                   onMouseLeave={e => (e.currentTarget.style.color = "#64748B")}>
-                  {l.label}
+                  {l.labelKey}
                 </a>
               ))}
             </div>
@@ -61,14 +70,14 @@ export default function Footer() {
 
           {/* Tools */}
           <div>
-            <div style={{ fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 16 }}>Tools</div>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 16 }}>{t.footerTools}</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {TOOLS.map(l => (
                 <a key={l.href} href={l.href}
                   style={{ fontSize: 14, color: "#64748B", textDecoration: "none", transition: "color 0.15s" }}
                   onMouseEnter={e => (e.currentTarget.style.color = "#E2E8F0")}
                   onMouseLeave={e => (e.currentTarget.style.color = "#64748B")}>
-                  {l.label}
+                  {l.labelKey}
                 </a>
               ))}
             </div>
@@ -76,24 +85,61 @@ export default function Footer() {
 
           {/* Company */}
           <div>
-            <div style={{ fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 16 }}>Company</div>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 16 }}>{t.footerCompany}</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {COMPANY.map(l => (
                 <a key={l.href} href={l.href}
                   style={{ fontSize: 14, color: "#64748B", textDecoration: "none", transition: "color 0.15s" }}
                   onMouseEnter={e => (e.currentTarget.style.color = "#E2E8F0")}
                   onMouseLeave={e => (e.currentTarget.style.color = "#64748B")}>
-                  {l.label}
+                  {l.labelKey}
                 </a>
               ))}
             </div>
           </div>
         </div>
 
+        {/* Language Picker */}
+        <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 28, marginBottom: 20 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+            <span style={{ fontSize: 12, fontWeight: 600, color: "#475569", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+              🌐 {t.footerLanguage}
+            </span>
+            <div style={{ position: "relative" }}>
+              <button
+                onClick={() => setLangOpen(v => !v)}
+                style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, padding: "6px 12px", color: "#E2E8F0", fontSize: 13, cursor: "pointer", fontWeight: 600 }}
+                onMouseEnter={e => (e.currentTarget.style.background = "rgba(99,102,241,0.15)")}
+                onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,255,255,0.06)")}
+              >
+                <span>{currentLang.flag}</span>
+                <span>{currentLang.nativeName}</span>
+                <span style={{ fontSize: 10, opacity: 0.6 }}>▾</span>
+              </button>
+              {langOpen && (
+                <div style={{ position: "absolute", bottom: "calc(100% + 8px)", left: 0, background: "#1E293B", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: 8, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 4, minWidth: 280, zIndex: 200, boxShadow: "0 -8px 32px rgba(0,0,0,0.4)" }}>
+                  {LANGUAGES.map(lang => (
+                    <button
+                      key={lang.code}
+                      onClick={() => { setLocale(lang.code); setLangOpen(false); }}
+                      style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 10px", borderRadius: 8, border: "none", background: locale === lang.code ? "rgba(99,102,241,0.2)" : "transparent", color: locale === lang.code ? "#818CF8" : "#94A3B8", fontSize: 13, cursor: "pointer", fontWeight: locale === lang.code ? 700 : 400, textAlign: "left" }}
+                      onMouseEnter={e => { if (locale !== lang.code) e.currentTarget.style.background = "rgba(255,255,255,0.06)"; }}
+                      onMouseLeave={e => { if (locale !== lang.code) e.currentTarget.style.background = "transparent"; }}
+                    >
+                      <span style={{ fontSize: 18 }}>{lang.flag}</span>
+                      <span>{lang.nativeName}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
         {/* Bottom bar */}
-        <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 28, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
+        <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 20, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
           <div style={{ fontSize: 13, color: "#475569" }}>
-            © {new Date().getFullYear()} JPT AI. All rights reserved.
+            © {new Date().getFullYear()} JPT AI. {t.footerRights}
           </div>
           <div style={{ display: "flex", gap: 24 }}>
             {[{ label: "Privacy Policy", href: "/privacy" }, { label: "Terms of Service", href: "/terms" }].map(l => (
@@ -108,5 +154,5 @@ export default function Footer() {
         </div>
       </div>
     </footer>
-  )
+  );
 }

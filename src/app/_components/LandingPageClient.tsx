@@ -3,6 +3,7 @@
 import { useRef, useState, useEffect } from "react";
 import FAQAccordion from "@/app/_components/FAQAccordion";
 import { landingImg } from "@/lib/landing-images";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 // AI-generated landing images served from Supabase Storage (public "landing" bucket).
 const thumb = (file: string) => landingImg(file);
@@ -212,6 +213,7 @@ function GoogleIcon() {
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function LandingPageClient() {
+  const { t } = useLanguage();
   const [prompt, setPrompt] = useState("");
   const [refImage, setRefImage] = useState<{ url: string } | null>(null);
   const [uploadImage, setUploadImage] = useState<{ url: string; name: string } | null>(null);
@@ -317,17 +319,14 @@ export default function LandingPageClient() {
       {/* ── Hero ───────────────────────────────────────────────────────────── */}
       <section style={s.hero}>
         <div style={s.heroInner}>
-          <div style={s.badge}>✨ AI-Powered Image Editing — Free to Start</div>
+          <div style={s.badge}>{t.heroBadge}</div>
 
           <h1 style={s.h1}>
-            Free AI Image Editor<br />
-            <span style={s.h1Accent}>Edit with a Single Prompt</span>
+            {t.heroH1}<br />
+            <span style={s.h1Accent}>{t.heroH1Accent}</span>
           </h1>
 
-          <p style={s.heroPara}>
-            Remove backgrounds free, upscale photos to 4K, generate AI backgrounds, resize, and transform
-            images — all in one place. No watermark, no software needed.
-          </p>
+          <p style={s.heroPara}>{t.heroPara}</p>
 
           {/* Upload Drop Zone */}
           <input ref={featureFileRef} type="file" accept="image/*" style={{ display: "none" }}
@@ -343,7 +342,7 @@ export default function LandingPageClient() {
               onChange={(e) => e.target.files?.[0] && handleUpload(e.target.files[0])} />
             <span style={{ fontSize: 40 }}>🖼️</span>
             <div>
-              <div style={s.dropTitle}>Drop an image here to start editing</div>
+              <div style={s.dropTitle}>{t.heroDropTitle}</div>
               <div style={s.dropHint}>or <span style={{ color: "#6366F1", fontWeight: 700 }}>click to browse</span> &nbsp;·&nbsp; JPG · PNG · WEBP</div>
             </div>
           </div>
@@ -390,7 +389,7 @@ export default function LandingPageClient() {
 
           {/* Stats */}
           <div style={s.statsRow}>
-            {([["6", "AI tools"], ["∞", "Edits / day"], ["Free", "To start"]] as [string, string][]).map(([val, label]) => (
+            {([[t.heroStat1Val, t.heroStat1Label], [t.heroStat2Val, t.heroStat2Label], [t.heroStat3Val, t.heroStat3Label]] as [string, string][]).map(([val, label]) => (
               <div key={label} style={s.statItem}>
                 <span style={s.statVal}>{val}</span>
                 <span style={s.statLabel}>{label}</span>
@@ -495,7 +494,7 @@ export default function LandingPageClient() {
       <section style={{ ...s.section, background: "#F4F5FB" }}>
         <div style={{ ...s.sectionInner, textAlign: "center" }}>
           <div style={s.sectionLabel}>HOW IT WORKS</div>
-          <h2 style={s.h2}>Edit images in 3 simple steps</h2>
+          <h2 style={s.h2}>{t.stepsH2}</h2>
           <p style={{ ...s.sectionSub, maxWidth: 480, margin: "0 auto 48px" }}>From upload to download in seconds — no learning curve.</p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20, maxWidth: 780, margin: "0 auto" }}>
             {STEPS.map((step, i) => (
@@ -640,11 +639,11 @@ export default function LandingPageClient() {
       {/* ── CTA ────────────────────────────────────────────────────────────── */}
       <section style={s.ctaSection}>
         <div style={s.ctaInner}>
-          <h2 style={s.ctaH2}>Start editing for free</h2>
-          <p style={s.ctaSub}>No credit card required. Sign in with Google and start transforming images in seconds.</p>
+          <h2 style={s.ctaH2}>{t.ctaH2}</h2>
+          <p style={s.ctaSub}>{t.ctaPara}</p>
           <a href="/api/auth/google?next=/editor" style={s.ctaBtn}>
             <GoogleIcon />
-            Get Started Free
+            {t.getStarted}
           </a>
         </div>
       </section>
