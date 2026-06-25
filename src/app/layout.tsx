@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import NavBar from "./_components/NavBar";
 import Footer from "./_components/Footer";
+import Analytics from "./_components/Analytics";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 
 const BASE = "https://www.sjpt.in";
@@ -90,6 +91,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
       </head>
       <body style={{ margin: 0, padding: 0, fontFamily: "system-ui, -apple-system, sans-serif" }}>
+        <Analytics />
         <LanguageProvider>
           <NavBar />
           {children}
