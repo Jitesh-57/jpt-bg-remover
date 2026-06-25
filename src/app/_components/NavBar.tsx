@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useState, lazy, Suspense, useRef } from "react";
+import { usePathname } from "next/navigation";
 import { createSupabaseClient } from "@/lib/supabase";
+import { trackSignUp } from "@/lib/analytics";
 
 const PricingModal = lazy(() => import("./PricingModal"));
 
@@ -54,6 +56,7 @@ export default function NavBar() {
   const [showToolsDropdown, setShowToolsDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  const pathname = usePathname();
   const countdown = useCountdown(user?.plan === "free" ? user?.dailyCreditResetAt ?? null : null);
 
   const [tab, setTab] = useState<"google" | "email">("google");
@@ -95,6 +98,7 @@ export default function NavBar() {
     try { (window as unknown as { __jptPersistContext?: () => void }).__jptPersistContext?.(); } catch {}
   };
   const handleGoogleSignIn = () => {
+    trackSignUp("google");
     persistPageContext();
     const current = window.location.pathname + window.location.search;
     // On the homepage there's nothing to return to — send to the editor.
@@ -118,12 +122,15 @@ export default function NavBar() {
       const data = await res.json() as { ok?: boolean; error?: string; needsConfirmation?: boolean };
       if (!res.ok) { setAuthError(data.error || "Authentication failed"); return; }
       if (data.needsConfirmation) { setAuthError("✅ Check your email and click the confirmation link, then sign in."); return; }
+      trackSignUp(mode === "signup" ? "email_signup" : "email_login");
       persistPageContext();
       const current = window.location.pathname + window.location.search;
       window.location.href = current === "/" || current === "" ? "/editor" : current;
     } catch { setAuthError("Network error. Please try again."); }
     finally { setAuthLoading(false); }
   };
+
+  if (pathname?.startsWith("/lp/")) return null;
 
   return (
     <>

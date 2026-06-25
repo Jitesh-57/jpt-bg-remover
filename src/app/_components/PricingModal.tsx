@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { trackBeginCheckout, trackPurchase } from "@/lib/analytics";
 
 interface PricingModalProps {
   onClose: () => void;
@@ -28,6 +29,8 @@ export default function PricingModal({ onClose, onPurchaseSuccess, prefillUser }
   async function handleBuy(planKey: string) {
     setLoading(planKey);
     setStatusMsg(null);
+    const planValue = Number((plans.find(p => p.planKey === planKey)?.price || "0").replace(/[^0-9]/g, ""));
+    trackBeginCheckout(planKey, planValue);
 
     try {
       // Load Razorpay checkout.js if not already loaded
@@ -96,6 +99,7 @@ export default function PricingModal({ onClose, onPurchaseSuccess, prefillUser }
 
             if (verifyData.success) {
               setStatusMsg({ text: `🎉 Payment successful! ${verifyData.credits} credits added.`, ok: true });
+              trackPurchase(planKey, planValue, verifyData.credits!);
               onPurchaseSuccess?.(planKey, verifyData.credits!);
             } else {
               setStatusMsg({ text: verifyData.error || "Verification failed", ok: false });

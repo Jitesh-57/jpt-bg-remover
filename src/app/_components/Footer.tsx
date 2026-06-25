@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { LANGUAGES } from "@/lib/i18n/translations";
 
@@ -26,6 +27,8 @@ const COMPANY = [
 export default function Footer() {
   const { t, locale, setLocale } = useLanguage();
   const [langOpen, setLangOpen] = useState(false);
+  const pathname = usePathname();
+  if (pathname?.startsWith("/lp/")) return null;
 
   const currentLang = LANGUAGES.find(l => l.code === locale) ?? LANGUAGES[0];
 
