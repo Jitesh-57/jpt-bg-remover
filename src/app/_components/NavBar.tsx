@@ -206,9 +206,10 @@ export default function NavBar() {
                       <div style={{ fontSize: 11, fontWeight: 700, color: "#6366F1", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>⏱ Free credits refresh in</div>
                       <div style={{ fontFamily: "monospace", fontSize: 22, fontWeight: 900, color: "#4338CA", letterSpacing: "0.05em", lineHeight: 1 }}>{countdown}</div>
                       <div style={{ fontSize: 11, color: "#6B7280", marginTop: 5 }}>You get 10 free credits every 24 hours</div>
+                      <div style={{ fontSize: 11, color: "#6366F1", fontWeight: 600, marginTop: 4 }}>Unlock all AI features with a paid plan</div>
                       <button onClick={() => { setShowPricing(true); setShowMenu(false); }}
                         style={{ marginTop: 8, width: "100%", padding: "7px 12px", background: "#6366F1", color: "#fff", border: "none", borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
-                        Get unlimited credits →
+                        Buy Paid Plan
                       </button>
                     </div>
                   )}
