@@ -56,17 +56,71 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const post = getPost(slug);
   if (!post) notFound();
 
+  const url = `https://www.sjpt.in/blog/${post.slug}`;
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: post.title,
     description: post.metaDescription,
     datePublished: post.date,
-    author: { "@type": "Organization", name: "JPT AI" },
-    publisher: { "@type": "Organization", name: "JPT AI", url: "https://www.sjpt.in" },
-    url: `https://www.sjpt.in/blog/${post.slug}`,
+    dateModified: post.date,
+    image: post.image ? [post.image] : undefined,
+    author: { "@type": "Organization", name: "JPT AI", url: "https://www.sjpt.in" },
+    publisher: {
+      "@type": "Organization",
+      name: "JPT AI",
+      url: "https://www.sjpt.in",
+      logo: { "@type": "ImageObject", url: "https://www.sjpt.in/logo.png" },
+    },
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+    url,
     keywords: post.keywords.join(", "),
   };
+
+  // Breadcrumb rich result
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://www.sjpt.in" },
+      { "@type": "ListItem", position: 2, name: "Blog", item: "https://www.sjpt.in/blog" },
+      { "@type": "ListItem", position: 3, name: post.title, item: url },
+    ],
+  };
+
+  // FAQ rich result — parse a "Frequently Asked Questions" section into Q&A pairs.
+  // Format in body: lines of "**Question?**\nAnswer" separated by blank lines.
+  const faqSection = post.sections.find((s) => /frequently asked questions|faqs?\b/i.test(s.heading || ""));
+  const faqPairs: { q: string; a: string }[] = [];
+  if (faqSection) {
+    const blocks = faqSection.body.split(/\n\s*\n/).map((b) => b.trim()).filter(Boolean);
+    for (const block of blocks) {
+      const m = block.match(/^\*\*(.+?)\*\*\s*\n?([\s\S]*)$/);
+      if (m) {
+        const q = m[1].trim();
+        const a = m[2].replace(/\*\*/g, "").trim();
+        if (q && a) faqPairs.push({ q, a });
+      }
+    }
+  }
+  const faqLd = faqPairs.length
+    ? {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: faqPairs.map((p) => ({
+          "@type": "Question",
+          name: p.q,
+          acceptedAnswer: { "@type": "Answer", text: p.a },
+        })),
+      }
+    : null;
+
+  // Related posts — same category first, then fill with others. Internal linking.
+  const related = [
+    ...POSTS.filter((p) => p.slug !== post.slug && p.category === post.category),
+    ...POSTS.filter((p) => p.slug !== post.slug && p.category !== post.category),
+  ].slice(0, 3);
 
   const CATEGORY_COLORS: Record<string, string> = {
     Tutorial: "#6366F1",
@@ -77,6 +131,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
+      {faqLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />}
 
       <main style={{ background: "#F8F9FC", minHeight: "100vh", padding: "48px 24px 80px" }}>
         <div style={{ maxWidth: 780, margin: "0 auto" }}>
@@ -146,6 +202,30 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               {post.toolLabel}
             </Link>
           </div>
+
+          {/* Related articles — internal linking for SEO + engagement */}
+          {related.length > 0 && (
+            <div style={{ marginTop: 56 }}>
+              <h2 style={{ fontSize: 22, fontWeight: 800, color: "#111", margin: "0 0 24px", letterSpacing: "-0.3px" }}>
+                Related articles
+              </h2>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 18 }}>
+                {related.map((r) => (
+                  <Link key={r.slug} href={`/blog/${r.slug}`} style={{ textDecoration: "none", display: "block", background: "#fff", border: "1px solid #EAECF0", borderRadius: 14, overflow: "hidden" }}>
+                    {r.image && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={r.image} alt={r.title} style={{ width: "100%", height: 120, objectFit: "cover", display: "block" }} loading="lazy" />
+                    )}
+                    <div style={{ padding: "14px 16px" }}>
+                      <span style={{ fontSize: 11, fontWeight: 700, color: CATEGORY_COLORS[r.category] || "#6366F1", letterSpacing: 0.4 }}>{r.category}</span>
+                      <div style={{ fontSize: 15, fontWeight: 700, color: "#111", lineHeight: 1.35, marginTop: 6 }}>{r.title}</div>
+                      <div style={{ fontSize: 12, color: "#999", marginTop: 8 }}>{r.readTime}</div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Back to blog */}
           <div style={{ textAlign: "center" as const, marginTop: 36 }}>
