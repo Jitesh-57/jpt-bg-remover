@@ -5,7 +5,26 @@ import { createSupabaseClient } from "@/lib/supabase";
 
 const PricingModal = lazy(() => import("./PricingModal"));
 
-interface User { email: string; name: string; picture?: string; credits: number; }
+interface User { email: string; name: string; picture?: string; credits: number; plan: string; dailyCreditResetAt: string | null; }
+
+function useCountdown(resetAt: string | null): string {
+  const [label, setLabel] = useState("");
+  useEffect(() => {
+    if (!resetAt) { setLabel(""); return; }
+    const update = () => {
+      const msLeft = new Date(resetAt).getTime() + 86_400_000 - Date.now();
+      if (msLeft <= 0) { setLabel("Refreshing…"); return; }
+      const h = Math.floor(msLeft / 3_600_000);
+      const m = Math.floor((msLeft % 3_600_000) / 60_000);
+      const s = Math.floor((msLeft % 60_000) / 1_000);
+      setLabel(`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`);
+    };
+    update();
+    const id = setInterval(update, 1000);
+    return () => clearInterval(id);
+  }, [resetAt]);
+  return label;
+}
 
 const TOOLS = [
   {
@@ -35,6 +54,8 @@ export default function NavBar() {
   const [showToolsDropdown, setShowToolsDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  const countdown = useCountdown(user?.plan === "free" ? user?.dailyCreditResetAt ?? null : null);
+
   const [tab, setTab] = useState<"google" | "email">("google");
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [email, setEmail] = useState("");
@@ -62,8 +83,8 @@ export default function NavBar() {
 
   const fetchUser = () =>
     fetch("/api/auth/google/me").then(r => r.json())
-      .then((d: { authenticated: boolean; email?: string; name?: string; picture?: string; credits?: number }) => {
-        if (d.authenticated && d.email) setUser({ email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? 10 });
+      .then((d: { authenticated: boolean; email?: string; name?: string; picture?: string; credits?: number; plan?: string; dailyCreditResetAt?: string | null }) => {
+        if (d.authenticated && d.email) setUser({ email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? 10, plan: d.plan ?? "free", dailyCreditResetAt: d.dailyCreditResetAt ?? null });
       }).catch(() => null);
 
   const openModal = () => { setShowModal(true); setTab("google"); setMode("login"); setEmail(""); setPassword(""); setName(""); setAuthError(""); };
@@ -180,6 +201,26 @@ export default function NavBar() {
                     <div style={{ fontWeight: 700, fontSize: 14, color: "#111" }}>{user.name}</div>
                     <div style={{ fontSize: 12, color: "#6B7280", marginTop: 2 }}>{user.email}</div>
                   </div>
+                  {user.plan === "free" && user.credits === 0 && countdown && (
+                    <div style={{ margin: "10px 12px 4px", background: "linear-gradient(135deg,#EEF2FF,#F5F3FF)", border: "1px solid #C7D2FE", borderRadius: 12, padding: "12px 14px" }}>
+                      <div style={{ fontSize: 11, fontWeight: 700, color: "#6366F1", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>⏱ Free credits refresh in</div>
+                      <div style={{ fontFamily: "monospace", fontSize: 22, fontWeight: 900, color: "#4338CA", letterSpacing: "0.05em", lineHeight: 1 }}>{countdown}</div>
+                      <div style={{ fontSize: 11, color: "#6B7280", marginTop: 5 }}>You get 10 free credits every 24 hours</div>
+                      <button onClick={() => { setShowPricing(true); setShowMenu(false); }}
+                        style={{ marginTop: 8, width: "100%", padding: "7px 12px", background: "#6366F1", color: "#fff", border: "none", borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
+                        Get unlimited credits →
+                      </button>
+                    </div>
+                  )}
+                  {user.plan === "free" && user.credits > 0 && (
+                    <div style={{ margin: "10px 12px 4px", background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 10, padding: "8px 12px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                      <div>
+                        <div style={{ fontSize: 11, fontWeight: 700, color: "#16A34A", textTransform: "uppercase", letterSpacing: "0.06em" }}>Free daily credits</div>
+                        <div style={{ fontSize: 12, color: "#4B5563", marginTop: 2 }}>{user.credits} of 10 remaining · resets in {countdown || "…"}</div>
+                      </div>
+                      <div style={{ fontSize: 20, fontWeight: 900, color: "#16A34A" }}>{user.credits}</div>
+                    </div>
+                  )}
                   <div style={{ padding: "6px 0" }}>
                     <a href="/generations" onClick={() => setShowMenu(false)}
                       style={{ display: "block", padding: "10px 16px", fontSize: 13, color: "#111", textDecoration: "none", fontWeight: 500 }}
