@@ -1,5 +1,6 @@
 import { MetadataRoute } from "next";
 import { POSTS } from "./blog/_data/posts";
+import { VARIANTS, PARENT_META } from "@/lib/landing-variants";
 
 const BASE = "https://www.sjpt.in";
 
@@ -27,5 +28,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...blogPages];
+  const variantPages: MetadataRoute.Sitemap = VARIANTS.map((v) => ({
+    url: `${BASE}${PARENT_META[v.parent].base}/${v.slug}`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
+
+  return [...staticPages, ...variantPages, ...blogPages];
 }
