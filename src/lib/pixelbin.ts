@@ -124,6 +124,43 @@ export async function runPixelBinPrediction(
   return url;
 }
 
+/**
+ * Text-to-image generation (no source image) via nanoBananaPro.generate.
+ * Returns a CDN URL of the generated image.
+ */
+export async function generateImageFromText(
+  prompt: string,
+  opts?: { aspect_ratio?: string; output_resolution?: string }
+): Promise<string> {
+  const client = getClient() as {
+    predictions: {
+      createAndWait: (arg: {
+        name: string;
+        input: Record<string, unknown>;
+        options?: Record<string, number>;
+      }) => Promise<PredictionResult>;
+    };
+  };
+
+  const result = await client.predictions.createAndWait({
+    name: "nanoBananaPro_generate",
+    input: {
+      prompt,
+      aspect_ratio: opts?.aspect_ratio || "16:9",
+      output_resolution: opts?.output_resolution || "1K",
+    },
+    options: { maxAttempts: 40, retryFactor: 1, retryInterval: 2000 },
+  });
+
+  if (result.status !== "SUCCESS") {
+    console.error(`[pixelbin] text2img status=${result.status}`, result.error || result.output);
+    throw new Error("Image generation failed.");
+  }
+  const url = extractUrl(result.output);
+  if (!url) throw new Error("Image generation returned no result.");
+  return url;
+}
+
 /** Same as runPixelBinPrediction but returns a base64 data URL. */
 export async function runPixelBinPredictionAsDataUrl(
   imageDataUrl: string,

@@ -14,7 +14,9 @@ export interface BlogPost {
   sections: { heading?: string; body: string }[];
 }
 
-export const POSTS: BlogPost[] = [
+import { blogImageUrl } from "@/lib/blog-images";
+
+const RAW_POSTS: BlogPost[] = [
   {
     image: "https://images.pexels.com/photos/5632397/pexels-photo-5632397.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "remove-background-from-image-online-free",
@@ -1906,6 +1908,9 @@ export const POSTS: BlogPost[] = [
     ],
   }
 ];
+
+// Serve content-matched hero images from Supabase Storage (deterministic by slug).
+export const POSTS: BlogPost[] = RAW_POSTS.map((p) => ({ ...p, image: blogImageUrl(p.slug) }));
 
 export function getPost(slug: string): BlogPost | undefined {
   return POSTS.find((p) => p.slug === slug);
