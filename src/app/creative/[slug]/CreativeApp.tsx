@@ -56,7 +56,12 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient }: Prop
   const [message, setMessage] = useState<string>("");
   const [needs, setNeeds] = useState<null | "signin" | "upgrade" | "credits">(null);
   const [showPricing, setShowPricing] = useState(false);
+  const [pricingNotice, setPricingNotice] = useState<string | undefined>(undefined);
   const [trialDone, setTrialDone] = useState(false);
+
+  const TRIAL_NOTICE = "You've already used your free trial. Buy credits for more generations and unlock all AI tools.";
+
+  const openPricing = (note?: string) => { setPricingNotice(note); setShowPricing(true); };
 
   // Restore the photo a user uploaded before being sent to sign-in.
   useEffect(() => {
@@ -106,13 +111,13 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient }: Prop
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
-      const data = (await res.json()) as { dataUrl?: string; error?: string; upgradeRequired?: boolean; trial?: boolean };
+      const data = (await res.json()) as { dataUrl?: string; error?: string; upgradeRequired?: boolean; trial?: boolean; trialUsed?: boolean };
 
       // Not signed in → save the photo and send them to sign-in, then back here.
       if (res.status === 401) { goSignIn(); return; }
       // Free trial already used, or paid feature → open the payment popup.
-      if (res.status === 403) { setShowPricing(true); setStatus("idle"); return; }
-      if (res.status === 402) { data.upgradeRequired ? setShowPricing(true) : setNeeds("credits"); setStatus("idle"); return; }
+      if (res.status === 403) { openPricing(data.trialUsed ? TRIAL_NOTICE : undefined); setStatus("idle"); return; }
+      if (res.status === 402) { data.upgradeRequired ? openPricing(TRIAL_NOTICE) : setNeeds("credits"); setStatus("idle"); return; }
       if (!res.ok || !data.dataUrl) { setMessage(data.error || "Generation failed. Please try again."); setStatus("error"); return; }
 
       setResult(data.dataUrl);
@@ -217,17 +222,20 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient }: Prop
             )}
           </div>
         )}
+        <div style={{ marginTop: 12, fontSize: 12.5, color: "#9CA3AF" }}>
+          ⚡ Each generation uses 2 credits · your first try is free
+        </div>
       </div>
 
       {/* Free-trial note after a successful trial generation */}
       {trialDone && status === "done" && (
         <Notice color="#4338CA" bg="#EEF2FF">
-          🎁 That was your <strong>free trial</strong>. <button onClick={() => setShowPricing(true)} style={btnLinkStyle}>Upgrade for unlimited generations →</button>
+          🎁 That was your <strong>free trial</strong>. <button onClick={() => openPricing(TRIAL_NOTICE)} style={btnLinkStyle}>Buy credits to unlock all AI tools →</button>
         </Notice>
       )}
       {needs === "credits" && (
         <Notice color="#B45309" bg="#FFFBEB">
-          You&apos;re out of credits for today. <button onClick={() => setShowPricing(true)} style={btnLinkStyle}>Get more credits →</button>
+          You&apos;re out of credits. <button onClick={() => openPricing("Buy more credits to keep generating and unlock all AI tools.")} style={btnLinkStyle}>Get more credits →</button>
         </Notice>
       )}
       {status === "error" && message && (
@@ -236,7 +244,7 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient }: Prop
 
       {showPricing && (
         <Suspense fallback={null}>
-          <PricingModal onClose={() => setShowPricing(false)} />
+          <PricingModal onClose={() => setShowPricing(false)} notice={pricingNotice} />
         </Suspense>
       )}
     </div>

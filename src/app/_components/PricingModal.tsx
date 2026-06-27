@@ -7,6 +7,7 @@ interface PricingModalProps {
   onClose: () => void;
   onPurchaseSuccess?: (plan: string, newCredits: number) => void;
   prefillUser?: { name?: string; email?: string };
+  notice?: string;
 }
 
 const plans = [
@@ -22,7 +23,7 @@ declare global {
   }
 }
 
-export default function PricingModal({ onClose, onPurchaseSuccess, prefillUser }: PricingModalProps) {
+export default function PricingModal({ onClose, onPurchaseSuccess, prefillUser, notice }: PricingModalProps) {
   const [loading, setLoading] = useState<string | null>(null);
   const [statusMsg, setStatusMsg] = useState<{ text: string; ok: boolean } | null>(null);
 
@@ -147,6 +148,20 @@ export default function PricingModal({ onClose, onPurchaseSuccess, prefillUser }
           overflowY: "auto",
         }}
       >
+        {notice && (
+          <div style={{
+            marginBottom: 24,
+            padding: "16px 20px",
+            borderRadius: 14,
+            background: "linear-gradient(135deg,#EEF2FF,#FAF5FF)",
+            border: "1px solid #C7D2FE",
+            textAlign: "center",
+          }}>
+            <div style={{ fontSize: 24, marginBottom: 6 }}>🎁</div>
+            <div style={{ fontSize: 15, fontWeight: 800, color: "#4338CA", lineHeight: 1.5 }}>{notice}</div>
+          </div>
+        )}
+
         <div style={{ textAlign: "center", marginBottom: 36 }}>
           <div style={{ fontSize: 40, marginBottom: 10 }}>💳</div>
           <h2 style={{ fontWeight: 900, fontSize: 26, color: "#111827", margin: "0 0 8px", letterSpacing: "-0.02em" }}>
@@ -155,6 +170,9 @@ export default function PricingModal({ onClose, onPurchaseSuccess, prefillUser }
           <p style={{ fontSize: 15, color: "#6B7280", margin: 0 }}>
             Pay once, use anytime. No subscriptions.
           </p>
+          <div style={{ display: "inline-block", marginTop: 12, padding: "6px 14px", background: "#EEF2FF", color: "#4338CA", borderRadius: 20, fontSize: 13, fontWeight: 700 }}>
+            ⚡ Each AI generation uses 2 credits
+          </div>
         </div>
 
         {statusMsg && (
