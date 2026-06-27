@@ -12,13 +12,15 @@ export default function BlogImageFiller() {
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      for (let i = 0; i < 20 && !cancelled; i++) {
+      // Keep going through timeouts/errors — missing images are retried until done.
+      for (let i = 0; i < 60 && !cancelled; i++) {
         try {
           const r = await fetch("/api/cron/blog-images?token=jptblog2026", { cache: "no-store" });
           const d = (await r.json()) as { done?: boolean; remaining?: number };
           if (d.done || (d.remaining ?? 0) <= 0) break;
         } catch {
-          break;
+          // a batch may 504 on Hobby's 60s limit — pause briefly and continue
+          await new Promise((res) => setTimeout(res, 2000));
         }
       }
     })();

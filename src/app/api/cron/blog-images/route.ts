@@ -19,7 +19,7 @@ export const maxDuration = 60;
  * once everything is generated.
  */
 const BUCKET = "landing";
-const BATCH = 4;
+const BATCH = 2;
 
 export async function GET(req: NextRequest) {
   const authed =
