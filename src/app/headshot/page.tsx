@@ -92,6 +92,7 @@ async function downloadImage(url: string, filename: string) {
 
 export default function HeadshotPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const changeFileRef = useRef<HTMLInputElement>(null);
   const bgFileInputRef = useRef<HTMLInputElement>(null);
 
   const [step, setStep] = useState<Step>("upload");
@@ -116,7 +117,7 @@ export default function HeadshotPage() {
   const [sourcePreview, setSourcePreview] = useState<string | null>(null);
   const [sourceUrl, setSourceUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
-  const [selectedStyleIds, setSelectedStyleIds] = useState<number[]>([1, 2, 3, 4]);
+  const [selectedStyleIds, setSelectedStyleIds] = useState<number[]>([]);
   const [generating, setGenerating] = useState(false);
   const [progress, setProgress] = useState("");
   const [images, setImages] = useState<GeneratedImage[]>([]);
@@ -146,6 +147,21 @@ export default function HeadshotPage() {
       .then((d: { authenticated: boolean; email?: string; name?: string; credits?: number; plan?: string }) => {
         if (d.authenticated && d.email) setUser({ email: d.email, name: d.name ?? "", credits: d.credits ?? 0, plan: d.plan });
       }).catch(() => null);
+  }, []);
+
+  // Restore the uploaded photo + styles step after a refresh (no bounce to upload).
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("jpt_hs_session");
+      if (!raw) return;
+      const saved = JSON.parse(raw) as { sourceUrl?: string; gender?: Gender };
+      if (saved.sourceUrl) {
+        setSourceUrl(saved.sourceUrl);
+        setSourcePreview(saved.sourceUrl);
+        if (saved.gender) setGender(saved.gender);
+        setStep("styles");
+      }
+    } catch {}
   }, []);
 
   useEffect(() => {
@@ -200,7 +216,7 @@ export default function HeadshotPage() {
   };
 
   const activeStyles = gender === "women" ? WOMEN_STYLES : MEN_STYLES;
-  const switchGender = (g: Gender) => { setGender(g); setSelectedStyleIds([1, 2, 3, 4]); };
+  const switchGender = (g: Gender) => { setGender(g); setSelectedStyleIds([]); };
 
   const handleFile = useCallback(async (file: File) => {
     setError(null);
@@ -214,6 +230,8 @@ export default function HeadshotPage() {
       if (!res.ok || !data.url) throw new Error(data.error || `Upload failed (${res.status})`);
       setSourceUrl(data.url);
       setStep("styles");
+      // Persist so a refresh keeps the user on the styles step with their photo.
+      try { localStorage.setItem("jpt_hs_session", JSON.stringify({ sourceUrl: data.url, gender })); } catch {}
     } catch (e) { setError((e as Error).message); setSourcePreview(null); }
     finally { setUploading(false); }
   }, []);
@@ -403,6 +421,7 @@ export default function HeadshotPage() {
   };
 
   const reset = () => {
+    try { localStorage.removeItem("jpt_hs_session"); } catch {}
     setStep("upload");
     setSourcePreview(null);
     setSourceUrl(null);
@@ -588,6 +607,14 @@ export default function HeadshotPage() {
             <div style={s.sourceThumb}>
               {sourcePreview && <img src={sourcePreview} alt="source" style={s.srcImg} />}
               <p style={s.srcLabel}>Your photo</p>
+              <input ref={changeFileRef} type="file" accept="image/*" style={{ display: "none" }}
+                onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} />
+              <button
+                onClick={() => changeFileRef.current?.click()}
+                disabled={uploading}
+                style={{ marginTop: 8, width: "100%", padding: "8px 12px", background: "#fff", color: "#6366F1", border: "1.5px solid #C7D2FE", borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: uploading ? "default" : "pointer" }}>
+                {uploading ? "Uploading…" : "🔄 Change Photo"}
+              </button>
             </div>
             <div style={s.stylesPanel}>
               <div style={s.stylesPanelHeader}>
