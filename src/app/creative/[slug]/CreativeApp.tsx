@@ -210,6 +210,12 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient }: Prop
           </button>
         ) : (
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+            {result && (
+              <button onClick={pick} disabled={busy}
+                style={{ background: "#fff", color: "#4338CA", fontWeight: 800, fontSize: 16, padding: "15px 28px", borderRadius: 14, border: "1.5px solid #C7D2FE", cursor: busy ? "default" : "pointer" }}>
+                📂 Upload New Image
+              </button>
+            )}
             <button onClick={generate} disabled={busy}
               style={{ background: busy ? "#A5B4FC" : "linear-gradient(135deg,#6366F1,#8B5CF6)", color: "#fff", fontWeight: 800, fontSize: 16, padding: "15px 38px", borderRadius: 14, border: "none", cursor: busy ? "default" : "pointer", boxShadow: "0 8px 30px rgba(99,102,241,0.4)" }}>
               {busy ? "Working…" : result ? "↻ Generate Again" : `${cta} →`}
@@ -226,6 +232,13 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient }: Prop
           ⚡ Each generation uses 2 credits · your first try is free
         </div>
       </div>
+
+      {/* Warn users to download before they lose the result */}
+      {result && status === "done" && (
+        <Notice color="#B45309" bg="#FFFBEB">
+          ⚠️ Download your generated image before generating a new one or refreshing the page — it isn&apos;t saved automatically.
+        </Notice>
+      )}
 
       {/* Free-trial note after a successful trial generation */}
       {trialDone && status === "done" && (
