@@ -273,7 +273,11 @@ export default function ImageEditorPage() {
   const [showNoCreditsModal, setShowNoCreditsModal] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [creditRenewCountdown, setCreditRenewCountdown] = useState("");
-  const [isMobile, setIsMobile] = useState(false);
+  // Initialise from the real viewport so the first paint already uses the
+  // mobile (bottom-sheet) layout — avoids the panel flashing on the right.
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== "undefined" ? window.innerWidth < 768 : false
+  );
   const [mobileSheetOpen, setMobileSheetOpen] = useState(false);
   const [blockedTool, setBlockedTool] = useState<{ id: string | null; icon: string; label: string } | null>(null);
   const [buyingPlan, setBuyingPlan] = useState<string | null>(null);
