@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { POSTS } from "./_data/posts";
+import BlogImageFiller from "./BlogImageFiller";
 
 export const metadata: Metadata = {
   title: "AI Image Editing Blog — Tips, Tutorials & Guides | JPT AI",
@@ -30,6 +31,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 export default function BlogIndexPage() {
   return (
     <main style={{ background: "#F8F9FC", minHeight: "100vh", padding: "60px 24px 80px" }}>
+      <BlogImageFiller />
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: 56 }}>

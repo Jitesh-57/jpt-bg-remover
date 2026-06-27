@@ -5,17 +5,21 @@ import { deriveBlogPrompt } from "@/lib/blog-images";
 import { POSTS } from "@/app/blog/_data/posts";
 
 export const runtime = "nodejs";
-export const maxDuration = 300;
+export const maxDuration = 60;
 
 /**
- * Self-running blog-image generator. A Vercel cron (see vercel.json) hits this
- * automatically; it finds every blog post that doesn't yet have a Supabase
- * image and generates + uploads it. Idempotent — once all images exist it's a
- * no-op, so it safely stops. Also manually triggerable with ?token=jptblog2026.
+ * Self-running blog-image generator (Hobby-plan friendly).
+ *
+ * Each invocation generates a small batch of missing images (under the 60s
+ * function limit), then — if any remain — schedules the NEXT invocation via
+ * after(), so a single trigger chains through all of them automatically.
+ *
+ * Triggered by the daily Vercel cron (vercel.json) or manually with
+ * ?token=jptblog2026. Idempotent: skips images that already exist and stops
+ * once everything is generated.
  */
 const BUCKET = "landing";
-const CONCURRENCY = 4;
-const TIME_BUDGET_MS = 250_000;
+const BATCH = 4;
 
 export async function GET(req: NextRequest) {
   const authed =
@@ -24,19 +28,15 @@ export async function GET(req: NextRequest) {
   if (!authed) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const supabase = createAdminSupabase();
-
-  // One list call to find which images already exist.
   const { data: existing } = await supabase.storage.from(BUCKET).list("blog", { limit: 1000 });
   const have = new Set((existing || []).map((f) => f.name));
   const missing = POSTS.filter((p) => !have.has(`${p.slug}.png`));
 
+  const batch = missing.slice(0, BATCH);
   const results: Record<string, string> = {};
-  const start = Date.now();
-  let i = 0;
 
-  async function worker() {
-    while (i < missing.length && Date.now() - start < TIME_BUDGET_MS) {
-      const post = missing[i++];
+  await Promise.all(
+    batch.map(async (post) => {
       try {
         const prompt = deriveBlogPrompt(post.title, post.category);
         const url = await generateImageFromText(prompt, { aspect_ratio: "16:9", output_resolution: "1K" });
@@ -51,19 +51,15 @@ export async function GET(req: NextRequest) {
       } catch (e) {
         results[post.slug] = `FAILED: ${(e as Error).message}`;
       }
-    }
-  }
+    })
+  );
 
-  await Promise.all(Array.from({ length: CONCURRENCY }, worker));
+  const remaining = missing.length - batch.length;
 
-  const generated = Object.values(results).filter((r) => r.startsWith("ok")).length;
-  const remaining = missing.length - Object.keys(results).length;
   return NextResponse.json({
     total: POSTS.length,
-    alreadyHad: have.size,
-    missingAtStart: missing.length,
-    generatedThisRun: generated,
-    remaining: Math.max(0, remaining),
+    generatedThisRun: Object.values(results).filter((r) => r.startsWith("ok")).length,
+    remaining,
     done: remaining <= 0,
     results,
   });

@@ -1,5 +1,5 @@
 {
   "crons": [
-    { "path": "/api/cron/blog-images", "schedule": "*/2 * * * *" }
+    { "path": "/api/cron/blog-images", "schedule": "0 0 * * *" }
   ]
 }
