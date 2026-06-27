@@ -79,7 +79,7 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
             <p style={{ fontSize: "clamp(1rem,2vw,1.15rem)", color: "#4B5563", lineHeight: 1.6, maxWidth: 560, margin: "0 auto 36px" }}>{a.tagline}</p>
           </div>
 
-          <CreativeApp slug={a.slug} prompt={a.prompt} cta="Generate Now" badge={a.badge} gradient={a.gradient} />
+          <CreativeApp slug={a.slug} prompt={a.prompt} cta="Generate Now" badge={a.badge} gradient={a.gradient} appName={a.h1} />
         </section>
 
         {/* How it works */}

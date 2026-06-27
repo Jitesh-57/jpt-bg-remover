@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect, lazy, Suspense } from "react";
 import { trackEvent, trackToolUse } from "@/lib/analytics";
+import { saveGeneration } from "@/lib/save-generation";
 
 const PricingModal = lazy(() => import("@/app/_components/PricingModal"));
 const PENDING_KEY = "jpt_creative_pending";
@@ -12,6 +13,7 @@ interface Props {
   cta: string;
   badge: string;
   gradient: [string, string];
+  appName: string;
 }
 
 type Status = "idle" | "uploading" | "generating" | "done" | "error";
@@ -48,7 +50,7 @@ function readFile(file: File): Promise<string> {
   });
 }
 
-export default function CreativeApp({ slug, prompt, cta, badge, gradient }: Props) {
+export default function CreativeApp({ slug, prompt, cta, badge, gradient, appName }: Props) {
   const fileRef = useRef<HTMLInputElement>(null);
   const [original, setOriginal] = useState<string | null>(null);
   const [result, setResult] = useState<string | null>(null);
@@ -124,6 +126,8 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient }: Prop
       setStatus("done");
       if (data.trial) setTrialDone(true);
       trackEvent("creative_generate_success", { tool: slug, trial: !!data.trial });
+      // Save to My Generations.
+      saveGeneration({ url: data.dataUrl, tool: `creative:${slug}`, label: appName });
     } catch {
       setMessage("Network error. Please try again.");
       setStatus("error");
