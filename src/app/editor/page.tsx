@@ -1428,6 +1428,9 @@ export default function ImageEditorPage() {
                     })}
                   </div>
                   {(() => {
+                    // Only warn before any upscale is applied — once upscaled, the
+                    // "Already upscaled" note covers it (the result is naturally large).
+                    if (appliedUpscale) return null;
                     const curW = workingSize?.w || original?.w || 0;
                     const curH = workingSize?.h || original?.h || 0;
                     const maxDim = Math.max(curW, curH);
