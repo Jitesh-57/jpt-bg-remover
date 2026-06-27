@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import FAQAccordion from "@/app/_components/FAQAccordion";
 import CreativeApp from "./CreativeApp";
-import { CREATIVE_APPS, getCreativeApp, CREATIVE_BASE, previewUrl } from "@/lib/creative-apps";
+import { CREATIVE_APPS, getCreativeApp, getCreativeContent, CREATIVE_BASE, previewUrl } from "@/lib/creative-apps";
 
 const BASE = "https://www.sjpt.in";
 
@@ -32,6 +32,7 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
 
   const url = `${BASE}${CREATIVE_BASE}/${slug}`;
   const related = CREATIVE_APPS.filter((x) => x.slug !== a.slug).slice(0, 6);
+  const content = getCreativeContent(slug);
 
   const appLd = {
     "@context": "https://schema.org",
@@ -75,16 +76,7 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
               {a.emoji} JPT Creative App
             </a>
             <h1 style={{ fontSize: "clamp(2rem,4.5vw,3.2rem)", fontWeight: 900, color: "#0F172A", lineHeight: 1.1, letterSpacing: "-0.03em", margin: "0 0 16px" }}>{a.h1}</h1>
-            <p style={{ fontSize: "clamp(1rem,2vw,1.15rem)", color: "#4B5563", lineHeight: 1.6, maxWidth: 560, margin: "0 auto 28px" }}>{a.tagline}</p>
-
-            {/* Real AI before/after example */}
-            <figure style={{ margin: "0 auto 8px", maxWidth: 760 }}>
-              <div style={{ borderRadius: 18, overflow: "hidden", boxShadow: "0 20px 60px rgba(0,0,0,0.16)", border: "1px solid #E5E7EB" }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={previewUrl(a.slug)} alt={`${a.h1}: real before and after AI example`} style={{ width: "100%", display: "block" }} />
-              </div>
-              <figcaption style={{ fontSize: 12.5, color: "#9CA3AF", marginTop: 8 }}>Real AI example — actual output from this Creative App</figcaption>
-            </figure>
+            <p style={{ fontSize: "clamp(1rem,2vw,1.15rem)", color: "#4B5563", lineHeight: 1.6, maxWidth: 560, margin: "0 auto 36px" }}>{a.tagline}</p>
           </div>
 
           <CreativeApp slug={a.slug} prompt={a.prompt} cta="Generate Now" badge={a.badge} gradient={a.gradient} />
@@ -110,14 +102,44 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
           </div>
         </section>
 
-        {/* SEO content */}
-        <section style={{ padding: "72px 24px", background: "#F9FAFB" }}>
-          <div style={{ maxWidth: 820, margin: "0 auto", fontSize: 15.5, color: "#374151", lineHeight: 1.85 }}>
-            <h2 style={{ fontSize: "clamp(1.5rem,3vw,2rem)", fontWeight: 900, color: "#0F172A", margin: "0 0 20px", letterSpacing: "-0.02em" }}>{a.h1} — free, online & instant</h2>
-            <p style={{ marginTop: 0 }}>{a.tagline} The {a.h1} is part of the JPT AI Creative Apps suite — a collection of free, browser-based AI photo tools. {a.intro} You don&apos;t need Photoshop, a separate app, or any design experience: upload a reference photo, let the AI do the work, and download a clean, full-resolution result with no watermark.</p>
-            <p>JPT AI runs entirely online, so it works on any device — phone, tablet or desktop. Your images are processed securely and are never used to train models. Sign in to claim free daily credits and start creating. Looking for more? Explore the rest of our <a href={CREATIVE_BASE} style={{ color: "#6366F1", fontWeight: 700 }}>AI Creative Apps</a>, or jump into the full <a href="/editor" style={{ color: "#6366F1", fontWeight: 700 }}>AI photo editor</a> for advanced edits.</p>
+        {/* Real AI before/after example */}
+        <section style={{ padding: "72px 24px", background: "#fff" }}>
+          <div style={{ maxWidth: 820, margin: "0 auto", textAlign: "center" }}>
+            <h2 style={{ fontSize: "clamp(1.5rem,3vw,2rem)", fontWeight: 900, color: "#0F172A", margin: "0 0 28px", letterSpacing: "-0.02em" }}>See it in action — real before &amp; after</h2>
+            <figure style={{ margin: 0 }}>
+              <div style={{ borderRadius: 18, overflow: "hidden", boxShadow: "0 20px 60px rgba(0,0,0,0.16)", border: "1px solid #E5E7EB" }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={previewUrl(a.slug)} alt={`${a.h1}: real before and after AI example`} style={{ width: "100%", display: "block" }} />
+              </div>
+              <figcaption style={{ fontSize: 12.5, color: "#9CA3AF", marginTop: 10 }}>Real AI example — actual output from this Creative App</figcaption>
+            </figure>
           </div>
         </section>
+
+        {/* SEO content */}
+        {content && (
+          <section style={{ padding: "72px 24px", background: "#F9FAFB" }}>
+            <div style={{ maxWidth: 760, margin: "0 auto", fontSize: 16, color: "#374151", lineHeight: 1.85 }}>
+              <h2 style={{ fontSize: "clamp(1.5rem,3vw,2rem)", fontWeight: 900, color: "#0F172A", margin: "0 0 22px", letterSpacing: "-0.02em" }}>{a.h1}</h2>
+              {content.paragraphs.map((p, i) => (
+                <p key={i} style={{ marginTop: i === 0 ? 0 : 18 }}>{p}</p>
+              ))}
+
+              <h3 style={{ fontSize: 19, fontWeight: 800, color: "#111827", margin: "34px 0 14px" }}>{content.tipsTitle}</h3>
+              <ul style={{ margin: 0, paddingLeft: 22 }}>
+                {content.tips.map((t, i) => (
+                  <li key={i} style={{ marginBottom: 10 }}>{t}</li>
+                ))}
+              </ul>
+
+              <p style={{ marginTop: 26, fontSize: 15, color: "#6B7280" }}>
+                It&apos;s free to try and runs right in your browser — nothing to install. Explore the rest of our{" "}
+                <a href={CREATIVE_BASE} style={{ color: "#6366F1", fontWeight: 700 }}>AI Creative Apps</a>, or open the full{" "}
+                <a href="/editor" style={{ color: "#6366F1", fontWeight: 700 }}>AI photo editor</a> for more control.
+              </p>
+            </div>
+          </section>
+        )}
 
         {/* FAQ */}
         <section style={{ padding: "72px 24px", background: "#fff" }}>

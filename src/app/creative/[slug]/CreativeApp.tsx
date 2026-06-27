@@ -1,7 +1,10 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect, lazy, Suspense } from "react";
 import { trackEvent, trackToolUse } from "@/lib/analytics";
+
+const PricingModal = lazy(() => import("@/app/_components/PricingModal"));
+const PENDING_KEY = "jpt_creative_pending";
 
 interface Props {
   slug: string;
@@ -52,6 +55,20 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient }: Prop
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState<string>("");
   const [needs, setNeeds] = useState<null | "signin" | "upgrade" | "credits">(null);
+  const [showPricing, setShowPricing] = useState(false);
+  const [trialDone, setTrialDone] = useState(false);
+
+  // Restore the photo a user uploaded before being sent to sign-in.
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(PENDING_KEY);
+      if (raw) {
+        const { slug: s, img } = JSON.parse(raw);
+        if (s === slug && img) setOriginal(img);
+        sessionStorage.removeItem(PENDING_KEY);
+      }
+    } catch { /* ignore */ }
+  }, [slug]);
 
   const pick = () => fileRef.current?.click();
 
@@ -84,30 +101,37 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient }: Prop
 
     setStatus("generating");
     try {
-      const res = await fetch("/api/ai-edit", {
+      const res = await fetch("/api/creative-edit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
-      const data = (await res.json()) as { dataUrl?: string; error?: string; upgradeRequired?: boolean };
+      const data = (await res.json()) as { dataUrl?: string; error?: string; upgradeRequired?: boolean; trial?: boolean };
 
-      if (res.status === 401) { setNeeds("signin"); setStatus("error"); return; }
-      if (res.status === 403) { setNeeds("upgrade"); setStatus("error"); return; }
-      if (res.status === 402) { setNeeds(data.upgradeRequired ? "upgrade" : "credits"); setStatus("error"); return; }
+      // Not signed in → save the photo and send them to sign-in, then back here.
+      if (res.status === 401) { goSignIn(); return; }
+      // Free trial already used, or paid feature → open the payment popup.
+      if (res.status === 403) { setShowPricing(true); setStatus("idle"); return; }
+      if (res.status === 402) { data.upgradeRequired ? setShowPricing(true) : setNeeds("credits"); setStatus("idle"); return; }
       if (!res.ok || !data.dataUrl) { setMessage(data.error || "Generation failed. Please try again."); setStatus("error"); return; }
 
       setResult(data.dataUrl);
       setStatus("done");
-      trackEvent("creative_generate_success", { tool: slug });
+      if (data.trial) setTrialDone(true);
+      trackEvent("creative_generate_success", { tool: slug, trial: !!data.trial });
     } catch {
       setMessage("Network error. Please try again.");
       setStatus("error");
     }
   };
 
-  const signInHref = () => {
-    const next = typeof window !== "undefined" ? window.location.pathname : "/";
-    return `/api/auth/google?next=${encodeURIComponent(next)}`;
+  const goSignIn = () => {
+    try {
+      if (original) sessionStorage.setItem(PENDING_KEY, JSON.stringify({ slug, img: original }));
+    } catch { /* ignore */ }
+    trackEvent("creative_signin_prompt", { tool: slug });
+    const next = window.location.pathname;
+    window.location.href = `/api/auth/google?next=${encodeURIComponent(next)}`;
   };
 
   const busy = status === "uploading" || status === "generating";
@@ -195,30 +219,31 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient }: Prop
         )}
       </div>
 
-      {/* Messages / gating */}
-      {needs === "signin" && (
+      {/* Free-trial note after a successful trial generation */}
+      {trialDone && status === "done" && (
         <Notice color="#4338CA" bg="#EEF2FF">
-          Sign in to generate — you get free daily credits. <a href={signInHref()} style={linkStyle}>Sign in with Google →</a>
-        </Notice>
-      )}
-      {needs === "upgrade" && (
-        <Notice color="#9333EA" bg="#FAF5FF">
-          This AI creative app needs a paid plan. <a href="/pricing" style={linkStyle}>See plans →</a>
+          🎁 That was your <strong>free trial</strong>. <button onClick={() => setShowPricing(true)} style={btnLinkStyle}>Upgrade for unlimited generations →</button>
         </Notice>
       )}
       {needs === "credits" && (
         <Notice color="#B45309" bg="#FFFBEB">
-          You&apos;re out of credits for today. <a href="/pricing" style={linkStyle}>Get more credits →</a>
+          You&apos;re out of credits for today. <button onClick={() => setShowPricing(true)} style={btnLinkStyle}>Get more credits →</button>
         </Notice>
       )}
       {status === "error" && message && (
         <Notice color="#B91C1C" bg="#FEF2F2">{message}</Notice>
       )}
+
+      {showPricing && (
+        <Suspense fallback={null}>
+          <PricingModal onClose={() => setShowPricing(false)} />
+        </Suspense>
+      )}
     </div>
   );
 }
 
-const linkStyle: React.CSSProperties = { fontWeight: 800, textDecoration: "underline", color: "inherit" };
+const btnLinkStyle: React.CSSProperties = { background: "none", border: "none", padding: 0, font: "inherit", fontWeight: 800, textDecoration: "underline", color: "inherit", cursor: "pointer" };
 
 function Notice({ children, color, bg }: { children: React.ReactNode; color: string; bg: string }) {
   return (
