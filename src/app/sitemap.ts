@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 import { POSTS } from "./blog/_data/posts";
 import { VARIANTS, PARENT_META } from "@/lib/landing-variants";
-import { NANO_BANANA_PAGES, NANO_BANANA_BASE } from "@/lib/nano-banana";
+import { CREATIVE_APPS, CREATIVE_BASE } from "@/lib/creative-apps";
 
 const BASE = "https://www.sjpt.in";
 
@@ -18,7 +18,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/batch-editor`,     lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/pricing`,          lastModified: now, changeFrequency: "monthly", priority: 0.75 },
     { url: `${BASE}/blog`,             lastModified: now, changeFrequency: "weekly",  priority: 0.8 },
-    { url: `${BASE}${NANO_BANANA_BASE}`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
+    { url: `${BASE}${CREATIVE_BASE}`,  lastModified: now, changeFrequency: "weekly", priority: 0.9 },
     { url: `${BASE}/privacy`,          lastModified: now, changeFrequency: "yearly",  priority: 0.3 },
     { url: `${BASE}/terms`,            lastModified: now, changeFrequency: "yearly",  priority: 0.3 },
   ];
@@ -37,12 +37,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  const nanoBananaPages: MetadataRoute.Sitemap = NANO_BANANA_PAGES.map((p) => ({
-    url: `${BASE}${NANO_BANANA_BASE}/${p.slug}`,
+  const creativePages: MetadataRoute.Sitemap = CREATIVE_APPS.map((a) => ({
+    url: `${BASE}${CREATIVE_BASE}/${a.slug}`,
     lastModified: now,
     changeFrequency: "weekly" as const,
     priority: 0.85,
   }));
 
-  return [...staticPages, ...variantPages, ...nanoBananaPages, ...blogPages];
+  return [...staticPages, ...variantPages, ...creativePages, ...blogPages];
 }

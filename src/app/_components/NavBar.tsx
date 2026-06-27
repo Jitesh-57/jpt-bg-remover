@@ -36,7 +36,7 @@ const TOOLS = [
       { icon: "🪄", label: "Remove BG (AI)",  desc: "AI-powered, higher quality",            href: "/remove-bg" },
       { icon: "🎯", label: "AI Headshot",    desc: "Professional headshots from any photo", href: "/ai-headshot" },
       { icon: "✍️", label: "AI Editor",     desc: "Edit images with text prompts",         href: "/ai-editor" },
-      { icon: "🍌", label: "Nano Banana",    desc: "Viral AI photo trends & prompts",       href: "/nano-banana" },
+      { icon: "✦", label: "Creative Apps",   desc: "Viral AI photo apps — saree, figurine…", href: "/creative" },
     ],
   },
   {

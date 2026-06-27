@@ -10,7 +10,7 @@ const AI_TOOLS = [
   { labelKey: "Remove Background",  href: "/remove-bg" },
   { labelKey: "AI Headshot",        href: "/ai-headshot" },
   { labelKey: "AI Editor",          href: "/ai-editor" },
-  { labelKey: "Nano Banana",        href: "/nano-banana" },
+  { labelKey: "Creative Apps",      href: "/creative" },
 ];
 
 const TOOLS = [
