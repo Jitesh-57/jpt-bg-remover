@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { CREATIVE_APPS, CREATIVE_BASE } from "@/lib/creative-apps";
+import { CREATIVE_APPS, CREATIVE_BASE, previewUrl } from "@/lib/creative-apps";
 
 const BASE = "https://www.sjpt.in";
 const URL = `${BASE}${CREATIVE_BASE}`;
@@ -43,9 +43,10 @@ export default function CreativeHub() {
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 20 }}>
               {CREATIVE_APPS.map((a) => (
                 <a key={a.slug} href={`${CREATIVE_BASE}/${a.slug}`} style={{ display: "block", textDecoration: "none", borderRadius: 18, overflow: "hidden", border: "1px solid #EAECF0", background: "#fff", boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
-                  <div style={{ aspectRatio: "16 / 10", background: `linear-gradient(135deg, ${a.gradient[0]}, ${a.gradient[1]})`, display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
-                    <span style={{ fontSize: 56 }}>{a.emoji}</span>
-                    <span style={{ position: "absolute", bottom: 10, right: 10, padding: "5px 12px", background: "rgba(255,255,255,0.92)", color: "#4338CA", fontSize: 11, fontWeight: 800, borderRadius: 8 }}>{a.badge}</span>
+                  <div style={{ aspectRatio: "16 / 10", background: `linear-gradient(135deg, ${a.gradient[0]}, ${a.gradient[1]})`, position: "relative" }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={previewUrl(a.slug, 800)} alt={`${a.h1} before and after example`} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                    <span style={{ position: "absolute", bottom: 10, right: 10, padding: "5px 12px", background: "rgba(255,255,255,0.92)", color: "#4338CA", fontSize: 11, fontWeight: 800, borderRadius: 8 }}>{a.emoji} {a.badge}</span>
                   </div>
                   <div style={{ padding: "18px 18px 20px" }}>
                     <div style={{ fontSize: 16, fontWeight: 800, color: "#111827", marginBottom: 6, lineHeight: 1.3 }}>{a.h1}</div>

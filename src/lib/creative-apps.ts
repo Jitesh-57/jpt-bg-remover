@@ -260,3 +260,16 @@ export const CREATIVE_APPS: CreativeApp[] = [
 ];
 
 export const getCreativeApp = (slug: string) => CREATIVE_APPS.find((a) => a.slug === slug);
+
+// Real AI-generated before/after previews hosted on the JPT PixelBin CDN.
+const PREVIEW_CDN = "https://cdn.pixelbin.io/v2/misty-band-06f445";
+// The first saved asset landed at the storage root rather than its own folder.
+const PREVIEW_PATH_OVERRIDE: Record<string, string> = {
+  "saree-photoshoot": "creative/result_0.png",
+};
+
+/** Build an optimised before/after preview image URL for an app (PixelBin resize transform). */
+export function previewUrl(slug: string, width = 1000): string {
+  const path = PREVIEW_PATH_OVERRIDE[slug] ?? `creative/${slug}/result_0.png`;
+  return `${PREVIEW_CDN}/t.resize(w:${width})/${path}`;
+}
