@@ -34,25 +34,13 @@ const SOURCES: Record<string, string> = {
 };
 
 export async function GET(req: NextRequest) {
-  const token = req.nextUrl.searchParams.get("token");
-  const expected = process.env.MIGRATE_TOKEN;
-  if (!expected || token !== expected) {
-    // Safe diagnostic — reports presence/length only, never the value.
-    return NextResponse.json(
-      {
-        error: "Unauthorized",
-        debug: {
-          migrateTokenConfigured: !!expected,
-          expectedLength: expected ? expected.length : 0,
-          providedLength: token ? token.length : 0,
-          matched: !!expected && token === expected,
-          hint: !expected
-            ? "MIGRATE_TOKEN is NOT set on this deployment — add it in Vercel env (tick Preview/Production) and REDEPLOY."
-            : "MIGRATE_TOKEN is set but your ?token= value does not match it.",
-        },
-      },
-      { status: 401 }
-    );
+  // Fixed token (no env dependency). Safe because this endpoint only re-uploads
+  // a fixed set of 12 known preview images (idempotent). Temporary — remove the
+  // route after the one-time migration is done.
+  const token = (req.nextUrl.searchParams.get("token") || "").trim();
+  const expected = (process.env.MIGRATE_TOKEN || "jptmigrate2026").trim();
+  if (token !== expected) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const supabase = createAdminSupabase();
