@@ -261,15 +261,11 @@ export const CREATIVE_APPS: CreativeApp[] = [
 
 export const getCreativeApp = (slug: string) => CREATIVE_APPS.find((a) => a.slug === slug);
 
-// Real AI-generated before/after previews hosted on the JPT PixelBin CDN.
-const PREVIEW_CDN = "https://cdn.pixelbin.io/v2/misty-band-06f445";
-// The first saved asset landed at the storage root rather than its own folder.
-const PREVIEW_PATH_OVERRIDE: Record<string, string> = {
-  "saree-photoshoot": "creative/result_0.png",
-};
+// Real AI-generated before/after previews served from Supabase Storage (the
+// "landing" public bucket). Populated once via scripts/migrate-previews-to-supabase.mjs.
+const SUPABASE_PUBLIC = "https://lwworujvfttxkrjfrgav.supabase.co/storage/v1/object/public/landing";
 
-/** Build an optimised before/after preview image URL for an app (PixelBin resize transform). */
-export function previewUrl(slug: string, width = 1000): string {
-  const path = PREVIEW_PATH_OVERRIDE[slug] ?? `creative/${slug}/result_0.png`;
-  return `${PREVIEW_CDN}/t.resize(w:${width})/${path}`;
+/** Public Supabase URL for an app's before/after preview image. */
+export function previewUrl(slug: string): string {
+  return `${SUPABASE_PUBLIC}/creative/${slug}.png`;
 }

@@ -45,7 +45,7 @@ export default function CreativeHub() {
                 <a key={a.slug} href={`${CREATIVE_BASE}/${a.slug}`} style={{ display: "block", textDecoration: "none", borderRadius: 18, overflow: "hidden", border: "1px solid #EAECF0", background: "#fff", boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
                   <div style={{ aspectRatio: "16 / 10", background: `linear-gradient(135deg, ${a.gradient[0]}, ${a.gradient[1]})`, position: "relative" }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={previewUrl(a.slug, 800)} alt={`${a.h1} before and after example`} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                    <img src={previewUrl(a.slug)} alt={`${a.h1} before and after example`} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                     <span style={{ position: "absolute", bottom: 10, right: 10, padding: "5px 12px", background: "rgba(255,255,255,0.92)", color: "#4338CA", fontSize: 11, fontWeight: 800, borderRadius: 8 }}>{a.emoji} {a.badge}</span>
                   </div>
                   <div style={{ padding: "18px 18px 20px" }}>

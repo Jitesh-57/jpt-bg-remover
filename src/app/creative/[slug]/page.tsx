@@ -41,8 +41,8 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
     applicationCategory: "MultimediaApplication",
     operatingSystem: "Web",
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-    screenshot: previewUrl(a.slug, 1100),
-    image: previewUrl(a.slug, 1100),
+    screenshot: previewUrl(a.slug),
+    image: previewUrl(a.slug),
     aggregateRating: { "@type": "AggregateRating", ratingValue: "4.8", reviewCount: "1200" },
     url,
   };
@@ -81,7 +81,7 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
             <figure style={{ margin: "0 auto 8px", maxWidth: 760 }}>
               <div style={{ borderRadius: 18, overflow: "hidden", boxShadow: "0 20px 60px rgba(0,0,0,0.16)", border: "1px solid #E5E7EB" }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={previewUrl(a.slug, 1100)} alt={`${a.h1}: real before and after AI example`} style={{ width: "100%", display: "block" }} />
+                <img src={previewUrl(a.slug)} alt={`${a.h1}: real before and after AI example`} style={{ width: "100%", display: "block" }} />
               </div>
               <figcaption style={{ fontSize: 12.5, color: "#9CA3AF", marginTop: 8 }}>Real AI example — actual output from this Creative App</figcaption>
             </figure>
@@ -136,7 +136,7 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
                 <a key={r.slug} href={`${CREATIVE_BASE}/${r.slug}`} style={{ textDecoration: "none" }}>
                   <div style={{ aspectRatio: "16 / 10", borderRadius: 14, overflow: "hidden", marginBottom: 8, background: `linear-gradient(135deg, ${r.gradient[0]}, ${r.gradient[1]})` }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={previewUrl(r.slug, 500)} alt={`${r.h1} example`} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                    <img src={previewUrl(r.slug)} alt={`${r.h1} example`} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                   </div>
                   <div style={{ fontSize: 13, fontWeight: 700, color: "#111827", textAlign: "center", lineHeight: 1.3 }}>{r.h1}</div>
                 </a>
