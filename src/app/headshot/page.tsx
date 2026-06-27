@@ -4,6 +4,7 @@ import "./headshot.css";
 import { useRef, useState, useCallback, useEffect } from "react";
 import PricingModal from "@/app/_components/PricingModal";
 import { WOMEN_STYLES, MEN_STYLES } from "@/lib/headshot-prompts";
+import { headshotThumbUrl } from "@/lib/headshot-thumbs";
 
 const PRESET_COLORS = [
   { label: "White", color: "#FFFFFF" },
@@ -95,6 +96,23 @@ export default function HeadshotPage() {
 
   const [step, setStep] = useState<Step>("upload");
   const [gender, setGender] = useState<Gender>("women");
+
+  // One-time: drive generation of any missing style thumbnails (idempotent, self-terminating).
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      for (let i = 0; i < 24 && !cancelled; i++) {
+        try {
+          const r = await fetch("/api/cron/headshot-thumbs?token=jptblog2026", { cache: "no-store" });
+          const d = (await r.json()) as { done?: boolean; remaining?: number };
+          if (d.done || (d.remaining ?? 0) <= 0) break;
+        } catch {
+          await new Promise((res) => setTimeout(res, 2000));
+        }
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
   const [sourcePreview, setSourcePreview] = useState<string | null>(null);
   const [sourceUrl, setSourceUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -591,7 +609,17 @@ export default function HeadshotPage() {
                   const sel = selectedStyleIds.includes(style.id);
                   return (
                     <button key={style.id} style={{ ...s.styleCard, ...(sel ? s.styleCardSel : {}) }} onClick={() => toggleStyle(style.id)}>
-                      <div style={s.styleNum}>{sel ? "✓" : style.id}</div>
+                      <div style={{ position: "relative", width: "100%", aspectRatio: "1 / 1", borderRadius: 8, overflow: "hidden", marginBottom: 8, background: "#EEF0F6" }}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={headshotThumbUrl(gender, style.id)}
+                          alt={`${style.name} headshot style`}
+                          loading="lazy"
+                          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                          onError={(e) => { (e.currentTarget as HTMLImageElement).style.visibility = "hidden"; }}
+                        />
+                        <div style={{ position: "absolute", top: 6, left: 6, width: 22, height: 22, borderRadius: "50%", background: sel ? "#6366F1" : "rgba(255,255,255,0.9)", color: sel ? "#fff" : "#6366F1", fontSize: 12, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center" }}>{sel ? "✓" : style.id}</div>
+                      </div>
                       <div style={s.styleName}>{style.name}</div>
                       <div style={s.styleTag}>{style.tag}</div>
                     </button>
