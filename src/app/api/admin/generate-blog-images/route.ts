@@ -21,8 +21,10 @@ export const maxDuration = 300;
 const BUCKET = "landing";
 
 export async function GET(req: NextRequest) {
+  // Fixed token (independent of MIGRATE_TOKEN). Safe: only generates a fixed set
+  // of blog images and uploads them to a known path. Temporary one-time endpoint.
   const token = (req.nextUrl.searchParams.get("token") || "").trim();
-  if (token !== (process.env.MIGRATE_TOKEN || "jptblog2026").trim()) {
+  if (token !== "jptblog2026") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
