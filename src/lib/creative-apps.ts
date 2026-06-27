@@ -261,6 +261,162 @@ export const CREATIVE_APPS: CreativeApp[] = [
 
 export const getCreativeApp = (slug: string) => CREATIVE_APPS.find((a) => a.slug === slug);
 
+export interface CreativeContent {
+  paragraphs: string[];
+  tipsTitle: string;
+  tips: string[];
+}
+
+// Human-written, unique long-form content per app (for SEO + genuinely useful reading).
+export const CREATIVE_CONTENT: Record<string, CreativeContent> = {
+  "saree-photoshoot": {
+    paragraphs: [
+      "There's a reason the vintage saree look keeps showing up on everyone's feed — it's dramatic, a little nostalgic, and it makes an ordinary selfie feel like a film poster. The catch is that getting that look normally means a stylist, a borrowed silk saree, good lighting and an actual photographer. This does it from a photo you already have on your phone.",
+      "Upload a clear selfie and the AI dresses you in a draped silk saree, adds the gold jewellery, and lights the whole thing with that warm, slightly faded cinematic glow people associate with 90s Bollywood. Your face stays yours — it's the wardrobe, lighting and mood that change. Try a few photos; a straight-on shot with soft light almost always wins.",
+    ],
+    tipsTitle: "Tips for the best saree portrait",
+    tips: [
+      "Use a front-facing photo where your whole face is visible — no sunglasses or heavy shadows.",
+      "Natural window light or a plain indoor background gives the AI the cleanest base to work from.",
+      "If the first result feels off, re-run it — small differences in the source photo change the drape and lighting a lot.",
+    ],
+  },
+  "3d-figurine": {
+    paragraphs: [
+      "The collectible-figurine trend blew up because it's weirdly satisfying to see yourself as a boxed action figure, base and all. Doing it by hand in 3D software is hours of work. Here it's one upload.",
+      "Give it a photo where your pose and outfit are visible — full body or waist-up both work — and the AI renders a glossy 1/7-scale figure standing on a round base, with a printed packaging box behind it like something off a shelf. The more your original photo reads as a clear, single subject, the cleaner the figure comes out.",
+    ],
+    tipsTitle: "Tips for a sharper figurine",
+    tips: [
+      "Full-body or upper-body photos work better than tight face crops — the figure needs your pose.",
+      "A plain background helps the AI separate you from the scene.",
+      "Bold, distinct outfits translate into a more convincing collectible.",
+    ],
+  },
+  "retro-bollywood": {
+    paragraphs: [
+      "Some photos just want to be a film still. The retro 90s Bollywood look — warm grade, soft grain, a little drama in the shadows — turns a normal picture into something that feels pulled from an old movie poster.",
+      "Drop in any portrait and the AI handles the colour grade, the grain and the lighting mood for you. It keeps you looking like you; it just changes the era. It works on solo shots, couples, even group photos, though close portraits get the most cinematic result.",
+    ],
+    tipsTitle: "Tips for the retro film look",
+    tips: [
+      "Portraits with a clear face and simple background grade the best.",
+      "Slightly warm or neutral lighting in the original helps the vintage tones land.",
+      "Re-run it a couple of times — each pass varies the grain and colour slightly.",
+    ],
+  },
+  "polaroid-photo": {
+    paragraphs: [
+      "Polaroids feel personal in a way phone photos don't — the white border, the flash, that slightly imperfect look. This recreates that feeling from a regular digital photo, no instant camera required.",
+      "Upload a photo and you get back a polaroid-style shot: soft flash, gentle blur, warm tones and the classic white frame. It's great for couple pics, friends, or a single portrait you want to feel a bit more candid and nostalgic.",
+    ],
+    tipsTitle: "Tips for a realistic polaroid",
+    tips: [
+      "Front-facing photos with a simple background look the most authentic.",
+      "Indoor or evening shots suit the flash-photography vibe best.",
+      "Keep the subject close — polaroids are at their best up close, not zoomed out.",
+    ],
+  },
+  "restore-old-photos": {
+    paragraphs: [
+      "Old family photos fade, scratch and blur — and the people in them are exactly who you don't want to lose. Restoring them by hand in Photoshop is fiddly and slow. This brings them back in seconds.",
+      "Scan or photograph the old print, upload it, and the AI repairs the damage, sharpens faces and recovers detail that the years wore away — while keeping everyone looking like themselves. Once it's restored you can run it through the upscaler too, so a tiny faded print becomes something you can actually print and frame.",
+    ],
+    tipsTitle: "Tips for the best restoration",
+    tips: [
+      "Lay the print flat and shoot it straight-on in good light, or use a flatbed scan.",
+      "Avoid glare — angle the photo away from direct lamps or windows.",
+      "Crop out the background so the AI focuses on the photo itself.",
+    ],
+  },
+  "couple-photoshoot": {
+    paragraphs: [
+      "Not every couple has the time (or budget) for a pre-wedding shoot, but everyone has a phone full of photos together. This turns one of those into a proper cinematic portrait.",
+      "Upload a clear photo of the two of you and the AI styles it like a pre-wedding shoot — coordinated outfits, golden-hour light, soft background blur. Both faces stay recognisably you. It's a fun way to make a save-the-date, an anniversary post, or just a frame for the wall.",
+    ],
+    tipsTitle: "Tips for couple portraits",
+    tips: [
+      "Pick a photo where both faces are clearly visible and well lit.",
+      "Avoid heavy shadows across either face.",
+      "Standing close together gives the AI the most natural composition to build on.",
+    ],
+  },
+  "professional-headshot": {
+    paragraphs: [
+      "A good headshot opens doors — recruiters, clients and connections all judge a profile photo in about a second. But booking a studio is expensive and slow, and most people end up using a cropped holiday photo instead.",
+      "Upload a clear selfie and the AI gives you a polished, studio-style headshot: business attire, clean neutral background, soft flattering light. It's designed to look like real photography, not an obvious filter — the kind of photo that fits straight onto LinkedIn, a resume, or a team page.",
+    ],
+    tipsTitle: "Tips for a headshot that lands",
+    tips: [
+      "Use a sharp, front-facing selfie taken at eye level.",
+      "Soft, even light (a window works great) beats harsh overhead light.",
+      "A neutral expression or a natural smile reads as the most professional.",
+    ],
+  },
+  "festival-photoshoot": {
+    paragraphs: [
+      "Festivals are when everyone wants a great photo — and when everyone's too busy celebrating to set one up. This lets you create a festive portrait after the fact, or even when you didn't dress up at all.",
+      "Upload a selfie and the AI adds the traditional outfit, the warm glow of diyas and lights, and a festive backdrop — Diwali, Navratri, or any occasion. Your face stays the same; the celebration gets added around you. Perfect for greetings, status updates and posts.",
+    ],
+    tipsTitle: "Tips for festive portraits",
+    tips: [
+      "A clear, well-lit selfie gives the most realistic styling.",
+      "Front-facing shots work better than profile angles.",
+      "Try a couple of runs to get the lighting and outfit you like most.",
+    ],
+  },
+  "pet-portrait": {
+    paragraphs: [
+      "Our pets deserve to be immortalised, and a royal oil-painting portrait of your dog in a crown is exactly as great as it sounds. It also makes a brilliant gift.",
+      "Upload a clear photo of your pet and the AI turns it into a regal renaissance-style portrait — crown, robe, dramatic lighting, the works — while keeping their actual face and features. Cats, dogs, whoever rules your house; it works on all of them.",
+    ],
+    tipsTitle: "Tips for the best pet portrait",
+    tips: [
+      "Use a photo where your pet is looking towards the camera.",
+      "Good light on the face matters more than anything else.",
+      "Avoid blurry action shots — a calm, still photo gives the cleanest result.",
+    ],
+  },
+  "anime-style": {
+    paragraphs: [
+      "Turning yourself into anime art used to mean commissioning an illustrator and waiting days. This does it instantly, and the results are genuinely lovely — soft colours, expressive features, that hand-drawn feel.",
+      "Upload a photo and the AI redraws it as an anime illustration while keeping you recognisable. It makes a great profile picture or wallpaper, and because you can download it full quality, you can upscale it for prints too.",
+    ],
+    tipsTitle: "Tips for the best anime art",
+    tips: [
+      "A clear portrait with a visible face converts the cleanest.",
+      "Simple backgrounds let the AI focus on you.",
+      "Re-run for different moods — lighting and colour shift each time.",
+    ],
+  },
+  "passport-photo": {
+    paragraphs: [
+      "Passport and ID photos are annoying: you need a plain background, even lighting and the right framing, and the photo booth never quite gets it. This makes a clean ID-style photo from a normal selfie.",
+      "Upload a front-facing photo and the AI swaps in a plain white background, evens out the lighting and frames you head-and-shoulders with a neutral expression. It's quick and free to try — just remember to check your specific country's size and head-position rules before you submit anything official.",
+    ],
+    tipsTitle: "Tips for a usable ID photo",
+    tips: [
+      "Face the camera straight-on with a neutral expression.",
+      "Make sure your whole head and the top of your shoulders are in frame.",
+      "Avoid hats, sunglasses and heavy shadows on the face.",
+    ],
+  },
+  "background-changer": {
+    paragraphs: [
+      "A distracting background can ruin an otherwise great photo — a messy room behind a product shot, a cluttered wall behind a portrait. Swapping it cleanly usually means careful masking. This does it in one step.",
+      "Upload your photo and the AI cuts you (or your product) out, keeps the fine edges like hair intact, and drops in a clean professional backdrop. Your subject, pose and outfit stay exactly the same — only what's behind them changes.",
+    ],
+    tipsTitle: "Tips for a clean background swap",
+    tips: [
+      "Good contrast between subject and original background helps the cutout.",
+      "Avoid motion blur on the edges of your subject.",
+      "Well-lit photos keep hair and fine details sharp after the swap.",
+    ],
+  },
+};
+
+export const getCreativeContent = (slug: string): CreativeContent | undefined => CREATIVE_CONTENT[slug];
+
 // Real AI-generated before/after previews served from Supabase Storage (the
 // "landing" public bucket). Populated once via scripts/migrate-previews-to-supabase.mjs.
 const SUPABASE_PUBLIC = "https://lwworujvfttxkrjfrgav.supabase.co/storage/v1/object/public/landing";
