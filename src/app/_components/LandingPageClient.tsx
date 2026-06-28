@@ -7,8 +7,8 @@ import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 // AI-generated landing images served from Supabase Storage (public "landing" bucket).
 const thumb = (file: string) => landingImg(file);
-// Single AI before/after showcase (raw selfie → edited result), resized for the web.
-const HERO_SHOWCASE = "https://cdn.pixelbin.io/v2/misty-band-06f445/t.resize(w:1300)/landing/hero-annotated/result_0.png";
+// Single AI before/after showcase (raw selfie → edited result), served from Supabase.
+const HERO_SHOWCASE = `${process.env.NEXT_PUBLIC_SUPABASE_URL || ""}/storage/v1/object/public/landing/hero-annotated.png`;
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
