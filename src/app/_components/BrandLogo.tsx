@@ -20,13 +20,20 @@ export default function BrandLogo({ height = 30, dark = false }: { height?: numb
     );
   }
 
+  // On dark surfaces, sit the logo on a light chip so a dark/blue mark stays visible.
+  const wrap: React.CSSProperties = dark
+    ? { background: "#fff", borderRadius: 10, padding: "5px 10px", display: "inline-flex", alignItems: "center", lineHeight: 0 }
+    : { display: "inline-flex", alignItems: "center", lineHeight: 0 };
+
   return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src={LOGO_URL}
-      alt="JPT AI"
-      style={{ height, width: "auto", display: "block", objectFit: "contain" }}
-      onError={() => setFailed(true)}
-    />
+    <span style={wrap}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={LOGO_URL}
+        alt="JPT AI"
+        style={{ height, width: "auto", display: "block", objectFit: "contain" }}
+        onError={() => setFailed(true)}
+      />
+    </span>
   );
 }

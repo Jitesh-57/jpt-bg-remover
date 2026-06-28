@@ -141,7 +141,7 @@ export default function NavBar() {
 
           {/* Brand */}
           <a href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none", marginRight: 8 }}>
-            <BrandLogo height={34} dark />
+            <BrandLogo height={38} dark />
           </a>
 
           {/* AI Tools Dropdown */}
