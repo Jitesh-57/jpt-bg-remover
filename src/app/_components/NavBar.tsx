@@ -2,7 +2,6 @@
 
 import { useEffect, useState, lazy, Suspense, useRef } from "react";
 import { usePathname } from "next/navigation";
-import BrandLogo from "./BrandLogo";
 import { createSupabaseClient } from "@/lib/supabase";
 import { trackSignUp } from "@/lib/analytics";
 
@@ -141,7 +140,8 @@ export default function NavBar() {
 
           {/* Brand */}
           <a href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none", marginRight: 8 }}>
-            <BrandLogo height={38} dark />
+            <span style={{ fontSize: 18, fontWeight: 900, color: "#6366F1" }}>✦</span>
+            <span style={{ fontSize: 16, fontWeight: 900, color: "#fff", letterSpacing: "-0.02em" }}>JPT AI</span>
           </a>
 
           {/* AI Tools Dropdown */}
