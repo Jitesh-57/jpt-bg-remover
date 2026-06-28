@@ -398,6 +398,9 @@ export default function LandingPageClient() {
           </div>
 
           {/* Hero showcase — AI before/after with prompt callouts */}
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginTop: 18, background: "#EEF2FF", color: "#4338CA", fontSize: 14, fontWeight: 800, padding: "7px 16px", borderRadius: 100, border: "1px solid rgba(99,102,241,0.2)" }}>
+            ✨ See what you can do with prompts
+          </div>
           <div style={s.heroShowcase}>
             <img src={HERO_SHOWCASE} alt="Before and after — raw selfie transformed by JPT AI with text prompts" style={s.heroShowcaseImg} loading="eager" />
 
