@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import BrandLogo from "./BrandLogo";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { LANGUAGES } from "@/lib/i18n/translations";
 
@@ -42,7 +41,8 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <a href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none", marginBottom: 16 }}>
-              <BrandLogo height={40} dark />
+              <span style={{ fontSize: 20, fontWeight: 900, color: "#6366F1" }}>✦</span>
+              <span style={{ fontSize: 18, fontWeight: 900, color: "#fff", letterSpacing: "-0.02em" }}>JPT AI</span>
             </a>
             <p style={{ fontSize: 14, lineHeight: 1.7, color: "#64748B", margin: "0 0 20px", maxWidth: 260 }}>
               {t.footerTagline}
