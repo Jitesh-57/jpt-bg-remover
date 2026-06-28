@@ -6,6 +6,7 @@ import Analytics from "./_components/Analytics";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 
 const BASE = "https://www.sjpt.in";
+const LOGO_URL = `${process.env.NEXT_PUBLIC_SUPABASE_URL || ""}/storage/v1/object/public/landing/logo.png`;
 
 export const metadata: Metadata = {
   title: {
@@ -15,6 +16,7 @@ export const metadata: Metadata = {
   description: "Free AI image editor online. Remove backgrounds in one click, upscale photos to 4K, generate AI backgrounds, and edit images with text prompts. No watermark, no software needed.",
   keywords: ["ai image editor free", "remove background free", "image upscaler free", "ai photo editor online", "background remover free"],
   metadataBase: new URL(BASE),
+  icons: { icon: LOGO_URL, shortcut: LOGO_URL, apple: LOGO_URL },
   alternates: {
     canonical: BASE,
     languages: {
@@ -37,11 +39,13 @@ export const metadata: Metadata = {
     title: "JPT AI — Free AI Image Editor Online",
     description: "Remove backgrounds, upscale photos to 4K, and edit images with AI. Free to start — no credit card required.",
     url: BASE,
+    images: [{ url: LOGO_URL }],
   },
   twitter: {
     card: "summary_large_image",
     title: "JPT AI — Free AI Image Editor Online",
     description: "Remove backgrounds, upscale photos, and edit images with AI. Free to start — no credit card required.",
+    images: [LOGO_URL],
   },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
   verification: { google: "oaUjZEOCATyjaE5OvAHr6gXTXGjt6wJnk436SYbf1O4" },
@@ -52,7 +56,7 @@ const organizationSchema = {
   "@type": "Organization",
   name: "JPT AI",
   url: BASE,
-  logo: `${BASE}/logo.png`,
+  logo: LOGO_URL,
   sameAs: ["https://twitter.com/jptai"],
   contactPoint: { "@type": "ContactPoint", email: "support@sjpt.in", contactType: "customer service" },
 };
