@@ -7,8 +7,8 @@ import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 // AI-generated landing images served from Supabase Storage (public "landing" bucket).
 const thumb = (file: string) => landingImg(file);
-const HERO_BEFORE = "https://cdn.pixelbin.io/v2/misty-band-06f445/original/landing/hero-before.jpg";
-const HERO_AFTER = "https://cdn.pixelbin.io/v2/misty-band-06f445/original/landing/hero-after.png";
+// Single AI before/after showcase (raw selfie → edited result), resized for the web.
+const HERO_SHOWCASE = "https://cdn.pixelbin.io/v2/misty-band-06f445/t.resize(w:1300)/landing/hero-annotated/result_0.png";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
@@ -397,20 +397,28 @@ export default function LandingPageClient() {
             ))}
           </div>
 
-          {/* Hero showcase — AI before/after */}
+          {/* Hero showcase — AI before/after with prompt callouts */}
           <div style={s.heroShowcase}>
-            <div style={{ position: "relative", width: "100%", borderRadius: 16, overflow: "hidden", display: "flex" }}>
-              <div style={{ position: "relative", flex: 1 }}>
-                <img src={HERO_BEFORE} alt="Before AI editing" style={{ ...s.heroShowcaseImg, borderRadius: 0 }} loading="eager" />
-                <div style={{ position: "absolute", bottom: 12, left: 12, background: "rgba(0,0,0,0.55)", color: "#fff", fontSize: 13, fontWeight: 700, padding: "4px 12px", borderRadius: 6, letterSpacing: 1 }}>BEFORE</div>
-              </div>
-              <div style={{ width: 3, background: "#fff", flexShrink: 0, zIndex: 2 }} />
-              <div style={{ position: "relative", flex: 1 }}>
-                <img src={HERO_AFTER} alt="After AI editing — sunny outdoor background" style={{ ...s.heroShowcaseImg, borderRadius: 0 }} loading="eager" />
-                <div style={{ position: "absolute", bottom: 12, right: 12, background: "rgba(0,0,0,0.55)", color: "#fff", fontSize: 13, fontWeight: 700, padding: "4px 12px", borderRadius: 6, letterSpacing: 1 }}>AFTER</div>
-              </div>
-            </div>
+            <img src={HERO_SHOWCASE} alt="Before and after — raw selfie transformed by JPT AI with text prompts" style={s.heroShowcaseImg} loading="eager" />
+
+            {/* BEFORE / AFTER labels */}
+            <div style={{ position: "absolute", bottom: 12, left: 12, background: "rgba(0,0,0,0.6)", color: "#fff", fontSize: 12, fontWeight: 800, padding: "4px 12px", borderRadius: 6, letterSpacing: 1 }}>BEFORE</div>
             <div style={s.heroShowcaseBadge}>✦ Real result from JPT AI</div>
+
+            {/* Prompt callout chips over the AFTER (right) half */}
+            {[
+              { top: "10%", label: "🌅 Background", prompt: "“golden sunset field”" },
+              { top: "44%", label: "👗 Outfit", prompt: "“elegant flowing dress”" },
+              { top: "76%", label: "✨ Style", prompt: "“cinematic warm glow”" },
+            ].map((c) => (
+              <div key={c.label} style={{ position: "absolute", top: c.top, right: "3%", display: "flex", alignItems: "center", gap: 6, maxWidth: "44%" }}>
+                <div style={{ background: "rgba(255,255,255,0.95)", borderRadius: 10, padding: "6px 10px", boxShadow: "0 4px 14px rgba(0,0,0,0.25)", border: "1px solid rgba(99,102,241,0.3)" }}>
+                  <div style={{ fontSize: 11, fontWeight: 800, color: "#4338CA", lineHeight: 1.2 }}>{c.label}</div>
+                  <div style={{ fontSize: 11, color: "#6B7280", lineHeight: 1.2, whiteSpace: "nowrap" as const }}>{c.prompt}</div>
+                </div>
+                <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#6366F1", flexShrink: 0, boxShadow: "0 0 0 3px rgba(99,102,241,0.3)" }} />
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -782,7 +790,7 @@ const s: Record<string, React.CSSProperties> = {
   featureDesc: { margin: 0, fontSize: 14, color: "#555", lineHeight: 1.65 },
 
   // Hero showcase
-  heroShowcase: { position: "relative", width: "100%", maxWidth: 720, marginTop: 16, borderRadius: 20, overflow: "hidden", boxShadow: "0 20px 60px rgba(99,102,241,0.25)", border: "1px solid rgba(99,102,241,0.15)" },
+  heroShowcase: { position: "relative", width: "100%", maxWidth: 880, marginTop: 16, borderRadius: 20, overflow: "hidden", boxShadow: "0 20px 60px rgba(99,102,241,0.25)", border: "1px solid rgba(99,102,241,0.15)" },
   heroShowcaseImg: { width: "100%", display: "block" },
   heroShowcaseBadge: { position: "absolute", bottom: 14, right: 14, background: "rgba(15,23,42,0.85)", color: "#fff", fontSize: 12, fontWeight: 700, padding: "6px 12px", borderRadius: 100, backdropFilter: "blur(4px)" },
 
