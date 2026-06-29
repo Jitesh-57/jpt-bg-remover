@@ -653,384 +653,448 @@ export const CREATIVE_CONTENT: Record<string, CreativeContent> = {
     paragraphs: [
       "There's a reason the vintage saree look keeps showing up on everyone's feed — it's dramatic, a little nostalgic, and it makes an ordinary selfie feel like a film poster. The catch is that getting that look normally means a stylist, a borrowed silk saree, good lighting and an actual photographer. This does it from a photo you already have on your phone.",
       "Upload a clear selfie and the AI dresses you in a draped silk saree, adds the gold jewellery, and lights the whole thing with that warm, slightly faded cinematic glow people associate with 90s Bollywood. Your face stays yours — it's the wardrobe, lighting and mood that change. Try a few photos; a straight-on shot with soft light almost always wins.",
+      "Searches for 'ai saree photoshoot near me' and 'vintage saree portrait maker' have spiked as people look for a faster, cheaper alternative to a studio booking — this free ai saree photoshoot tool is built for exactly that. It's especially popular before festivals and weddings, when everyone wants a fresh profile picture but nobody has time for a real photoshoot. Your free trial covers your first generation here; after that it's a small credit cost per image.",
     ],
     tipsTitle: "Tips for the best saree portrait",
     tips: [
       "Use a front-facing photo where your whole face is visible — no sunglasses or heavy shadows.",
       "Natural window light or a plain indoor background gives the AI the cleanest base to work from.",
       "If the first result feels off, re-run it — small differences in the source photo change the drape and lighting a lot.",
+      "Try it once with a solo photo, then again with a friend or partner for a matching set.",
     ],
   },
   "3d-figurine": {
     paragraphs: [
       "The collectible-figurine trend blew up because it's weirdly satisfying to see yourself as a boxed action figure, base and all. Doing it by hand in 3D software is hours of work. Here it's one upload.",
       "Give it a photo where your pose and outfit are visible — full body or waist-up both work — and the AI renders a glossy 1/7-scale figure standing on a round base, with a printed packaging box behind it like something off a shelf. The more your original photo reads as a clear, single subject, the cleaner the figure comes out.",
+      "This is one of the most searched 'photo to 3d figure ai' trends right now, alongside the similar Lego minifigure and Barbie box looks — if you like this one, try those too as part of your 5 free trials. People use the result as a profile picture, a group-chat joke, or just to see what they'd look like as a real action figure.",
     ],
     tipsTitle: "Tips for a sharper figurine",
     tips: [
       "Full-body or upper-body photos work better than tight face crops — the figure needs your pose.",
       "A plain background helps the AI separate you from the scene.",
       "Bold, distinct outfits translate into a more convincing collectible.",
+      "Try a hobby-related pose or prop in the original photo — it often carries through to the figure.",
     ],
   },
   "retro-bollywood": {
     paragraphs: [
       "Some photos just want to be a film still. The retro 90s Bollywood look — warm grade, soft grain, a little drama in the shadows — turns a normal picture into something that feels pulled from an old movie poster.",
       "Drop in any portrait and the AI handles the colour grade, the grain and the lighting mood for you. It keeps you looking like you; it just changes the era. It works on solo shots, couples, even group photos, though close portraits get the most cinematic result.",
+      "This retro 90s Bollywood photo editor is a free online alternative to manually grading a photo in Lightroom or Photoshop — no presets to buy, no editing skills needed. It's a favourite for festival posts, anniversaries, and just giving an ordinary photo a nostalgic, film-poster mood.",
     ],
     tipsTitle: "Tips for the retro film look",
     tips: [
       "Portraits with a clear face and simple background grade the best.",
       "Slightly warm or neutral lighting in the original helps the vintage tones land.",
       "Re-run it a couple of times — each pass varies the grain and colour slightly.",
+      "Group photos work too — the vintage grade tends to flatter everyone in frame evenly.",
     ],
   },
   "polaroid-photo": {
     paragraphs: [
       "Polaroids feel personal in a way phone photos don't — the white border, the flash, that slightly imperfect look. This recreates that feeling from a regular digital photo, no instant camera required.",
       "Upload a photo and you get back a polaroid-style shot: soft flash, gentle blur, warm tones and the classic white frame. It's great for couple pics, friends, or a single portrait you want to feel a bit more candid and nostalgic.",
+      "It's a popular pick for anyone searching 'retro polaroid selfie ai' or 'vintage polaroid maker online' who wants the analogue look without buying actual film. Use it for a scrapbook page, a printed photo wall, or just to make a regular selfie feel like a captured moment instead of a posed shot.",
     ],
     tipsTitle: "Tips for a realistic polaroid",
     tips: [
       "Front-facing photos with a simple background look the most authentic.",
       "Indoor or evening shots suit the flash-photography vibe best.",
       "Keep the subject close — polaroids are at their best up close, not zoomed out.",
+      "Make a few from the same day out — a little polaroid set looks great printed together.",
     ],
   },
   "restore-old-photos": {
     paragraphs: [
       "Old family photos fade, scratch and blur — and the people in them are exactly who you don't want to lose. Restoring them by hand in Photoshop is fiddly and slow. This brings them back in seconds.",
       "Scan or photograph the old print, upload it, and the AI repairs the damage, sharpens faces and recovers detail that the years wore away — while keeping everyone looking like themselves. Once it's restored you can run it through the upscaler too, so a tiny faded print becomes something you can actually print and frame.",
+      "People searching 'restore old photos free' and 'ai photo restoration online' are usually trying to save a family heirloom before it degrades further — this tool handles scratches, fading, water damage and soft focus in one pass, free to try, with no software to install and no Photoshop skill required.",
     ],
     tipsTitle: "Tips for the best restoration",
     tips: [
       "Lay the print flat and shoot it straight-on in good light, or use a flatbed scan.",
       "Avoid glare — angle the photo away from direct lamps or windows.",
       "Crop out the background so the AI focuses on the photo itself.",
+      "Restore first, then upscale — fixing damage before enlarging gives a cleaner final print.",
     ],
   },
   "couple-photoshoot": {
     paragraphs: [
       "Not every couple has the time (or budget) for a pre-wedding shoot, but everyone has a phone full of photos together. This turns one of those into a proper cinematic portrait.",
       "Upload a clear photo of the two of you and the AI styles it like a pre-wedding shoot — coordinated outfits, golden-hour light, soft background blur. Both faces stay recognisably you. It's a fun way to make a save-the-date, an anniversary post, or just a frame for the wall.",
+      "It's the free alternative to a paid 'ai couple photoshoot' or 'pre wedding photo ai' app — no booking, no studio, just a photo you already have. Couples use it for engagement announcements, anniversary posts, or to pair with our Wedding Invitation Photo Maker for a matching invite design.",
     ],
     tipsTitle: "Tips for couple portraits",
     tips: [
       "Pick a photo where both faces are clearly visible and well lit.",
       "Avoid heavy shadows across either face.",
       "Standing close together gives the AI the most natural composition to build on.",
+      "Try the same photo through the Wedding Invitation Photo Maker too for a matching set.",
     ],
   },
   "professional-headshot": {
     paragraphs: [
       "A good headshot opens doors — recruiters, clients and connections all judge a profile photo in about a second. But booking a studio is expensive and slow, and most people end up using a cropped holiday photo instead.",
       "Upload a clear selfie and the AI gives you a polished, studio-style headshot: business attire, clean neutral background, soft flattering light. It's designed to look like real photography, not an obvious filter — the kind of photo that fits straight onto LinkedIn, a resume, or a team page.",
+      "If you've searched 'ai professional headshot' or 'linkedin headshot from selfie free,' this is built for exactly that — LinkedIn profiles with a real headshot get significantly more views and connection requests than ones without. It's a faster, cheaper alternative to booking a photographer, and your first generation is covered by a free trial.",
     ],
     tipsTitle: "Tips for a headshot that lands",
     tips: [
       "Use a sharp, front-facing selfie taken at eye level.",
       "Soft, even light (a window works great) beats harsh overhead light.",
       "A neutral expression or a natural smile reads as the most professional.",
+      "Generate a couple of versions and pick the one that looks most like a normal day at work, not a costume.",
     ],
   },
   "festival-photoshoot": {
     paragraphs: [
       "Festivals are when everyone wants a great photo — and when everyone's too busy celebrating to set one up. This lets you create a festive portrait after the fact, or even when you didn't dress up at all.",
       "Upload a selfie and the AI adds the traditional outfit, the warm glow of diyas and lights, and a festive backdrop — Diwali, Navratri, or any occasion. Your face stays the same; the celebration gets added around you. Perfect for greetings, status updates and posts.",
+      "Searches for 'ai diwali photo maker' and 'navratri photoshoot ai free' surge every festival season, as people want a fresh festive picture without the rush of last-minute shopping and styling. This free ai festival photoshoot tool covers Diwali, Navratri, Eid and other celebrations from the same selfie.",
     ],
     tipsTitle: "Tips for festive portraits",
     tips: [
       "A clear, well-lit selfie gives the most realistic styling.",
       "Front-facing shots work better than profile angles.",
       "Try a couple of runs to get the lighting and outfit you like most.",
+      "Use the same selfie across a few festivals to build a set of greeting-card images.",
     ],
   },
   "pet-portrait": {
     paragraphs: [
       "Our pets deserve to be immortalised, and a royal oil-painting portrait of your dog in a crown is exactly as great as it sounds. It also makes a brilliant gift.",
       "Upload a clear photo of your pet and the AI turns it into a regal renaissance-style portrait — crown, robe, dramatic lighting, the works — while keeping their actual face and features. Cats, dogs, whoever rules your house; it works on all of them.",
+      "This ai pet portrait maker is one of the most-shared pet trends online, and it's a genuinely good gift idea — print it, frame it, or put it on a mug. It pairs naturally with the Renaissance Portrait Maker if you want a matching human-and-pet pair.",
     ],
     tipsTitle: "Tips for the best pet portrait",
     tips: [
       "Use a photo where your pet is looking towards the camera.",
       "Good light on the face matters more than anything else.",
       "Avoid blurry action shots — a calm, still photo gives the cleanest result.",
+      "Upscale the result afterward if you're planning to print it.",
     ],
   },
   "anime-style": {
     paragraphs: [
       "Turning yourself into anime art used to mean commissioning an illustrator and waiting days. This does it instantly, and the results are genuinely lovely — soft colours, expressive features, that hand-drawn feel.",
       "Upload a photo and the AI redraws it as an anime illustration while keeping you recognisable. It makes a great profile picture or wallpaper, and because you can download it full quality, you can upscale it for prints too.",
+      "If you've searched 'photo to anime ai free' or 'turn photo into anime,' this is the same idea you've seen go viral, minus the watermark and minus the app download. It's a different flavour from our Ghibli Style Converter — try both to see which animation style suits your photo.",
     ],
     tipsTitle: "Tips for the best anime art",
     tips: [
       "A clear portrait with a visible face converts the cleanest.",
       "Simple backgrounds let the AI focus on you.",
       "Re-run for different moods — lighting and colour shift each time.",
+      "Compare it against the Ghibli Style Converter on the same photo to pick your favourite look.",
     ],
   },
   "passport-photo": {
     paragraphs: [
       "Passport and ID photos are annoying: you need a plain background, even lighting and the right framing, and the photo booth never quite gets it. This makes a clean ID-style photo from a normal selfie.",
       "Upload a front-facing photo and the AI swaps in a plain white background, evens out the lighting and frames you head-and-shoulders with a neutral expression. It's quick and free to try — just remember to check your specific country's size and head-position rules before you submit anything official.",
+      "Anyone searching 'passport photo maker free' or 'white background id photo ai' is usually trying to skip a trip to a photo booth or studio. This works for passport, visa, PAN card, government ID, and most application photos that need a plain white background — at no cost for your first try.",
     ],
     tipsTitle: "Tips for a usable ID photo",
     tips: [
       "Face the camera straight-on with a neutral expression.",
       "Make sure your whole head and the top of your shoulders are in frame.",
       "Avoid hats, sunglasses and heavy shadows on the face.",
+      "After downloading, double-check your country's exact pixel-size requirement before printing or uploading.",
     ],
   },
   "background-changer": {
     paragraphs: [
       "A distracting background can ruin an otherwise great photo — a messy room behind a product shot, a cluttered wall behind a portrait. Swapping it cleanly usually means careful masking. This does it in one step.",
       "Upload your photo and the AI cuts you (or your product) out, keeps the fine edges like hair intact, and drops in a clean professional backdrop. Your subject, pose and outfit stay exactly the same — only what's behind them changes.",
+      "This free ai background changer covers most of what people search for under 'replace photo background ai free' — portraits, product shots, and casual photos that need a more professional setting. For e-commerce listings specifically, our dedicated Background Remover gives a transparent-PNG cutout you can place anywhere yourself.",
     ],
     tipsTitle: "Tips for a clean background swap",
     tips: [
       "Good contrast between subject and original background helps the cutout.",
       "Avoid motion blur on the edges of your subject.",
       "Well-lit photos keep hair and fine details sharp after the swap.",
+      "For product photos specifically, try the dedicated Background Remover for a transparent-PNG cutout instead.",
     ],
   },
   "linkedin-banner": {
     paragraphs: [
       "Most LinkedIn profiles use the default banner, which is a missed chance — a good cover image is free real estate that makes a profile look intentional. Hiring a designer for one image rarely happens.",
       "Upload a photo or just a colour you like, and the AI generates a clean, corporate-toned banner with the negative space a real banner needs for your headline or branding. It's built to look professional, not like a stock-photo cliché.",
+      "If you've searched 'linkedin cover photo generator free' or 'linkedin background image ai,' this solves it without needing Canva or a designer. Pair it with our AI Corporate Avatar or AI Professional Headshot for a fully polished LinkedIn profile in one sitting.",
     ],
     tipsTitle: "Tips for a banner that looks intentional",
     tips: [
       "Leave the left or right third clear in your mind — that's where LinkedIn's profile photo overlaps the banner.",
       "Try a couple of generations and pick the one with the calmest, least busy composition.",
       "Stick to one or two brand colours across your profile photo and banner for a cohesive look.",
+      "Update your profile photo with our AI Headshot or Corporate Avatar tool at the same time for a consistent look.",
     ],
   },
   "christmas-photo": {
     paragraphs: [
       "Getting an actual festive photoshoot done before the holidays rarely happens — everyone's busy, and the good light is gone by 5pm. This gives you the cozy Christmas portrait without the scheduling.",
       "Upload a selfie and the AI adds the string lights, the tree, the warm sweater and that golden bokeh glow people associate with holiday cards. It's a fast way to get a genuinely warm-looking photo for cards or socials.",
+      "Every December, searches for 'ai christmas photo maker' and 'holiday photo editor ai free' spike as people scramble for a card-worthy picture without a studio session. Generate one for each family member and you've got a coordinated set of holiday cards without anyone leaving the house.",
     ],
     tipsTitle: "Tips for the coziest Christmas photo",
     tips: [
       "A front-facing photo with good lighting on the face works best.",
       "Indoor photos blend most naturally with the warm festive backdrop.",
       "Try it on a few different photos — the lighting and decor vary each generation.",
+      "Generate one per family member for a matching set of holiday card photos.",
     ],
   },
   "baby-photoshoot": {
     paragraphs: [
       "Professional newborn and baby photography is expensive, and babies are famously uncooperative with schedules. This gets you the soft studio look from a photo you already took at home.",
       "Upload a clear photo and the AI applies the gentle pastel tones, diffused light and clean backdrop that studio baby photography is known for — while keeping your baby looking exactly like your baby.",
+      "Parents searching 'baby photo editor ai free' or 'newborn portrait ai' usually want one good photo for a birth announcement or nursery print without booking a professional session in the chaotic first weeks. This gets you there free, from a phone photo you already have.",
     ],
     tipsTitle: "Tips for the sweetest baby portrait",
     tips: [
       "Use a calm, well-lit photo — sleeping or content expressions work beautifully.",
       "A simple background in the original photo helps the AI build a cleaner studio backdrop.",
       "Avoid heavy shadows across the face for the gentlest result.",
+      "Great for birth announcements — generate it early and you'll have a print-ready photo on hand.",
     ],
   },
   "graduation-photo": {
     paragraphs: [
       "Not everyone gets the official cap-and-gown shot — ceremonies get cancelled, photographers run out of time, or you just want another version. This recreates that proud moment from any selfie.",
       "Upload a clear photo and the AI adds the cap, gown, diploma and a ceremony-style backdrop, keeping your face exactly as it is. It's become a popular way to mark the milestone even without the formal event photo.",
+      "Searches for 'cap and gown photo ai free' tend to come from graduates whose official photographer photos haven't arrived yet, or who simply want another version for social media. It's free to try, instant, and works for any degree level or ceremony you didn't get an official photo from.",
     ],
     tipsTitle: "Tips for a convincing graduation portrait",
     tips: [
       "A front-facing, well-lit selfie gives the cleanest result.",
       "Simple backgrounds in the original photo help the ceremony backdrop blend naturally.",
       "Re-run it if the first gown colour or pose doesn't feel right — each pass varies slightly.",
+      "Share it the same day as your ceremony — it's a popular way to post before official photos arrive.",
     ],
   },
   "gym-transformation": {
     paragraphs: [
       "Fitness motivation content is everywhere, and a stylised 'future you' photo is a fun, harmless way to visualize a goal — not a medical prediction, just an energising piece of motivation art.",
       "Upload a photo and the AI applies gym lighting, workout styling and an athletic mood while keeping your actual face and identity. People use it for motivation boards, before-you-start posts, or just for fun.",
+      "This ai gym transformation photo tool is popular with anyone searching 'fitness physique ai free' or 'ai muscle photo generator' for motivation content, vision boards, or a fun progress-goal image to pin up — not as a guarantee of real results.",
     ],
     tipsTitle: "Tips for the best motivational result",
     tips: [
       "A clear, well-lit photo gives the most natural gym-styled result.",
       "Remember this is stylised motivation art, not a fitness or medical forecast.",
       "Pair it with a real workout plan — the photo is the spark, not the substitute.",
+      "Save it as a lock-screen or vision-board image for daily motivation.",
     ],
   },
   "ghibli-style": {
     paragraphs: [
       "That soft, hand-painted Japanese animation look has a huge following, and turning a real photo into it used to mean a skilled illustrator and a long wait. This does it from any photo, instantly.",
       "Upload a photo and the AI repaints it with watercolour backgrounds, warm nostalgic light and gently simplified, expressive features — while keeping you recognisable. Great for profile pictures, prints or just admiring.",
+      "This is one of the most-searched 'studio ghibli ai filter free' and 'photo to ghibli style ai' tools online, riding the wave of the broader hand-painted-anime trend. Compare it side by side with our Anime Style Converter — the moods are different even though both start from the same kind of photo.",
     ],
     tipsTitle: "Tips for the dreamiest result",
     tips: [
       "Photos with some background scenery (not just a tight face crop) translate best into the painterly style.",
       "Soft natural light in the original photo carries through beautifully.",
       "Re-run for variation — the brushwork and palette shift a little each time.",
+      "Compare it against the Anime Style Converter on the same photo to see which mood you prefer.",
     ],
   },
   "y2k-aesthetic": {
     paragraphs: [
       "The early-2000s digital-camera look — flash, grain, saturated colour — is back everywhere on social feeds. Recreating it convincingly from a modern photo takes some specific editing knowledge. This does it in one click.",
       "Upload a selfie and the AI applies that glossy flash-lit, slightly grainy Y2K look while keeping your face the same. It's an easy way to make a normal photo feel like it was pulled from a 2003 digital camera roll.",
+      "If you've searched 'y2k photo editor free' or '2000s style photo ai,' this nails the specific look — not just a generic vintage filter, but the exact flash-and-grain combination people associate with early-2000s digicams and disposable cameras.",
     ],
     tipsTitle: "Tips for an authentic Y2K look",
     tips: [
       "Close-up selfies with a plain background give the most convincing flash-photo feel.",
       "Bold, simple outfits read better in the saturated Y2K colour grade.",
       "Try a few runs — the grain and flash intensity vary each time.",
+      "Pair it with a 90s Yearbook Photo for a full throwback social media post.",
     ],
   },
   "wedding-invite-photo": {
     paragraphs: [
       "A proper engagement shoot isn't always in the budget or the calendar, but the invitation still needs a great photo of the two of you. This builds that elegant portrait from a photo you already have together.",
       "Upload a clear couple photo and the AI styles it with refined attire, soft romantic light and a tasteful backdrop with room for your names and date — ready to drop straight into invitation design software.",
+      "Couples searching 'wedding invite photo ai free' or 'save the date photo ai' are usually trying to avoid the cost and scheduling of a full engagement shoot just for one invitation photo. This gets a usable result from a photo you already have together — pair it with our AI Couple Photoshoot for more options from the same upload.",
     ],
     tipsTitle: "Tips for an invite-ready portrait",
     tips: [
       "Choose a photo where both faces are clearly visible and evenly lit.",
       "Standing close together with simple backgrounds gives the cleanest, most elegant composition.",
       "Generate a couple of versions and pick the one with the calmest backdrop for text overlay.",
+      "Also try the AI Couple Photoshoot tool on the same photo for a more casual cinematic option.",
     ],
   },
   "corporate-avatar": {
     paragraphs: [
       "Work chat apps all want a profile picture, and most people end up using a cropped vacation photo or no photo at all. This gives you a clean, simple avatar built specifically for that small circular frame.",
       "Upload a selfie and the AI creates a friendly, professional-looking icon with business-casual styling and a calm solid background — designed to look good even at the tiny size Slack and Teams display it.",
+      "It's built for the 'professional profile picture ai free' search — a step up from a cropped vacation photo, a step below booking a headshot session. Pair it with our AI LinkedIn Banner Maker if you're refreshing your whole professional online presence at once.",
     ],
     tipsTitle: "Tips for an avatar that reads well small",
     tips: [
       "Use a close, front-facing selfie — avatars get cropped tight and small.",
       "Good even lighting matters more than background detail here.",
       "A relaxed, approachable expression works best for a profile icon people see daily.",
+      "Update your LinkedIn banner at the same time with our AI LinkedIn Banner Maker for a consistent look.",
     ],
   },
   "old-money-aesthetic": {
     paragraphs: [
       "The 'old money' quiet-luxury aesthetic — tailored neutrals, soft light, understated elegance — is one of the most consistent viral photo trends. Building that look usually means a wardrobe and a location most people don't have.",
       "Upload a photo and the AI restyles it with that timeless, tailored, soft-lit mood while keeping you exactly recognisable. It works well for profile photos, aesthetic social posts, or just seeing yourself in a different mood.",
+      "Searches for 'old money aesthetic photo ai' and 'quiet luxury photo filter' have been steadily climbing as the style trend holds on social feeds. It pairs naturally with our Renaissance Portrait Maker for two very different takes on a timeless, elegant photo from the same upload.",
     ],
     tipsTitle: "Tips for the most timeless result",
     tips: [
       "A calm, well-lit portrait gives the AI the cleanest base for the understated styling.",
       "Simple original backgrounds blend best with the elegant backdrop.",
       "Re-run a couple of times — the tone and styling shift subtly with each generation.",
+      "Try the Renaissance Portrait Maker on the same photo for a more dramatic, painterly alternative.",
     ],
   },
   "barbie-box": {
     paragraphs: [
       "The doll-box trend took over feeds for a reason — there's something irresistibly funny about seeing yourself as a collectible toy, complete with branded packaging and tiny printed accessories.",
       "Upload a clear photo and the AI packages you up in glossy pink retail-box styling, keeping your likeness intact while building the toy presentation around you. Great for a laugh, a profile picture, or just joining the trend.",
+      "If you've seen the 'ai barbie box photo' trend everywhere and searched for a free version, this is it — no watermark, no app download. It sits alongside our 3D Figurine Maker and Lego Minifigure Maker as one of three doll/toy styles worth comparing on the same photo.",
     ],
     tipsTitle: "Tips for the best doll-box photo",
     tips: [
       "A clear, front-facing or half-body photo gives the cleanest box composition.",
       "Simple backgrounds in the original photo help the AI focus on packaging you, not the scene.",
       "Bold, distinct outfits read better on the printed box art.",
+      "Try the 3D Figurine Maker and Lego Minifigure Maker on the same photo to compare all three toy styles.",
     ],
   },
   "ai-baby-predictor": {
     paragraphs: [
       "Every couple eventually wonders what their kids might look like, and this is the fun, harmless way to find out — or at least get an entertaining guess. It's become one of the most shared AI photo trends among couples.",
       "Upload a clear photo of both of you and the AI blends your features into a sweet illustrated baby portrait. It's playful entertainment, not a genetics tool — think of it as a fun keepsake rather than a forecast.",
+      "This ai baby predictor is one of the most-searched couple trends, with people looking up 'what will my baby look like ai' or 'ai baby face generator free' for fun before or during pregnancy, or just as a what-if with a partner — purely for entertainment, free to try.",
     ],
     tipsTitle: "Tips for the sweetest result",
     tips: [
       "Use a photo where both faces are clearly visible and well lit.",
       "Front-facing shots work better than angled or side profiles.",
       "Re-run it a few times — each pass blends the features a little differently.",
+      "Save a few different versions — it's a fun keepsake to look back on later.",
     ],
   },
   "lego-minifigure": {
     paragraphs: [
       "Building a custom Lego figure of yourself by hand takes specialised 3D skills most people don't have. This gets the same charming brick-toy effect from a single photo.",
       "Upload a photo and the AI turns you into a glossy, blocky minifigure — complete with your outfit's colours — and drops it into toy packaging for that shelf-ready look. A fun gift idea or just a profile picture upgrade.",
+      "If you've searched 'photo to lego figure ai' or 'ai lego character maker,' this is the free version of that trend, no watermark on the result. Try the 3D Figurine Maker and Barbie Box Photo Maker on the same upload to see all three toy-collectible styles side by side.",
     ],
     tipsTitle: "Tips for the best minifigure",
     tips: [
       "A clear photo showing your outfit and pose helps the AI build a more recognisable toy version.",
       "Bold, simple colours in your clothing translate best into the brick-toy style.",
       "Full-body or waist-up shots work better than tight face crops.",
+      "Compare it with the 3D Figurine Maker and Barbie Box Photo Maker for three different toy takes on the same photo.",
     ],
   },
   "pixar-avatar": {
     paragraphs: [
       "That polished 3D animated-movie look — big expressive eyes, soft cinematic lighting — usually takes a studio pipeline to create. This gets you there from a single selfie.",
       "Upload a photo and the AI redraws you as a stylised 3D character, keeping your likeness recognisable while giving you that warm, rounded animated-film quality. Great as an avatar, profile picture, or just to see yourself animated.",
+      "Searches for 'photo to pixar character ai' and '3d cartoon avatar generator free' have grown alongside the broader AI-avatar trend — this gives you the polished, big-eyed animated-movie look without a paid app or subscription.",
     ],
     tipsTitle: "Tips for the best 3D avatar",
     tips: [
       "A clear, front-facing selfie with good lighting converts the most accurately.",
       "Simple backgrounds let the AI focus on stylising your features.",
       "Try a few runs — the exact styling shifts slightly each time.",
+      "Use it as a matching avatar across all your social profiles for a consistent look.",
     ],
   },
   "renaissance-portrait": {
     paragraphs: [
       "Classic oil-painting portraits have a timeless gravity that modern photos don't — the dramatic light, the rich colour, the sense of history. Commissioning a real painted portrait costs a fortune and takes months. This takes seconds.",
       "Upload a selfie and the AI repaints you with the dramatic chiaroscuro lighting and ornate styling of a Renaissance masterpiece, while keeping your face recognisable beneath the brushwork. A striking print, a unique gift, or just a fun transformation.",
+      "Anyone searching 'photo to oil painting ai free' or 'classic painting photo generator' usually wants exactly this — a museum-worthy portrait without commissioning a real painter. It also works beautifully on pets; try our AI Pet Portrait Maker for a matching set.",
     ],
     tipsTitle: "Tips for the most striking portrait",
     tips: [
       "A clear, well-lit front-facing photo gives the painting the strongest likeness to work from.",
       "Simple original backgrounds blend more naturally into the dark museum-style backdrop.",
       "Pair the result with our free upscaler if you want a sharper, print-ready version.",
+      "Try the AI Pet Portrait Maker on your pet for a matching set of framed paintings.",
     ],
   },
   "age-progression": {
     paragraphs: [
       "Curiosity about your future self is universal — and a stylised preview is a fun way to satisfy it without waiting decades. This is illustrative entertainment, not a scientific forecast, but it's a surprisingly fun one.",
       "Upload a clear selfie and the AI ages your features naturally — greying hair, softened skin texture — while keeping your identity obviously recognisable. People use it for fun, for laughs with friends, or just out of curiosity.",
+      "This is the same 'ai aging filter' trend that's gone viral repeatedly on social apps, here as a free online version with no app install. It's a fun one to run on a whole friend group or family and compare results side by side.",
     ],
     tipsTitle: "Tips for the most natural result",
     tips: [
       "A clear, front-facing photo with even lighting ages the most convincingly.",
       "Remember this is a stylised illustration, not a medical or scientific prediction.",
       "Try it on a few different photos — results vary with expression and lighting.",
+      "Run it on a group photo of friends or family for a fun side-by-side comparison.",
     ],
   },
   "superhero-costume": {
     paragraphs: [
       "Everyone's imagined their superhero alter ego at some point. This skips the cosplay budget and the photoshoot and gets straight to the dramatic cape-and-costume payoff.",
       "Upload a clear photo and the AI suits you up in a sleek heroic costume with cinematic comic-movie lighting, keeping your face exactly as it is. Great for a fun profile picture or just living the fantasy for thirty seconds.",
+      "If you've searched 'photo to superhero ai free' or 'superhero avatar generator,' this delivers the comic-movie poster look in one generation. It's a popular pick for kids' birthday invitations, gaming profiles, and just messing around with friends.",
     ],
     tipsTitle: "Tips for the most dynamic hero shot",
     tips: [
       "A clear, front-facing photo with a visible pose gives the most dynamic result.",
       "Simple backgrounds help the AI build a cleaner heroic backdrop around you.",
       "Re-run a couple of times — the costume style and pose vary each generation.",
+      "Makes a fun, easy birthday invitation image for a superhero-themed party.",
     ],
   },
   "tarot-card-portrait": {
     paragraphs: [
       "Tarot card aesthetics — gold borders, celestial symbols, rich jewel tones — make for some of the most strikingly designed art on social feeds. Designing one by hand takes real illustration skill. This builds one around your own portrait.",
       "Upload a selfie and the AI frames you in an ornate mystical card design, complete with celestial symbolism and dramatic painterly lighting, while keeping your face recognisable in the artwork. A unique profile picture or a fun personalised print.",
+      "Searches for 'photo to tarot card ai free' and 'mystical card photo generator' come from a genuinely distinct art-style trend — equal parts fortune-telling aesthetic and personalised poster art. It makes an unusual, eye-catching gift when printed and framed.",
     ],
     tipsTitle: "Tips for the most mystical result",
     tips: [
       "A clear, well-lit portrait gives the artwork the strongest base to build around.",
       "Front-facing photos integrate most naturally into the symmetrical card design.",
       "Pair it with our free upscaler for a sharper, print-ready version.",
+      "Frame and print it for an unusual, personalised gift.",
     ],
   },
   "90s-yearbook-photo": {
     paragraphs: [
       "That unmistakable 90s school-photo aesthetic — laser-grid backdrops, soft flash, slightly awkward charm — has become a genuinely beloved nostalgia trend. This recreates it from any modern selfie.",
       "Upload a photo and the AI applies the retro studio backdrop, flash lighting and period styling while keeping your face the same. It's a fun, funny throwback for social posts, no actual yearbook required.",
+      "This 90s yearbook photo trend pairs naturally with our Y2K Aesthetic Filter if you want a full early-internet-era post — searches for 'retro yearbook photo ai free' and '90s photo filter free' both land here. Great for nostalgia posts, throwback-Thursday content, or just a laugh with old classmates.",
     ],
     tipsTitle: "Tips for the most authentic throwback",
     tips: [
       "A clear, front-facing selfie with simple lighting gives the most convincing retro studio look.",
       "Close-up portraits work best — yearbook photos are tightly framed.",
       "Re-run a couple of times for different backdrop and styling variations.",
+      "Pair it with the Y2K Aesthetic Filter for a full early-2000s nostalgia post.",
     ],
   },
   "cyberpunk-avatar": {
     paragraphs: [
       "Neon-lit, high-contrast cyberpunk aesthetics are a staple of gaming and sci-fi profile pictures, but building that look convincingly takes specific lighting and editing knowledge. This applies it in one step.",
       "Upload a selfie and the AI adds neon pink and cyan lighting, a futuristic backdrop and dramatic rim light, while keeping your face exactly as it is. A striking avatar for gaming profiles, Discord, or just a futuristic alter ego.",
+      "If you've searched 'cyberpunk photo filter' or 'ai sci-fi avatar generator,' this is built for gamers and Discord/Twitch profiles wanting a distinctive neon look without buying preset packs. It also makes a strong banner image when paired with our AI LinkedIn Banner Maker's free-form colour mode.",
     ],
     tipsTitle: "Tips for the most striking cyberpunk look",
     tips: [
       "A clear, front-facing photo with simple lighting gives the neon effects the cleanest base.",
       "Darker original backgrounds blend most naturally with the neon-lit futuristic backdrop.",
       "Try a few runs — the neon colour balance varies each generation.",
+      "Use it as a matching Discord, Twitch, or gaming-profile avatar across platforms.",
     ],
   },
 };
