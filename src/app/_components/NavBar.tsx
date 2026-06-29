@@ -3,11 +3,11 @@
 import { useEffect, useState, lazy, Suspense, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { createSupabaseClient } from "@/lib/supabase";
-import { trackSignUp } from "@/lib/analytics";
+import { trackSignUp, setAnalyticsUser, trackSignInClicked, trackSignInFailed, trackPaymentPopupTriggered } from "@/lib/analytics";
 
 const PricingModal = lazy(() => import("./PricingModal"));
 
-interface User { email: string; name: string; picture?: string; credits: number; plan: string; trialToolsUsed: string[]; trialsRemaining: number; }
+interface User { userId: string; email: string; name: string; picture?: string; credits: number; plan: string; trialToolsUsed: string[]; trialsRemaining: number; }
 
 const FREE_TRIAL_LIMIT = 5;
 
@@ -65,7 +65,7 @@ export default function NavBar() {
     });
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (session?.user) fetchUser();
-      else if (event === "SIGNED_OUT") setUser(null);
+      else if (event === "SIGNED_OUT") { setUser(null); setAnalyticsUser(null); }
     });
     const onClickOutside = (e: MouseEvent) => {
       // On mobile the dropdown renders as a bottom sheet outside dropdownRef
@@ -82,11 +82,15 @@ export default function NavBar() {
 
   const fetchUser = () =>
     fetch("/api/auth/google/me").then(r => r.json())
-      .then((d: { authenticated: boolean; email?: string; name?: string; picture?: string; credits?: number; plan?: string; trialToolsUsed?: string[]; trialsRemaining?: number }) => {
-        if (d.authenticated && d.email) setUser({ email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? 0, plan: d.plan ?? "free", trialToolsUsed: d.trialToolsUsed ?? [], trialsRemaining: d.trialsRemaining ?? 0 });
+      .then((d: { authenticated: boolean; userId?: string; email?: string; name?: string; picture?: string; credits?: number; plan?: string; trialToolsUsed?: string[]; trialsRemaining?: number }) => {
+        if (d.authenticated && d.email) {
+          const plan = d.plan ?? "free";
+          setUser({ userId: d.userId!, email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? 0, plan, trialToolsUsed: d.trialToolsUsed ?? [], trialsRemaining: d.trialsRemaining ?? 0 });
+          setAnalyticsUser({ id: d.userId!, plan });
+        }
       }).catch(() => null);
 
-  const openModal = () => { setShowModal(true); setTab("google"); setMode("login"); setEmail(""); setPassword(""); setName(""); setAuthError(""); };
+  const openModal = () => { trackSignInClicked("modal_open"); setShowModal(true); setTab("google"); setMode("login"); setEmail(""); setPassword(""); setName(""); setAuthError(""); };
   const closeModal = () => { setShowModal(false); setAuthError(""); };
   // Let the current page (e.g. the editor) persist its in-memory context
   // (uploaded image + active tool) so it survives the sign-in round-trip.
@@ -104,7 +108,7 @@ export default function NavBar() {
   const handleLogout = async () => {
     try { await createSupabaseClient().auth.signOut(); } catch {}
     await fetch("/api/auth/google/logout", { method: "POST" });
-    setUser(null); setShowMenu(false);
+    setUser(null); setAnalyticsUser(null); setShowMenu(false);
     window.location.href = "/";
   };
 
@@ -116,13 +120,13 @@ export default function NavBar() {
       const body = mode === "signup" ? { email: email.trim(), password, name: name.trim() } : { email: email.trim(), password };
       const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
       const data = await res.json() as { ok?: boolean; error?: string; needsConfirmation?: boolean };
-      if (!res.ok) { setAuthError(data.error || "Authentication failed"); return; }
+      if (!res.ok) { trackSignInFailed("email", data.error || "unknown"); setAuthError(data.error || "Authentication failed"); return; }
       if (data.needsConfirmation) { setAuthError("✅ Check your email and click the confirmation link, then sign in."); return; }
       trackSignUp(mode === "signup" ? "email_signup" : "email_login");
       persistPageContext();
       const current = window.location.pathname + window.location.search;
       window.location.href = current === "/" || current === "" ? "/editor" : current;
-    } catch { setAuthError("Network error. Please try again."); }
+    } catch { trackSignInFailed("email", "network_error"); setAuthError("Network error. Please try again."); }
     finally { setAuthLoading(false); }
   };
 
@@ -237,7 +241,7 @@ export default function NavBar() {
                       <div style={{ fontSize: 11, fontWeight: 700, color: "#6366F1", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>🎁 Free trials used up</div>
                       <div style={{ fontSize: 11, color: "#6B7280", marginTop: 5 }}>You&apos;ve used all {FREE_TRIAL_LIMIT} free trials, one per tool.</div>
                       <div style={{ fontSize: 11, color: "#6366F1", fontWeight: 600, marginTop: 4 }}>Unlock all AI features with a paid plan</div>
-                      <button onClick={() => { setShowPricing(true); setShowMenu(false); }}
+                      <button onClick={() => { trackPaymentPopupTriggered("trial_exhausted"); setShowPricing(true); setShowMenu(false); }}
                         style={{ marginTop: 8, width: "100%", padding: "7px 12px", background: "#6366F1", color: "#fff", border: "none", borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
                         Buy Paid Plan
                       </button>
@@ -259,7 +263,7 @@ export default function NavBar() {
                       onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
                       ✦ My Generations
                     </a>
-                    <button onClick={() => { setShowPricing(true); setShowMenu(false); }}
+                    <button onClick={() => { trackPaymentPopupTriggered("manual"); setShowPricing(true); setShowMenu(false); }}
                       style={{ width: "100%", padding: "10px 16px", background: "none", border: "none", textAlign: "left", fontSize: 13, color: "#6366F1", cursor: "pointer", fontWeight: 600 }}
                       onMouseEnter={e => (e.currentTarget.style.background = "#F5F5FF")}
                       onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
@@ -290,7 +294,7 @@ export default function NavBar() {
                   <div style={{ margin: "12px 16px 4px", background: "linear-gradient(135deg,#EEF2FF,#F5F3FF)", border: "1px solid #C7D2FE", borderRadius: 12, padding: "12px 14px" }}>
                     <div style={{ fontSize: 11, fontWeight: 700, color: "#6366F1", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>🎁 Free trials used up</div>
                     <div style={{ fontSize: 11, color: "#6B7280", marginTop: 5 }}>You&apos;ve used all {FREE_TRIAL_LIMIT} free trials, one per tool.</div>
-                    <button onClick={() => { setShowPricing(true); setShowMenu(false); }}
+                    <button onClick={() => { trackPaymentPopupTriggered("trial_exhausted"); setShowPricing(true); setShowMenu(false); }}
                       style={{ marginTop: 8, width: "100%", padding: "10px 12px", background: "#6366F1", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
                       Buy Paid Plan
                     </button>
@@ -310,7 +314,7 @@ export default function NavBar() {
                     style={{ display: "block", padding: "14px 16px", fontSize: 14.5, color: "#111", textDecoration: "none", fontWeight: 600 }}>
                     ✦ My Generations
                   </a>
-                  <button onClick={() => { setShowPricing(true); setShowMenu(false); }}
+                  <button onClick={() => { trackPaymentPopupTriggered("manual"); setShowPricing(true); setShowMenu(false); }}
                     style={{ width: "100%", padding: "14px 16px", background: "none", border: "none", textAlign: "left", fontSize: 14.5, color: "#6366F1", cursor: "pointer", fontWeight: 700 }}>
                     💳 Buy Credits
                   </button>

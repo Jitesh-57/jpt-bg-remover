@@ -34,6 +34,8 @@ function maybeCleanup() {
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  // Vercel injects this at the edge — accurate, no extra geo-IP lookup needed.
+  const country = request.headers.get("x-vercel-ip-country") || "";
 
   // Rate limiting for API routes
   if (path.startsWith("/api/")) {
@@ -50,7 +52,9 @@ export async function middleware(request: NextRequest) {
 
   // Supabase session refresh
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    return NextResponse.next({ request });
+    const res = NextResponse.next({ request });
+    if (country) res.cookies.set("jpt_country", country, { path: "/", maxAge: 86400, httpOnly: false });
+    return res;
   }
 
   let supabaseResponse = NextResponse.next({ request });
@@ -72,6 +76,7 @@ export async function middleware(request: NextRequest) {
   );
 
   await supabase.auth.getUser();
+  if (country) supabaseResponse.cookies.set("jpt_country", country, { path: "/", maxAge: 86400, httpOnly: false });
   return supabaseResponse;
 }
 

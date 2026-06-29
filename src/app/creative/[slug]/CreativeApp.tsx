@@ -1,7 +1,11 @@
 "use client";
 
 import { useRef, useState, useEffect, lazy, Suspense } from "react";
-import { trackEvent, trackToolUse } from "@/lib/analytics";
+import {
+  trackEvent, trackToolUse, trackImageUploaded, trackImageUploadFailed,
+  trackGenerateButtonClicked, trackImageGenerated, trackImageGenerationFailed,
+  trackPaymentPopupTriggered, trackDownloadButtonClicked,
+} from "@/lib/analytics";
 import { saveGeneration } from "@/lib/save-generation";
 
 const PricingModal = lazy(() => import("@/app/_components/PricingModal"));
@@ -64,7 +68,11 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient, appNam
 
   const TRIAL_NOTICE = "You've used your free trials. Buy credits to keep generating and unlock all AI tools.";
 
-  const openPricing = (note?: string) => { setPricingNotice(note); setShowPricing(true); };
+  const openPricing = (note?: string) => {
+    trackPaymentPopupTriggered(note ? "trial_exhausted" : "manual");
+    setPricingNotice(note);
+    setShowPricing(true);
+  };
 
   // Restore the photo a user uploaded before being sent to sign-in.
   useEffect(() => {
@@ -81,13 +89,22 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient, appNam
   const pick = () => fileRef.current?.click();
 
   const onFile = async (file?: File) => {
-    if (!file || !file.type.startsWith("image/")) return;
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      trackImageUploadFailed(`creative:${slug}`, "invalid_file_type");
+      return;
+    }
     setResult(null);
     setNeeds(null);
     setMessage("");
     setStatus("idle");
-    const dataUrl = await readFile(file);
-    setOriginal(await compress(dataUrl));
+    try {
+      const dataUrl = await readFile(file);
+      setOriginal(await compress(dataUrl));
+      trackImageUploaded(`creative:${slug}`);
+    } catch {
+      trackImageUploadFailed(`creative:${slug}`, "read_error");
+    }
   };
 
   const generate = async () => {
@@ -95,6 +112,7 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient, appNam
     setNeeds(null);
     setMessage("");
     trackToolUse(`creative:${slug}`);
+    trackGenerateButtonClicked(`creative:${slug}`);
 
     // Try to upload to Supabase to dodge the 4.5MB API body limit; fall back to dataUrl.
     let body: Record<string, unknown> = { dataUrl: original, prompt, slug };
@@ -117,19 +135,36 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient, appNam
       const data = (await res.json()) as { dataUrl?: string; error?: string; upgradeRequired?: boolean; trial?: boolean; trialUsed?: boolean; trialsRemaining?: number };
 
       // Not signed in → save the photo and send them to sign-in, then back here.
-      if (res.status === 401) { goSignIn(); return; }
+      if (res.status === 401) { trackImageGenerationFailed(`creative:${slug}`, "signin_required"); goSignIn(); return; }
       // Free trial already used, or paid feature → open the payment popup.
-      if (res.status === 403) { openPricing(data.trialUsed ? TRIAL_NOTICE : undefined); setStatus("idle"); return; }
-      if (res.status === 402) { data.upgradeRequired ? openPricing(TRIAL_NOTICE) : setNeeds("credits"); setStatus("idle"); return; }
-      if (!res.ok || !data.dataUrl) { setMessage(data.error || "Generation failed. Please try again."); setStatus("error"); return; }
+      if (res.status === 403) {
+        trackImageGenerationFailed(`creative:${slug}`, data.trialUsed ? "trial_exhausted" : "upgrade_required");
+        openPricing(data.trialUsed ? TRIAL_NOTICE : undefined);
+        setStatus("idle");
+        return;
+      }
+      if (res.status === 402) {
+        trackImageGenerationFailed(`creative:${slug}`, data.upgradeRequired ? "upgrade_required" : "no_credits");
+        data.upgradeRequired ? openPricing(TRIAL_NOTICE) : setNeeds("credits");
+        setStatus("idle");
+        return;
+      }
+      if (!res.ok || !data.dataUrl) {
+        trackImageGenerationFailed(`creative:${slug}`, data.error || "unknown_error");
+        setMessage(data.error || "Generation failed. Please try again.");
+        setStatus("error");
+        return;
+      }
 
       setResult(data.dataUrl);
       setStatus("done");
       if (data.trial) { setTrialDone(true); setTrialsRemaining(data.trialsRemaining ?? null); }
+      trackImageGenerated(`creative:${slug}`);
       trackEvent("creative_generate_success", { tool: slug, trial: !!data.trial });
       // Save to My Generations.
       saveGeneration({ url: data.dataUrl, tool: `creative:${slug}`, label: appName });
     } catch {
+      trackImageGenerationFailed(`creative:${slug}`, "network_error");
       setMessage("Network error. Please try again.");
       setStatus("error");
     }
@@ -226,7 +261,7 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient, appNam
               {busy ? "Working…" : result ? "↻ Generate Again" : `${cta} →`}
             </button>
             {result && (
-              <a href={result} download={`jpt-${slug}.png`}
+              <a href={result} download={`jpt-${slug}.png`} onClick={() => trackDownloadButtonClicked(`creative:${slug}`)}
                 style={{ background: "#0F172A", color: "#fff", fontWeight: 800, fontSize: 16, padding: "15px 30px", borderRadius: 14, textDecoration: "none" }}>
                 ⬇ Download
               </a>

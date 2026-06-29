@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { trackBeginCheckout, trackPurchase } from "@/lib/analytics";
+import { trackBeginCheckout, trackPurchase, trackBuyButtonClicked, trackPaymentFailed } from "@/lib/analytics";
 
 interface PricingModalProps {
   onClose: () => void;
@@ -31,6 +31,7 @@ export default function PricingModal({ onClose, onPurchaseSuccess, prefillUser, 
     setLoading(planKey);
     setStatusMsg(null);
     const planValue = Number((plans.find(p => p.planKey === planKey)?.price || "0").replace(/[^0-9]/g, ""));
+    trackBuyButtonClicked(planKey, planValue);
     trackBeginCheckout(planKey, planValue);
 
     try {
@@ -57,6 +58,7 @@ export default function PricingModal({ onClose, onPurchaseSuccess, prefillUser, 
       };
 
       if (!orderRes.ok || !orderData.order_id) {
+        trackPaymentFailed(planKey, orderData.error || "order_creation_failed");
         setStatusMsg({ text: orderData.error || "Failed to create order", ok: false });
         setLoading(null);
         return;
@@ -73,6 +75,7 @@ export default function PricingModal({ onClose, onPurchaseSuccess, prefillUser, 
         theme: { color: "#6366F1" },
         modal: {
           ondismiss() {
+            trackPaymentFailed(planKey, "cancelled_by_user");
             setStatusMsg({ text: "Payment cancelled", ok: false });
             setLoading(null);
           },
@@ -103,9 +106,11 @@ export default function PricingModal({ onClose, onPurchaseSuccess, prefillUser, 
               trackPurchase(planKey, planValue, verifyData.credits!);
               onPurchaseSuccess?.(planKey, verifyData.credits!);
             } else {
+              trackPaymentFailed(planKey, verifyData.error || "verification_failed");
               setStatusMsg({ text: verifyData.error || "Verification failed", ok: false });
             }
           } catch {
+            trackPaymentFailed(planKey, "verification_request_failed");
             setStatusMsg({ text: "Verification request failed", ok: false });
           }
           setLoading(null);
@@ -115,6 +120,7 @@ export default function PricingModal({ onClose, onPurchaseSuccess, prefillUser, 
 
       rzp.open();
     } catch (e) {
+      trackPaymentFailed(planKey, String(e));
       setStatusMsg({ text: String(e), ok: false });
       setLoading(null);
     }

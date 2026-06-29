@@ -2,6 +2,12 @@
 
 import "../globals.css";
 import { useRef, useState, useCallback, useEffect } from "react";
+import {
+  trackImageUploaded, trackImageUploadFailed, trackTransformButtonClicked, trackImageTransformed,
+  trackImageTransformedFailed, trackGenerateButtonClicked, trackImageGenerated, trackImageGenerationFailed,
+  trackPaymentPopupTriggered, trackBuyButtonClicked, trackDownloadButtonClicked, setAnalyticsUser,
+  trackBeginCheckout, trackPurchase, trackPaymentFailed,
+} from "@/lib/analytics";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -16,7 +22,7 @@ type Tool = "ai-edit" | "generate-bg" | "upscale" | "resize" | "adjust" | "remov
 type BgMode = "color" | "gradient" | "image" | "ai";
 
 interface GradientPreset { label: string; from: string; to: string; angle: number }
-interface User { email: string; name: string; picture?: string; credits: number; plan?: string; dailyCreditResetAt?: string | null; trialToolsUsed?: string[]; trialsRemaining?: number }
+interface User { userId?: string; email: string; name: string; picture?: string; credits: number; plan?: string; dailyCreditResetAt?: string | null; trialToolsUsed?: string[]; trialsRemaining?: number }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -282,7 +288,24 @@ export default function ImageEditorPage() {
   const [blockedTool, setBlockedTool] = useState<{ id: string | null; icon: string; label: string } | null>(null);
   const [buyingPlan, setBuyingPlan] = useState<string | null>(null);
 
+  // Central payment-popup tracking — covers every setShowUpgradeModal/setShowNoCreditsModal
+  // call site without needing to touch each one individually.
+  useEffect(() => {
+    if (showUpgradeModal) trackPaymentPopupTriggered(blockedTool ? "tool_blocked" : "manual");
+  }, [showUpgradeModal, blockedTool]);
+  useEffect(() => {
+    if (showNoCreditsModal) trackPaymentPopupTriggered("no_credits");
+  }, [showNoCreditsModal]);
+  useEffect(() => {
+    if (user?.userId) setAnalyticsUser({ id: user.userId, plan: user.plan || "free" });
+    else if (!user) setAnalyticsUser(null);
+  }, [user]);
+
+  const PLAN_PRICES: Record<string, number> = { starter: 499, creator: 999, pro: 2499 };
+
   async function handleBuyPlan(planKey: string) {
+    const planValue = PLAN_PRICES[planKey] || 0;
+    trackBuyButtonClicked(planKey, planValue);
     setBuyingPlan(planKey);
     try {
       if (!window.Razorpay) {
@@ -300,7 +323,12 @@ export default function ImageEditorPage() {
         body: JSON.stringify({ plan: planKey }),
       });
       const orderData = await orderRes.json() as { order_id?: string; amount?: number; currency?: string; credits?: number; error?: string };
-      if (!orderRes.ok || !orderData.order_id) { setBuyingPlan(null); return; }
+      if (!orderRes.ok || !orderData.order_id) {
+        trackPaymentFailed(planKey, orderData.error || "order_creation_failed");
+        setBuyingPlan(null);
+        return;
+      }
+      trackBeginCheckout(planKey, planValue);
       const rzp = new window.Razorpay({
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         order_id: orderData.order_id,
@@ -309,7 +337,7 @@ export default function ImageEditorPage() {
         name: "JPT AI",
         description: `${planKey.charAt(0).toUpperCase() + planKey.slice(1)} Plan — ${orderData.credits} credits`,
         theme: { color: "#6366F1" },
-        modal: { ondismiss() { setBuyingPlan(null); } },
+        modal: { ondismiss() { trackPaymentFailed(planKey, "cancelled_by_user"); setBuyingPlan(null); } },
         handler: async (response: { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string }) => {
           try {
             const verifyRes = await fetch("/api/verify-payment", {
@@ -322,14 +350,20 @@ export default function ImageEditorPage() {
               setUser(u => u ? { ...u, credits: data.credits!, plan: planKey } : u);
               setShowUpgradeModal(false);
               setBlockedTool(null);
+              trackPurchase(planKey, planValue, data.credits);
+            } else {
+              trackPaymentFailed(planKey, "verification_failed");
             }
-          } catch {}
+          } catch {
+            trackPaymentFailed(planKey, "verification_request_failed");
+          }
           setBuyingPlan(null);
         },
         prefill: { name: user?.name || "", email: user?.email || "" },
       });
       rzp.open();
-    } catch {
+    } catch (e) {
+      trackPaymentFailed(planKey, (e as Error).message || "unknown_error");
       setBuyingPlan(null);
     }
   }
@@ -350,9 +384,9 @@ export default function ImageEditorPage() {
     const loadUser = (retries = 1): Promise<void> =>
       fetch("/api/auth/google/me")
         .then(r => r.json())
-        .then((d: { authenticated: boolean; email?: string; name?: string; picture?: string; credits?: number; plan?: string; dailyCreditResetAt?: string | null; trialToolsUsed?: string[]; trialsRemaining?: number }) => {
+        .then((d: { authenticated: boolean; userId?: string; email?: string; name?: string; picture?: string; credits?: number; plan?: string; dailyCreditResetAt?: string | null; trialToolsUsed?: string[]; trialsRemaining?: number }) => {
           if (d.authenticated && d.email) {
-            setUser({ email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? FREE_CREDITS, plan: d.plan || "free", dailyCreditResetAt: d.dailyCreditResetAt, trialToolsUsed: d.trialToolsUsed ?? [], trialsRemaining: d.trialsRemaining ?? 0 });
+            setUser({ userId: d.userId, email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? FREE_CREDITS, plan: d.plan || "free", dailyCreditResetAt: d.dailyCreditResetAt, trialToolsUsed: d.trialToolsUsed ?? [], trialsRemaining: d.trialsRemaining ?? 0 });
             setAuthChecked(true);
           } else if (retries > 0) {
             return new Promise<void>(res => setTimeout(() => loadUser(retries - 1).then(res), 300));
@@ -510,6 +544,7 @@ export default function ImageEditorPage() {
   const handleFile = useCallback(async (file: File) => {
     if (!file.type.startsWith("image/")) return;
     if (!SUPPORTED_IMAGE_FORMATS.includes(file.type)) {
+      trackImageUploadFailed("editor", "unsupported_format");
       setError(`Unsupported format: ${file.type.split("/")[1]?.toUpperCase() || "unknown"}. Please upload a JPG, PNG, or WEBP image.`);
       return;
     }
@@ -522,12 +557,13 @@ export default function ImageEditorPage() {
       const name = file.name.replace(/\.[^.]+$/, "") || "image";
       setOriginal({ dataUrl: p.dataUrl, w: p.w, h: p.h, name });
       setResizeW(p.w); setResizeH(p.h);
+      trackImageUploaded("editor");
       // Persist session for 24h
       try {
         const sess: SessionData = { dataUrl: p.dataUrl, name, w: p.w, h: p.h, ts: Date.now() };
         localStorage.setItem(SESSION_KEY, JSON.stringify(sess));
       } catch { /* storage full, ignore */ }
-    } catch { setError("Failed to load image."); }
+    } catch { trackImageUploadFailed("editor", "load_error"); setError("Failed to load image."); }
   }, []);
 
   const resetAdjust = () => { setBrightness(100); setContrast(100); setSaturation(100); setSharpness(0); };
@@ -571,6 +607,7 @@ export default function ImageEditorPage() {
   const handleGenerateBg = async (templateOrPrompt: string) => {
     const src = working || original?.dataUrl;
     if (!src || processing) return;
+    trackGenerateButtonClicked("generate-bg");
     setProcessing(true); setProcessingLabel("Generating background…"); setError(null);
     const prevCreditsGBg = user?.credits ?? 0;
     setUser(u => u ? { ...u, credits: Math.max(0, u.credits - CREDIT_COST) } : u);
@@ -581,9 +618,11 @@ export default function ImageEditorPage() {
       if (!data?.dataUrl) throw new Error("Background generation failed");
       setEditHistory(prev => working ? [...prev, working] : prev);
       setWorking(data.dataUrl);
+      trackImageGenerated("generate-bg");
       autoSaveToDrive(data.dataUrl, "generate-bg", templateOrPrompt.slice(0, 60));
     } catch (e) {
       setUser(u => u ? { ...u, credits: prevCreditsGBg } : u); // rollback on error
+      trackImageGenerationFailed("generate-bg", (e as Error).message);
       setError((e as Error).message);
     }
     finally { setProcessing(false); setProcessingLabel(""); }
@@ -596,6 +635,7 @@ export default function ImageEditorPage() {
 
     const isPro = upscaleMode === "pro";
     const creditCost = isPro ? CREDIT_COST : 1;
+    if (isPro) trackTransformButtonClicked("upscale-pro");
     setProcessing(true); setProcessingLabel(`${isPro ? "AI Pro" : ""} Upscaling ${upscaleScale}…`); setError(null);
     const prevCredits = user?.credits ?? 0;
     setUser(u => u ? { ...u, credits: Math.max(0, u.credits - creditCost) } : u);
@@ -612,6 +652,7 @@ export default function ImageEditorPage() {
         setEditHistory(prev => working ? [...prev, working] : prev);
         setWorking(data.dataUrl);
         setAppliedUpscale(upscaleScale);
+        trackImageTransformed("upscale-pro");
         autoSaveToDrive(data.dataUrl, "upscale", `${upscaleScale} Pro Upscale`);
       } else {
         // Normal: canvas upscale — costs 1 credit, free users allowed
@@ -644,6 +685,7 @@ export default function ImageEditorPage() {
       }
     } catch (e) {
       setUser(u => u ? { ...u, credits: prevCredits } : u);
+      if (isPro) trackImageTransformedFailed("upscale-pro", (e as Error).message);
       setError((e as Error).message || "Upscale failed. Please try again.");
     }
     finally { setProcessing(false); setProcessingLabel(""); }
@@ -731,6 +773,7 @@ export default function ImageEditorPage() {
   const handleAiEdit = async () => {
     const src = working || original?.dataUrl;
     if (!src || !prompt.trim() || processing) return;
+    trackTransformButtonClicked("ai-edit");
     setProcessing(true); setProcessingLabel("Editing with JPT AI…"); setError(null);
     const prevCreditsAI = user?.credits ?? 0;
     setUser(u => u ? { ...u, credits: Math.max(0, u.credits - CREDIT_COST) } : u);
@@ -739,11 +782,13 @@ export default function ImageEditorPage() {
       if (data?.dataUrl) {
         setEditHistory(prev => working ? [...prev, working] : prev);
         setWorking(data.dataUrl);
+        trackImageTransformed("ai-edit");
         autoSaveToDrive(data.dataUrl, "ai-edit", prompt.trim().slice(0, 60));
         setPrompt("");
       } else throw new Error("Edit failed");
     } catch (e) {
       setUser(u => u ? { ...u, credits: prevCreditsAI } : u); // rollback on error
+      trackImageTransformedFailed("ai-edit", (e as Error).message);
       setError((e as Error).message);
     }
     finally { setProcessing(false); setProcessingLabel(""); }
@@ -755,6 +800,7 @@ export default function ImageEditorPage() {
     const src = working || original?.dataUrl;
     if (!src || processing) return;
     if (requireSignIn()) return;
+    trackTransformButtonClicked("remove-bg");
 
     setProcessing(true); setProcessingLabel("Removing background…"); setError(null); setRemoveBgProgress(20);
     try {
@@ -767,24 +813,30 @@ export default function ImageEditorPage() {
       const data = await res.json() as { dataUrl?: string; credits?: number; error?: string; upgradeRequired?: boolean };
       if (!res.ok) {
         if (res.status === 402) {
+          trackImageTransformedFailed("remove-bg", data.upgradeRequired ? "upgrade_required" : "no_credits");
           if (data.upgradeRequired) setShowUpgradeModal(true);
           else setShowNoCreditsModal(true);
         } else if (res.status === 401) {
+          trackImageTransformedFailed("remove-bg", "signin_required");
           setShowSignInModal(true);
         } else if (res.status === 403) {
+          trackImageTransformedFailed("remove-bg", "trial_exhausted_or_upgrade_required");
           setShowUpgradeModal(true);
         } else {
+          trackImageTransformedFailed("remove-bg", data.error || "unknown_error");
           setError(data.error || "Background removal failed");
         }
         return;
       }
       if (typeof data.credits === "number") setUser(u => u ? { ...u, credits: data.credits! } : u);
-      if (!data.dataUrl) { setError("No result returned"); return; }
+      if (!data.dataUrl) { trackImageTransformedFailed("remove-bg", "no_result"); setError("No result returned"); return; }
       setEditHistory(prev => working ? [...prev, working] : prev);
       setWorking(data.dataUrl);
       setRemoveBgProgress(100);
+      trackImageTransformed("remove-bg");
       autoSaveToDrive(data.dataUrl, "remove-bg", "Background Removed");
     } catch (e) {
+      trackImageTransformedFailed("remove-bg", (e as Error).message || "network_error");
       setError((e as Error).message || "Background removal failed");
     } finally {
       setProcessing(false); setProcessingLabel("");
@@ -797,6 +849,7 @@ export default function ImageEditorPage() {
   const handleDownload = () => {
     const url = working || original?.dataUrl;
     if (!url) return;
+    trackDownloadButtonClicked(activeTool || "editor");
     const a = document.createElement("a");
     a.href = url; a.download = `${original?.name || "image"}-edited.${url.includes("image/png") ? "png" : "jpg"}`;
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
