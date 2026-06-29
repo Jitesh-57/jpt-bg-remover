@@ -274,6 +274,67 @@ export async function withCredits(
   });
 }
 
+// ─── checkEntitlement ─────────────────────────────────────────────────────────
+//
+// Read-only preflight for the same gate withCredits enforces — call this
+// BEFORE running the (slow, costly) AI generation so trial-exhausted/
+// no-credits users get an instant rejection instead of waiting out a full
+// generation only to be blocked afterwards. Mirrors withCredits' checks but
+// never mutates credits/trial state; withCredits still runs after a
+// successful generation to actually charge/record the trial.
+
+export async function checkEntitlement(
+  session: GoogleSession,
+  toolType: "free" | "basic" | "standard" | "ai" = "ai",
+  toolId?: string
+): Promise<NextResponse | null> {
+  if (toolType === "free" || toolType === "basic") return null;
+
+  if (session.plan !== "free") {
+    if (session.credits < CREDIT_COST) {
+      return NextResponse.json({
+        error: "No credits remaining. Purchase more to continue.",
+        credits: session.credits,
+        upgradeRequired: false,
+      }, { status: 402 });
+    }
+    return null;
+  }
+
+  if (!toolId) {
+    return NextResponse.json({
+      error: "This feature requires a paid plan. Upgrade to use AI transformations.",
+      upgradeRequired: true,
+      credits: session.credits,
+    }, { status: 403 });
+  }
+
+  const admin = createAdminSupabase();
+  const trialToolsUsed = await getTrialToolsUsed(admin, session.userId);
+
+  if (trialToolsUsed.includes(toolId)) {
+    return NextResponse.json({
+      error: "You've already used your free trial for this tool. Upgrade to keep using it.",
+      upgradeRequired: true,
+      trialUsed: true,
+      credits: session.credits,
+      trialsRemaining: Math.max(0, FREE_TRIAL_LIMIT - trialToolsUsed.length),
+    }, { status: 403 });
+  }
+
+  if (trialToolsUsed.length >= FREE_TRIAL_LIMIT) {
+    return NextResponse.json({
+      error: `You've used all ${FREE_TRIAL_LIMIT} free trials. Upgrade to a paid plan to keep creating.`,
+      upgradeRequired: true,
+      trialUsed: true,
+      credits: session.credits,
+      trialsRemaining: 0,
+    }, { status: 403 });
+  }
+
+  return null;
+}
+
 // ─── Legacy stubs ─────────────────────────────────────────────────────────────
 
 export async function getKVUser(_email: string): Promise<KVUser | null> { return null; }

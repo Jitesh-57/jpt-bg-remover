@@ -68,6 +68,14 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient, appNam
 
   const TRIAL_NOTICE = "You've used your free trials. Buy credits to keep generating and unlock all AI tools.";
 
+  /** Build the right notice depending on how many of the 5 free trials are left. */
+  function trialNoticeFor(trialsRemaining?: number): string {
+    if (trialsRemaining && trialsRemaining > 0) {
+      return `🎁 You've used your free trial for this app — but you still have ${trialsRemaining} free trial${trialsRemaining === 1 ? "" : "s"} left! Try one of our other AI tools for free, or buy credits to keep using this one.`;
+    }
+    return TRIAL_NOTICE;
+  }
+
   const openPricing = (note?: string) => {
     trackPaymentPopupTriggered(note ? "trial_exhausted" : "manual");
     setPricingNotice(note);
@@ -139,13 +147,13 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient, appNam
       // Free trial already used, or paid feature → open the payment popup.
       if (res.status === 403) {
         trackImageGenerationFailed(`creative:${slug}`, data.trialUsed ? "trial_exhausted" : "upgrade_required");
-        openPricing(data.trialUsed ? TRIAL_NOTICE : undefined);
+        openPricing(data.trialUsed ? trialNoticeFor(data.trialsRemaining) : undefined);
         setStatus("idle");
         return;
       }
       if (res.status === 402) {
         trackImageGenerationFailed(`creative:${slug}`, data.upgradeRequired ? "upgrade_required" : "no_credits");
-        data.upgradeRequired ? openPricing(TRIAL_NOTICE) : setNeeds("credits");
+        data.upgradeRequired ? openPricing(trialNoticeFor(data.trialsRemaining)) : setNeeds("credits");
         setStatus("idle");
         return;
       }

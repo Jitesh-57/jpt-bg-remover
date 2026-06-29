@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { checkAuth, withCredits } from "@/lib/auth";
+import { checkAuth, checkEntitlement, withCredits } from "@/lib/auth";
 import { runPixelBinPredictionAsDataUrl } from "@/lib/pixelbin";
 
 export const runtime = "nodejs";
@@ -12,6 +12,9 @@ export async function POST(req: NextRequest) {
   const { dataUrl, image, imageUrl } = await req.json() as { dataUrl?: string; image?: string; imageUrl?: string };
   const src = imageUrl || dataUrl || image;
   if (!src) return NextResponse.json({ error: "image required" }, { status: 400 });
+
+  const blocked = await checkEntitlement(session!, "standard", "remove-bg");
+  if (blocked) return blocked;
 
   try {
     const resultDataUrl = await runPixelBinPredictionAsDataUrl(src, "erase", "bg");

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { checkAuth, withCredits } from "@/lib/auth";
+import { checkAuth, checkEntitlement, withCredits } from "@/lib/auth";
 import { runPixelBinPredictionAsDataUrl } from "@/lib/pixelbin";
 import { WOMEN_STYLES, MEN_STYLES } from "@/lib/headshot-prompts";
 
@@ -24,6 +24,9 @@ export async function POST(req: NextRequest) {
   if (!imageUrl) return NextResponse.json({ error: "imageUrl required" }, { status: 400 });
   if (!Array.isArray(styleIds) || styleIds.length === 0)
     return NextResponse.json({ error: "styleIds required" }, { status: 400 });
+
+  const blocked = await checkEntitlement(session!, "ai", "ai-headshot");
+  if (blocked) return blocked;
 
   const styleLibrary = gender === "men" ? MEN_STYLES : WOMEN_STYLES;
   const selectedStyles = styleLibrary.filter((s) => styleIds.includes(s.id));

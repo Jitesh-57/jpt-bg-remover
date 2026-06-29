@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { checkAuth, withCredits } from "@/lib/auth";
+import { checkAuth, checkEntitlement, withCredits } from "@/lib/auth";
 import { runPixelBinPredictionAsDataUrl } from "@/lib/pixelbin";
 
 export const runtime = "nodejs";
@@ -29,6 +29,9 @@ export async function POST(req: NextRequest) {
   if (!slug) {
     return NextResponse.json({ error: "slug required" }, { status: 400 });
   }
+
+  const blocked = await checkEntitlement(session!, "ai", `creative:${slug}`);
+  if (blocked) return blocked;
 
   try {
     const result = await runPixelBinPredictionAsDataUrl(src, "nanoBananaPro", "generate", { prompt });
