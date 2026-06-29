@@ -16,11 +16,12 @@ type Tool = "ai-edit" | "generate-bg" | "upscale" | "resize" | "adjust" | "remov
 type BgMode = "color" | "gradient" | "image" | "ai";
 
 interface GradientPreset { label: string; from: string; to: string; angle: number }
-interface User { email: string; name: string; picture?: string; credits: number; plan?: string; dailyCreditResetAt?: string | null }
+interface User { email: string; name: string; picture?: string; credits: number; plan?: string; dailyCreditResetAt?: string | null; trialToolsUsed?: string[]; trialsRemaining?: number }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const FREE_CREDITS = 10;
+const FREE_TRIAL_LIMIT = 5;
 const CREDIT_COST = 2;
 const BASIC_UPSCALE_COST = 1;
 const SUPPORTED_IMAGE_FORMATS = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
@@ -272,7 +273,6 @@ export default function ImageEditorPage() {
   const [showAccountModal, setShowAccountModal] = useState(false);
   const [showNoCreditsModal, setShowNoCreditsModal] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
-  const [creditRenewCountdown, setCreditRenewCountdown] = useState("");
   // Initialise from the real viewport so the first paint already uses the
   // mobile (bottom-sheet) layout — avoids the panel flashing on the right.
   const [isMobile, setIsMobile] = useState(() =>
@@ -350,9 +350,9 @@ export default function ImageEditorPage() {
     const loadUser = (retries = 1): Promise<void> =>
       fetch("/api/auth/google/me")
         .then(r => r.json())
-        .then((d: { authenticated: boolean; email?: string; name?: string; picture?: string; credits?: number; plan?: string; dailyCreditResetAt?: string | null }) => {
+        .then((d: { authenticated: boolean; email?: string; name?: string; picture?: string; credits?: number; plan?: string; dailyCreditResetAt?: string | null; trialToolsUsed?: string[]; trialsRemaining?: number }) => {
           if (d.authenticated && d.email) {
-            setUser({ email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? FREE_CREDITS, plan: d.plan || "free", dailyCreditResetAt: d.dailyCreditResetAt });
+            setUser({ email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? FREE_CREDITS, plan: d.plan || "free", dailyCreditResetAt: d.dailyCreditResetAt, trialToolsUsed: d.trialToolsUsed ?? [], trialsRemaining: d.trialsRemaining ?? 0 });
             setAuthChecked(true);
           } else if (retries > 0) {
             return new Promise<void>(res => setTimeout(() => loadUser(retries - 1).then(res), 300));
@@ -504,26 +504,6 @@ export default function ImageEditorPage() {
     // dataUrl returned directly (Gemini routes)
     return data;
   }, []);
-
-  // ── Credit renewal countdown ─────────────────────────────────────────────────
-
-  useEffect(() => {
-    if (!showNoCreditsModal) return;
-    const tick = () => {
-      const resetAt = user?.dailyCreditResetAt;
-      if (!resetAt) { setCreditRenewCountdown(""); return; }
-      const renewsAt = new Date(resetAt).getTime() + 24 * 3600 * 1000;
-      const ms = Math.max(0, renewsAt - Date.now());
-      if (ms === 0) { setCreditRenewCountdown("now"); return; }
-      const h = Math.floor(ms / 3600000);
-      const m = Math.floor((ms % 3600000) / 60000);
-      const s = Math.floor((ms % 60000) / 1000);
-      setCreditRenewCountdown(`${h}h ${String(m).padStart(2, "0")}m ${String(s).padStart(2, "0")}s`);
-    };
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
-  }, [showNoCreditsModal, user?.dailyCreditResetAt]);
 
   // ── File upload ───────────────────────────────────────────────────────────────
 
@@ -1013,9 +993,15 @@ export default function ImageEditorPage() {
                   ? <img src={user.picture} alt="" style={s.avatar} />
                   : <span style={s.avatarFallback}>{user.name[0]}</span>}
                 <span style={s.userName}>{user.name.split(" ")[0]}</span>
-                <span style={{ ...s.creditsBadge, ...(creditsLeft === 0 ? s.creditsEmpty : lowCredits ? s.creditsLow : {}) }}>
-                  ⚡ {creditsLeft}
-                </span>
+                {user.plan === "free" ? (
+                  <span style={{ ...s.creditsBadge, ...((user.trialsRemaining ?? 0) === 0 ? s.creditsEmpty : {}) }}>
+                    🎁 {user.trialsRemaining ?? 0}
+                  </span>
+                ) : (
+                  <span style={{ ...s.creditsBadge, ...(creditsLeft === 0 ? s.creditsEmpty : lowCredits ? s.creditsLow : {}) }}>
+                    ⚡ {creditsLeft}
+                  </span>
+                )}
               </button>
             )}
           </div>
@@ -1038,14 +1024,16 @@ export default function ImageEditorPage() {
                 if (!authChecked) { setActiveTool(activeTool === t.id ? null : t.id); return; }
                 if (!user) { requireSignIn(); return; }
                 const isPaidUser = !!(user.plan && user.plan !== "free");
-                if (t.paid && !isPaidUser) {
+                const trialUsedForTool = !!(t.id && user.trialToolsUsed?.includes(t.id));
+                const trialAvailable = !trialUsedForTool && (user.trialsRemaining ?? 0) > 0;
+                if (t.paid && !isPaidUser && !trialAvailable) {
                   setBlockedTool(t);
                   setShowUpgradeModal(true);
                   return;
                 }
                 setActiveTool(activeTool === t.id ? null : t.id);
               }}
-              title={`${t.label}${t.free || ["resize", "adjust"].includes(t.id ?? "") ? " (Free)" : ` (${CREDIT_COST} credits)`}`}
+              title={`${t.label}${t.free || ["resize", "adjust"].includes(t.id ?? "") ? " (Free)" : ` (${CREDIT_COST} credits, or a free trial)`}`}
               style={{ ...s.toolBtn, ...(activeTool === t.id ? s.toolBtnActive : {}), ...(!hasImage ? { opacity: 0.35, cursor: "not-allowed" } : {}) }}
             >
               <span style={{ fontSize: 22 }}>{t.icon}</span>
@@ -1099,7 +1087,7 @@ export default function ImageEditorPage() {
               </div>
               {!user && (
                 <div style={s.signInHint}>
-                  <button onClick={() => setShowSignInModal(true)} style={{ color: "#6366F1", fontWeight: 600, textDecoration: "none", background: "none", border: "none", cursor: "pointer", padding: 0 }}>Sign in</button> to use AI tools — 10 free credits included
+                  <button onClick={() => setShowSignInModal(true)} style={{ color: "#6366F1", fontWeight: 600, textDecoration: "none", background: "none", border: "none", cursor: "pointer", padding: 0 }}>Sign in</button> to use AI tools — 5 free trials included, plus unlimited free upscale
                 </div>
               )}
               {error && <div style={s.errBox}>{error}</div>}
@@ -1269,7 +1257,11 @@ export default function ImageEditorPage() {
               <div style={s.panelContent}>
                 <div style={s.panelTitle}>🌅 Generate Background</div>
                 <p style={s.panelSub}>Choose a template or describe your own background</p>
-                <div style={s.creditNote}>Uses {CREDIT_COST} credits · {creditsLeft} remaining</div>
+                <div style={s.creditNote}>
+                  {user?.plan === "free"
+                    ? user.trialToolsUsed?.includes("generate-bg") ? `Free trial used · ${CREDIT_COST} credits after upgrading` : (user.trialsRemaining ?? 0) > 0 ? "1 free trial available" : "No free trials left · upgrade to use"
+                    : `Uses ${CREDIT_COST} credits · ${creditsLeft} remaining`}
+                </div>
 
                 {/* Background Templates Grid */}
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 14 }}>
@@ -1346,7 +1338,11 @@ export default function ImageEditorPage() {
               <div style={s.panelContent}>
                 <div style={s.panelTitle}>✨ AI Edit</div>
                 <p style={s.panelSub}>Describe any change — JPT AI enhances your prompt and edits the image</p>
-                <div style={s.creditNote}>Uses {CREDIT_COST} credits · {creditsLeft} remaining</div>
+                <div style={s.creditNote}>
+                  {user?.plan === "free"
+                    ? user.trialToolsUsed?.includes("ai-edit") ? `Free trial used · ${CREDIT_COST} credits after upgrading` : (user.trialsRemaining ?? 0) > 0 ? "1 free trial available" : "No free trials left · upgrade to use"
+                    : `Uses ${CREDIT_COST} credits · ${creditsLeft} remaining`}
+                </div>
                 <textarea value={prompt} onChange={(e) => setPrompt(e.target.value)} placeholder={'e.g. "Make the background blurry"\n"Change the sky to sunset"\n"Add dramatic lighting"'} style={s.textarea} rows={4} disabled={processing} />
                 <div style={s.suggestions}>
                   {["Make background blurry", "Add dramatic lighting", "Change to black and white", "Make it cinematic", "Add fog effect"].map((s2) => (
@@ -1368,14 +1364,17 @@ export default function ImageEditorPage() {
                 {/* Mode toggle: Normal / Pro AI */}
                 <div style={{ display: "flex", gap: 6, marginBottom: 14, background: "#F3F4F6", borderRadius: 10, padding: 4 }}>
                   {([
-                    { key: "normal", label: "⚡ Normal", sub: "Free · 1 credit" },
+                    { key: "normal", label: "⚡ Normal", sub: "Free · unlimited" },
                     { key: "pro", label: "✨ Pro AI", sub: "2 credits · AI" },
                   ] as const).map(m => (
                     <button
                       key={m.key}
                       onClick={() => {
-                        // Pro upscale is paid-only — show the payment popup for free users.
-                        if (m.key === "pro" && !(user && user.plan && user.plan !== "free")) {
+                        // Pro upscale is paid-only — free users get one trial, then the payment popup.
+                        const isPaidUser = !!(user && user.plan && user.plan !== "free");
+                        const trialUsedForUpscalePro = !!user?.trialToolsUsed?.includes("upscale-pro");
+                        const trialAvailable = !trialUsedForUpscalePro && (user?.trialsRemaining ?? 0) > 0;
+                        if (m.key === "pro" && !isPaidUser && !trialAvailable) {
                           setBlockedTool({ id: "upscale", icon: "✨", label: "Upscale (Pro)" });
                           setShowUpgradeModal(true);
                           return;
@@ -1508,7 +1507,11 @@ export default function ImageEditorPage() {
               <div style={s.panelContent}>
                 <div style={s.panelTitle}>🪄 Remove Background</div>
                 <p style={s.panelSub}>Automatically remove the background from any image</p>
-                <div style={s.creditNote}>Uses {CREDIT_COST} credits · {creditsLeft} remaining</div>
+                <div style={s.creditNote}>
+                  {user?.plan === "free"
+                    ? user.trialToolsUsed?.includes("remove-bg") ? `Free trial used · ${CREDIT_COST} credits after upgrading` : (user.trialsRemaining ?? 0) > 0 ? "1 free trial available" : "No free trials left · upgrade to use"
+                    : `Uses ${CREDIT_COST} credits · ${creditsLeft} remaining`}
+                </div>
                 {processing && removeBgProgress > 0 && (
                   <div style={{ marginBottom: 14 }}>
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
@@ -1583,7 +1586,9 @@ export default function ImageEditorPage() {
                 if (!authChecked) { const next = activeTool === t.id ? null : t.id; setActiveTool(next); setMobileSheetOpen(!!next); return; }
                 if (!user) { requireSignIn(); return; }
                 const isPaidUser = !!(user.plan && user.plan !== "free");
-                if (t.paid && !isPaidUser) { setBlockedTool(t); setShowUpgradeModal(true); return; }
+                const trialUsedForTool = !!(t.id && user.trialToolsUsed?.includes(t.id));
+                const trialAvailable = !trialUsedForTool && (user.trialsRemaining ?? 0) > 0;
+                if (t.paid && !isPaidUser && !trialAvailable) { setBlockedTool(t); setShowUpgradeModal(true); return; }
                 const next = activeTool === t.id ? null : t.id;
                 setActiveTool(next);
                 setMobileSheetOpen(!!next);
@@ -1612,57 +1617,83 @@ export default function ImageEditorPage() {
               </div>
             </div>
 
-            {/* Credits section */}
-            <div style={s.creditsSection}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-                <div style={{ fontWeight: 800, fontSize: 15 }}>⚡ AI Credits</div>
-                <div style={{ fontWeight: 900, fontSize: 20, color: creditsLeft === 0 ? "#EF4444" : "#6366F1" }}>
-                  {creditsLeft} <span style={{ fontSize: 13, color: "#999", fontWeight: 400 }}>/ {creditsTotal}</span>
+            {/* Credits / trials section */}
+            {user.plan === "free" ? (
+              <div style={s.creditsSection}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                  <div style={{ fontWeight: 800, fontSize: 15 }}>🎁 Free Trials</div>
+                  <div style={{ fontWeight: 900, fontSize: 20, color: (user.trialsRemaining ?? 0) === 0 ? "#EF4444" : "#6366F1" }}>
+                    {user.trialsRemaining ?? 0} <span style={{ fontSize: 13, color: "#999", fontWeight: 400 }}>/ {FREE_TRIAL_LIMIT}</span>
+                  </div>
                 </div>
-              </div>
-
-              {/* Progress bar */}
-              <div style={s.creditBarBg}>
-                <div style={{ ...s.creditBarFill, width: `${(creditsLeft / creditsTotal) * 100}%`, background: creditsLeft === 0 ? "#EF4444" : creditsLeft <= 4 ? "#F59E0B" : "#6366F1" }} />
-              </div>
-
-              <div style={{ fontSize: 12, color: "#888", marginTop: 8, lineHeight: 1.6 }}>
-                {creditsLeft} credit{creditsLeft === 1 ? "" : "s"} remaining
-              </div>
-
-              {creditsLeft === 0 && (
-                <div style={s.noCreditsNote}>
-                  You&apos;ve used all {FREE_CREDITS} free credits. More credits coming soon with paid plans.
+                <div style={s.creditBarBg}>
+                  <div style={{ ...s.creditBarFill, width: `${((user.trialsRemaining ?? 0) / FREE_TRIAL_LIMIT) * 100}%`, background: (user.trialsRemaining ?? 0) === 0 ? "#EF4444" : "#6366F1" }} />
                 </div>
-              )}
-              {lowCredits && creditsLeft > 0 && (
-                <div style={s.lowNote}>Running low! Resize and Adjust are free — no credits needed.</div>
-              )}
-            </div>
+                <div style={{ fontSize: 12, color: "#888", marginTop: 8, lineHeight: 1.6 }}>
+                  One free trial per tool — Resize, Adjust and Normal Upscale are always free, no trial needed.
+                </div>
+                {(user.trialsRemaining ?? 0) === 0 && (
+                  <div style={s.noCreditsNote}>
+                    You&apos;ve used all {FREE_TRIAL_LIMIT} free trials. Upgrade to a paid plan to keep using AI tools.
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div style={s.creditsSection}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                  <div style={{ fontWeight: 800, fontSize: 15 }}>⚡ AI Credits</div>
+                  <div style={{ fontWeight: 900, fontSize: 20, color: creditsLeft === 0 ? "#EF4444" : "#6366F1" }}>
+                    {creditsLeft} <span style={{ fontSize: 13, color: "#999", fontWeight: 400 }}>/ {creditsTotal}</span>
+                  </div>
+                </div>
+
+                {/* Progress bar */}
+                <div style={s.creditBarBg}>
+                  <div style={{ ...s.creditBarFill, width: `${(creditsLeft / creditsTotal) * 100}%`, background: creditsLeft === 0 ? "#EF4444" : creditsLeft <= 4 ? "#F59E0B" : "#6366F1" }} />
+                </div>
+
+                <div style={{ fontSize: 12, color: "#888", marginTop: 8, lineHeight: 1.6 }}>
+                  {creditsLeft} credit{creditsLeft === 1 ? "" : "s"} remaining
+                </div>
+
+                {creditsLeft === 0 && (
+                  <div style={s.noCreditsNote}>
+                    No credits remaining. Purchase more to continue.
+                  </div>
+                )}
+                {lowCredits && creditsLeft > 0 && (
+                  <div style={s.lowNote}>Running low! Resize, Adjust and Normal Upscale are free — no credits needed.</div>
+                )}
+              </div>
+            )}
 
             {/* Usage breakdown */}
             <div style={s.usageGrid}>
               {[
-                { icon: "✨", label: "AI Edit", cost: CREDIT_COST },
-                { icon: "🌅", label: "Generate BG", cost: CREDIT_COST },
-                { icon: "🪄", label: "Remove BG", cost: CREDIT_COST },
-                { icon: "✨", label: "Upscale (Pro)", cost: CREDIT_COST },
-                { icon: "🔍", label: "Upscale (Normal)", cost: BASIC_UPSCALE_COST },
-                { icon: "↔️", label: "Resize", cost: 0 },
-                { icon: "🎨", label: "Adjust", cost: 0 },
-              ].map((item) => (
-                <div key={item.label} style={s.usageItem}>
-                  <span>{item.icon} {item.label}</span>
-                  <span style={{ fontWeight: 700, color: item.cost === 0 ? "#10B981" : "#6366F1" }}>
-                    {item.cost === 0 ? "Free" : `${item.cost} cr`}
-                  </span>
-                </div>
-              ))}
+                { icon: "✨", label: "AI Edit", id: "ai-edit", cost: CREDIT_COST },
+                { icon: "🌅", label: "Generate BG", id: "generate-bg", cost: CREDIT_COST },
+                { icon: "🪄", label: "Remove BG", id: "remove-bg", cost: CREDIT_COST },
+                { icon: "✨", label: "Upscale (Pro)", id: "upscale-pro", cost: CREDIT_COST },
+                { icon: "🔍", label: "Upscale (Normal)", id: "upscale", cost: 0 },
+                { icon: "↔️", label: "Resize", id: "resize", cost: 0 },
+                { icon: "🎨", label: "Adjust", id: "adjust", cost: 0 },
+              ].map((item) => {
+                const trialUsed = user.plan === "free" && !!user.trialToolsUsed?.includes(item.id);
+                const trialAvailable = user.plan === "free" && item.cost > 0 && !trialUsed && (user.trialsRemaining ?? 0) > 0;
+                return (
+                  <div key={item.label} style={s.usageItem}>
+                    <span>{item.icon} {item.label}</span>
+                    <span style={{ fontWeight: 700, color: item.cost === 0 ? "#10B981" : trialAvailable ? "#16A34A" : "#6366F1" }}>
+                      {item.cost === 0 ? "Free" : trialAvailable ? "1 free trial" : user.plan === "free" ? `${item.cost} cr (after trial)` : `${item.cost} cr`}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
 
             {user.plan === "free" && (
               <div style={{ fontSize: 12, color: "#888", textAlign: "center" as const, marginBottom: 8 }}>
-                Free plan · 10 credits/day · resets every 24h
+                Free plan · {user.trialsRemaining ?? 0} of {FREE_TRIAL_LIMIT} free trials left
               </div>
             )}
             <button style={{ ...s.primaryBtn, marginTop: 4 }} onClick={() => { setShowAccountModal(false); setShowUpgradeModal(true); }}>
@@ -1793,31 +1824,21 @@ export default function ImageEditorPage() {
         <div style={s.modalOverlay} onClick={() => setShowNoCreditsModal(false)}>
           <div style={s.modalBox} onClick={(e) => e.stopPropagation()}>
             <div style={{ fontSize: 48, marginBottom: 12 }}>⚡</div>
-            <div style={s.modalTitle}>Daily credits used up</div>
+            <div style={s.modalTitle}>No credits remaining</div>
 
-            {/* Renewal timer */}
-            <div style={{ background: "#F5F3FF", border: "1.5px solid #C4B5FD", borderRadius: 12, padding: "14px 18px", marginBottom: 16, textAlign: "center" as const }}>
-              <div style={{ fontSize: 12, color: "#7C3AED", fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: 0.8, marginBottom: 6 }}>Free credits renew in</div>
-              <div style={{ fontSize: 28, fontWeight: 900, color: "#6366F1", letterSpacing: 1, fontVariantNumeric: "tabular-nums" }}>
-                {creditRenewCountdown || "calculating…"}
-              </div>
-              <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Your 10 free credits reset every 24 hours</div>
-            </div>
-
-            {/* Why wait CTA */}
             <div style={{ fontSize: 13, color: "#555", lineHeight: 1.6, marginBottom: 16, textAlign: "center" as const }}>
-              Why wait? <strong>Buy a plan and unlock full AI features</strong> —<br />
-              unlimited transformations, no daily limits, credits never expire.
+              You&apos;ve used up your purchased credits. <strong>Buy more to keep using AI features</strong> —<br />
+              your credits never expire.
             </div>
 
             <div style={s.noCreditsInfo}>
               <div style={{ fontWeight: 700, marginBottom: 8 }}>Always free (no credits needed):</div>
-              <div>↔️ Resize &nbsp;·&nbsp; 🎨 Color Adjust</div>
+              <div>↔️ Resize &nbsp;·&nbsp; 🎨 Color Adjust &nbsp;·&nbsp; 🔍 Normal Upscale</div>
             </div>
             <button style={s.primaryBtn} onClick={() => { setShowNoCreditsModal(false); setShowUpgradeModal(true); }}>
-              🚀 Upgrade Plan — Unlock Everything
+              💳 Get More Credits
             </button>
-            <button style={s.modalDismiss} onClick={() => setShowNoCreditsModal(false)}>I&apos;ll wait for the reset</button>
+            <button style={s.modalDismiss} onClick={() => setShowNoCreditsModal(false)}>Maybe later</button>
           </div>
         </div>
       )}
@@ -1851,7 +1872,7 @@ export default function ImageEditorPage() {
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 20 }}>
                 <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: 12, padding: "12px 14px" }}>
                   <div style={{ fontWeight: 800, fontSize: 12, marginBottom: 8, opacity: 0.8 }}>✅ FREE (Your Plan)</div>
-                  {["↔️ Resize", "🎨 Color Adjust", "🔢 Basic Crop", "🔍 Basic Upscale (1 cr/day)"].map(f => (
+                  {["↔️ Resize", "🎨 Color Adjust", "🔢 Basic Crop", "🔍 Unlimited Basic Upscale", "🎁 5 free AI trials"].map(f => (
                     <div key={f} style={{ fontSize: 12, opacity: 0.9, marginBottom: 4 }}>{f}</div>
                   ))}
                 </div>

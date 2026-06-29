@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
       const imagenData = (await imagenRes.json()) as { predictions?: { bytesBase64Encoded?: string; mimeType?: string }[] };
       const pred = imagenData.predictions?.[0];
       if (pred?.bytesBase64Encoded) {
-        return await withCredits({ data: pred.bytesBase64Encoded, mimeType: pred.mimeType || "image/png" }, session!);
+        return await withCredits({ data: pred.bytesBase64Encoded, mimeType: pred.mimeType || "image/png" }, session!, "ai", req, "ai-background");
       }
     }
 
@@ -119,7 +119,7 @@ export async function POST(req: NextRequest) {
     const inlineData = geminiData.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData;
     if (!inlineData) return NextResponse.json({ error: "No image in response. Try a different prompt." }, { status: 500 });
 
-    return await withCredits({ data: inlineData.data, mimeType: inlineData.mimeType }, session!);
+    return await withCredits({ data: inlineData.data, mimeType: inlineData.mimeType }, session!, "ai", req, "ai-background");
   } catch (err) {
     console.error("ai-background error:", err);
     return NextResponse.json({ error: String(err) }, { status: 500 });

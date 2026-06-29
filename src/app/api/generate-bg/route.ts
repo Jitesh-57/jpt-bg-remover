@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
     const resultDataUrl = await runPixelBinPredictionAsDataUrl(src, "nanoBananaPro", "generate", {
       prompt: `Replace the background with: ${prompt.trim()}. Keep the main subject exactly as-is.`,
     });
-    return withCredits({ dataUrl: resultDataUrl }, session!, "ai", req);
+    return withCredits({ dataUrl: resultDataUrl }, session!, "ai", req, "generate-bg");
   } catch (e) {
     console.error("[generate-bg]", e);
     return NextResponse.json({ error: String(e) }, { status: 500 });

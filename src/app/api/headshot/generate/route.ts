@@ -64,5 +64,5 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ images, errors }, { status: 500 });
   }
 
-  return withCredits({ images, errors }, session!, "ai", req);
+  return withCredits({ images, errors }, session!, "ai", req, "ai-headshot");
 }

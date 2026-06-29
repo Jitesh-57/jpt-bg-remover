@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const resultDataUrl = await runPixelBinPredictionAsDataUrl(src, "erase", "bg");
-    return withCredits({ dataUrl: resultDataUrl }, session!, "standard", req);
+    return withCredits({ dataUrl: resultDataUrl }, session!, "standard", req, "remove-bg");
   } catch (e) {
     console.error("[remove-bg]", e);
     return NextResponse.json({ error: String(e) }, { status: 500 });

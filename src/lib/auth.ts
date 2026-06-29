@@ -1,16 +1,16 @@
 /**
- * auth.ts — Credit system with daily reset for free users and paid plans
+ * auth.ts — Trial system for free users, credit system for paid plans
  *
  * Plans:
- *   free     → 10 daily credits (auto-reset every 24h), basic tools only
+ *   free     → 5 lifetime free trials total, max ONE trial per distinct tool/app,
+ *              plus unlimited free basic (non-AI) upscale and resize/adjust
  *   starter  → 50 paid credits, all tools
  *   creator  → 100 paid credits, all tools
  *   pro      → 300 paid credits, all tools
  *
- * Costs:
- *   resize / color-adjust  → 0 credits (always free)
- *   basic-upscale          → 1 credit  (free & paid users)
- *   AI tools               → 2 credits (paid users only)
+ * Costs (paid plans only — free plan uses the trial system below):
+ *   resize / color-adjust / basic-upscale → 0 credits (always free, everyone)
+ *   AI tools                              → 2 credits (paid users only)
  */
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
@@ -21,6 +21,7 @@ export const DAILY_FREE_CREDITS = 10;
 export const CREDIT_COST = 2;
 export const BASIC_UPSCALE_COST = 1;
 export const FREE_TOOLS = ["resize", "color-adjust"];
+export const FREE_TRIAL_LIMIT = 5;
 
 export type Plan = "free" | "starter" | "creator" | "pro";
 
@@ -41,6 +42,7 @@ export interface KVUser {
 export interface SessionPayload {
   userId: string; email: string; name: string; picture?: string;
   provider: "google" | "email"; credits: number; plan: Plan;
+  trialToolsUsed: string[]; trialsRemaining: number;
   iat: number; exp: number;
 }
 export type GoogleSession = SessionPayload;
@@ -74,35 +76,50 @@ export function createAdminSupabase() {
   );
 }
 
-// ─── Daily credit reset ───────────────────────────────────────────────────────
+// ─── Free-trial tracking (replaces the old daily-credit grant) ───────────────
+//
+// Free-plan users get FREE_TRIAL_LIMIT (5) lifetime trials, max one per distinct
+// toolId, tracked in Supabase Auth user_metadata.trial_tools_used (a string[]).
+// This avoids a DB schema change, same approach as the old single-trial flag.
 
-async function maybeResetDailyCredits(
+async function getUserMetadata(
+  admin: ReturnType<typeof createAdminSupabase>,
+  userId: string
+): Promise<Record<string, unknown>> {
+  try {
+    const { data } = await admin.auth.admin.getUserById(userId);
+    return data?.user?.user_metadata || {};
+  } catch {
+    return {};
+  }
+}
+
+export async function getTrialToolsUsed(
+  admin: ReturnType<typeof createAdminSupabase>,
+  userId: string
+): Promise<string[]> {
+  const metadata = await getUserMetadata(admin, userId);
+  const used = metadata.trial_tools_used;
+  return Array.isArray(used) ? used.filter((t): t is string => typeof t === "string") : [];
+}
+
+async function markTrialToolUsed(
+  admin: ReturnType<typeof createAdminSupabase>,
   userId: string,
-  profile: ProfileRow,
-  admin: ReturnType<typeof createAdminSupabase>
-): Promise<number> {
-  if (profile.plan !== "free") return profile.credits;
-
-  const now = Date.now();
-
-  // If daily_credits_reset_at is null, just stamp it now — don't reset credits
-  if (!profile.daily_credits_reset_at) {
-    await admin.from("profiles").upsert({
-      id: userId, daily_credits_reset_at: new Date().toISOString(),
-    }, { onConflict: "id" });
-    return profile.credits;
+  toolId: string
+): Promise<void> {
+  try {
+    const currentMetadata = await getUserMetadata(admin, userId);
+    const trialToolsUsed = Array.isArray(currentMetadata.trial_tools_used)
+      ? (currentMetadata.trial_tools_used as unknown[]).filter((t): t is string => typeof t === "string")
+      : [];
+    if (trialToolsUsed.includes(toolId)) return; // already recorded, avoid duplicate
+    await admin.auth.admin.updateUserById(userId, {
+      user_metadata: { ...currentMetadata, trial_tools_used: [...trialToolsUsed, toolId] },
+    });
+  } catch (e) {
+    console.warn("[auth] could not record trial usage:", (e as Error).message);
   }
-
-  const resetAt = new Date(profile.daily_credits_reset_at).getTime();
-  const hoursSince = (now - resetAt) / 3_600_000;
-
-  if (hoursSince >= 24) {
-    await admin.from("profiles").upsert({
-      id: userId, credits: DAILY_FREE_CREDITS, daily_credits_reset_at: new Date().toISOString(),
-    }, { onConflict: "id" });
-    return DAILY_FREE_CREDITS;
-  }
-  return profile.credits;
 }
 
 // ─── checkAuth ────────────────────────────────────────────────────────────────
@@ -123,7 +140,7 @@ export async function checkAuth(req: NextRequest): Promise<
   const admin = createAdminSupabase();
   const { data: profile } = await admin
     .from("profiles")
-    .select("credits, plan, daily_credits_reset_at, name, picture")
+    .select("credits, plan, name, picture")
     .eq("id", user.id)
     .single() as { data: ProfileRow | null };
 
@@ -131,20 +148,25 @@ export async function checkAuth(req: NextRequest): Promise<
   let credits: number;
 
   if (!profile) {
-    // No profile row — create one now so future updates have a target
-    credits = DAILY_FREE_CREDITS;
+    // No profile row — create one now so future updates have a target.
+    // Free-plan users no longer get a daily credit grant; their free usage
+    // is governed by the trial system (see getTrialToolsUsed/withCredits).
+    credits = 0;
     await admin.from("profiles").upsert({
       id: user.id,
       name: user.user_metadata?.name || user.email!.split("@")[0],
       picture: user.user_metadata?.avatar_url || null,
-      credits: DAILY_FREE_CREDITS,
+      credits: 0,
       plan: "free",
-      daily_credits_reset_at: new Date().toISOString(),
     }, { onConflict: "id" });
   } else {
     credits = profile.credits ?? 0;
-    credits = await maybeResetDailyCredits(user.id, { ...profile, plan, credits }, admin);
   }
+
+  const trialToolsUsedRaw = user.user_metadata?.trial_tools_used;
+  const trialToolsUsed: string[] = Array.isArray(trialToolsUsedRaw)
+    ? trialToolsUsedRaw.filter((t): t is string => typeof t === "string")
+    : [];
 
   return {
     session: {
@@ -155,6 +177,8 @@ export async function checkAuth(req: NextRequest): Promise<
       provider: (user.app_metadata?.provider || "email") as "google" | "email",
       credits,
       plan,
+      trialToolsUsed,
+      trialsRemaining: Math.max(0, FREE_TRIAL_LIMIT - trialToolsUsed.length),
       iat: 0, exp: 0,
     },
     error: null,
@@ -164,23 +188,52 @@ export async function checkAuth(req: NextRequest): Promise<
 // ─── withCredits ──────────────────────────────────────────────────────────────
 //
 //  toolType:
-//    "free"  → no credit charge, no plan restriction
-//    "basic" → 1 credit, free users OK
-//    "ai"    → 2 credits, PAID users only
+//    "free"            → no charge, no plan restriction (resize, color-adjust)
+//    "basic"           → always free, unlimited, no plan restriction (normal upscale)
+//    "ai" / "standard" → paid plans: 2 credits from their purchased balance.
+//                        free plan: governed by the 5-distinct-tool trial system
+//                        — requires `toolId` to identify which tool/app this is.
 
 export async function withCredits(
   body: object,
   session: GoogleSession,
   toolType: "free" | "basic" | "standard" | "ai" = "ai",
-  req?: NextRequest
+  req?: NextRequest,
+  toolId?: string
 ): Promise<NextResponse> {
-  if (toolType === "free") {
+  if (toolType === "free" || toolType === "basic") {
     return NextResponse.json({ ...body, credits: session.credits });
   }
 
-  const cost = toolType === "ai" || toolType === "standard" ? CREDIT_COST : BASIC_UPSCALE_COST;
+  // Paid plans: unchanged — deduct from their purchased credit balance.
+  if (session.plan !== "free") {
+    const cost = CREDIT_COST;
+    if (session.credits < cost) {
+      return NextResponse.json({
+        error: "No credits remaining. Purchase more to continue.",
+        credits: session.credits,
+        upgradeRequired: false,
+      }, { status: 402 });
+    }
+    const newCredits = Math.max(0, session.credits - cost);
+    const admin = createAdminSupabase();
+    const { error: adminErr } = await admin
+      .from("profiles")
+      .upsert({ id: session.userId, credits: newCredits }, { onConflict: "id" });
+    if (adminErr && req) {
+      console.warn("[withCredits] admin upsert failed, retrying with user auth:", adminErr.message);
+      const userClient = createRequestSupabase(req);
+      const { error: userErr } = await userClient
+        .from("profiles")
+        .upsert({ id: session.userId, credits: newCredits }, { onConflict: "id" });
+      if (userErr) console.error("[withCredits] user-auth upsert also failed:", userErr.message);
+    }
+    return NextResponse.json({ ...body, credits: newCredits });
+  }
 
-  if (toolType === "ai" && session.plan === "free") {
+  // Free plan: gated by the 5-distinct-tool trial system.
+  if (!toolId) {
+    console.error("[withCredits] missing toolId for free-plan ai/standard request");
     return NextResponse.json({
       error: "This feature requires a paid plan. Upgrade to use AI transformations.",
       upgradeRequired: true,
@@ -188,36 +241,37 @@ export async function withCredits(
     }, { status: 403 });
   }
 
-  if (session.credits < cost) {
-    return NextResponse.json({
-      error: session.plan === "free"
-        ? "Daily credits used up. They'll reset in 24 hours, or upgrade for more."
-        : "No credits remaining. Purchase more to continue.",
-      credits: session.credits,
-      upgradeRequired: session.plan === "free",
-    }, { status: 402 });
-  }
-
-  const newCredits = Math.max(0, session.credits - cost);
-
-  // Upsert so it always writes even if the profile row doesn't exist yet
   const admin = createAdminSupabase();
-  const { error: adminErr } = await admin
-    .from("profiles")
-    .upsert({ id: session.userId, credits: newCredits }, { onConflict: "id" });
+  const trialToolsUsed = await getTrialToolsUsed(admin, session.userId);
 
-  if (adminErr && req) {
-    console.warn("[withCredits] admin upsert failed, retrying with user auth:", adminErr.message);
-    const userClient = createRequestSupabase(req);
-    const { error: userErr } = await userClient
-      .from("profiles")
-      .upsert({ id: session.userId, credits: newCredits }, { onConflict: "id" });
-    if (userErr) {
-      console.error("[withCredits] user-auth upsert also failed:", userErr.message);
-    }
+  if (trialToolsUsed.includes(toolId)) {
+    return NextResponse.json({
+      error: "You've already used your free trial for this tool. Upgrade to keep using it.",
+      upgradeRequired: true,
+      trialUsed: true,
+      credits: session.credits,
+      trialsRemaining: Math.max(0, FREE_TRIAL_LIMIT - trialToolsUsed.length),
+    }, { status: 403 });
   }
 
-  return NextResponse.json({ ...body, credits: newCredits });
+  if (trialToolsUsed.length >= FREE_TRIAL_LIMIT) {
+    return NextResponse.json({
+      error: `You've used all ${FREE_TRIAL_LIMIT} free trials. Upgrade to a paid plan to keep creating.`,
+      upgradeRequired: true,
+      trialUsed: true,
+      credits: session.credits,
+      trialsRemaining: 0,
+    }, { status: 403 });
+  }
+
+  await markTrialToolUsed(admin, session.userId, toolId);
+
+  return NextResponse.json({
+    ...body,
+    credits: session.credits,
+    trial: true,
+    trialsRemaining: Math.max(0, FREE_TRIAL_LIMIT - (trialToolsUsed.length + 1)),
+  });
 }
 
 // ─── Legacy stubs ─────────────────────────────────────────────────────────────

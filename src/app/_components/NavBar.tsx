@@ -7,26 +7,9 @@ import { trackSignUp } from "@/lib/analytics";
 
 const PricingModal = lazy(() => import("./PricingModal"));
 
-interface User { email: string; name: string; picture?: string; credits: number; plan: string; dailyCreditResetAt: string | null; }
+interface User { email: string; name: string; picture?: string; credits: number; plan: string; trialToolsUsed: string[]; trialsRemaining: number; }
 
-function useCountdown(resetAt: string | null): string {
-  const [label, setLabel] = useState("");
-  useEffect(() => {
-    if (!resetAt) { setLabel(""); return; }
-    const update = () => {
-      const msLeft = new Date(resetAt).getTime() + 86_400_000 - Date.now();
-      if (msLeft <= 0) { setLabel("Refreshing…"); return; }
-      const h = Math.floor(msLeft / 3_600_000);
-      const m = Math.floor((msLeft % 3_600_000) / 60_000);
-      const s = Math.floor((msLeft % 60_000) / 1_000);
-      setLabel(`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`);
-    };
-    update();
-    const id = setInterval(update, 1000);
-    return () => clearInterval(id);
-  }, [resetAt]);
-  return label;
-}
+const FREE_TRIAL_LIMIT = 5;
 
 const TOOLS = [
   {
@@ -66,7 +49,6 @@ export default function NavBar() {
   }, []);
 
   const pathname = usePathname();
-  const countdown = useCountdown(user?.plan === "free" ? user?.dailyCreditResetAt ?? null : null);
 
   const [tab, setTab] = useState<"google" | "email">("google");
   const [mode, setMode] = useState<"login" | "signup">("login");
@@ -100,8 +82,8 @@ export default function NavBar() {
 
   const fetchUser = () =>
     fetch("/api/auth/google/me").then(r => r.json())
-      .then((d: { authenticated: boolean; email?: string; name?: string; picture?: string; credits?: number; plan?: string; dailyCreditResetAt?: string | null }) => {
-        if (d.authenticated && d.email) setUser({ email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? 10, plan: d.plan ?? "free", dailyCreditResetAt: d.dailyCreditResetAt ?? null });
+      .then((d: { authenticated: boolean; email?: string; name?: string; picture?: string; credits?: number; plan?: string; trialToolsUsed?: string[]; trialsRemaining?: number }) => {
+        if (d.authenticated && d.email) setUser({ email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? 0, plan: d.plan ?? "free", trialToolsUsed: d.trialToolsUsed ?? [], trialsRemaining: d.trialsRemaining ?? 0 });
       }).catch(() => null);
 
   const openModal = () => { setShowModal(true); setTab("google"); setMode("login"); setEmail(""); setPassword(""); setName(""); setAuthError(""); };
@@ -240,7 +222,9 @@ export default function NavBar() {
                   ? <img src={user.picture} alt="" style={{ width: 28, height: 28, borderRadius: "50%", flexShrink: 0 }} />
                   : <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#6366F1", color: "#fff", fontSize: 13, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>{user.name[0]}</div>}
                 <span style={{ fontSize: 13, fontWeight: 600, color: "#E2E8F0" }}>{user.name.split(" ")[0]}</span>
-                <span style={{ fontSize: 11, background: "#6366F1", color: "#fff", padding: "2px 8px", borderRadius: 12, fontWeight: 700 }}>⚡ {user.credits}</span>
+                <span style={{ fontSize: 11, background: "#6366F1", color: "#fff", padding: "2px 8px", borderRadius: 12, fontWeight: 700 }}>
+                  {user.plan === "free" ? `🎁 ${user.trialsRemaining}` : `⚡ ${user.credits}`}
+                </span>
               </button>
               {showMenu && !isMobile && (
                 <div style={{ position: "absolute", top: "calc(100% + 10px)", right: 0, background: "#fff", border: "1px solid #E5E7EB", borderRadius: 14, boxShadow: "0 8px 30px rgba(0,0,0,0.15)", minWidth: 220, zIndex: 1000, overflow: "hidden" }}>
@@ -248,11 +232,10 @@ export default function NavBar() {
                     <div style={{ fontWeight: 700, fontSize: 14, color: "#111" }}>{user.name}</div>
                     <div style={{ fontSize: 12, color: "#6B7280", marginTop: 2 }}>{user.email}</div>
                   </div>
-                  {user.plan === "free" && user.credits === 0 && countdown && (
+                  {user.plan === "free" && user.trialsRemaining === 0 && (
                     <div style={{ margin: "10px 12px 4px", background: "linear-gradient(135deg,#EEF2FF,#F5F3FF)", border: "1px solid #C7D2FE", borderRadius: 12, padding: "12px 14px" }}>
-                      <div style={{ fontSize: 11, fontWeight: 700, color: "#6366F1", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>⏱ Free credits refresh in</div>
-                      <div style={{ fontFamily: "monospace", fontSize: 22, fontWeight: 900, color: "#4338CA", letterSpacing: "0.05em", lineHeight: 1 }}>{countdown}</div>
-                      <div style={{ fontSize: 11, color: "#6B7280", marginTop: 5 }}>You get 10 free credits every 24 hours</div>
+                      <div style={{ fontSize: 11, fontWeight: 700, color: "#6366F1", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>🎁 Free trials used up</div>
+                      <div style={{ fontSize: 11, color: "#6B7280", marginTop: 5 }}>You&apos;ve used all {FREE_TRIAL_LIMIT} free trials, one per tool.</div>
                       <div style={{ fontSize: 11, color: "#6366F1", fontWeight: 600, marginTop: 4 }}>Unlock all AI features with a paid plan</div>
                       <button onClick={() => { setShowPricing(true); setShowMenu(false); }}
                         style={{ marginTop: 8, width: "100%", padding: "7px 12px", background: "#6366F1", color: "#fff", border: "none", borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
@@ -260,13 +243,13 @@ export default function NavBar() {
                       </button>
                     </div>
                   )}
-                  {user.plan === "free" && user.credits > 0 && (
+                  {user.plan === "free" && user.trialsRemaining > 0 && (
                     <div style={{ margin: "10px 12px 4px", background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 10, padding: "8px 12px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                       <div>
-                        <div style={{ fontSize: 11, fontWeight: 700, color: "#16A34A", textTransform: "uppercase", letterSpacing: "0.06em" }}>Free daily credits</div>
-                        <div style={{ fontSize: 12, color: "#4B5563", marginTop: 2 }}>{user.credits} of 10 remaining · resets in {countdown || "…"}</div>
+                        <div style={{ fontSize: 11, fontWeight: 700, color: "#16A34A", textTransform: "uppercase", letterSpacing: "0.06em" }}>Free trials</div>
+                        <div style={{ fontSize: 12, color: "#4B5563", marginTop: 2 }}>{user.trialsRemaining} of {FREE_TRIAL_LIMIT} left · one per tool</div>
                       </div>
-                      <div style={{ fontSize: 20, fontWeight: 900, color: "#16A34A" }}>{user.credits}</div>
+                      <div style={{ fontSize: 20, fontWeight: 900, color: "#16A34A" }}>{user.trialsRemaining}</div>
                     </div>
                   )}
                   <div style={{ padding: "6px 0" }}>
@@ -303,24 +286,23 @@ export default function NavBar() {
                   <div style={{ fontWeight: 700, fontSize: 15, color: "#111" }}>{user.name}</div>
                   <div style={{ fontSize: 12, color: "#6B7280", marginTop: 2 }}>{user.email}</div>
                 </div>
-                {user.plan === "free" && user.credits === 0 && countdown && (
+                {user.plan === "free" && user.trialsRemaining === 0 && (
                   <div style={{ margin: "12px 16px 4px", background: "linear-gradient(135deg,#EEF2FF,#F5F3FF)", border: "1px solid #C7D2FE", borderRadius: 12, padding: "12px 14px" }}>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: "#6366F1", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>⏱ Free credits refresh in</div>
-                    <div style={{ fontFamily: "monospace", fontSize: 22, fontWeight: 900, color: "#4338CA", letterSpacing: "0.05em", lineHeight: 1 }}>{countdown}</div>
-                    <div style={{ fontSize: 11, color: "#6B7280", marginTop: 5 }}>You get 10 free credits every 24 hours</div>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: "#6366F1", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>🎁 Free trials used up</div>
+                    <div style={{ fontSize: 11, color: "#6B7280", marginTop: 5 }}>You&apos;ve used all {FREE_TRIAL_LIMIT} free trials, one per tool.</div>
                     <button onClick={() => { setShowPricing(true); setShowMenu(false); }}
                       style={{ marginTop: 8, width: "100%", padding: "10px 12px", background: "#6366F1", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
                       Buy Paid Plan
                     </button>
                   </div>
                 )}
-                {user.plan === "free" && user.credits > 0 && (
+                {user.plan === "free" && user.trialsRemaining > 0 && (
                   <div style={{ margin: "12px 16px 4px", background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 10, padding: "10px 12px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                     <div>
-                      <div style={{ fontSize: 11, fontWeight: 700, color: "#16A34A", textTransform: "uppercase", letterSpacing: "0.06em" }}>Free daily credits</div>
-                      <div style={{ fontSize: 12, color: "#4B5563", marginTop: 2 }}>{user.credits} of 10 remaining · resets in {countdown || "…"}</div>
+                      <div style={{ fontSize: 11, fontWeight: 700, color: "#16A34A", textTransform: "uppercase", letterSpacing: "0.06em" }}>Free trials</div>
+                      <div style={{ fontSize: 12, color: "#4B5563", marginTop: 2 }}>{user.trialsRemaining} of {FREE_TRIAL_LIMIT} left · one per tool</div>
                     </div>
-                    <div style={{ fontSize: 20, fontWeight: 900, color: "#16A34A" }}>{user.credits}</div>
+                    <div style={{ fontSize: 20, fontWeight: 900, color: "#16A34A" }}>{user.trialsRemaining}</div>
                   </div>
                 )}
                 <div style={{ padding: "8px 0" }}>

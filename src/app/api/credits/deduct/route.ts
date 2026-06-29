@@ -9,7 +9,8 @@ export async function POST(req: NextRequest) {
 
   const { tool } = await req.json() as { tool?: string };
 
-  // Only basic-upscale uses this endpoint; resize/adjust are always free
+  // Normal/basic upscale is unlimited and free for everyone — this endpoint
+  // is kept only so the client's existing call doesn't error.
   if (tool !== "basic-upscale") {
     return NextResponse.json({ credits: session!.credits });
   }

@@ -60,8 +60,9 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient, appNam
   const [showPricing, setShowPricing] = useState(false);
   const [pricingNotice, setPricingNotice] = useState<string | undefined>(undefined);
   const [trialDone, setTrialDone] = useState(false);
+  const [trialsRemaining, setTrialsRemaining] = useState<number | null>(null);
 
-  const TRIAL_NOTICE = "You've already used your free trial. Buy credits for more generations and unlock all AI tools.";
+  const TRIAL_NOTICE = "You've used your free trials. Buy credits to keep generating and unlock all AI tools.";
 
   const openPricing = (note?: string) => { setPricingNotice(note); setShowPricing(true); };
 
@@ -96,12 +97,12 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient, appNam
     trackToolUse(`creative:${slug}`);
 
     // Try to upload to Supabase to dodge the 4.5MB API body limit; fall back to dataUrl.
-    let body: Record<string, unknown> = { dataUrl: original, prompt };
+    let body: Record<string, unknown> = { dataUrl: original, prompt, slug };
     setStatus("uploading");
     try {
       const { uploadDataUrlToSupabase } = await import("@/lib/supabase-upload");
       const imageUrl = await uploadDataUrlToSupabase(original);
-      body = { imageUrl, prompt };
+      body = { imageUrl, prompt, slug };
     } catch {
       /* fall back to base64 dataUrl */
     }
@@ -113,7 +114,7 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient, appNam
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
-      const data = (await res.json()) as { dataUrl?: string; error?: string; upgradeRequired?: boolean; trial?: boolean; trialUsed?: boolean };
+      const data = (await res.json()) as { dataUrl?: string; error?: string; upgradeRequired?: boolean; trial?: boolean; trialUsed?: boolean; trialsRemaining?: number };
 
       // Not signed in → save the photo and send them to sign-in, then back here.
       if (res.status === 401) { goSignIn(); return; }
@@ -124,7 +125,7 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient, appNam
 
       setResult(data.dataUrl);
       setStatus("done");
-      if (data.trial) setTrialDone(true);
+      if (data.trial) { setTrialDone(true); setTrialsRemaining(data.trialsRemaining ?? null); }
       trackEvent("creative_generate_success", { tool: slug, trial: !!data.trial });
       // Save to My Generations.
       saveGeneration({ url: data.dataUrl, tool: `creative:${slug}`, label: appName });
@@ -233,7 +234,7 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient, appNam
           </div>
         )}
         <div style={{ marginTop: 12, fontSize: 12.5, color: "#9CA3AF" }}>
-          ⚡ Each generation uses 2 credits · your first try is free
+          🎁 New users get 5 free trials, one per tool — try this app free · 2 credits per generation after that
         </div>
       </div>
 
@@ -247,7 +248,11 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient, appNam
       {/* Free-trial note after a successful trial generation */}
       {trialDone && status === "done" && (
         <Notice color="#4338CA" bg="#EEF2FF">
-          🎁 That was your <strong>free trial</strong>. <button onClick={() => openPricing(TRIAL_NOTICE)} style={btnLinkStyle}>Buy credits to unlock all AI tools →</button>
+          🎁 That was your free trial for this app
+          {trialsRemaining !== null && trialsRemaining > 0
+            ? ` — you have ${trialsRemaining} more free trial${trialsRemaining === 1 ? "" : "s"} for other tools or apps, or `
+            : " — you've used all your free trials, "}
+          <button onClick={() => openPricing(TRIAL_NOTICE)} style={btnLinkStyle}>buy credits to unlock unlimited use →</button>
         </Notice>
       )}
       {needs === "credits" && (

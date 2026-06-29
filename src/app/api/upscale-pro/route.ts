@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const resultDataUrl = await runPixelBinPredictionAsDataUrl(src, "sr", "upscale");
-    return withCredits({ dataUrl: resultDataUrl }, session!, "ai", req);
+    return withCredits({ dataUrl: resultDataUrl }, session!, "ai", req, "upscale-pro");
   } catch (e) {
     console.error("[upscale-pro]", e);
     return NextResponse.json({ error: String(e) }, { status: 500 });
