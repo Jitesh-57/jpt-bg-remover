@@ -257,6 +257,196 @@ export const CREATIVE_APPS: CreativeApp[] = [
       { q: "Will my subject stay sharp?", a: "Yes. The AI preserves the subject and fine edges like hair while replacing only the background." },
     ],
   },
+  {
+    slug: "linkedin-banner",
+    emoji: "🖥️",
+    gradient: ["#0A66C2", "#1E3A8A"],
+    title: "AI LinkedIn Banner Maker — Free Profile Cover Photo Generator | JPT AI",
+    metaDescription:
+      "Create a professional LinkedIn banner free online. Upload a photo and AI generates a branded cover image on the page — no design skills, no watermark.",
+    keywords: "ai linkedin banner maker, linkedin cover photo generator free, linkedin background image ai, professional linkedin banner free, linkedin header image maker",
+    h1: "AI LinkedIn Banner Maker",
+    tagline: "Upload a photo and AI generates a polished LinkedIn cover banner — right here, in seconds. Free.",
+    intro: "Generate a professional LinkedIn banner from a photo.",
+    prompt: "Create a professional LinkedIn banner background image inspired by this photo: clean corporate gradient in deep blue tones, subtle abstract geometric shapes, professional and modern, wide banner composition with negative space for text overlay. Keep it tasteful and brand-safe.",
+    badge: "✨ LinkedIn Banner",
+    faq: [
+      { q: "How do I make a LinkedIn banner with AI?", a: "Upload any photo or just a colour reference on this page and click Generate. The AI creates a polished, professional banner sized for LinkedIn in seconds." },
+      { q: "Is it free?", a: "Yes — free daily credits when you sign in, with no watermark on your download." },
+      { q: "What size is the banner?", a: "The output is generated to fit LinkedIn's wide banner format. You can crop slightly after download if needed for an exact fit." },
+    ],
+  },
+  {
+    slug: "christmas-photo",
+    emoji: "🎄",
+    gradient: ["#B91C1C", "#15803D"],
+    title: "AI Christmas Photo Maker — Festive Holiday Portrait Free | JPT AI",
+    metaDescription:
+      "Create a festive AI Christmas photo free online. Upload a selfie and AI adds a cozy holiday scene on the page — no app, no watermark.",
+    keywords: "ai christmas photo maker, holiday photo editor ai free, christmas portrait generator, festive ai photo free, ai xmas photo maker",
+    h1: "AI Christmas Photo Maker",
+    tagline: "Upload a selfie and AI creates a cozy festive Christmas portrait — right here, in seconds. Free.",
+    intro: "Turn a selfie into a cozy Christmas portrait.",
+    prompt: "Transform this photo into a warm festive Christmas portrait: soft string lights, a decorated tree in the background, a cozy red or green sweater, gentle golden bokeh and a joyful holiday mood. Keep the face and identity exactly the same.",
+    badge: "✨ Christmas",
+    faq: [
+      { q: "How do I make a Christmas photo with AI?", a: "Upload your selfie on this page and click Generate. The AI adds festive lighting, decorations and a cozy holiday mood in seconds." },
+      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+      { q: "Can I use it for greeting cards?", a: "Yes, download the full-quality image and use it for cards, social posts or prints." },
+    ],
+  },
+  {
+    slug: "baby-photoshoot",
+    emoji: "👶",
+    gradient: ["#F472B6", "#FDE68A"],
+    title: "AI Baby Photoshoot — Cute Studio Baby Portrait Free | JPT AI",
+    metaDescription:
+      "Create an adorable AI baby photoshoot free online. Upload a photo and AI makes a soft studio-style baby portrait on the page — no watermark.",
+    keywords: "ai baby photoshoot, baby photo editor ai free, newborn portrait ai, cute baby photo maker online, ai baby portrait generator",
+    h1: "AI Baby Photoshoot Maker",
+    tagline: "Upload a photo and AI creates an adorable soft studio baby portrait — right here. Free and instant.",
+    intro: "Turn a baby photo into a soft studio portrait.",
+    prompt: "Transform this photo into a soft, dreamy studio baby portrait: warm pastel tones, gentle diffused lighting, a cozy knitted wrap or outfit, and a clean minimal backdrop. Keep the baby's face and features exactly the same.",
+    badge: "✨ Baby Portrait",
+    faq: [
+      { q: "How do I make a baby photoshoot with AI?", a: "Upload a clear photo of your baby on this page and click Generate. The AI creates a soft, professional studio-style portrait in seconds." },
+      { q: "Is it free?", a: "Yes — free daily credits with no watermark." },
+      { q: "What photo works best?", a: "A clear, well-lit photo where the baby's face is visible gives the most charming result." },
+    ],
+  },
+  {
+    slug: "graduation-photo",
+    emoji: "🎓",
+    gradient: ["#1E3A8A", "#CA8A04"],
+    title: "AI Graduation Photo Maker — Cap & Gown Portrait Free | JPT AI",
+    metaDescription:
+      "Create a proud AI graduation photo free online. Upload a selfie and AI adds a cap, gown and ceremony backdrop on the page — no watermark.",
+    keywords: "ai graduation photo maker, cap and gown photo ai free, graduation portrait generator, ai convocation photo, graduation photoshoot online free",
+    h1: "AI Graduation Photo Maker",
+    tagline: "Upload a selfie and AI dresses you in a cap and gown for a proud graduation portrait — free, instant.",
+    intro: "Turn a selfie into a graduation cap-and-gown portrait.",
+    prompt: "Transform this person into a graduation portrait: wearing an academic cap and gown, holding a rolled diploma, with a celebratory campus or ceremony backdrop and warm proud lighting. Keep the face and identity exactly the same.",
+    badge: "✨ Graduation",
+    faq: [
+      { q: "How do I make a graduation photo with AI?", a: "Upload a clear selfie on this page and click Generate. The AI adds a cap, gown and ceremony backdrop in seconds." },
+      { q: "Is it free?", a: "Yes — free daily credits with no watermark." },
+      { q: "Can I use it even if I couldn't attend the ceremony?", a: "Yes — this is a popular way to get a graduation-style portrait without needing the official event photo." },
+    ],
+  },
+  {
+    slug: "gym-transformation",
+    emoji: "💪",
+    gradient: ["#0F172A", "#DC2626"],
+    title: "AI Gym Transformation Photo — Fitness Physique Preview Free | JPT AI",
+    metaDescription:
+      "Visualize a fitter you with an AI gym transformation photo free online. Upload a photo and AI shows a toned physique preview — no watermark.",
+    keywords: "ai gym transformation photo, fitness physique ai free, ai muscle photo generator, body transformation photo ai, ai fitness motivation photo",
+    h1: "AI Gym Transformation Photo",
+    tagline: "Upload a photo and AI shows a motivating, toned physique preview — right here. Free and instant.",
+    intro: "Preview a leaner, more toned version of yourself for motivation.",
+    prompt: "Subtly restyle this photo for a fitness-motivation portrait: athletic gym lighting, a toned and energised look, workout attire, and a dynamic gym backdrop. Keep the person's face and identity exactly the same — this is a motivational style edit, not a medical depiction.",
+    badge: "✨ Fitness",
+    faq: [
+      { q: "How does the gym transformation photo work?", a: "Upload a clear photo on this page and click Generate. The AI creates a motivating, gym-styled version of your photo in seconds." },
+      { q: "Is this a real transformation?", a: "No — it's a stylised motivational image, not a medical or fitness prediction. Think of it as inspiration art, not a guarantee." },
+      { q: "Is it free?", a: "Yes — free daily credits with no watermark." },
+    ],
+  },
+  {
+    slug: "ghibli-style",
+    emoji: "🌿",
+    gradient: ["#16A34A", "#0EA5E9"],
+    title: "AI Ghibli Style Photo Converter — Studio Anime Art Free | JPT AI",
+    metaDescription:
+      "Turn photos into dreamy Ghibli-style anime art free online. Upload a selfie and AI redraws it in a hand-painted studio anime style — no watermark.",
+    keywords: "ai ghibli style converter, studio ghibli ai filter free, ghibli anime art generator, photo to ghibli style ai, ghibli style photo maker free",
+    h1: "AI Ghibli Style Photo Converter",
+    tagline: "Upload a photo and AI redraws it in a dreamy, hand-painted studio anime style — free, instant.",
+    intro: "Convert any photo into dreamy hand-painted anime art.",
+    prompt: "Convert this photo into a dreamy hand-painted Japanese animated film style: soft watercolour backgrounds, warm nostalgic lighting, gentle painterly textures and expressive simplified features. Keep the person's likeness recognisable.",
+    badge: "✨ Studio Anime",
+    faq: [
+      { q: "How do I convert a photo to Ghibli style?", a: "Upload your photo on this page and click Generate. The AI redraws it in a dreamy hand-painted animation style in seconds." },
+      { q: "Is it free?", a: "Yes — free daily credits with no watermark." },
+      { q: "Can I use it as a wallpaper?", a: "Yes, download the full-quality image — pair it with our free upscaler for a sharper wallpaper-ready version." },
+    ],
+  },
+  {
+    slug: "y2k-aesthetic",
+    emoji: "💿",
+    gradient: ["#DB2777", "#7C3AED"],
+    title: "AI Y2K Aesthetic Photo Filter — 2000s Style Photo Free | JPT AI",
+    metaDescription:
+      "Create a viral Y2K aesthetic photo free online. Upload a selfie and AI applies a 2000s-style filter on the page — no app, no watermark.",
+    keywords: "ai y2k aesthetic filter, y2k photo editor free, 2000s style photo ai, y2k aesthetic generator online, ai y2k filter free",
+    h1: "AI Y2K Aesthetic Photo Filter",
+    tagline: "Upload a selfie and AI gives it that viral early-2000s Y2K look — right here, free.",
+    intro: "Give any selfie the viral early-2000s Y2K look.",
+    prompt: "Restyle this photo with a Y2K early-2000s aesthetic: flash-lit digital camera look, glossy highlights, low-rise fashion vibe, bold saturated colours and a slight grainy point-and-shoot quality. Keep the person's face and identity the same.",
+    badge: "✨ Y2K",
+    faq: [
+      { q: "How do I get the Y2K look with AI?", a: "Upload your photo on this page and click Generate. The AI applies the flash-lit, saturated early-2000s look in seconds." },
+      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+      { q: "What photo works best?", a: "Close-up selfies with simple backgrounds give the most authentic Y2K flash-photo look." },
+    ],
+  },
+  {
+    slug: "wedding-invite-photo",
+    emoji: "💌",
+    gradient: ["#BE185D", "#D97706"],
+    title: "AI Wedding Invitation Photo Maker — Elegant Couple Portrait Free | JPT AI",
+    metaDescription:
+      "Create an elegant AI wedding invitation photo free online. Upload a couple photo and AI makes a refined portrait for your invite — no watermark.",
+    keywords: "ai wedding invitation photo maker, wedding invite photo ai free, elegant couple portrait generator, save the date photo ai, wedding card photo maker free",
+    h1: "AI Wedding Invitation Photo Maker",
+    tagline: "Upload a couple photo and AI creates an elegant portrait ready for your wedding invite — free, instant.",
+    intro: "An elegant couple portrait styled for wedding invitations.",
+    prompt: "Transform this couple photo into an elegant wedding invitation portrait: refined formal attire, soft romantic lighting, a tasteful neutral or floral backdrop, and a timeless composition with space for text. Keep both faces and identities exactly the same.",
+    badge: "✨ Invite Portrait",
+    faq: [
+      { q: "How do I make a wedding invite photo with AI?", a: "Upload a clear photo of the couple on this page and click Generate. The AI creates an elegant, invite-ready portrait in seconds." },
+      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+      { q: "Can I add text afterwards?", a: "Yes — the portrait is generated with clean space so you can add names and the date in any design tool." },
+    ],
+  },
+  {
+    slug: "corporate-avatar",
+    emoji: "🧑‍💼",
+    gradient: ["#0E7490", "#1E40AF"],
+    title: "AI Corporate Avatar Maker — Professional Profile Icon Free | JPT AI",
+    metaDescription:
+      "Create a clean AI corporate avatar free online. Upload a selfie and AI makes a polished profile icon for Slack, Teams and email — no watermark.",
+    keywords: "ai corporate avatar maker, professional profile picture ai free, ai work avatar generator, slack avatar maker ai, teams profile photo ai free",
+    h1: "AI Corporate Avatar Maker",
+    tagline: "Upload a selfie and AI creates a clean, professional profile icon — for Slack, Teams, email and more.",
+    intro: "Turn a selfie into a clean professional profile icon.",
+    prompt: "Turn this selfie into a clean, simplified professional avatar: smart business-casual attire, soft solid-colour background, friendly approachable expression, framed tightly like a profile icon. Keep the face and identity exactly the same.",
+    badge: "✨ Corporate Avatar",
+    faq: [
+      { q: "How do I make a corporate avatar with AI?", a: "Upload a clear selfie on this page and click Generate. The AI produces a clean, professional profile icon in seconds." },
+      { q: "Is it free?", a: "Yes — free daily credits with no watermark." },
+      { q: "Where can I use it?", a: "Great for Slack, Microsoft Teams, email signatures, and any work profile that needs a polished, simple headshot icon." },
+    ],
+  },
+  {
+    slug: "old-money-aesthetic",
+    emoji: "🎻",
+    gradient: ["#3F3F46", "#A16207"],
+    title: "AI Old Money Aesthetic Photo — Quiet Luxury Portrait Free | JPT AI",
+    metaDescription:
+      "Create a viral old money aesthetic photo free online. Upload a photo and AI gives it a quiet-luxury, timeless styled look — no watermark.",
+    keywords: "ai old money aesthetic photo, quiet luxury photo filter ai, old money style generator, ai old money outfit photo, timeless luxury photo ai free",
+    h1: "AI Old Money Aesthetic Photo",
+    tagline: "Upload a photo and AI gives it that viral quiet-luxury 'old money' look — right here, free.",
+    intro: "Give any photo the viral quiet-luxury 'old money' look.",
+    prompt: "Restyle this photo with an old-money quiet-luxury aesthetic: tailored neutral-toned classic clothing, soft natural light, an elegant estate or library-style backdrop, and a timeless understated mood. Keep the person's face and identity exactly the same.",
+    badge: "✨ Old Money",
+    faq: [
+      { q: "How do I get the old money look with AI?", a: "Upload your photo on this page and click Generate. The AI restyles it with tailored neutral tones and an elegant timeless mood in seconds." },
+      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+      { q: "What photo works best?", a: "A clear portrait with simple lighting gives the AI the cleanest base to build the elegant styling on." },
+    ],
+  },
 ];
 
 export const getCreativeApp = (slug: string) => CREATIVE_APPS.find((a) => a.slug === slug);
@@ -411,6 +601,126 @@ export const CREATIVE_CONTENT: Record<string, CreativeContent> = {
       "Good contrast between subject and original background helps the cutout.",
       "Avoid motion blur on the edges of your subject.",
       "Well-lit photos keep hair and fine details sharp after the swap.",
+    ],
+  },
+  "linkedin-banner": {
+    paragraphs: [
+      "Most LinkedIn profiles use the default banner, which is a missed chance — a good cover image is free real estate that makes a profile look intentional. Hiring a designer for one image rarely happens.",
+      "Upload a photo or just a colour you like, and the AI generates a clean, corporate-toned banner with the negative space a real banner needs for your headline or branding. It's built to look professional, not like a stock-photo cliché.",
+    ],
+    tipsTitle: "Tips for a banner that looks intentional",
+    tips: [
+      "Leave the left or right third clear in your mind — that's where LinkedIn's profile photo overlaps the banner.",
+      "Try a couple of generations and pick the one with the calmest, least busy composition.",
+      "Stick to one or two brand colours across your profile photo and banner for a cohesive look.",
+    ],
+  },
+  "christmas-photo": {
+    paragraphs: [
+      "Getting an actual festive photoshoot done before the holidays rarely happens — everyone's busy, and the good light is gone by 5pm. This gives you the cozy Christmas portrait without the scheduling.",
+      "Upload a selfie and the AI adds the string lights, the tree, the warm sweater and that golden bokeh glow people associate with holiday cards. It's a fast way to get a genuinely warm-looking photo for cards or socials.",
+    ],
+    tipsTitle: "Tips for the coziest Christmas photo",
+    tips: [
+      "A front-facing photo with good lighting on the face works best.",
+      "Indoor photos blend most naturally with the warm festive backdrop.",
+      "Try it on a few different photos — the lighting and decor vary each generation.",
+    ],
+  },
+  "baby-photoshoot": {
+    paragraphs: [
+      "Professional newborn and baby photography is expensive, and babies are famously uncooperative with schedules. This gets you the soft studio look from a photo you already took at home.",
+      "Upload a clear photo and the AI applies the gentle pastel tones, diffused light and clean backdrop that studio baby photography is known for — while keeping your baby looking exactly like your baby.",
+    ],
+    tipsTitle: "Tips for the sweetest baby portrait",
+    tips: [
+      "Use a calm, well-lit photo — sleeping or content expressions work beautifully.",
+      "A simple background in the original photo helps the AI build a cleaner studio backdrop.",
+      "Avoid heavy shadows across the face for the gentlest result.",
+    ],
+  },
+  "graduation-photo": {
+    paragraphs: [
+      "Not everyone gets the official cap-and-gown shot — ceremonies get cancelled, photographers run out of time, or you just want another version. This recreates that proud moment from any selfie.",
+      "Upload a clear photo and the AI adds the cap, gown, diploma and a ceremony-style backdrop, keeping your face exactly as it is. It's become a popular way to mark the milestone even without the formal event photo.",
+    ],
+    tipsTitle: "Tips for a convincing graduation portrait",
+    tips: [
+      "A front-facing, well-lit selfie gives the cleanest result.",
+      "Simple backgrounds in the original photo help the ceremony backdrop blend naturally.",
+      "Re-run it if the first gown colour or pose doesn't feel right — each pass varies slightly.",
+    ],
+  },
+  "gym-transformation": {
+    paragraphs: [
+      "Fitness motivation content is everywhere, and a stylised 'future you' photo is a fun, harmless way to visualize a goal — not a medical prediction, just an energising piece of motivation art.",
+      "Upload a photo and the AI applies gym lighting, workout styling and an athletic mood while keeping your actual face and identity. People use it for motivation boards, before-you-start posts, or just for fun.",
+    ],
+    tipsTitle: "Tips for the best motivational result",
+    tips: [
+      "A clear, well-lit photo gives the most natural gym-styled result.",
+      "Remember this is stylised motivation art, not a fitness or medical forecast.",
+      "Pair it with a real workout plan — the photo is the spark, not the substitute.",
+    ],
+  },
+  "ghibli-style": {
+    paragraphs: [
+      "That soft, hand-painted Japanese animation look has a huge following, and turning a real photo into it used to mean a skilled illustrator and a long wait. This does it from any photo, instantly.",
+      "Upload a photo and the AI repaints it with watercolour backgrounds, warm nostalgic light and gently simplified, expressive features — while keeping you recognisable. Great for profile pictures, prints or just admiring.",
+    ],
+    tipsTitle: "Tips for the dreamiest result",
+    tips: [
+      "Photos with some background scenery (not just a tight face crop) translate best into the painterly style.",
+      "Soft natural light in the original photo carries through beautifully.",
+      "Re-run for variation — the brushwork and palette shift a little each time.",
+    ],
+  },
+  "y2k-aesthetic": {
+    paragraphs: [
+      "The early-2000s digital-camera look — flash, grain, saturated colour — is back everywhere on social feeds. Recreating it convincingly from a modern photo takes some specific editing knowledge. This does it in one click.",
+      "Upload a selfie and the AI applies that glossy flash-lit, slightly grainy Y2K look while keeping your face the same. It's an easy way to make a normal photo feel like it was pulled from a 2003 digital camera roll.",
+    ],
+    tipsTitle: "Tips for an authentic Y2K look",
+    tips: [
+      "Close-up selfies with a plain background give the most convincing flash-photo feel.",
+      "Bold, simple outfits read better in the saturated Y2K colour grade.",
+      "Try a few runs — the grain and flash intensity vary each time.",
+    ],
+  },
+  "wedding-invite-photo": {
+    paragraphs: [
+      "A proper engagement shoot isn't always in the budget or the calendar, but the invitation still needs a great photo of the two of you. This builds that elegant portrait from a photo you already have together.",
+      "Upload a clear couple photo and the AI styles it with refined attire, soft romantic light and a tasteful backdrop with room for your names and date — ready to drop straight into invitation design software.",
+    ],
+    tipsTitle: "Tips for an invite-ready portrait",
+    tips: [
+      "Choose a photo where both faces are clearly visible and evenly lit.",
+      "Standing close together with simple backgrounds gives the cleanest, most elegant composition.",
+      "Generate a couple of versions and pick the one with the calmest backdrop for text overlay.",
+    ],
+  },
+  "corporate-avatar": {
+    paragraphs: [
+      "Work chat apps all want a profile picture, and most people end up using a cropped vacation photo or no photo at all. This gives you a clean, simple avatar built specifically for that small circular frame.",
+      "Upload a selfie and the AI creates a friendly, professional-looking icon with business-casual styling and a calm solid background — designed to look good even at the tiny size Slack and Teams display it.",
+    ],
+    tipsTitle: "Tips for an avatar that reads well small",
+    tips: [
+      "Use a close, front-facing selfie — avatars get cropped tight and small.",
+      "Good even lighting matters more than background detail here.",
+      "A relaxed, approachable expression works best for a profile icon people see daily.",
+    ],
+  },
+  "old-money-aesthetic": {
+    paragraphs: [
+      "The 'old money' quiet-luxury aesthetic — tailored neutrals, soft light, understated elegance — is one of the most consistent viral photo trends. Building that look usually means a wardrobe and a location most people don't have.",
+      "Upload a photo and the AI restyles it with that timeless, tailored, soft-lit mood while keeping you exactly recognisable. It works well for profile photos, aesthetic social posts, or just seeing yourself in a different mood.",
+    ],
+    tipsTitle: "Tips for the most timeless result",
+    tips: [
+      "A calm, well-lit portrait gives the AI the cleanest base for the understated styling.",
+      "Simple original backgrounds blend best with the elegant backdrop.",
+      "Re-run a couple of times — the tone and styling shift subtly with each generation.",
     ],
   },
 };

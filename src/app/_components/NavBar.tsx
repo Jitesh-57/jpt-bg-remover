@@ -56,6 +56,14 @@ export default function NavBar() {
   const [showPricing, setShowPricing] = useState(false);
   const [showToolsDropdown, setShowToolsDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   const pathname = usePathname();
   const countdown = useCountdown(user?.plan === "free" ? user?.dailyCreditResetAt ?? null : null);
@@ -156,7 +164,7 @@ export default function NavBar() {
               </svg>
             </button>
 
-            {showToolsDropdown && (
+            {showToolsDropdown && !isMobile && (
               <div style={{ position: "absolute", top: "calc(100% + 12px)", left: 0, background: "#fff", borderRadius: 16, boxShadow: "0 20px 60px rgba(0,0,0,0.18)", border: "1px solid #F1F5F9", padding: "20px", minWidth: 580, zIndex: 1000, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 0 }}>
                 {TOOLS.map((group, gi) => (
                   <div key={gi} style={{ padding: gi === 0 ? "0 20px 0 0" : "0 0 0 20px", borderRight: gi === 0 ? "1px solid #F1F5F9" : "none" }}>
@@ -182,6 +190,32 @@ export default function NavBar() {
             )}
           </div>
 
+          {showToolsDropdown && isMobile && (
+            <div onClick={() => setShowToolsDropdown(false)} style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(15,23,42,0.55)" }}>
+              <div onClick={e => e.stopPropagation()} style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "#fff", borderRadius: "20px 20px 0 0", boxShadow: "0 -10px 40px rgba(0,0,0,0.25)", maxHeight: "78vh", overflowY: "auto", padding: "10px 16px calc(20px + env(safe-area-inset-bottom))" }}>
+                <div style={{ width: 36, height: 4, background: "#E2E8F0", borderRadius: 2, margin: "4px auto 14px" }} />
+                {TOOLS.map((group, gi) => (
+                  <div key={gi} style={{ marginBottom: gi === TOOLS.length - 1 ? 0 : 18 }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: "#94A3B8", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>{group.section}</div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                      {group.items.map(item => (
+                        <a key={item.href} href={item.href} onClick={() => setShowToolsDropdown(false)}
+                          style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 10px", borderRadius: 10, textDecoration: "none" }}
+                        >
+                          <div style={{ width: 38, height: 38, background: "#EEF2FF", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 19, flexShrink: 0 }}>{item.icon}</div>
+                          <div>
+                            <div style={{ fontSize: 14.5, fontWeight: 700, color: "#111827" }}>{item.label}</div>
+                            <div style={{ fontSize: 12, color: "#6B7280", marginTop: 1 }}>{item.desc}</div>
+                          </div>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Pricing */}
           <a href="/pricing"
             style={{ padding: "7px 14px", color: "#94A3B8", fontSize: 14, fontWeight: 600, textDecoration: "none", borderRadius: 8 }}
@@ -203,7 +237,7 @@ export default function NavBar() {
                 <span style={{ fontSize: 13, fontWeight: 600, color: "#E2E8F0" }}>{user.name.split(" ")[0]}</span>
                 <span style={{ fontSize: 11, background: "#6366F1", color: "#fff", padding: "2px 8px", borderRadius: 12, fontWeight: 700 }}>⚡ {user.credits}</span>
               </button>
-              {showMenu && (
+              {showMenu && !isMobile && (
                 <div style={{ position: "absolute", top: "calc(100% + 10px)", right: 0, background: "#fff", border: "1px solid #E5E7EB", borderRadius: 14, boxShadow: "0 8px 30px rgba(0,0,0,0.15)", minWidth: 220, zIndex: 1000, overflow: "hidden" }}>
                   <div style={{ padding: "14px 16px", borderBottom: "1px solid #F3F4F6", background: "#F9FAFB" }}>
                     <div style={{ fontWeight: 700, fontSize: 14, color: "#111" }}>{user.name}</div>
@@ -254,7 +288,56 @@ export default function NavBar() {
                 </div>
               )}
             </div>
-          ) : (
+          ) : null}
+
+          {showMenu && isMobile && user && (
+            <div onClick={() => setShowMenu(false)} style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(15,23,42,0.55)" }}>
+              <div onClick={e => e.stopPropagation()} style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "#fff", borderRadius: "20px 20px 0 0", boxShadow: "0 -10px 40px rgba(0,0,0,0.25)", maxHeight: "82vh", overflowY: "auto", padding: "10px 0 calc(10px + env(safe-area-inset-bottom))" }}>
+                <div style={{ width: 36, height: 4, background: "#E2E8F0", borderRadius: 2, margin: "4px auto 10px" }} />
+                <div style={{ padding: "10px 16px", borderBottom: "1px solid #F3F4F6", background: "#F9FAFB" }}>
+                  <div style={{ fontWeight: 700, fontSize: 15, color: "#111" }}>{user.name}</div>
+                  <div style={{ fontSize: 12, color: "#6B7280", marginTop: 2 }}>{user.email}</div>
+                </div>
+                {user.plan === "free" && user.credits === 0 && countdown && (
+                  <div style={{ margin: "12px 16px 4px", background: "linear-gradient(135deg,#EEF2FF,#F5F3FF)", border: "1px solid #C7D2FE", borderRadius: 12, padding: "12px 14px" }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: "#6366F1", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>⏱ Free credits refresh in</div>
+                    <div style={{ fontFamily: "monospace", fontSize: 22, fontWeight: 900, color: "#4338CA", letterSpacing: "0.05em", lineHeight: 1 }}>{countdown}</div>
+                    <div style={{ fontSize: 11, color: "#6B7280", marginTop: 5 }}>You get 10 free credits every 24 hours</div>
+                    <button onClick={() => { setShowPricing(true); setShowMenu(false); }}
+                      style={{ marginTop: 8, width: "100%", padding: "10px 12px", background: "#6366F1", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+                      Buy Paid Plan
+                    </button>
+                  </div>
+                )}
+                {user.plan === "free" && user.credits > 0 && (
+                  <div style={{ margin: "12px 16px 4px", background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 10, padding: "10px 12px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div>
+                      <div style={{ fontSize: 11, fontWeight: 700, color: "#16A34A", textTransform: "uppercase", letterSpacing: "0.06em" }}>Free daily credits</div>
+                      <div style={{ fontSize: 12, color: "#4B5563", marginTop: 2 }}>{user.credits} of 10 remaining · resets in {countdown || "…"}</div>
+                    </div>
+                    <div style={{ fontSize: 20, fontWeight: 900, color: "#16A34A" }}>{user.credits}</div>
+                  </div>
+                )}
+                <div style={{ padding: "8px 0" }}>
+                  <a href="/generations" onClick={() => setShowMenu(false)}
+                    style={{ display: "block", padding: "14px 16px", fontSize: 14.5, color: "#111", textDecoration: "none", fontWeight: 600 }}>
+                    ✦ My Generations
+                  </a>
+                  <button onClick={() => { setShowPricing(true); setShowMenu(false); }}
+                    style={{ width: "100%", padding: "14px 16px", background: "none", border: "none", textAlign: "left", fontSize: 14.5, color: "#6366F1", cursor: "pointer", fontWeight: 700 }}>
+                    💳 Buy Credits
+                  </button>
+                  <div style={{ borderTop: "1px solid #F3F4F6", margin: "4px 0" }} />
+                  <button onClick={handleLogout}
+                    style={{ width: "100%", padding: "14px 16px", background: "none", border: "none", textAlign: "left", fontSize: 14.5, color: "#EF4444", cursor: "pointer", fontWeight: 600 }}>
+                    🚪 Sign Out
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {!user && (
             <div style={{ display: "flex", gap: 8 }}>
               <button onClick={openModal} style={{ padding: "7px 16px", background: "transparent", color: "#E2E8F0", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
                 Sign In
