@@ -43,7 +43,7 @@ export const VARIANTS: LandingVariant[] = [
     cta_text: "Remove Product Background Free",
     faq: [
       { q: "How do I get a white background for Amazon product photos?", a: "Upload your product photo, let the AI remove the background to transparent, then place it on a pure white (#FFFFFF) canvas in the editor. This meets Amazon's main-image white-background requirement." },
-      { q: "Is it free to remove backgrounds from product photos?", a: "Yes. Sign in with Google for free daily credits — enough to process several product photos a day at no cost, with no watermark." },
+      { q: "Is it free to remove backgrounds from product photos?", a: "Yes. Sign in with Google to get a free trial on this tool, no watermark — you also get 5 free trials total across any of our tools and apps." },
       { q: "Can I batch-process a whole catalogue?", a: "Yes. Use the Batch Editor to remove backgrounds from up to 100 product photos in one session — ideal for large catalogues." },
       { q: "Does it keep fine edges like jewellery and fabric?", a: "Yes. The AI is trained to preserve fine edges including jewellery chains, fabric texture, and transparent packaging." },
     ],
@@ -75,7 +75,7 @@ export const VARIANTS: LandingVariant[] = [
     faq: [
       { q: "How do I make a logo background transparent?", a: "Upload your logo image and the AI detects and removes the background, giving you a transparent PNG that works on any colour." },
       { q: "Will the edges of my logo stay sharp?", a: "Yes. The AI preserves crisp edges on text and shapes, so your transparent logo looks clean at any size." },
-      { q: "Is it really free?", a: "Yes — free daily credits with no watermark on your downloaded transparent logo." },
+      { q: "Is it really free?", a: "Yes — your first try on this tool is a free trial, no watermark on your downloaded transparent logo. You get 5 free trials total across any of our tools." },
     ],
   },
   {
@@ -106,7 +106,7 @@ export const VARIANTS: LandingVariant[] = [
     faq: [
       { q: "Can AI fix a blurry old photo?", a: "Yes. AI super-resolution reconstructs detail and sharpens edges in old or blurry photos far better than traditional enlargement, which only stretches pixels." },
       { q: "Will it work on scanned printed photos?", a: "Yes. Scan your printed photo, upload it, and the AI enhances resolution, reduces grain, and sharpens details." },
-      { q: "Is the old-photo enhancer free?", a: "Yes — free daily credits with no watermark on the restored image." },
+      { q: "Is the old-photo enhancer free?", a: "Yes — your first try on this tool is a free trial, no watermark on the restored image. You get 5 free trials total across any of our tools." },
     ],
   },
   {
@@ -119,7 +119,7 @@ export const VARIANTS: LandingVariant[] = [
     subtitle: "Upscale any photo to crisp 4K resolution with AI super-resolution. Up to 4× larger with no loss of quality — free, instant, no watermark.",
     cta_text: "Upscale to 4K Free",
     faq: [
-      { q: "Can I upscale an image to 4K for free?", a: "Yes. JPT AI upscales images up to 4× their original size — enough to reach 4K from most source photos — free with your daily credits." },
+      { q: "Can I upscale an image to 4K for free?", a: "Yes. Basic upscale is free and unlimited — JPT AI upscales images up to 4× their original size, enough to reach 4K from most source photos. Pro AI upscale gives you a free trial too." },
       { q: "Will upscaling to 4K blur the image?", a: "No. Unlike basic resizing, AI super-resolution reconstructs detail so the 4K result looks sharp and natural, not stretched." },
       { q: "What's the maximum output size?", a: "You can upscale up to 4× and to very large output dimensions — easily covering 4K and beyond for most images." },
     ],
@@ -136,7 +136,7 @@ export const VARIANTS: LandingVariant[] = [
     faq: [
       { q: "Does AI upscaling work on anime and illustrations?", a: "Yes. AI super-resolution enhances line-art, flat colour, and shading in anime and illustrations while keeping edges crisp." },
       { q: "Can I upscale AI-generated art for printing?", a: "Yes. Upscale AI art up to 4× to reach print-quality resolution for posters, merchandise, and large prints." },
-      { q: "Is the anime upscaler free?", a: "Yes — free daily credits with no watermark on the upscaled image." },
+      { q: "Is the anime upscaler free?", a: "The basic upscale is free and unlimited for everyone. Pro AI upscale gives you one free trial, then no watermark on the upscaled image with a paid plan." },
     ],
   },
   {
@@ -151,7 +151,7 @@ export const VARIANTS: LandingVariant[] = [
     faq: [
       { q: "How do I make my profile picture less blurry?", a: "Upload your PFP and AI super-resolution sharpens detail and increases resolution, removing the blur that comes from compressed or small images." },
       { q: "What size should a profile picture be?", a: "Most platforms display PFPs at 400×400 or larger. Upscaling ensures your photo stays crisp even on high-resolution displays." },
-      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+      { q: "Is it free?", a: "Basic upscale is free and unlimited for everyone, no watermark. Pro AI upscale gives you one free trial, then 2 credits per use." },
     ],
   },
   // ───────── AI Headshot use-cases ─────────
@@ -167,7 +167,7 @@ export const VARIANTS: LandingVariant[] = [
     faq: [
       { q: "How do I make a professional LinkedIn photo from a selfie?", a: "Upload a clear, well-lit selfie and the AI generates a polished, professional-looking headshot suitable for LinkedIn and corporate profiles." },
       { q: "Do professional headshots really help on LinkedIn?", a: "Yes — LinkedIn profiles with professional headshots get up to 21× more profile views and 9× more connection requests." },
-      { q: "Is the LinkedIn headshot generator free?", a: "Yes — free daily credits with no watermark on your headshot." },
+      { q: "Is the LinkedIn headshot generator free?", a: "Yes — your first headshot generation is a free trial, no watermark. You get 5 free trials total across any of our tools." },
     ],
   },
   {
@@ -182,7 +182,7 @@ export const VARIANTS: LandingVariant[] = [
     faq: [
       { q: "Can I get consistent headshots for my whole team?", a: "Yes. Each team member uploads a selfie and the AI generates headshots with a consistent professional style for your website or directory." },
       { q: "Do I need a photographer or studio?", a: "No. The AI produces studio-quality results from a regular well-lit photo — no equipment or photographer needed." },
-      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+      { q: "Is it free?", a: "Yes — your first headshot generation is a free trial, no watermark. You get 5 free trials total across any of our tools." },
     ],
   },
   // ───────── AI Editor use-cases ─────────
@@ -198,7 +198,7 @@ export const VARIANTS: LandingVariant[] = [
     faq: [
       { q: "How do I change a photo background with AI?", a: "Upload your photo and type the background you want — like 'modern office' or 'sunset beach'. The AI removes the old background and generates the new scene." },
       { q: "Can I use a solid colour or my own image as the background?", a: "Yes. You can replace the background with a solid colour, a generated scene, or your own uploaded image." },
-      { q: "Is the AI background changer free?", a: "Yes — free daily credits with no watermark." },
+      { q: "Is the AI background changer free?", a: "Yes — your first generation is a free trial, no watermark. You get 5 free trials total across any of our tools." },
     ],
   },
   {
@@ -213,7 +213,7 @@ export const VARIANTS: LandingVariant[] = [
     faq: [
       { q: "How do I remove an object from a photo for free?", a: "Upload your photo and describe the object to remove — like 'remove the person on the left'. The AI erases it and reconstructs the background." },
       { q: "Can it remove photobombers and unwanted people?", a: "Yes. Describe the person or area to remove and the AI fills the space with a natural-looking background." },
-      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+      { q: "Is it free?", a: "Yes — your first generation is a free trial, no watermark. You get 5 free trials total across any of our tools." },
     ],
   },
 ];

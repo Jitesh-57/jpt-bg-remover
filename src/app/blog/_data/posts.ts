@@ -58,7 +58,7 @@ const RAW_POSTS: BlogPost[] = [
       },
       {
         heading: "Frequently Asked Questions",
-        body: "**Does JPT AI handle complex backgrounds like nature scenes?**\nYes — the AI is trained on a wide variety of scene types including busy backgrounds, nature, crowds, and urban environments. Complex scenes may occasionally need a small manual touch-up in the editor.\n\n**Does it work on hair?**\nYes. Hair is one of the hardest cutout challenges due to fine, overlapping strands. JPT AI's segmentation model specifically handles hair and fur at sub-pixel accuracy.\n\n**What file format does it output?**\nAlways a transparent PNG — the only format that supports alpha transparency. JPG does not support transparency.\n\n**Is it free?**\nBackground removal costs 2 credits. New users get 10 free credits on sign-up — enough for 5 free removals.\n\n**Can I remove backgrounds in bulk?**\nJPT AI's Batch Editor (available from the top menu) lets you process up to 100 images in a single session.",
+        body: "**Does JPT AI handle complex backgrounds like nature scenes?**\nYes — the AI is trained on a wide variety of scene types including busy backgrounds, nature, crowds, and urban environments. Complex scenes may occasionally need a small manual touch-up in the editor.\n\n**Does it work on hair?**\nYes. Hair is one of the hardest cutout challenges due to fine, overlapping strands. JPT AI's segmentation model specifically handles hair and fur at sub-pixel accuracy.\n\n**What file format does it output?**\nAlways a transparent PNG — the only format that supports alpha transparency. JPG does not support transparency.\n\n**Is it free?**\nBackground removal costs 2 credits. New users get a free trial on this tool — and 5 free trials total across any of our tools.\n\n**Can I remove backgrounds in bulk?**\nJPT AI's Batch Editor (available from the top menu) lets you process up to 100 images in a single session.",
       },
     ],
   },
@@ -148,7 +148,7 @@ const RAW_POSTS: BlogPost[] = [
       },
       {
         heading: "Frequently Asked Questions",
-        body: "**Will the AI change my face?**\nNo — the AI is instructed to preserve your exact facial features, skin tone, and likeness. Only the outfit, background, and lighting change.\n\n**What if the result doesn't look like me?**\nThis usually happens with low-resolution or low-quality source photos. Try uploading a higher-quality, well-lit photo and regenerating.\n\n**Can I use AI headshots commercially?**\nYes — all images generated through JPT AI are yours to use for personal and professional purposes including LinkedIn, corporate directories, and marketing.\n\n**How many credits does it cost?**\nEach headshot generation costs 2 credits. New users get 10 free credits on sign-up.\n\n**Is this better than a real photographer?**\nFor most professional digital uses (LinkedIn, email signatures, directories), AI headshots are indistinguishable from professionally-shot portraits. For high-end print (annual reports, large-format displays), a real photographer is still recommended.",
+        body: "**Will the AI change my face?**\nNo — the AI is instructed to preserve your exact facial features, skin tone, and likeness. Only the outfit, background, and lighting change.\n\n**What if the result doesn't look like me?**\nThis usually happens with low-resolution or low-quality source photos. Try uploading a higher-quality, well-lit photo and regenerating.\n\n**Can I use AI headshots commercially?**\nYes — all images generated through JPT AI are yours to use for personal and professional purposes including LinkedIn, corporate directories, and marketing.\n\n**How many credits does it cost?**\nEach headshot generation costs 2 credits. New users get a free trial on this tool — and 5 free trials total across any of our tools.\n\n**Is this better than a real photographer?**\nFor most professional digital uses (LinkedIn, email signatures, directories), AI headshots are indistinguishable from professionally-shot portraits. For high-end print (annual reports, large-format displays), a real photographer is still recommended.",
       },
     ],
   },
@@ -237,7 +237,7 @@ const RAW_POSTS: BlogPost[] = [
       },
       {
         heading: "Frequently Asked Questions",
-        body: "**Can AI upscaling make a 100px thumbnail look like a real 4K photo?**\nNo — AI upscaling can recover plausible detail but it cannot invent detail that was never there. A 100px thumbnail upscaled to 4× will look significantly better than a bicubic resize, but it will still show that it was originally a very small image. For best results, start from the largest available source.\n\n**Does JPT AI upscaling change colours?**\nNo — the upscaler preserves the original colour profile. The AI only adds spatial resolution (sharpness and detail), not colour grading.\n\n**How long does upscaling take?**\nNormal (canvas) upscaling is instant. Pro AI upscaling typically takes 15–40 seconds depending on image size and server load.\n\n**Is there a free tier?**\nYes. New accounts receive 10 free credits. Normal upscale costs 1 credit; Pro AI upscale costs 2 credits.",
+        body: "**Can AI upscaling make a 100px thumbnail look like a real 4K photo?**\nNo — AI upscaling can recover plausible detail but it cannot invent detail that was never there. A 100px thumbnail upscaled to 4× will look significantly better than a bicubic resize, but it will still show that it was originally a very small image. For best results, start from the largest available source.\n\n**Does JPT AI upscaling change colours?**\nNo — the upscaler preserves the original colour profile. The AI only adds spatial resolution (sharpness and detail), not colour grading.\n\n**How long does upscaling take?**\nNormal (canvas) upscaling is instant. Pro AI upscaling typically takes 15–40 seconds depending on image size and server load.\n\n**Is there a free tier?**\nYes. Normal upscale is free and unlimited for everyone — no credits, no limits. Pro AI upscale costs 2 credits, with a free trial for new accounts.",
       },
     ],
   },
@@ -315,7 +315,7 @@ const RAW_POSTS: BlogPost[] = [
       },
       {
         heading: "Frequently Asked Questions",
-        body: "**Will it make blurry faces sharp?**\nAI can significantly improve softness that comes from the original camera's limitations or low resolution. If a face is soft but recognisable, 4× Pro AI upscaling typically sharpens it noticeably. Very small, completely unrecognisable faces cannot be fully restored.\n\n**Can I restore photos from my phone scan?**\nYes — a phone-scanned photo can work if the lighting is even and there's no glare on the print surface. For best results, photograph the print in diffuse daylight on a flat surface.\n\n**How much does restoration cost?**\nPro AI upscale costs 2 credits per image. New accounts receive 10 free credits. The Adjust and AI Edit tools cost an additional 2 credits each.",
+        body: "**Will it make blurry faces sharp?**\nAI can significantly improve softness that comes from the original camera's limitations or low resolution. If a face is soft but recognisable, 4× Pro AI upscaling typically sharpens it noticeably. Very small, completely unrecognisable faces cannot be fully restored.\n\n**Can I restore photos from my phone scan?**\nYes — a phone-scanned photo can work if the lighting is even and there's no glare on the print surface. For best results, photograph the print in diffuse daylight on a flat surface.\n\n**How much does restoration cost?**\nPro AI upscale costs 2 credits per image, with a free trial for new accounts. The Adjust tool is always free; AI Edit costs 2 credits, also with its own free trial.",
       },
     ],
   },
@@ -381,7 +381,7 @@ const RAW_POSTS: BlogPost[] = [
       },
       {
         heading: "Top AI Upscaler Tools Compared",
-        body: "**JPT AI (sjpt.in/upscale)**\n*Best for: all-in-one photo editing with upscaling*\nJPT AI offers both Normal (canvas, 1 credit) and Pro AI (PixelBin model, 2 credits) upscaling up to 4×. No watermarks. Combines seamlessly with background removal, AI edit, and batch processing. 10 free credits on sign-up. Free tier gives 5 Normal or 5 Pro AI upscales.\n\n**Upscayl (desktop app)**\n*Best for: unlimited local processing*\nOpen-source desktop app that runs on your computer using your GPU. Unlimited free uses with no watermarks. Requires a reasonably modern GPU. Multiple model options (Real-ESRGAN, UltraMix, etc.). Best for users who process large volumes and want zero cost long-term.\n\n**Upscale.media**\n*Best for: quick single-image upscaling*\nClean web interface, 2× and 4× options, no watermark on free plan. Limited to 3 free images per day. Good quality for portraits and product photos. No batch processing on free plan.\n\n**Let's Enhance**\n*Best for: professional photographers*\n10 free credits. Credit-based model ($9/month for 100 credits). Excellent quality, especially for portraits. API available for developers.\n\n**Remini**\n*Best for: portrait and face enhancement*\nMobile-first app with strong face-specific enhancement. Better at portraits than products or landscapes. Free plan has daily limits and occasional ads.\n\n**Topaz Gigapixel AI**\n*Best for: professional photographers needing maximum quality*\nIndustry-leading desktop software ($99 one-time or subscription). Best overall quality, especially for challenging images. Not free — but worth it for professional workflows.",
+        body: "**JPT AI (sjpt.in/upscale)**\n*Best for: all-in-one photo editing with upscaling*\nJPT AI offers both Normal (canvas, free and unlimited) and Pro AI (PixelBin model, 2 credits) upscaling up to 4×. No watermarks. Combines seamlessly with background removal, AI edit, and batch processing. Free trial included on sign-up, plus unlimited free Normal upscaling forever.\n\n**Upscayl (desktop app)**\n*Best for: unlimited local processing*\nOpen-source desktop app that runs on your computer using your GPU. Unlimited free uses with no watermarks. Requires a reasonably modern GPU. Multiple model options (Real-ESRGAN, UltraMix, etc.). Best for users who process large volumes and want zero cost long-term.\n\n**Upscale.media**\n*Best for: quick single-image upscaling*\nClean web interface, 2× and 4× options, no watermark on free plan. Limited to 3 free images per day. Good quality for portraits and product photos. No batch processing on free plan.\n\n**Let's Enhance**\n*Best for: professional photographers*\n10 free credits. Credit-based model ($9/month for 100 credits). Excellent quality, especially for portraits. API available for developers.\n\n**Remini**\n*Best for: portrait and face enhancement*\nMobile-first app with strong face-specific enhancement. Better at portraits than products or landscapes. Free plan has daily limits and occasional ads.\n\n**Topaz Gigapixel AI**\n*Best for: professional photographers needing maximum quality*\nIndustry-leading desktop software ($99 one-time or subscription). Best overall quality, especially for challenging images. Not free — but worth it for professional workflows.",
       },
       {
         heading: "Which Tool Is Right for You?",
@@ -580,7 +580,7 @@ const RAW_POSTS: BlogPost[] = [
       },
       {
         heading: "Beyond Upscaling: AI Headshot Generation",
-        body: "If your existing photos aren't suitable for a professional headshot — wrong background, bad lighting, or just an unflattering shot — JPT AI's AI Headshot Generator creates professional LinkedIn-ready headshots from a casual reference photo.\n\nUpload any recent, clear photo of your face. Select a professional style (office background, outdoor professional, studio headshot) and your gender. The AI generates a professional-quality headshot in the selected style, preserving your facial features and identity.\n\nProfessional headshots cost 2 credits each. New accounts receive 10 free credits — enough for 5 professional headshot variations.",
+        body: "If your existing photos aren't suitable for a professional headshot — wrong background, bad lighting, or just an unflattering shot — JPT AI's AI Headshot Generator creates professional LinkedIn-ready headshots from a casual reference photo.\n\nUpload any recent, clear photo of your face. Select a professional style (office background, outdoor professional, studio headshot) and your gender. The AI generates a professional-quality headshot in the selected style, preserving your facial features and identity.\n\nProfessional headshots cost 2 credits each, with a free trial for new accounts — plus 5 free trials total across any of our tools.",
       },
       {
         heading: "Frequently Asked Questions",
@@ -1505,7 +1505,7 @@ const RAW_POSTS: BlogPost[] = [
       { heading: "Why marketplaces require white backgrounds", body: "Amazon's main product image policy requires a pure white (RGB 255,255,255) background. Shopify, Flipkart, and Etsy reward consistency — a uniform background across your catalogue looks trustworthy and increases conversions. Studies put the conversion lift from clean product imagery as high as 94%." },
       { heading: "Step-by-step: white background in 4 steps", body: "**1.** Upload your product photo to the background remover.\n**2.** The AI isolates the product and removes the background to transparent in 2–5 seconds.\n**3.** Place the cutout on a pure white canvas in the editor (or keep it transparent for your own layouts).\n**4.** Download the full-resolution image — no watermark." },
       { heading: "Tips for clean product cutouts", body: "**Shoot on contrast.** A plain or contrasting backdrop helps the AI find edges.\n**Use even lighting.** Avoid harsh shadows that blend into the background.\n**Go high-resolution.** More pixels means cleaner edges, especially on jewellery, fabric, and transparent packaging.\n**Batch it.** For a full catalogue, use the Batch Editor to process up to 100 photos at once." },
-      { heading: "Frequently Asked Questions", body: "**Is it free?**\nYes — free daily credits, no watermark.\n\n**Does it handle reflective or transparent products?**\nYes. The AI is trained on glass, jewellery, and packaging, though very reflective items may need a quick touch-up.\n\n**Can I get a transparent PNG instead of white?**\nYes — download as transparent PNG for use in any layout or ad." },
+      { heading: "Frequently Asked Questions", body: "**Is it free?**\nYes — your first try is a free trial, no watermark. You get 5 free trials total across any of our tools.\n\n**Does it handle reflective or transparent products?**\nYes. The AI is trained on glass, jewellery, and packaging, though very reflective items may need a quick touch-up.\n\n**Can I get a transparent PNG instead of white?**\nYes — download as transparent PNG for use in any layout or ad." },
     ],
   },
   {
@@ -1526,7 +1526,7 @@ const RAW_POSTS: BlogPost[] = [
       { heading: "Why old photos look blurry", body: "Printed photos lose detail when scanned at low resolution, and decades of fading reduce contrast. Traditional enlargement multiplies the blur. AI upscaling is different — it's trained on millions of images to predict and rebuild realistic detail at the edges, in skin, hair, and fabric." },
       { heading: "How to restore an old photo", body: "**1.** Scan your printed photo (or photograph it in good light).\n**2.** Upload it to the AI upscaler.\n**3.** Choose 2× or 4× and let the AI reconstruct detail, reduce grain, and sharpen edges.\n**4.** Download the restored, higher-resolution image free." },
       { heading: "Getting the best restoration", body: "**Scan at the highest resolution your scanner allows** — more source data means a better result.\n**Clean the photo and scanner glass** to avoid amplifying dust.\n**Use 4× for very small photos** so faces resolve clearly.\n**Combine with AI Edit** to remove creases or stains if needed." },
-      { heading: "Frequently Asked Questions", body: "**Can AI really fix a blurry photo?**\nYes — for blur caused by low resolution or soft scanning, AI super-resolution dramatically improves clarity.\n\n**Is it free?**\nYes — free daily credits, no watermark.\n\n**Will it work on black-and-white photos?**\nYes. Upscaling works on B&W and colour photos alike." },
+      { heading: "Frequently Asked Questions", body: "**Can AI really fix a blurry photo?**\nYes — for blur caused by low resolution or soft scanning, AI super-resolution dramatically improves clarity.\n\n**Is it free?**\nYes — your first try is a free trial, no watermark. You get 5 free trials total across any of our tools.\n\n**Will it work on black-and-white photos?**\nYes. Upscaling works on B&W and colour photos alike." },
     ],
   },
   {
@@ -1547,7 +1547,7 @@ const RAW_POSTS: BlogPost[] = [
       { heading: "Why you need a transparent signature", body: "When you paste a photo of your signature onto a document, the white background covers the text underneath. A transparent PNG signature blends seamlessly onto any background, looking like it was signed directly on the page." },
       { heading: "How to make a transparent signature", body: "**1.** Sign your name on plain white paper.\n**2.** Photograph or scan it clearly.\n**3.** Upload it to the background remover — the AI removes the white background.\n**4.** Download the transparent PNG and drop it into any document." },
       { heading: "Tips for a clean signature cutout", body: "**Use dark ink on white paper** for maximum contrast.\n**Photograph in even light** with no shadows.\n**Crop close** to the signature before uploading.\n**Save as PNG** — JPG can't store transparency." },
-      { heading: "Frequently Asked Questions", body: "**Is my signature kept private?**\nYes — images are processed securely, never used for training, and deleted after your session.\n\n**Is it free?**\nYes — free daily credits, no watermark.\n\n**Can I use it for e-signing?**\nYes — the transparent PNG works in PDF editors and e-sign tools." },
+      { heading: "Frequently Asked Questions", body: "**Is my signature kept private?**\nYes — images are processed securely, never used for training, and deleted after your session.\n\n**Is it free?**\nYes — your first try is a free trial, no watermark. You get 5 free trials total across any of our tools.\n\n**Can I use it for e-signing?**\nYes — the transparent PNG works in PDF editors and e-sign tools." },
     ],
   },
   {
@@ -1568,7 +1568,7 @@ const RAW_POSTS: BlogPost[] = [
       { heading: "When you need a transparent logo", body: "Website headers, email signatures, watermarks, T-shirts, mugs, slide decks, and overlays all need a logo with no background box. Transparency lets the logo adapt to any colour scheme." },
       { heading: "How to make a logo transparent", body: "**1.** Upload your logo image (even a screenshot works).\n**2.** The AI detects and removes the background.\n**3.** Review the crisp edges on text and shapes.\n**4.** Download as a transparent PNG, free." },
       { heading: "Tips for sharp logo edges", body: "**Start with the highest-resolution logo you have.**\n**Solid-colour backgrounds remove most cleanly.**\n**For tiny logos, upscale first** then remove the background for crisper edges." },
-      { heading: "Frequently Asked Questions", body: "**Will the text stay sharp?**\nYes — the AI preserves crisp edges on letters and shapes.\n\n**Is it free?**\nYes — free daily credits, no watermark.\n\n**What if my logo is on a busy background?**\nThe AI handles complex backgrounds, though busy ones may need a small touch-up." },
+      { heading: "Frequently Asked Questions", body: "**Will the text stay sharp?**\nYes — the AI preserves crisp edges on letters and shapes.\n\n**Is it free?**\nYes — your first try is a free trial, no watermark. You get 5 free trials total across any of our tools.\n\n**What if my logo is on a busy background?**\nThe AI handles complex backgrounds, though busy ones may need a small touch-up." },
     ],
   },
   {
@@ -1589,7 +1589,7 @@ const RAW_POSTS: BlogPost[] = [
       { heading: "Upscaling vs. resizing", body: "Basic resizing (in Paint or Preview) just stretches existing pixels, making images blurry and soft. AI super-resolution predicts new detail based on training across millions of images — edges stay crisp, textures stay realistic." },
       { heading: "How to upscale to 4K", body: "**1.** Upload your image.\n**2.** Select 4× (or 2× for already-large images).\n**3.** The AI reconstructs detail and outputs a high-resolution result.\n**4.** Download — free, no watermark." },
       { heading: "Best uses for 4K upscaling", body: "**Printing** posters and canvases.\n**4K wallpapers** and display backgrounds.\n**Marketing** assets for retina screens.\n**AI-generated art** that needs print resolution." },
-      { heading: "Frequently Asked Questions", body: "**Will it stay sharp at 4K?**\nYes — AI reconstruction keeps edges and textures crisp.\n\n**Is it free?**\nYes — free daily credits, no watermark.\n\n**What's the max output?**\nUp to 4× and very large dimensions, easily covering 4K." },
+      { heading: "Frequently Asked Questions", body: "**Will it stay sharp at 4K?**\nYes — AI reconstruction keeps edges and textures crisp.\n\n**Is it free?**\nYes — your first try is a free trial, no watermark. You get 5 free trials total across any of our tools.\n\n**What's the max output?**\nUp to 4× and very large dimensions, easily covering 4K." },
     ],
   },
   {
@@ -1610,7 +1610,7 @@ const RAW_POSTS: BlogPost[] = [
       { heading: "Why anime needs special handling", body: "Photographic upscalers can soften the clean lines that define illustration. AI super-resolution preserves sharp edges and flat colour while multiplying resolution, so your artwork stays true to its style." },
       { heading: "How to upscale anime art", body: "**1.** Upload your anime image or AI art.\n**2.** Choose 2× or 4×.\n**3.** The AI enhances resolution while keeping line-art crisp.\n**4.** Download free for wallpapers, prints, or posts." },
       { heading: "Great for", body: "**AI-generated art** that needs print resolution.\n**Wallpapers** for 4K screens.\n**Merch and posters** from digital illustrations.\n**Upscaling old, low-res scans** of manga or art." },
-      { heading: "Frequently Asked Questions", body: "**Does it keep clean lines?**\nYes — the AI preserves crisp edges typical of illustration.\n\n**Can I upscale AI art for printing?**\nYes — up to 4× for print quality.\n\n**Is it free?**\nYes — free daily credits, no watermark." },
+      { heading: "Frequently Asked Questions", body: "**Does it keep clean lines?**\nYes — the AI preserves crisp edges typical of illustration.\n\n**Can I upscale AI art for printing?**\nYes — up to 4× for print quality.\n\n**Is it free?**\nYes — your first try is a free trial, no watermark. You get 5 free trials total across any of our tools." },
     ],
   },
   {
@@ -1631,7 +1631,7 @@ const RAW_POSTS: BlogPost[] = [
       { heading: "What makes a great LinkedIn headshot", body: "Good lighting, a clean or neutral background, a friendly but professional expression, and sharp focus on the face. AI handles the background and polish; you provide a clear, well-lit selfie." },
       { heading: "How to create your headshot", body: "**1.** Take a clear selfie facing the camera in good light.\n**2.** Upload it to the AI headshot generator.\n**3.** The AI produces a professional, polished headshot.\n**4.** Download and set it as your LinkedIn photo, free." },
       { heading: "Selfie tips for the best result", body: "**Face a window** for soft, even light.\n**Keep a neutral expression** or a natural smile.\n**Avoid heavy filters** in the source photo.\n**Fill the frame** with your head and shoulders." },
-      { heading: "Frequently Asked Questions", body: "**Will it look natural?**\nYes — the AI aims for realistic, professional results, not obvious filters.\n\n**Is it free?**\nYes — free daily credits, no watermark.\n\n**Can I use it on other platforms?**\nYes — it works for any professional profile or resume." },
+      { heading: "Frequently Asked Questions", body: "**Will it look natural?**\nYes — the AI aims for realistic, professional results, not obvious filters.\n\n**Is it free?**\nYes — your first try is a free trial, no watermark. You get 5 free trials total across any of our tools.\n\n**Can I use it on other platforms?**\nYes — it works for any professional profile or resume." },
     ],
   },
   {
@@ -1652,7 +1652,7 @@ const RAW_POSTS: BlogPost[] = [
       { heading: "Describe-to-edit backgrounds", body: "Instead of manual selection, you type a prompt like 'modern office with soft window light' or 'sunset beach'. The AI removes the existing background, generates the scene, and blends your subject in naturally." },
       { heading: "How to change a background", body: "**1.** Upload your photo.\n**2.** Type the background you want, or pick a solid colour / upload your own.\n**3.** The AI replaces the background instantly.\n**4.** Download the result free, no watermark." },
       { heading: "Popular background swaps", body: "**Studio backdrops** for product and profile photos.\n**Office scenes** for professional portraits.\n**Nature and travel** scenes for social posts.\n**Solid colours** for IDs and clean layouts." },
-      { heading: "Frequently Asked Questions", body: "**Can I use my own background image?**\nYes — upload any image as the new background.\n\n**Is it free?**\nYes — free daily credits, no watermark.\n\n**Will the lighting match?**\nThe AI blends the subject to suit the generated scene for a natural look." },
+      { heading: "Frequently Asked Questions", body: "**Can I use my own background image?**\nYes — upload any image as the new background.\n\n**Is it free?**\nYes — your first try is a free trial, no watermark. You get 5 free trials total across any of our tools.\n\n**Will the lighting match?**\nThe AI blends the subject to suit the generated scene for a natural look." },
     ],
   },
   {
@@ -1673,7 +1673,7 @@ const RAW_POSTS: BlogPost[] = [
       { heading: "How AI object removal works", body: "You describe what to remove, and the AI identifies it, erases it, and generates plausible background to fill the space. It's far faster than manual clone-stamping in Photoshop and needs no skill." },
       { heading: "How to remove an object", body: "**1.** Upload your photo.\n**2.** Describe what to remove — e.g. 'remove the person on the right'.\n**3.** The AI erases it and fills the background.\n**4.** Download the clean result free." },
       { heading: "What you can remove", body: "**People and photobombers.**\n**Objects** like cars, bins, wires, and signs.\n**Text and watermarks** on images you own.\n**Blemishes** in scenery and backgrounds." },
-      { heading: "Frequently Asked Questions", body: "**Will the background look natural?**\nYes — the AI reconstructs the area to match its surroundings.\n\n**Is it free?**\nYes — free daily credits, no watermark.\n\n**Can it remove large objects?**\nYes, though very large removals against complex backgrounds work best with a follow-up touch-up." },
+      { heading: "Frequently Asked Questions", body: "**Will the background look natural?**\nYes — the AI reconstructs the area to match its surroundings.\n\n**Is it free?**\nYes — your first try is a free trial, no watermark. You get 5 free trials total across any of our tools.\n\n**Can it remove large objects?**\nYes, though very large removals against complex backgrounds work best with a follow-up touch-up." },
     ],
   },
   {
@@ -1694,7 +1694,7 @@ const RAW_POSTS: BlogPost[] = [
       { heading: "Why PFPs look blurry", body: "When you upload a small image, platforms scale it up and compress it, destroying detail. Starting with a higher-resolution, AI-enhanced image keeps your PFP sharp after upload." },
       { heading: "How to enhance your PFP", body: "**1.** Upload your profile picture.\n**2.** Choose 2× or 4× upscaling.\n**3.** The AI sharpens detail and increases resolution.\n**4.** Download and upload your crisp new PFP, free." },
       { heading: "Works for", body: "**Instagram, LinkedIn, Discord, WhatsApp, X, and gaming profiles.** Any platform that displays a profile photo benefits from a sharper, higher-resolution source image." },
-      { heading: "Frequently Asked Questions", body: "**Can AI unblur my photo?**\nFor blur from low resolution and compression, yes — AI super-resolution restores sharpness.\n\n**Is it free?**\nYes — free daily credits, no watermark.\n\n**What size should I use?**\nUpscale to at least 800×800 so your PFP stays crisp." },
+      { heading: "Frequently Asked Questions", body: "**Can AI unblur my photo?**\nFor blur from low resolution and compression, yes — AI super-resolution restores sharpness.\n\n**Is it free?**\nYes — your first try is a free trial, no watermark. You get 5 free trials total across any of our tools.\n\n**What size should I use?**\nUpscale to at least 800×800 so your PFP stays crisp." },
     ],
   },
   {
@@ -1715,7 +1715,7 @@ const RAW_POSTS: BlogPost[] = [
       { heading: "Background rules for ID photos", body: "Many countries require a plain white background; some accept off-white or light blue. The subject must be evenly lit with no shadows. AI removal gives you a clean, uniform background to meet these rules." },
       { heading: "How to change the background", body: "**1.** Take a front-facing photo in good light.\n**2.** Upload it to the background changer.\n**3.** The AI removes the background; set white or blue.\n**4.** Download free and check your country's size rules before printing." },
       { heading: "Tips for compliant photos", body: "**Face the camera squarely** with a neutral expression.\n**Use even lighting** to avoid shadows.\n**Keep hair and shoulders visible.**\n**Confirm exact dimensions** (e.g. 2×2 in or 35×45 mm) for your country." },
-      { heading: "Frequently Asked Questions", body: "**Does it meet official standards?**\nIt produces a clean solid background; always verify your country's dimension and head-position rules.\n\n**Can I get a blue background?**\nYes — apply any solid colour after removal.\n\n**Is it free?**\nYes — free daily credits, no watermark." },
+      { heading: "Frequently Asked Questions", body: "**Does it meet official standards?**\nIt produces a clean solid background; always verify your country's dimension and head-position rules.\n\n**Can I get a blue background?**\nYes — apply any solid colour after removal.\n\n**Is it free?**\nYes — your first try is a free trial, no watermark. You get 5 free trials total across any of our tools." },
     ],
   },
   {
@@ -1736,7 +1736,7 @@ const RAW_POSTS: BlogPost[] = [
       { heading: "Why consistency matters", body: "Mismatched photos — different backgrounds, lighting, and crops — make a team page look unpolished. AI headshots with a uniform professional style give your website and directory a cohesive, trustworthy look." },
       { heading: "How to do it for the team", body: "**1.** Each person takes a clear, well-lit selfie.\n**2.** They upload it to the AI headshot generator.\n**3.** The AI produces a professional headshot in a consistent style.\n**4.** Everyone downloads and adds theirs to the site, free." },
       { heading: "Best practices", body: "**Agree on a style** (background, framing) so results match.\n**Use good lighting** — face a window.\n**Keep framing consistent** — head and shoulders.\n**Review together** for a uniform team page." },
-      { heading: "Frequently Asked Questions", body: "**Do we need a photographer?**\nNo — selfies in good light are enough.\n\n**Is it free?**\nYes — free daily credits per account, no watermark.\n\n**Can large teams use it?**\nYes — each member generates their own headshot independently." },
+      { heading: "Frequently Asked Questions", body: "**Do we need a photographer?**\nNo — selfies in good light are enough.\n\n**Is it free?**\nYes — each team member gets their own free trial, no watermark. You get 5 free trials total per account, across any tools.\n\n**Can large teams use it?**\nYes — each member generates their own headshot independently." },
     ],
   },
   {
@@ -1757,7 +1757,7 @@ const RAW_POSTS: BlogPost[] = [
       { heading: "What AI can and can't fix", body: "AI works best on blur from small size and compression. It can substantially improve mild motion or focus softness, but severe motion blur is harder. For most everyday blurry photos, the improvement is significant." },
       { heading: "How to unblur a photo", body: "**1.** Upload your blurry image.\n**2.** Choose 2× or 4× upscaling.\n**3.** The AI sharpens edges and reconstructs detail.\n**4.** Download the clearer result free." },
       { heading: "Tips for best results", body: "**Start with the largest version** of the image you have.\n**Use 4×** for very small or soft images.\n**Avoid stacking heavy filters** before upscaling." },
-      { heading: "Frequently Asked Questions", body: "**Can it fix any blur?**\nIt's most effective on resolution and compression blur; severe motion blur is harder.\n\n**Is it free?**\nYes — free daily credits, no watermark.\n\n**Does it work on text?**\nYes — it sharpens edges including text in images." },
+      { heading: "Frequently Asked Questions", body: "**Can it fix any blur?**\nIt's most effective on resolution and compression blur; severe motion blur is harder.\n\n**Is it free?**\nYes — your first try is a free trial, no watermark. You get 5 free trials total across any of our tools.\n\n**Does it work on text?**\nYes — it sharpens edges including text in images." },
     ],
   },
   {
@@ -1778,7 +1778,7 @@ const RAW_POSTS: BlogPost[] = [
       { heading: "What you can do with text prompts", body: "Describe the change and the AI applies it: 'remove the background', 'replace sky with sunset', 'remove the person on the left', 'add soft studio lighting', 'make colours more vivid'. No layers, masks, or tools to learn." },
       { heading: "Common edits, no Photoshop", body: "**Background removal and replacement** in one step.\n**Object and people removal** by description.\n**Relighting and colour grading** via prompt.\n**Upscaling** to higher resolution.\n**Headshots** from selfies." },
       { heading: "When you might still want Photoshop", body: "For pixel-perfect compositing, precise typography, or complex multi-layer design, dedicated software still wins. For quick, high-quality everyday edits, AI is faster and free." },
-      { heading: "Frequently Asked Questions", body: "**Do I need any skills?**\nNo — if you can describe the change, the AI can do it.\n\n**Is it free?**\nYes — free daily credits, no watermark.\n\n**Does it install anything?**\nNo — it runs entirely in your browser." },
+      { heading: "Frequently Asked Questions", body: "**Do I need any skills?**\nNo — if you can describe the change, the AI can do it.\n\n**Is it free?**\nYes — your first try is a free trial, no watermark. You get 5 free trials total across any of our tools.\n\n**Does it install anything?**\nNo — it runs entirely in your browser." },
     ],
   },
   {
@@ -1799,7 +1799,7 @@ const RAW_POSTS: BlogPost[] = [
       { heading: "Why white backgrounds work", body: "White removes distraction and focuses attention on the subject. Marketplaces require it, and it gives portraits and catalogues a consistent, professional feel." },
       { heading: "How to add a white background", body: "**1.** Upload your photo.\n**2.** The AI removes the existing background to transparent.\n**3.** Apply a pure white (#FFFFFF) background in the editor.\n**4.** Download the full-resolution result free." },
       { heading: "Tips", body: "**Use pure white (255,255,255)** for marketplace compliance.\n**Check edges** around hair and fine detail.\n**Batch** multiple photos for consistency." },
-      { heading: "Frequently Asked Questions", body: "**Is it free?**\nYes — free daily credits, no watermark.\n\n**Can I get transparent instead?**\nYes — download as transparent PNG.\n\n**Does it work on portraits?**\nYes — the AI handles hair and fine edges." },
+      { heading: "Frequently Asked Questions", body: "**Is it free?**\nYes — your first try is a free trial, no watermark. You get 5 free trials total across any of our tools.\n\n**Can I get transparent instead?**\nYes — download as transparent PNG.\n\n**Does it work on portraits?**\nYes — the AI handles hair and fine edges." },
     ],
   },
   {
@@ -1820,7 +1820,7 @@ const RAW_POSTS: BlogPost[] = [
       { heading: "Resolution vs. quality", body: "Resolution is pixel count; quality is how much real detail those pixels hold. Naive resizing adds pixels but no detail. AI predicts realistic detail, raising both resolution and perceived quality." },
       { heading: "How to increase resolution", body: "**1.** Upload your image.\n**2.** Choose 2× or 4×.\n**3.** The AI reconstructs detail as it enlarges.\n**4.** Download the higher-resolution image free." },
       { heading: "Where it helps", body: "**Printing** at larger sizes.\n**Marketing** assets for high-res screens.\n**Restoring** small or old images.\n**Preparing** AI art for production." },
-      { heading: "Frequently Asked Questions", body: "**Will quality drop when I enlarge?**\nNo — AI reconstruction keeps it sharp, unlike basic resizing.\n\n**Is it free?**\nYes — free daily credits, no watermark.\n\n**How big can I go?**\nUp to 4× and large output dimensions." },
+      { heading: "Frequently Asked Questions", body: "**Will quality drop when I enlarge?**\nNo — AI reconstruction keeps it sharp, unlike basic resizing.\n\n**Is it free?**\nYes — your first try is a free trial, no watermark. You get 5 free trials total across any of our tools.\n\n**How big can I go?**\nUp to 4× and large output dimensions." },
     ],
   },
   {
@@ -1841,7 +1841,7 @@ const RAW_POSTS: BlogPost[] = [
       { heading: "Why hair is hard", body: "Hair has thousands of thin, overlapping, semi-transparent strands. Manual selection takes ages, and basic tools leave a fringe of the old background. AI models specifically trained on hair preserve those fine details." },
       { heading: "How to get clean hair edges", body: "**1.** Upload a clear, well-lit portrait.\n**2.** The AI isolates the subject including fine hair.\n**3.** Inspect the edges at 100% zoom.\n**4.** Download the transparent PNG free." },
       { heading: "Tips for the cleanest cutout", body: "**Use high contrast** between hair and background.\n**Higher resolution** gives the AI more to work with.\n**Even lighting** prevents dark strands blending into shadows." },
-      { heading: "Frequently Asked Questions", body: "**Does it really handle hair?**\nYes — hair and fur are specifically handled by the model.\n\n**Is it free?**\nYes — free daily credits, no watermark.\n\n**What about fur on pets?**\nYes — the same model handles animal fur." },
+      { heading: "Frequently Asked Questions", body: "**Does it really handle hair?**\nYes — hair and fur are specifically handled by the model.\n\n**Is it free?**\nYes — your first try is a free trial, no watermark. You get 5 free trials total across any of our tools.\n\n**What about fur on pets?**\nYes — the same model handles animal fur." },
     ],
   },
   {
@@ -1862,7 +1862,7 @@ const RAW_POSTS: BlogPost[] = [
       { heading: "What makes product photos convert", body: "Clarity, consistency, and clean backgrounds. High-resolution images let shoppers zoom in with confidence; uniform white backgrounds make your catalogue look professional and trustworthy." },
       { heading: "A free enhancement workflow", body: "**1. Upscale** low-resolution shots to sharp, zoomable images.\n**2. Remove backgrounds** for clean white or transparent listings.\n**3. Adjust** lighting and colour with AI edits.\n**4. Batch-process** the whole catalogue for consistency." },
       { heading: "Tips for better store images", body: "**Shoot in even light** to start with a clean base.\n**Upscale to 4×** for zoom-friendly detail.\n**Use pure white** to meet marketplace rules.\n**Keep framing consistent** across products." },
-      { heading: "Frequently Asked Questions", body: "**Is it free?**\nYes — free daily credits, no watermark.\n\n**Can I process many photos?**\nYes — the Batch Editor handles up to 100 at once.\n\n**Will upscaling keep detail?**\nYes — AI reconstructs realistic detail as it enlarges." },
+      { heading: "Frequently Asked Questions", body: "**Is it free?**\nYes — your first try is a free trial, no watermark. You get 5 free trials total across any of our tools.\n\n**Can I process many photos?**\nYes — the Batch Editor handles up to 100 at once.\n\n**Will upscaling keep detail?**\nYes — AI reconstructs realistic detail as it enlarges." },
     ],
   },
   {
@@ -1883,7 +1883,7 @@ const RAW_POSTS: BlogPost[] = [
       { heading: "When to upscale", body: "Upscale when your image is too small for its destination — printing, 4K screens, zoom-in product shots, or large marketing assets. AI super-resolution adds detail so the enlarged image stays sharp." },
       { heading: "When to compress", body: "Compress when your image is large enough but the file size slows your website. Smart compression reduces file size with minimal visible quality loss, improving page-load speed and SEO." },
       { heading: "Improving perceived quality", body: "Beyond size, sharpness and noise matter. AI enhancement sharpens soft images and reduces grain. For web, balance resolution against file size; for print, prioritise resolution." },
-      { heading: "Frequently Asked Questions", body: "**Does upscaling increase file size?**\nYes — more pixels means a larger file; compress afterward for web use.\n\n**Is the upscaler free?**\nYes — free daily credits, no watermark.\n\n**What resolution for web?**\nMatch the display size; 2× for retina screens is a good rule." },
+      { heading: "Frequently Asked Questions", body: "**Does upscaling increase file size?**\nYes — more pixels means a larger file; compress afterward for web use.\n\n**Is the upscaler free?**\nYes — basic upscale is free and unlimited for everyone, no watermark. Pro AI upscale gives you a free trial too.\n\n**What resolution for web?**\nMatch the display size; 2× for retina screens is a good rule." },
     ],
   },
   {
@@ -1904,7 +1904,7 @@ const RAW_POSTS: BlogPost[] = [
       { heading: "What buyers respond to", body: "Bright, evenly lit rooms; sharp detail; natural colour; and clean, distraction-free spaces. AI can brighten dim interiors, sharpen soft shots, and remove clutter via simple prompts." },
       { heading: "A free real estate workflow", body: "**1. Upscale and sharpen** soft or low-res photos.\n**2. Brighten** dim interiors with an AI edit.\n**3. Remove clutter** or distractions by description.\n**4. Adjust** colour and contrast for a clean, inviting look." },
       { heading: "Tips", body: "**Shoot in daylight** where possible.\n**Keep verticals straight** when composing.\n**Brighten, don't blow out** — keep window detail.\n**Stay realistic** — enhance, don't misrepresent the property." },
-      { heading: "Frequently Asked Questions", body: "**Is it free?**\nYes — free daily credits, no watermark.\n\n**Can I brighten dark rooms?**\nYes — use an AI edit prompt to lift exposure naturally.\n\n**Can I batch listing photos?**\nYes — the Batch Editor processes many at once." },
+      { heading: "Frequently Asked Questions", body: "**Is it free?**\nYes — your first try is a free trial, no watermark. You get 5 free trials total across any of our tools.\n\n**Can I brighten dark rooms?**\nYes — use an AI edit prompt to lift exposure naturally.\n\n**Can I batch listing photos?**\nYes — the Batch Editor processes many at once." },
     ],
   }
 ];

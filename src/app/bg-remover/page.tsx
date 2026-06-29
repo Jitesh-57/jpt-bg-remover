@@ -131,7 +131,7 @@ export default function BgRemoverPage() {
           <div style={{ background: '#fff', borderRadius: 20, padding: 48, textAlign: 'center', boxShadow: '0 4px 20px rgba(0,0,0,0.06)' }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>🔐</div>
             <h2 style={{ fontSize: 24, fontWeight: 800, color: '#0F172A', margin: '0 0 12px' }}>Sign in to continue</h2>
-            <p style={{ fontSize: 16, color: '#64748B', margin: '0 0 24px' }}>Background removal uses AI credits. Sign in to use your free daily credits.</p>
+            <p style={{ fontSize: 16, color: '#64748B', margin: '0 0 24px' }}>Background removal uses AI credits. Sign in to use one of your 5 free trials.</p>
             <a href="/auth/signin" style={{ display: 'inline-block', padding: '14px 32px', background: '#6366F1', color: '#fff', borderRadius: 12, fontWeight: 800, fontSize: 16, textDecoration: 'none' }}>
               Sign In
             </a>

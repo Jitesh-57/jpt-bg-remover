@@ -26,7 +26,7 @@ export default function TermsPage() {
         </Section>
 
         <Section title="4. Credits and Payments">
-          <b>Free credits:</b> New users receive 10 free credits upon sign-up, which reset every 24 hours.
+          <b>Free trials:</b> New users receive 5 free trials in total, usable on any 5 distinct tools or Creative Apps (a maximum of one free trial per distinct tool). Basic, non-AI tools such as Resize, Color Adjust and the standard Upscale are always free and unlimited, with no trial or credit required.
           <br /><br />
           <b>Paid plans:</b> Credits can be purchased through one-time payments processed by Razorpay. Purchased credits do not expire and are non-refundable except as required by applicable law.
           <br /><br />

@@ -123,7 +123,7 @@ const PAGE_COMPARISON: Record<string, { feature: string; jpt: boolean; alt1: boo
 const PAGE_SEO_CONTENT: Record<string, { heading: string; body: string }[]> = {
   upscale: [
     { heading: 'What is AI image upscaling?', body: 'AI image upscaling uses deep learning super-resolution to intelligently add detail when enlarging images — unlike traditional upscaling which just stretches pixels and creates blurry results. JPT AI\'s upscaler analyses textures, edges, and patterns to reconstruct sharp, high-resolution output up to 4× the original size.' },
-    { heading: 'Upscale images to 4K online for free', body: 'JPT AI lets you upscale any photo to 2× or 4× resolution directly in your browser — no software to install, no credit card required. Free users get daily credits to upscale images. Upgrade for unlimited 4K upscaling with priority processing.' },
+    { heading: 'Upscale images to 4K online for free', body: 'JPT AI lets you upscale any photo to 2× or 4× resolution directly in your browser — no software to install, no credit card required. Basic upscale is free and unlimited for everyone. Upgrade for unlimited 4K Pro AI upscaling with priority processing.' },
     { heading: 'Best for e-commerce, photography & print', body: 'Whether you\'re a seller needing high-resolution product photos, a photographer restoring old images, or a designer upscaling AI art for print — JPT AI delivers professional results in seconds. Works on portraits, products, landscapes, screenshots, and AI-generated images.' },
   ],
   'remove-bg': [
@@ -227,7 +227,7 @@ export default function LandingPage({ config, toolHref, pageId }: LandingPagePro
             {editorTool ? '📂 ' : ''}{config.cta_text || 'Try It Free'} →
           </button>
           <div style={{ fontSize: 13, color: '#9CA3AF', marginTop: 12 }}>
-            {editorTool ? 'Upload an image to get started · No credit card required' : 'No credit card required · 10 free credits included'}
+            {editorTool ? 'Upload an image to get started · No credit card required' : 'No credit card required · 5 free trials included'}
           </div>
         </div>
 
@@ -366,7 +366,7 @@ export default function LandingPage({ config, toolHref, pageId }: LandingPagePro
               <h2 style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', fontWeight: 900, color: '#fff', margin: '0 0 14px', letterSpacing: '-0.02em' }}>
                 Ready to transform your images?
               </h2>
-              <p style={{ fontSize: 16, color: '#94A3B8', margin: '0 0 32px' }}>No credit card required. 10 free credits when you sign up.</p>
+              <p style={{ fontSize: 16, color: '#94A3B8', margin: '0 0 32px' }}>No credit card required. 5 free trials when you sign up.</p>
               <a
                 href={toolHref}
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg, #6366F1, #8B5CF6)', color: '#fff', fontWeight: 800, fontSize: 16, padding: '16px 40px', borderRadius: 14, textDecoration: 'none', boxShadow: '0 8px 30px rgba(99,102,241,0.5)' }}

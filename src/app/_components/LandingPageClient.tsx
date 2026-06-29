@@ -169,7 +169,7 @@ const FAQS = [
   },
   {
     q: "Can I upscale images to 4K online for free?",
-    a: "Yes. Use the AI Upscale tool to enhance resolution up to 4× — for free with your daily credits. Upgrade for unlimited 4K upscaling.",
+    a: "Yes. Basic upscale is free and unlimited for everyone. Pro AI upscale to 4K gives you one free trial, then upgrade for unlimited 4K upscaling.",
   },
   {
     q: "Is this good for e-commerce product photos?",

@@ -68,7 +68,7 @@ const en: Translations = {
   step3Title: "Download the result", step3Desc: "Save your edited image in full quality. PNG or JPG, ready to use anywhere.",
   ctaH2: "Start editing for free",
   ctaBtn: "Try JPT AI — It's Free",
-  ctaPara: "No credit card required. 10 free credits every day.",
+  ctaPara: "No credit card required. 5 free trials, plus unlimited free basic upscale.",
   getStarted: "Get Started Free",
   signIn: "Sign in with Google",
   footerTagline: "All-in-one AI image editor. Remove backgrounds, upscale photos, and edit images with simple text prompts.",

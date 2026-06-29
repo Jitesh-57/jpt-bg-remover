@@ -44,7 +44,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     badge: "✨ Saree Portrait",
     faq: [
       { q: "How do I create an AI saree photoshoot?", a: "Upload a clear, front-facing selfie on this page and click Generate. The AI dresses you in a cinematic vintage saree look in seconds — no editing skills needed." },
-      { q: "Is the saree photoshoot free?", a: "You get free daily credits when you sign in. There is no watermark on your result." },
+      { q: "Is the saree photoshoot free?", a: "Yes — your first generation here is a free trial, no watermark. You get 5 free trials total across any tools or apps." },
       { q: "What photo works best?", a: "A clear, well-lit, front-facing selfie gives the most realistic saree portrait. Avoid heavy shadows or extreme angles." },
     ],
   },
@@ -63,7 +63,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     badge: "✨ 3D Figurine",
     faq: [
       { q: "How do I turn my photo into a 3D figurine?", a: "Upload a full or half-body photo on this page and click Generate. The AI renders a realistic collectible-figure version of you in seconds." },
-      { q: "Is it free?", a: "Yes — free daily credits when you sign in, with no watermark on your download." },
+      { q: "Is it free?", a: "Yes — your first generation here is a free trial, no watermark on your download. You get 5 free trials total across any tools or apps." },
       { q: "What photo works best?", a: "A clear photo showing your full body or upper body works best so the figure captures your pose and outfit." },
     ],
   },
@@ -82,7 +82,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     badge: "✨ Retro Film",
     faq: [
       { q: "How do I get the retro Bollywood look?", a: "Upload your photo on this page and click Generate. The AI restyles it with warm vintage tones, film grain and cinematic drama in seconds." },
-      { q: "Is it free?", a: "Yes — free daily credits with no watermark." },
+      { q: "Is it free?", a: "Yes — your first generation on this app is a free trial (no watermark). You get 5 free trials total across any tools or apps." },
       { q: "Can I use my own photo?", a: "Yes. Any clear photo of a person works; portraits give the most cinematic results." },
     ],
   },
@@ -101,7 +101,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     badge: "✨ Polaroid",
     faq: [
       { q: "How do I make an AI polaroid photo?", a: "Upload your photo on this page and click Generate. The AI produces a realistic retro polaroid-style shot with a white border in seconds." },
-      { q: "Is it free to use?", a: "Yes — free daily credits with no watermark." },
+      { q: "Is it free to use?", a: "Yes — your first generation on this app is a free trial (no watermark). You get 5 free trials total across any tools or apps." },
       { q: "What makes a good polaroid result?", a: "Clear, front-facing photos with simple backgrounds produce the most realistic polaroid style." },
     ],
   },
@@ -120,7 +120,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     badge: "✨ Restored",
     faq: [
       { q: "Can AI restore my old photos?", a: "Yes. Upload a scanned or photographed old print on this page and click Generate — the AI recovers detail, sharpens faces and reduces damage in seconds." },
-      { q: "Is photo restoration free?", a: "Yes — free daily credits with no watermark." },
+      { q: "Is photo restoration free?", a: "Yes — your first generation on this app is a free trial (no watermark). You get 5 free trials total across any tools or apps." },
       { q: "How should I scan an old photo?", a: "A flat, well-lit scan or a straight overhead photo on a plain surface gives the AI the most detail to work with." },
     ],
   },
@@ -139,7 +139,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     badge: "✨ Couple Portrait",
     faq: [
       { q: "How do I make a couple photoshoot with AI?", a: "Upload a clear photo of the couple on this page and click Generate. The AI creates a cinematic styled portrait in seconds." },
-      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+      { q: "Is it free?", a: "Yes — your first generation here is a free trial (no watermark). You get 5 free trials total across any tools or apps." },
       { q: "What photo works best?", a: "A clear photo where both faces are well-lit and visible gives the most realistic results." },
     ],
   },
@@ -158,7 +158,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     badge: "✨ Pro Headshot",
     faq: [
       { q: "How do I make a professional headshot from a selfie?", a: "Upload a clear selfie on this page and click Generate. The AI produces a polished, professional portrait with studio lighting in seconds." },
-      { q: "Is it free?", a: "Yes — free daily credits with no watermark." },
+      { q: "Is it free?", a: "Yes — your first generation on this app is a free trial (no watermark). You get 5 free trials total across any tools or apps." },
       { q: "Will it look natural?", a: "Yes. The AI uses realistic enhancement designed to look like professional photography, not an obvious filter." },
     ],
   },
@@ -177,7 +177,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     badge: "✨ Festive",
     faq: [
       { q: "How do I make a festival photoshoot with AI?", a: "Upload your selfie on this page and click Generate. The AI styles you with festive outfits and backdrops in seconds." },
-      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+      { q: "Is it free?", a: "Yes — your first generation here is a free trial (no watermark). You get 5 free trials total across any tools or apps." },
       { q: "Can I try different festivals?", a: "Yes — we offer Diwali, Navratri and other festive looks across our Creative apps." },
     ],
   },
@@ -196,7 +196,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     badge: "✨ Royal Pet",
     faq: [
       { q: "How do I make an AI pet portrait?", a: "Upload a clear photo of your pet on this page and click Generate. The AI restyles your pet into shareable royal art in seconds." },
-      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+      { q: "Is it free?", a: "Yes — your first generation here is a free trial (no watermark). You get 5 free trials total across any tools or apps." },
       { q: "What pet photo works best?", a: "A clear, well-lit photo where your pet's face is visible gives the best results." },
     ],
   },
@@ -215,7 +215,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     badge: "✨ Anime",
     faq: [
       { q: "How do I convert a photo to anime style?", a: "Upload your photo on this page and click Generate. The AI redraws it as hand-drawn anime art in seconds." },
-      { q: "Is it free?", a: "Yes — free daily credits with no watermark." },
+      { q: "Is it free?", a: "Yes — your first generation on this app is a free trial (no watermark). You get 5 free trials total across any tools or apps." },
       { q: "Can I print the result?", a: "Yes. You can download the artwork and use our free upscaler to enlarge it for printing or wallpapers." },
     ],
   },
@@ -234,7 +234,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     badge: "✨ ID Photo",
     faq: [
       { q: "How do I make a passport photo with AI?", a: "Upload a front-facing selfie on this page and click Generate. The AI removes the background and produces a clean white-background ID-style photo in seconds." },
-      { q: "Is it free?", a: "Yes — free daily credits with no watermark." },
+      { q: "Is it free?", a: "Yes — your first generation on this app is a free trial (no watermark). You get 5 free trials total across any tools or apps." },
       { q: "Does it meet official requirements?", a: "It produces a clean solid-background headshot. Always check your country's exact size and head-position rules before submitting." },
     ],
   },
@@ -253,7 +253,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     badge: "✨ New Background",
     faq: [
       { q: "How do I change a photo background with AI?", a: "Upload your photo on this page and click Generate. The AI removes the old background and blends in a clean new scene in seconds." },
-      { q: "Is the background changer free?", a: "Yes — free daily credits with no watermark." },
+      { q: "Is the background changer free?", a: "Yes — your first generation on this app is a free trial (no watermark). You get 5 free trials total across any tools or apps." },
       { q: "Will my subject stay sharp?", a: "Yes. The AI preserves the subject and fine edges like hair while replacing only the background." },
     ],
   },
@@ -272,7 +272,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     badge: "✨ LinkedIn Banner",
     faq: [
       { q: "How do I make a LinkedIn banner with AI?", a: "Upload any photo or just a colour reference on this page and click Generate. The AI creates a polished, professional banner sized for LinkedIn in seconds." },
-      { q: "Is it free?", a: "Yes — free daily credits when you sign in, with no watermark on your download." },
+      { q: "Is it free?", a: "Yes — your first generation here is a free trial, no watermark on your download. You get 5 free trials total across any tools or apps." },
       { q: "What size is the banner?", a: "The output is generated to fit LinkedIn's wide banner format. You can crop slightly after download if needed for an exact fit." },
     ],
   },
@@ -291,7 +291,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     badge: "✨ Christmas",
     faq: [
       { q: "How do I make a Christmas photo with AI?", a: "Upload your selfie on this page and click Generate. The AI adds festive lighting, decorations and a cozy holiday mood in seconds." },
-      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+      { q: "Is it free?", a: "Yes — your first generation here is a free trial (no watermark). You get 5 free trials total across any tools or apps." },
       { q: "Can I use it for greeting cards?", a: "Yes, download the full-quality image and use it for cards, social posts or prints." },
     ],
   },
@@ -310,7 +310,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     badge: "✨ Baby Portrait",
     faq: [
       { q: "How do I make a baby photoshoot with AI?", a: "Upload a clear photo of your baby on this page and click Generate. The AI creates a soft, professional studio-style portrait in seconds." },
-      { q: "Is it free?", a: "Yes — free daily credits with no watermark." },
+      { q: "Is it free?", a: "Yes — your first generation on this app is a free trial (no watermark). You get 5 free trials total across any tools or apps." },
       { q: "What photo works best?", a: "A clear, well-lit photo where the baby's face is visible gives the most charming result." },
     ],
   },
@@ -329,7 +329,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     badge: "✨ Graduation",
     faq: [
       { q: "How do I make a graduation photo with AI?", a: "Upload a clear selfie on this page and click Generate. The AI adds a cap, gown and ceremony backdrop in seconds." },
-      { q: "Is it free?", a: "Yes — free daily credits with no watermark." },
+      { q: "Is it free?", a: "Yes — your first generation on this app is a free trial (no watermark). You get 5 free trials total across any tools or apps." },
       { q: "Can I use it even if I couldn't attend the ceremony?", a: "Yes — this is a popular way to get a graduation-style portrait without needing the official event photo." },
     ],
   },
@@ -349,7 +349,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     faq: [
       { q: "How does the gym transformation photo work?", a: "Upload a clear photo on this page and click Generate. The AI creates a motivating, gym-styled version of your photo in seconds." },
       { q: "Is this a real transformation?", a: "No — it's a stylised motivational image, not a medical or fitness prediction. Think of it as inspiration art, not a guarantee." },
-      { q: "Is it free?", a: "Yes — free daily credits with no watermark." },
+      { q: "Is it free?", a: "Yes — your first generation on this app is a free trial (no watermark). You get 5 free trials total across any tools or apps." },
     ],
   },
   {
@@ -367,7 +367,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     badge: "✨ Studio Anime",
     faq: [
       { q: "How do I convert a photo to Ghibli style?", a: "Upload your photo on this page and click Generate. The AI redraws it in a dreamy hand-painted animation style in seconds." },
-      { q: "Is it free?", a: "Yes — free daily credits with no watermark." },
+      { q: "Is it free?", a: "Yes — your first generation on this app is a free trial (no watermark). You get 5 free trials total across any tools or apps." },
       { q: "Can I use it as a wallpaper?", a: "Yes, download the full-quality image — pair it with our free upscaler for a sharper wallpaper-ready version." },
     ],
   },
@@ -386,7 +386,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     badge: "✨ Y2K",
     faq: [
       { q: "How do I get the Y2K look with AI?", a: "Upload your photo on this page and click Generate. The AI applies the flash-lit, saturated early-2000s look in seconds." },
-      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+      { q: "Is it free?", a: "Yes — your first generation here is a free trial (no watermark). You get 5 free trials total across any tools or apps." },
       { q: "What photo works best?", a: "Close-up selfies with simple backgrounds give the most authentic Y2K flash-photo look." },
     ],
   },
@@ -405,7 +405,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     badge: "✨ Invite Portrait",
     faq: [
       { q: "How do I make a wedding invite photo with AI?", a: "Upload a clear photo of the couple on this page and click Generate. The AI creates an elegant, invite-ready portrait in seconds." },
-      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+      { q: "Is it free?", a: "Yes — your first generation here is a free trial (no watermark). You get 5 free trials total across any tools or apps." },
       { q: "Can I add text afterwards?", a: "Yes — the portrait is generated with clean space so you can add names and the date in any design tool." },
     ],
   },
@@ -424,7 +424,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     badge: "✨ Corporate Avatar",
     faq: [
       { q: "How do I make a corporate avatar with AI?", a: "Upload a clear selfie on this page and click Generate. The AI produces a clean, professional profile icon in seconds." },
-      { q: "Is it free?", a: "Yes — free daily credits with no watermark." },
+      { q: "Is it free?", a: "Yes — your first generation on this app is a free trial (no watermark). You get 5 free trials total across any tools or apps." },
       { q: "Where can I use it?", a: "Great for Slack, Microsoft Teams, email signatures, and any work profile that needs a polished, simple headshot icon." },
     ],
   },
@@ -443,7 +443,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     badge: "✨ Old Money",
     faq: [
       { q: "How do I get the old money look with AI?", a: "Upload your photo on this page and click Generate. The AI restyles it with tailored neutral tones and an elegant timeless mood in seconds." },
-      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+      { q: "Is it free?", a: "Yes — your first generation here is a free trial (no watermark). You get 5 free trials total across any tools or apps." },
       { q: "What photo works best?", a: "A clear portrait with simple lighting gives the AI the cleanest base to build the elegant styling on." },
     ],
   },
@@ -462,7 +462,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     badge: "✨ Doll Box",
     faq: [
       { q: "How do I make a Barbie box photo with AI?", a: "Upload a clear photo on this page and click Generate. The AI places you in a collectible doll-box packaging style in seconds." },
-      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+      { q: "Is it free?", a: "Yes — your first generation here is a free trial (no watermark). You get 5 free trials total across any tools or apps." },
       { q: "What photo works best?", a: "A clear, front-facing or half-body photo with a simple background gives the cleanest box-photo result." },
     ],
   },
@@ -482,7 +482,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     faq: [
       { q: "How does the AI baby predictor work?", a: "Upload a clear photo of the couple on this page and click Generate. The AI blends facial features into a fun, illustrative baby portrait in seconds." },
       { q: "Is this scientifically accurate?", a: "No — it's a fun, playful illustration for entertainment, not a genetic or medical prediction of your actual future child." },
-      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+      { q: "Is it free?", a: "Yes — your first generation here is a free trial (no watermark). You get 5 free trials total across any tools or apps." },
     ],
   },
   {
@@ -500,7 +500,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     badge: "✨ Lego Figure",
     faq: [
       { q: "How do I turn my photo into a Lego figure?", a: "Upload a clear photo on this page and click Generate. The AI renders a collectible brick-style minifigure version of you in seconds." },
-      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+      { q: "Is it free?", a: "Yes — your first generation here is a free trial (no watermark). You get 5 free trials total across any tools or apps." },
       { q: "What photo works best?", a: "A clear photo showing your outfit and pose helps the AI build a more accurate toy version." },
     ],
   },
@@ -519,7 +519,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     badge: "✨ 3D Avatar",
     faq: [
       { q: "How do I make a Pixar-style avatar?", a: "Upload your photo on this page and click Generate. The AI redraws it as a 3D animated-movie-style character in seconds." },
-      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+      { q: "Is it free?", a: "Yes — your first generation here is a free trial (no watermark). You get 5 free trials total across any tools or apps." },
       { q: "Can I use it as a profile picture?", a: "Yes, download the full-quality image and use it anywhere — profile pictures, avatars, prints." },
     ],
   },
@@ -538,7 +538,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     badge: "✨ Renaissance",
     faq: [
       { q: "How do I make a Renaissance-style portrait?", a: "Upload your photo on this page and click Generate. The AI repaints it as a classic oil-painting portrait in seconds." },
-      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+      { q: "Is it free?", a: "Yes — your first generation here is a free trial (no watermark). You get 5 free trials total across any tools or apps." },
       { q: "Can I print it?", a: "Yes — download the full-quality image and pair it with our free upscaler for a sharper, print-ready version." },
     ],
   },
@@ -557,7 +557,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     badge: "✨ Age Progression",
     faq: [
       { q: "How accurate is the AI age progression?", a: "It's a stylised, illustrative guess based on common ageing patterns — fun to look at, not a scientific or medical prediction." },
-      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+      { q: "Is it free?", a: "Yes — your first generation here is a free trial (no watermark). You get 5 free trials total across any tools or apps." },
       { q: "Can it make me look younger instead?", a: "The default preset ages you up; try re-running with your own description in the full AI Editor for a de-aged look." },
     ],
   },
@@ -576,7 +576,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     badge: "✨ Superhero",
     faq: [
       { q: "How do I make a superhero photo with AI?", a: "Upload a clear photo on this page and click Generate. The AI suits you up in a heroic costume with cinematic lighting in seconds." },
-      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+      { q: "Is it free?", a: "Yes — your first generation here is a free trial (no watermark). You get 5 free trials total across any tools or apps." },
       { q: "What photo works best?", a: "A clear, front-facing photo with a visible pose gives the most dynamic superhero result." },
     ],
   },
@@ -595,7 +595,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     badge: "✨ Tarot Card",
     faq: [
       { q: "How do I make a tarot card portrait with AI?", a: "Upload your photo on this page and click Generate. The AI designs a mystical tarot-card composition around your portrait in seconds." },
-      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+      { q: "Is it free?", a: "Yes — your first generation here is a free trial (no watermark). You get 5 free trials total across any tools or apps." },
       { q: "Can I print it?", a: "Yes — download the full-quality image and pair it with our free upscaler for a sharper print-ready version." },
     ],
   },
@@ -614,7 +614,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     badge: "✨ 90s Yearbook",
     faq: [
       { q: "How do I make a 90s yearbook photo with AI?", a: "Upload your photo on this page and click Generate. The AI applies the retro school-portrait backdrop and styling in seconds." },
-      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+      { q: "Is it free?", a: "Yes — your first generation here is a free trial (no watermark). You get 5 free trials total across any tools or apps." },
       { q: "What photo works best?", a: "A clear, front-facing photo with simple lighting gives the most authentic retro yearbook look." },
     ],
   },
@@ -633,7 +633,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     badge: "✨ Cyberpunk",
     faq: [
       { q: "How do I make a cyberpunk avatar with AI?", a: "Upload your photo on this page and click Generate. The AI applies neon futuristic lighting and styling in seconds." },
-      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+      { q: "Is it free?", a: "Yes — your first generation here is a free trial (no watermark). You get 5 free trials total across any tools or apps." },
       { q: "Can I use it as a profile picture?", a: "Yes — it's a popular gaming and social profile picture style." },
     ],
   },

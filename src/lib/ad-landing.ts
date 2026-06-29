@@ -30,7 +30,7 @@ export const AD_LANDINGS: AdLanding[] = [
     highlight: "One Click",
     subhead: "Upload a photo and get a clean transparent PNG in seconds. Perfect for products, portraits, and e-commerce. No Photoshop, no skills needed.",
     cta: "Remove Background Free →",
-    bullets: ["AI-perfect hair & edge detection", "Transparent PNG, full resolution", "10 free images every day"],
+    bullets: ["AI-perfect hair & edge detection", "Transparent PNG, full resolution", "Free trial included, no card needed"],
     tool: "remove-bg",
   },
   {
@@ -44,7 +44,7 @@ export const AD_LANDINGS: AdLanding[] = [
     highlight: "4K",
     subhead: "Turn small or blurry images into sharp, high-resolution photos with AI super-resolution. No software, no watermark.",
     cta: "Upscale Your Image Free →",
-    bullets: ["2× and 4× AI super-resolution", "Recovers detail in old, blurry photos", "10 free credits every day"],
+    bullets: ["2× and 4× AI super-resolution", "Recovers detail in old, blurry photos", "Basic upscale free & unlimited"],
     tool: "upscale",
   },
   {
