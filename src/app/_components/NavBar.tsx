@@ -86,6 +86,11 @@ export default function NavBar() {
       else if (event === "SIGNED_OUT") setUser(null);
     });
     const onClickOutside = (e: MouseEvent) => {
+      // On mobile the dropdown renders as a bottom sheet outside dropdownRef
+      // (with its own backdrop-tap-to-close); this listener would otherwise
+      // fire on mousedown for every tap inside it and unmount links before
+      // their click/navigation completes.
+      if (window.innerWidth < 768) return;
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node))
         setShowToolsDropdown(false);
     };
