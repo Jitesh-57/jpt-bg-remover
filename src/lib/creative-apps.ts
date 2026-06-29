@@ -447,6 +447,196 @@ export const CREATIVE_APPS: CreativeApp[] = [
       { q: "What photo works best?", a: "A clear portrait with simple lighting gives the AI the cleanest base to build the elegant styling on." },
     ],
   },
+  {
+    slug: "barbie-box",
+    emoji: "📦",
+    gradient: ["#EC4899", "#A21CAF"],
+    title: "AI Barbie Box Photo Maker — Doll Box Trend Free | JPT AI",
+    metaDescription:
+      "Create the viral AI Barbie box photo free online. Upload a selfie and AI puts you in a collectible doll box on the page — no app, no watermark.",
+    keywords: "ai barbie box photo, barbie box trend ai free, doll box photo maker, ai barbie doll photo generator, barbie box meme maker free",
+    h1: "AI Barbie Box Photo Maker",
+    tagline: "Upload a selfie and AI turns you into a collectible doll-box photo — the viral Barbie box trend, free.",
+    intro: "Turn yourself into the viral collectible doll-box trend.",
+    prompt: "Turn this person into a collectible doll in a pink Barbie-style retail box: glossy plastic packaging, bold pink branding elements, printed accessories around the figure, studio product-photography lighting. Keep the face and likeness accurate.",
+    badge: "✨ Doll Box",
+    faq: [
+      { q: "How do I make a Barbie box photo with AI?", a: "Upload a clear photo on this page and click Generate. The AI places you in a collectible doll-box packaging style in seconds." },
+      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+      { q: "What photo works best?", a: "A clear, front-facing or half-body photo with a simple background gives the cleanest box-photo result." },
+    ],
+  },
+  {
+    slug: "ai-baby-predictor",
+    emoji: "👶",
+    gradient: ["#FB7185", "#60A5FA"],
+    title: "AI Baby Predictor — Future Baby Face Generator Free | JPT AI",
+    metaDescription:
+      "See what your future baby might look like with the AI baby predictor free online. Upload both parents' photos and AI blends a baby face — no watermark.",
+    keywords: "ai baby predictor, future baby face generator free, ai baby maker couple, what will my baby look like ai, ai baby face generator free",
+    h1: "AI Baby Predictor",
+    tagline: "Upload a couple's photo and AI imagines a future baby's face — just for fun, free and instant.",
+    intro: "A fun AI guess at what your future baby might look like.",
+    prompt: "Using the features of the people in this photo, imagine and generate a cute baby portrait that blends their facial features — soft studio baby-portrait lighting, warm pastel tones, a gentle smile. This is a playful, for-fun illustration, not a scientific prediction.",
+    badge: "✨ Baby Predictor",
+    faq: [
+      { q: "How does the AI baby predictor work?", a: "Upload a clear photo of the couple on this page and click Generate. The AI blends facial features into a fun, illustrative baby portrait in seconds." },
+      { q: "Is this scientifically accurate?", a: "No — it's a fun, playful illustration for entertainment, not a genetic or medical prediction of your actual future child." },
+      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+    ],
+  },
+  {
+    slug: "lego-minifigure",
+    emoji: "🧱",
+    gradient: ["#DC2626", "#FACC15"],
+    title: "AI Lego Minifigure Maker — Turn Photo Into a Lego Figure Free | JPT AI",
+    metaDescription:
+      "Turn your photo into a Lego minifigure free online. Upload a photo and AI renders a collectible brick-style figure on the page — no watermark.",
+    keywords: "ai lego minifigure maker, photo to lego figure ai, lego avatar generator free, ai lego character maker, turn photo into lego free",
+    h1: "AI Lego Minifigure Maker",
+    tagline: "Upload your photo and AI turns you into a collectible Lego-style minifigure — free, instant.",
+    intro: "Turn your photo into a collectible brick-style minifigure.",
+    prompt: "Turn this person into a glossy plastic Lego-style minifigure: cylindrical head, simplified blocky body proportions, bright primary-colour outfit matching their real clothing, displayed in a printed toy packaging box, studio product photography lighting. Keep the likeness recognisable in a toy form.",
+    badge: "✨ Lego Figure",
+    faq: [
+      { q: "How do I turn my photo into a Lego figure?", a: "Upload a clear photo on this page and click Generate. The AI renders a collectible brick-style minifigure version of you in seconds." },
+      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+      { q: "What photo works best?", a: "A clear photo showing your outfit and pose helps the AI build a more accurate toy version." },
+    ],
+  },
+  {
+    slug: "pixar-avatar",
+    emoji: "🎬",
+    gradient: ["#0EA5E9", "#F97316"],
+    title: "AI Pixar Avatar Maker — 3D Cartoon Character Photo Free | JPT AI",
+    metaDescription:
+      "Turn your photo into a Pixar-style 3D cartoon avatar free online. Upload a selfie and AI renders an animated-movie character on the page — no watermark.",
+    keywords: "ai pixar avatar maker, photo to pixar character ai, 3d cartoon avatar generator free, ai animated movie character maker, pixar style photo free",
+    h1: "AI Pixar Avatar Maker",
+    tagline: "Upload a selfie and AI turns you into a 3D animated-movie-style character — free and instant.",
+    intro: "Turn a selfie into a 3D animated-movie-style character.",
+    prompt: "Convert this photo into a 3D animated-movie-style character: large expressive eyes, smooth stylised features, warm cinematic studio lighting, soft rounded shading typical of modern 3D animated films. Keep the person's likeness recognisable in cartoon form.",
+    badge: "✨ 3D Avatar",
+    faq: [
+      { q: "How do I make a Pixar-style avatar?", a: "Upload your photo on this page and click Generate. The AI redraws it as a 3D animated-movie-style character in seconds." },
+      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+      { q: "Can I use it as a profile picture?", a: "Yes, download the full-quality image and use it anywhere — profile pictures, avatars, prints." },
+    ],
+  },
+  {
+    slug: "renaissance-portrait",
+    emoji: "🖼️",
+    gradient: ["#7C2D12", "#CA8A04"],
+    title: "AI Renaissance Portrait Maker — Classic Oil Painting Photo Free | JPT AI",
+    metaDescription:
+      "Turn your photo into a classic Renaissance oil painting free online. Upload a selfie and AI creates a museum-style portrait on the page — no watermark.",
+    keywords: "ai renaissance portrait maker, photo to oil painting ai free, classic painting photo generator, ai museum portrait maker, renaissance art photo free",
+    h1: "AI Renaissance Portrait Maker",
+    tagline: "Upload a selfie and AI turns you into a classic Renaissance-style oil painting — free, instant.",
+    intro: "Turn a selfie into a museum-style oil painting portrait.",
+    prompt: "Transform this photo into a classic Renaissance oil painting portrait: rich dramatic chiaroscuro lighting, ornate period clothing, a dark museum-style background, visible brushwork texture and a gilded frame feel. Keep the person's face recognisable in painted form.",
+    badge: "✨ Renaissance",
+    faq: [
+      { q: "How do I make a Renaissance-style portrait?", a: "Upload your photo on this page and click Generate. The AI repaints it as a classic oil-painting portrait in seconds." },
+      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+      { q: "Can I print it?", a: "Yes — download the full-quality image and pair it with our free upscaler for a sharper, print-ready version." },
+    ],
+  },
+  {
+    slug: "age-progression",
+    emoji: "⏳",
+    gradient: ["#475569", "#94A3B8"],
+    title: "AI Age Progression Photo — See Yourself Older or Younger Free | JPT AI",
+    metaDescription:
+      "See yourself older or younger with the AI age progression photo tool free online. Upload a selfie and AI ages the photo on the page — no watermark.",
+    keywords: "ai age progression photo, ai aging filter free, see myself older ai, ai younger photo generator, age my photo ai free",
+    h1: "AI Age Progression Photo",
+    tagline: "Upload a selfie and AI shows a realistic older (or younger) version of you — free, for fun.",
+    intro: "A realistic, just-for-fun preview of an older you.",
+    prompt: "Realistically age this person by about 30 years: natural greying hair, age-appropriate skin texture and wrinkles, the same facial structure and expression, soft natural lighting. Keep the identity clearly recognisable — this is a stylised illustration, not a medical prediction.",
+    badge: "✨ Age Progression",
+    faq: [
+      { q: "How accurate is the AI age progression?", a: "It's a stylised, illustrative guess based on common ageing patterns — fun to look at, not a scientific or medical prediction." },
+      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+      { q: "Can it make me look younger instead?", a: "The default preset ages you up; try re-running with your own description in the full AI Editor for a de-aged look." },
+    ],
+  },
+  {
+    slug: "superhero-costume",
+    emoji: "🦸",
+    gradient: ["#1D4ED8", "#DC2626"],
+    title: "AI Superhero Costume Maker — Turn Photo Into a Hero Free | JPT AI",
+    metaDescription:
+      "Turn your photo into a superhero free online. Upload a selfie and AI dresses you in a heroic costume on the page — no app, no watermark.",
+    keywords: "ai superhero costume maker, photo to superhero ai free, superhero avatar generator, ai hero costume photo, turn photo into superhero free",
+    h1: "AI Superhero Costume Maker",
+    tagline: "Upload a selfie and AI suits you up as a superhero — dramatic cape and all. Free, instant.",
+    intro: "Turn a selfie into a dramatic superhero portrait.",
+    prompt: "Transform this person into a superhero: a sleek detailed costume with a flowing cape, a heroic confident pose, dramatic comic-movie lighting and a city-skyline backdrop. Keep the person's face and identity exactly the same.",
+    badge: "✨ Superhero",
+    faq: [
+      { q: "How do I make a superhero photo with AI?", a: "Upload a clear photo on this page and click Generate. The AI suits you up in a heroic costume with cinematic lighting in seconds." },
+      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+      { q: "What photo works best?", a: "A clear, front-facing photo with a visible pose gives the most dynamic superhero result." },
+    ],
+  },
+  {
+    slug: "tarot-card-portrait",
+    emoji: "🔮",
+    gradient: ["#581C87", "#B45309"],
+    title: "AI Tarot Card Portrait Maker — Mystical Card Photo Free | JPT AI",
+    metaDescription:
+      "Turn your photo into a mystical tarot card free online. Upload a selfie and AI designs a custom tarot-style portrait on the page — no watermark.",
+    keywords: "ai tarot card portrait maker, photo to tarot card ai free, mystical card photo generator, ai tarot avatar maker, tarot style photo free",
+    h1: "AI Tarot Card Portrait Maker",
+    tagline: "Upload a selfie and AI designs a mystical custom tarot card around your portrait — free, instant.",
+    intro: "Turn a selfie into a custom mystical tarot card design.",
+    prompt: "Design a mystical tarot card around this person's portrait: ornate gold border, celestial symbols (moon, stars, sun), rich jewel-toned colours, dramatic painterly lighting, and an elegant card-style composition. Keep the person's face recognisable within the artwork.",
+    badge: "✨ Tarot Card",
+    faq: [
+      { q: "How do I make a tarot card portrait with AI?", a: "Upload your photo on this page and click Generate. The AI designs a mystical tarot-card composition around your portrait in seconds." },
+      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+      { q: "Can I print it?", a: "Yes — download the full-quality image and pair it with our free upscaler for a sharper print-ready version." },
+    ],
+  },
+  {
+    slug: "90s-yearbook-photo",
+    emoji: "📒",
+    gradient: ["#0D9488", "#D97706"],
+    title: "AI 90s Yearbook Photo Maker — Retro School Portrait Free | JPT AI",
+    metaDescription:
+      "Create a viral 90s yearbook photo free online. Upload a selfie and AI applies a retro school-portrait look on the page — no app, no watermark.",
+    keywords: "ai 90s yearbook photo maker, retro yearbook photo ai free, school portrait generator ai, 90s photo filter free, ai yearbook style photo",
+    h1: "AI 90s Yearbook Photo Maker",
+    tagline: "Upload a selfie and AI gives it that viral retro 90s school-yearbook look — free, instant.",
+    intro: "Give any selfie the viral retro 90s yearbook look.",
+    prompt: "Restyle this photo as a 90s school yearbook portrait: laser-grid or marbled studio backdrop, soft flash lighting, slightly retro hairstyle and clothing styling, a faint film-photo grain. Keep the person's face and identity exactly the same.",
+    badge: "✨ 90s Yearbook",
+    faq: [
+      { q: "How do I make a 90s yearbook photo with AI?", a: "Upload your photo on this page and click Generate. The AI applies the retro school-portrait backdrop and styling in seconds." },
+      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+      { q: "What photo works best?", a: "A clear, front-facing photo with simple lighting gives the most authentic retro yearbook look." },
+    ],
+  },
+  {
+    slug: "cyberpunk-avatar",
+    emoji: "🤖",
+    gradient: ["#06B6D4", "#D946EF"],
+    title: "AI Cyberpunk Avatar Maker — Neon Futuristic Photo Free | JPT AI",
+    metaDescription:
+      "Turn your photo into a cyberpunk avatar free online. Upload a selfie and AI adds neon futuristic styling on the page — no app, no watermark.",
+    keywords: "ai cyberpunk avatar maker, neon futuristic photo ai free, cyberpunk photo filter, ai sci-fi avatar generator, cyberpunk style photo free",
+    h1: "AI Cyberpunk Avatar Maker",
+    tagline: "Upload a selfie and AI transforms it into a neon-lit cyberpunk avatar — free, instant.",
+    intro: "Turn a selfie into a neon-lit futuristic cyberpunk avatar.",
+    prompt: "Transform this photo into a cyberpunk-style portrait: neon pink and cyan lighting, futuristic city backdrop, subtle tech-inspired accessories, dramatic rim lighting and a high-contrast sci-fi mood. Keep the person's face and identity exactly the same.",
+    badge: "✨ Cyberpunk",
+    faq: [
+      { q: "How do I make a cyberpunk avatar with AI?", a: "Upload your photo on this page and click Generate. The AI applies neon futuristic lighting and styling in seconds." },
+      { q: "Is it free?", a: "Yes — free daily credits, no watermark." },
+      { q: "Can I use it as a profile picture?", a: "Yes — it's a popular gaming and social profile picture style." },
+    ],
+  },
 ];
 
 export const getCreativeApp = (slug: string) => CREATIVE_APPS.find((a) => a.slug === slug);
@@ -721,6 +911,126 @@ export const CREATIVE_CONTENT: Record<string, CreativeContent> = {
       "A calm, well-lit portrait gives the AI the cleanest base for the understated styling.",
       "Simple original backgrounds blend best with the elegant backdrop.",
       "Re-run a couple of times — the tone and styling shift subtly with each generation.",
+    ],
+  },
+  "barbie-box": {
+    paragraphs: [
+      "The doll-box trend took over feeds for a reason — there's something irresistibly funny about seeing yourself as a collectible toy, complete with branded packaging and tiny printed accessories.",
+      "Upload a clear photo and the AI packages you up in glossy pink retail-box styling, keeping your likeness intact while building the toy presentation around you. Great for a laugh, a profile picture, or just joining the trend.",
+    ],
+    tipsTitle: "Tips for the best doll-box photo",
+    tips: [
+      "A clear, front-facing or half-body photo gives the cleanest box composition.",
+      "Simple backgrounds in the original photo help the AI focus on packaging you, not the scene.",
+      "Bold, distinct outfits read better on the printed box art.",
+    ],
+  },
+  "ai-baby-predictor": {
+    paragraphs: [
+      "Every couple eventually wonders what their kids might look like, and this is the fun, harmless way to find out — or at least get an entertaining guess. It's become one of the most shared AI photo trends among couples.",
+      "Upload a clear photo of both of you and the AI blends your features into a sweet illustrated baby portrait. It's playful entertainment, not a genetics tool — think of it as a fun keepsake rather than a forecast.",
+    ],
+    tipsTitle: "Tips for the sweetest result",
+    tips: [
+      "Use a photo where both faces are clearly visible and well lit.",
+      "Front-facing shots work better than angled or side profiles.",
+      "Re-run it a few times — each pass blends the features a little differently.",
+    ],
+  },
+  "lego-minifigure": {
+    paragraphs: [
+      "Building a custom Lego figure of yourself by hand takes specialised 3D skills most people don't have. This gets the same charming brick-toy effect from a single photo.",
+      "Upload a photo and the AI turns you into a glossy, blocky minifigure — complete with your outfit's colours — and drops it into toy packaging for that shelf-ready look. A fun gift idea or just a profile picture upgrade.",
+    ],
+    tipsTitle: "Tips for the best minifigure",
+    tips: [
+      "A clear photo showing your outfit and pose helps the AI build a more recognisable toy version.",
+      "Bold, simple colours in your clothing translate best into the brick-toy style.",
+      "Full-body or waist-up shots work better than tight face crops.",
+    ],
+  },
+  "pixar-avatar": {
+    paragraphs: [
+      "That polished 3D animated-movie look — big expressive eyes, soft cinematic lighting — usually takes a studio pipeline to create. This gets you there from a single selfie.",
+      "Upload a photo and the AI redraws you as a stylised 3D character, keeping your likeness recognisable while giving you that warm, rounded animated-film quality. Great as an avatar, profile picture, or just to see yourself animated.",
+    ],
+    tipsTitle: "Tips for the best 3D avatar",
+    tips: [
+      "A clear, front-facing selfie with good lighting converts the most accurately.",
+      "Simple backgrounds let the AI focus on stylising your features.",
+      "Try a few runs — the exact styling shifts slightly each time.",
+    ],
+  },
+  "renaissance-portrait": {
+    paragraphs: [
+      "Classic oil-painting portraits have a timeless gravity that modern photos don't — the dramatic light, the rich colour, the sense of history. Commissioning a real painted portrait costs a fortune and takes months. This takes seconds.",
+      "Upload a selfie and the AI repaints you with the dramatic chiaroscuro lighting and ornate styling of a Renaissance masterpiece, while keeping your face recognisable beneath the brushwork. A striking print, a unique gift, or just a fun transformation.",
+    ],
+    tipsTitle: "Tips for the most striking portrait",
+    tips: [
+      "A clear, well-lit front-facing photo gives the painting the strongest likeness to work from.",
+      "Simple original backgrounds blend more naturally into the dark museum-style backdrop.",
+      "Pair the result with our free upscaler if you want a sharper, print-ready version.",
+    ],
+  },
+  "age-progression": {
+    paragraphs: [
+      "Curiosity about your future self is universal — and a stylised preview is a fun way to satisfy it without waiting decades. This is illustrative entertainment, not a scientific forecast, but it's a surprisingly fun one.",
+      "Upload a clear selfie and the AI ages your features naturally — greying hair, softened skin texture — while keeping your identity obviously recognisable. People use it for fun, for laughs with friends, or just out of curiosity.",
+    ],
+    tipsTitle: "Tips for the most natural result",
+    tips: [
+      "A clear, front-facing photo with even lighting ages the most convincingly.",
+      "Remember this is a stylised illustration, not a medical or scientific prediction.",
+      "Try it on a few different photos — results vary with expression and lighting.",
+    ],
+  },
+  "superhero-costume": {
+    paragraphs: [
+      "Everyone's imagined their superhero alter ego at some point. This skips the cosplay budget and the photoshoot and gets straight to the dramatic cape-and-costume payoff.",
+      "Upload a clear photo and the AI suits you up in a sleek heroic costume with cinematic comic-movie lighting, keeping your face exactly as it is. Great for a fun profile picture or just living the fantasy for thirty seconds.",
+    ],
+    tipsTitle: "Tips for the most dynamic hero shot",
+    tips: [
+      "A clear, front-facing photo with a visible pose gives the most dynamic result.",
+      "Simple backgrounds help the AI build a cleaner heroic backdrop around you.",
+      "Re-run a couple of times — the costume style and pose vary each generation.",
+    ],
+  },
+  "tarot-card-portrait": {
+    paragraphs: [
+      "Tarot card aesthetics — gold borders, celestial symbols, rich jewel tones — make for some of the most strikingly designed art on social feeds. Designing one by hand takes real illustration skill. This builds one around your own portrait.",
+      "Upload a selfie and the AI frames you in an ornate mystical card design, complete with celestial symbolism and dramatic painterly lighting, while keeping your face recognisable in the artwork. A unique profile picture or a fun personalised print.",
+    ],
+    tipsTitle: "Tips for the most mystical result",
+    tips: [
+      "A clear, well-lit portrait gives the artwork the strongest base to build around.",
+      "Front-facing photos integrate most naturally into the symmetrical card design.",
+      "Pair it with our free upscaler for a sharper, print-ready version.",
+    ],
+  },
+  "90s-yearbook-photo": {
+    paragraphs: [
+      "That unmistakable 90s school-photo aesthetic — laser-grid backdrops, soft flash, slightly awkward charm — has become a genuinely beloved nostalgia trend. This recreates it from any modern selfie.",
+      "Upload a photo and the AI applies the retro studio backdrop, flash lighting and period styling while keeping your face the same. It's a fun, funny throwback for social posts, no actual yearbook required.",
+    ],
+    tipsTitle: "Tips for the most authentic throwback",
+    tips: [
+      "A clear, front-facing selfie with simple lighting gives the most convincing retro studio look.",
+      "Close-up portraits work best — yearbook photos are tightly framed.",
+      "Re-run a couple of times for different backdrop and styling variations.",
+    ],
+  },
+  "cyberpunk-avatar": {
+    paragraphs: [
+      "Neon-lit, high-contrast cyberpunk aesthetics are a staple of gaming and sci-fi profile pictures, but building that look convincingly takes specific lighting and editing knowledge. This applies it in one step.",
+      "Upload a selfie and the AI adds neon pink and cyan lighting, a futuristic backdrop and dramatic rim light, while keeping your face exactly as it is. A striking avatar for gaming profiles, Discord, or just a futuristic alter ego.",
+    ],
+    tipsTitle: "Tips for the most striking cyberpunk look",
+    tips: [
+      "A clear, front-facing photo with simple lighting gives the neon effects the cleanest base.",
+      "Darker original backgrounds blend most naturally with the neon-lit futuristic backdrop.",
+      "Try a few runs — the neon colour balance varies each generation.",
     ],
   },
 };
