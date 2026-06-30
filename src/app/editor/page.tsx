@@ -31,7 +31,7 @@ const FREE_TRIAL_LIMIT = 5;
 const CREDIT_COST = 2;
 const BASIC_UPSCALE_COST = 1;
 const SUPPORTED_IMAGE_FORMATS = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
-const MAX_UPSCALE_OUTPUT_PX = 8000;
+const MAX_UPSCALE_OUTPUT_PX = 20000;
 
 const SOLID_COLORS = [
   { label: "White", hex: "#FFFFFF" }, { label: "Light Gray", hex: "#F2F2F2" },
