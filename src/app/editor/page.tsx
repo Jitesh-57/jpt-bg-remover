@@ -244,6 +244,10 @@ export default function ImageEditorPage() {
   const [sliderPos, setSliderPos] = useState(50);
   const [isDragging, setIsDragging] = useState(false);
   const sliderContainerRef = useRef<HTMLDivElement>(null);
+  // Bounding box of the actual (possibly zoomed/panned) image content — used
+  // instead of the outer container's rect so the divider tracks the cursor
+  // correctly when scale()/translate() has shrunk or shifted the content.
+  const sliderContentRef = useRef<HTMLDivElement>(null);
   const [workingSize, setWorkingSize] = useState<{ w: number; h: number } | null>(null);
   const [zoom, setZoom] = useState(1);
   const [panX, setPanX] = useState(0);
@@ -601,9 +605,13 @@ export default function ImageEditorPage() {
   }, [working]);
 
   const getSliderPosFromEvent = useCallback((clientX: number): number => {
-    const container = sliderContainerRef.current;
-    if (!container) return 50;
-    const rect = container.getBoundingClientRect();
+    // Use the transformed content's own rect, not the outer (unscaled)
+    // container — getBoundingClientRect() already reflects any scale()/
+    // translate() applied to it, so this stays accurate at any zoom/pan.
+    const content = sliderContentRef.current || sliderContainerRef.current;
+    if (!content) return 50;
+    const rect = content.getBoundingClientRect();
+    if (!rect.width) return 50;
     return Math.round(Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100)));
   }, []);
 
@@ -1196,7 +1204,10 @@ export default function ImageEditorPage() {
                     onTouchEnd={onSliderEnd}
                   >
                     {/* Before/after slider — scales and pans together as one unit when zoomed */}
-                    <div style={zoom > 1 ? { transform: `scale(${zoom}) translate(${panX / zoom}px, ${panY / zoom}px)`, transformOrigin: "center center" } : undefined}>
+                    <div
+                      ref={sliderContentRef}
+                      style={zoom > 1 ? { transform: `scale(${zoom}) translate(${panX / zoom}px, ${panY / zoom}px)`, transformOrigin: "center center" } : undefined}
+                    >
                       {/* Result image (behind) */}
                       <div style={{ position: "relative" }}>
                         {working?.includes("image/png") && <div style={s.checker} />}
