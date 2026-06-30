@@ -631,14 +631,16 @@ export default function ImageEditorPage() {
   const handleUpscale = async () => {
     const src = working || original?.dataUrl;
     if (!src || processing) return;
-    if (requireSignIn()) return;
 
     const isPro = upscaleMode === "pro";
-    const creditCost = isPro ? CREDIT_COST : 1;
+    // Pro upscale is an AI tool — gated by sign-in + trial/credits.
+    // Normal upscale is plain client-side canvas resampling — free and
+    // unlimited for everyone, no sign-in required (same as Resize/Adjust).
+    if (isPro && requireSignIn()) return;
     if (isPro) trackTransformButtonClicked("upscale-pro");
     setProcessing(true); setProcessingLabel(`${isPro ? "AI Pro" : ""} Upscaling ${upscaleScale}…`); setError(null);
     const prevCredits = user?.credits ?? 0;
-    setUser(u => u ? { ...u, credits: Math.max(0, u.credits - creditCost) } : u);
+    if (isPro) setUser(u => u ? { ...u, credits: Math.max(0, u.credits - CREDIT_COST) } : u);
 
     try {
       if (isPro) {
@@ -655,27 +657,7 @@ export default function ImageEditorPage() {
         trackImageTransformed("upscale-pro");
         autoSaveToDrive(data.dataUrl, "upscale", `${upscaleScale} Pro Upscale`);
       } else {
-        // Normal: canvas upscale — costs 1 credit, free users allowed
-        const deductRes = await fetch("/api/credits/deduct", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ tool: "basic-upscale" }),
-        });
-        const deductData = await deductRes.json() as { credits?: number; error?: string; upgradeRequired?: boolean };
-        if (!deductRes.ok) {
-          setUser(u => u ? { ...u, credits: prevCredits } : u);
-          if (deductRes.status === 402) {
-            if (deductData.upgradeRequired) { setShowUpgradeModal(true); } else { setShowNoCreditsModal(true); }
-          } else if (deductRes.status === 401) {
-            setShowSignInModal(true);
-          } else {
-            setError(deductData.error || "Failed to deduct credits.");
-          }
-          return;
-        }
-        if (typeof deductData.credits === "number") {
-          setUser(u => u ? { ...u, credits: deductData.credits! } : u);
-        }
+        // Normal: canvas upscale — free, unlimited, no account or credits needed.
         const { upscaleImage } = await import("@/lib/upscale-client");
         const out = await upscaleImage(src, upscaleScale);
         setEditHistory(prev => working ? [...prev, working] : prev);
@@ -684,8 +666,10 @@ export default function ImageEditorPage() {
         autoSaveToDrive(out, "upscale", `${upscaleScale} Upscale`);
       }
     } catch (e) {
-      setUser(u => u ? { ...u, credits: prevCredits } : u);
-      if (isPro) trackImageTransformedFailed("upscale-pro", (e as Error).message);
+      if (isPro) {
+        setUser(u => u ? { ...u, credits: prevCredits } : u);
+        trackImageTransformedFailed("upscale-pro", (e as Error).message);
+      }
       setError((e as Error).message || "Upscale failed. Please try again.");
     }
     finally { setProcessing(false); setProcessingLabel(""); }
