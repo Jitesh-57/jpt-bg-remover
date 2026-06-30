@@ -1203,10 +1203,17 @@ export default function ImageEditorPage() {
                     onTouchMove={onSliderTouchMove}
                     onTouchEnd={onSliderEnd}
                   >
-                    {/* Before/after slider — scales and pans together as one unit when zoomed */}
+                    {/* Before/after slider — scales and pans together as one unit when zoomed.
+                        position:relative is required here: it's what the clipped overlay and
+                        divider (position:absolute children below) anchor to. Without it, they
+                        fall back to the outer, untransformed container and don't actually move
+                        with the zoom/pan. */}
                     <div
                       ref={sliderContentRef}
-                      style={zoom > 1 ? { transform: `scale(${zoom}) translate(${panX / zoom}px, ${panY / zoom}px)`, transformOrigin: "center center" } : undefined}
+                      style={{
+                        position: "relative",
+                        ...(zoom > 1 ? { transform: `scale(${zoom}) translate(${panX / zoom}px, ${panY / zoom}px)`, transformOrigin: "center center" } : {}),
+                      }}
                     >
                       {/* Result image (behind) */}
                       <div style={{ position: "relative" }}>
