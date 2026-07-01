@@ -19,14 +19,14 @@ export const metadata: Metadata = {
     "online photo editor",
     "JPT AI",
   ],
-  alternates: { canonical: "https://www.sjpt.in" },
+  alternates: { canonical: "https://www.sjpt.io" },
   openGraph: {
     title: "JPT AI — Free AI Image Editor Online",
     description:
       "Remove backgrounds, upscale photos to 4K, generate AI backgrounds, and edit images with text prompts. Free to start.",
     type: "website",
     siteName: "JPT AI",
-    url: "https://www.sjpt.in",
+    url: "https://www.sjpt.io",
   },
   twitter: {
     card: "summary_large_image",
@@ -39,7 +39,7 @@ const webAppSchema = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
   name: "JPT AI",
-  url: "https://www.sjpt.in",
+  url: "https://www.sjpt.io",
   description:
     "All-in-one AI image editor. Remove backgrounds, upscale photos, generate AI backgrounds, and edit images with text prompts.",
   applicationCategory: "MultimediaApplication",
@@ -66,7 +66,7 @@ const orgSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "JPT AI",
-  url: "https://www.sjpt.in",
+  url: "https://www.sjpt.io",
   description: "AI-powered image editing tools for creators, businesses, and professionals.",
 };
 

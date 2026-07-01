@@ -5,7 +5,7 @@ import Footer from "./_components/Footer";
 import Analytics from "./_components/Analytics";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 
-const BASE = "https://www.sjpt.in";
+const BASE = "https://www.sjpt.io";
 const LOGO_URL = `${process.env.NEXT_PUBLIC_SUPABASE_URL || ""}/storage/v1/object/public/landing/logo.png`;
 
 export const metadata: Metadata = {
@@ -58,7 +58,7 @@ const organizationSchema = {
   url: BASE,
   logo: LOGO_URL,
   sameAs: ["https://twitter.com/jptai"],
-  contactPoint: { "@type": "ContactPoint", email: "support@sjpt.in", contactType: "customer service" },
+  contactPoint: { "@type": "ContactPoint", email: "support@sjpt.io", contactType: "customer service" },
 };
 
 const websiteSchema = {

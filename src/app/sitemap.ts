@@ -3,7 +3,7 @@ import { POSTS } from "./blog/_data/posts";
 import { VARIANTS, PARENT_META } from "@/lib/landing-variants";
 import { CREATIVE_APPS, CREATIVE_BASE } from "@/lib/creative-apps";
 
-const BASE = "https://www.sjpt.in";
+const BASE = "https://www.sjpt.io";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();

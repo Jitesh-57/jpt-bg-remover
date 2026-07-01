@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: post.metaTitle,
     description: post.metaDescription,
     keywords: post.keywords,
-    alternates: { canonical: `https://www.sjpt.in/blog/${post.slug}` },
+    alternates: { canonical: `https://www.sjpt.io/blog/${post.slug}` },
     openGraph: {
       title: post.title,
       description: post.metaDescription,
@@ -56,7 +56,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const post = getPost(slug);
   if (!post) notFound();
 
-  const url = `https://www.sjpt.in/blog/${post.slug}`;
+  const url = `https://www.sjpt.io/blog/${post.slug}`;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -66,12 +66,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     datePublished: post.date,
     dateModified: post.date,
     image: post.image ? [post.image] : undefined,
-    author: { "@type": "Organization", name: "JPT AI", url: "https://www.sjpt.in" },
+    author: { "@type": "Organization", name: "JPT AI", url: "https://www.sjpt.io" },
     publisher: {
       "@type": "Organization",
       name: "JPT AI",
-      url: "https://www.sjpt.in",
-      logo: { "@type": "ImageObject", url: "https://www.sjpt.in/logo.png" },
+      url: "https://www.sjpt.io",
+      logo: { "@type": "ImageObject", url: "https://www.sjpt.io/logo.png" },
     },
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
     url,
@@ -83,8 +83,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: "https://www.sjpt.in" },
-      { "@type": "ListItem", position: 2, name: "Blog", item: "https://www.sjpt.in/blog" },
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://www.sjpt.io" },
+      { "@type": "ListItem", position: 2, name: "Blog", item: "https://www.sjpt.io/blog" },
       { "@type": "ListItem", position: 3, name: post.title, item: url },
     ],
   };

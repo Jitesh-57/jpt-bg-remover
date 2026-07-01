@@ -225,7 +225,7 @@ const RAW_POSTS: BlogPost[] = [
       },
       {
         heading: "Step-by-Step: Upscale an Image with JPT AI",
-        body: "**Step 1 — Open the upscaler.** Go to sjpt.in/upscale or click 'Upscale' in the left toolbar of the JPT AI editor.\n\n**Step 2 — Upload your image.** Drag your JPG, PNG, or WEBP file onto the upload zone, or click 'Upload Image'. Maximum file size is 20 MB.\n\n**Step 3 — Choose your scale.** Select 2× (doubles dimensions) or 4× (quadruples dimensions). For a 1000×1000px image, 2× produces 2000×2000px and 4× produces 4000×4000px.\n\n**Step 4 — Choose Normal or Pro AI.** Normal upscale uses canvas super-resolution (1 credit, fast). Pro AI upscale uses PixelBin's advanced AI model (2 credits, highest quality with texture reconstruction).\n\n**Step 5 — Download.** Click Download to save your enhanced image as a high-resolution JPEG or PNG.",
+        body: "**Step 1 — Open the upscaler.** Go to sjpt.io/upscale or click 'Upscale' in the left toolbar of the JPT AI editor.\n\n**Step 2 — Upload your image.** Drag your JPG, PNG, or WEBP file onto the upload zone, or click 'Upload Image'. Maximum file size is 20 MB.\n\n**Step 3 — Choose your scale.** Select 2× (doubles dimensions) or 4× (quadruples dimensions). For a 1000×1000px image, 2× produces 2000×2000px and 4× produces 4000×4000px.\n\n**Step 4 — Choose Normal or Pro AI.** Normal upscale uses canvas super-resolution (1 credit, fast). Pro AI upscale uses PixelBin's advanced AI model (2 credits, highest quality with texture reconstruction).\n\n**Step 5 — Download.** Click Download to save your enhanced image as a high-resolution JPEG or PNG.",
       },
       {
         heading: "When to Use 2× vs 4× Upscaling",
@@ -268,11 +268,11 @@ const RAW_POSTS: BlogPost[] = [
       },
       {
         heading: "Step-by-Step: Upscale Product Photos for Amazon",
-        body: "**Step 1 — Check current dimensions.** Right-click your image → Properties → Details to see current pixel dimensions.\n\n**Step 2 — Upload to JPT AI.** Go to sjpt.in/upscale and upload your product image.\n\n**Step 3 — Select the right scale.** For a 600×600px image targeting Amazon's 2000px recommendation, select 4× (produces 2400×2400px). For a 1200×1200px image, select 2×.\n\n**Step 4 — Use Pro AI for maximum quality.** For product photography where detail matters, use Pro AI upscale. This reconstructs fabric texture, fine product detail, and sharp edges better than standard upscaling.\n\n**Step 5 — Remove background if needed.** Amazon main images require a pure white background. Use JPT AI's Remove BG tool after upscaling to produce a clean white-background image.\n\n**Step 6 — Download and upload to your listing.** Download as JPEG for Amazon (PNG for Shopify) and upload directly to your listing.",
+        body: "**Step 1 — Check current dimensions.** Right-click your image → Properties → Details to see current pixel dimensions.\n\n**Step 2 — Upload to JPT AI.** Go to sjpt.io/upscale and upload your product image.\n\n**Step 3 — Select the right scale.** For a 600×600px image targeting Amazon's 2000px recommendation, select 4× (produces 2400×2400px). For a 1200×1200px image, select 2×.\n\n**Step 4 — Use Pro AI for maximum quality.** For product photography where detail matters, use Pro AI upscale. This reconstructs fabric texture, fine product detail, and sharp edges better than standard upscaling.\n\n**Step 5 — Remove background if needed.** Amazon main images require a pure white background. Use JPT AI's Remove BG tool after upscaling to produce a clean white-background image.\n\n**Step 6 — Download and upload to your listing.** Download as JPEG for Amazon (PNG for Shopify) and upload directly to your listing.",
       },
       {
         heading: "Combine Upscale with Background Removal",
-        body: "The most efficient product photo workflow in JPT AI chains two tools:\n\n1. **Upscale** your product image to the required resolution\n2. **Remove BG** to get a transparent PNG or white background\n\nThis two-step workflow takes under 60 seconds per image and produces marketplace-ready product photos from almost any source image. You can process up to 100 images at once using the Batch Editor — go to sjpt.in/batch-editor and add both 'Upscale' and 'Remove BG' to your transformation queue.",
+        body: "The most efficient product photo workflow in JPT AI chains two tools:\n\n1. **Upscale** your product image to the required resolution\n2. **Remove BG** to get a transparent PNG or white background\n\nThis two-step workflow takes under 60 seconds per image and produces marketplace-ready product photos from almost any source image. You can process up to 100 images at once using the Batch Editor — go to sjpt.io/batch-editor and add both 'Upscale' and 'Remove BG' to your transformation queue.",
       },
       {
         heading: "Frequently Asked Questions",
@@ -381,7 +381,7 @@ const RAW_POSTS: BlogPost[] = [
       },
       {
         heading: "Top AI Upscaler Tools Compared",
-        body: "**JPT AI (sjpt.in/upscale)**\n*Best for: all-in-one photo editing with upscaling*\nJPT AI offers both Normal (canvas, free and unlimited) and Pro AI (PixelBin model, 2 credits) upscaling up to 4×. No watermarks. Combines seamlessly with background removal, AI edit, and batch processing. Free trial included on sign-up, plus unlimited free Normal upscaling forever.\n\n**Upscayl (desktop app)**\n*Best for: unlimited local processing*\nOpen-source desktop app that runs on your computer using your GPU. Unlimited free uses with no watermarks. Requires a reasonably modern GPU. Multiple model options (Real-ESRGAN, UltraMix, etc.). Best for users who process large volumes and want zero cost long-term.\n\n**Upscale.media**\n*Best for: quick single-image upscaling*\nClean web interface, 2× and 4× options, no watermark on free plan. Limited to 3 free images per day. Good quality for portraits and product photos. No batch processing on free plan.\n\n**Let's Enhance**\n*Best for: professional photographers*\n10 free credits. Credit-based model ($9/month for 100 credits). Excellent quality, especially for portraits. API available for developers.\n\n**Remini**\n*Best for: portrait and face enhancement*\nMobile-first app with strong face-specific enhancement. Better at portraits than products or landscapes. Free plan has daily limits and occasional ads.\n\n**Topaz Gigapixel AI**\n*Best for: professional photographers needing maximum quality*\nIndustry-leading desktop software ($99 one-time or subscription). Best overall quality, especially for challenging images. Not free — but worth it for professional workflows.",
+        body: "**JPT AI (sjpt.io/upscale)**\n*Best for: all-in-one photo editing with upscaling*\nJPT AI offers both Normal (canvas, free and unlimited) and Pro AI (PixelBin model, 2 credits) upscaling up to 4×. No watermarks. Combines seamlessly with background removal, AI edit, and batch processing. Free trial included on sign-up, plus unlimited free Normal upscaling forever.\n\n**Upscayl (desktop app)**\n*Best for: unlimited local processing*\nOpen-source desktop app that runs on your computer using your GPU. Unlimited free uses with no watermarks. Requires a reasonably modern GPU. Multiple model options (Real-ESRGAN, UltraMix, etc.). Best for users who process large volumes and want zero cost long-term.\n\n**Upscale.media**\n*Best for: quick single-image upscaling*\nClean web interface, 2× and 4× options, no watermark on free plan. Limited to 3 free images per day. Good quality for portraits and product photos. No batch processing on free plan.\n\n**Let's Enhance**\n*Best for: professional photographers*\n10 free credits. Credit-based model ($9/month for 100 credits). Excellent quality, especially for portraits. API available for developers.\n\n**Remini**\n*Best for: portrait and face enhancement*\nMobile-first app with strong face-specific enhancement. Better at portraits than products or landscapes. Free plan has daily limits and occasional ads.\n\n**Topaz Gigapixel AI**\n*Best for: professional photographers needing maximum quality*\nIndustry-leading desktop software ($99 one-time or subscription). Best overall quality, especially for challenging images. Not free — but worth it for professional workflows.",
       },
       {
         heading: "Which Tool Is Right for You?",
@@ -498,7 +498,7 @@ const RAW_POSTS: BlogPost[] = [
       },
       {
         heading: "Step-by-Step: Create a 4K Wallpaper with JPT AI",
-        body: "**Step 1 — Upload your image.** Go to sjpt.in/editor and drag your image onto the upload zone. The editor shows your current dimensions.\n\n**Step 2 — Select Upscale from the left toolbar.** Click the Upscale icon.\n\n**Step 3 — Choose Pro AI + 4×.** For wallpapers where you want maximum sharpness at 4K, Pro AI at 4× delivers the best results. Normal upscale works but produces softer fine detail at large viewing sizes.\n\n**Step 4 — Apply.** Processing takes 20–40 seconds. Your image is now 4× its original dimensions.\n\n**Step 5 — Crop to exact wallpaper dimensions (optional).** Use the Resize tool to set exact dimensions matching your display — e.g., 3840×2160px for 4K 16:9. Adjust the crop to frame the composition you want.\n\n**Step 6 — Download as PNG.** PNG preserves maximum quality for wallpapers. Set your new wallpaper through your OS settings.",
+        body: "**Step 1 — Upload your image.** Go to sjpt.io/editor and drag your image onto the upload zone. The editor shows your current dimensions.\n\n**Step 2 — Select Upscale from the left toolbar.** Click the Upscale icon.\n\n**Step 3 — Choose Pro AI + 4×.** For wallpapers where you want maximum sharpness at 4K, Pro AI at 4× delivers the best results. Normal upscale works but produces softer fine detail at large viewing sizes.\n\n**Step 4 — Apply.** Processing takes 20–40 seconds. Your image is now 4× its original dimensions.\n\n**Step 5 — Crop to exact wallpaper dimensions (optional).** Use the Resize tool to set exact dimensions matching your display — e.g., 3840×2160px for 4K 16:9. Adjust the crop to frame the composition you want.\n\n**Step 6 — Download as PNG.** PNG preserves maximum quality for wallpapers. Set your new wallpaper through your OS settings.",
       },
       {
         heading: "Tips for Best Wallpaper Results",
@@ -533,7 +533,7 @@ const RAW_POSTS: BlogPost[] = [
       },
       {
         heading: "How to Batch Upscale with JPT AI",
-        body: "JPT AI's Batch Editor (sjpt.in/batch-editor) supports up to 100 images per session with multiple transformation tools applied in sequence:\n\n**Step 1 — Open the Batch Editor.** Go to sjpt.in/batch-editor. Click 'Add Images' or drag up to 100 images onto the upload zone at once.\n\n**Step 2 — Add Upscale to your transformation queue.** Click 'Upscale' in the left tool panel. The side panel opens — choose Normal or Pro AI, and your scale factor (2× or 4×).\n\n**Step 3 — Stack additional transformations (optional).** You can add Resize, Colour Adjust, Remove BG, and AI Edit all in the same batch. Transformations apply in order to every image.\n\n**Step 4 — Check credit cost.** The batch editor shows the total credit cost before you start. Credits required = (credits per tool) × (number of images).\n\n**Step 5 — Click 'Process All Images'.** Processing runs in parallel. A progress indicator shows each image's status.\n\n**Step 6 — Download all.** Click 'Download All' to get a ZIP file with all processed images, or download individual images by clicking them.",
+        body: "JPT AI's Batch Editor (sjpt.io/batch-editor) supports up to 100 images per session with multiple transformation tools applied in sequence:\n\n**Step 1 — Open the Batch Editor.** Go to sjpt.io/batch-editor. Click 'Add Images' or drag up to 100 images onto the upload zone at once.\n\n**Step 2 — Add Upscale to your transformation queue.** Click 'Upscale' in the left tool panel. The side panel opens — choose Normal or Pro AI, and your scale factor (2× or 4×).\n\n**Step 3 — Stack additional transformations (optional).** You can add Resize, Colour Adjust, Remove BG, and AI Edit all in the same batch. Transformations apply in order to every image.\n\n**Step 4 — Check credit cost.** The batch editor shows the total credit cost before you start. Credits required = (credits per tool) × (number of images).\n\n**Step 5 — Click 'Process All Images'.** Processing runs in parallel. A progress indicator shows each image's status.\n\n**Step 6 — Download all.** Click 'Download All' to get a ZIP file with all processed images, or download individual images by clicking them.",
       },
       {
         heading: "Optimising Your Batch Workflow",
@@ -576,7 +576,7 @@ const RAW_POSTS: BlogPost[] = [
       },
       {
         heading: "Step-by-Step: Professional Profile Photo in 60 Seconds",
-        body: "**Step 1 — Upload your photo to JPT AI editor.** Go to sjpt.in/editor and drag your photo onto the upload zone.\n\n**Step 2 — Upscale with Pro AI 4×.** Click Upscale → Pro AI → 4×. This maximises facial detail recovery. Processing takes 20–30 seconds.\n\n**Step 3 — Adjust for professional look.** Click Adjust. Increase brightness by 5–10% (professional headshots are typically well-lit). Increase contrast by 10% for a crisp, modern look. Increase saturation by 5–10% if skin tones look flat.\n\n**Step 4 — Crop to square.** Use the Resize tool to crop or resize to exactly 1000×1000px.\n\n**Step 5 — Download and upload to LinkedIn.** Download as JPEG (90% quality). Upload to LinkedIn via Profile → Edit → Profile Photo.",
+        body: "**Step 1 — Upload your photo to JPT AI editor.** Go to sjpt.io/editor and drag your photo onto the upload zone.\n\n**Step 2 — Upscale with Pro AI 4×.** Click Upscale → Pro AI → 4×. This maximises facial detail recovery. Processing takes 20–30 seconds.\n\n**Step 3 — Adjust for professional look.** Click Adjust. Increase brightness by 5–10% (professional headshots are typically well-lit). Increase contrast by 10% for a crisp, modern look. Increase saturation by 5–10% if skin tones look flat.\n\n**Step 4 — Crop to square.** Use the Resize tool to crop or resize to exactly 1000×1000px.\n\n**Step 5 — Download and upload to LinkedIn.** Download as JPEG (90% quality). Upload to LinkedIn via Profile → Edit → Profile Photo.",
       },
       {
         heading: "Beyond Upscaling: AI Headshot Generation",
@@ -615,7 +615,7 @@ const RAW_POSTS: BlogPost[] = [
       },
       {
         heading: "Photography Tips + AI Upscaling Workflow",
-        body: "For best results, pair good photography practices with AI upscaling:\n\n**Step 1 — Shoot in the best light available.** For interiors, shoot during the day with all lights on and curtains open. Use HDR mode if your phone supports it.\n\n**Step 2 — Use landscape orientation.** All real estate platform thumbnails are landscape format. Portrait shots waste space and display poorly in grid views.\n\n**Step 3 — Upload to JPT AI Batch Editor.** Go to sjpt.in/batch-editor and add all property photos at once (up to 100 images).\n\n**Step 4 — Apply Upscale + Colour Adjust.** Add Upscale (2× Pro AI for reasonable source images, 4× for very small ones) and Colour Adjust (slight brightness boost for interiors, slight contrast increase for exteriors) to the transformation queue.\n\n**Step 5 — Process and download.** Download the full batch as a ZIP and upload directly to your listing platform.",
+        body: "For best results, pair good photography practices with AI upscaling:\n\n**Step 1 — Shoot in the best light available.** For interiors, shoot during the day with all lights on and curtains open. Use HDR mode if your phone supports it.\n\n**Step 2 — Use landscape orientation.** All real estate platform thumbnails are landscape format. Portrait shots waste space and display poorly in grid views.\n\n**Step 3 — Upload to JPT AI Batch Editor.** Go to sjpt.io/batch-editor and add all property photos at once (up to 100 images).\n\n**Step 4 — Apply Upscale + Colour Adjust.** Add Upscale (2× Pro AI for reasonable source images, 4× for very small ones) and Colour Adjust (slight brightness boost for interiors, slight contrast increase for exteriors) to the transformation queue.\n\n**Step 5 — Process and download.** Download the full batch as a ZIP and upload directly to your listing platform.",
       },
       {
         heading: "Before and After: What to Expect",
@@ -650,7 +650,7 @@ const RAW_POSTS: BlogPost[] = [
       },
       {
         heading: "How to Fix a Blurry Photo with JPT AI",
-        body: "**Step 1:** Visit **sjpt.in** and navigate to the Upscale & Enhance tool.\n\n**Step 2:** Upload your blurry photo. JPT AI accepts JPEG, PNG, and WebP formats up to 10MB.\n\n**Step 3:** Select the **Pro AI** upscale mode, which applies deep-learning sharpening and detail recovery on top of resolution enhancement.\n\n**Step 4:** Choose your scale factor — 2× is usually sufficient to restore sharpness in soft images.\n\n**Step 5:** Click **Enhance** and wait a few seconds while JPT AI processes your image.\n\n**Step 6:** Download your sharpened, high-resolution result. No watermark, no sign-up required on the free plan.",
+        body: "**Step 1:** Visit **sjpt.io** and navigate to the Upscale & Enhance tool.\n\n**Step 2:** Upload your blurry photo. JPT AI accepts JPEG, PNG, and WebP formats up to 10MB.\n\n**Step 3:** Select the **Pro AI** upscale mode, which applies deep-learning sharpening and detail recovery on top of resolution enhancement.\n\n**Step 4:** Choose your scale factor — 2× is usually sufficient to restore sharpness in soft images.\n\n**Step 5:** Click **Enhance** and wait a few seconds while JPT AI processes your image.\n\n**Step 6:** Download your sharpened, high-resolution result. No watermark, no sign-up required on the free plan.",
       },
       {
         heading: "Why JPT AI Outperforms Basic Sharpening",
@@ -693,7 +693,7 @@ const RAW_POSTS: BlogPost[] = [
       },
       {
         heading: "How to Enhance Image Quality with JPT AI",
-        body: "**Step 1:** Go to **sjpt.in** and open the Upscale tool.\n\n**Step 2:** Upload your image (JPEG, PNG, or WebP, up to 10MB).\n\n**Step 3:** Choose **Pro AI** mode for maximum quality improvement, or **Normal** for faster processing.\n\n**Step 4:** Select your desired output scale (2× or 4×).\n\n**Step 5:** Hit **Enhance** — the AI processes your photo and delivers a sharpened, higher-resolution result.\n\n**Step 6:** Download the enhanced image immediately. Free plan users get no watermark on standard outputs.",
+        body: "**Step 1:** Go to **sjpt.io** and open the Upscale tool.\n\n**Step 2:** Upload your image (JPEG, PNG, or WebP, up to 10MB).\n\n**Step 3:** Choose **Pro AI** mode for maximum quality improvement, or **Normal** for faster processing.\n\n**Step 4:** Select your desired output scale (2× or 4×).\n\n**Step 5:** Hit **Enhance** — the AI processes your photo and delivers a sharpened, higher-resolution result.\n\n**Step 6:** Download the enhanced image immediately. Free plan users get no watermark on standard outputs.",
       },
       {
         heading: "Why AI Enhancement Is Better Than Manual Editing",
@@ -736,7 +736,7 @@ const RAW_POSTS: BlogPost[] = [
       },
       {
         heading: "How to Increase Image Resolution with JPT AI",
-        body: "**Step 1:** Navigate to **sjpt.in** and select the Upscale tool.\n\n**Step 2:** Drag and drop or click to upload your image. Supported formats: JPEG, PNG, WebP.\n\n**Step 3:** Select your upscale factor — **2×** doubles both width and height (4× the pixel count), **4×** quadruples both (16× the pixel count).\n\n**Step 4:** Choose **Pro AI** mode for the sharpest detail reconstruction, especially for photos with faces, text, or fine patterns.\n\n**Step 5:** Click **Upscale** and download your higher-resolution file in seconds.",
+        body: "**Step 1:** Navigate to **sjpt.io** and select the Upscale tool.\n\n**Step 2:** Drag and drop or click to upload your image. Supported formats: JPEG, PNG, WebP.\n\n**Step 3:** Select your upscale factor — **2×** doubles both width and height (4× the pixel count), **4×** quadruples both (16× the pixel count).\n\n**Step 4:** Choose **Pro AI** mode for the sharpest detail reconstruction, especially for photos with faces, text, or fine patterns.\n\n**Step 5:** Click **Upscale** and download your higher-resolution file in seconds.",
       },
       {
         heading: "How AI Super-Resolution Works",
@@ -771,7 +771,7 @@ const RAW_POSTS: BlogPost[] = [
     image: "https://images.pexels.com/photos/1181671/pexels-photo-1181671.jpeg?auto=compress&cs=tinysrgb&w=1200",
     sections: [
       {
-        body: "The market for AI photo enhancement tools has exploded over the past two years. From mobile apps to desktop software, dozens of tools promise to make your photos look better instantly. But most of them either add a watermark, require a subscription, or limit output quality on the free tier. JPT AI at **sjpt.in** is different — it delivers genuine AI-powered photo enhancement completely free, with no watermark and no mandatory account creation.",
+        body: "The market for AI photo enhancement tools has exploded over the past two years. From mobile apps to desktop software, dozens of tools promise to make your photos look better instantly. But most of them either add a watermark, require a subscription, or limit output quality on the free tier. JPT AI at **sjpt.io** is different — it delivers genuine AI-powered photo enhancement completely free, with no watermark and no mandatory account creation.",
       },
       {
         heading: "What Makes a Good AI Photo Enhancer?",
@@ -779,7 +779,7 @@ const RAW_POSTS: BlogPost[] = [
       },
       {
         heading: "How to Use JPT AI as a Free Photo Enhancer",
-        body: "**Step 1:** Go to **sjpt.in** and open the Upscale & Enhance tool.\n\n**Step 2:** Upload your photo — JPEG, PNG, or WebP up to 10MB.\n\n**Step 3:** Select **Pro AI** mode to activate the full enhancement pipeline: upscaling, sharpening, noise reduction, and detail reconstruction.\n\n**Step 4:** Pick your scale factor: 2× for quick enhancement, 4× for maximum quality and resolution.\n\n**Step 5:** Click Enhance and download your result. No watermark. No account required.",
+        body: "**Step 1:** Go to **sjpt.io** and open the Upscale & Enhance tool.\n\n**Step 2:** Upload your photo — JPEG, PNG, or WebP up to 10MB.\n\n**Step 3:** Select **Pro AI** mode to activate the full enhancement pipeline: upscaling, sharpening, noise reduction, and detail reconstruction.\n\n**Step 4:** Pick your scale factor: 2× for quick enhancement, 4× for maximum quality and resolution.\n\n**Step 5:** Click Enhance and download your result. No watermark. No account required.",
       },
       {
         heading: "JPT AI vs Other Free Enhancers",
@@ -822,7 +822,7 @@ const RAW_POSTS: BlogPost[] = [
       },
       {
         heading: "How to Sharpen a Blurry Image with JPT AI",
-        body: "**Step 1:** Open **sjpt.in** in your browser.\n\n**Step 2:** Click **Upscale** and upload your blurry image.\n\n**Step 3:** Select **Pro AI** mode — this activates the full sharpening and detail reconstruction pipeline.\n\n**Step 4:** Choose **2×** scale for sharpening without significantly increasing the file size.\n\n**Step 5:** Click Enhance and download your sharpened image. The whole process takes under 15 seconds.",
+        body: "**Step 1:** Open **sjpt.io** in your browser.\n\n**Step 2:** Click **Upscale** and upload your blurry image.\n\n**Step 3:** Select **Pro AI** mode — this activates the full sharpening and detail reconstruction pipeline.\n\n**Step 4:** Choose **2×** scale for sharpening without significantly increasing the file size.\n\n**Step 5:** Click Enhance and download your sharpened image. The whole process takes under 15 seconds.",
       },
       {
         heading: "Understanding the AI Sharpening Process",
@@ -865,7 +865,7 @@ const RAW_POSTS: BlogPost[] = [
       },
       {
         heading: "How to Upscale Your Image to 4K with JPT AI",
-        body: "**Step 1:** Visit **sjpt.in** and open the Upscale tool.\n\n**Step 2:** Upload your image. For 4K output from a Full HD (1920×1080) source, select **2×**. For a smaller 960×540 source, select **4×** to reach approximately 3840×2160.\n\n**Step 3:** Select **Pro AI** mode for the highest quality 4K reconstruction.\n\n**Step 4:** Click Upscale. Larger images may take 20–30 seconds to process.\n\n**Step 5:** Download your 4K-quality image — no watermark, no account required.",
+        body: "**Step 1:** Visit **sjpt.io** and open the Upscale tool.\n\n**Step 2:** Upload your image. For 4K output from a Full HD (1920×1080) source, select **2×**. For a smaller 960×540 source, select **4×** to reach approximately 3840×2160.\n\n**Step 3:** Select **Pro AI** mode for the highest quality 4K reconstruction.\n\n**Step 4:** Click Upscale. Larger images may take 20–30 seconds to process.\n\n**Step 5:** Download your 4K-quality image — no watermark, no account required.",
       },
       {
         heading: "When to Use 2× vs 4× Upscaling",
@@ -908,7 +908,7 @@ const RAW_POSTS: BlogPost[] = [
       },
       {
         heading: "How to Improve Photo Quality with JPT AI",
-        body: "**Upscaling and Sharpening:**\n1. Go to **sjpt.in** → Upscale tool.\n2. Upload your photo, select Pro AI mode and 2× or 4× scale.\n3. Download the sharpened, high-resolution result.\n\n**Color and Exposure Correction:**\n1. Go to **sjpt.in** → Editor tool.\n2. Upload your photo and use the AI Edit prompt field: type \"Brighten the image, increase contrast, make colors more vibrant.\"\n3. Download the color-corrected result.\n\n**Background Cleanup:**\n1. Use the Background Remover at **sjpt.in** to replace cluttered backgrounds with clean white or a custom color.",
+        body: "**Upscaling and Sharpening:**\n1. Go to **sjpt.io** → Upscale tool.\n2. Upload your photo, select Pro AI mode and 2× or 4× scale.\n3. Download the sharpened, high-resolution result.\n\n**Color and Exposure Correction:**\n1. Go to **sjpt.io** → Editor tool.\n2. Upload your photo and use the AI Edit prompt field: type \"Brighten the image, increase contrast, make colors more vibrant.\"\n3. Download the color-corrected result.\n\n**Background Cleanup:**\n1. Use the Background Remover at **sjpt.io** to replace cluttered backgrounds with clean white or a custom color.",
       },
       {
         heading: "Which Quality Issues Can AI Fix?",
@@ -951,7 +951,7 @@ const RAW_POSTS: BlogPost[] = [
       },
       {
         heading: "How to Unblur a Photo with JPT AI",
-        body: "**Step 1:** Visit **sjpt.in** and go to the Upscale tool.\n\n**Step 2:** Upload your blurry photo.\n\n**Step 3:** Select **Pro AI** mode — this applies deblurring and detail reconstruction in addition to resolution upscaling.\n\n**Step 4:** Select **2×** for mildly blurry images, **4×** for severely degraded ones.\n\n**Step 5:** Click Enhance and download your unblurred result. The process typically takes 10–20 seconds.",
+        body: "**Step 1:** Visit **sjpt.io** and go to the Upscale tool.\n\n**Step 2:** Upload your blurry photo.\n\n**Step 3:** Select **Pro AI** mode — this applies deblurring and detail reconstruction in addition to resolution upscaling.\n\n**Step 4:** Select **2×** for mildly blurry images, **4×** for severely degraded ones.\n\n**Step 5:** Click Enhance and download your unblurred result. The process typically takes 10–20 seconds.",
       },
       {
         heading: "What to Expect from AI Deblurring",
@@ -994,7 +994,7 @@ const RAW_POSTS: BlogPost[] = [
       },
       {
         heading: "How to Enhance Images with JPT AI — No Watermark",
-        body: "**Step 1:** Go to **sjpt.in** — no account creation required.\n\n**Step 2:** Navigate to the Upscale tool and upload your image.\n\n**Step 3:** Select your enhancement mode (Normal for speed, Pro AI for maximum quality) and scale factor.\n\n**Step 4:** Click Enhance.\n\n**Step 5:** Download your enhanced image — clean, no watermark, ready to use immediately.\n\nThe process takes under 30 seconds from upload to download for most images.",
+        body: "**Step 1:** Go to **sjpt.io** — no account creation required.\n\n**Step 2:** Navigate to the Upscale tool and upload your image.\n\n**Step 3:** Select your enhancement mode (Normal for speed, Pro AI for maximum quality) and scale factor.\n\n**Step 4:** Click Enhance.\n\n**Step 5:** Download your enhanced image — clean, no watermark, ready to use immediately.\n\nThe process takes under 30 seconds from upload to download for most images.",
       },
       {
         heading: "Comparing Watermark Policies of Popular AI Enhancers",
@@ -1037,7 +1037,7 @@ const RAW_POSTS: BlogPost[] = [
       },
       {
         heading: "How to Enhance a Low-Resolution Image with JPT AI",
-        body: "**Step 1:** Visit **sjpt.in** and open the Upscale tool.\n\n**Step 2:** Upload your low-resolution image. Even very small images (100×100 pixels) are accepted.\n\n**Step 3:** Select **4×** scale and **Pro AI** mode for maximum detail recovery from very small sources.\n\n**Step 4:** Click Enhance — processing may take 15–30 seconds for 4× upscaling.\n\n**Step 5:** Preview the result and download your enhanced, high-resolution image.",
+        body: "**Step 1:** Visit **sjpt.io** and open the Upscale tool.\n\n**Step 2:** Upload your low-resolution image. Even very small images (100×100 pixels) are accepted.\n\n**Step 3:** Select **4×** scale and **Pro AI** mode for maximum detail recovery from very small sources.\n\n**Step 4:** Click Enhance — processing may take 15–30 seconds for 4× upscaling.\n\n**Step 5:** Preview the result and download your enhanced, high-resolution image.",
       },
       {
         heading: "What Results Can You Expect?",
@@ -1080,7 +1080,7 @@ const RAW_POSTS: BlogPost[] = [
       },
       {
         heading: "How to Use JPT AI as a Photo Resolution Increaser",
-        body: "**Step 1:** Open **sjpt.in** in any browser.\n\n**Step 2:** Click on the Upscale tool and upload your photo.\n\n**Step 3:** Select your desired scale: 2× doubles both dimensions, 4× quadruples them.\n\n**Step 4:** Choose **Pro AI** mode for the sharpest, highest-quality resolution increase.\n\n**Step 5:** Click Upscale, then download your higher-resolution photo.",
+        body: "**Step 1:** Open **sjpt.io** in any browser.\n\n**Step 2:** Click on the Upscale tool and upload your photo.\n\n**Step 3:** Select your desired scale: 2× doubles both dimensions, 4× quadruples them.\n\n**Step 4:** Choose **Pro AI** mode for the sharpest, highest-quality resolution increase.\n\n**Step 5:** Click Upscale, then download your higher-resolution photo.",
       },
       {
         heading: "How Much Resolution Increase Do You Need?",
@@ -1123,7 +1123,7 @@ const RAW_POSTS: BlogPost[] = [
       },
       {
         heading: "How to Make an Image Clearer with JPT AI",
-        body: "**Step 1:** Visit **sjpt.in** and open the Upscale tool.\n\n**Step 2:** Upload your image.\n\n**Step 3:** Select **Pro AI** mode and **2×** scale.\n\n**Step 4:** Click Enhance. The AI applies sharpening, noise reduction, and detail reconstruction in a single pass.\n\n**Step 5:** For additional contrast and color clarity, open the result in the **JPT AI Editor** and use the AI Edit prompt: \"Increase local contrast, boost midtone clarity, make the image punchier.\"\n\n**Step 6:** Download your clearer image.",
+        body: "**Step 1:** Visit **sjpt.io** and open the Upscale tool.\n\n**Step 2:** Upload your image.\n\n**Step 3:** Select **Pro AI** mode and **2×** scale.\n\n**Step 4:** Click Enhance. The AI applies sharpening, noise reduction, and detail reconstruction in a single pass.\n\n**Step 5:** For additional contrast and color clarity, open the result in the **JPT AI Editor** and use the AI Edit prompt: \"Increase local contrast, boost midtone clarity, make the image punchier.\"\n\n**Step 6:** Download your clearer image.",
       },
       {
         heading: "Clarity vs. Sharpness: What\'s the Difference?",
@@ -1166,7 +1166,7 @@ const RAW_POSTS: BlogPost[] = [
       },
       {
         heading: "How to Enhance Old Photos with JPT AI",
-        body: "**Step 1:** Scan your physical photo at the highest resolution your scanner supports (minimum 600 DPI, ideally 1200 DPI). Save as TIFF or high-quality JPEG.\n\n**Step 2:** Go to **sjpt.in** → Upscale tool and upload the scan.\n\n**Step 3:** Select **Pro AI** mode and **4×** scale for maximum detail recovery.\n\n**Step 4:** Download the upscaled result.\n\n**Step 5:** Open the result in the **JPT AI Editor** and use AI Edit: \"Reduce grain, restore natural colors, improve contrast, brighten faded areas.\"\n\n**Step 6:** Download your restored, enhanced photo — ready to print or share digitally.",
+        body: "**Step 1:** Scan your physical photo at the highest resolution your scanner supports (minimum 600 DPI, ideally 1200 DPI). Save as TIFF or high-quality JPEG.\n\n**Step 2:** Go to **sjpt.io** → Upscale tool and upload the scan.\n\n**Step 3:** Select **Pro AI** mode and **4×** scale for maximum detail recovery.\n\n**Step 4:** Download the upscaled result.\n\n**Step 5:** Open the result in the **JPT AI Editor** and use AI Edit: \"Reduce grain, restore natural colors, improve contrast, brighten faded areas.\"\n\n**Step 6:** Download your restored, enhanced photo — ready to print or share digitally.",
       },
       {
         heading: "What AI Can and Cannot Fix in Old Photos",
@@ -1201,7 +1201,7 @@ const RAW_POSTS: BlogPost[] = [
     image: "https://images.pexels.com/photos/1181671/pexels-photo-1181671.jpeg?auto=compress&cs=tinysrgb&w=1200",
     sections: [
       {
-        body: "\"Upscale without losing quality\" sounds like a contradiction — if you are adding pixels that were not there, how can quality be preserved? The answer lies in AI super-resolution. Unlike traditional upscaling methods that spread existing pixels and create blur, AI upscaling uses neural networks trained on millions of image pairs to reconstruct missing detail intelligently. The result: images that are not just larger, but genuinely sharper and more detailed. JPT AI offers this capability for free at **sjpt.in**.",
+        body: "\"Upscale without losing quality\" sounds like a contradiction — if you are adding pixels that were not there, how can quality be preserved? The answer lies in AI super-resolution. Unlike traditional upscaling methods that spread existing pixels and create blur, AI upscaling uses neural networks trained on millions of image pairs to reconstruct missing detail intelligently. The result: images that are not just larger, but genuinely sharper and more detailed. JPT AI offers this capability for free at **sjpt.io**.",
       },
       {
         heading: "Why Traditional Upscaling Loses Quality",
@@ -1209,7 +1209,7 @@ const RAW_POSTS: BlogPost[] = [
       },
       {
         heading: "How to Upscale Without Losing Quality Using JPT AI",
-        body: "**Step 1:** Visit **sjpt.in** and open the Upscale tool.\n\n**Step 2:** Upload your image in the highest quality format available (TIFF or high-quality JPEG).\n\n**Step 3:** Select **Pro AI** mode — this is essential for quality-preserving upscaling.\n\n**Step 4:** Select your scale factor: 2× for most use cases, 4× for significant enlargement needs.\n\n**Step 5:** Click Upscale and download your result as PNG for lossless output.",
+        body: "**Step 1:** Visit **sjpt.io** and open the Upscale tool.\n\n**Step 2:** Upload your image in the highest quality format available (TIFF or high-quality JPEG).\n\n**Step 3:** Select **Pro AI** mode — this is essential for quality-preserving upscaling.\n\n**Step 4:** Select your scale factor: 2× for most use cases, 4× for significant enlargement needs.\n\n**Step 5:** Click Upscale and download your result as PNG for lossless output.",
       },
       {
         heading: "Pro Tips for Lossless-Quality Upscaling",
@@ -1244,7 +1244,7 @@ const RAW_POSTS: BlogPost[] = [
     image: "https://images.pexels.com/photos/3807571/pexels-photo-3807571.jpeg?auto=compress&cs=tinysrgb&w=1200",
     sections: [
       {
-        body: "The AI photo enhancement market in 2025 is crowded, and not all tools are created equal. Some hide their best quality behind paywalls. Others add intrusive watermarks. Many require account creation and aggressive email marketing opt-ins. We\'ve tested the leading free AI photo enhancers and ranked them on quality, ease of use, watermark policy, and genuine free access. JPT AI at **sjpt.in** is our top pick — and here\'s why.",
+        body: "The AI photo enhancement market in 2025 is crowded, and not all tools are created equal. Some hide their best quality behind paywalls. Others add intrusive watermarks. Many require account creation and aggressive email marketing opt-ins. We\'ve tested the leading free AI photo enhancers and ranked them on quality, ease of use, watermark policy, and genuine free access. JPT AI at **sjpt.io** is our top pick — and here\'s why.",
       },
       {
         heading: "What We Looked For in Free AI Photo Enhancers",
@@ -1252,7 +1252,7 @@ const RAW_POSTS: BlogPost[] = [
       },
       {
         heading: "Top Free AI Photo Enhancers in 2025",
-        body: "**1. JPT AI (sjpt.in) — Best Overall Free AI Enhancer**\nNo watermark. No mandatory sign-up. Pro AI upscaling with genuine neural network quality. Includes Editor and Background Remover. Fast processing. Free tier is genuinely useful.\n\n**2. Upscayl (Desktop)**\nExcellent open-source quality. Free. Requires a decent GPU and desktop installation — not browser-based.\n\n**3. Adobe Firefly**\nExceptional AI quality but requires Adobe Creative Cloud subscription. Not truly free.\n\n**4. Remini**\nGreat for portraits. Free tier adds a watermark. Mobile-only.\n\n**5. Let\'s Enhance**\nGood quality. Limited free credits. Requires account creation. Watermarks free outputs.",
+        body: "**1. JPT AI (sjpt.io) — Best Overall Free AI Enhancer**\nNo watermark. No mandatory sign-up. Pro AI upscaling with genuine neural network quality. Includes Editor and Background Remover. Fast processing. Free tier is genuinely useful.\n\n**2. Upscayl (Desktop)**\nExcellent open-source quality. Free. Requires a decent GPU and desktop installation — not browser-based.\n\n**3. Adobe Firefly**\nExceptional AI quality but requires Adobe Creative Cloud subscription. Not truly free.\n\n**4. Remini**\nGreat for portraits. Free tier adds a watermark. Mobile-only.\n\n**5. Let\'s Enhance**\nGood quality. Limited free credits. Requires account creation. Watermarks free outputs.",
       },
       {
         heading: "Why JPT AI Ranks First",
@@ -1295,7 +1295,7 @@ const RAW_POSTS: BlogPost[] = [
       },
       {
         heading: "How to Enhance Blurry Wedding Photos with JPT AI",
-        body: "**Step 1:** Identify your blurriest or most important wedding photos — prioritize faces, first dance, ceremony key moments.\n\n**Step 2:** Go to **sjpt.in** → Upscale tool and upload a photo.\n\n**Step 3:** Select **Pro AI** mode (essential for maximum detail recovery in wedding photos) and **4×** scale for maximum quality.\n\n**Step 4:** Download the enhanced version and compare with the original.\n\n**Step 5:** For photos with poor exposure (dark reception images), open in the **JPT AI Editor** and use the prompt: \"Brighten the image, lift shadows, maintain natural skin tones, preserve warm candlelit atmosphere.\"\n\n**Step 6:** Repeat for each priority photo. Process the full set with the Creator plan\'s batch feature.",
+        body: "**Step 1:** Identify your blurriest or most important wedding photos — prioritize faces, first dance, ceremony key moments.\n\n**Step 2:** Go to **sjpt.io** → Upscale tool and upload a photo.\n\n**Step 3:** Select **Pro AI** mode (essential for maximum detail recovery in wedding photos) and **4×** scale for maximum quality.\n\n**Step 4:** Download the enhanced version and compare with the original.\n\n**Step 5:** For photos with poor exposure (dark reception images), open in the **JPT AI Editor** and use the prompt: \"Brighten the image, lift shadows, maintain natural skin tones, preserve warm candlelit atmosphere.\"\n\n**Step 6:** Repeat for each priority photo. Process the full set with the Creator plan\'s batch feature.",
       },
       {
         heading: "Managing Expectations: What AI Can Restore",
@@ -1338,7 +1338,7 @@ const RAW_POSTS: BlogPost[] = [
       },
       {
         heading: "How to Enhance Product Images with JPT AI",
-        body: "**Complete product image enhancement workflow:**\n\n**Step 1:** Upload your product photo to the **JPT AI Upscale** tool at **sjpt.in**.\n\n**Step 2:** Select **Pro AI** mode and **2×** scale — this sharpens detail and meets most platform resolution requirements.\n\n**Step 3:** Download the upscaled result.\n\n**Step 4:** Upload the upscaled image to the **JPT AI Background Remover** — automatically isolates the product on a transparent background.\n\n**Step 5:** In the editor, replace the transparent background with white (#FFFFFF) for Amazon/Etsy main images, or with a lifestyle background for secondary images.\n\n**Step 6:** Download your final, platform-ready product image.",
+        body: "**Complete product image enhancement workflow:**\n\n**Step 1:** Upload your product photo to the **JPT AI Upscale** tool at **sjpt.io**.\n\n**Step 2:** Select **Pro AI** mode and **2×** scale — this sharpens detail and meets most platform resolution requirements.\n\n**Step 3:** Download the upscaled result.\n\n**Step 4:** Upload the upscaled image to the **JPT AI Background Remover** — automatically isolates the product on a transparent background.\n\n**Step 5:** In the editor, replace the transparent background with white (#FFFFFF) for Amazon/Etsy main images, or with a lifestyle background for secondary images.\n\n**Step 6:** Download your final, platform-ready product image.",
       },
       {
         heading: "Platform-Specific Image Requirements",
@@ -1381,7 +1381,7 @@ const RAW_POSTS: BlogPost[] = [
       },
       {
         heading: "How to Restore a Photo with JPT AI",
-        body: "**Step 1 — Scan your original:** If working from a physical print, scan at 600–1200 DPI. Save as TIFF or high-quality JPEG.\n\n**Step 2 — AI Upscale:** Go to **sjpt.in** → Upscale → upload the scan → select Pro AI mode → 4× scale → download.\n\n**Step 3 — AI Edit for additional restoration:** Upload the upscaled result to the JPT AI Editor. Use the prompt: \"Reduce grain, restore faded colors to natural tones, improve contrast, preserve vintage character.\"\n\n**Step 4 — Fine-tuning:** If scratches or spots remain visible, use the manual brush tools in the Editor to address specific damage areas.\n\n**Step 5 — Download** your restored photo in PNG format for maximum quality.",
+        body: "**Step 1 — Scan your original:** If working from a physical print, scan at 600–1200 DPI. Save as TIFF or high-quality JPEG.\n\n**Step 2 — AI Upscale:** Go to **sjpt.io** → Upscale → upload the scan → select Pro AI mode → 4× scale → download.\n\n**Step 3 — AI Edit for additional restoration:** Upload the upscaled result to the JPT AI Editor. Use the prompt: \"Reduce grain, restore faded colors to natural tones, improve contrast, preserve vintage character.\"\n\n**Step 4 — Fine-tuning:** If scratches or spots remain visible, use the manual brush tools in the Editor to address specific damage areas.\n\n**Step 5 — Download** your restored photo in PNG format for maximum quality.",
       },
       {
         heading: "Before and After: What to Expect",
@@ -1416,7 +1416,7 @@ const RAW_POSTS: BlogPost[] = [
     image: "https://images.pexels.com/photos/3623578/pexels-photo-3623578.jpeg?auto=compress&cs=tinysrgb&w=1200",
     sections: [
       {
-        body: "4K resolution has become the display standard across televisions, monitors, smartphones, and streaming platforms. But the vast majority of existing photos in people\'s collections — especially anything older than 5 years — was captured at resolutions well below 4K. A free 4K image upscaler is therefore one of the most practically useful AI tools available today. JPT AI at **sjpt.in** provides genuine AI-powered 4K upscaling, completely free, without watermarks.",
+        body: "4K resolution has become the display standard across televisions, monitors, smartphones, and streaming platforms. But the vast majority of existing photos in people\'s collections — especially anything older than 5 years — was captured at resolutions well below 4K. A free 4K image upscaler is therefore one of the most practically useful AI tools available today. JPT AI at **sjpt.io** provides genuine AI-powered 4K upscaling, completely free, without watermarks.",
       },
       {
         heading: "What \"4K Quality\" Really Means for Upscaled Images",
@@ -1424,7 +1424,7 @@ const RAW_POSTS: BlogPost[] = [
       },
       {
         heading: "How to Use JPT AI as a Free 4K Upscaler",
-        body: "**Step 1:** Visit **sjpt.in** and open the Upscale tool.\n\n**Step 2:** Upload your photo. For best 4K results, start from the highest-quality version you have.\n\n**Step 3:** To achieve approximately 4K output:\n- From Full HD (1920×1080): Select **2×** scale.\n- From HD (1280×720): Select **3×** or two sequential 2× passes.\n- From SD (960×540) or smaller: Select **4×** scale.\n\n**Step 4:** Select **Pro AI** mode.\n\n**Step 5:** Click Upscale and download your 4K-quality result in PNG format for maximum fidelity.",
+        body: "**Step 1:** Visit **sjpt.io** and open the Upscale tool.\n\n**Step 2:** Upload your photo. For best 4K results, start from the highest-quality version you have.\n\n**Step 3:** To achieve approximately 4K output:\n- From Full HD (1920×1080): Select **2×** scale.\n- From HD (1280×720): Select **3×** or two sequential 2× passes.\n- From SD (960×540) or smaller: Select **4×** scale.\n\n**Step 4:** Select **Pro AI** mode.\n\n**Step 5:** Click Upscale and download your 4K-quality result in PNG format for maximum fidelity.",
       },
       {
         heading: "Best Uses for 4K Upscaled Images",
@@ -1467,7 +1467,7 @@ const RAW_POSTS: BlogPost[] = [
       },
       {
         heading: "How to Enhance Portrait Photos with JPT AI",
-        body: "**Step 1:** Go to **sjpt.in** → Upscale tool.\n\n**Step 2:** Upload your portrait photo. Crop to the face and upper body before uploading for the best results on individual portraits.\n\n**Step 3:** Select **Pro AI** mode and **2×** scale. For extreme close-up portraits, 4× produces stunning eye and hair detail.\n\n**Step 4:** Click Enhance and download the result.\n\n**Step 5 (optional):** Open in the JPT AI Editor and apply a gentle prompt: \"Slightly brighten the face, add a little warmth, sharpen the eyes subtly while keeping skin smooth.\"",
+        body: "**Step 1:** Go to **sjpt.io** → Upscale tool.\n\n**Step 2:** Upload your portrait photo. Crop to the face and upper body before uploading for the best results on individual portraits.\n\n**Step 3:** Select **Pro AI** mode and **2×** scale. For extreme close-up portraits, 4× produces stunning eye and hair detail.\n\n**Step 4:** Click Enhance and download the result.\n\n**Step 5 (optional):** Open in the JPT AI Editor and apply a gentle prompt: \"Slightly brighten the face, add a little warmth, sharpen the eyes subtly while keeping skin smooth.\"",
       },
       {
         heading: "Portrait Enhancement for Different Use Cases",

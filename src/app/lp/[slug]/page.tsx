@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { AD_LANDINGS, getAdLanding } from "@/lib/ad-landing";
 import AdLandingCTA from "./AdLandingCTA";
 
-const BASE = "https://www.sjpt.in";
+const BASE = "https://www.sjpt.io";
 
 export function generateStaticParams() {
   return AD_LANDINGS.map((l) => ({ slug: l.slug }));

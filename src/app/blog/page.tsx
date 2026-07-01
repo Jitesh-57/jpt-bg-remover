@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     "image upscaler tips",
     "ai headshot guide",
   ],
-  alternates: { canonical: "https://www.sjpt.in/blog" },
+  alternates: { canonical: "https://www.sjpt.io/blog" },
   openGraph: {
     title: "AI Image Editing Blog | JPT AI",
     description: "Tutorials, guides and tips for AI-powered image editing.",

@@ -12,7 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: config.og_title || config.title,
       description: config.og_description || config.meta_description,
       images: config.og_image ? [config.og_image] : [],
-      url: 'https://www.sjpt.in/ai-headshot',
+      url: 'https://www.sjpt.io/ai-headshot',
     },
     twitter: {
       card: 'summary_large_image',
@@ -20,7 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description: config.og_description || config.meta_description,
       images: config.og_image ? [config.og_image] : [],
     },
-    alternates: { canonical: 'https://www.sjpt.in/ai-headshot' },
+    alternates: { canonical: 'https://www.sjpt.io/ai-headshot' },
   }
 }
 
@@ -34,7 +34,7 @@ export default async function AIHeadshotPage() {
     applicationCategory: 'MultimediaApplication',
     operatingSystem: 'Web',
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-    url: 'https://www.sjpt.in/ai-headshot',
+    url: 'https://www.sjpt.io/ai-headshot',
   }
 
   return (

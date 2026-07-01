@@ -12,7 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: config.og_title || config.title,
       description: config.og_description || config.meta_description,
       images: config.og_image ? [config.og_image] : [],
-      url: 'https://www.sjpt.in/upscale',
+      url: 'https://www.sjpt.io/upscale',
     },
     twitter: {
       card: 'summary_large_image',
@@ -20,7 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description: config.og_description || config.meta_description,
       images: config.og_image ? [config.og_image] : [],
     },
-    alternates: { canonical: 'https://www.sjpt.in/upscale' },
+    alternates: { canonical: 'https://www.sjpt.io/upscale' },
   }
 }
 
@@ -34,7 +34,7 @@ export default async function UpscalePage() {
     applicationCategory: 'MultimediaApplication',
     operatingSystem: 'Web',
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-    url: 'https://www.sjpt.in/upscale',
+    url: 'https://www.sjpt.io/upscale',
   }
 
   return (

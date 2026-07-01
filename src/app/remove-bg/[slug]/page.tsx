@@ -10,7 +10,7 @@ import {
 } from "@/lib/landing-variants";
 
 const PARENT = "remove-bg" as const;
-const BASE = "https://www.sjpt.in";
+const BASE = "https://www.sjpt.io";
 
 export function generateStaticParams() {
   return variantsFor(PARENT).map((v) => ({ slug: v.slug }));

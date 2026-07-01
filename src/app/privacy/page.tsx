@@ -14,7 +14,7 @@ export default function PrivacyPage() {
 
         <Section title="1. Introduction">
           JPT AI (&quot;we&quot;, &quot;our&quot;, or &quot;us&quot;) operates the website{" "}
-          <a href="https://www.sjpt.in" style={{ color: "#6366F1" }}>www.sjpt.in</a> and provides AI-powered image editing tools. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our service.
+          <a href="https://www.sjpt.io" style={{ color: "#6366F1" }}>www.sjpt.io</a> and provides AI-powered image editing tools. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our service.
         </Section>
 
         <Section title="2. Information We Collect">
@@ -68,7 +68,7 @@ export default function PrivacyPage() {
             <li>Withdraw consent at any time</li>
           </ul>
           To exercise these rights, contact us at{" "}
-          <a href="mailto:support@sjpt.in" style={{ color: "#6366F1" }}>support@sjpt.in</a>.
+          <a href="mailto:support@sjpt.io" style={{ color: "#6366F1" }}>support@sjpt.io</a>.
         </Section>
 
         <Section title="8. Cookies">
@@ -87,8 +87,8 @@ export default function PrivacyPage() {
           If you have questions about this Privacy Policy, please contact us at:
           <br /><br />
           <b>JPT AI</b><br />
-          Email: <a href="mailto:support@sjpt.in" style={{ color: "#6366F1" }}>support@sjpt.in</a><br />
-          Website: <a href="https://www.sjpt.in" style={{ color: "#6366F1" }}>www.sjpt.in</a>
+          Email: <a href="mailto:support@sjpt.io" style={{ color: "#6366F1" }}>support@sjpt.io</a><br />
+          Website: <a href="https://www.sjpt.io" style={{ color: "#6366F1" }}>www.sjpt.io</a>
         </Section>
       </div>
     </main>

@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { CREATIVE_APPS, CREATIVE_BASE, previewUrl } from "@/lib/creative-apps";
 
-const BASE = "https://www.sjpt.in";
+const BASE = "https://www.sjpt.io";
 const URL = `${BASE}${CREATIVE_BASE}`;
 
 export const metadata: Metadata = {

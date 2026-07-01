@@ -4,7 +4,7 @@ import FAQAccordion from "@/app/_components/FAQAccordion";
 import CreativeApp from "./CreativeApp";
 import { CREATIVE_APPS, getCreativeApp, getCreativeContent, CREATIVE_BASE, previewUrl } from "@/lib/creative-apps";
 
-const BASE = "https://www.sjpt.in";
+const BASE = "https://www.sjpt.io";
 
 export function generateStaticParams() {
   return CREATIVE_APPS.map((a) => ({ slug: a.slug }));

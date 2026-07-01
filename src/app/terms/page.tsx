@@ -14,7 +14,7 @@ export default function TermsPage() {
 
         <Section title="1. Acceptance of Terms">
           By accessing or using JPT AI (&quot;the Service&quot;) at{" "}
-          <a href="https://www.sjpt.in" style={{ color: "#6366F1" }}>www.sjpt.in</a>, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Service.
+          <a href="https://www.sjpt.io" style={{ color: "#6366F1" }}>www.sjpt.io</a>, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Service.
         </Section>
 
         <Section title="2. Description of Service">
@@ -80,8 +80,8 @@ export default function TermsPage() {
           If you have questions about these Terms of Service, please contact us at:
           <br /><br />
           <b>JPT AI</b><br />
-          Email: <a href="mailto:support@sjpt.in" style={{ color: "#6366F1" }}>support@sjpt.in</a><br />
-          Website: <a href="https://www.sjpt.in" style={{ color: "#6366F1" }}>www.sjpt.in</a>
+          Email: <a href="mailto:support@sjpt.io" style={{ color: "#6366F1" }}>support@sjpt.io</a><br />
+          Website: <a href="https://www.sjpt.io" style={{ color: "#6366F1" }}>www.sjpt.io</a>
         </Section>
       </div>
     </main>
