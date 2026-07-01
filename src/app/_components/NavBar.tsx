@@ -19,7 +19,6 @@ const TOOLS = [
       { icon: "🪄", label: "Remove BG (AI)",  desc: "AI-powered, higher quality",            href: "/remove-bg" },
       { icon: "🎯", label: "AI Headshot",    desc: "Professional headshots from any photo", href: "/ai-headshot" },
       { icon: "✍️", label: "AI Editor",     desc: "Edit images with text prompts",         href: "/ai-editor" },
-      { icon: "✦", label: "Creative Apps",   desc: "Viral AI photo apps — saree, figurine…", href: "/creative" },
     ],
   },
   {
@@ -207,15 +206,24 @@ export default function NavBar() {
             </div>
           )}
 
-          {/* Pricing */}
+          {/* Creative Apps — standalone navbar link */}
+          <a href="/creative"
+            style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", color: "#E2E8F0", fontSize: 14, fontWeight: 600, textDecoration: "none", borderRadius: 8, background: "rgba(99,102,241,0.12)", border: "1px solid rgba(99,102,241,0.25)" }}
+            onMouseEnter={e => { e.currentTarget.style.background = "rgba(99,102,241,0.22)"; e.currentTarget.style.borderColor = "rgba(99,102,241,0.5)"; }}
+            onMouseLeave={e => { e.currentTarget.style.background = "rgba(99,102,241,0.12)"; e.currentTarget.style.borderColor = "rgba(99,102,241,0.25)"; }}>
+            <span style={{ fontSize: 13 }}>✦</span>
+            Creative Apps
+          </a>
+
+          <div style={{ flex: 1 }} />
+
+          {/* Pricing — right side */}
           <a href="/pricing"
             style={{ padding: "7px 14px", color: "#94A3B8", fontSize: 14, fontWeight: 600, textDecoration: "none", borderRadius: 8 }}
             onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
             onMouseLeave={e => (e.currentTarget.style.color = "#94A3B8")}>
             Pricing
           </a>
-
-          <div style={{ flex: 1 }} />
 
           {/* Auth */}
           {user ? (
