@@ -4,6 +4,7 @@ import { useEffect, useState, lazy, Suspense, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { createSupabaseClient } from "@/lib/supabase";
 import { trackSignUp, setAnalyticsUser, trackSignInClicked, trackSignInFailed, trackPaymentPopupTriggered } from "@/lib/analytics";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 const PricingModal = lazy(() => import("./PricingModal"));
 
@@ -32,6 +33,7 @@ const TOOLS = [
 ];
 
 export default function NavBar() {
+  const { t } = useLanguage();
   const [user, setUser] = useState<User | null>(null);
   const [showMenu, setShowMenu] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -222,7 +224,7 @@ export default function NavBar() {
             style={{ padding: "7px 14px", color: "#94A3B8", fontSize: 14, fontWeight: 600, textDecoration: "none", borderRadius: 8 }}
             onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
             onMouseLeave={e => (e.currentTarget.style.color = "#94A3B8")}>
-            Pricing
+            {t.navPricing}
           </a>
 
           {/* Auth */}
@@ -339,10 +341,10 @@ export default function NavBar() {
           {!user && (
             <div style={{ display: "flex", gap: 8 }}>
               <button onClick={openModal} style={{ padding: "7px 16px", background: "transparent", color: "#E2E8F0", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
-                Sign In
+                {t.navSignIn}
               </button>
               <button onClick={openModal} style={{ padding: "7px 16px", background: "#6366F1", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer", boxShadow: "0 2px 8px rgba(99,102,241,0.4)" }}>
-                Get Started Free
+                {t.getStarted}
               </button>
             </div>
           )}

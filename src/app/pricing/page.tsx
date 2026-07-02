@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 declare global {
   interface Window {
@@ -16,6 +17,7 @@ const plans = [
 ];
 
 export default function PricingPage() {
+  const { t } = useLanguage();
   const [loading, setLoading] = useState<string | null>(null);
   const [statusMsg, setStatusMsg] = useState<{ text: string; ok: boolean } | null>(null);
   const [prefillUser, setPrefillUser] = useState<{ name?: string; email?: string } | null>(null);
@@ -66,7 +68,7 @@ export default function PricingPage() {
         theme: { color: "#6366F1" },
         modal: {
           ondismiss() {
-            setStatusMsg({ text: "Payment cancelled", ok: false });
+            setStatusMsg({ text: t.pricingPaymentCancelled, ok: false });
             setLoading(null);
           },
         },
@@ -81,10 +83,10 @@ export default function PricingPage() {
             if (data.success) {
               setStatusMsg({ text: `🎉 Payment successful! You now have ${data.credits} credits.`, ok: true });
             } else {
-              setStatusMsg({ text: data.error || "Verification failed", ok: false });
+              setStatusMsg({ text: data.error || t.pricingVerificationFailed, ok: false });
             }
           } catch {
-            setStatusMsg({ text: "Verification request failed", ok: false });
+            setStatusMsg({ text: t.pricingVerificationError, ok: false });
           }
           setLoading(null);
         },
@@ -102,13 +104,13 @@ export default function PricingPage() {
     <main style={{ minHeight: "100vh", background: "#F9FAFB", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "60px 20px" }}>
       <div style={{ textAlign: "center", marginBottom: 56 }}>
         <div style={{ display: "inline-block", background: "#EEF2FF", color: "#6366F1", fontWeight: 700, fontSize: 13, borderRadius: 20, padding: "6px 16px", marginBottom: 20, letterSpacing: "0.05em", textTransform: "uppercase" }}>
-          Pricing
+          {t.pricingBadge}
         </div>
         <h1 style={{ fontSize: "clamp(2rem, 5vw, 3rem)", fontWeight: 900, color: "#111827", margin: "0 0 16px", letterSpacing: "-0.02em" }}>
-          Simple, transparent pricing
+          {t.pricingH1}
         </h1>
         <p style={{ fontSize: 18, color: "#6B7280", margin: 0, fontWeight: 400 }}>
-          Pay once, use anytime. No subscriptions.
+          {t.pricingSubtitle}
         </p>
       </div>
 
@@ -168,15 +170,15 @@ export default function PricingPage() {
             <div style={{ marginBottom: 28, flex: 1 }}>
               <div style={{ background: plan.popular ? "rgba(255,255,255,0.15)" : "#fff", borderRadius: 12, padding: "16px 20px", marginBottom: 16 }}>
                 <div style={{ fontWeight: 800, fontSize: 28, color: plan.popular ? "#fff" : "#6366F1" }}>{plan.credits}</div>
-                <div style={{ fontSize: 13, color: plan.popular ? "rgba(255,255,255,0.8)" : "#6B7280", fontWeight: 500 }}>AI Credits</div>
+                <div style={{ fontSize: 13, color: plan.popular ? "rgba(255,255,255,0.8)" : "#6B7280", fontWeight: 500 }}>{t.pricingAiCredits}</div>
               </div>
 
               <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 10 }}>
                 <li style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 14, color: plan.popular ? "rgba(255,255,255,0.9)" : "#374151" }}>
                   <span style={{ color: plan.popular ? "#A5F3C0" : "#10B981", fontWeight: 700, fontSize: 16 }}>✓</span>
-                  {plan.transformations} AI transformations
+                  {plan.transformations} {t.pricingTransformations}
                 </li>
-                {["Background removal", "AI image editing", "Pro upscaling"].map(f => (
+                {[t.pricingBgRemoval, t.pricingAiEditing, t.pricingProUpscale].map(f => (
                   <li key={f} style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 14, color: plan.popular ? "rgba(255,255,255,0.9)" : "#374151" }}>
                     <span style={{ color: plan.popular ? "#A5F3C0" : "#10B981", fontWeight: 700, fontSize: 16 }}>✓</span>
                     {f}
@@ -184,7 +186,7 @@ export default function PricingPage() {
                 ))}
                 <li style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 14, color: plan.popular ? "rgba(255,255,255,0.9)" : "#374151", fontWeight: 600 }}>
                   <span style={{ color: plan.popular ? "#FCD34D" : "#F59E0B", fontWeight: 700, fontSize: 16 }}>★</span>
-                  Credits never expire
+                  {t.pricingCreditsExpiry}
                 </li>
               </ul>
             </div>
@@ -208,7 +210,7 @@ export default function PricingPage() {
                 transition: "opacity 0.15s",
               }}
             >
-              {loading === plan.planKey ? "Processing…" : "Buy Now →"}
+              {loading === plan.planKey ? t.pricingProcessing : `${t.pricingBuyBtn} →`}
             </button>
           </div>
         ))}
