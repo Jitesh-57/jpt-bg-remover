@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect, lazy, Suspense } from "react";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 import {
   trackEvent, trackToolUse, trackImageUploaded, trackImageUploadFailed,
   trackGenerateButtonClicked, trackImageGenerated, trackImageGenerationFailed,
@@ -55,6 +56,7 @@ function readFile(file: File): Promise<string> {
 }
 
 export default function CreativeApp({ slug, prompt, cta, badge, gradient, appName }: Props) {
+  const { t } = useLanguage();
   const fileRef = useRef<HTMLInputElement>(null);
   const [original, setOriginal] = useState<string | null>(null);
   const [result, setResult] = useState<string | null>(null);
@@ -237,7 +239,7 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient, appNam
           ) : busy ? (
             <div style={{ color: "#fff" }}>
               <div style={{ width: 40, height: 40, border: "3px solid rgba(255,255,255,0.4)", borderTopColor: "#fff", borderRadius: "50%", margin: "0 auto 14px", animation: "jptspin 0.8s linear infinite" }} />
-              <div style={{ fontSize: 14, fontWeight: 700 }}>{status === "uploading" ? "Uploading…" : "Generating with AI…"}</div>
+              <div style={{ fontSize: 14, fontWeight: 700 }}>{status === "uploading" ? t.commonLoading : t.creativeGenerating}</div>
               <style>{`@keyframes jptspin{to{transform:rotate(360deg)}}`}</style>
             </div>
           ) : (
@@ -271,7 +273,7 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient, appNam
             {result && (
               <a href={result} download={`jpt-${slug}.png`} onClick={() => trackDownloadButtonClicked(`creative:${slug}`)}
                 style={{ background: "#0F172A", color: "#fff", fontWeight: 800, fontSize: 16, padding: "15px 30px", borderRadius: 14, textDecoration: "none" }}>
-                ⬇ Download
+                ⬇ {t.creativeDownload}
               </a>
             )}
           </div>

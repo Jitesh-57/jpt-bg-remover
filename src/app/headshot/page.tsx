@@ -2,6 +2,7 @@
 
 import "./headshot.css";
 import { useRef, useState, useCallback, useEffect } from "react";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 import PricingModal from "@/app/_components/PricingModal";
 import { WOMEN_STYLES, MEN_STYLES } from "@/lib/headshot-prompts";
 import { headshotThumbUrl } from "@/lib/headshot-thumbs";
@@ -91,6 +92,7 @@ async function downloadImage(url: string, filename: string) {
 }
 
 export default function HeadshotPage() {
+  const { t } = useLanguage();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const changeFileRef = useRef<HTMLInputElement>(null);
   const bgFileInputRef = useRef<HTMLInputElement>(null);
@@ -580,7 +582,7 @@ export default function HeadshotPage() {
         {/* ── STEP 1: Upload ── */}
         {!showLibrary && step === "upload" && (
           <div style={s.card}>
-            <h1 style={s.h1}>Generate Professional Headshots</h1>
+            <h1 style={s.h1}>{t.headshotTitle}</h1>
             <p style={s.sub}>Upload your photo — AI will create stunning headshot variants in your chosen styles</p>
             <div style={{ ...s.dropzone, ...(dragOver ? s.dropActive : {}) }} onDragOver={(e) => { e.preventDefault(); setDragOver(true); }} onDragLeave={() => setDragOver(false)} onDrop={handleDrop} onClick={() => fileInputRef.current?.click()}>
               <input ref={fileInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} />

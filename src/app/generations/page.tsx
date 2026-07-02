@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 interface GenItem {
   id: string;
@@ -469,6 +470,7 @@ function mergeItems(ecItems: GenItem[], localItems: GenItem[]): GenItem[] {
 // ─── Page ──────────────────────────────────────────────────────────────────────
 
 export default function GenerationsPage() {
+  const { t } = useLanguage();
   const [items, setItems] = useState<GenItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -605,7 +607,7 @@ export default function GenerationsPage() {
       <div style={{ background: "#fff", borderBottom: "1px solid #E5E7EB", padding: "24px 32px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
           <div>
-            <h1 style={{ margin: 0, fontSize: 28, fontWeight: 900, color: "#111", letterSpacing: "-0.5px" }}>✦ My Generations</h1>
+            <h1 style={{ margin: 0, fontSize: 28, fontWeight: 900, color: "#111", letterSpacing: "-0.5px" }}>✦ {t.generationsTitle}</h1>
             <p style={{ margin: "4px 0 0", fontSize: 14, color: "#6B7280" }}>
               {items.length} image{items.length !== 1 ? "s" : ""} · click any card to preview · JPT AI
             </p>
@@ -640,7 +642,7 @@ export default function GenerationsPage() {
         {!loading && !error && items.length === 0 && (
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "80px 0", gap: 16 }}>
             <div style={{ fontSize: 64 }}>🎨</div>
-            <h3 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: "#111" }}>No generations yet</h3>
+            <h3 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: "#111" }}>{t.generationsEmpty}</h3>
             <p style={{ margin: 0, fontSize: 14, color: "#6B7280", textAlign: "center", maxWidth: 380 }}>
               Every image you generate or edit — from the AI Editor or Headshot tool — appears here automatically.
             </p>
