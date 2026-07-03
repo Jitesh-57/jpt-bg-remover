@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { POSTS, getPost } from "../_data/posts";
+import BlogStickyBar from "../_components/BlogStickyBar";
 
 export async function generateStaticParams() {
   return POSTS.map((p) => ({ slug: p.slug }));
@@ -228,13 +229,15 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           )}
 
           {/* Back to blog */}
-          <div style={{ textAlign: "center" as const, marginTop: 36 }}>
+          <div style={{ textAlign: "center" as const, marginTop: 36, marginBottom: 80 }}>
             <Link href="/blog" style={{ color: "#6366F1", textDecoration: "none", fontSize: 14, fontWeight: 600 }}>
               ← Back to all articles
             </Link>
           </div>
         </div>
       </main>
+
+      <BlogStickyBar toolHref={post.toolHref} toolLabel={post.toolLabel} />
     </>
   );
 }
