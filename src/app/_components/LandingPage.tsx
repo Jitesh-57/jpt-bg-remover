@@ -2,7 +2,6 @@
 
 import { useRef } from 'react'
 import FAQAccordion from './FAQAccordion'
-import InlineTool from './InlineTool'
 import { PageSEO } from '@/lib/page-config'
 import { PAGE_IMAGES, PAGE_BEFORE_AFTER } from '@/lib/landing-images'
 
@@ -12,13 +11,7 @@ interface LandingPageProps {
   pageId: string
 }
 
-// Map pageId → inline tool id (only pages that have a real processing API)
-const PAGE_INLINE_TOOL: Record<string, 'remove-bg' | 'upscale'> = {
-  'remove-bg': 'remove-bg',
-  upscale: 'upscale',
-}
-
-// Map pageId → editor tool id (for redirect-based flow on other pages)
+// Map pageId → editor tool id (matches editor's Tool type)
 const PAGE_TOOL: Record<string, string> = {
   'remove-bg': 'remove-bg',
   upscale: 'upscale',
@@ -180,7 +173,6 @@ export default function LandingPage({ config, toolHref, pageId }: LandingPagePro
   const beforeAfter = PAGE_BEFORE_AFTER[pageId]
   const fileRef = useRef<HTMLInputElement>(null)
 
-  const inlineToolId = PAGE_INLINE_TOOL[pageId]
   const editorTool = PAGE_TOOL[pageId]
 
   const handleUploadAndRedirect = async (file: File) => {
@@ -193,132 +185,86 @@ export default function LandingPage({ config, toolHref, pageId }: LandingPagePro
       } catch {}
       window.location.href = `/editor?tool=${editorTool}`
     } else {
+      // headshot — just navigate, the headshot page has its own upload
       window.location.href = toolHref
     }
   }
 
   const handleCTAClick = () => {
-    if (editorTool) fileRef.current?.click()
-    else window.location.href = toolHref
+    if (editorTool) {
+      fileRef.current?.click()
+    } else {
+      window.location.href = toolHref
+    }
   }
 
   return (
     <div style={{ fontFamily: 'system-ui, -apple-system, sans-serif', color: '#111827', background: '#fff' }}>
 
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
-      <section style={{ background: 'linear-gradient(160deg, #F5F5FF 0%, #fff 50%, #F0FDF4 100%)', padding: '64px 24px 72px' }}>
-        <div style={{ maxWidth: 1160, margin: '0 auto' }}>
+      <section style={{ background: 'linear-gradient(160deg, #F5F5FF 0%, #fff 50%, #F0FDF4 100%)', padding: '80px 24px 72px', textAlign: 'center' }}>
+        <div style={{ maxWidth: 780, margin: '0 auto' }}>
+          {/* Badge */}
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#EEF2FF', color: '#6366F1', fontWeight: 700, fontSize: 12, borderRadius: 20, padding: '6px 14px', marginBottom: 28, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+            ✦ JPT AI
+          </div>
 
-          {inlineToolId ? (
-            /* 2-column: left = copy + big before/after, right = inline tool */
-            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,480px)', gap: 52, alignItems: 'start' }}>
-              {/* Left — headline + trust + big before/after */}
-              <div>
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#EEF2FF', color: '#6366F1', fontWeight: 700, fontSize: 12, borderRadius: 20, padding: '6px 14px', marginBottom: 24, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-                  ✦ JPT AI &mdash; Free Online Tool
-                </div>
-                <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3.2rem)', fontWeight: 900, color: '#0F172A', lineHeight: 1.1, letterSpacing: '-0.03em', margin: '0 0 18px' }}>
-                  {config.h1}
-                </h1>
-                <p style={{ fontSize: 'clamp(1rem, 1.8vw, 1.15rem)', color: '#4B5563', lineHeight: 1.7, margin: '0 0 28px' }}>
-                  {config.subtitle}
-                </p>
-                {/* Trust signals */}
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 20px', marginBottom: 32 }}>
-                  {['No credit card', 'No watermark', 'No signup needed', 'Results in seconds'].map(t => (
-                    <span key={t} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: '#374151', fontWeight: 600 }}>
-                      <svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8" fill="#22C55E"/><path d="M5 8l2.2 2.2L11 6" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/></svg>
-                      {t}
-                    </span>
-                  ))}
-                </div>
-                {/* Big before/after image */}
-                {beforeAfter && (
-                  <div style={{ borderRadius: 22, overflow: 'hidden', boxShadow: '0 20px 64px rgba(0,0,0,0.18)', display: 'flex', position: 'relative' }}>
-                    <div style={{ flex: 1, position: 'relative' }}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={beforeAfter.before} alt="Before" style={{ display: 'block', width: '100%', height: 320, objectFit: 'cover', filter: 'blur(1.5px)', imageRendering: 'pixelated' }} />
-                      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.6), transparent)', padding: '32px 16px 14px' }}>
-                        <span style={{ color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Before</span>
-                      </div>
-                    </div>
-                    <div style={{ width: 3, background: '#fff', flexShrink: 0, zIndex: 2 }} />
-                    <div style={{ flex: 1, position: 'relative' }}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={beforeAfter.after} alt="After" style={{ display: 'block', width: '100%', height: 320, objectFit: 'cover' }} />
-                      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(to top, rgba(99,102,241,0.7), transparent)', padding: '32px 16px 14px', textAlign: 'right' }}>
-                        <span style={{ color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>&#10024; After AI</span>
-                      </div>
-                    </div>
-                    {/* Centre divider label */}
-                    <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 36, height: 36, borderRadius: '50%', background: '#fff', boxShadow: '0 2px 12px rgba(0,0,0,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 3, fontSize: 14 }}>&#8596;</div>
-                  </div>
-                )}
-              </div>
+          <h1 style={{ fontSize: 'clamp(2.2rem, 5vw, 3.6rem)', fontWeight: 900, color: '#0F172A', lineHeight: 1.1, letterSpacing: '-0.03em', margin: '0 0 20px' }}>
+            {config.h1}
+          </h1>
+          <p style={{ fontSize: 'clamp(1rem, 2vw, 1.2rem)', color: '#4B5563', lineHeight: 1.7, maxWidth: 560, margin: '0 auto 36px' }}>
+            {config.subtitle}
+          </p>
 
-              {/* Right — inline tool card (bigger) */}
-              <div style={{ background: '#fff', borderRadius: 24, border: '1.5px solid #E5E7EB', boxShadow: '0 12px 56px rgba(0,0,0,0.10)', overflow: 'hidden' }}>
-                <div style={{ background: 'linear-gradient(135deg,#6366F1,#8B5CF6)', padding: '18px 24px' }}>
-                  <div style={{ fontSize: 16, fontWeight: 900, color: '#fff', letterSpacing: '-0.01em' }}>&#9889; {config.cta_text || 'Try It Free'}</div>
-                  <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.75)', marginTop: 3 }}>Upload &rarr; AI transforms &rarr; Download &mdash; all on this page</div>
-                </div>
-                <InlineTool toolId={inlineToolId} pageId={pageId} />
-              </div>
-            </div>
-          ) : (
-            /* Fallback: centred CTA for pages without inline tool */
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#EEF2FF', color: '#6366F1', fontWeight: 700, fontSize: 12, borderRadius: 20, padding: '6px 14px', marginBottom: 28, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-                ✦ JPT AI
-              </div>
-              <h1 style={{ fontSize: 'clamp(2.2rem, 5vw, 3.6rem)', fontWeight: 900, color: '#0F172A', lineHeight: 1.1, letterSpacing: '-0.03em', margin: '0 0 20px' }}>
-                {config.h1}
-              </h1>
-              <p style={{ fontSize: 'clamp(1rem, 2vw, 1.2rem)', color: '#4B5563', lineHeight: 1.7, maxWidth: 560, margin: '0 auto 36px' }}>
-                {config.subtitle}
-              </p>
-              <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }}
-                onChange={e => { const f = e.target.files?.[0]; if (f) handleUploadAndRedirect(f); e.target.value = '' }} />
-              <button onClick={handleCTAClick}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg, #6366F1, #8B5CF6)', color: '#fff', fontWeight: 800, fontSize: 16, padding: '16px 36px', borderRadius: 14, border: 'none', cursor: 'pointer', boxShadow: '0 8px 30px rgba(99,102,241,0.4)' }}>
-                {editorTool ? '📂 ' : ''}{config.cta_text || 'Try It Free'} &rarr;
-              </button>
-              <div style={{ fontSize: 13, color: '#9CA3AF', marginTop: 12 }}>No credit card required &bull; 5 free trials included</div>
+          {/* Hidden file input for upload-then-redirect */}
+          <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }}
+            onChange={e => { const f = e.target.files?.[0]; if (f) handleUploadAndRedirect(f); e.target.value = ''; }} />
 
-              {/* Visual below CTA */}
-              {beforeAfter ? (
-                <div style={{ maxWidth: 820, margin: '56px auto 0', borderRadius: 24, overflow: 'hidden', boxShadow: '0 24px 80px rgba(0,0,0,0.16)', display: 'flex' }}>
-                  <div style={{ flex: 1, position: 'relative' }}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={beforeAfter.before} alt="Before" style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(1.5px)', imageRendering: 'pixelated' }} />
-                    <span style={{ position: 'absolute', bottom: 14, left: 14, padding: '6px 14px', background: 'rgba(0,0,0,0.6)', color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', borderRadius: 8 }}>Low-Res Input</span>
-                  </div>
-                  <div style={{ width: 3, background: '#fff', flexShrink: 0 }} />
-                  <div style={{ flex: 1, position: 'relative' }}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={beforeAfter.after} alt="After" style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }} />
-                    <span style={{ position: 'absolute', bottom: 14, right: 14, padding: '6px 14px', background: 'rgba(99,102,241,0.92)', color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', borderRadius: 8 }}>&#10024; 4K AI Upscaled</span>
-                  </div>
-                </div>
-              ) : heroImg ? (
-                <div style={{ maxWidth: 900, margin: '56px auto 0', borderRadius: 24, overflow: 'hidden', boxShadow: '0 24px 80px rgba(0,0,0,0.16)', position: 'relative' }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={heroImg} alt={`${visual.label} example`} style={{ display: 'block', width: '100%', height: 'auto' }} />
-                  <span style={{ position: 'absolute', bottom: 16, right: 16, padding: '8px 16px', background: 'rgba(99,102,241,0.92)', color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', borderRadius: 10 }}>&#10024; {visual.label}</span>
-                </div>
-              ) : (
-                <div style={{ maxWidth: 820, margin: '56px auto 0', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, borderRadius: 24, overflow: 'hidden', boxShadow: '0 24px 80px rgba(0,0,0,0.12)' }}>
-                  <div style={{ position: 'relative', height: 280, background: visual.before, display: 'flex', alignItems: 'flex-end' }}>
-                    <span style={{ position: 'relative', padding: '10px 16px', background: 'rgba(0,0,0,0.5)', color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', borderTopRightRadius: 10 }}>Original</span>
-                  </div>
-                  <div style={{ position: 'relative', height: 280, background: visual.after, display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
-                    <span style={{ position: 'relative', padding: '10px 16px', background: 'rgba(99,102,241,0.85)', color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', borderTopLeftRadius: 10 }}>&#10024; {visual.label}</span>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
+          <button
+            onClick={handleCTAClick}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg, #6366F1, #8B5CF6)', color: '#fff', fontWeight: 800, fontSize: 16, padding: '16px 36px', borderRadius: 14, border: 'none', cursor: 'pointer', boxShadow: '0 8px 30px rgba(99,102,241,0.4)', letterSpacing: '-0.01em' }}
+          >
+            {editorTool ? '📂 ' : ''}{config.cta_text || 'Try It Free'} →
+          </button>
+          <div style={{ fontSize: 13, color: '#9CA3AF', marginTop: 12 }}>
+            {editorTool ? 'Upload an image to get started · No credit card required' : 'No credit card required · 5 free trials included'}
+          </div>
         </div>
+
+        {/* Showcase visual — before/after split, single image, or gradient fallback */}
+        {beforeAfter ? (
+          <div style={{ maxWidth: 820, margin: '56px auto 0', borderRadius: 24, overflow: 'hidden', boxShadow: '0 24px 80px rgba(0,0,0,0.16)', display: 'flex', position: 'relative' }}>
+            <div style={{ flex: 1, position: 'relative' }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={beforeAfter.before} alt="Before upscaling — low resolution" style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(1.5px)', imageRendering: 'pixelated' }} />
+              <span style={{ position: 'absolute', bottom: 14, left: 14, padding: '6px 14px', background: 'rgba(0,0,0,0.6)', color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', borderRadius: 8 }}>Low-Res Input</span>
+            </div>
+            <div style={{ width: 3, background: '#fff', flexShrink: 0 }} />
+            <div style={{ flex: 1, position: 'relative' }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={beforeAfter.after} alt="After upscaling — HD enhanced" style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }} />
+              <span style={{ position: 'absolute', bottom: 14, right: 14, padding: '6px 14px', background: 'rgba(99,102,241,0.92)', color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', borderRadius: 8 }}>✨ 4K AI Upscaled</span>
+            </div>
+          </div>
+        ) : heroImg ? (
+          <div style={{ maxWidth: 900, margin: '56px auto 0', borderRadius: 24, overflow: 'hidden', boxShadow: '0 24px 80px rgba(0,0,0,0.16)', position: 'relative' }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={heroImg} alt={`${visual.label} example`} style={{ display: 'block', width: '100%', height: 'auto' }} />
+            <span style={{ position: 'absolute', bottom: 16, right: 16, padding: '8px 16px', background: 'rgba(99,102,241,0.92)', color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', borderRadius: 10, boxShadow: '0 4px 16px rgba(0,0,0,0.2)' }}>✨ {visual.label}</span>
+          </div>
+        ) : (
+          <div style={{ maxWidth: 820, margin: '56px auto 0', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, borderRadius: 24, overflow: 'hidden', boxShadow: '0 24px 80px rgba(0,0,0,0.12)' }}>
+            <div style={{ position: 'relative', height: 280, background: visual.before, display: 'flex', alignItems: 'flex-end' }}>
+              <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.04)' }} />
+              <div style={{ width: '100%', height: '100%', backgroundImage: 'repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 8px)', position: 'absolute' }} />
+              <span style={{ position: 'relative', padding: '10px 16px', background: 'rgba(0,0,0,0.5)', color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', borderTopRightRadius: 10 }}>Original</span>
+            </div>
+            <div style={{ position: 'relative', height: 280, background: visual.after, display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
+              <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(circle at 30% 40%, rgba(255,255,255,0.18) 0%, transparent 60%)' }} />
+              <span style={{ position: 'relative', padding: '10px 16px', background: 'rgba(99,102,241,0.85)', color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', borderTopLeftRadius: 10 }}>✨ {visual.label}</span>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* ── PRODUCT HIGHLIGHTS BAR ───────────────────────────────────────── */}
