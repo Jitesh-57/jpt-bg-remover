@@ -210,9 +210,9 @@ export default function LandingPage({ config, toolHref, pageId }: LandingPagePro
         <div style={{ maxWidth: 1160, margin: '0 auto' }}>
 
           {inlineToolId ? (
-            /* 2-column: left = copy, right = inline tool */
-            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,420px)', gap: 48, alignItems: 'start' }}>
-              {/* Left — headline + trust */}
+            /* 2-column: left = copy + big before/after, right = inline tool */
+            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,480px)', gap: 52, alignItems: 'start' }}>
+              {/* Left — headline + trust + big before/after */}
               <div>
                 <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#EEF2FF', color: '#6366F1', fontWeight: 700, fontSize: 12, borderRadius: 20, padding: '6px 14px', marginBottom: 24, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
                   ✦ JPT AI &mdash; Free Online Tool
@@ -232,29 +232,35 @@ export default function LandingPage({ config, toolHref, pageId }: LandingPagePro
                     </span>
                   ))}
                 </div>
-                {/* Before/after preview below copy on wide screens */}
+                {/* Big before/after image */}
                 {beforeAfter && (
-                  <div style={{ borderRadius: 18, overflow: 'hidden', boxShadow: '0 12px 48px rgba(0,0,0,0.14)', display: 'flex', maxWidth: 560 }}>
+                  <div style={{ borderRadius: 22, overflow: 'hidden', boxShadow: '0 20px 64px rgba(0,0,0,0.18)', display: 'flex', position: 'relative' }}>
                     <div style={{ flex: 1, position: 'relative' }}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={beforeAfter.before} alt="Before" style={{ display: 'block', width: '100%', height: 220, objectFit: 'cover', filter: 'blur(1.5px)', imageRendering: 'pixelated' }} />
-                      <span style={{ position: 'absolute', bottom: 10, left: 10, padding: '4px 10px', background: 'rgba(0,0,0,0.6)', color: '#fff', fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', borderRadius: 6 }}>Before</span>
+                      <img src={beforeAfter.before} alt="Before" style={{ display: 'block', width: '100%', height: 320, objectFit: 'cover', filter: 'blur(1.5px)', imageRendering: 'pixelated' }} />
+                      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.6), transparent)', padding: '32px 16px 14px' }}>
+                        <span style={{ color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Before</span>
+                      </div>
                     </div>
-                    <div style={{ width: 2, background: '#fff', flexShrink: 0 }} />
+                    <div style={{ width: 3, background: '#fff', flexShrink: 0, zIndex: 2 }} />
                     <div style={{ flex: 1, position: 'relative' }}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={beforeAfter.after} alt="After" style={{ display: 'block', width: '100%', height: 220, objectFit: 'cover' }} />
-                      <span style={{ position: 'absolute', bottom: 10, right: 10, padding: '4px 10px', background: 'rgba(99,102,241,0.9)', color: '#fff', fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', borderRadius: 6 }}>&#10024; After AI</span>
+                      <img src={beforeAfter.after} alt="After" style={{ display: 'block', width: '100%', height: 320, objectFit: 'cover' }} />
+                      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(to top, rgba(99,102,241,0.7), transparent)', padding: '32px 16px 14px', textAlign: 'right' }}>
+                        <span style={{ color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>&#10024; After AI</span>
+                      </div>
                     </div>
+                    {/* Centre divider label */}
+                    <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 36, height: 36, borderRadius: '50%', background: '#fff', boxShadow: '0 2px 12px rgba(0,0,0,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 3, fontSize: 14 }}>&#8596;</div>
                   </div>
                 )}
               </div>
 
-              {/* Right — inline upload/process/download tool */}
-              <div style={{ background: '#fff', borderRadius: 22, border: '1.5px solid #E5E7EB', boxShadow: '0 8px 40px rgba(0,0,0,0.08)', overflow: 'hidden' }}>
-                <div style={{ background: 'linear-gradient(135deg,#6366F1,#8B5CF6)', padding: '14px 20px' }}>
-                  <div style={{ fontSize: 14, fontWeight: 800, color: '#fff' }}>&#9889; {config.cta_text || 'Try It Free'}</div>
-                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)', marginTop: 2 }}>Upload &rarr; Process &rarr; Download &mdash; all here</div>
+              {/* Right — inline tool card (bigger) */}
+              <div style={{ background: '#fff', borderRadius: 24, border: '1.5px solid #E5E7EB', boxShadow: '0 12px 56px rgba(0,0,0,0.10)', overflow: 'hidden' }}>
+                <div style={{ background: 'linear-gradient(135deg,#6366F1,#8B5CF6)', padding: '18px 24px' }}>
+                  <div style={{ fontSize: 16, fontWeight: 900, color: '#fff', letterSpacing: '-0.01em' }}>&#9889; {config.cta_text || 'Try It Free'}</div>
+                  <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.75)', marginTop: 3 }}>Upload &rarr; AI transforms &rarr; Download &mdash; all on this page</div>
                 </div>
                 <InlineTool toolId={inlineToolId} pageId={pageId} />
               </div>
