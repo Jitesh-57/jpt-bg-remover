@@ -1,7 +1,7 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
-import { PageFAQ } from '@/lib/page-config'
+import { PageFAQ } from '@/lib/page-types'
 
 export default function FAQAccordion({ faqs }: { faqs: PageFAQ[] }) {
   const [open, setOpen] = useState<number | null>(null)
@@ -16,7 +16,7 @@ export default function FAQAccordion({ faqs }: { faqs: PageFAQ[] }) {
           >
             <span style={{ fontWeight: 700, fontSize: 15, color: '#111827', lineHeight: 1.4 }}>{faq.q}</span>
             <span style={{ width: 28, height: 28, borderRadius: '50%', background: open === i ? '#6366F1' : '#F3F4F6', color: open === i ? '#fff' : '#6366F1', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, fontWeight: 700, flexShrink: 0, transition: 'all 0.2s' }}>
-              {open === i ? '−' : '+'}
+              {open === i ? 'âˆ’' : '+'}
             </span>
           </button>
           {open === i && (
@@ -29,3 +29,4 @@ export default function FAQAccordion({ faqs }: { faqs: PageFAQ[] }) {
     </div>
   )
 }
+

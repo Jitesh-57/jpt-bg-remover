@@ -1,10 +1,10 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import FAQAccordion from './FAQAccordion'
 import InlineTool, { InlineToolType } from './InlineTool'
 import BeforeAfterSlider from './BeforeAfterSlider'
-import { PageSEO } from '@/lib/page-config'
+import { PageSEO } from '@/lib/page-types'
 import { PAGE_BEFORE_AFTER, landingImg } from '@/lib/landing-images'
 
 interface LandingPageProps {
@@ -14,7 +14,7 @@ interface LandingPageProps {
   inlineToolType?: InlineToolType
 }
 
-// ─── per-page inline tool mapping ────────────────────────────────────────────
+// â”€â”€â”€ per-page inline tool mapping â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const PAGE_INLINE_TOOL: Record<string, InlineToolType> = {
   upscale: 'upscale',
   'photo-enhancer': 'upscale',
@@ -25,9 +25,9 @@ const PAGE_INLINE_TOOL: Record<string, InlineToolType> = {
   'convert-to-jpg': 'convert-jpg',
 }
 
-// ─── labels for before/after ──────────────────────────────────────────────────
+// â”€â”€â”€ labels for before/after â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const PAGE_BA_LABELS: Record<string, { before: string; after: string }> = {
-  upscale: { before: 'Low-Res Original', after: '4× AI Upscaled' },
+  upscale: { before: 'Low-Res Original', after: '4Ã— AI Upscaled' },
   'photo-enhancer': { before: 'Original Photo', after: 'AI Enhanced' },
   'remove-bg': { before: 'Original', after: 'Background Removed' },
   'compress-image': { before: 'Original (Large)', after: 'Compressed (80% smaller)' },
@@ -39,7 +39,7 @@ const PAGE_BA_LABELS: Record<string, { before: string; after: string }> = {
   'passport-photo': { before: 'Casual Photo', after: 'Passport Ready' },
 }
 
-// ─── hero before/after images (Supabase where real images exist, CSS sim otherwise) ──
+// â”€â”€â”€ hero before/after images (Supabase where real images exist, CSS sim otherwise) â”€â”€
 const PAGE_HERO_IMAGES: Record<string, { before: string; after: string; beforeFilter?: string; beforeOverlay?: string }> = {
   upscale: {
     before: landingImg('upscale-before.jpg'),
@@ -65,7 +65,7 @@ const PAGE_HERO_IMAGES: Record<string, { before: string; after: string; beforeFi
   },
 }
 
-// ─── feature rows ─────────────────────────────────────────────────────────────
+// â”€â”€â”€ feature rows â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 interface FeatureRow {
   badge: string
   heading: string
@@ -82,15 +82,15 @@ const PAGE_FEATURE_ROWS: Record<string, FeatureRow[]> = {
     {
       badge: 'AI Super-Resolution',
       heading: 'Recover stunning detail from any low-res photo',
-      body: 'Deep learning super-resolution reconstructs sharp edges, fine textures, and crisp detail that traditional upscaling destroys. Hair, fabric, product labels — all rendered pixel-perfect.',
+      body: 'Deep learning super-resolution reconstructs sharp edges, fine textures, and crisp detail that traditional upscaling destroys. Hair, fabric, product labels â€” all rendered pixel-perfect.',
       beforeLabel: 'Pixelated Original',
-      afterLabel: '4× AI Upscaled',
+      afterLabel: '4Ã— AI Upscaled',
       beforeFilter: 'blur(3px) contrast(0.75) saturate(0.6)',
       side: 'right',
     },
     {
       badge: 'Lossless Quality',
-      heading: 'Upscale to print-ready resolution — zero artifacts',
+      heading: 'Upscale to print-ready resolution â€” zero artifacts',
       body: 'No JPEG artifacts, no ringing, no over-sharpening. JPT AI produces clean, natural-looking high-resolution output ready for large-format printing, retina displays, and e-commerce listings.',
       beforeLabel: 'Original (Blurry)',
       afterLabel: 'Upscaled (Sharp)',
@@ -99,8 +99,8 @@ const PAGE_FEATURE_ROWS: Record<string, FeatureRow[]> = {
     },
     {
       badge: 'Works on Everything',
-      heading: 'Products, portraits, landscapes, AI art — all supported',
-      body: 'Whether upscaling e-commerce product shots, restoring old family photos, or scaling AI-generated art for print — our model handles every subject type with equal precision.',
+      heading: 'Products, portraits, landscapes, AI art â€” all supported',
+      body: 'Whether upscaling e-commerce product shots, restoring old family photos, or scaling AI-generated art for print â€” our model handles every subject type with equal precision.',
       beforeLabel: 'Low Resolution',
       afterLabel: 'AI Enhanced',
       beforeFilter: 'blur(2px) contrast(0.8)',
@@ -111,7 +111,7 @@ const PAGE_FEATURE_ROWS: Record<string, FeatureRow[]> = {
     {
       badge: 'Auto Enhancement',
       heading: 'Fix brightness, contrast & sharpness automatically',
-      body: 'AI analyzes each photo and applies optimal corrections — boosting shadow detail, balancing highlights, sharpening edges. No sliders, no guesswork.',
+      body: 'AI analyzes each photo and applies optimal corrections â€” boosting shadow detail, balancing highlights, sharpening edges. No sliders, no guesswork.',
       beforeLabel: 'Dull Original',
       afterLabel: 'AI Enhanced',
       beforeFilter: 'blur(1.5px) brightness(0.8) saturate(0.6) contrast(0.8)',
@@ -128,10 +128,10 @@ const PAGE_FEATURE_ROWS: Record<string, FeatureRow[]> = {
     },
     {
       badge: 'Resolution Upscaling',
-      heading: '4× resolution — retina-ready for print and web',
-      body: 'Increase resolution 2× or 4× using the same deep learning used by Google Photos and Apple\'s intelligent upscaler. Results are indistinguishable from the original high-resolution source.',
+      heading: '4Ã— resolution â€” retina-ready for print and web',
+      body: 'Increase resolution 2Ã— or 4Ã— using the same deep learning used by Google Photos and Apple\'s intelligent upscaler. Results are indistinguishable from the original high-resolution source.',
       beforeLabel: 'Low Resolution',
-      afterLabel: '4× AI Upscaled',
+      afterLabel: '4Ã— AI Upscaled',
       beforeFilter: 'blur(3px) contrast(0.8) saturate(0.7)',
       side: 'right',
     },
@@ -140,7 +140,7 @@ const PAGE_FEATURE_ROWS: Record<string, FeatureRow[]> = {
     {
       badge: 'Pixel-Perfect Cutout',
       heading: 'Remove backgrounds with studio-quality accuracy',
-      body: 'AI detects subjects with pixel-level precision. Hair strands, fur, translucent fabric — all handled cleanly. Results indistinguishable from a professional Photoshop cutout.',
+      body: 'AI detects subjects with pixel-level precision. Hair strands, fur, translucent fabric â€” all handled cleanly. Results indistinguishable from a professional Photoshop cutout.',
       beforeLabel: 'Original Background',
       afterLabel: 'Clean Cutout',
       beforeFilter: 'contrast(0.85)',
@@ -150,7 +150,7 @@ const PAGE_FEATURE_ROWS: Record<string, FeatureRow[]> = {
     {
       badge: 'E-Commerce Ready',
       heading: 'White background product photos in seconds',
-      body: 'Amazon, Shopify, Etsy — all require clean white backgrounds. JPT AI delivers marketplace-compliant product shots automatically. Save hours vs. manual Photoshop editing.',
+      body: 'Amazon, Shopify, Etsy â€” all require clean white backgrounds. JPT AI delivers marketplace-compliant product shots automatically. Save hours vs. manual Photoshop editing.',
       beforeLabel: 'Original',
       afterLabel: 'White Background',
       beforeFilter: undefined,
@@ -160,7 +160,7 @@ const PAGE_FEATURE_ROWS: Record<string, FeatureRow[]> = {
     {
       badge: 'Any Subject',
       heading: 'Works on people, products, pets, and more',
-      body: 'From sharp product edges to wispy hair — our AI handles every subject type. Perfect for headshots, product photography, social media thumbnails, and ad creatives.',
+      body: 'From sharp product edges to wispy hair â€” our AI handles every subject type. Perfect for headshots, product photography, social media thumbnails, and ad creatives.',
       beforeLabel: 'With Background',
       afterLabel: 'Removed',
       beforeFilter: 'contrast(0.9)',
@@ -171,7 +171,7 @@ const PAGE_FEATURE_ROWS: Record<string, FeatureRow[]> = {
     {
       badge: 'AI Watermark Detection',
       heading: 'Detect and remove watermarks automatically',
-      body: 'AI identifies text overlays, logos, timestamp stamps, and semi-transparent watermarks of any size or placement — then cleanly fills the area.',
+      body: 'AI identifies text overlays, logos, timestamp stamps, and semi-transparent watermarks of any size or placement â€” then cleanly fills the area.',
       beforeLabel: 'Watermarked',
       afterLabel: 'Clean',
       beforeFilter: undefined,
@@ -190,8 +190,8 @@ const PAGE_FEATURE_ROWS: Record<string, FeatureRow[]> = {
     },
     {
       badge: 'Every Watermark Type',
-      heading: 'Text, logos, dates, preview marks — all removed',
-      body: 'Handles stock site watermarks, photographer copyright text, date stamps, logo overlays, and promotional banners — regardless of position, opacity, or font.',
+      heading: 'Text, logos, dates, preview marks â€” all removed',
+      body: 'Handles stock site watermarks, photographer copyright text, date stamps, logo overlays, and promotional banners â€” regardless of position, opacity, or font.',
       beforeLabel: 'Before',
       afterLabel: 'After',
       beforeFilter: undefined,
@@ -203,7 +203,7 @@ const PAGE_FEATURE_ROWS: Record<string, FeatureRow[]> = {
     {
       badge: 'Smart Compression',
       heading: 'Reduce file size 80% with zero visible quality loss',
-      body: 'AI-powered compression targets redundant data while preserving visual quality. Results are indistinguishable at full size — but load dramatically faster on web and email.',
+      body: 'AI-powered compression targets redundant data while preserving visual quality. Results are indistinguishable at full size â€” but load dramatically faster on web and email.',
       beforeLabel: 'Original (Large File)',
       afterLabel: 'Compressed (80% Smaller)',
       beforeFilter: 'blur(0.5px)',
@@ -211,7 +211,7 @@ const PAGE_FEATURE_ROWS: Record<string, FeatureRow[]> = {
     },
     {
       badge: 'Core Web Vitals',
-      heading: 'Pass Google Page Speed — rank higher in search',
+      heading: 'Pass Google Page Speed â€” rank higher in search',
       body: 'Image size is the #1 cause of slow websites. Google rewards fast pages with higher search rankings. Compress your images and improve your Core Web Vitals score instantly.',
       beforeLabel: 'Unoptimized (Slow)',
       afterLabel: 'Compressed (Fast)',
@@ -234,7 +234,7 @@ const PAGE_FEATURE_ROWS: Record<string, FeatureRow[]> = {
 const getFeatureRows = (pageId: string): FeatureRow[] =>
   PAGE_FEATURE_ROWS[pageId] ?? PAGE_FEATURE_ROWS['upscale']
 
-// ─── use case tabs ────────────────────────────────────────────────────────────
+// â”€â”€â”€ use case tabs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 interface UseCase {
   label: string
   heading: string
@@ -247,36 +247,36 @@ interface UseCase {
 
 const PAGE_USE_CASES: Record<string, UseCase[]> = {
   upscale: [
-    { label: 'E-Commerce', heading: 'Sharper product images — higher conversions', desc: 'Upscale blurry product photos to retina quality. E-commerce listings with high-resolution images convert up to 94% better. No reshooting needed.', beforeLabel: 'Low-Res Product', afterLabel: '4× Upscaled', beforeFilter: 'blur(3px) contrast(0.75) saturate(0.6)' },
+    { label: 'E-Commerce', heading: 'Sharper product images â€” higher conversions', desc: 'Upscale blurry product photos to retina quality. E-commerce listings with high-resolution images convert up to 94% better. No reshooting needed.', beforeLabel: 'Low-Res Product', afterLabel: '4Ã— Upscaled', beforeFilter: 'blur(3px) contrast(0.75) saturate(0.6)' },
     { label: 'Old Photos', heading: 'Restore vintage photos to vivid clarity', desc: 'Bring scanned family photos and vintage prints back to life. AI recovers detail lost to age, scanning artifacts, and compression.', beforeLabel: 'Scanned Original', afterLabel: 'AI Restored', beforeFilter: 'sepia(0.6) blur(2px) contrast(0.7)' },
     { label: 'AI Art & Design', heading: 'Scale AI art to print-ready resolution', desc: 'AI-generated images at 512px or 1024px upscale beautifully to 2048px and beyond for canvas prints, posters, and merchandise.', beforeLabel: 'AI Art (Small)', afterLabel: 'Print Ready', beforeFilter: 'blur(2.5px) contrast(0.8)' },
-    { label: 'Social Media', heading: 'Retina-quality visuals for every platform', desc: 'Upload compressed downloads or screenshots and upscale to Instagram, LinkedIn, and TikTok standards — crisp on every screen.', beforeLabel: 'Downloaded (Blurry)', afterLabel: 'Upscaled (Sharp)', beforeFilter: 'blur(2px) brightness(0.9) saturate(0.8)' },
-    { label: 'Print & Canvas', heading: 'Large-format print from small originals', desc: 'Starting from a 1MP phone photo or web image, upscale 4× for high-quality A1/A2 posters, canvas prints, and merchandise.', beforeLabel: 'Small Original', afterLabel: 'Large Format Ready', beforeFilter: 'blur(3.5px) contrast(0.7)' },
+    { label: 'Social Media', heading: 'Retina-quality visuals for every platform', desc: 'Upload compressed downloads or screenshots and upscale to Instagram, LinkedIn, and TikTok standards â€” crisp on every screen.', beforeLabel: 'Downloaded (Blurry)', afterLabel: 'Upscaled (Sharp)', beforeFilter: 'blur(2px) brightness(0.9) saturate(0.8)' },
+    { label: 'Print & Canvas', heading: 'Large-format print from small originals', desc: 'Starting from a 1MP phone photo or web image, upscale 4Ã— for high-quality A1/A2 posters, canvas prints, and merchandise.', beforeLabel: 'Small Original', afterLabel: 'Large Format Ready', beforeFilter: 'blur(3.5px) contrast(0.7)' },
   ],
   'remove-bg': [
-    { label: 'E-Commerce', heading: 'Amazon & Shopify white background shots', desc: 'Amazon requires pure white backgrounds on all main product images. JPT AI delivers marketplace-compliant photos in seconds — no studio, no photographer.', beforeLabel: 'Product in Scene', afterLabel: 'White Background', beforeFilter: undefined, beforeOverlay: 'bg' },
-    { label: 'Headshots', heading: 'Professional LinkedIn profile photos', desc: 'LinkedIn profiles with professional headshots get 21× more views. Remove distracting backgrounds and add a clean professional backdrop.', beforeLabel: 'Casual Photo', afterLabel: 'Studio Look', beforeFilter: undefined, beforeOverlay: 'bg' },
-    { label: 'Thumbnails', heading: 'Eye-catching YouTube & social thumbnails', desc: 'Cut out subjects for bold, high-contrast thumbnails that drive clicks. Place on any background — gradient, solid color, or custom scene.', beforeLabel: 'Original Background', afterLabel: 'Clean Cutout', beforeFilter: undefined, beforeOverlay: 'bg' },
+    { label: 'E-Commerce', heading: 'Amazon & Shopify white background shots', desc: 'Amazon requires pure white backgrounds on all main product images. JPT AI delivers marketplace-compliant photos in seconds â€” no studio, no photographer.', beforeLabel: 'Product in Scene', afterLabel: 'White Background', beforeFilter: undefined, beforeOverlay: 'bg' },
+    { label: 'Headshots', heading: 'Professional LinkedIn profile photos', desc: 'LinkedIn profiles with professional headshots get 21Ã— more views. Remove distracting backgrounds and add a clean professional backdrop.', beforeLabel: 'Casual Photo', afterLabel: 'Studio Look', beforeFilter: undefined, beforeOverlay: 'bg' },
+    { label: 'Thumbnails', heading: 'Eye-catching YouTube & social thumbnails', desc: 'Cut out subjects for bold, high-contrast thumbnails that drive clicks. Place on any background â€” gradient, solid color, or custom scene.', beforeLabel: 'Original Background', afterLabel: 'Clean Cutout', beforeFilter: undefined, beforeOverlay: 'bg' },
     { label: 'Ad Creatives', heading: 'Marketing assets in minutes, not days', desc: 'Remove backgrounds from product photos and people to create flexible assets for ads, emails, flyers, and presentations across every platform.', beforeLabel: 'With Background', afterLabel: 'Asset Ready', beforeFilter: 'contrast(0.85)', beforeOverlay: 'bg' },
-    { label: 'Real Estate', heading: 'Clean property and furniture photography', desc: 'Remove cluttered backgrounds from furniture and product photos. Create clean shots that highlight the item — not the room it was photographed in.', beforeLabel: 'In-Room Photo', afterLabel: 'Clean Product', beforeFilter: undefined, beforeOverlay: 'bg' },
+    { label: 'Real Estate', heading: 'Clean property and furniture photography', desc: 'Remove cluttered backgrounds from furniture and product photos. Create clean shots that highlight the item â€” not the room it was photographed in.', beforeLabel: 'In-Room Photo', afterLabel: 'Clean Product', beforeFilter: undefined, beforeOverlay: 'bg' },
   ],
   'photo-enhancer': [
     { label: 'Old Photos', heading: 'Restore faded family photographs', desc: 'Recover detail from aged, faded prints. AI corrects yellowing, removes grain, and sharpens detail lost over decades of storage.', beforeLabel: 'Faded Original', afterLabel: 'Restored', beforeFilter: 'sepia(0.7) blur(2px) brightness(0.8)' },
-    { label: 'Portraits', heading: 'Professional portrait enhancement', desc: 'Brighten eyes, smooth skin, and enhance portrait clarity — subtly, without the over-processed look of heavy retouching filters.', beforeLabel: 'Unedited', afterLabel: 'Enhanced', beforeFilter: 'blur(1.5px) brightness(0.85) saturate(0.7)' },
+    { label: 'Portraits', heading: 'Professional portrait enhancement', desc: 'Brighten eyes, smooth skin, and enhance portrait clarity â€” subtly, without the over-processed look of heavy retouching filters.', beforeLabel: 'Unedited', afterLabel: 'Enhanced', beforeFilter: 'blur(1.5px) brightness(0.85) saturate(0.7)' },
     { label: 'Products', heading: 'Sharper product photos for listings', desc: 'Fix dark, blurry, or dull product shots. AI boosts detail, corrects color, and sharpens edges so your listing stands out.', beforeLabel: 'Dull Product Shot', afterLabel: 'Professional Look', beforeFilter: 'blur(1px) contrast(0.8) saturate(0.6)' },
     { label: 'Events', heading: 'Rescue dark or blurry event photos', desc: 'Indoor event photos often suffer from poor lighting and motion blur. AI enhancement rescues dark, noisy, and blurry captures.', beforeLabel: 'Dark / Blurry', afterLabel: 'Clear & Bright', beforeFilter: 'blur(2px) brightness(0.6) contrast(0.8)' },
     { label: 'Travel', heading: 'Bring travel memories back to life', desc: 'Holiday and travel photos taken on older phones or in low light come out dramatically better with AI color restoration and sharpening.', beforeLabel: 'Hazy Travel Shot', afterLabel: 'Vivid & Sharp', beforeFilter: 'blur(1px) brightness(0.85) saturate(0.65) hue-rotate(-5deg)' },
   ],
   'compress-image': [
     { label: 'Websites', heading: 'Pass Core Web Vitals. Rank higher.', desc: 'Google uses page speed as a ranking factor. Images account for 60% of page weight. Compress your images and watch your PageSpeed score jump.', beforeLabel: 'Unoptimized (Slow)', afterLabel: 'Compressed (Fast)', beforeFilter: undefined },
-    { label: 'E-Commerce', heading: 'Faster product pages — more conversions', desc: 'A 1-second improvement in mobile page load improves conversions by 27%. Compress your entire product catalog for measurable revenue impact.', beforeLabel: 'Heavy Images', afterLabel: 'Optimized Images', beforeFilter: undefined },
+    { label: 'E-Commerce', heading: 'Faster product pages â€” more conversions', desc: 'A 1-second improvement in mobile page load improves conversions by 27%. Compress your entire product catalog for measurable revenue impact.', beforeLabel: 'Heavy Images', afterLabel: 'Optimized Images', beforeFilter: undefined },
     { label: 'Email', heading: 'Email images that actually load', desc: 'Large images in emails trigger spam filters and never load for recipients. Compress to under 200KB and ensure every subscriber sees your campaign.', beforeLabel: 'Too Large (Spam Risk)', afterLabel: 'Email Ready', beforeFilter: undefined },
     { label: 'Apps', heading: 'Smaller app bundles, faster downloads', desc: 'Every KB of image assets your app downloads costs users time and data. Compress assets to reduce APK/IPA size and improve app store ratings.', beforeLabel: 'Large Assets', afterLabel: 'Optimized Bundle', beforeFilter: undefined },
     { label: 'Cloud Storage', heading: 'Cut storage costs without losing quality', desc: 'Compress your photo library and cloud storage bills drop proportionally. JPT AI reduces file sizes 60-80% with zero visible quality difference.', beforeLabel: 'Original (Full Size)', afterLabel: 'Compressed (Tiny)', beforeFilter: undefined },
   ],
 }
 
-// ─── type/scenario grid ───────────────────────────────────────────────────────
+// â”€â”€â”€ type/scenario grid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 interface TypeCard {
   title: string
   desc: string
@@ -288,56 +288,56 @@ interface TypeCard {
 
 const PAGE_TYPE_CARDS: Record<string, TypeCard[]> = {
   upscale: [
-    { title: 'Product Photos', desc: 'Upscale e-commerce shots to retina quality', icon: '🛍️', beforeFilter: 'blur(3px) contrast(0.75)', tag: 'Most Popular' },
-    { title: 'Old & Scanned Photos', desc: 'Restore vintage prints to digital clarity', icon: '📷', beforeFilter: 'sepia(0.6) blur(2px) contrast(0.7)' },
-    { title: 'Portraits & Headshots', desc: 'Sharp faces, crisp skin texture, clear eyes', icon: '👤', beforeFilter: 'blur(2px) contrast(0.8) saturate(0.8)' },
-    { title: 'AI-Generated Art', desc: 'Scale 512px AI images to print-ready 4K', icon: '🎨', beforeFilter: 'blur(4px) contrast(0.7) saturate(0.5)', tag: 'Trending' },
-    { title: 'Screenshots & UI', desc: 'Crisp screenshots for docs, blogs, and ads', icon: '🖥️', beforeFilter: 'blur(1.5px) contrast(0.85)' },
-    { title: 'Logos & Brand Assets', desc: 'Enlarge logos without pixelation or blur', icon: '✦', beforeFilter: 'blur(2.5px) contrast(0.7) saturate(0.6)' },
+    { title: 'Product Photos', desc: 'Upscale e-commerce shots to retina quality', icon: 'ðŸ›ï¸', beforeFilter: 'blur(3px) contrast(0.75)', tag: 'Most Popular' },
+    { title: 'Old & Scanned Photos', desc: 'Restore vintage prints to digital clarity', icon: 'ðŸ“·', beforeFilter: 'sepia(0.6) blur(2px) contrast(0.7)' },
+    { title: 'Portraits & Headshots', desc: 'Sharp faces, crisp skin texture, clear eyes', icon: 'ðŸ‘¤', beforeFilter: 'blur(2px) contrast(0.8) saturate(0.8)' },
+    { title: 'AI-Generated Art', desc: 'Scale 512px AI images to print-ready 4K', icon: 'ðŸŽ¨', beforeFilter: 'blur(4px) contrast(0.7) saturate(0.5)', tag: 'Trending' },
+    { title: 'Screenshots & UI', desc: 'Crisp screenshots for docs, blogs, and ads', icon: 'ðŸ–¥ï¸', beforeFilter: 'blur(1.5px) contrast(0.85)' },
+    { title: 'Logos & Brand Assets', desc: 'Enlarge logos without pixelation or blur', icon: 'âœ¦', beforeFilter: 'blur(2.5px) contrast(0.7) saturate(0.6)' },
   ],
   'remove-bg': [
-    { title: 'Product Photography', desc: 'White-background shots for Amazon & Shopify', icon: '🛍️', beforeOverlay: 'bg', tag: 'Most Popular' },
-    { title: 'Profile Photos', desc: 'Clean headshots for LinkedIn & team pages', icon: '👤', beforeOverlay: 'bg' },
-    { title: 'YouTube Thumbnails', desc: 'Subject cutouts for eye-catching thumbnails', icon: '▶️', beforeOverlay: 'bg', tag: 'Trending' },
-    { title: 'Clothing & Apparel', desc: 'Ghost mannequin effect for fashion listings', icon: '👕', beforeOverlay: 'bg' },
-    { title: 'Pets & Animals', desc: 'Precise fur-edge cutouts for pet portraits', icon: '🐾', beforeOverlay: 'bg' },
-    { title: 'Ad Creatives', desc: 'Flexible assets for any campaign background', icon: '📣', beforeOverlay: 'bg' },
+    { title: 'Product Photography', desc: 'White-background shots for Amazon & Shopify', icon: 'ðŸ›ï¸', beforeOverlay: 'bg', tag: 'Most Popular' },
+    { title: 'Profile Photos', desc: 'Clean headshots for LinkedIn & team pages', icon: 'ðŸ‘¤', beforeOverlay: 'bg' },
+    { title: 'YouTube Thumbnails', desc: 'Subject cutouts for eye-catching thumbnails', icon: 'â–¶ï¸', beforeOverlay: 'bg', tag: 'Trending' },
+    { title: 'Clothing & Apparel', desc: 'Ghost mannequin effect for fashion listings', icon: 'ðŸ‘•', beforeOverlay: 'bg' },
+    { title: 'Pets & Animals', desc: 'Precise fur-edge cutouts for pet portraits', icon: 'ðŸ¾', beforeOverlay: 'bg' },
+    { title: 'Ad Creatives', desc: 'Flexible assets for any campaign background', icon: 'ðŸ“£', beforeOverlay: 'bg' },
   ],
   'watermark-remover': [
-    { title: 'Text Watermarks', desc: 'Remove copyright text and name overlays', icon: '©', beforeOverlay: 'watermark', tag: 'Most Common' },
-    { title: 'Logo Watermarks', desc: 'Remove brand logos placed over images', icon: '🏷️', beforeOverlay: 'watermark' },
-    { title: 'Date & Time Stamps', desc: 'Remove camera date stamps from old photos', icon: '📅', beforeOverlay: 'watermark' },
-    { title: 'Stock Photo Marks', desc: 'Identify and clean stock site watermarks', icon: '🖼️', beforeOverlay: 'watermark', tag: 'Popular' },
-    { title: 'Preview Watermarks', desc: 'Remove diagonal "PREVIEW" and "SAMPLE" text', icon: '🔒', beforeOverlay: 'watermark' },
-    { title: 'Promotional Banners', desc: 'Remove overlaid promotional text banners', icon: '📢', beforeOverlay: 'watermark' },
+    { title: 'Text Watermarks', desc: 'Remove copyright text and name overlays', icon: 'Â©', beforeOverlay: 'watermark', tag: 'Most Common' },
+    { title: 'Logo Watermarks', desc: 'Remove brand logos placed over images', icon: 'ðŸ·ï¸', beforeOverlay: 'watermark' },
+    { title: 'Date & Time Stamps', desc: 'Remove camera date stamps from old photos', icon: 'ðŸ“…', beforeOverlay: 'watermark' },
+    { title: 'Stock Photo Marks', desc: 'Identify and clean stock site watermarks', icon: 'ðŸ–¼ï¸', beforeOverlay: 'watermark', tag: 'Popular' },
+    { title: 'Preview Watermarks', desc: 'Remove diagonal "PREVIEW" and "SAMPLE" text', icon: 'ðŸ”’', beforeOverlay: 'watermark' },
+    { title: 'Promotional Banners', desc: 'Remove overlaid promotional text banners', icon: 'ðŸ“¢', beforeOverlay: 'watermark' },
   ],
   'compress-image': [
-    { title: 'JPEG Photos', desc: 'Compress product & lifestyle photography', icon: '📸', tag: 'Most Popular' },
-    { title: 'PNG Graphics', desc: 'Compress UI screenshots and graphics', icon: '🖥️' },
-    { title: 'E-Commerce Catalogs', desc: 'Batch optimize entire product libraries', icon: '🛍️', tag: 'Power User' },
-    { title: 'Blog Images', desc: 'Optimize hero images for Core Web Vitals', icon: '✍️' },
-    { title: 'Social Media Assets', desc: 'Resize and compress for Instagram & LinkedIn', icon: '📱' },
-    { title: 'Email Images', desc: 'Under 200KB for perfect email rendering', icon: '📧' },
+    { title: 'JPEG Photos', desc: 'Compress product & lifestyle photography', icon: 'ðŸ“¸', tag: 'Most Popular' },
+    { title: 'PNG Graphics', desc: 'Compress UI screenshots and graphics', icon: 'ðŸ–¥ï¸' },
+    { title: 'E-Commerce Catalogs', desc: 'Batch optimize entire product libraries', icon: 'ðŸ›ï¸', tag: 'Power User' },
+    { title: 'Blog Images', desc: 'Optimize hero images for Core Web Vitals', icon: 'âœï¸' },
+    { title: 'Social Media Assets', desc: 'Resize and compress for Instagram & LinkedIn', icon: 'ðŸ“±' },
+    { title: 'Email Images', desc: 'Under 200KB for perfect email rendering', icon: 'ðŸ“§' },
   ],
   'photo-enhancer': [
-    { title: 'Old Family Photos', desc: 'Restore faded vintage and scanned prints', icon: '📷', tag: 'Most Popular' },
-    { title: 'Portrait Retouching', desc: 'Bright eyes, smooth skin, natural look', icon: '👤' },
-    { title: 'Product Photos', desc: 'Sharper, brighter e-commerce listing images', icon: '🛍️' },
-    { title: 'Travel Photography', desc: 'Enhance hazy and underexposed travel shots', icon: '✈️', tag: 'Trending' },
-    { title: 'Event Photography', desc: 'Rescue dark or motion-blurred event photos', icon: '🎉' },
-    { title: 'Landscape Photos', desc: 'Vivid colors, sharp detail, clear skies', icon: '🏔️' },
+    { title: 'Old Family Photos', desc: 'Restore faded vintage and scanned prints', icon: 'ðŸ“·', tag: 'Most Popular' },
+    { title: 'Portrait Retouching', desc: 'Bright eyes, smooth skin, natural look', icon: 'ðŸ‘¤' },
+    { title: 'Product Photos', desc: 'Sharper, brighter e-commerce listing images', icon: 'ðŸ›ï¸' },
+    { title: 'Travel Photography', desc: 'Enhance hazy and underexposed travel shots', icon: 'âœˆï¸', tag: 'Trending' },
+    { title: 'Event Photography', desc: 'Rescue dark or motion-blurred event photos', icon: 'ðŸŽ‰' },
+    { title: 'Landscape Photos', desc: 'Vivid colors, sharp detail, clear skies', icon: 'ðŸ”ï¸' },
   ],
 }
 
 const getTypeCards = (pageId: string): TypeCard[] =>
   PAGE_TYPE_CARDS[pageId] ?? PAGE_TYPE_CARDS['upscale']
 
-// ─── testimonials ─────────────────────────────────────────────────────────────
+// â”€â”€â”€ testimonials â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const PAGE_TESTIMONIALS: Record<string, { name: string; role: string; avatar: string; quote: string }[]> = {
   upscale: [
     { name: 'Marcus Johnson', role: 'E-commerce Seller, Austin TX', avatar: 'MJ', quote: 'Had hundreds of old product photos shot on a phone. After upscaling they look like studio shots. My conversion rate improved noticeably.' },
-    { name: 'Sarah Mitchell', role: 'Photographer, New York', avatar: 'SM', quote: 'The AI preserves texture and detail unlike any other online tool. Hair, fabric, skin — all looks natural after upscaling.' },
-    { name: 'Derek Chen', role: 'Graphic Designer, San Francisco', avatar: 'DC', quote: 'I use it to upscale AI-generated art before printing. 4× and the results are ready for A2 poster prints. Incredible quality.' },
+    { name: 'Sarah Mitchell', role: 'Photographer, New York', avatar: 'SM', quote: 'The AI preserves texture and detail unlike any other online tool. Hair, fabric, skin â€” all looks natural after upscaling.' },
+    { name: 'Derek Chen', role: 'Graphic Designer, San Francisco', avatar: 'DC', quote: 'I use it to upscale AI-generated art before printing. 4Ã— and the results are ready for A2 poster prints. Incredible quality.' },
     { name: 'Priya Nair', role: 'Etsy Seller, Portland', avatar: 'PN', quote: 'My handmade jewelry photos were blurry on Etsy. Upscaling made them look professional. Sales went up 40% that month.' },
     { name: 'Tom Bradley', role: 'Marketing Director, Chicago', avatar: 'TB', quote: 'We use it for old campaign assets that need updating for 4K screens. Saves us a full photo reshoot every time.' },
     { name: 'Lisa Park', role: 'Print Designer, Seattle', avatar: 'LP', quote: 'I regularly upscale client logos for large-format banners. Results are always sharp with zero pixelation artifacts.' },
@@ -345,7 +345,7 @@ const PAGE_TESTIMONIALS: Record<string, { name: string; role: string; avatar: st
   'remove-bg': [
     { name: 'Jessica Park', role: 'E-commerce Owner, Los Angeles', avatar: 'JP', quote: 'Was spending 30 min per product photo in Photoshop. Now I process 40 images before my morning coffee. Store looks completely professional.' },
     { name: 'Ryan Torres', role: 'Freelance Photographer, Miami', avatar: 'RT', quote: 'Background removal on hair and fine edges is flawless. Clients can\'t tell the difference from a manual Photoshop cutout.' },
-    { name: 'Amanda Lee', role: 'Social Media Manager, Chicago', avatar: 'AL', quote: 'Switched from remove.bg — same quality but JPT AI has all the other tools too. No watermarks, instant results. Love it.' },
+    { name: 'Amanda Lee', role: 'Social Media Manager, Chicago', avatar: 'AL', quote: 'Switched from remove.bg â€” same quality but JPT AI has all the other tools too. No watermarks, instant results. Love it.' },
     { name: 'Carlos Rivera', role: 'Fashion Brand, Miami', avatar: 'CR', quote: 'We do ghost mannequin shots for our entire clothing line. JPT AI handles fabric edges perfectly every single time.' },
     { name: 'Kevin Walsh', role: 'LinkedIn Coach, Boston', avatar: 'KW', quote: 'My clients use it for headshots. A clean background adds instant professionalism. Connection requests go up noticeably after.' },
     { name: 'Emma Collins', role: 'Content Creator, Nashville', avatar: 'EC', quote: 'Thumbnail backgrounds removed in seconds. My YouTube click-through rate improved 18% after switching to clean cutouts.' },
@@ -353,16 +353,16 @@ const PAGE_TESTIMONIALS: Record<string, { name: string; role: string; avatar: st
   'photo-enhancer': [
     { name: 'Tyler Brooks', role: 'Family Photographer, Denver', avatar: 'TB', quote: 'My parents\' wedding photos from the 70s came out of this tool looking like they were taken last year. The family was speechless.' },
     { name: 'Natalie Grant', role: 'Blogger, Seattle', avatar: 'NG', quote: 'My old travel photos from 2012 on a terrible point-and-shoot look stunning now. The color restoration is incredible.' },
-    { name: 'Kevin Walsh', role: 'Freelance Consultant, Denver', avatar: 'KW', quote: 'Used it to enhance product shots taken in bad lighting. Clients can\'t believe the difference — looks like a professional studio shot.' },
+    { name: 'Kevin Walsh', role: 'Freelance Consultant, Denver', avatar: 'KW', quote: 'Used it to enhance product shots taken in bad lighting. Clients can\'t believe the difference â€” looks like a professional studio shot.' },
     { name: 'Sophie Anderson', role: 'Event Photographer, Chicago', avatar: 'SA', quote: 'Rescues my indoor event shots. Low-light photos come out sharp and properly exposed. Saves me 2 hours of Lightroom editing per event.' },
     { name: 'James Miller', role: 'Genealogy Researcher, Boston', avatar: 'JM', quote: 'I digitize old family photos for research. JPT AI restores them so clearly you can read text on documents from 1920.' },
     { name: 'Rachel Kim', role: 'Real Estate Agent, Phoenix', avatar: 'RK', quote: 'Enhancing interior listing photos takes 10 seconds per image now. Brighter, sharper, more professional. My listings get more views.' },
   ],
   'compress-image': [
     { name: 'David Wilson', role: 'Web Developer, Austin', avatar: 'DW', quote: 'Cut my homepage image sizes by 70% without any visible quality loss. My Core Web Vitals score jumped 18 points.' },
-    { name: 'Emma Davis', role: 'Blogger, Seattle', avatar: 'ED', quote: 'Finally a free image compressor that doesn\'t add a watermark. My blog loads 3× faster now. Google loves it.' },
+    { name: 'Emma Davis', role: 'Blogger, Seattle', avatar: 'ED', quote: 'Finally a free image compressor that doesn\'t add a watermark. My blog loads 3Ã— faster now. Google loves it.' },
     { name: 'James Taylor', role: 'Shopify Developer, Atlanta', avatar: 'JT', quote: 'Compressed an entire product catalog in minutes. Page load dropped from 4.2s to 1.8s. Client is thrilled.' },
-    { name: 'Nina Patel', role: 'SEO Specialist, Chicago', avatar: 'NP', quote: 'Image compression is an SEO non-negotiable. This tool makes it effortless — no more excuses from clients about slow sites.' },
+    { name: 'Nina Patel', role: 'SEO Specialist, Chicago', avatar: 'NP', quote: 'Image compression is an SEO non-negotiable. This tool makes it effortless â€” no more excuses from clients about slow sites.' },
     { name: 'Chris Morgan', role: 'E-commerce Director, Phoenix', avatar: 'CM', quote: 'Reduced our product image library from 4GB to 900MB with zero visible loss. CDN costs dropped significantly.' },
     { name: 'Lauren Kim', role: 'UX Designer, Portland', avatar: 'LK', quote: 'I compress every design export before handing off. Developers love me for it and pages load instantly.' },
   ],
@@ -371,10 +371,10 @@ const PAGE_TESTIMONIALS: Record<string, { name: string; role: string; avatar: st
 const getTestimonials = (pageId: string) =>
   PAGE_TESTIMONIALS[pageId] ?? PAGE_TESTIMONIALS['upscale']
 
-// ─── comparison ───────────────────────────────────────────────────────────────
+// â”€â”€â”€ comparison â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const PAGE_COMPARISON: Record<string, { feature: string; jpt: boolean; alt1: boolean; alt2: boolean; alt1name: string; alt2name: string }[]> = {
   upscale: [
-    { feature: '4× AI Super-Resolution', jpt: true, alt1: false, alt2: true, alt1name: 'Photoshop', alt2name: "Let's Enhance" },
+    { feature: '4Ã— AI Super-Resolution', jpt: true, alt1: false, alt2: true, alt1name: 'Photoshop', alt2name: "Let's Enhance" },
     { feature: 'Free tier (no credit card)', jpt: true, alt1: false, alt2: false, alt1name: 'Photoshop', alt2name: "Let's Enhance" },
     { feature: 'No watermark on output', jpt: true, alt1: true, alt2: false, alt1name: 'Photoshop', alt2name: "Let's Enhance" },
     { feature: 'Works 100% in browser', jpt: true, alt1: false, alt2: true, alt1name: 'Photoshop', alt2name: "Let's Enhance" },
@@ -385,7 +385,7 @@ const PAGE_COMPARISON: Record<string, { feature: string; jpt: boolean; alt1: boo
     { feature: 'Free tier (no credit card)', jpt: true, alt1: false, alt2: true, alt1name: 'Photoshop', alt2name: 'remove.bg' },
     { feature: 'No watermark on free tier', jpt: true, alt1: false, alt2: false, alt1name: 'Photoshop', alt2name: 'remove.bg' },
     { feature: 'AI image editing included', jpt: true, alt1: true, alt2: false, alt1name: 'Photoshop', alt2name: 'remove.bg' },
-    { feature: '4× AI upscaling included', jpt: true, alt1: true, alt2: false, alt1name: 'Photoshop', alt2name: 'remove.bg' },
+    { feature: '4Ã— AI upscaling included', jpt: true, alt1: true, alt2: false, alt1name: 'Photoshop', alt2name: 'remove.bg' },
     { feature: 'Works in browser', jpt: true, alt1: false, alt2: true, alt1name: 'Photoshop', alt2name: 'remove.bg' },
     { feature: 'No signup to try', jpt: true, alt1: false, alt2: true, alt1name: 'Photoshop', alt2name: 'remove.bg' },
   ],
@@ -399,59 +399,59 @@ const PAGE_COMPARISON: Record<string, { feature: string; jpt: boolean; alt1: boo
   ],
 }
 
-// ─── seo content ─────────────────────────────────────────────────────────────
+// â”€â”€â”€ seo content â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const PAGE_SEO: Record<string, { heading: string; body: string }[]> = {
   upscale: [
-    { heading: 'What is AI image upscaling?', body: 'AI image upscaling uses deep learning super-resolution to intelligently reconstruct detail when enlarging images — unlike traditional upscaling which just stretches pixels and creates blurry results. JPT AI analyzes textures, edges, and fine patterns to produce sharp, high-resolution output up to 4× the original size.' },
-    { heading: 'Upscale images to 4K free online', body: 'JPT AI lets you upscale any photo to 2× or 4× resolution directly in your browser — no software to install, no credit card required. Process images instantly for e-commerce, print, social media, and professional use.' },
-    { heading: 'Best for e-commerce, print & photography', body: 'Whether you\'re a seller needing retina-quality product photos, a photographer restoring old scans, or a designer scaling AI art for print — JPT AI delivers professional results in seconds. Works on portraits, products, landscapes, screenshots, and AI-generated images.' },
+    { heading: 'What is AI image upscaling?', body: 'AI image upscaling uses deep learning super-resolution to intelligently reconstruct detail when enlarging images â€” unlike traditional upscaling which just stretches pixels and creates blurry results. JPT AI analyzes textures, edges, and fine patterns to produce sharp, high-resolution output up to 4Ã— the original size.' },
+    { heading: 'Upscale images to 4K free online', body: 'JPT AI lets you upscale any photo to 2Ã— or 4Ã— resolution directly in your browser â€” no software to install, no credit card required. Process images instantly for e-commerce, print, social media, and professional use.' },
+    { heading: 'Best for e-commerce, print & photography', body: 'Whether you\'re a seller needing retina-quality product photos, a photographer restoring old scans, or a designer scaling AI art for print â€” JPT AI delivers professional results in seconds. Works on portraits, products, landscapes, screenshots, and AI-generated images.' },
   ],
   'remove-bg': [
-    { heading: 'What is AI background removal?', body: 'AI background removal uses deep learning image segmentation to precisely detect and separate the subject from the background — no manual selection, magic wand, or green screen needed. JPT AI handles people, products, animals, and complex edges like hair with pixel-level accuracy.' },
-    { heading: 'Remove background online free — no watermark', body: 'JPT AI removes backgrounds instantly in your browser. Output is a full-resolution transparent PNG with no watermarks, no quality loss, free to use immediately. Perfect for Amazon product photos, LinkedIn headshots, YouTube thumbnails, and ad creatives.' },
-    { heading: 'The best remove.bg alternative', body: 'Unlike remove.bg, JPT AI gives you an all-in-one toolkit: remove backgrounds AND upscale images, edit with AI text prompts, generate new backgrounds, and resize — all in one place, completely free to start with no credit card.' },
+    { heading: 'What is AI background removal?', body: 'AI background removal uses deep learning image segmentation to precisely detect and separate the subject from the background â€” no manual selection, magic wand, or green screen needed. JPT AI handles people, products, animals, and complex edges like hair with pixel-level accuracy.' },
+    { heading: 'Remove background online free â€” no watermark', body: 'JPT AI removes backgrounds instantly in your browser. Output is a full-resolution transparent PNG with no watermarks, no quality loss, free to use immediately. Perfect for Amazon product photos, LinkedIn headshots, YouTube thumbnails, and ad creatives.' },
+    { heading: 'The best remove.bg alternative', body: 'Unlike remove.bg, JPT AI gives you an all-in-one toolkit: remove backgrounds AND upscale images, edit with AI text prompts, generate new backgrounds, and resize â€” all in one place, completely free to start with no credit card.' },
   ],
   'photo-enhancer': [
-    { heading: 'What is AI photo enhancement?', body: 'AI photo enhancement uses neural networks to automatically analyze and correct brightness, contrast, sharpness, color balance, and noise in a single pass — delivering professional-grade results without manual slider adjustments or expert knowledge.' },
-    { heading: 'Restore old photos online free', body: 'Old family photos, scanned prints, and damaged photographs respond beautifully to AI restoration. JPT AI corrects fading, removes grain, sharpens detail, and restores color shift from aging — all in seconds, completely free.' },
-    { heading: 'AI photo enhancer vs. Lightroom', body: 'Professional photo editing tools require skill, time, and subscription costs. JPT AI delivers comparable results instantly, for free, directly in your browser — no export workflow, no adjustment presets, no learning curve required.' },
+    { heading: 'What is AI photo enhancement?', body: 'AI photo enhancement uses neural networks to automatically analyze and correct brightness, contrast, sharpness, color balance, and noise in a single pass â€” delivering professional-grade results without manual slider adjustments or expert knowledge.' },
+    { heading: 'Restore old photos online free', body: 'Old family photos, scanned prints, and damaged photographs respond beautifully to AI restoration. JPT AI corrects fading, removes grain, sharpens detail, and restores color shift from aging â€” all in seconds, completely free.' },
+    { heading: 'AI photo enhancer vs. Lightroom', body: 'Professional photo editing tools require skill, time, and subscription costs. JPT AI delivers comparable results instantly, for free, directly in your browser â€” no export workflow, no adjustment presets, no learning curve required.' },
   ],
   'compress-image': [
-    { heading: 'What is image compression?', body: 'Image compression reduces file size by removing redundant data and optimizing encoding without significantly affecting visual quality. Smart compression can cut image sizes 60–80% while remaining indistinguishable to the human eye.' },
+    { heading: 'What is image compression?', body: 'Image compression reduces file size by removing redundant data and optimizing encoding without significantly affecting visual quality. Smart compression can cut image sizes 60â€“80% while remaining indistinguishable to the human eye.' },
     { heading: 'Why compress images for your website?', body: 'Page speed is a direct Google ranking factor. Large images are the #1 cause of slow websites. Google recommends images under 100KB for fast Core Web Vitals scores. Compress your images and rank higher in search results.' },
-    { heading: 'Compress images free online — no watermark', body: 'JPT AI compresses JPG and PNG images instantly in your browser. No upload limits, no watermarks, no account required. Perfect for optimizing website images, email attachments, and cloud storage.' },
+    { heading: 'Compress images free online â€” no watermark', body: 'JPT AI compresses JPG and PNG images instantly in your browser. No upload limits, no watermarks, no account required. Perfect for optimizing website images, email attachments, and cloud storage.' },
   ],
 }
 
 const getSEO = (pageId: string) => PAGE_SEO[pageId] ?? PAGE_SEO['upscale']
 
-// ─── related tools ────────────────────────────────────────────────────────────
+// â”€â”€â”€ related tools â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const RELATED_TOOLS = [
-  { label: 'AI Upscale', href: '/upscale', icon: '🔍', desc: 'Enlarge images 4× with AI' },
-  { label: 'Remove Background', href: '/remove-bg', icon: '🪄', desc: 'One-click background removal' },
-  { label: 'Photo Enhancer', href: '/photo-enhancer', icon: '✨', desc: 'Restore & enhance quality' },
-  { label: 'Compress Image', href: '/compress-image', icon: '⚡', desc: 'Reduce file size 80%' },
-  { label: 'Change Background', href: '/change-background', icon: '🌅', desc: 'Replace with AI background' },
-  { label: 'Watermark Remover', href: '/watermark-remover', icon: '©', desc: 'Remove any watermark' },
-  { label: 'White Background', href: '/make-background-white', icon: '⬜', desc: 'Amazon-ready white BG' },
-  { label: 'Convert to PNG', href: '/convert-to-png', icon: '🔄', desc: 'JPG/WEBP → PNG free' },
-  { label: 'Convert to JPG', href: '/convert-to-jpg', icon: '🔄', desc: 'PNG/WEBP → JPG free' },
+  { label: 'AI Upscale', href: '/upscale', icon: 'ðŸ”', desc: 'Enlarge images 4Ã— with AI' },
+  { label: 'Remove Background', href: '/remove-bg', icon: 'ðŸª„', desc: 'One-click background removal' },
+  { label: 'Photo Enhancer', href: '/photo-enhancer', icon: 'âœ¨', desc: 'Restore & enhance quality' },
+  { label: 'Compress Image', href: '/compress-image', icon: 'âš¡', desc: 'Reduce file size 80%' },
+  { label: 'Change Background', href: '/change-background', icon: 'ðŸŒ…', desc: 'Replace with AI background' },
+  { label: 'Watermark Remover', href: '/watermark-remover', icon: 'Â©', desc: 'Remove any watermark' },
+  { label: 'White Background', href: '/make-background-white', icon: 'â¬œ', desc: 'Amazon-ready white BG' },
+  { label: 'Convert to PNG', href: '/convert-to-png', icon: 'ðŸ”„', desc: 'JPG/WEBP â†’ PNG free' },
+  { label: 'Convert to JPG', href: '/convert-to-jpg', icon: 'ðŸ”„', desc: 'PNG/WEBP â†’ JPG free' },
 ]
 
-// ─── HOW IT WORKS ─────────────────────────────────────────────────────────────
+// â”€â”€â”€ HOW IT WORKS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const HOW_IT_WORKS = [
   { step: '01', title: 'Upload Your Image', desc: 'Drag & drop or click to select any photo. JPG, PNG, WEBP supported. No account needed to try.' },
-  { step: '02', title: 'AI Processes in Seconds', desc: 'Our AI analyzes your image and applies the transformation instantly — right in your browser. No waiting.' },
-  { step: '03', title: 'Download in Full Quality', desc: 'Preview the before/after result, then download — no watermark, no login, no hidden fees.' },
+  { step: '02', title: 'AI Processes in Seconds', desc: 'Our AI analyzes your image and applies the transformation instantly â€” right in your browser. No waiting.' },
+  { step: '03', title: 'Download in Full Quality', desc: 'Preview the before/after result, then download â€” no watermark, no login, no hidden fees.' },
 ]
 
-// ─── WATERMARK OVERLAY helper ─────────────────────────────────────────────────
+// â”€â”€â”€ WATERMARK OVERLAY helper â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function WatermarkOverlay() {
   return (
     <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 20 }}>
       {[0, 1, 2].map(row => (
         <div key={row} style={{ display: 'flex', gap: 24, opacity: row === 1 ? 0.55 : 0.3 }}>
-          {['© SAMPLE', 'WATERMARK', '© SAMPLE'].map((txt, i) => (
+          {['Â© SAMPLE', 'WATERMARK', 'Â© SAMPLE'].map((txt, i) => (
             <span key={i} style={{ color: 'rgba(200,200,200,0.9)', fontSize: 13, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', transform: 'rotate(-25deg)', display: 'block', whiteSpace: 'nowrap', textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>{txt}</span>
           ))}
         </div>
@@ -460,14 +460,14 @@ function WatermarkOverlay() {
   )
 }
 
-// ─── BACKGROUND overlay for remove-bg demos ──────────────────────────────────
+// â”€â”€â”€ BACKGROUND overlay for remove-bg demos â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function BgOverlay() {
   return (
     <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, #CBD5E1 0%, #94A3B8 100%)', opacity: 0.6, pointerEvents: 'none' }} />
   )
 }
 
-// ─── MAIN COMPONENT ───────────────────────────────────────────────────────────
+// â”€â”€â”€ MAIN COMPONENT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export default function LandingPage({ config, toolHref, pageId, inlineToolType }: LandingPageProps) {
   const [activeTab, setActiveTab] = useState(0)
 
@@ -483,7 +483,7 @@ export default function LandingPage({ config, toolHref, pageId, inlineToolType }
 
   const supabaseImages = PAGE_BEFORE_AFTER[pageId] ?? PAGE_BEFORE_AFTER['upscale']
 
-  // ── Decide what image to use for demo sliders
+  // â”€â”€ Decide what image to use for demo sliders
   const demoAfterSrc = supabaseImages?.after ?? heroImages?.after
   const demoBeforeSrc = supabaseImages?.before ?? heroImages?.before
 
@@ -508,7 +508,7 @@ export default function LandingPage({ config, toolHref, pageId, inlineToolType }
   return (
     <div style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif', color: '#1A1008', background: '#FAFAF8' }}>
 
-      {/* ══ HERO ══════════════════════════════════════════════════════════════ */}
+      {/* â•â• HERO â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       <section style={{ background: '#FAFAF8', paddingTop: 56, paddingBottom: 0 }}>
         <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48, alignItems: 'start' }}>
 
@@ -528,14 +528,14 @@ export default function LandingPage({ config, toolHref, pageId, inlineToolType }
             />
             {/* Caption */}
             <p style={{ textAlign: 'center', fontSize: 13, color: '#8B7355', marginTop: 12 }}>
-              ← Drag the slider to compare · Auto-plays as demo
+              â† Drag the slider to compare Â· Auto-plays as demo
             </p>
           </div>
 
           {/* Right: title + tool */}
           <div style={{ paddingTop: 8 }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#F0EBE3', color: '#7C5C2E', fontWeight: 700, fontSize: 11, borderRadius: 20, padding: '5px 14px', marginBottom: 20, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-              ✦ Free Online Tool · No Signup
+              âœ¦ Free Online Tool Â· No Signup
             </div>
 
             <h1 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)', fontWeight: 900, color: '#1A1008', lineHeight: 1.08, letterSpacing: '-0.03em', margin: '0 0 16px' }}>
@@ -573,9 +573,9 @@ export default function LandingPage({ config, toolHref, pageId, inlineToolType }
                   href={toolHref}
                   style={{ display: 'inline-flex', alignItems: 'center', gap: 10, background: '#1A1008', color: '#fff', fontWeight: 800, fontSize: 16, padding: '16px 36px', borderRadius: 14, textDecoration: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.2)', letterSpacing: '-0.01em' }}
                 >
-                  {config.cta_text || 'Try It Free'} →
+                  {config.cta_text || 'Try It Free'} â†’
                 </a>
-                <div style={{ fontSize: 12, color: '#9B8B7C', marginTop: 10 }}>5 free uses · No credit card</div>
+                <div style={{ fontSize: 12, color: '#9B8B7C', marginTop: 10 }}>5 free uses Â· No credit card</div>
               </div>
             )}
           </div>
@@ -594,7 +594,7 @@ export default function LandingPage({ config, toolHref, pageId, inlineToolType }
         </div>
       </section>
 
-      {/* ══ HOW IT WORKS ═══════════════════════════════════════════════════════ */}
+      {/* â•â• HOW IT WORKS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       <section style={{ padding: '96px 24px', background: '#fff' }}>
         <div style={{ maxWidth: 960, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 64 }}>
@@ -613,7 +613,7 @@ export default function LandingPage({ config, toolHref, pageId, inlineToolType }
         </div>
       </section>
 
-      {/* ══ FEATURE ROWS ═══════════════════════════════════════════════════════ */}
+      {/* â•â• FEATURE ROWS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       {featureRows.map((row, i) => {
         const bgColor = i % 2 === 0 ? '#FAFAF8' : '#fff'
         const textLeft = row.side === 'right'
@@ -628,11 +628,11 @@ export default function LandingPage({ config, toolHref, pageId, inlineToolType }
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
                   {inlineTool ? (
                     <label style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#1A1008', color: '#fff', fontWeight: 700, fontSize: 15, padding: '12px 28px', borderRadius: 12, cursor: 'pointer', letterSpacing: '-0.01em' }}>
-                      Try it now →
+                      Try it now â†’
                     </label>
                   ) : (
                     <a href={toolHref} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#1A1008', color: '#fff', fontWeight: 700, fontSize: 15, padding: '12px 28px', borderRadius: 12, textDecoration: 'none', letterSpacing: '-0.01em' }}>
-                      Try it free →
+                      Try it free â†’
                     </a>
                   )}
                 </div>
@@ -655,7 +655,7 @@ export default function LandingPage({ config, toolHref, pageId, inlineToolType }
         )
       })}
 
-      {/* ══ USE CASE TABS ══════════════════════════════════════════════════════ */}
+      {/* â•â• USE CASE TABS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       <section style={{ padding: '96px 24px', background: '#1A1008' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 48 }}>
@@ -701,11 +701,11 @@ export default function LandingPage({ config, toolHref, pageId, inlineToolType }
                 <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.65)', lineHeight: 1.75, margin: '0 0 28px' }}>{useCases[activeTab].desc}</p>
                 {inlineTool ? (
                   <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#7C3AED', color: '#fff', fontWeight: 700, fontSize: 15, padding: '12px 28px', borderRadius: 12, cursor: 'pointer', letterSpacing: '-0.01em' }}>
-                    Upload your image →
+                    Upload your image â†’
                   </div>
                 ) : (
                   <a href={toolHref} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#7C3AED', color: '#fff', fontWeight: 700, fontSize: 15, padding: '12px 28px', borderRadius: 12, textDecoration: 'none', letterSpacing: '-0.01em' }}>
-                    Try it free →
+                    Try it free â†’
                   </a>
                 )}
               </div>
@@ -714,14 +714,14 @@ export default function LandingPage({ config, toolHref, pageId, inlineToolType }
         </div>
       </section>
 
-      {/* ══ TYPE GRID ══════════════════════════════════════════════════════════ */}
+      {/* â•â• TYPE GRID â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       <section style={{ padding: '96px 24px', background: '#fff' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 64 }}>
             <div style={styles.sectionLabel}>Works on Every Type</div>
             <h2 style={styles.h2}>Every scenario. One tool.</h2>
             <p style={{ fontSize: 16, color: '#6B5B4E', marginTop: 16, maxWidth: 520, margin: '16px auto 0' }}>
-              From e-commerce product shots to personal photos and professional assets — JPT AI handles every use case with equal precision.
+              From e-commerce product shots to personal photos and professional assets â€” JPT AI handles every use case with equal precision.
             </p>
           </div>
 
@@ -760,7 +760,7 @@ export default function LandingPage({ config, toolHref, pageId, inlineToolType }
         </div>
       </section>
 
-      {/* ══ TESTIMONIALS ═══════════════════════════════════════════════════════ */}
+      {/* â•â• TESTIMONIALS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       <section style={{ padding: '96px 0', background: '#FAFAF8', overflow: 'hidden' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', paddingLeft: 24 }}>
           <div style={{ marginBottom: 48 }}>
@@ -768,7 +768,7 @@ export default function LandingPage({ config, toolHref, pageId, inlineToolType }
             <h2 style={styles.h2}>Loved by creators & businesses</h2>
           </div>
         </div>
-        {/* Scrolling marquee — split into 2 rows */}
+        {/* Scrolling marquee â€” split into 2 rows */}
         {[0, 1].map(row => (
           <div key={row} style={{ overflow: 'hidden', marginBottom: 16 }}>
             <div style={{
@@ -779,7 +779,7 @@ export default function LandingPage({ config, toolHref, pageId, inlineToolType }
               {[...testimonials, ...testimonials].map((t, idx) => (
                 <div key={idx} style={{ width: 320, flexShrink: 0, background: '#fff', borderRadius: 16, padding: '24px 22px', border: '1.5px solid #E8E4DC', boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}>
                   <div style={{ display: 'flex', gap: 2, marginBottom: 12 }}>
-                    {Array.from({ length: 5 }).map((_, i) => <span key={i} style={{ color: '#F59E0B', fontSize: 14 }}>★</span>)}
+                    {Array.from({ length: 5 }).map((_, i) => <span key={i} style={{ color: '#F59E0B', fontSize: 14 }}>â˜…</span>)}
                   </div>
                   <p style={{ margin: '0 0 16px', fontSize: 14, color: '#3D2E1E', lineHeight: 1.7, fontStyle: 'italic' }}>&ldquo;{t.quote}&rdquo;</p>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -800,7 +800,7 @@ export default function LandingPage({ config, toolHref, pageId, inlineToolType }
         `}</style>
       </section>
 
-      {/* ══ COMPARISON ═════════════════════════════════════════════════════════ */}
+      {/* â•â• COMPARISON â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       {comparison && (() => {
         const alt1 = comparison[0].alt1name
         const alt2 = comparison[0].alt2name
@@ -817,7 +817,7 @@ export default function LandingPage({ config, toolHref, pageId, inlineToolType }
                   <thead>
                     <tr style={{ background: '#FAFAF8' }}>
                       <th style={{ textAlign: 'left', padding: '14px 20px', color: '#6B5B4E', fontWeight: 700, fontSize: 12, borderBottom: '1.5px solid #E8E4DC' }}>Feature</th>
-                      <th style={{ textAlign: 'center', padding: '14px 20px', color: '#7C3AED', fontWeight: 900, fontSize: 12, background: '#F5F0FF', borderBottom: '1.5px solid #E8E4DC' }}>✦ JPT AI</th>
+                      <th style={{ textAlign: 'center', padding: '14px 20px', color: '#7C3AED', fontWeight: 900, fontSize: 12, background: '#F5F0FF', borderBottom: '1.5px solid #E8E4DC' }}>âœ¦ JPT AI</th>
                       <th style={{ textAlign: 'center', padding: '14px 20px', color: '#6B5B4E', fontWeight: 700, fontSize: 12, borderBottom: '1.5px solid #E8E4DC' }}>{alt1}</th>
                       <th style={{ textAlign: 'center', padding: '14px 20px', color: '#6B5B4E', fontWeight: 700, fontSize: 12, borderBottom: '1.5px solid #E8E4DC' }}>{alt2}</th>
                     </tr>
@@ -827,13 +827,13 @@ export default function LandingPage({ config, toolHref, pageId, inlineToolType }
                       <tr key={row.feature} style={{ borderBottom: i < comparison.length - 1 ? '1px solid #F0EAE0' : 'none' }}>
                         <td style={{ padding: '13px 20px', color: '#3D2E1E', fontWeight: 500 }}>{row.feature}</td>
                         <td style={{ textAlign: 'center', padding: '13px 20px', background: '#FAF8FF' }}>
-                          <span style={{ color: row.jpt ? '#16A34A' : '#DC2626', fontSize: 20, fontWeight: 900 }}>{row.jpt ? '✓' : '✗'}</span>
+                          <span style={{ color: row.jpt ? '#16A34A' : '#DC2626', fontSize: 20, fontWeight: 900 }}>{row.jpt ? 'âœ“' : 'âœ—'}</span>
                         </td>
                         <td style={{ textAlign: 'center', padding: '13px 20px' }}>
-                          <span style={{ color: row.alt1 ? '#16A34A' : '#DC2626', fontSize: 20, fontWeight: 900 }}>{row.alt1 ? '✓' : '✗'}</span>
+                          <span style={{ color: row.alt1 ? '#16A34A' : '#DC2626', fontSize: 20, fontWeight: 900 }}>{row.alt1 ? 'âœ“' : 'âœ—'}</span>
                         </td>
                         <td style={{ textAlign: 'center', padding: '13px 20px' }}>
-                          <span style={{ color: row.alt2 ? '#16A34A' : '#DC2626', fontSize: 20, fontWeight: 900 }}>{row.alt2 ? '✓' : '✗'}</span>
+                          <span style={{ color: row.alt2 ? '#16A34A' : '#DC2626', fontSize: 20, fontWeight: 900 }}>{row.alt2 ? 'âœ“' : 'âœ—'}</span>
                         </td>
                       </tr>
                     ))}
@@ -845,7 +845,7 @@ export default function LandingPage({ config, toolHref, pageId, inlineToolType }
         )
       })()}
 
-      {/* ══ RELATED TOOLS ══════════════════════════════════════════════════════ */}
+      {/* â•â• RELATED TOOLS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       <section style={{ padding: '80px 0', background: '#FAFAF8', overflow: 'hidden' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', paddingLeft: 24, marginBottom: 40 }}>
           <div style={styles.sectionLabel}>Related Tools</div>
@@ -866,7 +866,7 @@ export default function LandingPage({ config, toolHref, pageId, inlineToolType }
         </div>
       </section>
 
-      {/* ══ MID-PAGE CTA ═══════════════════════════════════════════════════════ */}
+      {/* â•â• MID-PAGE CTA â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       <section style={{ padding: '0 24px 96px' }}>
         <div style={{ maxWidth: 800, margin: '0 auto', background: '#1A1008', borderRadius: 28, padding: '64px 56px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', top: -80, right: -80, width: 280, height: 280, background: 'radial-gradient(circle, rgba(124,58,237,0.3) 0%, transparent 70%)', pointerEvents: 'none' }} />
@@ -880,13 +880,13 @@ export default function LandingPage({ config, toolHref, pageId, inlineToolType }
               href={toolHref}
               style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#fff', color: '#1A1008', fontWeight: 800, fontSize: 16, padding: '16px 40px', borderRadius: 14, textDecoration: 'none', letterSpacing: '-0.01em' }}
             >
-              {config.cta_text || 'Try It Free'} →
+              {config.cta_text || 'Try It Free'} â†’
             </a>
           </div>
         </div>
       </section>
 
-      {/* ══ SEO CONTENT ════════════════════════════════════════════════════════ */}
+      {/* â•â• SEO CONTENT â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       <section style={{ padding: '0 24px 96px', background: '#FAFAF8' }}>
         <div style={{ maxWidth: 900, margin: '0 auto' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '40px 56px' }}>
@@ -900,7 +900,7 @@ export default function LandingPage({ config, toolHref, pageId, inlineToolType }
         </div>
       </section>
 
-      {/* ══ FAQ ════════════════════════════════════════════════════════════════ */}
+      {/* â•â• FAQ â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       {config.faq?.length > 0 && (
         <section style={{ padding: '0 24px 96px', background: '#fff' }}>
           <div style={{ maxWidth: 720, margin: '0 auto' }}>
@@ -916,3 +916,4 @@ export default function LandingPage({ config, toolHref, pageId, inlineToolType }
     </div>
   )
 }
+

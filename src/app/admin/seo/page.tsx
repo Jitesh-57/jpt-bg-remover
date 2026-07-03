@@ -1,7 +1,7 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { PageSEO, PageFeature, PageFAQ } from '@/lib/page-config'
+import { PageSEO, PageFeature, PageFAQ } from '@/lib/page-types'
 
 const ADMIN_EMAILS = ['jiteshpatil@gofynd.com', 'patil.jitesh866@gmail.com']
 
@@ -392,3 +392,4 @@ export default function AdminSEOPage() {
     </div>
   )
 }
+
