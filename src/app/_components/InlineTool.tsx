@@ -379,52 +379,18 @@ export default function InlineTool({ toolType, beforeImg, afterImg, beforeLabel 
           </div>
           <div style={{ textAlign: 'center', fontSize: 12, color: '#9CA3AF', marginTop: 8 }}>← Drag slider to compare</div>
 
-          {/* Download + post-transform actions */}
-          <div style={{ marginTop: 24, background: '#F9FAFB', borderRadius: 20, padding: '24px 28px', border: '1.5px solid #E5E7EB' }}>
-            {/* Primary: Download */}
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 20, flexWrap: 'wrap' }}>
             <button
               onClick={handleDownload}
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: 'linear-gradient(135deg, #6366F1, #8B5CF6)', color: '#fff', fontWeight: 800, fontSize: 16, padding: '16px', borderRadius: 14, border: 'none', cursor: 'pointer', boxShadow: '0 6px 24px rgba(99,102,241,0.35)', width: '100%', marginBottom: 12 }}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg, #6366F1, #8B5CF6)', color: '#fff', fontWeight: 800, fontSize: 15, padding: '14px 36px', borderRadius: 12, border: 'none', cursor: 'pointer', boxShadow: '0 6px 24px rgba(99,102,241,0.4)' }}
             >
-              ⬇&nbsp; Download {cfg.downloadExt.toUpperCase()} — Free, No Watermark
+              ⬇️ Download {cfg.downloadExt.toUpperCase()}
             </button>
-
-            {/* Upsell row */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 12 }}>
-              <button
-                onClick={() => {
-                  if (resultDataUrl) {
-                    try { sessionStorage.setItem('jpt_editor_img', resultDataUrl) } catch {}
-                  }
-                  window.location.href = '/editor'
-                }}
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7, background: '#fff', color: '#111827', fontWeight: 700, fontSize: 14, padding: '13px 16px', borderRadius: 12, border: '2px solid #E5E7EB', cursor: 'pointer', textAlign: 'center' as const }}
-              >
-                <span style={{ fontSize: 18 }}>✏️</span>
-                <span>Edit in AI Editor</span>
-              </button>
-              <button
-                onClick={() => { window.location.href = '/editor?mode=batch' }}
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7, background: '#fff', color: '#111827', fontWeight: 700, fontSize: 14, padding: '13px 16px', borderRadius: 12, border: '2px solid #E5E7EB', cursor: 'pointer', textAlign: 'center' as const }}
-              >
-                <span style={{ fontSize: 18 }}>📦</span>
-                <span>Batch Process</span>
-              </button>
-            </div>
-
-            {/* Hint text */}
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, background: '#EEF2FF', borderRadius: 12, padding: '12px 14px', marginBottom: 14 }}>
-              <span style={{ fontSize: 16, flexShrink: 0 }}>💡</span>
-              <p style={{ margin: 0, fontSize: 13, color: '#3730A3', lineHeight: 1.5 }}>
-                <strong>Want more?</strong> Open in AI Editor to apply prompts, swap backgrounds, add effects, or touch up details. Use Batch Process to handle 10+ images at once.
-              </p>
-            </div>
-
             <button
               onClick={reset}
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, background: 'transparent', color: '#6B7280', fontWeight: 600, fontSize: 14, padding: '10px', borderRadius: 10, border: '1px solid #E5E7EB', cursor: 'pointer', width: '100%' }}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#F3F4F6', color: '#374151', fontWeight: 700, fontSize: 15, padding: '14px 24px', borderRadius: 12, border: '1.5px solid #E5E7EB', cursor: 'pointer' }}
             >
-              Process Another Image
+              🔄 Process Another
             </button>
           </div>
         </div>
