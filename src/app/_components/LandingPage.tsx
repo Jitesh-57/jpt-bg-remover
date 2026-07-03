@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef } from 'react'
+import { useRef, useState, DragEvent } from 'react'
 import FAQAccordion from './FAQAccordion'
 import { PageSEO } from '@/lib/page-config'
 import { PAGE_IMAGES, PAGE_BEFORE_AFTER } from '@/lib/landing-images'
@@ -172,6 +172,7 @@ export default function LandingPage({ config, toolHref, pageId }: LandingPagePro
   const heroImg = PAGE_IMAGES[pageId]
   const beforeAfter = PAGE_BEFORE_AFTER[pageId]
   const fileRef = useRef<HTMLInputElement>(null)
+  const [isDragging, setIsDragging] = useState(false)
 
   const editorTool = PAGE_TOOL[pageId]
 
@@ -185,9 +186,15 @@ export default function LandingPage({ config, toolHref, pageId }: LandingPagePro
       } catch {}
       window.location.href = `/editor?tool=${editorTool}`
     } else {
-      // headshot — just navigate, the headshot page has its own upload
       window.location.href = toolHref
     }
+  }
+
+  const handleDrop = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    setIsDragging(false)
+    const f = e.dataTransfer.files?.[0]
+    if (f) handleUploadAndRedirect(f)
   }
 
   const handleCTAClick = () => {
@@ -216,19 +223,83 @@ export default function LandingPage({ config, toolHref, pageId }: LandingPagePro
             {config.subtitle}
           </p>
 
-          {/* Hidden file input for upload-then-redirect */}
+          {/* Hidden file input */}
           <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }}
-            onChange={e => { const f = e.target.files?.[0]; if (f) handleUploadAndRedirect(f); e.target.value = ''; }} />
+            onChange={e => { const f = e.target.files?.[0]; if (f) handleUploadAndRedirect(f); e.target.value = '' }} />
 
-          <button
-            onClick={handleCTAClick}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg, #6366F1, #8B5CF6)', color: '#fff', fontWeight: 800, fontSize: 16, padding: '16px 36px', borderRadius: 14, border: 'none', cursor: 'pointer', boxShadow: '0 8px 30px rgba(99,102,241,0.4)', letterSpacing: '-0.01em' }}
-          >
-            {editorTool ? '📂 ' : ''}{config.cta_text || 'Try It Free'} →
-          </button>
-          <div style={{ fontSize: 13, color: '#9CA3AF', marginTop: 12 }}>
-            {editorTool ? 'Upload an image to get started · No credit card required' : 'No credit card required · 5 free trials included'}
-          </div>
+          {editorTool ? (
+            /* ── Upload box ── */
+            <div
+              onDragOver={e => { e.preventDefault(); setIsDragging(true) }}
+              onDragLeave={() => setIsDragging(false)}
+              onDrop={handleDrop}
+              style={{
+                maxWidth: 540, margin: '0 auto',
+                border: `2px dashed ${isDragging ? '#6366F1' : '#C4C9F0'}`,
+                borderRadius: 20,
+                background: isDragging ? '#EEF2FF' : '#FAFBFF',
+                padding: '36px 32px 28px',
+                cursor: 'pointer',
+                transition: 'border-color 0.18s, background 0.18s',
+                boxShadow: isDragging ? '0 0 0 4px rgba(99,102,241,0.12)' : '0 2px 24px rgba(99,102,241,0.07)',
+              }}
+              onClick={() => fileRef.current?.click()}
+            >
+              {/* Upload icon */}
+              <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'linear-gradient(135deg,#EEF2FF,#E0E7FF)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', fontSize: 24 }}>
+                📤
+              </div>
+
+              <div style={{ fontSize: 15, fontWeight: 700, color: '#111827', marginBottom: 6 }}>
+                Drop your image here
+              </div>
+              <div style={{ fontSize: 13, color: '#9CA3AF', marginBottom: 22 }}>
+                or click to browse from your device
+              </div>
+
+              <button
+                onClick={e => { e.stopPropagation(); fileRef.current?.click() }}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 8,
+                  background: 'linear-gradient(135deg,#6366F1,#8B5CF6)', color: '#fff',
+                  fontWeight: 800, fontSize: 15, padding: '13px 32px', borderRadius: 12,
+                  border: 'none', cursor: 'pointer', boxShadow: '0 6px 22px rgba(99,102,241,0.38)',
+                  letterSpacing: '-0.01em', marginBottom: 16,
+                }}
+              >
+                + Upload Image
+              </button>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, justifyContent: 'center', marginBottom: 14 }}>
+                <div style={{ height: 1, flex: 1, background: '#E5E7EB' }} />
+                <span style={{ fontSize: 12, color: '#CBD5E1', fontWeight: 600 }}>or drop image anywhere</span>
+                <div style={{ height: 1, flex: 1, background: '#E5E7EB' }} />
+              </div>
+
+              <div style={{ fontSize: 11, color: '#C4C8D4', lineHeight: 1.6 }}>
+                Supports JPG · JPEG · PNG · WEBP · up to 16 MB
+              </div>
+              <div style={{ fontSize: 11, color: '#D1D5DB', marginTop: 10 }}>
+                By uploading you agree to our{' '}
+                <a href="/terms" onClick={e => e.stopPropagation()} style={{ color: '#9CA3AF', textDecoration: 'underline' }}>Terms of Use</a>
+                {' '}and{' '}
+                <a href="/privacy" onClick={e => e.stopPropagation()} style={{ color: '#9CA3AF', textDecoration: 'underline' }}>Privacy Policy</a>
+              </div>
+            </div>
+          ) : (
+            /* ── Regular CTA for pages without direct upload (headshot etc.) ── */
+            <>
+              <button
+                onClick={handleCTAClick}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg, #6366F1, #8B5CF6)', color: '#fff', fontWeight: 800, fontSize: 16, padding: '16px 36px', borderRadius: 14, border: 'none', cursor: 'pointer', boxShadow: '0 8px 30px rgba(99,102,241,0.4)', letterSpacing: '-0.01em' }}
+              >
+                {config.cta_text || 'Try It Free'} →
+              </button>
+              <div style={{ fontSize: 13, color: '#9CA3AF', marginTop: 12 }}>
+                No credit card required · 5 free trials included
+              </div>
+            </>
+          )}
         </div>
 
         {/* Showcase visual — before/after split, single image, or gradient fallback */}
