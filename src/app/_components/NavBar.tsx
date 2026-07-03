@@ -16,25 +16,18 @@ const TOOLS = [
   {
     section: "AI Tools",
     items: [
-      { icon: "🔍", label: "AI Upscale",          desc: "Enhance resolution up to 4×",           href: "/upscale" },
-      { icon: "🪄", label: "Remove Background",    desc: "AI-powered, perfect edge detection",    href: "/remove-bg" },
-      { icon: "🎯", label: "AI Headshot",          desc: "Professional headshots from any photo", href: "/ai-headshot" },
-      { icon: "✍️", label: "AI Photo Editor",     desc: "Edit images with text prompts",         href: "/ai-editor" },
-      { icon: "🌅", label: "Change Background",    desc: "Replace any background with AI",        href: "/change-background" },
-      { icon: "✨", label: "Photo Enhancer",       desc: "Restore & enhance old or blurry photos",href: "/photo-enhancer" },
-      { icon: "🗑️", label: "Watermark Remover",   desc: "Remove watermarks & text overlays",     href: "/watermark-remover" },
+      { icon: "🔍", label: "AI Upscale",     desc: "Enhance resolution up to 4×",           href: "/upscale" },
+      { icon: "🪄", label: "Remove BG (AI)",  desc: "AI-powered, higher quality",            href: "/remove-bg" },
+      { icon: "🎯", label: "AI Headshot",    desc: "Professional headshots from any photo", href: "/ai-headshot" },
+      { icon: "✍️", label: "AI Editor",     desc: "Edit images with text prompts",         href: "/ai-editor" },
     ],
   },
   {
-    section: "Utility Tools",
+    section: "Tools",
     items: [
-      { icon: "⚡",  label: "Compress Image",      desc: "Reduce file size up to 80%",           href: "/compress-image" },
-      { icon: "⬜",  label: "White Background",    desc: "Amazon & e-commerce product photos",   href: "/make-background-white" },
-      { icon: "📸",  label: "Passport Photo",      desc: "US passport photo — 2×2 inch",        href: "/passport-photo" },
-      { icon: "🔄",  label: "Convert to PNG",      desc: "JPG / WEBP → PNG, lossless",          href: "/convert-to-png" },
-      { icon: "🔄",  label: "Convert to JPG",      desc: "PNG / WEBP → JPG, smaller size",      href: "/convert-to-jpg" },
-      { icon: "🖼️", label: "Image Editor",        desc: "Full-featured photo editor",           href: "/editor" },
-      { icon: "⚡",  label: "Batch Editor",        desc: "Process up to 100 images at once",    href: "/batch-editor" },
+      { icon: "🖼️", label: "Image Editor",   desc: "Full-featured photo editor",           href: "/editor" },
+      { icon: "⚡",  label: "Batch Editor",   desc: "Process up to 100 images at once",     href: "/batch-editor" },
+      { icon: "✦",  label: "My Generations", desc: "View your saved edits",                href: "/generations" },
     ],
   },
 ];
