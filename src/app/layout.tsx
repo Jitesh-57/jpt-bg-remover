@@ -17,22 +17,8 @@ export const metadata: Metadata = {
   keywords: ["ai image editor free", "remove background free", "image upscaler free", "ai photo editor online", "background remover free"],
   metadataBase: new URL(BASE),
   icons: { icon: LOGO_URL, shortcut: LOGO_URL, apple: LOGO_URL },
-  alternates: {
-    canonical: BASE,
-    languages: {
-      "x-default": BASE,
-      en: BASE,
-      hi: BASE,
-      es: BASE,
-      fr: BASE,
-      pt: BASE,
-      de: BASE,
-      ar: BASE,
-      ja: BASE,
-      "zh-CN": BASE,
-      ko: BASE,
-    },
-  },
+  // No canonical here — each page sets its own. A layout-level canonical
+  // would incorrectly point every subpage at the homepage.
   openGraph: {
     type: "website",
     siteName: "JPT AI",

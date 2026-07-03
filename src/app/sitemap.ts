@@ -14,11 +14,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/remove-bg`,        lastModified: now, changeFrequency: "monthly", priority: 0.95 },
     { url: `${BASE}/ai-editor`,        lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/ai-headshot`,      lastModified: now, changeFrequency: "monthly", priority: 0.9 },
-    { url: `${BASE}/editor`,           lastModified: now, changeFrequency: "monthly", priority: 0.85 },
+    // /editor is noindex (tool UI) — excluded from sitemap
     { url: `${BASE}/batch-editor`,     lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/pricing`,          lastModified: now, changeFrequency: "monthly", priority: 0.75 },
     { url: `${BASE}/blog`,             lastModified: now, changeFrequency: "weekly",  priority: 0.8 },
-    { url: `${BASE}${CREATIVE_BASE}`,  lastModified: now, changeFrequency: "weekly", priority: 0.9 },
+    { url: `${BASE}${CREATIVE_BASE}`,  lastModified: now, changeFrequency: "weekly",  priority: 0.9 },
     { url: `${BASE}/privacy`,          lastModified: now, changeFrequency: "yearly",  priority: 0.3 },
     { url: `${BASE}/terms`,            lastModified: now, changeFrequency: "yearly",  priority: 0.3 },
   ];
