@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import LandingPageClient from "./_components/LandingPageClient";
 
 export const metadata: Metadata = {
-  title: "JPT AI — Free AI Image Editor | Remove Background, Upscale & Edit Photos Online",
+  title: { absolute: "JPT AI — Free AI Image Editor | Remove Background, Upscale & Edit Photos Online" },
   description:
     "Free AI image editor online. Remove backgrounds in one click, upscale photos to 4K, generate AI backgrounds, and edit images with text prompts. No software needed.",
   keywords: [

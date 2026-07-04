@@ -4,7 +4,7 @@ import { POSTS } from "./_data/posts";
 import BlogImageFiller from "./BlogImageFiller";
 
 export const metadata: Metadata = {
-  title: "AI Image Editing Blog — Tips, Tutorials & Guides | JPT AI",
+  title: { absolute: "AI Image Editing Blog — Tips, Tutorials & Guides | JPT AI" },
   description:
     "Learn how to remove backgrounds, upscale images, generate AI headshots, and edit photos with text prompts. Tutorials and guides from the JPT AI team.",
   keywords: [

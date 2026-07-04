@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terms of Service | JPT AI",
+  title: { absolute: "Terms of Service | JPT AI" },
   description: "Terms of Service for JPT AI — rules and conditions for using our AI image editing tools.",
 };
 

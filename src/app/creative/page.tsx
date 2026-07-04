@@ -5,7 +5,7 @@ const BASE = "https://www.sjpt.io";
 const URL = `${BASE}${CREATIVE_BASE}`;
 
 export const metadata: Metadata = {
-  title: "JPT AI Creative Apps — Free AI Photo Generators Online | JPT AI",
+  title: { absolute: "JPT AI Creative Apps — Free AI Photo Generators Online | JPT AI" },
   description:
     "Free JPT AI Creative apps — saree photoshoot, 3D figurine, retro Bollywood, pet portrait, anime and more. Upload a photo and get the result right on the page. No app, no watermark.",
   keywords: "ai creative apps, ai photo generator free, ai photoshoot online, ai photo trends, free ai photo editor apps",

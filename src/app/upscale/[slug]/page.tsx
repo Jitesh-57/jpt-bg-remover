@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!v) return {};
   const url = `${BASE}${PARENT_META[PARENT].base}/${slug}`;
   return {
-    title: v.title,
+    title: { absolute: v.title },
     description: v.metaDescription,
     keywords: v.keywords,
     alternates: { canonical: url },

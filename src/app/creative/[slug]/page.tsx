@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!a) return {};
   const url = `${BASE}${CREATIVE_BASE}/${slug}`;
   return {
-    title: a.title,
+    title: { absolute: a.title },
     description: a.metaDescription,
     keywords: a.keywords,
     alternates: { canonical: url },

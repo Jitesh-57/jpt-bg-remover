@@ -5,7 +5,7 @@ import LandingPage from '../_components/LandingPage'
 export async function generateMetadata(): Promise<Metadata> {
   const config = await getPageConfig('ai-editor')
   return {
-    title: config.title,
+    title: { absolute: config.title },
     description: config.meta_description,
     keywords: config.keywords,
     openGraph: {
