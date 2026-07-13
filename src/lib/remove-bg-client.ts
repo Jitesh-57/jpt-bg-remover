@@ -1,13 +1,13 @@
 "use client";
 
-// Background removal for the "Remove BG" tool — free for everyone.
+// Free, unlimited background removal — 100% in-browser via
+// @imgly/background-removal. Runs entirely on the user's device: no server,
+// no Gemini, no credits, no quota.
 //
-// Two engines, tried in order:
-//   1. In-browser (@imgly/background-removal) — free, on-device, no server,
-//      no Google quota. Best case: instant and private.
-//   2. Server fallback (/api/remove-bg → Gemini) — used if the in-browser
-//      engine fails to load/run (e.g. old device, model CDN blocked). The
-//      route is ungated/free, so this works for everyone too.
+// The first run downloads a small AI model to the device (cached afterwards,
+// so subsequent removals are instant and work offline). We use the "small"
+// (quantized) model so that one-time download is as light as possible for
+// mobile connections.
 
 function blobToDataUrl(blob: Blob): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -19,40 +19,30 @@ function blobToDataUrl(blob: Blob): Promise<string> {
 }
 
 /**
- * Free, in-browser background removal. Returns a transparent-PNG data URL.
- * The source is normalized to a Blob first — passing a data-URL string trips
- * the library's internal URL parsing on some builds ("e.replace is not a
- * function"); a Blob goes straight to the decode path and avoids it.
+ * Remove the background in-browser. Returns a transparent-PNG data URL.
+ *
+ * @param src   data-URL string or Blob (normalized to a Blob to avoid the
+ *              library's internal URL parsing).
+ * @param onProgress optional 0–100 callback, reports the one-time model
+ *              download progress so the UI can show it on slow connections.
  */
-export async function removeBackgroundLocal(src: string | Blob): Promise<string> {
+export async function removeBackgroundLocal(
+  src: string | Blob,
+  onProgress?: (percent: number) => void
+): Promise<string> {
   const blob = typeof src === "string" ? await (await fetch(src)).blob() : src;
   const { removeBackground } = await import("@imgly/background-removal");
-  const out = await removeBackground(blob, { output: { format: "image/png" } });
-  return blobToDataUrl(out);
-}
-
-/** Server (Gemini) fallback. Returns a data URL or throws with the server error. */
-async function removeBackgroundServer(dataUrl: string): Promise<string> {
-  const res = await fetch("/api/remove-bg", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ dataUrl }),
+  const out = await removeBackground(blob, {
+    model: "isnet_quint8", // smallest (quantized) model → fastest first-load download
+    output: { format: "image/png" },
+    progress: onProgress
+      ? (key: string, current: number, total: number) => {
+          // Only surface the model-download phase (key starts with "fetch").
+          if (key.startsWith("fetch") && total > 0) {
+            onProgress(Math.min(99, Math.round((current / total) * 100)));
+          }
+        }
+      : undefined,
   });
-  let data: { dataUrl?: string; error?: string } = {};
-  try { data = await res.json(); } catch { /* non-JSON */ }
-  if (res.ok && data.dataUrl) return data.dataUrl;
-  throw new Error(data.error || "Background removal failed. Please try again.");
-}
-
-/**
- * Remove the background, preferring the free in-browser engine and falling
- * back to the server if it can't run. Free for everyone either way.
- */
-export async function removeBackgroundSmart(dataUrl: string): Promise<string> {
-  try {
-    return await removeBackgroundLocal(dataUrl);
-  } catch (localErr) {
-    console.warn("[remove-bg] in-browser engine failed, falling back to server:", localErr);
-    return removeBackgroundServer(dataUrl);
-  }
+  return blobToDataUrl(out);
 }
