@@ -8,7 +8,7 @@ import {
   trackPaymentPopupTriggered, trackBuyButtonClicked, trackDownloadButtonClicked, setAnalyticsUser,
   trackBeginCheckout, trackPurchase, trackPaymentFailed,
 } from "@/lib/analytics";
-import { removeBackgroundLocal } from "@/lib/remove-bg-client";
+import { removeBackgroundSmart } from "@/lib/remove-bg-client";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -817,12 +817,12 @@ export default function ImageEditorPage() {
     // free, unlimited, no sign-in and no credits, like Upscale/Resize/Adjust.
     setProcessing(true); setProcessingLabel("Removing background…"); setError(null); setRemoveBgProgress(20);
     try {
-      const localUrl = await removeBackgroundLocal(src);
+      const resultUrl = await removeBackgroundSmart(src);
       setEditHistory(prev => working ? [...prev, working] : prev);
-      setWorking(localUrl);
+      setWorking(resultUrl);
       setRemoveBgProgress(100);
       trackImageTransformed("remove-bg");
-      autoSaveToDrive(localUrl, "remove-bg", "Background Removed");
+      autoSaveToDrive(resultUrl, "remove-bg", "Background Removed");
     } catch (e) {
       trackImageTransformedFailed("remove-bg", (e as Error).message || "remove_bg_failed");
       setError((e as Error).message || "Background removal failed");
