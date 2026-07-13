@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { runPixelBinPredictionAsDataUrl } from "@/lib/pixelbin";
+import { geminiEditImage } from "@/lib/gemini";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
@@ -41,9 +41,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "bgType must be 'color', 'image', or 'prompt'" }, { status: 400 });
     }
 
-    const resultDataUrl = await runPixelBinPredictionAsDataUrl(imageUrl, "nanoBananaPro", "generate", {
-      prompt,
-    });
+    const resultDataUrl = await geminiEditImage(imageUrl, prompt);
 
     return NextResponse.json({ url: resultDataUrl });
   } catch (e) {

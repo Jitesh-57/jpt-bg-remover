@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminSupabase } from "@/lib/auth";
-import { generateImageFromText } from "@/lib/pixelbin";
+import { geminiGenerateFromText } from "@/lib/gemini";
 import { deriveBlogPrompt } from "@/lib/blog-images";
 import { POSTS } from "@/app/blog/_data/posts";
 
@@ -47,7 +47,7 @@ export async function GET(req: NextRequest) {
         }
       }
       const prompt = deriveBlogPrompt(post.title, post.category);
-      const url = await generateImageFromText(prompt, { aspect_ratio: "16:9", output_resolution: "1K" });
+      const url = await geminiGenerateFromText(prompt, { aspect_ratio: "16:9" });
       const res = await fetch(url);
       if (!res.ok) throw new Error(`fetch result ${res.status}`);
       const bytes = Buffer.from(await res.arrayBuffer());

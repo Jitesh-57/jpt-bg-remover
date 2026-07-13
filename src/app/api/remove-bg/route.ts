@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkAuth, checkEntitlement, withCredits } from "@/lib/auth";
-import { runPixelBinPredictionAsDataUrl } from "@/lib/pixelbin";
+import { geminiRemoveBg } from "@/lib/gemini";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
   if (blocked) return blocked;
 
   try {
-    const resultDataUrl = await runPixelBinPredictionAsDataUrl(src, "erase", "bg");
+    const resultDataUrl = await geminiRemoveBg(src);
     return withCredits({ dataUrl: resultDataUrl }, session!, "standard", req, "remove-bg");
   } catch (e) {
     console.error("[remove-bg]", e);

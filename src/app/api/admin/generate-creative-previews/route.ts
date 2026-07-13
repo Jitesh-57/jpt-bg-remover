@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminSupabase } from "@/lib/auth";
-import { generateImageFromText } from "@/lib/pixelbin";
+import { geminiGenerateFromText } from "@/lib/gemini";
 import { CREATIVE_APPS } from "@/lib/creative-apps";
 
 export const runtime = "nodejs";
@@ -65,7 +65,7 @@ export async function GET(req: NextRequest) {
     try {
       if (!force && have.has(name)) { results[app.slug] = "skipped (exists)"; continue; }
       const prompt = buildPrompt(app.slug, app.prompt, before);
-      const cdnUrl = await generateImageFromText(prompt, { aspect_ratio: "16:9", output_resolution: "1K" });
+      const cdnUrl = await geminiGenerateFromText(prompt, { aspect_ratio: "16:9" });
       const res = await fetch(cdnUrl);
       if (!res.ok) throw new Error(`fetch ${res.status}`);
       const bytes = Buffer.from(await res.arrayBuffer());

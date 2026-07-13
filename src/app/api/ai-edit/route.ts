@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkAuth, checkEntitlement, withCredits } from "@/lib/auth";
-import { runPixelBinPredictionAsDataUrl } from "@/lib/pixelbin";
+import { geminiEditImage } from "@/lib/gemini";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
   if (blocked) return blocked;
 
   try {
-    const resultDataUrl = await runPixelBinPredictionAsDataUrl(src, "nanoBananaPro", "generate", { prompt });
+    const resultDataUrl = await geminiEditImage(src, prompt);
     return withCredits({ dataUrl: resultDataUrl }, session!, "ai", req, "ai-edit");
   } catch (e) {
     console.error("[ai-edit]", e);

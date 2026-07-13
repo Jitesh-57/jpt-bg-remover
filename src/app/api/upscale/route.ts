@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkAuth, withCredits } from "@/lib/auth";
-import { runPixelBinPredictionAsDataUrl } from "@/lib/pixelbin";
+import { geminiUpscale } from "@/lib/gemini";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
   if (!src) return NextResponse.json({ error: "dataUrl or imageUrl required" }, { status: 400 });
 
   try {
-    const resultDataUrl = await runPixelBinPredictionAsDataUrl(src, "sr", "upscale");
+    const resultDataUrl = await geminiUpscale(src, "2x");
     return withCredits({ dataUrl: resultDataUrl }, session!, "basic", req);
   } catch (e) {
     console.error("[upscale]", e);
