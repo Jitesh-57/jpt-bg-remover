@@ -31,6 +31,38 @@ function assertKey() {
   }
 }
 
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+// Pull Google's suggested retry delay (e.g. "9s") out of a 429 body, capped.
+function retryDelayMs(body: string, attempt: number): number {
+  const m = body.match(/"retryDelay":\s*"(\d+(?:\.\d+)?)s"/);
+  const suggested = m ? Math.ceil(parseFloat(m[1]) * 1000) : 0;
+  const backoff = 800 * 2 ** attempt; // 800ms, 1.6s, 3.2s…
+  return Math.min(Math.max(suggested, backoff), 6000);
+}
+
+// POST to Gemini with automatic retry on transient rate-limit/overload (429/503).
+async function postGemini(body: object): Promise<Response> {
+  assertKey();
+  const MAX_ATTEMPTS = 3;
+  let res: Response | null = null;
+  for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+    res = await fetch(`${ENDPOINT}?key=${API_KEY()}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    if (res.ok) return res;
+    if ((res.status === 429 || res.status === 503) && attempt < MAX_ATTEMPTS - 1) {
+      const errBody = await res.clone().text();
+      await sleep(retryDelayMs(errBody, attempt));
+      continue;
+    }
+    return res;
+  }
+  return res as Response;
+}
+
 function extractImage(json: {
   candidates?: { content?: { parts?: { inlineData?: { data: string; mimeType: string } }[] } }[];
 }): string {
@@ -45,15 +77,10 @@ function extractImage(json: {
 
 // Image-in / image-out edit.
 async function callGemini(src: string, text: string): Promise<string> {
-  assertKey();
   const imagePart = await srcToPart(src);
-  const res = await fetch(`${ENDPOINT}?key=${API_KEY()}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      contents: [{ parts: [imagePart, { text }] }],
-      generationConfig: { responseModalities: ["TEXT", "IMAGE"] },
-    }),
+  const res = await postGemini({
+    contents: [{ parts: [imagePart, { text }] }],
+    generationConfig: { responseModalities: ["TEXT", "IMAGE"] },
   });
 
   if (!res.ok) {
@@ -100,23 +127,18 @@ export async function geminiGenerateFromText(
   prompt: string,
   opts?: { aspect_ratio?: string }
 ): Promise<string> {
-  assertKey();
   const aspect = opts?.aspect_ratio || "16:9";
-  const res = await fetch(`${ENDPOINT}?key=${API_KEY()}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      contents: [
-        {
-          parts: [
-            {
-              text: `Generate a high-quality, photorealistic image (${aspect} aspect ratio): ${prompt}. Return only the image.`,
-            },
-          ],
-        },
-      ],
-      generationConfig: { responseModalities: ["TEXT", "IMAGE"] },
-    }),
+  const res = await postGemini({
+    contents: [
+      {
+        parts: [
+          {
+            text: `Generate a high-quality, photorealistic image (${aspect} aspect ratio): ${prompt}. Return only the image.`,
+          },
+        ],
+      },
+    ],
+    generationConfig: { responseModalities: ["TEXT", "IMAGE"] },
   });
 
   if (!res.ok) {

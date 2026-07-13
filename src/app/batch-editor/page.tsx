@@ -2,6 +2,7 @@
 
 import { useRef, useState, useCallback, useEffect } from "react";
 import PricingModal from "@/app/_components/PricingModal";
+import { removeBackgroundLocal } from "@/lib/remove-bg-client";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -232,9 +233,17 @@ export default function BatchEditorPage() {
         body: JSON.stringify(imgPayload),
       });
       const data = await res.json() as { dataUrl?: string; credits?: number; error?: string };
-      if (!res.ok) throw new Error(data.error || "Remove BG failed");
-      if (typeof data.credits === "number") setUser(u => u ? { ...u, credits: data.credits! } : u);
-      const cutout = data.dataUrl!;
+      let cutout: string;
+      if (res.ok && data.dataUrl) {
+        if (typeof data.credits === "number") setUser(u => u ? { ...u, credits: data.credits! } : u);
+        cutout = data.dataUrl;
+      } else if ([401, 402, 403, 503].includes(res.status)) {
+        // Auth / paywall gates — keep surfacing these, don't hand out free work.
+        throw new Error(data.error || "Remove BG failed");
+      } else {
+        // 500 / quota / unexpected — degrade to the free on-device engine.
+        cutout = await removeBackgroundLocal(src);
+      }
       // Composite onto background if needed
       if (removeBgOutput === "transparent") return cutout;
       const bgImg = await loadImg(cutout);

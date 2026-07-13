@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef, useState, useCallback } from 'react'
+import { removeBackgroundSmart, AuthRequiredError } from '@/lib/remove-bg-client'
 
 type Status = 'idle' | 'processing' | 'done' | 'error' | 'auth-required'
 
@@ -31,29 +32,17 @@ export default function BgRemoverPage() {
         reader.readAsDataURL(file)
       })
 
-      const res = await fetch('/api/remove-bg', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ dataUrl }),
-      })
-
-      const data = await res.json() as { dataUrl?: string; error?: string; upgradeRequired?: boolean }
-
-      if (!res.ok) {
-        if (res.status === 401) {
-          setStatus('auth-required')
-          return
-        }
-        setError(data.error || 'Background removal failed')
-        setStatus('error')
-        return
-      }
-
-      if (!data.dataUrl) { setError('No result returned'); setStatus('error'); return }
-      setResult(data.dataUrl)
+      // Tries Gemini (spends credits); on a quota/processing failure it falls
+      // back to free in-browser removal so the tool never fully goes down.
+      const { dataUrl: resultUrl } = await removeBackgroundSmart(dataUrl)
+      setResult(resultUrl)
       setStatus('done')
     } catch (e) {
-      setError(String(e))
+      if (e instanceof AuthRequiredError) {
+        setStatus('auth-required')
+        return
+      }
+      setError(e instanceof Error ? e.message : String(e))
       setStatus('error')
     }
   }, [])

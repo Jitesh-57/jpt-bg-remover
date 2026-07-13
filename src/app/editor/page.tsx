@@ -8,6 +8,7 @@ import {
   trackPaymentPopupTriggered, trackBuyButtonClicked, trackDownloadButtonClicked, setAnalyticsUser,
   trackBeginCheckout, trackPurchase, trackPaymentFailed,
 } from "@/lib/analytics";
+import { removeBackgroundLocal } from "@/lib/remove-bg-client";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -814,6 +815,24 @@ export default function ImageEditorPage() {
     trackTransformButtonClicked("remove-bg");
 
     setProcessing(true); setProcessingLabel("Removing background…"); setError(null); setRemoveBgProgress(20);
+
+    // Free in-browser fallback — used when Gemini is quota-limited/unavailable
+    // so this tool never fully goes down. Runs entirely on-device, no credits.
+    const applyLocalFallback = async (): Promise<void> => {
+      try {
+        setProcessingLabel("Removing background (free engine)…");
+        const localUrl = await removeBackgroundLocal(src);
+        setEditHistory(prev => working ? [...prev, working] : prev);
+        setWorking(localUrl);
+        setRemoveBgProgress(100);
+        trackImageTransformed("remove-bg");
+        autoSaveToDrive(localUrl, "remove-bg", "Background Removed");
+      } catch (err) {
+        trackImageTransformedFailed("remove-bg", "local_fallback_failed");
+        setError((err as Error).message || "Background removal failed");
+      }
+    };
+
     try {
       const res = await fetch("/api/remove-bg", {
         method: "POST",
@@ -834,21 +853,21 @@ export default function ImageEditorPage() {
           trackImageTransformedFailed("remove-bg", "trial_exhausted_or_upgrade_required");
           setShowUpgradeModal(true);
         } else {
-          trackImageTransformedFailed("remove-bg", data.error || "unknown_error");
-          setError(data.error || "Background removal failed");
+          // 500 / quota / unexpected — degrade to the free on-device engine.
+          await applyLocalFallback();
         }
         return;
       }
       if (typeof data.credits === "number") setUser(u => u ? { ...u, credits: data.credits! } : u);
-      if (!data.dataUrl) { trackImageTransformedFailed("remove-bg", "no_result"); setError("No result returned"); return; }
+      if (!data.dataUrl) { await applyLocalFallback(); return; }
       setEditHistory(prev => working ? [...prev, working] : prev);
       setWorking(data.dataUrl);
       setRemoveBgProgress(100);
       trackImageTransformed("remove-bg");
       autoSaveToDrive(data.dataUrl, "remove-bg", "Background Removed");
-    } catch (e) {
-      trackImageTransformedFailed("remove-bg", (e as Error).message || "network_error");
-      setError((e as Error).message || "Background removal failed");
+    } catch {
+      // Network error reaching the server — try the free on-device engine.
+      await applyLocalFallback();
     } finally {
       setProcessing(false); setProcessingLabel("");
     }
