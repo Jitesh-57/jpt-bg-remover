@@ -2,7 +2,7 @@
 
 import { useRef, useState, useCallback, useEffect } from "react";
 import PricingModal from "@/app/_components/PricingModal";
-import { removeBackgroundSmart } from "@/lib/remove-bg-client";
+import { removeBackgroundLocal } from "@/lib/remove-bg-client";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -227,8 +227,8 @@ export default function BatchEditorPage() {
       return data.dataUrl!;
     }
     if (tool === "remove-bg") {
-      // Free removal — in-browser engine with automatic server fallback.
-      const cutout = await removeBackgroundSmart(src);
+      // Free removal — 100% in-browser, no Gemini.
+      const cutout = await removeBackgroundLocal(src);
       // Composite onto background if needed
       if (removeBgOutput === "transparent") return cutout;
       const bgImg = await loadImg(cutout);

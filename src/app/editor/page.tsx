@@ -8,7 +8,7 @@ import {
   trackPaymentPopupTriggered, trackBuyButtonClicked, trackDownloadButtonClicked, setAnalyticsUser,
   trackBeginCheckout, trackPurchase, trackPaymentFailed,
 } from "@/lib/analytics";
-import { removeBackgroundSmart } from "@/lib/remove-bg-client";
+import { removeBackgroundLocal } from "@/lib/remove-bg-client";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -817,7 +817,7 @@ export default function ImageEditorPage() {
     // free, unlimited, no sign-in and no credits, like Upscale/Resize/Adjust.
     setProcessing(true); setProcessingLabel("Removing background…"); setError(null); setRemoveBgProgress(20);
     try {
-      const resultUrl = await removeBackgroundSmart(src);
+      const resultUrl = await removeBackgroundLocal(src, (p) => setRemoveBgProgress(Math.max(20, p)));
       setEditHistory(prev => working ? [...prev, working] : prev);
       setWorking(resultUrl);
       setRemoveBgProgress(100);
