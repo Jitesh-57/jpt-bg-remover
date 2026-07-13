@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState, useCallback } from 'react'
-import { removeBackgroundLocal } from '@/lib/remove-bg-client'
+import { removeBackgroundSmart } from '@/lib/remove-bg-client'
 
 type Status = 'idle' | 'processing' | 'done' | 'error' | 'auth-required'
 
@@ -32,8 +32,8 @@ export default function BgRemoverPage() {
         reader.readAsDataURL(file)
       })
 
-      // Runs entirely in the browser — free, no sign-in, no credits.
-      const resultUrl = await removeBackgroundLocal(dataUrl)
+      // Free in-browser engine, with automatic server fallback if it can't run.
+      const resultUrl = await removeBackgroundSmart(dataUrl)
       setResult(resultUrl)
       setStatus('done')
     } catch (e) {
