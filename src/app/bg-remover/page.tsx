@@ -1,9 +1,8 @@
 'use client'
 
 import { useRef, useState, useCallback } from 'react'
-import { removeBackgroundLocal } from '@/lib/remove-bg-client'
 
-type Status = 'idle' | 'processing' | 'done' | 'error' | 'auth-required'
+type Status = 'idle' | 'processing' | 'done' | 'error' | 'auth-required' | 'upgrade-required'
 
 export default function BgRemoverPage() {
   const [status, setStatus] = useState<Status>('idle')
@@ -32,9 +31,22 @@ export default function BgRemoverPage() {
         reader.readAsDataURL(file)
       })
 
-      // 100% in-browser — free, unlimited, no Gemini.
-      const resultUrl = await removeBackgroundLocal(dataUrl)
-      setResult(resultUrl)
+      const res = await fetch('/api/remove-bg', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ dataUrl }),
+      })
+      const data = await res.json() as { dataUrl?: string; error?: string; upgradeRequired?: boolean }
+
+      if (!res.ok) {
+        if (res.status === 401) { setStatus('auth-required'); return }
+        if (res.status === 402 || res.status === 403) { setStatus('upgrade-required'); return }
+        setError(data.error || 'Background removal failed')
+        setStatus('error')
+        return
+      }
+      if (!data.dataUrl) { setError('No result returned'); setStatus('error'); return }
+      setResult(data.dataUrl)
       setStatus('done')
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e))
@@ -74,7 +86,7 @@ export default function BgRemoverPage() {
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#EEF2FF', borderRadius: 20, padding: '6px 16px', marginBottom: 16 }}>
             <span style={{ fontSize: 16 }}>🪄</span>
-            <span style={{ fontSize: 13, fontWeight: 700, color: '#6366F1' }}>Unlimited · 100% Free</span>
+            <span style={{ fontSize: 13, fontWeight: 700, color: '#6366F1' }}>AI-Powered · Paid Plan</span>
           </div>
           <h1 style={{ fontSize: 40, fontWeight: 900, color: '#0F172A', margin: '0 0 12px', letterSpacing: '-0.02em' }}>
             Remove Background
@@ -103,7 +115,7 @@ export default function BgRemoverPage() {
               <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); e.target.value = '' }} />
             </div>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginTop: 32 }}>
-              {['✅ 100% free', '♾️ Unlimited removals', '🎯 AI-powered precision', '⚡ Results in seconds', '🖼️ Transparent PNG output'].map(f => (
+              {['✨ Gemini AI quality', '🎯 AI-powered precision', '⚡ Results in seconds', '🖼️ Transparent PNG output', '🔓 Included in paid plans'].map(f => (
                 <div key={f} style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: 20, padding: '8px 16px', fontSize: 13, color: '#374151', fontWeight: 600 }}>{f}</div>
               ))}
             </div>
@@ -115,9 +127,24 @@ export default function BgRemoverPage() {
           <div style={{ background: '#fff', borderRadius: 20, padding: 48, textAlign: 'center', boxShadow: '0 4px 20px rgba(0,0,0,0.06)' }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>🔐</div>
             <h2 style={{ fontSize: 24, fontWeight: 800, color: '#0F172A', margin: '0 0 12px' }}>Sign in to continue</h2>
-            <p style={{ fontSize: 16, color: '#64748B', margin: '0 0 24px' }}>Background removal uses AI credits. Sign in to use one of your 5 free trials.</p>
+            <p style={{ fontSize: 16, color: '#64748B', margin: '0 0 24px' }}>AI background removal is available on paid plans. Sign in to continue.</p>
             <a href="/auth/signin" style={{ display: 'inline-block', padding: '14px 32px', background: '#6366F1', color: '#fff', borderRadius: 12, fontWeight: 800, fontSize: 16, textDecoration: 'none' }}>
               Sign In
+            </a>
+            <button onClick={reset} style={{ display: 'block', margin: '16px auto 0', background: 'none', border: 'none', color: '#94A3B8', cursor: 'pointer', fontSize: 14 }}>
+              ← Try another image
+            </button>
+          </div>
+        )}
+
+        {/* Upgrade required */}
+        {status === 'upgrade-required' && (
+          <div style={{ background: '#fff', borderRadius: 20, padding: 48, textAlign: 'center', boxShadow: '0 4px 20px rgba(0,0,0,0.06)' }}>
+            <div style={{ fontSize: 48, marginBottom: 16 }}>✨</div>
+            <h2 style={{ fontSize: 24, fontWeight: 800, color: '#0F172A', margin: '0 0 12px' }}>Upgrade to remove backgrounds</h2>
+            <p style={{ fontSize: 16, color: '#64748B', margin: '0 0 24px' }}>AI background removal is a premium feature. Upgrade to a paid plan to use it.</p>
+            <a href="/pricing" style={{ display: 'inline-block', padding: '14px 32px', background: '#6366F1', color: '#fff', borderRadius: 12, fontWeight: 800, fontSize: 16, textDecoration: 'none' }}>
+              View Plans
             </a>
             <button onClick={reset} style={{ display: 'block', margin: '16px auto 0', background: 'none', border: 'none', color: '#94A3B8', cursor: 'pointer', fontSize: 14 }}>
               ← Try another image
