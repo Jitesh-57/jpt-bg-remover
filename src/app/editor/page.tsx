@@ -68,7 +68,7 @@ const BG_TEMPLATES = [
 const TOOLS: { id: Tool; icon: string; label: string; ai?: boolean; free?: boolean; paid?: boolean }[] = [
   { id: "ai-edit", icon: "✨", label: "AI Edit", ai: true, paid: true },
   { id: "generate-bg", icon: "🌅", label: "Generate BG", ai: true, paid: true },
-  { id: "remove-bg", icon: "🪄", label: "Remove BG", paid: true },
+  { id: "remove-bg", icon: "🪄", label: "Remove BG", paid: false },
   { id: "upscale", icon: "🔍", label: "Upscale", free: true },
   { id: "resize", icon: "↔️", label: "Resize", free: true },
   { id: "adjust", icon: "🎨", label: "Adjust", free: true },
@@ -811,63 +811,21 @@ export default function ImageEditorPage() {
   const handleRemoveBg = async () => {
     const src = working || original?.dataUrl;
     if (!src || processing) return;
-    if (requireSignIn()) return;
     trackTransformButtonClicked("remove-bg");
 
+    // Remove BG runs entirely in the browser (@imgly/background-removal) —
+    // free, unlimited, no sign-in and no credits, like Upscale/Resize/Adjust.
     setProcessing(true); setProcessingLabel("Removing background…"); setError(null); setRemoveBgProgress(20);
-
-    // Free in-browser fallback — used when Gemini is quota-limited/unavailable
-    // so this tool never fully goes down. Runs entirely on-device, no credits.
-    const applyLocalFallback = async (): Promise<void> => {
-      try {
-        setProcessingLabel("Removing background (free engine)…");
-        const localUrl = await removeBackgroundLocal(src);
-        setEditHistory(prev => working ? [...prev, working] : prev);
-        setWorking(localUrl);
-        setRemoveBgProgress(100);
-        trackImageTransformed("remove-bg");
-        autoSaveToDrive(localUrl, "remove-bg", "Background Removed");
-      } catch (err) {
-        trackImageTransformedFailed("remove-bg", "local_fallback_failed");
-        setError((err as Error).message || "Background removal failed");
-      }
-    };
-
     try {
-      const res = await fetch("/api/remove-bg", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ dataUrl: src }),
-      });
-      setRemoveBgProgress(90);
-      const data = await res.json() as { dataUrl?: string; credits?: number; error?: string; upgradeRequired?: boolean };
-      if (!res.ok) {
-        if (res.status === 402) {
-          trackImageTransformedFailed("remove-bg", data.upgradeRequired ? "upgrade_required" : "no_credits");
-          if (data.upgradeRequired) setShowUpgradeModal(true);
-          else setShowNoCreditsModal(true);
-        } else if (res.status === 401) {
-          trackImageTransformedFailed("remove-bg", "signin_required");
-          setShowSignInModal(true);
-        } else if (res.status === 403) {
-          trackImageTransformedFailed("remove-bg", "trial_exhausted_or_upgrade_required");
-          setShowUpgradeModal(true);
-        } else {
-          // 500 / quota / unexpected — degrade to the free on-device engine.
-          await applyLocalFallback();
-        }
-        return;
-      }
-      if (typeof data.credits === "number") setUser(u => u ? { ...u, credits: data.credits! } : u);
-      if (!data.dataUrl) { await applyLocalFallback(); return; }
+      const localUrl = await removeBackgroundLocal(src);
       setEditHistory(prev => working ? [...prev, working] : prev);
-      setWorking(data.dataUrl);
+      setWorking(localUrl);
       setRemoveBgProgress(100);
       trackImageTransformed("remove-bg");
-      autoSaveToDrive(data.dataUrl, "remove-bg", "Background Removed");
-    } catch {
-      // Network error reaching the server — try the free on-device engine.
-      await applyLocalFallback();
+      autoSaveToDrive(localUrl, "remove-bg", "Background Removed");
+    } catch (e) {
+      trackImageTransformedFailed("remove-bg", (e as Error).message || "remove_bg_failed");
+      setError((e as Error).message || "Background removal failed");
     } finally {
       setProcessing(false); setProcessingLabel("");
     }
@@ -1586,11 +1544,7 @@ export default function ImageEditorPage() {
               <div style={s.panelContent}>
                 <div style={s.panelTitle}>🪄 Remove Background</div>
                 <p style={s.panelSub}>Automatically remove the background from any image</p>
-                <div style={s.creditNote}>
-                  {user?.plan === "free"
-                    ? user.trialToolsUsed?.includes("remove-bg") ? `Free trial used · ${CREDIT_COST} credits after upgrading` : (user.trialsRemaining ?? 0) > 0 ? "1 free trial available" : "No free trials left · upgrade to use"
-                    : `Uses ${CREDIT_COST} credits · ${creditsLeft} remaining`}
-                </div>
+                <div style={s.creditNote}>Free · runs in your browser · no credits</div>
                 {processing && removeBgProgress > 0 && (
                   <div style={{ marginBottom: 14 }}>
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
@@ -1606,11 +1560,11 @@ export default function ImageEditorPage() {
                   </div>
                 )}
                 <button
-                  style={{ ...s.primaryBtn, background: "linear-gradient(135deg,#6366F1,#8B5CF6)", ...((processing || !authChecked) ? s.btnOff : {}) }}
-                  disabled={processing || !authChecked}
+                  style={{ ...s.primaryBtn, background: "linear-gradient(135deg,#6366F1,#8B5CF6)", ...(processing ? s.btnOff : {}) }}
+                  disabled={processing}
                   onClick={handleRemoveBg}
                 >
-                  {processing ? <span style={s.btnRow}><span style={s.spin} />Processing…</span> : !authChecked ? <span style={s.btnRow}><span style={s.spin} />Loading…</span> : "🪄 Remove Background"}
+                  {processing ? <span style={s.btnRow}><span style={s.spin} />Processing…</span> : "🪄 Remove Background"}
                 </button>
                 <p style={{ fontSize: 12, color: "#94A3B8", marginTop: 10, textAlign: "center" }}>
                   Result is a transparent PNG. Use Generate BG to swap in a new background.
@@ -1751,7 +1705,7 @@ export default function ImageEditorPage() {
               {[
                 { icon: "✨", label: "AI Edit", id: "ai-edit", cost: CREDIT_COST },
                 { icon: "🌅", label: "Generate BG", id: "generate-bg", cost: CREDIT_COST },
-                { icon: "🪄", label: "Remove BG", id: "remove-bg", cost: CREDIT_COST },
+                { icon: "🪄", label: "Remove BG", id: "remove-bg", cost: 0 },
                 { icon: "✨", label: "Upscale (Pro)", id: "upscale-pro", cost: CREDIT_COST },
                 { icon: "🔍", label: "Upscale (Normal)", id: "upscale", cost: 0 },
                 { icon: "↔️", label: "Resize", id: "resize", cost: 0 },
