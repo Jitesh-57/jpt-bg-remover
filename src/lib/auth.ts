@@ -23,6 +23,14 @@ export const BASIC_UPSCALE_COST = 1;
 export const FREE_TOOLS = ["resize", "color-adjust"];
 export const FREE_TRIAL_LIMIT = 5;
 
+// TEMPORARY: while the Gemini API project is still on Google's free tier
+// (paid-tier billing not yet activated), the AI tools that depend on Gemini
+// can't serve free-trial users — so they're paid-plan-only and free users get
+// the upgrade/payment popup on click. The web-native tools (Remove BG, basic
+// Upscale) run in the browser and stay free for everyone, unaffected by this.
+// Flip back to false to restore the 5-free-trial system once billing is live.
+export const AI_TOOLS_PAID_ONLY = true;
+
 export type Plan = "free" | "starter" | "creator" | "pro";
 
 export interface ProfileRow {
@@ -231,6 +239,15 @@ export async function withCredits(
     return NextResponse.json({ ...body, credits: newCredits });
   }
 
+  // Paid-only mode: free users get the upgrade popup instead of a free trial.
+  if (AI_TOOLS_PAID_ONLY) {
+    return NextResponse.json({
+      error: "AI tools are currently available on paid plans only. Upgrade to continue.",
+      upgradeRequired: true,
+      credits: session.credits,
+    }, { status: 403 });
+  }
+
   // Free plan: gated by the 5-distinct-tool trial system.
   if (!toolId) {
     console.error("[withCredits] missing toolId for free-plan ai/standard request");
@@ -299,6 +316,15 @@ export async function checkEntitlement(
       }, { status: 402 });
     }
     return null;
+  }
+
+  // Paid-only mode: free users get the upgrade popup instead of a free trial.
+  if (AI_TOOLS_PAID_ONLY) {
+    return NextResponse.json({
+      error: "AI tools are currently available on paid plans only. Upgrade to continue.",
+      upgradeRequired: true,
+      credits: session.credits,
+    }, { status: 403 });
   }
 
   if (!toolId) {

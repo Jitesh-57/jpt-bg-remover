@@ -33,7 +33,7 @@ const TRANSFORMS: { id: TransformType; label: string; icon: string; desc: string
   { id: "adjust",      label: "Color Adjust", icon: "🎨", desc: "Brightness / contrast / saturation",        creditsEach: 0 },
   { id: "upscale",     label: "Upscale",      icon: "🔍", desc: "2× or 4× super-resolution",                 creditsEach: 1 },
   { id: "ai-edit",     label: "AI Edit",      icon: "✨", desc: "Transform with text prompt via Gemini",     creditsEach: 2, aiOnly: true },
-  { id: "remove-bg",   label: "Remove BG",    icon: "🪄", desc: "Remove background via Gemini AI",           creditsEach: 2, aiOnly: true },
+  { id: "remove-bg",   label: "Remove BG",    icon: "🪄", desc: "Remove background — free, in your browser",  creditsEach: 0 },
   { id: "generate-bg", label: "Generate BG",  icon: "🌅", desc: "Replace background with AI scene",          creditsEach: 2, aiOnly: true },
 ];
 
@@ -227,23 +227,8 @@ export default function BatchEditorPage() {
       return data.dataUrl!;
     }
     if (tool === "remove-bg") {
-      const imgPayload = await uploadOrFallback(src);
-      const res = await fetch("/api/remove-bg", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(imgPayload),
-      });
-      const data = await res.json() as { dataUrl?: string; credits?: number; error?: string };
-      let cutout: string;
-      if (res.ok && data.dataUrl) {
-        if (typeof data.credits === "number") setUser(u => u ? { ...u, credits: data.credits! } : u);
-        cutout = data.dataUrl;
-      } else if ([401, 402, 403, 503].includes(res.status)) {
-        // Auth / paywall gates — keep surfacing these, don't hand out free work.
-        throw new Error(data.error || "Remove BG failed");
-      } else {
-        // 500 / quota / unexpected — degrade to the free on-device engine.
-        cutout = await removeBackgroundLocal(src);
-      }
+      // Free, in-browser removal — no server call, no credits (like Upscale).
+      const cutout = await removeBackgroundLocal(src);
       // Composite onto background if needed
       if (removeBgOutput === "transparent") return cutout;
       const bgImg = await loadImg(cutout);

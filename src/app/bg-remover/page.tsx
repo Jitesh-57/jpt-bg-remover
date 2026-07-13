@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState, useCallback } from 'react'
-import { removeBackgroundSmart, AuthRequiredError } from '@/lib/remove-bg-client'
+import { removeBackgroundLocal } from '@/lib/remove-bg-client'
 
 type Status = 'idle' | 'processing' | 'done' | 'error' | 'auth-required'
 
@@ -32,16 +32,11 @@ export default function BgRemoverPage() {
         reader.readAsDataURL(file)
       })
 
-      // Tries Gemini (spends credits); on a quota/processing failure it falls
-      // back to free in-browser removal so the tool never fully goes down.
-      const { dataUrl: resultUrl } = await removeBackgroundSmart(dataUrl)
+      // Runs entirely in the browser — free, no sign-in, no credits.
+      const resultUrl = await removeBackgroundLocal(dataUrl)
       setResult(resultUrl)
       setStatus('done')
     } catch (e) {
-      if (e instanceof AuthRequiredError) {
-        setStatus('auth-required')
-        return
-      }
       setError(e instanceof Error ? e.message : String(e))
       setStatus('error')
     }
@@ -79,7 +74,7 @@ export default function BgRemoverPage() {
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#EEF2FF', borderRadius: 20, padding: '6px 16px', marginBottom: 16 }}>
             <span style={{ fontSize: 16 }}>🪄</span>
-            <span style={{ fontSize: 13, fontWeight: 700, color: '#6366F1' }}>AI-Powered · 2 Credits per Image</span>
+            <span style={{ fontSize: 13, fontWeight: 700, color: '#6366F1' }}>Free · Runs in Your Browser</span>
           </div>
           <h1 style={{ fontSize: 40, fontWeight: 900, color: '#0F172A', margin: '0 0 12px', letterSpacing: '-0.02em' }}>
             Remove Background
@@ -108,7 +103,7 @@ export default function BgRemoverPage() {
               <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); e.target.value = '' }} />
             </div>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginTop: 32 }}>
-              {['✅ Sign in required', '🎯 AI-powered precision', '⚡ Results in seconds', '💰 2 credits per image', '🖼️ Transparent PNG output'].map(f => (
+              {['✅ 100% free', '🎯 AI-powered precision', '⚡ Results in seconds', '🔒 Private — never leaves your device', '🖼️ Transparent PNG output'].map(f => (
                 <div key={f} style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: 20, padding: '8px 16px', fontSize: 13, color: '#374151', fontWeight: 600 }}>{f}</div>
               ))}
             </div>
