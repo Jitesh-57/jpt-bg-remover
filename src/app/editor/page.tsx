@@ -1544,7 +1544,7 @@ export default function ImageEditorPage() {
               <div style={s.panelContent}>
                 <div style={s.panelTitle}>🪄 Remove Background</div>
                 <p style={s.panelSub}>Automatically remove the background from any image</p>
-                <div style={s.creditNote}>Free · runs in your browser · no credits</div>
+                <div style={s.creditNote}>♾️ Unlimited · 100% Free</div>
                 {processing && removeBgProgress > 0 && (
                   <div style={{ marginBottom: 14 }}>
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>

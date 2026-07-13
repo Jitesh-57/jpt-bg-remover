@@ -33,7 +33,7 @@ const TRANSFORMS: { id: TransformType; label: string; icon: string; desc: string
   { id: "adjust",      label: "Color Adjust", icon: "🎨", desc: "Brightness / contrast / saturation",        creditsEach: 0 },
   { id: "upscale",     label: "Upscale",      icon: "🔍", desc: "2× or 4× super-resolution",                 creditsEach: 1 },
   { id: "ai-edit",     label: "AI Edit",      icon: "✨", desc: "Transform with text prompt via Gemini",     creditsEach: 2, aiOnly: true },
-  { id: "remove-bg",   label: "Remove BG",    icon: "🪄", desc: "Remove background — free, in your browser",  creditsEach: 0 },
+  { id: "remove-bg",   label: "Remove BG",    icon: "🪄", desc: "Remove background — unlimited & free",       creditsEach: 0 },
   { id: "generate-bg", label: "Generate BG",  icon: "🌅", desc: "Replace background with AI scene",          creditsEach: 2, aiOnly: true },
 ];
 

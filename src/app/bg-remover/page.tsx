@@ -74,7 +74,7 @@ export default function BgRemoverPage() {
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#EEF2FF', borderRadius: 20, padding: '6px 16px', marginBottom: 16 }}>
             <span style={{ fontSize: 16 }}>🪄</span>
-            <span style={{ fontSize: 13, fontWeight: 700, color: '#6366F1' }}>Free · Runs in Your Browser</span>
+            <span style={{ fontSize: 13, fontWeight: 700, color: '#6366F1' }}>Unlimited · 100% Free</span>
           </div>
           <h1 style={{ fontSize: 40, fontWeight: 900, color: '#0F172A', margin: '0 0 12px', letterSpacing: '-0.02em' }}>
             Remove Background
@@ -103,7 +103,7 @@ export default function BgRemoverPage() {
               <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); e.target.value = '' }} />
             </div>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginTop: 32 }}>
-              {['✅ 100% free', '🎯 AI-powered precision', '⚡ Results in seconds', '🔒 Private — never leaves your device', '🖼️ Transparent PNG output'].map(f => (
+              {['✅ 100% free', '♾️ Unlimited removals', '🎯 AI-powered precision', '⚡ Results in seconds', '🖼️ Transparent PNG output'].map(f => (
                 <div key={f} style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: 20, padding: '8px 16px', fontSize: 13, color: '#374151', fontWeight: 600 }}>{f}</div>
               ))}
             </div>
