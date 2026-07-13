@@ -32,17 +32,25 @@ export async function removeBackgroundLocal(
 ): Promise<string> {
   const blob = typeof src === "string" ? await (await fetch(src)).blob() : src;
   const { removeBackground } = await import("@imgly/background-removal");
-  const out = await removeBackground(blob, {
-    model: "isnet_quint8", // smallest (quantized) model → fastest first-load download
-    output: { format: "image/png" },
-    progress: onProgress
-      ? (key: string, current: number, total: number) => {
-          // Only surface the model-download phase (key starts with "fetch").
-          if (key.startsWith("fetch") && total > 0) {
-            onProgress(Math.min(99, Math.round((current / total) * 100)));
+  try {
+    const out = await removeBackground(blob, {
+      model: "isnet_quint8", // smallest (quantized) model → fastest first-load download
+      output: { format: "image/png" },
+      progress: onProgress
+        ? (key: string, current: number, total: number) => {
+            // Only surface the model-download phase (key starts with "fetch").
+            if (key.startsWith("fetch") && total > 0) {
+              onProgress(Math.min(99, Math.round((current / total) * 100)));
+            }
           }
-        }
-      : undefined,
-  });
-  return blobToDataUrl(out);
+        : undefined,
+    });
+    return blobToDataUrl(out);
+  } catch (e) {
+    // Surface the real origin of failures (e.g. "e.replace is not a function")
+    // so they can be diagnosed from the UI. Keeps the original message + top frame.
+    const err = e as Error;
+    const frame = (err?.stack || "").split("\n").slice(0, 3).join(" | ");
+    throw new Error(`${err?.message || String(e)} [origin: ${frame}]`);
+  }
 }
