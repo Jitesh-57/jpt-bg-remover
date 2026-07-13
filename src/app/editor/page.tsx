@@ -8,7 +8,6 @@ import {
   trackPaymentPopupTriggered, trackBuyButtonClicked, trackDownloadButtonClicked, setAnalyticsUser,
   trackBeginCheckout, trackPurchase, trackPaymentFailed,
 } from "@/lib/analytics";
-import { removeBackgroundLocal } from "@/lib/remove-bg-client";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -68,7 +67,7 @@ const BG_TEMPLATES = [
 const TOOLS: { id: Tool; icon: string; label: string; ai?: boolean; free?: boolean; paid?: boolean }[] = [
   { id: "ai-edit", icon: "✨", label: "AI Edit", ai: true, paid: true },
   { id: "generate-bg", icon: "🌅", label: "Generate BG", ai: true, paid: true },
-  { id: "remove-bg", icon: "🪄", label: "Remove BG", paid: false },
+  { id: "remove-bg", icon: "🪄", label: "Remove BG", paid: true },
   { id: "upscale", icon: "🔍", label: "Upscale", free: true },
   { id: "resize", icon: "↔️", label: "Resize", free: true },
   { id: "adjust", icon: "🎨", label: "Adjust", free: true },
@@ -811,18 +810,21 @@ export default function ImageEditorPage() {
   const handleRemoveBg = async () => {
     const src = working || original?.dataUrl;
     if (!src || processing) return;
+    if (requireSignIn()) return;
     trackTransformButtonClicked("remove-bg");
 
-    // Remove BG runs entirely in the browser (@imgly/background-removal) —
-    // free, unlimited, no sign-in and no credits, like Upscale/Resize/Adjust.
+    // Remove BG is an AI (Gemini) tool. callApi handles the paywall statuses
+    // (401 sign-in, 402 credits, 403 upgrade) by showing the right modal.
     setProcessing(true); setProcessingLabel("Removing background…"); setError(null); setRemoveBgProgress(20);
     try {
-      const resultUrl = await removeBackgroundLocal(src, (p) => setRemoveBgProgress(Math.max(20, p)));
+      const data = await callApi<{ dataUrl: string }>("/api/remove-bg", { dataUrl: src });
+      setRemoveBgProgress(90);
+      if (!data?.dataUrl) return; // blocked — callApi already surfaced the modal
       setEditHistory(prev => working ? [...prev, working] : prev);
-      setWorking(resultUrl);
+      setWorking(data.dataUrl);
       setRemoveBgProgress(100);
       trackImageTransformed("remove-bg");
-      autoSaveToDrive(resultUrl, "remove-bg", "Background Removed");
+      autoSaveToDrive(data.dataUrl, "remove-bg", "Background Removed");
     } catch (e) {
       trackImageTransformedFailed("remove-bg", (e as Error).message || "remove_bg_failed");
       setError((e as Error).message || "Background removal failed");
@@ -1544,7 +1546,11 @@ export default function ImageEditorPage() {
               <div style={s.panelContent}>
                 <div style={s.panelTitle}>🪄 Remove Background</div>
                 <p style={s.panelSub}>Automatically remove the background from any image</p>
-                <div style={s.creditNote}>♾️ Unlimited · 100% Free</div>
+                <div style={s.creditNote}>
+                  {user?.plan === "free"
+                    ? "AI background removal · paid plan"
+                    : `Uses ${CREDIT_COST} credits · ${creditsLeft} remaining`}
+                </div>
                 {processing && removeBgProgress > 0 && (
                   <div style={{ marginBottom: 14 }}>
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
@@ -1705,7 +1711,7 @@ export default function ImageEditorPage() {
               {[
                 { icon: "✨", label: "AI Edit", id: "ai-edit", cost: CREDIT_COST },
                 { icon: "🌅", label: "Generate BG", id: "generate-bg", cost: CREDIT_COST },
-                { icon: "🪄", label: "Remove BG", id: "remove-bg", cost: 0 },
+                { icon: "🪄", label: "Remove BG", id: "remove-bg", cost: CREDIT_COST },
                 { icon: "✨", label: "Upscale (Pro)", id: "upscale-pro", cost: CREDIT_COST },
                 { icon: "🔍", label: "Upscale (Normal)", id: "upscale", cost: 0 },
                 { icon: "↔️", label: "Resize", id: "resize", cost: 0 },
