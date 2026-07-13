@@ -40,7 +40,7 @@ export default function PrivacyPage() {
         </Section>
 
         <Section title="4. Data Storage and Security">
-          Your account data (name, email, credits, plan) is stored securely in Supabase, a trusted cloud database provider. Images you process are temporarily handled by PixelBin (our AI processing partner) and are not permanently stored after your session. We use HTTPS encryption for all data in transit.
+          Your account data (name, email, credits, plan) is stored securely in Supabase, a trusted cloud database provider. Images you process are temporarily handled by Google Gemini (our AI processing partner) and are not permanently stored after your session. We use HTTPS encryption for all data in transit.
         </Section>
 
         <Section title="5. Third-Party Services">
@@ -48,7 +48,7 @@ export default function PrivacyPage() {
           <ul style={{ paddingLeft: 20, lineHeight: 2 }}>
             <li><b>Google OAuth</b> — for sign-in (email, name, profile picture only)</li>
             <li><b>Supabase</b> — secure database and authentication</li>
-            <li><b>PixelBin</b> — AI image processing</li>
+            <li><b>Google Gemini</b> — AI image processing</li>
             <li><b>Razorpay</b> — payment processing</li>
             <li><b>Vercel</b> — hosting and infrastructure</li>
           </ul>

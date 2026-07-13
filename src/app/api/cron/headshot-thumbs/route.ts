@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminSupabase } from "@/lib/auth";
-import { generateImageFromText } from "@/lib/pixelbin";
+import { geminiGenerateFromText } from "@/lib/gemini";
 import { MEN_STYLES, WOMEN_STYLES } from "@/lib/headshot-prompts";
 import { deriveHeadshotThumbPrompt, HeadshotGender } from "@/lib/headshot-thumbs";
 
@@ -41,7 +41,7 @@ export async function GET(req: NextRequest) {
       const key = `${it.gender}-${it.id}`;
       try {
         const prompt = deriveHeadshotThumbPrompt(it.prompt, it.gender);
-        const url = await generateImageFromText(prompt, { aspect_ratio: "1:1", output_resolution: "1K" });
+        const url = await geminiGenerateFromText(prompt, { aspect_ratio: "1:1" });
         const res = await fetch(url);
         if (!res.ok) throw new Error(`fetch ${res.status}`);
         const bytes = Buffer.from(await res.arrayBuffer());
