@@ -23,13 +23,10 @@ export const BASIC_UPSCALE_COST = 1;
 export const FREE_TOOLS = ["resize", "color-adjust"];
 export const FREE_TRIAL_LIMIT = 5;
 
-// TEMPORARY: while the Gemini API project is still on Google's free tier
-// (paid-tier billing not yet activated), the AI tools that depend on Gemini
-// can't serve free-trial users — so they're paid-plan-only and free users get
-// the upgrade/payment popup on click. The web-native tools (Remove BG, basic
-// Upscale) run in the browser and stay free for everyone, unaffected by this.
-// Flip back to false to restore the 5-free-trial system once billing is live.
-export const AI_TOOLS_PAID_ONLY = true;
+// When true, AI (Gemini) tools are paid-plan-only and free users get the
+// upgrade popup. Used as a temporary switch while Gemini billing was inactive.
+// Billing is now on the paid tier, so the normal 5-free-trial system is back on.
+export const AI_TOOLS_PAID_ONLY = false;
 
 export type Plan = "free" | "starter" | "creator" | "pro";
 
