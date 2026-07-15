@@ -29,7 +29,7 @@ function readFileAsDataUrl(file: File): Promise<string> {
 
 const HOW_IT_WORKS = [
   { step: '01', title: 'Upload Your Photo', desc: 'Drag & drop or click to select any image from your device. JPG, PNG, WEBP supported.' },
-  { step: '02', title: 'AI Processes It', desc: 'Our Gemini AI analyzes your image and applies the transformation in seconds.' },
+  { step: '02', title: 'Enhance Instantly', desc: 'Advanced image processing sharpens and upscales your photo in seconds — right in your browser.' },
   { step: '03', title: 'Download Result', desc: 'Preview the result and download in full quality — PNG or JPEG, your choice.' },
 ]
 
@@ -437,7 +437,7 @@ export default function LandingPage({ config, toolHref, pageId }: LandingPagePro
               <h2 style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', fontWeight: 900, color: '#fff', margin: '0 0 14px', letterSpacing: '-0.02em' }}>
                 Ready to transform your images?
               </h2>
-              <p style={{ fontSize: 16, color: '#94A3B8', margin: '0 0 32px' }}>No credit card required. 5 free trials when you sign up.</p>
+              <p style={{ fontSize: 16, color: '#94A3B8', margin: '0 0 32px' }}>100% free · No sign-up required · No watermark.</p>
               <a
                 href={toolHref}
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg, #6366F1, #8B5CF6)', color: '#fff', fontWeight: 800, fontSize: 16, padding: '16px 40px', borderRadius: 14, textDecoration: 'none', boxShadow: '0 8px 30px rgba(99,102,241,0.5)' }}
