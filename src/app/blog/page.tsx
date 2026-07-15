@@ -1,23 +1,22 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { POSTS } from "./_data/posts";
-import BlogImageFiller from "./BlogImageFiller";
 
 export const metadata: Metadata = {
-  title: { absolute: "AI Image Editing Blog — Tips, Tutorials & Guides | JPT AI" },
+  title: { absolute: "Image Upscaling Blog — Tips, Tutorials & Guides | JPT AI" },
   description:
-    "Learn how to remove backgrounds, upscale images, generate AI headshots, and edit photos with text prompts. Tutorials and guides from the JPT AI team.",
+    "Learn how to upscale images, enhance photo quality, fix blurry pictures, and get print-ready resolution. Free upscaling tutorials and guides from JPT AI.",
   keywords: [
-    "ai image editing",
-    "remove background tutorial",
-    "ai photo editing guide",
-    "image upscaler tips",
-    "ai headshot guide",
+    "image upscaling tips",
+    "upscale image tutorial",
+    "enhance photo quality guide",
+    "fix blurry photo",
+    "ai image upscaler guide",
   ],
   alternates: { canonical: "https://www.sjpt.io/blog" },
   openGraph: {
-    title: "AI Image Editing Blog | JPT AI",
-    description: "Tutorials, guides and tips for AI-powered image editing.",
+    title: "Image Upscaling Blog | JPT AI",
+    description: "Tutorials, guides and tips for upscaling and enhancing images for free.",
     type: "website",
   },
 };
@@ -31,7 +30,6 @@ const CATEGORY_COLORS: Record<string, string> = {
 export default function BlogIndexPage() {
   return (
     <main style={{ background: "#F8F9FC", minHeight: "100vh", padding: "60px 24px 80px" }}>
-      <BlogImageFiller />
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: 56 }}>
@@ -39,10 +37,10 @@ export default function BlogIndexPage() {
             Blog
           </div>
           <h1 style={{ margin: "0 0 14px", fontSize: "clamp(28px, 4vw, 42px)", fontWeight: 900, color: "#111", letterSpacing: "-0.8px", lineHeight: 1.15 }}>
-            AI Image Editing Tips & Tutorials
+            Image Upscaling Tips & Tutorials
           </h1>
           <p style={{ margin: 0, fontSize: 18, color: "#555", lineHeight: 1.6, maxWidth: 540, marginLeft: "auto", marginRight: "auto" }}>
-            Step-by-step guides on removing backgrounds, upscaling photos, generating headshots, and editing images with AI.
+            Step-by-step guides on upscaling images, enhancing photo quality, fixing blurry pictures, and getting print-ready resolution — all free.
           </p>
         </div>
 
