@@ -2,6 +2,7 @@
 
 import { useRef, useState, useCallback, useEffect } from "react";
 import PricingModal from "@/app/_components/PricingModal";
+import { PAID_FEATURES_ENABLED } from "@/lib/features";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -27,7 +28,7 @@ interface User { email: string; name: string; credits: number; plan?: string }
 const MAX_IMAGES = 100;
 const MAX_DIMENSION = 1024;
 
-const TRANSFORMS: { id: TransformType; label: string; icon: string; desc: string; creditsEach: number; aiOnly?: boolean }[] = [
+const ALL_TRANSFORMS: { id: TransformType; label: string; icon: string; desc: string; creditsEach: number; aiOnly?: boolean }[] = [
   { id: "resize",      label: "Resize",       icon: "↔️", desc: "Resize to custom dimensions",                creditsEach: 0 },
   { id: "adjust",      label: "Color Adjust", icon: "🎨", desc: "Brightness / contrast / saturation",        creditsEach: 0 },
   { id: "upscale",     label: "Upscale",      icon: "🔍", desc: "2× or 4× super-resolution",                 creditsEach: 1 },
@@ -35,6 +36,11 @@ const TRANSFORMS: { id: TransformType; label: string; icon: string; desc: string
   { id: "remove-bg",   label: "Remove BG",    icon: "🪄", desc: "Remove background via Gemini AI",           creditsEach: 2, aiOnly: true },
   { id: "generate-bg", label: "Generate BG",  icon: "🌅", desc: "Replace background with AI scene",          creditsEach: 2, aiOnly: true },
 ];
+
+// Free-only mode: drop the AI transforms and make the rest fully free (0 credits).
+const TRANSFORMS = PAID_FEATURES_ENABLED
+  ? ALL_TRANSFORMS
+  : ALL_TRANSFORMS.filter(t => !t.aiOnly).map(t => ({ ...t, creditsEach: 0 }));
 
 // ─── Utils ────────────────────────────────────────────────────────────────────
 
@@ -203,13 +209,17 @@ export default function BatchEditorPage() {
         if (typeof data.credits === "number") setUser(u => u ? { ...u, credits: data.credits! } : u);
         return data.dataUrl!;
       } else {
-        const deductRes = await fetch("/api/credits/deduct", {
-          method: "POST", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ tool: "basic-upscale" }),
-        });
-        if (!deductRes.ok) throw new Error("Not enough credits for upscale");
-        const dd = await deductRes.json() as { credits?: number };
-        if (typeof dd.credits === "number") setUser(u => u ? { ...u, credits: dd.credits! } : u);
+        // Normal upscale is client-side. In free-only mode it's fully free (no
+        // credit deduction); otherwise it costs 1 basic credit.
+        if (PAID_FEATURES_ENABLED) {
+          const deductRes = await fetch("/api/credits/deduct", {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ tool: "basic-upscale" }),
+          });
+          if (!deductRes.ok) throw new Error("Not enough credits for upscale");
+          const dd = await deductRes.json() as { credits?: number };
+          if (typeof dd.credits === "number") setUser(u => u ? { ...u, credits: dd.credits! } : u);
+        }
         const { upscaleImage } = await import("@/lib/upscale-client");
         return upscaleImage(src, upscaleScale);
       }

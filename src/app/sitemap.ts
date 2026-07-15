@@ -2,25 +2,32 @@ import { MetadataRoute } from "next";
 import { POSTS } from "./blog/_data/posts";
 import { VARIANTS, PARENT_META } from "@/lib/landing-variants";
 import { CREATIVE_APPS, CREATIVE_BASE } from "@/lib/creative-apps";
+import { PAID_FEATURES_ENABLED } from "@/lib/features";
 
 const BASE = "https://www.sjpt.io";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
-  const staticPages: MetadataRoute.Sitemap = [
+  // Only the free, live pages are indexed in free-only mode.
+  const freePages: MetadataRoute.Sitemap = [
     { url: BASE,                       lastModified: now, changeFrequency: "weekly",  priority: 1.0 },
     { url: `${BASE}/upscale`,          lastModified: now, changeFrequency: "monthly", priority: 0.95 },
+    // /editor is noindex (tool UI) — excluded from sitemap
+    { url: `${BASE}/batch-editor`,     lastModified: now, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${BASE}/privacy`,          lastModified: now, changeFrequency: "yearly",  priority: 0.3 },
+    { url: `${BASE}/terms`,            lastModified: now, changeFrequency: "yearly",  priority: 0.3 },
+  ];
+
+  if (!PAID_FEATURES_ENABLED) return freePages;
+
+  const paidPages: MetadataRoute.Sitemap = [
     { url: `${BASE}/remove-bg`,        lastModified: now, changeFrequency: "monthly", priority: 0.95 },
     { url: `${BASE}/ai-editor`,        lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/ai-headshot`,      lastModified: now, changeFrequency: "monthly", priority: 0.9 },
-    // /editor is noindex (tool UI) — excluded from sitemap
-    { url: `${BASE}/batch-editor`,     lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/pricing`,          lastModified: now, changeFrequency: "monthly", priority: 0.75 },
     { url: `${BASE}/blog`,             lastModified: now, changeFrequency: "weekly",  priority: 0.8 },
     { url: `${BASE}${CREATIVE_BASE}`,  lastModified: now, changeFrequency: "weekly",  priority: 0.9 },
-    { url: `${BASE}/privacy`,          lastModified: now, changeFrequency: "yearly",  priority: 0.3 },
-    { url: `${BASE}/terms`,            lastModified: now, changeFrequency: "yearly",  priority: 0.3 },
   ];
 
   const blogPages: MetadataRoute.Sitemap = POSTS.map((post) => ({
@@ -44,5 +51,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.85,
   }));
 
-  return [...staticPages, ...variantPages, ...creativePages, ...blogPages];
+  return [...freePages, ...paidPages, ...variantPages, ...creativePages, ...blogPages];
 }

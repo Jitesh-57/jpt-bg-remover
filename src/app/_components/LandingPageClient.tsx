@@ -4,6 +4,7 @@ import { useRef, useState, useEffect } from "react";
 import FAQAccordion from "@/app/_components/FAQAccordion";
 import { landingImg } from "@/lib/landing-images";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { PAID_FEATURES_ENABLED } from "@/lib/features";
 
 // AI-generated landing images served from Supabase Storage (public "landing" bucket).
 const thumb = (file: string) => landingImg(file);
@@ -12,13 +13,14 @@ const HERO_SHOWCASE = `${process.env.NEXT_PUBLIC_SUPABASE_URL || ""}/storage/v1/
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
-const FEATURES = [
+const ALL_FEATURES = [
   {
     icon: "✂️",
     title: "Background Removal",
     desc: "Instantly remove any background with AI precision. Works on people, products, objects, and complex scenes — in seconds.",
     img: thumb("bg-removal.png"),
     tool: "remove-bg",
+    free: false,
   },
   {
     icon: "✨",
@@ -26,13 +28,15 @@ const FEATURES = [
     desc: "Describe any change in plain English. Transform lighting, swap backgrounds, add effects, change colors — just type what you want.",
     img: thumb("ai-edit.png"),
     tool: "ai-edit",
+    free: false,
   },
   {
     icon: "🔍",
     title: "Image Upscaling",
-    desc: "Enhance photo resolution and sharpness with AI. Recover fine details, reduce noise, and get sharper results from any image.",
+    desc: "Enhance photo resolution and sharpness. Recover fine details, reduce noise, and get sharper results from any image.",
     img: thumb("upscale.png"),
     tool: "upscale",
+    free: true,
   },
   {
     icon: "🌅",
@@ -40,6 +44,7 @@ const FEATURES = [
     desc: "Generate stunning, photorealistic backgrounds from a text description. Studio bokeh, mountain sunsets, cityscapes — anything you imagine.",
     img: thumb("bg-generate.png"),
     tool: "generate-bg",
+    free: false,
   },
   {
     icon: "↔️",
@@ -47,6 +52,7 @@ const FEATURES = [
     desc: "Resize to any dimension with aspect ratio lock. Optimise for Instagram, LinkedIn, print, or any custom size.",
     img: thumb("resize.png"),
     tool: "resize",
+    free: true,
   },
   {
     icon: "🎨",
@@ -54,8 +60,12 @@ const FEATURES = [
     desc: "Fine-tune brightness, contrast, saturation, and sharpness with a real-time preview before saving.",
     img: thumb("color.png"),
     tool: "adjust",
+    free: true,
   },
 ];
+
+// Free-only mode shows just the on-device tools on the homepage.
+const FEATURES = PAID_FEATURES_ENABLED ? ALL_FEATURES : ALL_FEATURES.filter(f => f.free);
 
 const STEPS = [
   {
@@ -347,14 +357,14 @@ export default function LandingPageClient() {
             </div>
           </div>
 
-          {/* OR divider */}
+          {/* OR divider + Prompt Bar — AI feature, hidden in free-only mode */}
+          {PAID_FEATURES_ENABLED && (<>
           <div style={s.orRow}>
             <div style={s.orLine} />
             <span style={s.orText}>or describe what you want</span>
             <div style={s.orLine} />
           </div>
 
-          {/* Prompt Bar */}
           <div style={s.promptBar}>
             <input ref={refRef} type="file" accept="image/*" style={{ display: "none" }}
               onChange={(e) => e.target.files?.[0] && handleRefFile(e.target.files[0])} />
@@ -386,6 +396,7 @@ export default function LandingPageClient() {
               Generate →
             </button>
           </div>
+          </>)}
 
           {/* Stats */}
           <div style={s.statsRow}>
@@ -429,14 +440,20 @@ export default function LandingPageClient() {
       {/* ── Product Highlights Bar ─────────────────────────────────────────── */}
       <section style={{ background: "#0F172A", padding: "20px 24px" }}>
         <div style={{ maxWidth: 1000, margin: "0 auto", display: "flex", justifyContent: "space-around", flexWrap: "wrap", gap: 16 }}>
-          {[
+          {(PAID_FEATURES_ENABLED ? [
             { icon: "🪄", label: "AI Background Removal" },
             { icon: "🔍", label: "4× Image Upscaling" },
             { icon: "✨", label: "Text-Prompt Editing" },
             { icon: "💼", label: "AI Headshot Generator" },
             { icon: "⚡", label: "Batch Process 100 Images" },
             { icon: "📤", label: "No Watermark on Download" },
-          ].map(item => (
+          ] : [
+            { icon: "🔍", label: "2× & 4× Image Upscaling" },
+            { icon: "↔️", label: "Smart Resize" },
+            { icon: "🎨", label: "Color & Light Adjust" },
+            { icon: "⚡", label: "Batch Process 100 Images" },
+            { icon: "📤", label: "No Watermark on Download" },
+          ]).map(item => (
             <div key={item.label} style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <span style={{ fontSize: 18 }}>{item.icon}</span>
               <span style={{ fontSize: 13, fontWeight: 600, color: "#CBD5E1", whiteSpace: "nowrap" }}>{item.label}</span>
@@ -449,8 +466,8 @@ export default function LandingPageClient() {
       <section style={s.section}>
         <div style={s.sectionInner}>
           <div style={s.sectionLabel}>FEATURES</div>
-          <h2 style={s.h2}>Everything you need to edit images with AI</h2>
-          <p style={s.sectionSub}>Six powerful tools in one editor — no plugins, no complex software.</p>
+          <h2 style={s.h2}>{PAID_FEATURES_ENABLED ? "Everything you need to edit images with AI" : "Free image tools, right in your browser"}</h2>
+          <p style={s.sectionSub}>{PAID_FEATURES_ENABLED ? "Six powerful tools in one editor — no plugins, no complex software." : "Fast, free tools in one editor — no plugins, no sign-up, no watermarks."}</p>
           <div style={s.featureGrid}>
             {FEATURES.map((f) => (
               <div key={f.title} style={{ ...s.featureCard, cursor: "pointer" }}

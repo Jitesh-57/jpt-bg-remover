@@ -8,6 +8,7 @@ import {
   trackPaymentPopupTriggered, trackBuyButtonClicked, trackDownloadButtonClicked, setAnalyticsUser,
   trackBeginCheckout, trackPurchase, trackPaymentFailed,
 } from "@/lib/analytics";
+import { PAID_FEATURES_ENABLED } from "@/lib/features";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -64,7 +65,7 @@ const BG_TEMPLATES = [
 // `paid` tools are unavailable on the free plan (show the payment popup).
 // `free` tools are always usable. Upscale is `free` because its Normal mode is
 // free — the Pro mode is gated separately inside the panel.
-const TOOLS: { id: Tool; icon: string; label: string; ai?: boolean; free?: boolean; paid?: boolean }[] = [
+const ALL_TOOLS: { id: Tool; icon: string; label: string; ai?: boolean; free?: boolean; paid?: boolean }[] = [
   { id: "ai-edit", icon: "✨", label: "AI Edit", ai: true, paid: true },
   { id: "generate-bg", icon: "🌅", label: "Generate BG", ai: true, paid: true },
   { id: "remove-bg", icon: "🪄", label: "Remove BG", paid: true },
@@ -72,6 +73,9 @@ const TOOLS: { id: Tool; icon: string; label: string; ai?: boolean; free?: boole
   { id: "resize", icon: "↔️", label: "Resize", free: true },
   { id: "adjust", icon: "🎨", label: "Adjust", free: true },
 ];
+
+// Free-only mode keeps just the on-device tools (Upscale/Resize/Adjust).
+const TOOLS = PAID_FEATURES_ENABLED ? ALL_TOOLS : ALL_TOOLS.filter(t => t.free);
 
 const AI_TOOL_DESCRIPTIONS: Record<string, string> = {
   "ai-edit": "AI Edit lets you transform images with text prompts — change backgrounds, add effects, relight scenes and more.",
@@ -1400,7 +1404,8 @@ export default function ImageEditorPage() {
                 <div style={s.panelTitle}>🔍 Upscale</div>
                 <p style={s.panelSub}>Enhance image quality, sharpness and detail</p>
 
-                {/* Mode toggle: Normal / Pro AI */}
+                {/* Mode toggle: Normal / Pro AI — Pro is hidden in free-only mode */}
+                {PAID_FEATURES_ENABLED && (
                 <div style={{ display: "flex", gap: 6, marginBottom: 14, background: "#F3F4F6", borderRadius: 10, padding: 4 }}>
                   {([
                     { key: "normal", label: "⚡ Normal", sub: "Free · unlimited" },
@@ -1432,6 +1437,7 @@ export default function ImageEditorPage() {
                     </button>
                   ))}
                 </div>
+                )}
 
                 {/* 2x / 4x toggle */}
                 <div style={{ marginBottom: 12 }}>
@@ -1656,8 +1662,8 @@ export default function ImageEditorPage() {
               </div>
             </div>
 
-            {/* Credits / trials section */}
-            {user.plan === "free" ? (
+            {/* Credits / trials section — hidden in free-only mode */}
+            {PAID_FEATURES_ENABLED && (user.plan === "free" ? (
               <div style={s.creditsSection}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
                   <div style={{ fontWeight: 800, fontSize: 15 }}>🎁 Free Trials</div>
@@ -1704,7 +1710,7 @@ export default function ImageEditorPage() {
                   <div style={s.lowNote}>Running low! Resize, Adjust and Normal Upscale are free — no credits needed.</div>
                 )}
               </div>
-            )}
+            ))}
 
             {/* Usage breakdown */}
             <div style={s.usageGrid}>
@@ -1716,7 +1722,7 @@ export default function ImageEditorPage() {
                 { icon: "🔍", label: "Upscale (Normal)", id: "upscale", cost: 0 },
                 { icon: "↔️", label: "Resize", id: "resize", cost: 0 },
                 { icon: "🎨", label: "Adjust", id: "adjust", cost: 0 },
-              ].map((item) => {
+              ].filter(item => PAID_FEATURES_ENABLED || item.cost === 0).map((item) => {
                 const trialUsed = user.plan === "free" && !!user.trialToolsUsed?.includes(item.id);
                 const trialAvailable = user.plan === "free" && item.cost > 0 && !trialUsed && (user.trialsRemaining ?? 0) > 0;
                 return (
