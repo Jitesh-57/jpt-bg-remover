@@ -18,7 +18,6 @@ export const PAID_ROUTE_PREFIXES = [
   "/ai-headshot",
   "/headshot",
   "/remove-bg",
-  "/blog",
   "/pricing",
   "/generations",
 ];

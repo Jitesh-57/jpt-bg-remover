@@ -26,9 +26,10 @@ const ALL_COMPANY = [
   { labelKey: "Contact", href: "mailto:patil.jitesh866@gmail.com" },
 ];
 
-// In free-only mode drop the paid links (My Generations, Pricing, Blog).
+// In free-only mode drop the paid links (My Generations, Pricing). The Blog
+// stays — it's kept as an upscale-only content hub.
 const TOOLS = PAID_FEATURES_ENABLED ? ALL_TOOLS : ALL_TOOLS.filter(l => l.href !== "/generations");
-const COMPANY = PAID_FEATURES_ENABLED ? ALL_COMPANY : ALL_COMPANY.filter(l => l.href !== "/pricing" && l.href !== "/blog");
+const COMPANY = PAID_FEATURES_ENABLED ? ALL_COMPANY : ALL_COMPANY.filter(l => l.href !== "/pricing");
 
 export default function Footer() {
   const { t, locale, setLocale } = useLanguage();

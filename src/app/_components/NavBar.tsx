@@ -215,6 +215,14 @@ export default function NavBar() {
             </div>
           )}
 
+          {/* Blog */}
+          <a href="/blog"
+            style={{ padding: "7px 14px", color: "#E2E8F0", fontSize: 14, fontWeight: 600, textDecoration: "none", borderRadius: 8 }}
+            onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
+            onMouseLeave={e => (e.currentTarget.style.color = "#E2E8F0")}>
+            Blog
+          </a>
+
           {/* Creative Apps — standalone navbar link (hidden in free-only mode) */}
           {PAID_FEATURES_ENABLED && (
             <a href="/creative"

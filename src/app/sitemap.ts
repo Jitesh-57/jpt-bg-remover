@@ -15,11 +15,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/upscale`,          lastModified: now, changeFrequency: "monthly", priority: 0.95 },
     // /editor is noindex (tool UI) — excluded from sitemap
     { url: `${BASE}/batch-editor`,     lastModified: now, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${BASE}/blog`,             lastModified: now, changeFrequency: "weekly",  priority: 0.8 },
     { url: `${BASE}/privacy`,          lastModified: now, changeFrequency: "yearly",  priority: 0.3 },
     { url: `${BASE}/terms`,            lastModified: now, changeFrequency: "yearly",  priority: 0.3 },
   ];
 
-  if (!PAID_FEATURES_ENABLED) return freePages;
+  // The published (upscale-only) blog posts.
+  const freeBlogPages: MetadataRoute.Sitemap = POSTS.map((post) => ({
+    url: `${BASE}/blog/${post.slug}`,
+    lastModified: new Date(post.date),
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+
+  if (!PAID_FEATURES_ENABLED) return [...freePages, ...freeBlogPages];
 
   const paidPages: MetadataRoute.Sitemap = [
     { url: `${BASE}/remove-bg`,        lastModified: now, changeFrequency: "monthly", priority: 0.95 },
