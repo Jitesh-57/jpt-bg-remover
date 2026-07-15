@@ -46,6 +46,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ url: resultDataUrl });
   } catch (e) {
     console.error("[headshot/edit-bg]", e);
-    return NextResponse.json({ error: String(e) }, { status: 500 });
+    return NextResponse.json({ error: e instanceof Error ? e.message : "Couldn't process the image right now. Please try again." }, { status: 500 });
   }
 }

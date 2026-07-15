@@ -38,6 +38,6 @@ export async function POST(req: NextRequest) {
     return withCredits({ dataUrl: result }, session!, "ai", req, `creative:${slug}`);
   } catch (e) {
     console.error("[creative-edit]", e);
-    return NextResponse.json({ error: String(e) }, { status: 500 });
+    return NextResponse.json({ error: e instanceof Error ? e.message : "Couldn't process the image right now. Please try again." }, { status: 500 });
   }
 }

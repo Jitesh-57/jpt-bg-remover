@@ -63,6 +63,18 @@ async function postGemini(body: object): Promise<Response> {
   return res as Response;
 }
 
+// Turn a raw Gemini API failure into a short, user-friendly message. The raw
+// body is logged server-side (see callers) for debugging; users never see it.
+function friendlyGeminiError(status: number, body: string): Error {
+  if (status === 429 || /RESOURCE_EXHAUSTED|quota/i.test(body)) {
+    return new Error("This AI feature is temporarily unavailable due to high demand. Please try again in a few minutes.");
+  }
+  if (status === 401 || status === 403 || /API key|permission|billing/i.test(body)) {
+    return new Error("The AI service is being set up and will be back shortly. Please try again later.");
+  }
+  return new Error("Couldn't process the image right now. Please try again.");
+}
+
 function extractImage(json: {
   candidates?: { content?: { parts?: { inlineData?: { data: string; mimeType: string } }[] } }[];
 }): string {
@@ -72,7 +84,7 @@ function extractImage(json: {
       return `data:${part.inlineData.mimeType || "image/png"};base64,${part.inlineData.data}`;
     }
   }
-  throw new Error("Gemini did not return an image. Check your API key and billing.");
+  throw new Error("Couldn't process the image right now. Please try again.");
 }
 
 // Image-in / image-out edit.
@@ -85,7 +97,8 @@ async function callGemini(src: string, text: string): Promise<string> {
 
   if (!res.ok) {
     const err = await res.text();
-    throw new Error(`Gemini API error: ${err}`);
+    console.error(`[gemini] ${res.status} ${err.slice(0, 500)}`);
+    throw friendlyGeminiError(res.status, err);
   }
 
   return extractImage(await res.json());
@@ -143,7 +156,8 @@ export async function geminiGenerateFromText(
 
   if (!res.ok) {
     const err = await res.text();
-    throw new Error(`Gemini API error: ${err}`);
+    console.error(`[gemini] text2img ${res.status} ${err.slice(0, 500)}`);
+    throw friendlyGeminiError(res.status, err);
   }
 
   return extractImage(await res.json());
