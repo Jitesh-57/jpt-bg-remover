@@ -303,6 +303,7 @@ export default function ImageEditorPage() {
   const [user, setUser] = useState<User | null>(null);
   const [authChecked, setAuthChecked] = useState(false);
   const [showSignInModal, setShowSignInModal] = useState(false);
+  const [signInReason, setSignInReason] = useState<"default" | "unlimited">("default");
   const [showAccountModal, setShowAccountModal] = useState(false);
   const [showNoCreditsModal, setShowNoCreditsModal] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
@@ -498,6 +499,24 @@ export default function ImageEditorPage() {
   // prompts during the brief window after OAuth redirect while cookies resolve.
   const requireSignIn = () => { if (!authChecked) return true; if (!user) { setShowSignInModal(true); return true; } return false; };
 
+  // Free tools are unlimited for signed-in users. Anonymous visitors get one
+  // free transform, then must sign up (unlimited afterwards, no credits).
+  const ANON_FREE_TRANSFORMS = 1;
+  const anonBlocked = (): boolean => {
+    if (!authChecked || user) return false; // signed in → unlimited
+    let used = 0;
+    try { used = parseInt(localStorage.getItem("jpt_anon_transforms") || "0", 10) || 0; } catch {}
+    if (used >= ANON_FREE_TRANSFORMS) { setSignInReason("unlimited"); setShowSignInModal(true); return true; }
+    return false;
+  };
+  const recordAnonTransform = () => {
+    if (user) return;
+    try {
+      const used = parseInt(localStorage.getItem("jpt_anon_transforms") || "0", 10) || 0;
+      localStorage.setItem("jpt_anon_transforms", String(used + 1));
+    } catch {}
+  };
+
   // ── Compress image to max 1024px before sending to API (avoids 4.5MB Vercel limit) ──
   const compressForApi = async (dataUrl: string): Promise<string> => {
     return new Promise(resolve => {
@@ -665,9 +684,10 @@ export default function ImageEditorPage() {
 
     const isPro = upscaleMode === "pro";
     // Pro upscale is an AI tool — gated by sign-in + trial/credits.
-    // Normal upscale is plain client-side canvas resampling — free and
-    // unlimited for everyone, no sign-in required (same as Resize/Adjust).
+    // Normal upscale is free & unlimited for signed-in users; anonymous
+    // visitors get one free transform, then are asked to sign up.
     if (isPro && requireSignIn()) return;
+    if (!isPro && anonBlocked()) return;
     if (isPro) trackTransformButtonClicked("upscale-pro");
     setProcessing(true); setProcessingLabel(`${isPro ? "AI Pro" : ""} Upscaling ${upscaleScale}…`); setError(null);
     const prevCredits = user?.credits ?? 0;
@@ -694,6 +714,7 @@ export default function ImageEditorPage() {
         setEditHistory(prev => working ? [...prev, working] : prev);
         setWorking(out);
         setAppliedUpscale(upscaleScale);
+        recordAnonTransform();
         autoSaveToDrive(out, "upscale", `${upscaleScale} Upscale`);
       }
     } catch (e) {
@@ -759,11 +780,13 @@ export default function ImageEditorPage() {
   const handleResize = async () => {
     const src = working || original?.dataUrl;
     if (!src || !resizeW || !resizeH || processing) return;
+    if (anonBlocked()) return;
     setProcessing(true); setError(null);
     try {
       const result = await resizeOnCanvas(src, resizeW, resizeH);
       setEditHistory(prev => working ? [...prev, working] : prev);
       setWorking(result);
+      recordAnonTransform();
       autoSaveToDrive(result, "resize", `${resizeW}×${resizeH}`);
     }
     catch { setError("Resize failed."); }
@@ -773,11 +796,13 @@ export default function ImageEditorPage() {
   const handleApplyAdjust = async () => {
     const src = working || original?.dataUrl;
     if (!src || processing) return;
+    if (anonBlocked()) return;
     setProcessing(true); setError(null);
     try {
       const result = await applyFiltersToCanvas(src, brightness, contrast, saturation, sharpness);
       setEditHistory(prev => working ? [...prev, working] : prev);
       setWorking(result);
+      recordAnonTransform();
       resetAdjust();
       autoSaveToDrive(result, "adjust", "Color Adjustments");
     }
@@ -1040,7 +1065,9 @@ export default function ImageEditorPage() {
                   ? <img src={user.picture} alt="" style={s.avatar} />
                   : <span style={s.avatarFallback}>{user.name[0]}</span>}
                 <span style={s.userName}>{user.name.split(" ")[0]}</span>
-                {user.plan === "free" ? (
+                {!PAID_FEATURES_ENABLED ? (
+                  <span style={{ ...s.creditsBadge, background: "#DCFCE7", color: "#16A34A" }}>♾️ Free</span>
+                ) : user.plan === "free" ? (
                   <span style={{ ...s.creditsBadge, ...((user.trialsRemaining ?? 0) === 0 ? s.creditsEmpty : {}) }}>
                     🎁 {user.trialsRemaining ?? 0}
                   </span>
@@ -1134,7 +1161,7 @@ export default function ImageEditorPage() {
               </div>
               {!user && (
                 <div style={s.signInHint}>
-                  <button onClick={() => setShowSignInModal(true)} style={{ color: "#6366F1", fontWeight: 600, textDecoration: "none", background: "none", border: "none", cursor: "pointer", padding: 0 }}>Sign in</button> to use AI tools — 5 free trials included, plus unlimited free upscale
+                  <button onClick={() => setShowSignInModal(true)} style={{ color: "#6366F1", fontWeight: 600, textDecoration: "none", background: "none", border: "none", cursor: "pointer", padding: 0 }}>Sign up free</button> to transform unlimited images — no limits on any tool
                 </div>
               )}
               {error && <div style={s.errBox}>{error}</div>}
@@ -1736,14 +1763,22 @@ export default function ImageEditorPage() {
               })}
             </div>
 
-            {user.plan === "free" && (
-              <div style={{ fontSize: 12, color: "#888", textAlign: "center" as const, marginBottom: 8 }}>
-                Free plan · {user.trialsRemaining ?? 0} of {FREE_TRIAL_LIMIT} free trials left
+            {PAID_FEATURES_ENABLED ? (
+              <>
+                {user.plan === "free" && (
+                  <div style={{ fontSize: 12, color: "#888", textAlign: "center" as const, marginBottom: 8 }}>
+                    Free plan · {user.trialsRemaining ?? 0} of {FREE_TRIAL_LIMIT} free trials left
+                  </div>
+                )}
+                <button style={{ ...s.primaryBtn, marginTop: 4 }} onClick={() => { setShowAccountModal(false); setShowUpgradeModal(true); }}>
+                  🚀 {user.plan === "free" ? "Upgrade Plan" : "Get More Credits"}
+                </button>
+              </>
+            ) : (
+              <div style={{ fontSize: 13, color: "#10B981", textAlign: "center" as const, fontWeight: 700, margin: "4px 0 8px", background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 10, padding: "10px 12px" }}>
+                ♾️ Unlimited · 100% Free — no limits on any tool
               </div>
             )}
-            <button style={{ ...s.primaryBtn, marginTop: 4 }} onClick={() => { setShowAccountModal(false); setShowUpgradeModal(true); }}>
-              🚀 {user.plan === "free" ? "Upgrade Plan" : "Get More Credits"}
-            </button>
             <button style={{ ...s.ghostBtn, width: "100%", justifyContent: "center", marginTop: 8 }}
               onClick={async () => { await fetch("/api/auth/google/logout", { method: "POST" }); setUser(null); setShowAccountModal(false); setAuthTab("google"); setAuthEmail(""); setAuthPassword(""); }}>
               Sign out
@@ -1757,9 +1792,15 @@ export default function ImageEditorPage() {
         <div style={s.modalOverlay} onClick={() => { setShowSignInModal(false); setAuthError(""); }}>
           <div style={{ ...s.modalBox, maxWidth: 460, textAlign: "left" as const }} onClick={(e) => e.stopPropagation()}>
             <div style={{ textAlign: "center" as const, marginBottom: 20 }}>
-              <div style={{ fontSize: 40, marginBottom: 8 }}>✨</div>
-              <div style={{ ...s.modalTitle, fontSize: 20 }}>Sign in to JPT AI Editor</div>
-              <p style={{ ...s.modalSub, marginBottom: 0 }}>Get <strong>10 free AI credits</strong> to start editing</p>
+              <div style={{ fontSize: 40, marginBottom: 8 }}>{signInReason === "unlimited" ? "🚀" : "✨"}</div>
+              <div style={{ ...s.modalTitle, fontSize: 20 }}>
+                {signInReason === "unlimited" ? "Sign up to keep going — it's free" : "Sign in to JPT AI Editor"}
+              </div>
+              <p style={{ ...s.modalSub, marginBottom: 0 }}>
+                {signInReason === "unlimited"
+                  ? <>Create a free account and transform <strong>unlimited images</strong> — no limits on Upscale, Resize, or Adjust.</>
+                  : <>Get <strong>unlimited free transforms</strong> when you sign up</>}
+              </p>
             </div>
 
             {/* Tab bar */}
