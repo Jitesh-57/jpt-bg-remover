@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { PAID_FEATURES_ENABLED, PAID_ROUTE_PREFIXES } from "@/lib/features";
 
 // In-memory rate limiter (per serverless instance — good enough for burst protection)
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
@@ -33,6 +34,12 @@ function maybeCleanup() {
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
+
+  // Free-only mode: redirect the hidden paid/AI pages back to the home page.
+  if (!PAID_FEATURES_ENABLED && PAID_ROUTE_PREFIXES.some(p => path === p || path.startsWith(p + "/"))) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
   // Vercel injects this at the edge — accurate, no extra geo-IP lookup needed.
   const country = request.headers.get("x-vercel-ip-country") || "";

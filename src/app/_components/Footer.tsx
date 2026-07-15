@@ -4,6 +4,7 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { LANGUAGES } from "@/lib/i18n/translations";
+import { PAID_FEATURES_ENABLED } from "@/lib/features";
 
 const AI_TOOLS = [
   { labelKey: "AI Upscale",         href: "/upscale" },
@@ -13,17 +14,21 @@ const AI_TOOLS = [
   { labelKey: "Creative Apps",      href: "/creative" },
 ];
 
-const TOOLS = [
+const ALL_TOOLS = [
   { labelKey: "Image Editor",    href: "/editor" },
   { labelKey: "Batch Editor",    href: "/batch-editor" },
   { labelKey: "My Generations",  href: "/generations" },
 ];
 
-const COMPANY = [
+const ALL_COMPANY = [
   { labelKey: "Pricing", href: "/pricing" },
   { labelKey: "Blog",    href: "/blog" },
   { labelKey: "Contact", href: "mailto:patil.jitesh866@gmail.com" },
 ];
+
+// In free-only mode drop the paid links (My Generations, Pricing, Blog).
+const TOOLS = PAID_FEATURES_ENABLED ? ALL_TOOLS : ALL_TOOLS.filter(l => l.href !== "/generations");
+const COMPANY = PAID_FEATURES_ENABLED ? ALL_COMPANY : ALL_COMPANY.filter(l => l.href !== "/pricing" && l.href !== "/blog");
 
 export default function Footer() {
   const { t, locale, setLocale } = useLanguage();
@@ -36,7 +41,7 @@ export default function Footer() {
   return (
     <footer style={{ background: "#0F172A", color: "#94A3B8", padding: "60px 24px 32px" }}>
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: 40, marginBottom: 48 }}>
+        <div style={{ display: "grid", gridTemplateColumns: PAID_FEATURES_ENABLED ? "2fr 1fr 1fr 1fr" : "2fr 1fr 1fr", gap: 40, marginBottom: 48 }}>
 
           {/* Brand */}
           <div>
@@ -57,20 +62,22 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* AI Tools */}
-          <div>
-            <div style={{ fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 16 }}>{t.footerAiTools}</div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {AI_TOOLS.map(l => (
-                <a key={l.href} href={l.href}
-                  style={{ fontSize: 14, color: "#64748B", textDecoration: "none", transition: "color 0.15s" }}
-                  onMouseEnter={e => (e.currentTarget.style.color = "#E2E8F0")}
-                  onMouseLeave={e => (e.currentTarget.style.color = "#64748B")}>
-                  {l.labelKey}
-                </a>
-              ))}
+          {/* AI Tools — hidden in free-only mode */}
+          {PAID_FEATURES_ENABLED && (
+            <div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 16 }}>{t.footerAiTools}</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                {AI_TOOLS.map(l => (
+                  <a key={l.href} href={l.href}
+                    style={{ fontSize: 14, color: "#64748B", textDecoration: "none", transition: "color 0.15s" }}
+                    onMouseEnter={e => (e.currentTarget.style.color = "#E2E8F0")}
+                    onMouseLeave={e => (e.currentTarget.style.color = "#64748B")}>
+                    {l.labelKey}
+                  </a>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Tools */}
           <div>

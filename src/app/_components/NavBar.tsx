@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { createSupabaseClient } from "@/lib/supabase";
 import { trackSignUp, setAnalyticsUser, trackSignInClicked, trackSignInFailed, trackPaymentPopupTriggered } from "@/lib/analytics";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { PAID_FEATURES_ENABLED } from "@/lib/features";
 
 const PricingModal = lazy(() => import("./PricingModal"));
 
@@ -12,25 +13,31 @@ interface User { userId: string; email: string; name: string; picture?: string; 
 
 const FREE_TRIAL_LIMIT = 5;
 
-const TOOLS = [
+const ALL_TOOLS = [
   {
     section: "AI Tools",
     items: [
-      { icon: "🔍", label: "AI Upscale",     desc: "Enhance resolution up to 4×",           href: "/upscale" },
-      { icon: "🪄", label: "Remove BG (AI)",  desc: "AI-powered, higher quality",            href: "/remove-bg" },
-      { icon: "🎯", label: "AI Headshot",    desc: "Professional headshots from any photo", href: "/ai-headshot" },
-      { icon: "✍️", label: "AI Editor",     desc: "Edit images with text prompts",         href: "/ai-editor" },
+      { icon: "🔍", label: "AI Upscale",     desc: "Enhance resolution up to 4×",           href: "/upscale", free: true },
+      { icon: "🪄", label: "Remove BG (AI)",  desc: "AI-powered, higher quality",            href: "/remove-bg", free: false },
+      { icon: "🎯", label: "AI Headshot",    desc: "Professional headshots from any photo", href: "/ai-headshot", free: false },
+      { icon: "✍️", label: "AI Editor",     desc: "Edit images with text prompts",         href: "/ai-editor", free: false },
     ],
   },
   {
     section: "Tools",
     items: [
-      { icon: "🖼️", label: "Image Editor",   desc: "Full-featured photo editor",           href: "/editor" },
-      { icon: "⚡",  label: "Batch Editor",   desc: "Process up to 100 images at once",     href: "/batch-editor" },
-      { icon: "✦",  label: "My Generations", desc: "View your saved edits",                href: "/generations" },
+      { icon: "🖼️", label: "Image Editor",   desc: "Full-featured photo editor",           href: "/editor", free: true },
+      { icon: "⚡",  label: "Batch Editor",   desc: "Process up to 100 images at once",     href: "/batch-editor", free: true },
+      { icon: "✦",  label: "My Generations", desc: "View your saved edits",                href: "/generations", free: false },
     ],
   },
 ];
+
+// In free-only mode, keep just the free tools (and drop any now-empty section).
+const TOOLS = PAID_FEATURES_ENABLED
+  ? ALL_TOOLS
+  : ALL_TOOLS.map(g => ({ ...g, section: g.section === "AI Tools" ? "Free Tools" : g.section, items: g.items.filter(i => i.free) }))
+             .filter(g => g.items.length > 0);
 
 export default function NavBar() {
   const { t } = useLanguage();
@@ -150,7 +157,7 @@ export default function NavBar() {
               onClick={() => setShowToolsDropdown(v => !v)}
               style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", background: showToolsDropdown ? "rgba(99,102,241,0.15)" : "transparent", border: "none", borderRadius: 8, color: "#E2E8F0", fontSize: 14, fontWeight: 600, cursor: "pointer" }}
             >
-              AI Tools
+              {PAID_FEATURES_ENABLED ? "AI Tools" : "Tools"}
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ transform: showToolsDropdown ? "rotate(180deg)" : "none", opacity: 0.7 }}>
                 <polyline points="6 9 12 15 18 9" />
               </svg>
@@ -208,24 +215,28 @@ export default function NavBar() {
             </div>
           )}
 
-          {/* Creative Apps — standalone navbar link */}
-          <a href="/creative"
-            style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", color: "#E2E8F0", fontSize: 14, fontWeight: 600, textDecoration: "none", borderRadius: 8, background: "rgba(99,102,241,0.12)", border: "1px solid rgba(99,102,241,0.25)" }}
-            onMouseEnter={e => { e.currentTarget.style.background = "rgba(99,102,241,0.22)"; e.currentTarget.style.borderColor = "rgba(99,102,241,0.5)"; }}
-            onMouseLeave={e => { e.currentTarget.style.background = "rgba(99,102,241,0.12)"; e.currentTarget.style.borderColor = "rgba(99,102,241,0.25)"; }}>
-            <span style={{ fontSize: 13 }}>✦</span>
-            Creative Apps
-          </a>
+          {/* Creative Apps — standalone navbar link (hidden in free-only mode) */}
+          {PAID_FEATURES_ENABLED && (
+            <a href="/creative"
+              style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", color: "#E2E8F0", fontSize: 14, fontWeight: 600, textDecoration: "none", borderRadius: 8, background: "rgba(99,102,241,0.12)", border: "1px solid rgba(99,102,241,0.25)" }}
+              onMouseEnter={e => { e.currentTarget.style.background = "rgba(99,102,241,0.22)"; e.currentTarget.style.borderColor = "rgba(99,102,241,0.5)"; }}
+              onMouseLeave={e => { e.currentTarget.style.background = "rgba(99,102,241,0.12)"; e.currentTarget.style.borderColor = "rgba(99,102,241,0.25)"; }}>
+              <span style={{ fontSize: 13 }}>✦</span>
+              Creative Apps
+            </a>
+          )}
 
           <div style={{ flex: 1 }} />
 
-          {/* Pricing — right side */}
-          <a href="/pricing"
-            style={{ padding: "7px 14px", color: "#94A3B8", fontSize: 14, fontWeight: 600, textDecoration: "none", borderRadius: 8 }}
-            onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
-            onMouseLeave={e => (e.currentTarget.style.color = "#94A3B8")}>
-            {t.navPricing}
-          </a>
+          {/* Pricing — right side (hidden in free-only mode) */}
+          {PAID_FEATURES_ENABLED && (
+            <a href="/pricing"
+              style={{ padding: "7px 14px", color: "#94A3B8", fontSize: 14, fontWeight: 600, textDecoration: "none", borderRadius: 8 }}
+              onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
+              onMouseLeave={e => (e.currentTarget.style.color = "#94A3B8")}>
+              {t.navPricing}
+            </a>
+          )}
 
           {/* Auth */}
           {user ? (
@@ -236,9 +247,11 @@ export default function NavBar() {
                   ? <img src={user.picture} alt="" style={{ width: 28, height: 28, borderRadius: "50%", flexShrink: 0 }} />
                   : <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#6366F1", color: "#fff", fontSize: 13, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>{user.name[0]}</div>}
                 <span style={{ fontSize: 13, fontWeight: 600, color: "#E2E8F0" }}>{user.name.split(" ")[0]}</span>
-                <span style={{ fontSize: 11, background: "#6366F1", color: "#fff", padding: "2px 8px", borderRadius: 12, fontWeight: 700 }}>
-                  {user.plan === "free" ? `🎁 ${user.trialsRemaining}` : `⚡ ${user.credits}`}
-                </span>
+                {PAID_FEATURES_ENABLED && (
+                  <span style={{ fontSize: 11, background: "#6366F1", color: "#fff", padding: "2px 8px", borderRadius: 12, fontWeight: 700 }}>
+                    {user.plan === "free" ? `🎁 ${user.trialsRemaining}` : `⚡ ${user.credits}`}
+                  </span>
+                )}
               </button>
               {showMenu && !isMobile && (
                 <div style={{ position: "absolute", top: "calc(100% + 10px)", right: 0, background: "#fff", border: "1px solid #E5E7EB", borderRadius: 14, boxShadow: "0 8px 30px rgba(0,0,0,0.15)", minWidth: 220, zIndex: 1000, overflow: "hidden" }}>
@@ -246,7 +259,7 @@ export default function NavBar() {
                     <div style={{ fontWeight: 700, fontSize: 14, color: "#111" }}>{user.name}</div>
                     <div style={{ fontSize: 12, color: "#6B7280", marginTop: 2 }}>{user.email}</div>
                   </div>
-                  {user.plan === "free" && user.trialsRemaining === 0 && (
+                  {PAID_FEATURES_ENABLED && user.plan === "free" && user.trialsRemaining === 0 && (
                     <div style={{ margin: "10px 12px 4px", background: "linear-gradient(135deg,#EEF2FF,#F5F3FF)", border: "1px solid #C7D2FE", borderRadius: 12, padding: "12px 14px" }}>
                       <div style={{ fontSize: 11, fontWeight: 700, color: "#6366F1", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>🎁 Free trials used up</div>
                       <div style={{ fontSize: 11, color: "#6B7280", marginTop: 5 }}>You&apos;ve used all {FREE_TRIAL_LIMIT} free trials, one per tool.</div>
@@ -257,7 +270,7 @@ export default function NavBar() {
                       </button>
                     </div>
                   )}
-                  {user.plan === "free" && user.trialsRemaining > 0 && (
+                  {PAID_FEATURES_ENABLED && user.plan === "free" && user.trialsRemaining > 0 && (
                     <div style={{ margin: "10px 12px 4px", background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 10, padding: "8px 12px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                       <div>
                         <div style={{ fontSize: 11, fontWeight: 700, color: "#16A34A", textTransform: "uppercase", letterSpacing: "0.06em" }}>Free trials</div>
@@ -267,18 +280,22 @@ export default function NavBar() {
                     </div>
                   )}
                   <div style={{ padding: "6px 0" }}>
-                    <a href="/generations" onClick={() => setShowMenu(false)}
-                      style={{ display: "block", padding: "10px 16px", fontSize: 13, color: "#111", textDecoration: "none", fontWeight: 500 }}
-                      onMouseEnter={e => (e.currentTarget.style.background = "#F5F5FF")}
-                      onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
-                      ✦ My Generations
-                    </a>
-                    <button onClick={() => { trackPaymentPopupTriggered("manual"); setShowPricing(true); setShowMenu(false); }}
-                      style={{ width: "100%", padding: "10px 16px", background: "none", border: "none", textAlign: "left", fontSize: 13, color: "#6366F1", cursor: "pointer", fontWeight: 600 }}
-                      onMouseEnter={e => (e.currentTarget.style.background = "#F5F5FF")}
-                      onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
-                      💳 Buy Credits
-                    </button>
+                    {PAID_FEATURES_ENABLED && (
+                      <>
+                        <a href="/generations" onClick={() => setShowMenu(false)}
+                          style={{ display: "block", padding: "10px 16px", fontSize: 13, color: "#111", textDecoration: "none", fontWeight: 500 }}
+                          onMouseEnter={e => (e.currentTarget.style.background = "#F5F5FF")}
+                          onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
+                          ✦ My Generations
+                        </a>
+                        <button onClick={() => { trackPaymentPopupTriggered("manual"); setShowPricing(true); setShowMenu(false); }}
+                          style={{ width: "100%", padding: "10px 16px", background: "none", border: "none", textAlign: "left", fontSize: 13, color: "#6366F1", cursor: "pointer", fontWeight: 600 }}
+                          onMouseEnter={e => (e.currentTarget.style.background = "#F5F5FF")}
+                          onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
+                          💳 Buy Credits
+                        </button>
+                      </>
+                    )}
                     <div style={{ borderTop: "1px solid #F3F4F6", margin: "4px 0" }} />
                     <button onClick={handleLogout}
                       style={{ width: "100%", padding: "10px 16px", background: "none", border: "none", textAlign: "left", fontSize: 13, color: "#EF4444", cursor: "pointer", fontWeight: 500 }}
@@ -300,7 +317,7 @@ export default function NavBar() {
                   <div style={{ fontWeight: 700, fontSize: 15, color: "#111" }}>{user.name}</div>
                   <div style={{ fontSize: 12, color: "#6B7280", marginTop: 2 }}>{user.email}</div>
                 </div>
-                {user.plan === "free" && user.trialsRemaining === 0 && (
+                {PAID_FEATURES_ENABLED && user.plan === "free" && user.trialsRemaining === 0 && (
                   <div style={{ margin: "12px 16px 4px", background: "linear-gradient(135deg,#EEF2FF,#F5F3FF)", border: "1px solid #C7D2FE", borderRadius: 12, padding: "12px 14px" }}>
                     <div style={{ fontSize: 11, fontWeight: 700, color: "#6366F1", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>🎁 Free trials used up</div>
                     <div style={{ fontSize: 11, color: "#6B7280", marginTop: 5 }}>You&apos;ve used all {FREE_TRIAL_LIMIT} free trials, one per tool.</div>
@@ -310,7 +327,7 @@ export default function NavBar() {
                     </button>
                   </div>
                 )}
-                {user.plan === "free" && user.trialsRemaining > 0 && (
+                {PAID_FEATURES_ENABLED && user.plan === "free" && user.trialsRemaining > 0 && (
                   <div style={{ margin: "12px 16px 4px", background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 10, padding: "10px 12px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                     <div>
                       <div style={{ fontSize: 11, fontWeight: 700, color: "#16A34A", textTransform: "uppercase", letterSpacing: "0.06em" }}>Free trials</div>
@@ -320,14 +337,18 @@ export default function NavBar() {
                   </div>
                 )}
                 <div style={{ padding: "8px 0" }}>
-                  <a href="/generations" onClick={() => setShowMenu(false)}
-                    style={{ display: "block", padding: "14px 16px", fontSize: 14.5, color: "#111", textDecoration: "none", fontWeight: 600 }}>
-                    ✦ My Generations
-                  </a>
-                  <button onClick={() => { trackPaymentPopupTriggered("manual"); setShowPricing(true); setShowMenu(false); }}
-                    style={{ width: "100%", padding: "14px 16px", background: "none", border: "none", textAlign: "left", fontSize: 14.5, color: "#6366F1", cursor: "pointer", fontWeight: 700 }}>
-                    💳 Buy Credits
-                  </button>
+                  {PAID_FEATURES_ENABLED && (
+                    <>
+                      <a href="/generations" onClick={() => setShowMenu(false)}
+                        style={{ display: "block", padding: "14px 16px", fontSize: 14.5, color: "#111", textDecoration: "none", fontWeight: 600 }}>
+                        ✦ My Generations
+                      </a>
+                      <button onClick={() => { trackPaymentPopupTriggered("manual"); setShowPricing(true); setShowMenu(false); }}
+                        style={{ width: "100%", padding: "14px 16px", background: "none", border: "none", textAlign: "left", fontSize: 14.5, color: "#6366F1", cursor: "pointer", fontWeight: 700 }}>
+                        💳 Buy Credits
+                      </button>
+                    </>
+                  )}
                   <div style={{ borderTop: "1px solid #F3F4F6", margin: "4px 0" }} />
                   <button onClick={handleLogout}
                     style={{ width: "100%", padding: "14px 16px", background: "none", border: "none", textAlign: "left", fontSize: 14.5, color: "#EF4444", cursor: "pointer", fontWeight: 600 }}>
