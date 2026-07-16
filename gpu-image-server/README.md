@@ -24,13 +24,20 @@ in 6 GB. SDXL is supported too but is slow on this card.
 
 | Feature | Works? | Notes |
 |---|---|---|
-| **Text → image** (generate) | ✅ Yes | 512–768px, ~3–8 sec/image with SD 1.5 |
+| **Text → image (Full HD)** | ✅ Yes | **1920×1080 by default** via the two-stage hi-res pipeline (~15–35 sec) |
+| **Even bigger (2K/4K)** | ✅ Yes | Ask for `width/height` up to ~3840×2160; slower |
 | **Image edit** (img2img) | ✅ Yes | Restyle, enhance, re-imagine an image |
 | **Inpaint / background swap** | ✅ Yes | Paint a mask, replace that region |
+| **Upscale to HD** (`/upscale`) | ✅ Yes | Turn any image into a sharp Full-HD/4K version |
 | **Smart prompts** (GPT-4o) | ✅ Yes | Short idea → detailed prompt, free via GitHub |
-| **SDXL** (higher quality) | ⚠️ Slow | ~40–90 sec/image with CPU offload |
+| **SDXL** (higher base quality) | ⚠️ Slow | Optional; ~60–120 sec/HD image with CPU offload |
 | **FLUX** (best quality) | ❌ No | Needs 12 GB+; skip on this card |
 | **Many users at once** | ⚠️ Serial | One image at a time; fine for you, queues under load |
+
+**How Full HD works on 6 GB:** the model renders at its native size (768px) then
+the server upscales and runs a light detail pass to reach **1920×1080** (or 4K).
+This is the standard "hi-res fix" — it gives sharp, detailed HD output without
+running out of VRAM. Set `"hd": false` for a fast native-size draft.
 
 **Realistic quality:** With a good SD 1.5 checkpoint, this is **more than enough
 for your website creatives and blog hero images** — especially illustrated,
@@ -44,25 +51,20 @@ photorealism of faces. My honest recommendation:
 
 ---
 
-## Setup (Windows, ~15 min + model download)
+## Setup (Windows) — literally one double-click
 
 1. **Install Python 3.10–3.11** from python.org (tick *"Add Python to PATH"*).
 2. **Install the latest NVIDIA driver** for your RTX 3050.
-3. Open **PowerShell** in this `gpu-image-server` folder and run:
-   ```
-   setup.bat
-   ```
-   This creates a virtual environment and installs PyTorch (CUDA 12.4) + the deps.
-4. **Configure it:** copy `.env.example` to `.env` and set:
-   - `API_TOKEN` — any long random string (your website will send this).
-   - `GITHUB_TOKEN` — a token from https://github.com/settings/tokens (enables the
-     GPT-4o smart-prompt layer; optional but recommended).
-5. **Start it:**
-   ```
-   run.bat
-   ```
-   The first run downloads the model (~2–5 GB) — one time. When you see
-   `Application startup complete`, it's ready on `http://localhost:7860`.
+3. **Double-click `start.bat`.**
+
+That's it. On the first run it automatically creates the virtual environment,
+installs PyTorch (CUDA) + all dependencies, generates a `.env` with a random
+`API_TOKEN`, downloads the model once (~2–5 GB), and starts the server on
+`http://localhost:7860`. Every run after that starts instantly.
+
+*(Optional: to enable GPT-4o smart prompts, paste a token from
+https://github.com/settings/tokens into the `GITHUB_TOKEN=` line of the `.env`
+file that `start.bat` created.)*
 
 **Quick test** (new PowerShell window):
 ```powershell
@@ -119,7 +121,13 @@ All requests are JSON. Direct-to-server requests need `Authorization: Bearer <AP
 { "image": "data:image/png;base64,...", "mask": "data:image/png;base64,...",
   "prompt": "a clean studio background" }
 ```
-`mask`: white = area to change, black = keep. All return `{ "dataUrl": "...", "seconds": n }`.
+`mask`: white = area to change, black = keep.
+
+**Upscale any image to HD/4K** — `{"action":"upscale", ...}`
+```json
+{ "image": "data:image/png;base64,...", "width": 1920, "height": 1080 }
+```
+All return `{ "dataUrl": "...", "size": "1920x1080", "seconds": n }`.
 
 ---
 
@@ -165,6 +173,6 @@ print("saved creative.png")
 | `server.py` | FastAPI server: `/generate`, `/edit`, `/inpaint`, `/health` |
 | `prompt_brain.py` | GPT-4o (GitHub Models) prompt enhancement |
 | `requirements.txt` | Python dependencies |
-| `setup.bat` / `run.bat` | Windows one-time setup and launcher |
+| `start.bat` | Windows one-click: auto-setup on first run, then launches |
 | `.env.example` | Configuration template |
 | `../src/app/api/studio/route.ts` | Next.js route that proxies to this server |

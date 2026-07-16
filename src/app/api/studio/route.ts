@@ -15,6 +15,7 @@ const ACTIONS: Record<string, string> = {
   generate: "/generate",
   edit: "/edit",
   inpaint: "/inpaint",
+  upscale: "/upscale",
 };
 
 export async function POST(req: NextRequest) {

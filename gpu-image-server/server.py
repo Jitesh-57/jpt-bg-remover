@@ -152,12 +152,13 @@ def _steps_and_guidance(steps: Optional[int], guidance: Optional[float]):
 class GenerateReq(BaseModel):
     prompt: str
     negative_prompt: Optional[str] = "blurry, low quality, watermark, text, deformed"
-    width: int = 768
-    height: int = 768
+    width: int = 1920               # final output size — Full HD by default
+    height: int = 1080
     steps: Optional[int] = None
     guidance: Optional[float] = None
     seed: Optional[int] = None
     enhance: bool = False
+    hd: bool = True                 # two-stage hi-res: generate native, then upscale + add detail
 
 
 class EditReq(BaseModel):
@@ -182,10 +183,63 @@ class InpaintReq(BaseModel):
     enhance: bool = False
 
 
+class UpscaleReq(BaseModel):
+    image: str                 # base64 / data URL
+    width: int = 1920          # target size (Full HD by default)
+    height: int = 1080
+    prompt: Optional[str] = "high quality, sharp, detailed, crisp"
+    negative_prompt: Optional[str] = "blurry, low quality, watermark, text, deformed"
+    seed: Optional[int] = None
+
+
 def _generator(seed: Optional[int]):
     if seed is None:
         return None
     return torch.Generator(device="cpu" if LOW_VRAM else DEVICE).manual_seed(int(seed))
+
+
+# ── Hi-res (Full HD) pipeline ────────────────────────────────────────────────
+# Diffusion models render best at their native size (SD1.5 ~768, SDXL ~1024).
+# To reach Full HD / 4K on a 6 GB card we render native, then upscale the image
+# and run a light img2img pass ("hi-res fix") that adds real detail at the larger
+# size — the standard way to get sharp HD from a small GPU without running out
+# of VRAM. The heaviest img2img stage is capped, then a final Lanczos resize
+# hits the exact target so we never OOM at 1920+ on 6 GB.
+BASE_LONG = 1024 if FAMILY in ("sdxl", "flux") else 768   # native render long-edge
+HIRES_CAP = 1536 if LOW_VRAM else 2048                    # heaviest detail-pass long-edge
+
+
+def _round8(v: float) -> int:
+    return max(8, int(round(v / 8)) * 8)
+
+
+def _fit(long_edge: int, w: int, h: int):
+    """Scale (w,h) so the long edge == long_edge, keep aspect, round to /8."""
+    scale = long_edge / max(w, h)
+    return _round8(w * scale), _round8(h * scale)
+
+
+def _to_size(img: Image.Image, w: int, h: int) -> Image.Image:
+    return img if img.size == (w, h) else img.resize((w, h), Image.LANCZOS)
+
+
+def _hires(base: Image.Image, tw: int, th: int, prompt: str, negative: str,
+           steps: int, guidance: float, seed: Optional[int]) -> Image.Image:
+    """Upscale `base` toward (tw, th) and add detail with a light img2img pass."""
+    target_long = max(tw, th)
+    if target_long <= max(base.size):
+        return _to_size(base, tw, th)
+    inter_w, inter_h = _fit(min(target_long, HIRES_CAP), tw, th)
+    upscaled = base.resize((inter_w, inter_h), Image.LANCZOS)
+    kwargs = dict(
+        prompt=prompt, image=upscaled, strength=0.35,
+        num_inference_steps=max(18, int(steps * 0.7)), guidance_scale=guidance,
+        generator=_generator(seed),
+    )
+    if FAMILY != "flux":
+        kwargs["negative_prompt"] = negative
+    detailed = img2img(**kwargs).images[0]
+    return _to_size(detailed, tw, th)   # final exact-size (Full HD / 4K)
 
 
 # ── Routes ────────────────────────────────────────────────────────────────────
@@ -208,15 +262,30 @@ def generate(req: GenerateReq, authorization: Optional[str] = Header(None)):
     steps, guidance = _steps_and_guidance(req.steps, req.guidance)
     prompt = enhance_prompt(req.prompt, "generate") if req.enhance else req.prompt
     t0 = time.time()
+
+    # Stage 1 — render at the model's native resolution (keeps the aspect ratio).
+    do_hd = req.hd and max(req.width, req.height) > BASE_LONG
+    gw, gh = _fit(BASE_LONG, req.width, req.height) if do_hd else (req.width, req.height)
     kwargs = dict(
-        prompt=prompt, width=req.width, height=req.height,
+        prompt=prompt, width=gw, height=gh,
         num_inference_steps=steps, guidance_scale=guidance,
         generator=_generator(req.seed),
     )
     if FAMILY != "flux":
         kwargs["negative_prompt"] = req.negative_prompt
     image = txt2img(**kwargs).images[0]
-    return {"dataUrl": _image_to_dataurl(image), "seconds": round(time.time() - t0, 1), "prompt": prompt}
+
+    # Stage 2 — upscale + add detail to hit the exact target (Full HD / 4K).
+    if do_hd:
+        image = _hires(image, req.width, req.height, prompt, req.negative_prompt or "",
+                       steps, guidance, req.seed)
+
+    return {
+        "dataUrl": _image_to_dataurl(image),
+        "seconds": round(time.time() - t0, 1),
+        "size": f"{image.width}x{image.height}",
+        "prompt": prompt,
+    }
 
 
 @app.post("/edit")
@@ -254,6 +323,21 @@ def inpaint_route(req: InpaintReq, authorization: Optional[str] = Header(None)):
         kwargs["negative_prompt"] = req.negative_prompt
     image = inpaint(**kwargs).images[0]
     return {"dataUrl": _image_to_dataurl(image), "seconds": round(time.time() - t0, 1), "prompt": prompt}
+
+
+@app.post("/upscale")
+def upscale_route(req: UpscaleReq, authorization: Optional[str] = Header(None)):
+    _auth(authorization)
+    steps, guidance = _steps_and_guidance(None, None)
+    init = _b64_to_image(req.image)
+    t0 = time.time()
+    image = _hires(init, req.width, req.height, req.prompt or "high quality, sharp, detailed",
+                   req.negative_prompt or "", steps, guidance, req.seed)
+    return {
+        "dataUrl": _image_to_dataurl(image),
+        "seconds": round(time.time() - t0, 1),
+        "size": f"{image.width}x{image.height}",
+    }
 
 
 if __name__ == "__main__":
