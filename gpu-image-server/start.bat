@@ -8,6 +8,19 @@ REM ============================================================================
 cd /d "%~dp0"
 setlocal enabledelayedexpansion
 
+REM ── Make sure Python is installed (auto-install via winget on Windows 11) ────
+where python >nul 2>nul
+if errorlevel 1 (
+  echo [setup] Python was not found. Installing it automatically...
+  winget install -e --id Python.Python.3.11 --accept-source-agreements --accept-package-agreements
+  echo.
+  echo [setup] Python has been installed.
+  echo [setup] Please CLOSE this window and double-click start.bat again.
+  echo.
+  pause
+  exit /b
+)
+
 REM ── First-time setup ─────────────────────────────────────────────────────────
 if not exist venv (
   echo [setup] Creating virtual environment...
