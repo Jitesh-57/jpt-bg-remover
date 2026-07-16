@@ -499,9 +499,9 @@ export default function ImageEditorPage() {
   // prompts during the brief window after OAuth redirect while cookies resolve.
   const requireSignIn = () => { if (!authChecked) return true; if (!user) { setShowSignInModal(true); return true; } return false; };
 
-  // Free tools are unlimited for signed-in users. Anonymous visitors get one
-  // free transform, then must sign up (unlimited afterwards, no credits).
-  const ANON_FREE_TRANSFORMS = 1;
+  // Free tools are unlimited for signed-in users. Anonymous visitors get 5
+  // free transforms, then must sign up (unlimited afterwards, no credits).
+  const ANON_FREE_TRANSFORMS = 5;
   const anonBlocked = (): boolean => {
     if (!authChecked || user) return false; // signed in → unlimited
     let used = 0;
