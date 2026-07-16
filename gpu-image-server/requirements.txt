@@ -1,0 +1,16 @@
+# Core inference stack for the self-hosted image generation + editing server.
+# Install PyTorch with the CUDA build that matches your driver first, e.g.:
+#   pip install torch --index-url https://download.pytorch.org/whl/cu124
+torch>=2.3
+diffusers>=0.31
+transformers>=4.44
+accelerate>=0.33
+safetensors>=0.4
+sentencepiece>=0.2          # required by FLUX text encoders
+protobuf>=4.25
+Pillow>=10.3
+fastapi>=0.114
+uvicorn[standard]>=0.30
+python-multipart>=0.0.9
+requests>=2.32
+peft>=0.12                  # optional: LoRA / fine-tune adapters
