@@ -66,6 +66,20 @@ installs PyTorch (CUDA) + all dependencies, generates a `.env` with a random
 https://github.com/settings/tokens into the `GITHUB_TOKEN=` line of the `.env`
 file that `start.bat` created.)*
 
+### If Windows blocks `start.bat` ("Smart App Control blocked a file")
+
+Windows 11 Smart App Control blocks `.bat` files downloaded from the internet —
+even safe ones. Run the same steps through PowerShell instead (SAC allows this):
+
+1. Install Python from the **Microsoft Store** (search "Python 3.12") — Store apps
+   are trusted by SAC.
+2. Open the `gpu-image-server` folder, click the address bar, type `powershell`, Enter.
+3. Paste this one line and press Enter:
+   ```
+   python -m venv venv ; .\venv\Scripts\python.exe -m pip install --upgrade pip ; .\venv\Scripts\python.exe -m pip install torch --index-url https://download.pytorch.org/whl/cu124 ; .\venv\Scripts\python.exe -m pip install -r requirements.txt ; .\venv\Scripts\python.exe server.py
+   ```
+It installs everything and starts the server on `http://localhost:7860`.
+
 **Quick test** (new PowerShell window):
 ```powershell
 curl http://localhost:7860/health
