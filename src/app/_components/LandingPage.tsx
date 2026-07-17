@@ -16,7 +16,22 @@ const PAGE_TOOL: Record<string, string> = {
   'remove-bg': 'remove-bg',
   upscale: 'upscale',
   'ai-editor': 'ai-edit',
+  'compress-image': 'compress',
+  'convert-image': 'convert',
+  'crop-image': 'crop',
+  'rotate-image': 'rotate',
+  'image-to-pdf': 'pdf',
 }
+
+// Free, in-browser tools — used for the "More free tools" cross-link hub.
+const FREE_TOOL_LINKS: { id: string; icon: string; title: string; href: string }[] = [
+  { id: 'upscale', icon: '🔍', title: 'Image Upscaler', href: '/upscale' },
+  { id: 'compress-image', icon: '🗜️', title: 'Image Compressor', href: '/compress-image' },
+  { id: 'convert-image', icon: '🔀', title: 'Image Converter', href: '/convert-image' },
+  { id: 'crop-image', icon: '✂️', title: 'Crop Image', href: '/crop-image' },
+  { id: 'rotate-image', icon: '🔄', title: 'Rotate & Flip', href: '/rotate-image' },
+  { id: 'image-to-pdf', icon: '📄', title: 'Image to PDF', href: '/image-to-pdf' },
+]
 
 function readFileAsDataUrl(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -29,7 +44,7 @@ function readFileAsDataUrl(file: File): Promise<string> {
 
 const HOW_IT_WORKS = [
   { step: '01', title: 'Upload Your Photo', desc: 'Drag & drop or click to select any image from your device. JPG, PNG, WEBP supported.' },
-  { step: '02', title: 'Enhance Instantly', desc: 'Advanced image processing sharpens and upscales your photo in seconds — right in your browser.' },
+  { step: '02', title: 'Process Instantly', desc: 'Advanced in-browser image processing transforms your photo in seconds — nothing is uploaded to a server.' },
   { step: '03', title: 'Download Result', desc: 'Preview the result and download in full quality — PNG or JPEG, your choice.' },
 ]
 
@@ -59,6 +74,36 @@ const PAGE_USE_CASES: Record<string, { icon: string; title: string; stat?: strin
     { icon: '🎥', title: 'Content Creators', stat: '35% more shares', desc: 'Create eye-catching thumbnails, social media images, and banners with AI edits using plain English descriptions.' },
     { icon: '📣', title: 'Marketing Teams', desc: 'Produce on-brand campaign visuals at scale. Change backgrounds, apply styles, and relight images with simple text prompts.' },
     { icon: '🎨', title: 'Designers', desc: 'Prototype ideas and explore creative directions faster. Use AI editing to iterate without committing to full production.' },
+  ],
+  'compress-image': [
+    { icon: '🌐', title: 'Faster Websites', stat: 'Better Core Web Vitals', desc: 'Smaller images load quicker, improving page speed and SEO. Compress hero images and thumbnails before uploading.' },
+    { icon: '📧', title: 'Email Attachments', desc: 'Get photos under email size limits without emailing a blurry mess. Compress to a few hundred KB in seconds.' },
+    { icon: '📱', title: 'App & Form Uploads', desc: 'Meet strict upload size limits on government portals, job sites, and apps that reject large files.' },
+    { icon: '💾', title: 'Save Storage', desc: 'Shrink an entire photo library to reclaim space on your phone, drive, or cloud storage.' },
+  ],
+  'convert-image': [
+    { icon: '🪟', title: 'Need Transparency', desc: 'Convert JPG to PNG when you need a transparent background for logos, stickers, or overlays.' },
+    { icon: '📉', title: 'Smaller Files', desc: 'Convert PNG to JPG or WEBP to cut file size dramatically for web pages and email.' },
+    { icon: '🧩', title: 'App Compatibility', desc: 'Some apps and platforms only accept certain formats. Convert to exactly what they require.' },
+    { icon: '⚡', title: 'Modern Web Format', desc: 'Convert to WEBP for the best quality-to-size ratio on fast-loading websites.' },
+  ],
+  'crop-image': [
+    { icon: '📸', title: 'Instagram & Reels', desc: 'One-tap crops for square posts (1:1), tall posts (4:5), and Stories/Reels (9:16).' },
+    { icon: '▶️', title: 'YouTube Thumbnails', desc: 'Crop to a clean 16:9 so your thumbnail fills the frame with no awkward bars.' },
+    { icon: '⭕', title: 'Profile Pictures', desc: 'Make a perfect round avatar with the circle crop for social profiles and team pages.' },
+    { icon: '🖼️', title: 'Prints & Frames', desc: 'Crop to classic photo ratios like 3:2 so prints fit standard frame sizes.' },
+  ],
+  'rotate-image': [
+    { icon: '📱', title: 'Fix Sideways Photos', desc: 'Phone photos that uploaded rotated? Straighten them with a 90° turn in one tap.' },
+    { icon: '🪞', title: 'Mirror Selfies', desc: 'Flip selfies horizontally so text reads correctly or the framing feels natural.' },
+    { icon: '🎨', title: 'Creative Effects', desc: 'Flip and rotate for reflections, symmetry, and layout experiments.' },
+    { icon: '📄', title: 'Scanned Documents', desc: 'Turn upside-down or sideways scans the right way up before sharing.' },
+  ],
+  'image-to-pdf': [
+    { icon: '📑', title: 'Documents & Forms', desc: 'Turn a photo of a form, ID, or receipt into a PDF that portals and offices accept.' },
+    { icon: '📚', title: 'Share & Archive', desc: 'PDFs are universal and easy to store — perfect for keeping records tidy.' },
+    { icon: '🖨️', title: 'Easy Printing', desc: 'A PDF prints predictably at the right size, unlike loose image files.' },
+    { icon: '📤', title: 'Professional Sending', desc: 'Send a clean PDF instead of a raw photo when it needs to look official.' },
   ],
 }
 
@@ -141,6 +186,31 @@ const PAGE_SEO_CONTENT: Record<string, { heading: string; body: string }[]> = {
     { heading: 'The best AI photo editor online free', body: 'Unlike Photoshop or Adobe Firefly, JPT AI is free to start with no credit card required. Edit images in your browser — remove backgrounds, generate new backgrounds, apply styles, and upscale quality all in one tool. No watermarks on free tier.' },
     { heading: 'AI image editing for e-commerce and marketing', body: 'Create professional product photos, ad creatives, and social media visuals in minutes. Change backgrounds, adjust lighting, apply brand styles, and generate consistent imagery at scale — without a designer or agency. Perfect for Shopify, Amazon, Instagram, and paid ads.' },
   ],
+  'compress-image': [
+    { heading: 'How to compress an image for free', body: 'JPT AI shrinks your image file size right in your browser — no upload, no sign-up, no watermark. Just drag the quality slider until the estimated size is where you want it, then download. Most photos drop to a fraction of their original size with quality loss that is almost impossible to see.' },
+    { heading: 'Reduce photo size to KB without losing quality', body: 'Need a photo under 100 KB or 200 KB for a form, website, or email? Lower the quality slider and the live size read-out shows you exactly where you land. Because compression happens on your device, it is instant and completely private.' },
+    { heading: 'Why compress images?', body: 'Smaller images load faster, improving your website speed and Google ranking, slip under email and upload limits, and save storage on your phone or drive. JPT AI makes it a one-slider, one-click job — free and unlimited.' },
+  ],
+  'convert-image': [
+    { heading: 'How to convert an image format for free', body: 'Upload your image, pick JPG, PNG, or WEBP, and click convert — JPT AI does it instantly in your browser with no watermark and no sign-up. Your file never leaves your device, so conversion is private and fast.' },
+    { heading: 'JPG to PNG, PNG to JPG, and WEBP explained', body: 'Choose PNG when you need transparency or the sharpest edges for logos and graphics. Choose JPG for the smallest photo files that every app accepts. Choose WEBP for the best of both — small size with transparency support — ideal for modern, fast-loading websites.' },
+    { heading: 'A free image converter that respects your privacy', body: 'Unlike many online converters, JPT AI processes everything locally in your browser. No queue, no upload limits, no account — convert as many images as you like between JPG, PNG, and WEBP, completely free.' },
+  ],
+  'crop-image': [
+    { heading: 'How to crop an image online for free', body: 'Upload your photo, choose a ready-made ratio — Square, Portrait, Story, Wide, Classic, or Circle — and JPT AI crops it instantly in your browser. No watermark, no sign-up, and your image stays private on your device.' },
+    { heading: 'Crop photos for Instagram, YouTube, and profiles', body: 'Get the exact aspect ratios each platform wants: 1:1 for Instagram feed, 4:5 for tall posts, 9:16 for Stories and Reels, and 16:9 for YouTube thumbnails. The circle crop turns any photo into a clean round profile picture with a transparent background.' },
+    { heading: 'Free, unlimited, and private', body: 'Cropping only trims edges, so your image keeps full quality. Because everything runs in your browser, there are no upload limits and no waiting — crop as many photos as you like for free.' },
+  ],
+  'rotate-image': [
+    { heading: 'How to rotate an image online for free', body: 'Upload your photo and tap Rotate Left, Rotate Right, or 180° — JPT AI turns it instantly in your browser. Rotation is lossless, so your image keeps its full quality. No watermark, no sign-up.' },
+    { heading: 'Flip and mirror images in one click', body: 'Use Flip Horizontal to mirror a photo left-to-right (great for selfies) or Flip Vertical to mirror top-to-bottom. Perfect for fixing orientation, correcting mirrored text, or creating reflection effects.' },
+    { heading: 'Fix sideways and upside-down photos', body: 'Phone photos and scanned documents often upload rotated. A quick 90° or 180° turn straightens them right away. Everything runs on your device, so it is fast, private, and free with no limits.' },
+  ],
+  'image-to-pdf': [
+    { heading: 'How to convert an image to PDF for free', body: 'Upload a JPG, PNG, or WEBP and click Download as PDF — JPT AI builds the PDF right in your browser with no watermark and no sign-up. The page is sized to your image so it looks clean and professional.' },
+    { heading: 'JPG to PDF and PNG to PDF, instantly', body: 'Turning photos into PDFs makes them easy to share, print, and archive. Forms, IDs, receipts, and notes all become tidy, universal PDF files that any device and office can open.' },
+    { heading: 'Private, unlimited, and watermark-free', body: 'Because the PDF is generated locally in your browser, your image never leaves your device. Convert as many images to PDF as you like — completely free, with no watermark and no account required.' },
+  ],
 }
 
 // Gradient hero image previews per page
@@ -164,6 +234,31 @@ const PAGE_VISUALS: Record<string, { before: string; after: string; label: strin
     before: 'linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%)',
     after: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
     label: 'AI Edited',
+  },
+  'compress-image': {
+    before: 'linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)',
+    after: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+    label: 'Smaller File',
+  },
+  'convert-image': {
+    before: 'linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)',
+    after: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+    label: 'Converted',
+  },
+  'crop-image': {
+    before: 'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)',
+    after: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+    label: 'Cropped',
+  },
+  'rotate-image': {
+    before: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)',
+    after: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+    label: 'Rotated',
+  },
+  'image-to-pdf': {
+    before: 'linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%)',
+    after: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+    label: 'PDF Ready',
   },
 }
 
@@ -370,6 +465,41 @@ export default function LandingPage({ config, toolHref, pageId }: LandingPagePro
               { icon: '📤', label: 'No Watermark on Download' },
               { icon: '⚡', label: 'No Photoshop Skills Needed' },
             ],
+            'compress-image': [
+              { icon: '🗜️', label: 'Reduce File Size to KB' },
+              { icon: '🎚️', label: 'One-Slider Quality Control' },
+              { icon: '🔒', label: 'Private — Runs in Browser' },
+              { icon: '📤', label: 'No Watermark on Download' },
+              { icon: '⚡', label: 'Instant, Unlimited & Free' },
+            ],
+            'convert-image': [
+              { icon: '🔀', label: 'JPG · PNG · WEBP' },
+              { icon: '🪟', label: 'Keeps Transparency' },
+              { icon: '🔒', label: 'Private — Runs in Browser' },
+              { icon: '📤', label: 'No Watermark on Download' },
+              { icon: '⚡', label: 'Instant, Unlimited & Free' },
+            ],
+            'crop-image': [
+              { icon: '✂️', label: 'One-Tap Social Ratios' },
+              { icon: '⭕', label: 'Circle Profile Crop' },
+              { icon: '🔒', label: 'Private — Runs in Browser' },
+              { icon: '📤', label: 'No Watermark on Download' },
+              { icon: '⚡', label: 'Instant, Unlimited & Free' },
+            ],
+            'rotate-image': [
+              { icon: '🔄', label: 'Rotate 90° / 180°' },
+              { icon: '🪞', label: 'Flip & Mirror' },
+              { icon: '🔒', label: 'Private — Runs in Browser' },
+              { icon: '📤', label: 'No Watermark on Download' },
+              { icon: '⚡', label: 'Instant, Unlimited & Free' },
+            ],
+            'image-to-pdf': [
+              { icon: '📄', label: 'JPG & PNG to PDF' },
+              { icon: '📐', label: 'Right-Sized Pages' },
+              { icon: '🔒', label: 'Private — Runs in Browser' },
+              { icon: '📤', label: 'No Watermark on Download' },
+              { icon: '⚡', label: 'Instant, Unlimited & Free' },
+            ],
           } as Record<string, { icon: string; label: string }[]>)[pageId]?.map(item => (
             <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <span style={{ fontSize: 18 }}>{item.icon}</span>
@@ -558,6 +688,31 @@ export default function LandingPage({ config, toolHref, pageId }: LandingPagePro
                   <h3 style={{ fontSize: 17, fontWeight: 800, color: '#111827', marginBottom: 10, marginTop: 0 }}>{block.heading}</h3>
                   <p style={{ margin: 0 }}>{block.body}</p>
                 </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ── More Free Tools (cross-link hub) ─────────────────────────────── */}
+      {FREE_TOOL_LINKS.some(l => l.id === pageId) && (
+        <section style={{ padding: '72px 24px', background: 'linear-gradient(160deg, #F5F5FF 0%, #EEF2FF 100%)' }}>
+          <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+            <div style={{ textAlign: 'center', marginBottom: 40 }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: '#6366F1', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>More Free Tools</div>
+              <h2 style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', fontWeight: 900, color: '#0F172A', margin: '0 0 10px', letterSpacing: '-0.02em' }}>All your image tools in one place</h2>
+              <p style={{ fontSize: 16, color: '#6B7280', margin: 0 }}>100% free · No sign-up · No watermark · Runs in your browser</p>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 14 }}>
+              {FREE_TOOL_LINKS.filter(l => l.id !== pageId).map(l => (
+                <a key={l.id} href={l.href}
+                  style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, background: '#fff', border: '1px solid #E5E7EF', borderRadius: 16, padding: '22px 16px', textDecoration: 'none', boxShadow: '0 2px 12px rgba(0,0,0,0.04)', transition: 'transform 0.18s, box-shadow 0.18s' }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 8px 28px rgba(99,102,241,0.16)'; (e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 2px 12px rgba(0,0,0,0.04)'; (e.currentTarget as HTMLAnchorElement).style.transform = 'none'; }}>
+                  <span style={{ fontSize: 30 }}>{l.icon}</span>
+                  <span style={{ fontSize: 14, fontWeight: 800, color: '#111827', textAlign: 'center' }}>{l.title}</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: '#6366F1' }}>Try free →</span>
+                </a>
               ))}
             </div>
           </div>

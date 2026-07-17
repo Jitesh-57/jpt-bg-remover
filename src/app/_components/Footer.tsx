@@ -20,6 +20,16 @@ const ALL_TOOLS = [
   { labelKey: "My Generations",  href: "/generations" },
 ];
 
+// Free, in-browser tools — the SEO landing pages. Shown in free-only mode.
+const FREE_TOOLS = [
+  { labelKey: "Image Upscaler",   href: "/upscale" },
+  { labelKey: "Image Compressor", href: "/compress-image" },
+  { labelKey: "Image Converter",  href: "/convert-image" },
+  { labelKey: "Crop Image",       href: "/crop-image" },
+  { labelKey: "Rotate & Flip",    href: "/rotate-image" },
+  { labelKey: "Image to PDF",     href: "/image-to-pdf" },
+];
+
 const ALL_COMPANY = [
   { labelKey: "Pricing", href: "/pricing" },
   { labelKey: "Blog",    href: "/blog" },
@@ -42,7 +52,7 @@ export default function Footer() {
   return (
     <footer style={{ background: "#0F172A", color: "#94A3B8", padding: "60px 24px 32px" }}>
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-        <div style={{ display: "grid", gridTemplateColumns: PAID_FEATURES_ENABLED ? "2fr 1fr 1fr 1fr" : "2fr 1fr 1fr", gap: 40, marginBottom: 48 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: 40, marginBottom: 48 }}>
 
           {/* Brand */}
           <div>
@@ -63,22 +73,20 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* AI Tools — hidden in free-only mode */}
-          {PAID_FEATURES_ENABLED && (
-            <div>
-              <div style={{ fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 16 }}>{t.footerAiTools}</div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                {AI_TOOLS.map(l => (
-                  <a key={l.href} href={l.href}
-                    style={{ fontSize: 14, color: "#64748B", textDecoration: "none", transition: "color 0.15s" }}
-                    onMouseEnter={e => (e.currentTarget.style.color = "#E2E8F0")}
-                    onMouseLeave={e => (e.currentTarget.style.color = "#64748B")}>
-                    {l.labelKey}
-                  </a>
-                ))}
-              </div>
+          {/* AI Tools (paid mode) or Free Tools (free-only mode) */}
+          <div>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 16 }}>{PAID_FEATURES_ENABLED ? t.footerAiTools : "Free Tools"}</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {(PAID_FEATURES_ENABLED ? AI_TOOLS : FREE_TOOLS).map(l => (
+                <a key={l.href} href={l.href}
+                  style={{ fontSize: 14, color: "#64748B", textDecoration: "none", transition: "color 0.15s" }}
+                  onMouseEnter={e => (e.currentTarget.style.color = "#E2E8F0")}
+                  onMouseLeave={e => (e.currentTarget.style.color = "#64748B")}>
+                  {l.labelKey}
+                </a>
+              ))}
             </div>
-          )}
+          </div>
 
           {/* Tools */}
           <div>
