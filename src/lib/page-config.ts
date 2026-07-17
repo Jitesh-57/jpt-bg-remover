@@ -332,6 +332,64 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
       { q: 'Do I need to install anything?', a: 'No. It works in your browser — no app, no Acrobat, no software required.' },
     ],
   },
+  'watermark-image': {
+    page_id: 'watermark-image',
+    title: 'Free Watermark Maker Online — Add Text Watermark to Photos | JPT AI',
+    meta_description:
+      'Add a text watermark to your images online for free. Protect photos with your name or brand — choose position, size, color, and opacity. No sign-up, no watermark on the tool.',
+    og_title: 'Free Watermark Maker — Add Text to Photos Online | JPT AI',
+    og_description: 'Add a text watermark to images free online. Position, size, color, opacity. No sign-up.',
+    og_image: '',
+    keywords: 'add watermark free, watermark maker free, watermark photo online free, add text to image free, image watermark free, batch watermark free',
+    h1: 'Free Watermark Maker',
+    subtitle:
+      'Protect your photos with a text watermark — free online. Add your name or brand, then choose the position, size, color, and opacity. No sign-up, and no watermark from us.',
+    cta_text: 'Add Watermark Free',
+    features: [
+      { icon: '🔖', title: 'Custom Text', desc: 'Add your name, brand, or © notice in any color' },
+      { icon: '🎯', title: 'Any Position', desc: 'Corners, center, or a repeating tiled pattern across the image' },
+      { icon: '🎚️', title: 'Size & Opacity', desc: 'Fine-tune how bold or subtle the watermark looks' },
+      { icon: '📦', title: 'Batch Mode', desc: 'Watermark up to 100 images at once in the Batch Editor' },
+    ],
+    faq: [
+      { q: 'How do I add a watermark to a photo for free?', a: 'Upload your image, type your watermark text, pick a position, size, color, and opacity, then apply and download. It is free, needs no sign-up, and the tool adds no watermark of its own.' },
+      { q: 'Can I watermark many photos at once?', a: 'Yes. Use the Batch Editor to apply the same text watermark to up to 100 images in one go — perfect for photographers and stores.' },
+      { q: 'Can I control how the watermark looks?', a: 'Yes. Choose the text, a position (corners, center, or a tiled repeat), the size, the color, and the opacity so it is as bold or subtle as you want.' },
+      { q: 'Does the tool add its own watermark?', a: 'No. Only your text appears on the image. There is no JPT AI branding on your download.' },
+      { q: 'Is my photo uploaded to a server?', a: 'No. Watermarking runs entirely in your browser, so your image stays private on your device.' },
+      { q: 'Is it really free?', a: 'Yes — completely free with no limits and no account required.' },
+      { q: 'Do I need to install anything?', a: 'No. It works in your browser — no app or software needed.' },
+    ],
+  },
+  'meme-generator': {
+    page_id: 'meme-generator',
+    title: 'Free Meme Generator Online — Add Top & Bottom Text to Images | JPT AI',
+    meta_description:
+      'Make memes online for free. Add classic top and bottom text to any image with the bold Impact style — no sign-up, no watermark, instant download.',
+    og_title: 'Free Meme Generator — Add Text to Images Online | JPT AI',
+    og_description: 'Make memes free online. Classic top/bottom Impact text, no watermark, no sign-up.',
+    og_image: '',
+    keywords: 'meme generator free, make a meme free, meme maker online free, add text to image meme free, caption image free, impact text meme free',
+    h1: 'Free Meme Generator',
+    subtitle:
+      'Turn any image into a meme — free online. Add classic top and bottom text in the bold Impact style, then download instantly. No sign-up, no watermark.',
+    cta_text: 'Make a Meme Free',
+    features: [
+      { icon: '😂', title: 'Classic Meme Text', desc: 'Bold white Impact font with a black outline — the real meme look' },
+      { icon: '⬆️⬇️', title: 'Top & Bottom Captions', desc: 'Add a caption to the top, the bottom, or both' },
+      { icon: '↩️', title: 'Auto Text Wrap', desc: 'Long captions wrap neatly to fit the image width' },
+      { icon: '📥', title: 'Instant Download', desc: 'Save your meme instantly — no watermark, no limits' },
+    ],
+    faq: [
+      { q: 'How do I make a meme for free?', a: 'Upload an image, type your top and/or bottom text, click Create Meme, and download. It is free, needs no sign-up, and adds no watermark.' },
+      { q: 'Does it use the classic meme font?', a: 'Yes. Captions render in bold uppercase Impact with a black outline — the classic meme style everyone recognises.' },
+      { q: 'Can I add text to just the top or bottom?', a: 'Yes. Fill in either field or both. Empty fields are simply skipped.' },
+      { q: 'What if my caption is long?', a: 'Long captions automatically wrap onto multiple lines so they always fit the image width.' },
+      { q: 'Is there a watermark on the meme?', a: 'No watermark, ever. Your meme downloads clean and ready to share.' },
+      { q: 'Is my image uploaded to a server?', a: 'No. The meme is made entirely in your browser, so your image stays private.' },
+      { q: 'Do I need to install anything?', a: 'No. It works in your browser — no app or software required.' },
+    ],
+  },
 }
 
 export async function getPageConfig(pageId: string): Promise<PageSEO> {
