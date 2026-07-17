@@ -30,7 +30,7 @@ export interface PageSEO {
 export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
   upscale: {
     page_id: 'upscale',
-    title: 'Free AI Image Upscaler — Enhance Photo Resolution to 4K Online | JPT AI',
+    title: 'Free AI Image Upscaler — Upscale Photos to 4K | JPT AI',
     meta_description:
       'Free AI image upscaler online. Upscale photos to 4K without losing quality. Enhance resolution 2× or 4× instantly — no watermark, no software needed.',
     og_title: 'Free AI Image Upscaler — 4K Photo Enhancement | JPT AI',
@@ -189,7 +189,7 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
   },
   'compress-image': {
     page_id: 'compress-image',
-    title: 'Free Image Compressor Online — Reduce Photo Size Without Losing Quality | JPT AI',
+    title: 'Free Image Compressor — Reduce Photo Size to KB | JPT AI',
     meta_description:
       'Compress JPG, PNG & WEBP images online for free. Reduce photo file size to KB for web, email, and uploads — no quality loss, no watermark, no sign-up.',
     og_title: 'Free Image Compressor — Reduce Photo Size Online | JPT AI',
@@ -218,7 +218,7 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
   },
   'convert-image': {
     page_id: 'convert-image',
-    title: 'Free Image Converter Online — JPG to PNG, PNG to JPG, WEBP | JPT AI',
+    title: 'Free Image Converter — JPG to PNG, PNG to JPG | JPT AI',
     meta_description:
       'Convert images between JPG, PNG, and WEBP online for free. Fast, in-browser image format converter — no watermark, no sign-up, no upload to a server.',
     og_title: 'Free Image Converter — JPG · PNG · WEBP Online | JPT AI',
@@ -247,7 +247,7 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
   },
   'crop-image': {
     page_id: 'crop-image',
-    title: 'Free Image Cropper Online — Crop Photos for Instagram, YouTube & More | JPT AI',
+    title: 'Free Image Cropper — Crop for Instagram & YouTube | JPT AI',
     meta_description:
       'Crop images online for free. Ready-made sizes for Instagram, Stories, YouTube, and profile pictures — plus a circle crop. No watermark, no sign-up.',
     og_title: 'Free Image Cropper — Crop for Social Media Online | JPT AI',
@@ -276,7 +276,7 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
   },
   'rotate-image': {
     page_id: 'rotate-image',
-    title: 'Free Rotate & Flip Image Online — Straighten or Mirror Photos | JPT AI',
+    title: 'Rotate & Flip Image Free — Straighten or Mirror | JPT AI',
     meta_description:
       'Rotate and flip images online for free. Turn photos 90°, 180°, or mirror them horizontally and vertically — no watermark, no sign-up, instant download.',
     og_title: 'Free Rotate & Flip Image Tool Online | JPT AI',
@@ -305,7 +305,7 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
   },
   'image-to-pdf': {
     page_id: 'image-to-pdf',
-    title: 'Free Image to PDF Converter Online — JPG & PNG to PDF | JPT AI',
+    title: 'Free Image to PDF — JPG & PNG to PDF Online | JPT AI',
     meta_description:
       'Convert images to PDF online for free. Turn JPG, PNG, or WEBP photos into a PDF in one click — no watermark, no sign-up, private in-browser conversion.',
     og_title: 'Free Image to PDF Converter Online | JPT AI',
@@ -334,7 +334,7 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
   },
   'watermark-image': {
     page_id: 'watermark-image',
-    title: 'Free Watermark Maker Online — Add Text Watermark to Photos | JPT AI',
+    title: 'Free Watermark Maker — Add Text to Photos | JPT AI',
     meta_description:
       'Add a text watermark to your images online for free. Protect photos with your name or brand — choose position, size, color, and opacity. No sign-up, no watermark on the tool.',
     og_title: 'Free Watermark Maker — Add Text to Photos Online | JPT AI',
@@ -363,7 +363,7 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
   },
   'meme-generator': {
     page_id: 'meme-generator',
-    title: 'Free Meme Generator Online — Add Top & Bottom Text to Images | JPT AI',
+    title: 'Free Meme Generator — Add Top & Bottom Text | JPT AI',
     meta_description:
       'Make memes online for free. Add classic top and bottom text to any image with the bold Impact style — no sign-up, no watermark, instant download.',
     og_title: 'Free Meme Generator — Add Text to Images Online | JPT AI',

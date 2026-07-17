@@ -32,8 +32,24 @@ function maybeCleanup() {
   });
 }
 
+// The single canonical host. All other production hostnames (the old .in
+// domain, the non-www .io apex) 301-redirect here so Google consolidates all
+// ranking signals onto one URL instead of splitting them across duplicates.
+const CANONICAL_HOST = "www.sjpt.io";
+const REDIRECT_HOSTS = new Set(["sjpt.in", "www.sjpt.in", "sjpt.io"]);
+
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
+
+  // Canonical-host redirect — consolidate duplicate domains onto www.sjpt.io.
+  const host = request.headers.get("host")?.toLowerCase() ?? "";
+  if (REDIRECT_HOSTS.has(host)) {
+    const url = new URL(request.url);
+    url.host = CANONICAL_HOST;
+    url.protocol = "https:";
+    url.port = "";
+    return NextResponse.redirect(url, 301);
+  }
 
   // Free-only mode: redirect the hidden paid/AI pages back to the home page.
   if (!PAID_FEATURES_ENABLED && PAID_ROUTE_PREFIXES.some(p => path === p || path.startsWith(p + "/"))) {
