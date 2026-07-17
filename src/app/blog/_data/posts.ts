@@ -17,6 +17,7 @@ export interface BlogPost {
 import { blogImageUrl } from "@/lib/blog-images";
 import { UPSCALE_POSTS } from "./upscale-posts";
 import { UPSCALE_FREE_POSTS } from "./upscale-free-posts";
+import { UPSCALE_FREE_POSTS_2 } from "./upscale-free-posts-2";
 
 const RAW_POSTS: BlogPost[] = [
   {
@@ -14346,7 +14347,7 @@ Ready to make your listings shine? Head to JPT AI's AI Editor at sjpt.io and enh
 // Free-only mode keeps the blog focused on upscale content. Only posts whose
 // tool is the (free) Upscale tool are published, and each uses its own Pexels
 // hero image (falling back to the generated Supabase image if none is set).
-export const POSTS: BlogPost[] = [...RAW_POSTS, ...UPSCALE_POSTS, ...UPSCALE_FREE_POSTS]
+export const POSTS: BlogPost[] = [...RAW_POSTS, ...UPSCALE_POSTS, ...UPSCALE_FREE_POSTS, ...UPSCALE_FREE_POSTS_2]
   .filter((p) => p.toolHref.startsWith("/upscale"))
   .map((p) => ({ ...p, image: p.image || blogImageUrl(p.slug) }))
   .sort((a, b) => (a.date < b.date ? 1 : -1));
