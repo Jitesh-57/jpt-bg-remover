@@ -472,20 +472,20 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
           <div style={{ maxWidth: 820, margin: '56px auto 0', borderRadius: 24, overflow: 'hidden', boxShadow: '0 24px 80px rgba(0,0,0,0.16)', display: 'flex', position: 'relative' }}>
             <div style={{ flex: 1, position: 'relative' }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={beforeAfter.before} alt="Before upscaling — low resolution" style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(1.5px)', imageRendering: 'pixelated' }} />
+              <img src={beforeAfter.before} alt={`${config.h1} — before (low resolution photo)`} style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(1.5px)', imageRendering: 'pixelated' }} />
               <span style={{ position: 'absolute', bottom: 14, left: 14, padding: '6px 14px', background: 'rgba(0,0,0,0.6)', color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', borderRadius: 8 }}>Low-Res Input</span>
             </div>
             <div style={{ width: 3, background: '#fff', flexShrink: 0 }} />
             <div style={{ flex: 1, position: 'relative' }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={beforeAfter.after} alt="After upscaling — HD enhanced" style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src={beforeAfter.after} alt={`${config.h1} — after (free 4K enhanced result, no watermark)`} style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }} />
               <span style={{ position: 'absolute', bottom: 14, right: 14, padding: '6px 14px', background: 'rgba(99,102,241,0.92)', color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', borderRadius: 8 }}>✨ 4K AI Upscaled</span>
             </div>
           </div>
         ) : heroImg ? (
           <div style={{ maxWidth: 900, margin: '56px auto 0', borderRadius: 24, overflow: 'hidden', boxShadow: '0 24px 80px rgba(0,0,0,0.16)', position: 'relative' }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={heroImg} alt={`${visual.label} example`} style={{ display: 'block', width: '100%', height: 'auto' }} />
+            <img src={heroImg} alt={`${config.h1} — free online tool, no watermark (${visual.label})`} style={{ display: 'block', width: '100%', height: 'auto' }} />
             <span style={{ position: 'absolute', bottom: 16, right: 16, padding: '8px 16px', background: 'rgba(99,102,241,0.92)', color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', borderRadius: 10, boxShadow: '0 4px 16px rgba(0,0,0,0.2)' }}>✨ {visual.label}</span>
           </div>
         ) : (
