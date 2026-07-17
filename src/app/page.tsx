@@ -43,21 +43,11 @@ export default async function Page() {
     url: BASE,
   };
 
-  const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: (config.faq || []).map((f) => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
-  };
-
+  // FAQ structured data is emitted by <LandingPage> to avoid duplication.
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <LandingPage config={config} toolHref="/editor?tool=upscale" pageId="upscale" />
+      <LandingPage config={config} toolHref="/editor?tool=upscale" pageId="upscale" isHome />
     </>
   );
 }

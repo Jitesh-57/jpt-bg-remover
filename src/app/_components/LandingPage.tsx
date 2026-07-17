@@ -9,7 +9,10 @@ interface LandingPageProps {
   config: PageSEO
   toolHref: string
   pageId: string
+  isHome?: boolean
 }
+
+const SITE_BASE = 'https://www.sjpt.io'
 
 // Map pageId → editor tool id (matches editor's Tool type)
 const PAGE_TOOL: Record<string, string> = {
@@ -298,7 +301,33 @@ const PAGE_VISUALS: Record<string, { before: string; after: string; label: strin
   },
 }
 
-export default function LandingPage({ config, toolHref, pageId }: LandingPageProps) {
+export default function LandingPage({ config, toolHref, pageId, isHome }: LandingPageProps) {
+  // ── Structured data (rich results) ──────────────────────────────────────────
+  // FAQ schema → the "People also ask"-style expandable answers in Google.
+  const faqLd = config.faq?.length
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: config.faq.map((f) => ({
+          '@type': 'Question',
+          name: f.q,
+          acceptedAnswer: { '@type': 'Answer', text: f.a },
+        })),
+      }
+    : null
+  // Breadcrumb schema → the Home › Tool trail under the search result title.
+  const crumbLink = FREE_TOOL_LINKS.find((l) => l.id === pageId)
+  const breadcrumbLd = !isHome && crumbLink
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_BASE },
+          { '@type': 'ListItem', position: 2, name: crumbLink.title, item: `${SITE_BASE}${crumbLink.href}` },
+        ],
+      }
+    : null
+
   const visual = PAGE_VISUALS[pageId] ?? PAGE_VISUALS['upscale']
   const heroImg = PAGE_IMAGES[pageId]
   const beforeAfter = PAGE_BEFORE_AFTER[pageId]
@@ -338,6 +367,11 @@ export default function LandingPage({ config, toolHref, pageId }: LandingPagePro
 
   return (
     <div style={{ fontFamily: 'system-ui, -apple-system, sans-serif', color: '#111827', background: '#fff' }}>
+
+      {/* Structured data for rich results */}
+      {faqLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />}
+      {breadcrumbLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />}
+
 
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
       <section style={{ background: 'linear-gradient(160deg, #F5F5FF 0%, #fff 50%, #F0FDF4 100%)', padding: '80px 24px 72px', textAlign: 'center' }}>
