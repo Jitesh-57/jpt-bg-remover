@@ -304,6 +304,7 @@ export default function ImageEditorPage() {
   const [authChecked, setAuthChecked] = useState(false);
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [signInReason, setSignInReason] = useState<"default" | "unlimited">("default");
+  const [anonUsed, setAnonUsed] = useState(0);   // free transforms a guest has used
   const [showAccountModal, setShowAccountModal] = useState(false);
   const [showNoCreditsModal, setShowNoCreditsModal] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
@@ -512,10 +513,17 @@ export default function ImageEditorPage() {
   const recordAnonTransform = () => {
     if (user) return;
     try {
-      const used = parseInt(localStorage.getItem("jpt_anon_transforms") || "0", 10) || 0;
-      localStorage.setItem("jpt_anon_transforms", String(used + 1));
+      const used = (parseInt(localStorage.getItem("jpt_anon_transforms") || "0", 10) || 0) + 1;
+      localStorage.setItem("jpt_anon_transforms", String(used));
+      setAnonUsed(used);
     } catch {}
   };
+  const anonLeft = Math.max(0, ANON_FREE_TRANSFORMS - anonUsed);
+
+  // Load the guest's used-count on mount so the "free edits left" counter is accurate.
+  useEffect(() => {
+    try { setAnonUsed(parseInt(localStorage.getItem("jpt_anon_transforms") || "0", 10) || 0); } catch {}
+  }, []);
 
   // ── Compress image to max 1024px before sending to API (avoids 4.5MB Vercel limit) ──
   const compressForApi = async (dataUrl: string): Promise<string> => {
@@ -1077,6 +1085,26 @@ export default function ImageEditorPage() {
                   </span>
                 )}
               </button>
+            )}
+            {!user && authChecked && (
+              anonLeft > 0 ? (
+                <button
+                  style={{ ...s.userChip, cursor: "pointer" }}
+                  onClick={() => { setSignInReason("default"); setShowSignInModal(true); }}
+                  title="Sign up free for unlimited edits"
+                >
+                  <span style={{ ...s.creditsBadge, background: "#EEF2FF", color: "#6366F1" }}>
+                    🎁 {anonLeft} free edit{anonLeft === 1 ? "" : "s"} left
+                  </span>
+                </button>
+              ) : (
+                <button
+                  style={{ padding: "7px 14px", background: "#6366F1", color: "#fff", border: "none", borderRadius: 20, fontSize: 12, fontWeight: 800, cursor: "pointer", whiteSpace: "nowrap" as const, boxShadow: "0 2px 8px rgba(99,102,241,0.4)" }}
+                  onClick={() => { setSignInReason("unlimited"); setShowSignInModal(true); }}
+                >
+                  Sign up free — unlimited →
+                </button>
+              )
             )}
           </div>
         </div>
