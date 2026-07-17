@@ -20,6 +20,14 @@ function readFileAsDataUrl(file: File): Promise<string> {
 function resolveDestination(toolHref: string): { dest: string; editorTool: string | null } {
   if (toolHref.startsWith('/remove-bg')) return { dest: '/editor?tool=remove-bg', editorTool: 'remove-bg' }
   if (toolHref.startsWith('/upscale'))   return { dest: '/editor?tool=upscale',    editorTool: 'upscale'   }
+  // Free in-browser tools → open the editor pre-set to that tool.
+  if (toolHref.startsWith('/compress-image')) return { dest: '/editor?tool=compress', editorTool: 'compress' }
+  if (toolHref.startsWith('/convert-image'))  return { dest: '/editor?tool=convert',  editorTool: 'convert'  }
+  if (toolHref.startsWith('/crop-image'))     return { dest: '/editor?tool=crop',     editorTool: 'crop'     }
+  if (toolHref.startsWith('/rotate-image'))   return { dest: '/editor?tool=rotate',   editorTool: 'rotate'   }
+  if (toolHref.startsWith('/watermark-image')) return { dest: '/editor?tool=watermark', editorTool: 'watermark' }
+  if (toolHref.startsWith('/meme-generator')) return { dest: '/editor?tool=meme',     editorTool: 'meme'     }
+  if (toolHref.startsWith('/image-to-pdf'))   return { dest: '/editor?tool=pdf',      editorTool: 'pdf'      }
   if (toolHref.startsWith('/editor') || toolHref.startsWith('/ai-editor'))
     return { dest: toolHref, editorTool: 'ai-edit' }
   if (toolHref.startsWith('/creative'))
@@ -31,6 +39,13 @@ function resolveDestination(toolHref: string): { dest: string; editorTool: strin
 function getToolIcon(toolHref: string): string {
   if (toolHref.startsWith('/remove-bg'))  return '🪄'
   if (toolHref.startsWith('/upscale'))    return '🔍'
+  if (toolHref.startsWith('/compress-image')) return '🗜️'
+  if (toolHref.startsWith('/convert-image'))  return '🔀'
+  if (toolHref.startsWith('/crop-image'))     return '✂️'
+  if (toolHref.startsWith('/rotate-image'))   return '🔄'
+  if (toolHref.startsWith('/watermark-image')) return '🔖'
+  if (toolHref.startsWith('/meme-generator')) return '😂'
+  if (toolHref.startsWith('/image-to-pdf'))   return '📄'
   if (toolHref.startsWith('/creative'))   return '✨'
   if (toolHref.startsWith('/ai-editor') || toolHref.startsWith('/editor')) return '🎨'
   if (toolHref.startsWith('/ai-headshot')) return '💼'
