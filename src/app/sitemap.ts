@@ -13,6 +13,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const freePages: MetadataRoute.Sitemap = [
     { url: BASE,                       lastModified: now, changeFrequency: "weekly",  priority: 1.0 },
     { url: `${BASE}/upscale`,          lastModified: now, changeFrequency: "monthly", priority: 0.95 },
+    { url: `${BASE}/compress-image`,   lastModified: now, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${BASE}/convert-image`,    lastModified: now, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${BASE}/crop-image`,       lastModified: now, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${BASE}/rotate-image`,     lastModified: now, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${BASE}/image-to-pdf`,     lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     // /editor is noindex (tool UI) — excluded from sitemap
     { url: `${BASE}/batch-editor`,     lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/blog`,             lastModified: now, changeFrequency: "weekly",  priority: 0.8 },

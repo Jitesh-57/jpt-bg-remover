@@ -19,7 +19,7 @@ declare global {
   }
 }
 
-type Tool = "ai-edit" | "generate-bg" | "upscale" | "resize" | "adjust" | "remove-bg" | null;
+type Tool = "ai-edit" | "generate-bg" | "upscale" | "resize" | "adjust" | "remove-bg" | "crop" | "rotate" | "compress" | "convert" | "pdf" | null;
 type BgMode = "color" | "gradient" | "image" | "ai";
 
 interface GradientPreset { label: string; from: string; to: string; angle: number }
@@ -71,7 +71,12 @@ const ALL_TOOLS: { id: Tool; icon: string; label: string; ai?: boolean; free?: b
   { id: "remove-bg", icon: "🪄", label: "Remove BG", paid: true },
   { id: "upscale", icon: "🔍", label: "Upscale", free: true },
   { id: "resize", icon: "↔️", label: "Resize", free: true },
+  { id: "crop", icon: "✂️", label: "Crop", free: true },
+  { id: "rotate", icon: "🔄", label: "Rotate", free: true },
   { id: "adjust", icon: "🎨", label: "Adjust", free: true },
+  { id: "compress", icon: "🗜️", label: "Compress", free: true },
+  { id: "convert", icon: "🔀", label: "Convert", free: true },
+  { id: "pdf", icon: "📄", label: "To PDF", free: true },
 ];
 
 // Free-only mode keeps just the on-device tools (Upscale/Resize/Adjust).
@@ -225,6 +230,144 @@ async function resizeOnCanvas(dataUrl: string, w: number, h: number): Promise<st
   return canvas.toDataURL("image/jpeg", 0.92);
 }
 
+// Center-crop to a target aspect ratio (ratioW:ratioH). ratioH<=0 → circle crop
+// on the largest centered square (transparent corners, PNG output).
+async function cropToAspect(dataUrl: string, ratioW: number, ratioH: number): Promise<string> {
+  const img = await loadImg(dataUrl);
+  const W = img.naturalWidth, H = img.naturalHeight;
+  const circle = ratioH <= 0;
+  const targetRatio = circle ? 1 : ratioW / ratioH;
+  let cw = W, ch = Math.round(W / targetRatio);
+  if (ch > H) { ch = H; cw = Math.round(H * targetRatio); }
+  const sx = Math.round((W - cw) / 2), sy = Math.round((H - ch) / 2);
+  const canvas = document.createElement("canvas");
+  canvas.width = cw; canvas.height = ch;
+  const ctx = canvas.getContext("2d")!;
+  if (circle) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cw / 2, ch / 2, Math.min(cw, ch) / 2, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.clip();
+  }
+  ctx.drawImage(img, sx, sy, cw, ch, 0, 0, cw, ch);
+  if (circle) ctx.restore();
+  return canvas.toDataURL("image/png");
+}
+
+// Rotate by 0/90/180/270 degrees and optionally mirror horizontally/vertically.
+async function rotateFlipOnCanvas(dataUrl: string, deg: number, flipH: boolean, flipV: boolean): Promise<string> {
+  const img = await loadImg(dataUrl);
+  const W = img.naturalWidth, H = img.naturalHeight;
+  const rad = (deg * Math.PI) / 180;
+  const swap = deg === 90 || deg === 270;
+  const canvas = document.createElement("canvas");
+  canvas.width = swap ? H : W;
+  canvas.height = swap ? W : H;
+  const ctx = canvas.getContext("2d")!;
+  ctx.translate(canvas.width / 2, canvas.height / 2);
+  ctx.rotate(rad);
+  ctx.scale(flipH ? -1 : 1, flipV ? -1 : 1);
+  ctx.drawImage(img, -W / 2, -H / 2);
+  const png = dataUrl.includes("image/png");
+  return canvas.toDataURL(png ? "image/png" : "image/jpeg", 0.92);
+}
+
+// Re-encode as JPEG at a given quality (0–1) to shrink file size.
+async function compressOnCanvas(dataUrl: string, quality: number): Promise<string> {
+  const img = await loadImg(dataUrl);
+  const canvas = document.createElement("canvas");
+  canvas.width = img.naturalWidth; canvas.height = img.naturalHeight;
+  const ctx = canvas.getContext("2d")!;
+  // Flatten onto white so PNG transparency doesn't turn black in JPEG.
+  ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(img, 0, 0);
+  return canvas.toDataURL("image/jpeg", Math.min(1, Math.max(0.05, quality)));
+}
+
+// Convert to a target format. PNG/WEBP keep transparency; JPG flattens to white.
+async function convertOnCanvas(dataUrl: string, format: "png" | "jpeg" | "webp"): Promise<string> {
+  const img = await loadImg(dataUrl);
+  const canvas = document.createElement("canvas");
+  canvas.width = img.naturalWidth; canvas.height = img.naturalHeight;
+  const ctx = canvas.getContext("2d")!;
+  if (format === "jpeg") { ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, canvas.width, canvas.height); }
+  ctx.drawImage(img, 0, 0);
+  const mime = format === "png" ? "image/png" : format === "webp" ? "image/webp" : "image/jpeg";
+  return canvas.toDataURL(mime, format === "png" ? undefined : 0.92);
+}
+
+// Rough byte size of a base64 data URL (for the compress size read-out).
+function dataUrlBytes(dataUrl: string): number {
+  const i = dataUrl.indexOf(",");
+  const b64 = i >= 0 ? dataUrl.slice(i + 1) : dataUrl;
+  const pad = b64.endsWith("==") ? 2 : b64.endsWith("=") ? 1 : 0;
+  return Math.max(0, Math.floor(b64.length * 3 / 4) - pad);
+}
+function humanSize(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
+  return `${(bytes / 1024 / 1024).toFixed(2)} MB`;
+}
+
+// Build a single-page PDF (data URL) that embeds the image as a JPEG via
+// /DCTDecode — no external library needed. Page is sized to the image.
+async function imageToPdfDataUrl(dataUrl: string): Promise<string> {
+  const img = await loadImg(dataUrl);
+  const W = img.naturalWidth, H = img.naturalHeight;
+  const canvas = document.createElement("canvas");
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext("2d")!;
+  ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, W, H);
+  ctx.drawImage(img, 0, 0);
+  const jpegBase64 = canvas.toDataURL("image/jpeg", 0.92).split(",", 2)[1];
+  // Decode base64 JPEG → bytes
+  const bin = atob(jpegBase64);
+  const jpeg = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) jpeg[i] = bin.charCodeAt(i);
+
+  const enc = new TextEncoder();
+  const parts: Uint8Array[] = [];
+  const offsets: number[] = [];
+  let length = 0;
+  const push = (chunk: Uint8Array | string) => {
+    const u8 = typeof chunk === "string" ? enc.encode(chunk) : chunk;
+    parts.push(u8); length += u8.length;
+  };
+  const mark = () => { offsets.push(length); };
+
+  push("%PDF-1.3\n");
+  mark(); // obj 1
+  push("1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n");
+  mark(); // obj 2
+  push("2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n");
+  mark(); // obj 3
+  push(`3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>\nendobj\n`);
+  mark(); // obj 4 (image)
+  push(`4 0 obj\n<< /Type /XObject /Subtype /Image /Width ${W} /Height ${H} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpeg.length} >>\nstream\n`);
+  push(jpeg);
+  push("\nendstream\nendobj\n");
+  const content = `q\n${W} 0 0 ${H} 0 0 cm\n/Im0 Do\nQ\n`;
+  mark(); // obj 5 (content)
+  push(`5 0 obj\n<< /Length ${content.length} >>\nstream\n${content}endstream\nendobj\n`);
+  const xrefStart = length;
+  let xref = `xref\n0 6\n0000000000 65535 f \n`;
+  for (const off of offsets) xref += `${String(off).padStart(10, "0")} 00000 n \n`;
+  push(xref);
+  push(`trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n${xrefStart}\n%%EOF`);
+
+  // Concatenate + base64-encode
+  const out = new Uint8Array(length);
+  let pos = 0;
+  for (const p of parts) { out.set(p, pos); pos += p.length; }
+  let b64 = "";
+  const CH = 0x8000;
+  for (let i = 0; i < out.length; i += CH) {
+    b64 += String.fromCharCode.apply(null, Array.from(out.subarray(i, i + CH)) as unknown as number[]);
+  }
+  return "data:application/pdf;base64," + btoa(b64);
+}
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function ImageEditorPage() {
@@ -295,6 +438,11 @@ export default function ImageEditorPage() {
   const [contrast, setContrast] = useState(100);
   const [saturation, setSaturation] = useState(100);
   const [sharpness, setSharpness] = useState(0);
+
+  // Crop / Rotate / Compress / Convert
+  const [cropRatio, setCropRatio] = useState<string>("1:1");
+  const [compressQuality, setCompressQuality] = useState(70);
+  const [convertFormat, setConvertFormat] = useState<"png" | "jpeg" | "webp">("png");
 
   // Prompt
   const [prompt, setPrompt] = useState("");
@@ -816,6 +964,88 @@ export default function ImageEditorPage() {
     }
     catch { setError("Adjust failed."); }
     finally { setProcessing(false); }
+  };
+
+  const handleCrop = async () => {
+    const src = working || original?.dataUrl;
+    if (!src || processing) return;
+    if (anonBlocked()) return;
+    setProcessing(true); setError(null);
+    try {
+      const [rw, rh] = cropRatio === "circle" ? [1, 0] : cropRatio.split(":").map(Number);
+      const result = await cropToAspect(src, rw, rh);
+      setEditHistory(prev => working ? [...prev, working] : prev);
+      setWorking(result);
+      recordAnonTransform();
+      autoSaveToDrive(result, "crop", cropRatio);
+    }
+    catch { setError("Crop failed."); }
+    finally { setProcessing(false); }
+  };
+
+  const applyRotateFlip = async (deg: number, flipH: boolean, flipV: boolean) => {
+    const src = working || original?.dataUrl;
+    if (!src || processing) return;
+    if (anonBlocked()) return;
+    setProcessing(true); setError(null);
+    try {
+      const result = await rotateFlipOnCanvas(src, deg, flipH, flipV);
+      setEditHistory(prev => working ? [...prev, working] : prev);
+      setWorking(result);
+      recordAnonTransform();
+      autoSaveToDrive(result, "rotate", deg ? `${deg}°` : flipH ? "flip-h" : "flip-v");
+    }
+    catch { setError("Rotate failed."); }
+    finally { setProcessing(false); }
+  };
+
+  const handleCompress = async () => {
+    const src = working || original?.dataUrl;
+    if (!src || processing) return;
+    if (anonBlocked()) return;
+    setProcessing(true); setError(null);
+    try {
+      const result = await compressOnCanvas(src, compressQuality / 100);
+      setEditHistory(prev => working ? [...prev, working] : prev);
+      setWorking(result);
+      recordAnonTransform();
+      autoSaveToDrive(result, "compress", `${compressQuality}%`);
+    }
+    catch { setError("Compress failed."); }
+    finally { setProcessing(false); }
+  };
+
+  const handleConvert = async () => {
+    const src = working || original?.dataUrl;
+    if (!src || processing) return;
+    if (anonBlocked()) return;
+    setProcessing(true); setError(null);
+    try {
+      const result = await convertOnCanvas(src, convertFormat);
+      setEditHistory(prev => working ? [...prev, working] : prev);
+      setWorking(result);
+      recordAnonTransform();
+      autoSaveToDrive(result, "convert", convertFormat.toUpperCase());
+    }
+    catch { setError("Convert failed."); }
+    finally { setProcessing(false); }
+  };
+
+  const handleDownloadPdf = async () => {
+    const src = working || original?.dataUrl;
+    if (!src || processing) return;
+    if (anonBlocked()) return;
+    setProcessing(true); setProcessingLabel("Building PDF…"); setError(null);
+    try {
+      const pdf = await imageToPdfDataUrl(src);
+      const a = document.createElement("a");
+      a.href = pdf; a.download = `${original?.name || "image"}.pdf`;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      recordAnonTransform();
+      trackDownloadButtonClicked("pdf");
+    }
+    catch { setError("PDF export failed."); }
+    finally { setProcessing(false); setProcessingLabel(""); }
   };
 
   const handleAiEdit = async () => {
@@ -1665,6 +1895,127 @@ export default function ImageEditorPage() {
                     {processing ? <span style={s.btnRow}><span style={s.spin} />Applying…</span> : "Apply Adjustments"}
                   </button>
                 </div>
+              </div>
+            )}
+
+            {/* Crop */}
+            {activeTool === "crop" && (
+              <div style={s.panelContent}>
+                <div style={s.panelTitle}>✂️ Crop</div>
+                <p style={s.panelSub}>Crop to a ready-made size — free, no credits</p>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 12 }}>
+                  {[
+                    { id: "1:1", label: "Square", sub: "1:1 · Instagram" },
+                    { id: "4:5", label: "Portrait", sub: "4:5 · IG Post" },
+                    { id: "9:16", label: "Story", sub: "9:16 · Reels" },
+                    { id: "16:9", label: "Wide", sub: "16:9 · YouTube" },
+                    { id: "3:2", label: "Classic", sub: "3:2 · Photo" },
+                    { id: "circle", label: "Circle", sub: "Profile pic" },
+                  ].map((r) => (
+                    <button
+                      key={r.id}
+                      onClick={() => setCropRatio(r.id)}
+                      style={{
+                        padding: "10px 8px", borderRadius: 10, textAlign: "center",
+                        border: cropRatio === r.id ? "2px solid #6366F1" : "1.5px solid #E0E0EE",
+                        background: cropRatio === r.id ? "#EEEEFF" : "#FAFAFA",
+                        cursor: "pointer", color: cropRatio === r.id ? "#6366F1" : "#666",
+                      }}
+                    >
+                      <div style={{ fontWeight: 800, fontSize: 13 }}>{r.label}</div>
+                      <div style={{ fontSize: 10, fontWeight: 600, marginTop: 2, color: cropRatio === r.id ? "#6366F1" : "#AAA" }}>{r.sub}</div>
+                    </button>
+                  ))}
+                </div>
+                <button style={{ ...s.primaryBtn, ...(processing ? s.btnOff : {}) }} disabled={processing} onClick={handleCrop}>
+                  {processing ? <span style={s.btnRow}><span style={s.spin} />Cropping…</span> : "✂️ Apply Crop"}
+                </button>
+                <p style={{ fontSize: 12, color: "#94A3B8", marginTop: 10, textAlign: "center" }}>Center crop to the chosen ratio.</p>
+              </div>
+            )}
+
+            {/* Rotate & Flip */}
+            {activeTool === "rotate" && (
+              <div style={s.panelContent}>
+                <div style={s.panelTitle}>🔄 Rotate &amp; Flip</div>
+                <p style={s.panelSub}>Straighten or mirror your image — free</p>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                  <button style={s.ghostBtn} disabled={processing} onClick={() => applyRotateFlip(270, false, false)}>↺ Rotate Left</button>
+                  <button style={s.ghostBtn} disabled={processing} onClick={() => applyRotateFlip(90, false, false)}>↻ Rotate Right</button>
+                  <button style={s.ghostBtn} disabled={processing} onClick={() => applyRotateFlip(180, false, false)}>⤴ 180°</button>
+                  <button style={s.ghostBtn} disabled={processing} onClick={() => applyRotateFlip(0, true, false)}>⇄ Flip H</button>
+                  <button style={s.ghostBtn} disabled={processing} onClick={() => applyRotateFlip(0, false, true)}>⇅ Flip V</button>
+                </div>
+                {processing && <p style={{ fontSize: 12, color: "#6366F1", marginTop: 10, textAlign: "center" }}><span style={s.spin} /> Working…</p>}
+              </div>
+            )}
+
+            {/* Compress */}
+            {activeTool === "compress" && (() => {
+              const src = working || original?.dataUrl || "";
+              return (
+                <div style={s.panelContent}>
+                  <div style={s.panelTitle}>🗜️ Compress</div>
+                  <p style={s.panelSub}>Shrink file size for web &amp; email — free</p>
+                  <div style={s.sliderRow}>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                      <span style={s.inputLabel}>Quality</span>
+                      <span style={{ fontSize: 12, fontWeight: 700, color: "#6366F1" }}>{compressQuality}%</span>
+                    </div>
+                    <input type="range" min={10} max={95} value={compressQuality} onChange={(e) => setCompressQuality(parseInt(e.target.value))} style={{ width: "100%" }} />
+                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "#AAA", marginTop: 2 }}>
+                      <span>Smaller file</span><span>Higher quality</span>
+                    </div>
+                  </div>
+                  <div style={{ fontSize: 12, color: "#888", marginBottom: 10 }}>Current size: ~{humanSize(dataUrlBytes(src))}</div>
+                  <button style={{ ...s.primaryBtn, ...(processing ? s.btnOff : {}) }} disabled={processing} onClick={handleCompress}>
+                    {processing ? <span style={s.btnRow}><span style={s.spin} />Compressing…</span> : "🗜️ Compress Image"}
+                  </button>
+                  <p style={{ fontSize: 12, color: "#94A3B8", marginTop: 10, textAlign: "center" }}>Then hit Download to save the smaller JPG.</p>
+                </div>
+              );
+            })()}
+
+            {/* Convert */}
+            {activeTool === "convert" && (
+              <div style={s.panelContent}>
+                <div style={s.panelTitle}>🔀 Convert Format</div>
+                <p style={s.panelSub}>JPG · PNG · WEBP — free, no credits</p>
+                <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
+                  {(["png", "jpeg", "webp"] as const).map((f) => (
+                    <button
+                      key={f}
+                      onClick={() => setConvertFormat(f)}
+                      style={{
+                        flex: 1, padding: "12px 8px", borderRadius: 10,
+                        border: convertFormat === f ? "2px solid #6366F1" : "1.5px solid #E0E0EE",
+                        background: convertFormat === f ? "#EEEEFF" : "#FAFAFA",
+                        cursor: "pointer", fontWeight: 800, fontSize: 14,
+                        color: convertFormat === f ? "#6366F1" : "#999", textTransform: "uppercase",
+                      }}
+                    >
+                      {f === "jpeg" ? "JPG" : f}
+                    </button>
+                  ))}
+                </div>
+                <button style={{ ...s.primaryBtn, ...(processing ? s.btnOff : {}) }} disabled={processing} onClick={handleConvert}>
+                  {processing ? <span style={s.btnRow}><span style={s.spin} />Converting…</span> : `🔀 Convert to ${convertFormat === "jpeg" ? "JPG" : convertFormat.toUpperCase()}`}
+                </button>
+                <p style={{ fontSize: 12, color: "#94A3B8", marginTop: 10, textAlign: "center" }}>
+                  {convertFormat === "jpeg" ? "JPG flattens transparency to white." : "PNG & WEBP keep transparency."}
+                </p>
+              </div>
+            )}
+
+            {/* Image to PDF */}
+            {activeTool === "pdf" && (
+              <div style={s.panelContent}>
+                <div style={s.panelTitle}>📄 Image to PDF</div>
+                <p style={s.panelSub}>Turn your photo into a PDF — free, no watermark</p>
+                <button style={{ ...s.primaryBtn, ...(processing ? s.btnOff : {}) }} disabled={processing} onClick={handleDownloadPdf}>
+                  {processing ? <span style={s.btnRow}><span style={s.spin} />Building PDF…</span> : "📄 Download as PDF"}
+                </button>
+                <p style={{ fontSize: 12, color: "#94A3B8", marginTop: 10, textAlign: "center" }}>The PDF page matches your image size and downloads instantly.</p>
               </div>
             )}
 
