@@ -443,6 +443,8 @@ export default function ImageEditorPage() {
   const [cropRatio, setCropRatio] = useState<string>("1:1");
   const [compressQuality, setCompressQuality] = useState(70);
   const [convertFormat, setConvertFormat] = useState<"png" | "jpeg" | "webp">("png");
+  // Short "what just happened" summary shown with an in-panel Download button.
+  const [toolResult, setToolResult] = useState<{ title: string; detail?: string } | null>(null);
 
   // Prompt
   const [prompt, setPrompt] = useState("");
@@ -673,6 +675,9 @@ export default function ImageEditorPage() {
     try { setAnonUsed(parseInt(localStorage.getItem("jpt_anon_transforms") || "0", 10) || 0); } catch {}
   }, []);
 
+  // Clear the per-tool result summary when switching tools or loading a new image.
+  useEffect(() => { setToolResult(null); }, [activeTool, original?.dataUrl]);
+
   // ── Compress image to max 1024px before sending to API (avoids 4.5MB Vercel limit) ──
   const compressForApi = async (dataUrl: string): Promise<string> => {
     return new Promise(resolve => {
@@ -861,15 +866,18 @@ export default function ImageEditorPage() {
         setEditHistory(prev => working ? [...prev, working] : prev);
         setWorking(data.dataUrl);
         setAppliedUpscale(upscaleScale);
+        setToolResult({ title: `Pro upscaled ${upscaleScale}`, detail: "AI super-resolution applied" });
         trackImageTransformed("upscale-pro");
         autoSaveToDrive(data.dataUrl, "upscale", `${upscaleScale} Pro Upscale`);
       } else {
         // Normal: canvas upscale — free, unlimited, no account or credits needed.
         const { upscaleImage } = await import("@/lib/upscale-client");
         const out = await upscaleImage(src, upscaleScale);
+        const dim = await loadImg(out);
         setEditHistory(prev => working ? [...prev, working] : prev);
         setWorking(out);
         setAppliedUpscale(upscaleScale);
+        setToolResult({ title: `Upscaled ${upscaleScale}`, detail: `${dim.naturalWidth}×${dim.naturalHeight}px` });
         recordAnonTransform();
         autoSaveToDrive(out, "upscale", `${upscaleScale} Upscale`);
       }
@@ -942,6 +950,7 @@ export default function ImageEditorPage() {
       const result = await resizeOnCanvas(src, resizeW, resizeH);
       setEditHistory(prev => working ? [...prev, working] : prev);
       setWorking(result);
+      setToolResult({ title: "Resized", detail: `${resizeW}×${resizeH}px · ~${humanSize(dataUrlBytes(result))}` });
       recordAnonTransform();
       autoSaveToDrive(result, "resize", `${resizeW}×${resizeH}`);
     }
@@ -958,6 +967,7 @@ export default function ImageEditorPage() {
       const result = await applyFiltersToCanvas(src, brightness, contrast, saturation, sharpness);
       setEditHistory(prev => working ? [...prev, working] : prev);
       setWorking(result);
+      setToolResult({ title: "Adjustments applied", detail: "Brightness, contrast, saturation & sharpness baked in" });
       recordAnonTransform();
       resetAdjust();
       autoSaveToDrive(result, "adjust", "Color Adjustments");
@@ -974,8 +984,10 @@ export default function ImageEditorPage() {
     try {
       const [rw, rh] = cropRatio === "circle" ? [1, 0] : cropRatio.split(":").map(Number);
       const result = await cropToAspect(src, rw, rh);
+      const dim = await loadImg(result);
       setEditHistory(prev => working ? [...prev, working] : prev);
       setWorking(result);
+      setToolResult({ title: cropRatio === "circle" ? "Cropped to circle" : `Cropped to ${cropRatio}`, detail: `${dim.naturalWidth}×${dim.naturalHeight}px` });
       recordAnonTransform();
       autoSaveToDrive(result, "crop", cropRatio);
     }
@@ -990,8 +1002,10 @@ export default function ImageEditorPage() {
     setProcessing(true); setError(null);
     try {
       const result = await rotateFlipOnCanvas(src, deg, flipH, flipV);
+      const dim = await loadImg(result);
       setEditHistory(prev => working ? [...prev, working] : prev);
       setWorking(result);
+      setToolResult({ title: deg ? `Rotated ${deg}°` : flipH ? "Flipped horizontally" : "Flipped vertically", detail: `${dim.naturalWidth}×${dim.naturalHeight}px` });
       recordAnonTransform();
       autoSaveToDrive(result, "rotate", deg ? `${deg}°` : flipH ? "flip-h" : "flip-v");
     }
@@ -1005,9 +1019,13 @@ export default function ImageEditorPage() {
     if (anonBlocked()) return;
     setProcessing(true); setError(null);
     try {
+      const before = dataUrlBytes(src);
       const result = await compressOnCanvas(src, compressQuality / 100);
+      const after = dataUrlBytes(result);
+      const pct = before > 0 ? Math.max(0, Math.round((1 - after / before) * 100)) : 0;
       setEditHistory(prev => working ? [...prev, working] : prev);
       setWorking(result);
+      setToolResult({ title: `Compressed to ${humanSize(after)}`, detail: `${humanSize(before)} → ${humanSize(after)} · ${pct}% smaller` });
       recordAnonTransform();
       autoSaveToDrive(result, "compress", `${compressQuality}%`);
     }
@@ -1022,8 +1040,10 @@ export default function ImageEditorPage() {
     setProcessing(true); setError(null);
     try {
       const result = await convertOnCanvas(src, convertFormat);
+      const label = convertFormat === "jpeg" ? "JPG" : convertFormat.toUpperCase();
       setEditHistory(prev => working ? [...prev, working] : prev);
       setWorking(result);
+      setToolResult({ title: `Converted to ${label}`, detail: `${label} file · ~${humanSize(dataUrlBytes(result))}` });
       recordAnonTransform();
       autoSaveToDrive(result, "convert", convertFormat.toUpperCase());
     }
@@ -1107,10 +1127,26 @@ export default function ImageEditorPage() {
     const url = working || original?.dataUrl;
     if (!url) return;
     trackDownloadButtonClicked(activeTool || "editor");
+    const ext = url.includes("image/png") ? "png" : url.includes("image/webp") ? "webp" : "jpg";
     const a = document.createElement("a");
-    a.href = url; a.download = `${original?.name || "image"}-edited.${url.includes("image/png") ? "png" : "jpg"}`;
+    a.href = url; a.download = `${original?.name || "image"}-edited.${ext}`;
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
   };
+
+  // Green "what just happened" summary + an in-panel Download button. Shown
+  // inside each free tool's panel right after an operation completes.
+  const resultBlock = () => toolResult && (
+    <div style={{ marginTop: 12, background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 12, padding: "12px 14px" }}>
+      <div style={{ fontSize: 13, fontWeight: 800, color: "#16A34A", display: "flex", alignItems: "center", gap: 6 }}>✓ {toolResult.title}</div>
+      {toolResult.detail && <div style={{ fontSize: 12, color: "#4B5563", marginTop: 3 }}>{toolResult.detail}</div>}
+      <button
+        onClick={handleDownload}
+        style={{ ...s.primaryBtn, marginTop: 10, background: "linear-gradient(135deg,#10B981,#059669)" }}
+      >
+        ⬇ Download
+      </button>
+    </div>
+  );
 
   // Small fallback thumbnail (~150px, ~7-10KB base64) — stored in Edge Config for cross-device
   const makeThumbnail = async (dataUrl: string): Promise<string> => {
@@ -1809,6 +1845,7 @@ export default function ImageEditorPage() {
                     ? `✨ Pro Upscale ${upscaleScale}`
                     : `🔍 Upscale ${upscaleScale}`}
                 </button>
+                {resultBlock()}
               </div>
             )}
 
@@ -1829,6 +1866,7 @@ export default function ImageEditorPage() {
                 </div>
                 <div style={{ fontSize: 12, color: "#888" }}>Original: {original?.w} × {original?.h}px</div>
                 <button style={{ ...s.primaryBtn, ...(processing ? s.btnOff : {}) }} disabled={processing} onClick={handleResize}>↔️ Apply Resize</button>
+                {resultBlock()}
               </div>
             )}
 
@@ -1895,6 +1933,7 @@ export default function ImageEditorPage() {
                     {processing ? <span style={s.btnRow}><span style={s.spin} />Applying…</span> : "Apply Adjustments"}
                   </button>
                 </div>
+                {resultBlock()}
               </div>
             )}
 
@@ -1930,7 +1969,7 @@ export default function ImageEditorPage() {
                 <button style={{ ...s.primaryBtn, ...(processing ? s.btnOff : {}) }} disabled={processing} onClick={handleCrop}>
                   {processing ? <span style={s.btnRow}><span style={s.spin} />Cropping…</span> : "✂️ Apply Crop"}
                 </button>
-                <p style={{ fontSize: 12, color: "#94A3B8", marginTop: 10, textAlign: "center" }}>Center crop to the chosen ratio.</p>
+                {resultBlock() || <p style={{ fontSize: 12, color: "#94A3B8", marginTop: 10, textAlign: "center" }}>Center crop to the chosen ratio.</p>}
               </div>
             )}
 
@@ -1947,6 +1986,7 @@ export default function ImageEditorPage() {
                   <button style={s.ghostBtn} disabled={processing} onClick={() => applyRotateFlip(0, false, true)}>⇅ Flip V</button>
                 </div>
                 {processing && <p style={{ fontSize: 12, color: "#6366F1", marginTop: 10, textAlign: "center" }}><span style={s.spin} /> Working…</p>}
+                {resultBlock()}
               </div>
             )}
 
@@ -1971,7 +2011,7 @@ export default function ImageEditorPage() {
                   <button style={{ ...s.primaryBtn, ...(processing ? s.btnOff : {}) }} disabled={processing} onClick={handleCompress}>
                     {processing ? <span style={s.btnRow}><span style={s.spin} />Compressing…</span> : "🗜️ Compress Image"}
                   </button>
-                  <p style={{ fontSize: 12, color: "#94A3B8", marginTop: 10, textAlign: "center" }}>Then hit Download to save the smaller JPG.</p>
+                  {resultBlock() || <p style={{ fontSize: 12, color: "#94A3B8", marginTop: 10, textAlign: "center" }}>Compress, then download the smaller JPG.</p>}
                 </div>
               );
             })()}
@@ -2001,9 +2041,11 @@ export default function ImageEditorPage() {
                 <button style={{ ...s.primaryBtn, ...(processing ? s.btnOff : {}) }} disabled={processing} onClick={handleConvert}>
                   {processing ? <span style={s.btnRow}><span style={s.spin} />Converting…</span> : `🔀 Convert to ${convertFormat === "jpeg" ? "JPG" : convertFormat.toUpperCase()}`}
                 </button>
-                <p style={{ fontSize: 12, color: "#94A3B8", marginTop: 10, textAlign: "center" }}>
-                  {convertFormat === "jpeg" ? "JPG flattens transparency to white." : "PNG & WEBP keep transparency."}
-                </p>
+                {resultBlock() || (
+                  <p style={{ fontSize: 12, color: "#94A3B8", marginTop: 10, textAlign: "center" }}>
+                    {convertFormat === "jpeg" ? "JPG flattens transparency to white." : "PNG & WEBP keep transparency."}
+                  </p>
+                )}
               </div>
             )}
 
