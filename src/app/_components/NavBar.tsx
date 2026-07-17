@@ -33,11 +33,30 @@ const ALL_TOOLS = [
   },
 ];
 
-// In free-only mode, keep just the free tools (and drop any now-empty section).
+// The free, in-browser canvas tools (each has its own SEO landing page).
+const FREE_IMAGE_TOOLS = [
+  { icon: "🔍", label: "Image Upscaler",  desc: "Enhance resolution up to 4×",   href: "/upscale", free: true },
+  { icon: "🗜️", label: "Compress Image",  desc: "Reduce file size to KB",        href: "/compress-image", free: true },
+  { icon: "🔀", label: "Convert Format",  desc: "JPG · PNG · WEBP",              href: "/convert-image", free: true },
+  { icon: "✂️", label: "Crop Image",      desc: "Social ratios + circle crop",   href: "/crop-image", free: true },
+  { icon: "🔄", label: "Rotate & Flip",   desc: "Turn or mirror photos",         href: "/rotate-image", free: true },
+  { icon: "📄", label: "Image to PDF",    desc: "JPG & PNG to PDF",              href: "/image-to-pdf", free: true },
+];
+
+// In free-only mode show the free image tools + the editor. In paid mode keep
+// the original AI Tools / Tools grouping.
 const TOOLS = PAID_FEATURES_ENABLED
   ? ALL_TOOLS
-  : ALL_TOOLS.map(g => ({ ...g, section: g.section === "AI Tools" ? "Free Tools" : g.section, items: g.items.filter(i => i.free) }))
-             .filter(g => g.items.length > 0);
+  : [
+      { section: "Free Image Tools", items: FREE_IMAGE_TOOLS },
+      {
+        section: "Editor",
+        items: [
+          { icon: "🖼️", label: "Image Editor", desc: "All tools in one editor",     href: "/editor", free: true },
+          { icon: "⚡",  label: "Batch Editor", desc: "Up to 100 images at once",    href: "/batch-editor", free: true },
+        ],
+      },
+    ];
 
 export default function NavBar() {
   const { t } = useLanguage();
