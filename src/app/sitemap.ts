@@ -17,6 +17,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/convert-image`,    lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/crop-image`,       lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/rotate-image`,     lastModified: now, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${BASE}/watermark-image`,  lastModified: now, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${BASE}/meme-generator`,   lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/image-to-pdf`,     lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     // /editor is noindex (tool UI) — excluded from sitemap
     { url: `${BASE}/batch-editor`,     lastModified: now, changeFrequency: "monthly", priority: 0.8 },

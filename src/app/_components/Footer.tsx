@@ -27,6 +27,8 @@ const FREE_TOOLS = [
   { labelKey: "Image Converter",  href: "/convert-image" },
   { labelKey: "Crop Image",       href: "/crop-image" },
   { labelKey: "Rotate & Flip",    href: "/rotate-image" },
+  { labelKey: "Add Watermark",    href: "/watermark-image" },
+  { labelKey: "Meme Generator",   href: "/meme-generator" },
   { labelKey: "Image to PDF",     href: "/image-to-pdf" },
 ];
 

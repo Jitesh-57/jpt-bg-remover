@@ -9,6 +9,7 @@ import {
   trackBeginCheckout, trackPurchase, trackPaymentFailed,
 } from "@/lib/analytics";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
+import { applyWatermark, renderMeme, type WatermarkPosition } from "@/lib/tools-canvas";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -19,7 +20,7 @@ declare global {
   }
 }
 
-type Tool = "ai-edit" | "generate-bg" | "upscale" | "resize" | "adjust" | "remove-bg" | "crop" | "rotate" | "compress" | "convert" | "pdf" | null;
+type Tool = "ai-edit" | "generate-bg" | "upscale" | "resize" | "adjust" | "remove-bg" | "crop" | "rotate" | "compress" | "convert" | "pdf" | "watermark" | "meme" | null;
 type BgMode = "color" | "gradient" | "image" | "ai";
 
 interface GradientPreset { label: string; from: string; to: string; angle: number }
@@ -74,6 +75,8 @@ const ALL_TOOLS: { id: Tool; icon: string; label: string; ai?: boolean; free?: b
   { id: "crop", icon: "✂️", label: "Crop", free: true },
   { id: "rotate", icon: "🔄", label: "Rotate", free: true },
   { id: "adjust", icon: "🎨", label: "Adjust", free: true },
+  { id: "watermark", icon: "🔖", label: "Watermark", free: true },
+  { id: "meme", icon: "😂", label: "Meme", free: true },
   { id: "compress", icon: "🗜️", label: "Compress", free: true },
   { id: "convert", icon: "🔀", label: "Convert", free: true },
   { id: "pdf", icon: "📄", label: "To PDF", free: true },
@@ -443,6 +446,14 @@ export default function ImageEditorPage() {
   const [cropRatio, setCropRatio] = useState<string>("1:1");
   const [compressQuality, setCompressQuality] = useState(70);
   const [convertFormat, setConvertFormat] = useState<"png" | "jpeg" | "webp">("png");
+  // Watermark / Meme
+  const [wmText, setWmText] = useState("© JPT AI");
+  const [wmPosition, setWmPosition] = useState<WatermarkPosition>("bottom-right");
+  const [wmFontScale, setWmFontScale] = useState(5);
+  const [wmColor, setWmColor] = useState("#ffffff");
+  const [wmOpacity, setWmOpacity] = useState(70);
+  const [memeTop, setMemeTop] = useState("");
+  const [memeBottom, setMemeBottom] = useState("");
   // Short "what just happened" summary shown with an in-panel Download button.
   const [toolResult, setToolResult] = useState<{ title: string; detail?: string } | null>(null);
 
@@ -1066,6 +1077,41 @@ export default function ImageEditorPage() {
     }
     catch { setError("PDF export failed."); }
     finally { setProcessing(false); setProcessingLabel(""); }
+  };
+
+  const handleWatermark = async () => {
+    const src = working || original?.dataUrl;
+    if (!src || processing) return;
+    if (anonBlocked()) return;
+    setProcessing(true); setError(null);
+    try {
+      const result = await applyWatermark(src, { text: wmText, position: wmPosition, fontScale: wmFontScale, color: wmColor, opacity: wmOpacity / 100 });
+      setEditHistory(prev => working ? [...prev, working] : prev);
+      setWorking(result);
+      setToolResult({ title: "Watermark added", detail: `"${wmText || "© JPT AI"}" · ${wmPosition.replace("-", " ")}` });
+      recordAnonTransform();
+      autoSaveToDrive(result, "watermark", wmText);
+    }
+    catch { setError("Watermark failed."); }
+    finally { setProcessing(false); }
+  };
+
+  const handleMeme = async () => {
+    const src = working || original?.dataUrl;
+    if (!src || processing) return;
+    if (!memeTop.trim() && !memeBottom.trim()) { setError("Enter top or bottom text for the meme."); return; }
+    if (anonBlocked()) return;
+    setProcessing(true); setError(null);
+    try {
+      const result = await renderMeme(src, memeTop, memeBottom);
+      setEditHistory(prev => working ? [...prev, working] : prev);
+      setWorking(result);
+      setToolResult({ title: "Meme created", detail: "Classic Impact caption added" });
+      recordAnonTransform();
+      autoSaveToDrive(result, "meme", `${memeTop} / ${memeBottom}`.slice(0, 60));
+    }
+    catch { setError("Meme failed."); }
+    finally { setProcessing(false); }
   };
 
   const handleAiEdit = async () => {
@@ -2046,6 +2092,65 @@ export default function ImageEditorPage() {
                     {convertFormat === "jpeg" ? "JPG flattens transparency to white." : "PNG & WEBP keep transparency."}
                   </p>
                 )}
+              </div>
+            )}
+
+            {/* Watermark */}
+            {activeTool === "watermark" && (
+              <div style={s.panelContent}>
+                <div style={s.panelTitle}>🔖 Watermark</div>
+                <p style={s.panelSub}>Add a text watermark — free, no credits</p>
+                <div style={s.panelSection}>
+                  <label style={s.inputLabel}>Watermark text</label>
+                  <input type="text" value={wmText} onChange={(e) => setWmText(e.target.value)} placeholder="© Your Brand" style={s.numInput} />
+                </div>
+                <label style={s.inputLabel}>Position</label>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6, margin: "6px 0 12px" }}>
+                  {(["top-left", "top-right", "center", "bottom-left", "bottom-right", "tiled"] as WatermarkPosition[]).map((p) => (
+                    <button key={p} onClick={() => setWmPosition(p)} style={{
+                      padding: "9px 4px", borderRadius: 9, fontSize: 10.5, fontWeight: 700, cursor: "pointer",
+                      border: wmPosition === p ? "2px solid #6366F1" : "1.5px solid #E0E0EE",
+                      background: wmPosition === p ? "#EEEEFF" : "#FAFAFA", color: wmPosition === p ? "#6366F1" : "#888",
+                      textTransform: "capitalize",
+                    }}>{p.replace("-", " ")}</button>
+                  ))}
+                </div>
+                <div style={{ display: "flex", gap: 12, alignItems: "flex-end", marginBottom: 10 }}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between" }}><span style={s.inputLabel}>Size</span><span style={{ fontSize: 12, fontWeight: 700, color: "#6366F1" }}>{wmFontScale}%</span></div>
+                    <input type="range" min={2} max={15} value={wmFontScale} onChange={(e) => setWmFontScale(parseInt(e.target.value))} style={{ width: "100%" }} />
+                  </div>
+                  <div>
+                    <div style={s.inputLabel}>Color</div>
+                    <input type="color" value={wmColor} onChange={(e) => setWmColor(e.target.value)} style={{ width: 42, height: 34, borderRadius: 8, border: "1.5px solid #E0E0EE", cursor: "pointer", padding: 2 }} />
+                  </div>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between" }}><span style={s.inputLabel}>Opacity</span><span style={{ fontSize: 12, fontWeight: 700, color: "#6366F1" }}>{wmOpacity}%</span></div>
+                <input type="range" min={10} max={100} value={wmOpacity} onChange={(e) => setWmOpacity(parseInt(e.target.value))} style={{ width: "100%", marginBottom: 12 }} />
+                <button style={{ ...s.primaryBtn, ...(processing ? s.btnOff : {}) }} disabled={processing} onClick={handleWatermark}>
+                  {processing ? <span style={s.btnRow}><span style={s.spin} />Applying…</span> : "🔖 Add Watermark"}
+                </button>
+                {resultBlock()}
+              </div>
+            )}
+
+            {/* Meme Generator */}
+            {activeTool === "meme" && (
+              <div style={s.panelContent}>
+                <div style={s.panelTitle}>😂 Meme Generator</div>
+                <p style={s.panelSub}>Classic top/bottom caption — free, no watermark</p>
+                <div style={s.panelSection}>
+                  <label style={s.inputLabel}>Top text</label>
+                  <input type="text" value={memeTop} onChange={(e) => setMemeTop(e.target.value)} placeholder="TOP TEXT" style={s.numInput} />
+                </div>
+                <div style={s.panelSection}>
+                  <label style={s.inputLabel}>Bottom text</label>
+                  <input type="text" value={memeBottom} onChange={(e) => setMemeBottom(e.target.value)} placeholder="BOTTOM TEXT" style={s.numInput} />
+                </div>
+                <button style={{ ...s.primaryBtn, ...(processing ? s.btnOff : {}) }} disabled={processing} onClick={handleMeme}>
+                  {processing ? <span style={s.btnRow}><span style={s.spin} />Creating…</span> : "😂 Create Meme"}
+                </button>
+                {resultBlock()}
               </div>
             )}
 

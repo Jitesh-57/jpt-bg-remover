@@ -3,10 +3,14 @@
 import { useRef, useState, useCallback, useEffect } from "react";
 import PricingModal from "@/app/_components/PricingModal";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
+import {
+  cropToAspectRatio, rotateFlipImage, compressToJpeg, convertImageFormat,
+  applyWatermark, type WatermarkPosition,
+} from "@/lib/tools-canvas";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type TransformType = "resize" | "adjust" | "upscale" | "ai-edit" | "remove-bg" | "generate-bg";
+type TransformType = "resize" | "adjust" | "crop" | "rotate" | "compress" | "convert" | "watermark" | "upscale" | "ai-edit" | "remove-bg" | "generate-bg";
 type ItemStatus = "pending" | "processing" | "done" | "error";
 
 interface BatchItem {
@@ -30,7 +34,12 @@ const MAX_DIMENSION = 1024;
 
 const ALL_TRANSFORMS: { id: TransformType; label: string; icon: string; desc: string; creditsEach: number; aiOnly?: boolean }[] = [
   { id: "resize",      label: "Resize",       icon: "↔️", desc: "Resize to custom dimensions",                creditsEach: 0 },
+  { id: "crop",        label: "Crop",         icon: "✂️", desc: "Crop all to a social ratio",                creditsEach: 0 },
+  { id: "rotate",      label: "Rotate / Flip", icon: "🔄", desc: "Rotate or mirror every image",             creditsEach: 0 },
   { id: "adjust",      label: "Color Adjust", icon: "🎨", desc: "Brightness / contrast / saturation",        creditsEach: 0 },
+  { id: "watermark",   label: "Watermark",    icon: "🔖", desc: "Add a text watermark to all",               creditsEach: 0 },
+  { id: "compress",    label: "Compress",     icon: "🗜️", desc: "Shrink file size (JPEG quality)",           creditsEach: 0 },
+  { id: "convert",     label: "Convert",      icon: "🔀", desc: "JPG · PNG · WEBP",                          creditsEach: 0 },
   { id: "upscale",     label: "Upscale",      icon: "🔍", desc: "2× or 4× super-resolution",                 creditsEach: 1 },
   { id: "ai-edit",     label: "AI Edit",      icon: "✨", desc: "Transform with text prompt via Gemini",     creditsEach: 2, aiOnly: true },
   { id: "remove-bg",   label: "Remove BG",    icon: "🪄", desc: "Remove background via Gemini AI",           creditsEach: 2, aiOnly: true },
@@ -107,6 +116,18 @@ export default function BatchEditorPage() {
   const [brightness, setBrightness] = useState(100);
   const [contrast, setContrast] = useState(100);
   const [saturation, setSaturation] = useState(100);
+  // Crop / Rotate / Compress / Convert / Watermark options
+  const [cropRatio, setCropRatio] = useState("1:1");
+  const [rotateDeg, setRotateDeg] = useState<0 | 90 | 180 | 270>(90);
+  const [rotateFlipH, setRotateFlipH] = useState(false);
+  const [rotateFlipV, setRotateFlipV] = useState(false);
+  const [compressQuality, setCompressQuality] = useState(70);
+  const [convertFormat, setConvertFormat] = useState<"png" | "jpeg" | "webp">("jpeg");
+  const [wmText, setWmText] = useState("© JPT AI");
+  const [wmPosition, setWmPosition] = useState<WatermarkPosition>("bottom-right");
+  const [wmFontScale, setWmFontScale] = useState(5);
+  const [wmColor, setWmColor] = useState("#ffffff");
+  const [wmOpacity, setWmOpacity] = useState(70);
   const [aiPrompt, setAiPrompt] = useState("");
   const [bgPrompt, setBgPrompt] = useState("Soft blurred white background, professional studio style");
   const [upscaleScale, setUpscaleScale] = useState<"2x" | "4x">("2x");
@@ -196,6 +217,22 @@ export default function BatchEditorPage() {
     }
     if (tool === "adjust") {
       return canvasAdjust(src, brightness, contrast, saturation);
+    }
+    if (tool === "crop") {
+      const [rw, rh] = cropRatio === "circle" ? [1, 0] : cropRatio.split(":").map(Number);
+      return cropToAspectRatio(src, rw, rh);
+    }
+    if (tool === "rotate") {
+      return rotateFlipImage(src, rotateDeg, rotateFlipH, rotateFlipV);
+    }
+    if (tool === "compress") {
+      return compressToJpeg(src, compressQuality / 100);
+    }
+    if (tool === "convert") {
+      return convertImageFormat(src, convertFormat);
+    }
+    if (tool === "watermark") {
+      return applyWatermark(src, { text: wmText, position: wmPosition, fontScale: wmFontScale, color: wmColor, opacity: wmOpacity / 100 });
     }
     if (tool === "upscale") {
       if (upscaleMode === "pro") {
@@ -290,7 +327,7 @@ export default function BatchEditorPage() {
     }
 
     // Ordered tools to apply in sequence
-    const toolOrder: TransformType[] = ["resize", "adjust", "upscale", "remove-bg", "ai-edit", "generate-bg"];
+    const toolOrder: TransformType[] = ["crop", "rotate", "resize", "adjust", "upscale", "remove-bg", "ai-edit", "generate-bg", "watermark", "compress", "convert"];
     const activeTools = toolOrder.filter(t => selectedTools.has(t));
 
     setProcessing(true);
@@ -313,20 +350,22 @@ export default function BatchEditorPage() {
     setProcessing(false);
   };
 
+  const extOf = (dataUrl: string) => dataUrl.includes("image/png") ? "png" : dataUrl.includes("image/webp") ? "webp" : "jpg";
+
   const downloadAll = async () => {
     const done = items.filter(i => i.resultDataUrl);
     if (!done.length) return;
     if (done.length === 1) {
       const a = document.createElement("a");
       a.href = done[0].resultDataUrl!;
-      a.download = `${done[0].name}-edited.${done[0].resultDataUrl!.includes("image/png") ? "png" : "jpg"}`;
+      a.download = `${done[0].name}-edited.${extOf(done[0].resultDataUrl!)}`;
       a.click();
       return;
     }
     const JSZip = (await import("jszip")).default;
     const zip = new JSZip();
     done.forEach(item => {
-      const ext = item.resultDataUrl!.includes("image/png") ? "png" : "jpg";
+      const ext = extOf(item.resultDataUrl!);
       zip.file(`${item.name}-edited.${ext}`, item.resultDataUrl!.split(",")[1], { base64: true });
     });
     const blob = await zip.generateAsync({ type: "blob" });
@@ -340,9 +379,109 @@ export default function BatchEditorPage() {
     if (!item.resultDataUrl) return;
     const a = document.createElement("a");
     a.href = item.resultDataUrl;
-    a.download = `${item.name}-edited.${item.resultDataUrl.includes("image/png") ? "png" : "jpg"}`;
+    a.download = `${item.name}-edited.${extOf(item.resultDataUrl)}`;
     a.click();
   };
+
+  // Option UI for the new free tools — shared between the mobile and desktop
+  // option panels (they otherwise duplicate every tool's controls).
+  const renderToolOptions = (which: TransformType | null) => (
+    <>
+      {which === "crop" && (
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          <label style={optionLabel}>Crop ratio (applied to all)</label>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6 }}>
+            {["1:1", "4:5", "9:16", "16:9", "3:2", "circle"].map(r => (
+              <button key={r} onClick={() => setCropRatio(r)} style={{
+                padding: "9px 4px", borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: "pointer",
+                border: cropRatio === r ? "2px solid #6366F1" : "1.5px solid #E5E7EB",
+                background: cropRatio === r ? "#EEF2FF" : "#fff", color: cropRatio === r ? "#6366F1" : "#6B7280",
+              }}>{r === "circle" ? "○ Circle" : r}</button>
+            ))}
+          </div>
+        </div>
+      )}
+      {which === "rotate" && (
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <label style={optionLabel}>Rotation</label>
+          <div style={{ display: "flex", gap: 6 }}>
+            {([0, 90, 180, 270] as const).map(d => (
+              <button key={d} onClick={() => setRotateDeg(d)} style={{
+                flex: 1, padding: "10px 0", borderRadius: 8, fontSize: 13, fontWeight: 800, cursor: "pointer",
+                border: rotateDeg === d ? "2px solid #6366F1" : "1.5px solid #E5E7EB",
+                background: rotateDeg === d ? "#EEF2FF" : "#fff", color: rotateDeg === d ? "#6366F1" : "#6B7280",
+              }}>{d}°</button>
+            ))}
+          </div>
+          <div style={{ display: "flex", gap: 12 }}>
+            <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#6B7280", cursor: "pointer" }}>
+              <input type="checkbox" checked={rotateFlipH} onChange={e => setRotateFlipH(e.target.checked)} /> Flip H
+            </label>
+            <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#6B7280", cursor: "pointer" }}>
+              <input type="checkbox" checked={rotateFlipV} onChange={e => setRotateFlipV(e.target.checked)} /> Flip V
+            </label>
+          </div>
+        </div>
+      )}
+      {which === "watermark" && (
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <div>
+            <label style={optionLabel}>Watermark text</label>
+            <input type="text" value={wmText} onChange={e => setWmText(e.target.value)} style={inputStyle} placeholder="© Your Brand" />
+          </div>
+          <div>
+            <label style={optionLabel}>Position</label>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6, marginTop: 4 }}>
+              {(["top-left", "top-right", "center", "bottom-left", "bottom-right", "tiled"] as WatermarkPosition[]).map(p => (
+                <button key={p} onClick={() => setWmPosition(p)} style={{
+                  padding: "8px 4px", borderRadius: 8, fontSize: 10.5, fontWeight: 700, cursor: "pointer",
+                  border: wmPosition === p ? "2px solid #6366F1" : "1.5px solid #E5E7EB",
+                  background: wmPosition === p ? "#EEF2FF" : "#fff", color: wmPosition === p ? "#6366F1" : "#6B7280",
+                }}>{p.replace("-", " ")}</button>
+              ))}
+            </div>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{ flex: 1 }}>
+              <label style={optionLabel}>Size {wmFontScale}%</label>
+              <input type="range" min={2} max={15} value={wmFontScale} onChange={e => setWmFontScale(+e.target.value)} style={{ width: "100%", accentColor: "#6366F1" }} />
+            </div>
+            <div>
+              <label style={optionLabel}>Color</label>
+              <input type="color" value={wmColor} onChange={e => setWmColor(e.target.value)} style={{ width: 40, height: 34, borderRadius: 8, border: "1.5px solid #E5E7EB", cursor: "pointer", padding: 2 }} />
+            </div>
+          </div>
+          <div>
+            <label style={optionLabel}>Opacity {wmOpacity}%</label>
+            <input type="range" min={10} max={100} value={wmOpacity} onChange={e => setWmOpacity(+e.target.value)} style={{ width: "100%", accentColor: "#6366F1" }} />
+          </div>
+        </div>
+      )}
+      {which === "compress" && (
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          <label style={optionLabel}>JPEG quality {compressQuality}%</label>
+          <input type="range" min={10} max={95} value={compressQuality} onChange={e => setCompressQuality(+e.target.value)} style={{ width: "100%", accentColor: "#6366F1" }} />
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "#9CA3AF" }}>
+            <span>Smaller file</span><span>Higher quality</span>
+          </div>
+        </div>
+      )}
+      {which === "convert" && (
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          <label style={optionLabel}>Output format</label>
+          <div style={{ display: "flex", gap: 6 }}>
+            {(["png", "jpeg", "webp"] as const).map(f => (
+              <button key={f} onClick={() => setConvertFormat(f)} style={{
+                flex: 1, padding: "11px 0", borderRadius: 8, fontSize: 13, fontWeight: 800, cursor: "pointer", textTransform: "uppercase",
+                border: convertFormat === f ? "2px solid #6366F1" : "1.5px solid #E5E7EB",
+                background: convertFormat === f ? "#EEF2FF" : "#fff", color: convertFormat === f ? "#6366F1" : "#6B7280",
+              }}>{f === "jpeg" ? "JPG" : f}</button>
+            ))}
+          </div>
+        </div>
+      )}
+    </>
+  );
 
   const doneCount = items.filter(i => i.status === "done").length;
   const errorCount = items.filter(i => i.status === "error").length;
@@ -573,6 +712,8 @@ export default function BatchEditorPage() {
                     rows={4} style={{ ...inputStyle, resize: "vertical", lineHeight: 1.5 }} />
                 </div>
               )}
+
+              {renderToolOptions(openOptionsFor)}
             </div>
           );
         })()}
@@ -891,6 +1032,8 @@ export default function BatchEditorPage() {
                     rows={4} style={{ ...inputStyle, resize: "vertical", lineHeight: 1.5 }} />
                 </div>
               )}
+
+              {renderToolOptions(openOptionsFor)}
             </div>
           );
         })()}

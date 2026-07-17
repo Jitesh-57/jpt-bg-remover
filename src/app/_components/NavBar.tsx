@@ -40,6 +40,8 @@ const FREE_IMAGE_TOOLS = [
   { icon: "🔀", label: "Convert Format",  desc: "JPG · PNG · WEBP",              href: "/convert-image", free: true },
   { icon: "✂️", label: "Crop Image",      desc: "Social ratios + circle crop",   href: "/crop-image", free: true },
   { icon: "🔄", label: "Rotate & Flip",   desc: "Turn or mirror photos",         href: "/rotate-image", free: true },
+  { icon: "🔖", label: "Add Watermark",   desc: "Text watermark on photos",      href: "/watermark-image", free: true },
+  { icon: "😂", label: "Meme Generator",  desc: "Top & bottom meme text",        href: "/meme-generator", free: true },
   { icon: "📄", label: "Image to PDF",    desc: "JPG & PNG to PDF",              href: "/image-to-pdf", free: true },
 ];
 

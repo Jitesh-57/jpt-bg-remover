@@ -21,6 +21,8 @@ const PAGE_TOOL: Record<string, string> = {
   'crop-image': 'crop',
   'rotate-image': 'rotate',
   'image-to-pdf': 'pdf',
+  'watermark-image': 'watermark',
+  'meme-generator': 'meme',
 }
 
 // Free, in-browser tools — used for the "More free tools" cross-link hub.
@@ -30,6 +32,8 @@ const FREE_TOOL_LINKS: { id: string; icon: string; title: string; href: string }
   { id: 'convert-image', icon: '🔀', title: 'Image Converter', href: '/convert-image' },
   { id: 'crop-image', icon: '✂️', title: 'Crop Image', href: '/crop-image' },
   { id: 'rotate-image', icon: '🔄', title: 'Rotate & Flip', href: '/rotate-image' },
+  { id: 'watermark-image', icon: '🔖', title: 'Add Watermark', href: '/watermark-image' },
+  { id: 'meme-generator', icon: '😂', title: 'Meme Generator', href: '/meme-generator' },
   { id: 'image-to-pdf', icon: '📄', title: 'Image to PDF', href: '/image-to-pdf' },
 ]
 
@@ -104,6 +108,18 @@ const PAGE_USE_CASES: Record<string, { icon: string; title: string; stat?: strin
     { icon: '📚', title: 'Share & Archive', desc: 'PDFs are universal and easy to store — perfect for keeping records tidy.' },
     { icon: '🖨️', title: 'Easy Printing', desc: 'A PDF prints predictably at the right size, unlike loose image files.' },
     { icon: '📤', title: 'Professional Sending', desc: 'Send a clean PDF instead of a raw photo when it needs to look official.' },
+  ],
+  'watermark-image': [
+    { icon: '📸', title: 'Photographers', desc: 'Stamp your name across proofs and previews before sharing with clients.' },
+    { icon: '🛍️', title: 'Online Sellers', desc: 'Brand product photos so competitors cannot reuse them on other listings.' },
+    { icon: '©️', title: 'Copyright Protection', desc: 'Add a © notice to protect artwork, designs, and original photos online.' },
+    { icon: '📦', title: 'Bulk Branding', desc: 'Watermark a whole batch of up to 100 images with one consistent mark.' },
+  ],
+  'meme-generator': [
+    { icon: '📱', title: 'Social Media', desc: 'Whip up memes for Instagram, WhatsApp, X, and Reddit in seconds.' },
+    { icon: '💬', title: 'Group Chats', desc: 'Caption a photo and drop the perfect reaction meme into any chat.' },
+    { icon: '🎯', title: 'Marketing', desc: 'Meme marketing gets shares — brand-friendly, on-trend, and free to make.' },
+    { icon: '😄', title: 'Just for Fun', desc: 'Turn any picture into a classic top/bottom-text meme instantly.' },
   ],
 }
 
@@ -211,6 +227,16 @@ const PAGE_SEO_CONTENT: Record<string, { heading: string; body: string }[]> = {
     { heading: 'JPG to PDF and PNG to PDF, instantly', body: 'Turning photos into PDFs makes them easy to share, print, and archive. Forms, IDs, receipts, and notes all become tidy, universal PDF files that any device and office can open.' },
     { heading: 'Private, unlimited, and watermark-free', body: 'Because the PDF is generated locally in your browser, your image never leaves your device. Convert as many images to PDF as you like — completely free, with no watermark and no account required.' },
   ],
+  'watermark-image': [
+    { heading: 'How to add a watermark to a photo for free', body: 'Upload your image, type your watermark text, and choose the position, size, color, and opacity. Apply and download — free, no sign-up, and the tool never stamps its own branding on your photo. Everything runs in your browser, so your image stays private.' },
+    { heading: 'Protect your photos and brand', body: 'A watermark deters people from reusing your images without credit. Add your name, studio, or © notice to proofs, product shots, and original artwork. Choose a subtle corner mark or a repeating tiled pattern for stronger protection.' },
+    { heading: 'Watermark up to 100 images at once', body: 'Need to brand a whole gallery or product catalog? Open the Batch Editor, add your watermark once, and apply it to up to 100 images in a single run — consistent, fast, and free.' },
+  ],
+  'meme-generator': [
+    { heading: 'How to make a meme for free', body: 'Upload any image, type your top and bottom captions, and click Create Meme. Your text renders in the classic bold Impact style with a black outline, then downloads instantly — free, no sign-up, no watermark.' },
+    { heading: 'The classic meme look, done right', body: 'JPT AI uses uppercase Impact with a heavy outline — the format everyone recognises. Long captions wrap automatically to fit the image, so your meme always looks clean on any picture.' },
+    { heading: 'Private and unlimited', body: 'Memes are generated entirely in your browser, so your images never leave your device. Make as many as you like for Instagram, WhatsApp, X, Reddit, and group chats — completely free with no limits.' },
+  ],
 }
 
 // Gradient hero image previews per page
@@ -259,6 +285,16 @@ const PAGE_VISUALS: Record<string, { before: string; after: string; label: strin
     before: 'linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%)',
     after: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
     label: 'PDF Ready',
+  },
+  'watermark-image': {
+    before: 'linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%)',
+    after: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+    label: 'Watermarked',
+  },
+  'meme-generator': {
+    before: 'linear-gradient(135deg, #fef9c3 0%, #fde68a 100%)',
+    after: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+    label: 'Meme Ready',
   },
 }
 
@@ -497,6 +533,20 @@ export default function LandingPage({ config, toolHref, pageId }: LandingPagePro
               { icon: '📄', label: 'JPG & PNG to PDF' },
               { icon: '📐', label: 'Right-Sized Pages' },
               { icon: '🔒', label: 'Private — Runs in Browser' },
+              { icon: '📤', label: 'No Watermark on Download' },
+              { icon: '⚡', label: 'Instant, Unlimited & Free' },
+            ],
+            'watermark-image': [
+              { icon: '🔖', label: 'Custom Text Watermark' },
+              { icon: '🎯', label: 'Any Position + Tiled' },
+              { icon: '🎚️', label: 'Size, Color & Opacity' },
+              { icon: '📦', label: 'Batch Up to 100 Images' },
+              { icon: '⚡', label: 'Free — No Tool Watermark' },
+            ],
+            'meme-generator': [
+              { icon: '😂', label: 'Classic Impact Text' },
+              { icon: '⬆️', label: 'Top & Bottom Captions' },
+              { icon: '↩️', label: 'Auto Text Wrap' },
               { icon: '📤', label: 'No Watermark on Download' },
               { icon: '⚡', label: 'Instant, Unlimited & Free' },
             ],
