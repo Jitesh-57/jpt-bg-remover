@@ -20,7 +20,7 @@ declare global {
   }
 }
 
-type Tool = "ai-edit" | "generate-bg" | "upscale" | "resize" | "adjust" | "remove-bg" | "crop" | "rotate" | "compress" | "convert" | "pdf" | "watermark" | "meme" | null;
+type Tool = "ai-edit" | "generate-bg" | "upscale" | "resize" | "adjust" | "remove-bg" | "crop" | "rotate" | "compress" | "convert" | "pdf" | "watermark" | "meme" | "stickers" | null;
 type BgMode = "color" | "gradient" | "image" | "ai";
 
 interface GradientPreset { label: string; from: string; to: string; angle: number }
@@ -77,6 +77,7 @@ const ALL_TOOLS: { id: Tool; icon: string; label: string; ai?: boolean; free?: b
   { id: "adjust", icon: "🎨", label: "Adjust", free: true },
   { id: "watermark", icon: "🔖", label: "Watermark", free: true },
   { id: "meme", icon: "😂", label: "Meme", free: true },
+  { id: "stickers", icon: "😎", label: "Stickers", free: true },
   { id: "compress", icon: "🗜️", label: "Compress", free: true },
   { id: "convert", icon: "🔀", label: "Convert", free: true },
   { id: "pdf", icon: "📄", label: "To PDF", free: true },
@@ -84,6 +85,14 @@ const ALL_TOOLS: { id: Tool; icon: string; label: string; ai?: boolean; free?: b
 
 // Free-only mode keeps just the on-device tools (Upscale/Resize/Adjust).
 const TOOLS = PAID_FEATURES_ENABLED ? ALL_TOOLS : ALL_TOOLS.filter(t => t.free);
+
+// Emoji "sticker pack" — colorful, zero-asset stickers rendered onto the canvas.
+const STICKER_PACKS: { name: string; emojis: string[] }[] = [
+  { name: "Smileys", emojis: ["😀","😃","😄","😁","😆","😅","😂","🤣","😊","😇","🙂","🙃","😉","😌","😍","🥰","😘","😗","😙","😚","😋","😛","😜","🤪","😝","🤨","🧐","🤓","😎","🥸","🤩","🥳","😏","😴","🤤","😪","🫠","😵","🤯","🥵","🥶","😱","😨","😰","😢","😭","😤","😡","🤬","🤔","🤭","🫡","🤗"] },
+  { name: "Gestures", emojis: ["👍","👎","👌","🤌","🤏","✌️","🤞","🫰","🤟","🤘","🤙","👈","👉","👆","👇","☝️","✋","🤚","🖐️","🖖","👋","🤝","👏","🙌","🫶","🙏","💪","🦾","✍️","👀","👁️","🫵"] },
+  { name: "Love", emojis: ["❤️","🧡","💛","💚","💙","💜","🖤","🤍","🤎","💕","💞","💓","💗","💖","💘","💝","💟","❣️","💔","❤️‍🔥","💯","💥","💫","⭐","🌟","✨","⚡","🔥","🎉","🎊","🎈","👑","💎","🏆","🥇","🌈"] },
+  { name: "Fun", emojis: ["😺","😸","😹","😻","🙀","🐶","🐱","🦄","🐼","🐸","🐵","🙈","🙉","🙊","🦁","🐯","🍕","🍔","🍟","🌭","🍩","🍦","☕","🍺","🎮","🎧","📸","💩","🤡","👻","💀","☠️","👽","👾","🤖","🎃","👋"] },
+];
 
 const AI_TOOL_DESCRIPTIONS: Record<string, string> = {
   "ai-edit": "AI Edit lets you transform images with text prompts — change backgrounds, add effects, relight scenes and more.",
@@ -454,6 +463,16 @@ export default function ImageEditorPage() {
   const [wmOpacity, setWmOpacity] = useState(70);
   const [memeTop, setMemeTop] = useState("");
   const [memeBottom, setMemeBottom] = useState("");
+  // Sticker Studio: placed stickers positioned as fractions (fx,fy) of the image
+  // box; size is a fraction of image width. Baked onto the canvas on Apply.
+  type PlacedSticker = { id: string; emoji: string; fx: number; fy: number; size: number };
+  const [showStickerStudio, setShowStickerStudio] = useState(false);
+  const [stickers, setStickers] = useState<PlacedSticker[]>([]);
+  const [selectedStickerId, setSelectedStickerId] = useState<string | null>(null);
+  const [stickerPack, setStickerPack] = useState(0);
+  const stickerStageRef = useRef<HTMLDivElement>(null);
+  const stickerDrag = useRef<{ id: string; dx: number; dy: number } | null>(null);
+  const [stageW, setStageW] = useState(0); // displayed image width (px) for sizing emoji
   // Short "what just happened" summary shown with an in-panel Download button.
   const [toolResult, setToolResult] = useState<{ title: string; detail?: string } | null>(null);
 
@@ -688,6 +707,15 @@ export default function ImageEditorPage() {
 
   // Clear the per-tool result summary when switching tools or loading a new image.
   useEffect(() => { setToolResult(null); }, [activeTool, original?.dataUrl]);
+
+  // Keep the Sticker Studio stage width in sync so emoji scale with the image.
+  const measureStage = () => { if (stickerStageRef.current) setStageW(stickerStageRef.current.getBoundingClientRect().width); };
+  useEffect(() => {
+    if (!showStickerStudio) return;
+    measureStage();
+    window.addEventListener("resize", measureStage);
+    return () => window.removeEventListener("resize", measureStage);
+  }, [showStickerStudio]);
 
   // ── Compress image to max 1024px before sending to API (avoids 4.5MB Vercel limit) ──
   const compressForApi = async (dataUrl: string): Promise<string> => {
@@ -1111,6 +1139,89 @@ export default function ImageEditorPage() {
       autoSaveToDrive(result, "meme", `${memeTop} / ${memeBottom}`.slice(0, 60));
     }
     catch { setError("Meme failed."); }
+    finally { setProcessing(false); }
+  };
+
+  // ── Sticker Studio ──────────────────────────────────────────────────────────
+  const openStickerStudio = () => {
+    const src = working || original?.dataUrl;
+    if (!src || processing) return;
+    if (anonBlocked()) return;
+    setStickers([]);
+    setSelectedStickerId(null);
+    setStickerPack(0);
+    setShowStickerStudio(true);
+  };
+
+  const addSticker = (emoji: string) => {
+    const id = `s${Date.now()}${Math.random().toString(36).slice(2, 5)}`;
+    // Drop new stickers near the center with a slight offset so stacks fan out.
+    const jitter = (Math.random() - 0.5) * 0.12;
+    setStickers(prev => [...prev, { id, emoji, fx: 0.5 + jitter, fy: 0.5 + jitter, size: 0.16 }]);
+    setSelectedStickerId(id);
+  };
+
+  const onStickerPointerDown = (e: React.PointerEvent, id: string) => {
+    e.stopPropagation();
+    const stage = stickerStageRef.current;
+    const st = stickers.find(s => s.id === id);
+    if (!stage || !st) return;
+    const rect = stage.getBoundingClientRect();
+    // Offset between pointer and sticker center, in fractions, so it doesn't jump.
+    stickerDrag.current = {
+      id,
+      dx: (e.clientX - rect.left) / rect.width - st.fx,
+      dy: (e.clientY - rect.top) / rect.height - st.fy,
+    };
+    setSelectedStickerId(id);
+    (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
+  };
+
+  const onStickerPointerMove = (e: React.PointerEvent) => {
+    const drag = stickerDrag.current;
+    const stage = stickerStageRef.current;
+    if (!drag || !stage) return;
+    const rect = stage.getBoundingClientRect();
+    const fx = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width - drag.dx));
+    const fy = Math.min(1, Math.max(0, (e.clientY - rect.top) / rect.height - drag.dy));
+    setStickers(prev => prev.map(s => s.id === drag.id ? { ...s, fx, fy } : s));
+  };
+
+  const onStickerPointerUp = () => { stickerDrag.current = null; };
+
+  const removeSticker = (id: string) => {
+    setStickers(prev => prev.filter(s => s.id !== id));
+    setSelectedStickerId(cur => cur === id ? null : cur);
+  };
+
+  const applyStickers = async () => {
+    const src = working || original?.dataUrl;
+    if (!src || !stickers.length) { setShowStickerStudio(false); return; }
+    setProcessing(true); setError(null);
+    try {
+      const img = await loadImg(src);
+      const W = img.naturalWidth, H = img.naturalHeight;
+      const canvas = document.createElement("canvas");
+      canvas.width = W; canvas.height = H;
+      const ctx = canvas.getContext("2d")!;
+      ctx.drawImage(img, 0, 0);
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      for (const s of stickers) {
+        const fontPx = Math.max(8, s.size * W);
+        ctx.font = `${fontPx}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`;
+        ctx.fillText(s.emoji, s.fx * W, s.fy * H);
+      }
+      const out = canvas.toDataURL(src.includes("image/png") ? "image/png" : "image/jpeg", 0.92);
+      setEditHistory(prev => working ? [...prev, working] : prev);
+      setWorking(out);
+      setToolResult({ title: "Stickers added", detail: `${stickers.length} sticker${stickers.length === 1 ? "" : "s"} placed` });
+      recordAnonTransform();
+      autoSaveToDrive(out, "stickers", `${stickers.length} stickers`);
+      setShowStickerStudio(false);
+      setStickers([]);
+    }
+    catch { setError("Adding stickers failed."); }
     finally { setProcessing(false); }
   };
 
@@ -2154,6 +2265,19 @@ export default function ImageEditorPage() {
               </div>
             )}
 
+            {/* Stickers */}
+            {activeTool === "stickers" && (
+              <div style={s.panelContent}>
+                <div style={s.panelTitle}>😎 Stickers</div>
+                <p style={s.panelSub}>Add emoji stickers and drag them anywhere — free</p>
+                <button style={{ ...s.primaryBtn, ...(processing ? s.btnOff : {}) }} disabled={processing} onClick={openStickerStudio}>
+                  😎 Open Sticker Studio
+                </button>
+                <p style={{ fontSize: 12, color: "#94A3B8", marginTop: 10, textAlign: "center" }}>Pick from 150+ emoji stickers, place and resize them on your photo, then apply.</p>
+                {resultBlock()}
+              </div>
+            )}
+
             {/* Image to PDF */}
             {activeTool === "pdf" && (
               <div style={s.panelContent}>
@@ -2197,6 +2321,126 @@ export default function ImageEditorPage() {
               <span style={{ fontSize: 9, fontWeight: 700, color: activeTool === t.id ? "#6366F1" : "#888", whiteSpace: "nowrap" as const }}>{t.label}</span>
             </button>
           ))}
+        </div>
+      )}
+
+      {/* ── Sticker Studio Modal ──────────────────────────────────────────── */}
+      {showStickerStudio && (
+        <div style={{ position: "fixed", inset: 0, zIndex: 3000, background: "rgba(15,23,42,0.72)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 16 }}
+          onClick={() => setShowStickerStudio(false)}>
+          <div onClick={(e) => e.stopPropagation()}
+            style={{ background: "#fff", borderRadius: 18, width: "100%", maxWidth: 620, maxHeight: "94vh", overflow: "hidden", display: "flex", flexDirection: "column", boxShadow: "0 24px 80px rgba(0,0,0,0.35)" }}>
+
+            {/* Header */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 18px", borderBottom: "1px solid #EEF0F4" }}>
+              <div style={{ fontWeight: 900, fontSize: 16, color: "#111" }}>😎 Sticker Studio</div>
+              <button onClick={() => setShowStickerStudio(false)} style={{ background: "none", border: "none", fontSize: 22, color: "#9CA3AF", cursor: "pointer", lineHeight: 1 }}>×</button>
+            </div>
+
+            {/* Stage */}
+            <div style={{ flex: 1, overflow: "auto", background: "#F1F5F9", display: "flex", alignItems: "center", justifyContent: "center", padding: 16, minHeight: 240 }}>
+              <div
+                ref={stickerStageRef}
+                onPointerMove={onStickerPointerMove}
+                onPointerUp={onStickerPointerUp}
+                onPointerLeave={onStickerPointerUp}
+                onClick={() => setSelectedStickerId(null)}
+                style={{ position: "relative", display: "inline-block", lineHeight: 0, touchAction: "none", boxShadow: "0 4px 24px rgba(0,0,0,0.12)", borderRadius: 8, overflow: "hidden" }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={working || original?.dataUrl || ""}
+                  alt="Add stickers"
+                  onLoad={measureStage}
+                  style={{ display: "block", maxWidth: "100%", maxHeight: "56vh", width: "auto", height: "auto", userSelect: "none" }}
+                  draggable={false}
+                />
+                {stickers.map((st) => {
+                  const selected = selectedStickerId === st.id;
+                  return (
+                    <span
+                      key={st.id}
+                      onPointerDown={(e) => onStickerPointerDown(e, st.id)}
+                      onClick={(e) => { e.stopPropagation(); setSelectedStickerId(st.id); }}
+                      style={{
+                        position: "absolute",
+                        left: `${st.fx * 100}%`,
+                        top: `${st.fy * 100}%`,
+                        transform: "translate(-50%,-50%)",
+                        fontSize: `${Math.max(10, st.size * stageW)}px`,
+                        lineHeight: 1,
+                        cursor: "grab",
+                        userSelect: "none",
+                        touchAction: "none",
+                        outline: selected ? "2px dashed #6366F1" : "none",
+                        outlineOffset: 3,
+                        borderRadius: 4,
+                      }}
+                    >
+                      {st.emoji}
+                      {selected && (
+                        <button
+                          onPointerDown={(e) => { e.stopPropagation(); }}
+                          onClick={(e) => { e.stopPropagation(); removeSticker(st.id); }}
+                          style={{ position: "absolute", top: -10, right: -10, width: 20, height: 20, borderRadius: "50%", border: "none", background: "#EF4444", color: "#fff", fontSize: 13, lineHeight: "20px", cursor: "pointer", padding: 0, boxShadow: "0 1px 4px rgba(0,0,0,0.3)" }}
+                        >×</button>
+                      )}
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Selected sticker size control */}
+            {selectedStickerId && (() => {
+              const st = stickers.find(s => s.id === selectedStickerId);
+              if (!st) return null;
+              return (
+                <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 18px", borderTop: "1px solid #EEF0F4" }}>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: "#6B7280" }}>Size</span>
+                  <input type="range" min={4} max={60} value={Math.round(st.size * 100)}
+                    onChange={(e) => { const v = parseInt(e.target.value) / 100; setStickers(prev => prev.map(s => s.id === st.id ? { ...s, size: v } : s)); }}
+                    style={{ flex: 1, accentColor: "#6366F1" }} />
+                  <button onClick={() => removeSticker(st.id)} style={{ fontSize: 12, fontWeight: 700, color: "#EF4444", background: "none", border: "1px solid #FCA5A5", borderRadius: 8, padding: "5px 10px", cursor: "pointer" }}>Remove</button>
+                </div>
+              );
+            })()}
+
+            {/* Emoji picker */}
+            <div style={{ borderTop: "1px solid #EEF0F4", padding: "10px 14px 6px" }}>
+              <div style={{ display: "flex", gap: 6, marginBottom: 8, overflowX: "auto" }}>
+                {STICKER_PACKS.map((p, i) => (
+                  <button key={p.name} onClick={() => setStickerPack(i)}
+                    style={{ flexShrink: 0, padding: "6px 12px", borderRadius: 20, fontSize: 12, fontWeight: 700, cursor: "pointer",
+                      border: stickerPack === i ? "2px solid #6366F1" : "1.5px solid #E5E7EB",
+                      background: stickerPack === i ? "#EEF2FF" : "#fff", color: stickerPack === i ? "#6366F1" : "#6B7280" }}>
+                    {p.name}
+                  </button>
+                ))}
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(38px, 1fr))", gap: 4, maxHeight: 132, overflowY: "auto", paddingBottom: 4 }}>
+                {STICKER_PACKS[stickerPack].emojis.map((em, i) => (
+                  <button key={`${em}-${i}`} onClick={() => addSticker(em)}
+                    title="Add to image"
+                    style={{ fontSize: 24, lineHeight: "38px", height: 38, border: "none", background: "none", cursor: "pointer", borderRadius: 8 }}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = "#F1F5F9")}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = "none")}>
+                    {em}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Footer actions */}
+            <div style={{ display: "flex", gap: 10, padding: "12px 18px", borderTop: "1px solid #EEF0F4" }}>
+              <button onClick={() => setShowStickerStudio(false)} style={{ ...s.ghostBtn, flex: 1 }}>Cancel</button>
+              <button onClick={applyStickers} disabled={processing || !stickers.length}
+                style={{ ...s.primaryBtn, flex: 2, ...((processing || !stickers.length) ? s.btnOff : {}) }}>
+                {processing ? <span style={s.btnRow}><span style={s.spin} />Applying…</span> : `✓ Apply ${stickers.length || ""} Sticker${stickers.length === 1 ? "" : "s"}`.trim()}
+              </button>
+            </div>
+          </div>
+          <div style={{ color: "#CBD5E1", fontSize: 12, marginTop: 10 }}>Tap an emoji to add · drag to position · use the slider to resize</div>
         </div>
       )}
 
