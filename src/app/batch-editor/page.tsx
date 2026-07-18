@@ -511,7 +511,7 @@ export default function BatchEditorPage() {
           <span style={{ background: "#EEF2FF", color: "#6366F1", fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 20 }}>Up to 100 images</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          {user && (
+          {user && PAID_FEATURES_ENABLED && (
             <span style={{ background: "#F3F4F6", padding: "6px 12px", borderRadius: 20, fontSize: 13, color: "#374151", fontWeight: 600 }}>
               ⚡ {user.credits} credits
             </span>
@@ -594,6 +594,7 @@ export default function BatchEditorPage() {
 
               {openOptionsFor === "upscale" && (
                 <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  {PAID_FEATURES_ENABLED && (
                   <div>
                     <label style={optionLabel}>Mode</label>
                     <div style={{ display: "flex", gap: 0, background: "#F3F4F6", borderRadius: 10, padding: 4, marginTop: 6 }}>
@@ -621,6 +622,7 @@ export default function BatchEditorPage() {
                       <p style={{ fontSize: 11, color: "#7C3AED", margin: "6px 0 0", fontWeight: 600 }}>✨ AI-enhanced — sharper detail & texture recovery</p>
                     )}
                   </div>
+                  )}
                   <div>
                     <label style={optionLabel}>Resolution boost</label>
                     <div style={{ display: "flex", gap: 8, marginTop: 6 }}>
@@ -638,9 +640,11 @@ export default function BatchEditorPage() {
                     </div>
                   </div>
                   <p style={{ fontSize: 11, color: "#9CA3AF", margin: 0 }}>
-                    {upscaleMode === "pro"
-                      ? `Pro ${upscaleScale} — AI texture recovery, 2 credits/image`
-                      : upscaleScale === "2x" ? "2× Standard — faster, 1 credit/image" : "4× Ultra HD — 1 credit/image"}
+                    {PAID_FEATURES_ENABLED
+                      ? (upscaleMode === "pro"
+                          ? `Pro ${upscaleScale} — AI texture recovery, 2 credits/image`
+                          : upscaleScale === "2x" ? "2× Standard — faster, 1 credit/image" : "4× Ultra HD — 1 credit/image")
+                      : upscaleScale === "2x" ? "2× enhancement — free & unlimited" : "4× enhancement — free & unlimited"}
                   </p>
                 </div>
               )}
@@ -721,7 +725,7 @@ export default function BatchEditorPage() {
         {/* ── Mobile: Run button + status ───────────────────────────────────── */}
         {isMobile && (
           <div style={{ background: "#fff", borderBottom: "1px solid #E5E7EB", padding: "12px 16px", display: "flex", flexDirection: "column", gap: 8, flexShrink: 0 }}>
-            {items.length > 0 && selectedTools.size > 0 && (
+            {PAID_FEATURES_ENABLED && items.length > 0 && selectedTools.size > 0 && (
               <div style={{ background: creditsNeeded > (user?.credits ?? 0) && creditsNeeded > 0 ? "#FEF2F2" : "#F0FDF4", borderRadius: 10, padding: "8px 12px", border: `1px solid ${creditsNeeded > (user?.credits ?? 0) && creditsNeeded > 0 ? "#FECACA" : "#BBF7D0"}`, fontSize: 12 }}>
                 {TRANSFORMS.filter(t => selectedTools.has(t.id) && effectiveCredits(t) > 0).map(t => (
                   <div key={t.id} style={{ display: "flex", justifyContent: "space-between", color: "#6B7280", marginBottom: 2 }}>
@@ -808,7 +812,7 @@ export default function BatchEditorPage() {
           </div>
 
           {/* Credit summary */}
-          {items.length > 0 && selectedTools.size > 0 && (
+          {PAID_FEATURES_ENABLED && items.length > 0 && selectedTools.size > 0 && (
             <div style={{ background: creditsNeeded > (user?.credits ?? 0) && creditsNeeded > 0 ? "#FEF2F2" : "#F0FDF4", borderRadius: 10, padding: "12px 14px", border: `1px solid ${creditsNeeded > (user?.credits ?? 0) && creditsNeeded > 0 ? "#FECACA" : "#BBF7D0"}` }}>
               <div style={{ fontSize: 12, fontWeight: 700, color: "#374151", marginBottom: 6 }}>💳 Credit Summary</div>
               {TRANSFORMS.filter(t => selectedTools.has(t.id) && effectiveCredits(t) > 0).map(t => (
@@ -914,6 +918,7 @@ export default function BatchEditorPage() {
 
               {openOptionsFor === "upscale" && (
                 <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  {PAID_FEATURES_ENABLED && (
                   <div>
                     <label style={optionLabel}>Mode</label>
                     <div style={{ display: "flex", gap: 0, background: "#F3F4F6", borderRadius: 10, padding: 4, marginTop: 6 }}>
@@ -941,6 +946,7 @@ export default function BatchEditorPage() {
                       <p style={{ fontSize: 11, color: "#7C3AED", margin: "6px 0 0", fontWeight: 600 }}>✨ AI-enhanced — sharper detail & texture recovery</p>
                     )}
                   </div>
+                  )}
                   <div>
                     <label style={optionLabel}>Resolution boost</label>
                     <div style={{ display: "flex", gap: 8, marginTop: 6 }}>
@@ -958,9 +964,11 @@ export default function BatchEditorPage() {
                     </div>
                   </div>
                   <p style={{ fontSize: 11, color: "#9CA3AF", margin: 0 }}>
-                    {upscaleMode === "pro"
-                      ? `Pro ${upscaleScale} — AI texture recovery, 2 credits/image`
-                      : upscaleScale === "2x" ? "2× Standard — faster, 1 credit/image" : "4× Ultra HD — 1 credit/image"}
+                    {PAID_FEATURES_ENABLED
+                      ? (upscaleMode === "pro"
+                          ? `Pro ${upscaleScale} — AI texture recovery, 2 credits/image`
+                          : upscaleScale === "2x" ? "2× Standard — faster, 1 credit/image" : "4× Ultra HD — 1 credit/image")
+                      : upscaleScale === "2x" ? "2× enhancement — free & unlimited" : "4× enhancement — free & unlimited"}
                   </p>
                 </div>
               )}
