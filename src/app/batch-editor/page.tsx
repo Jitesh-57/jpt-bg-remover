@@ -139,6 +139,8 @@ export default function BatchEditorPage() {
   const [openOptionsFor, setOpenOptionsFor] = useState<TransformType | null>(null);
   const [showPricingModal, setShowPricingModal] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [previewItem, setPreviewItem] = useState<BatchItem | null>(null);
+  const [previewShowOriginal, setPreviewShowOriginal] = useState(false);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -1109,7 +1111,9 @@ export default function BatchEditorPage() {
                 }}>
                   <div style={{ position: "relative", aspectRatio: "1", background: "#F3F4F6", overflow: "hidden" }}>
                     <img src={item.resultDataUrl || item.originalDataUrl} alt={item.name}
-                      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                      onClick={() => { setPreviewShowOriginal(false); setPreviewItem(item); }}
+                      title="Click to preview"
+                      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", cursor: "zoom-in" }} />
 
                     {item.status === "processing" && (
                       <div style={{ position: "absolute", inset: 0, background: "rgba(99,102,241,0.65)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8 }}>
@@ -1143,6 +1147,52 @@ export default function BatchEditorPage() {
           )}
         </div>
       </div>
+
+      {/* ── Image Preview Lightbox ────────────────────────────────────────── */}
+      {previewItem && (() => {
+        const hasResult = !!previewItem.resultDataUrl;
+        const showingOriginal = previewShowOriginal || !hasResult;
+        const shownSrc = showingOriginal ? previewItem.originalDataUrl : previewItem.resultDataUrl!;
+        const download = () => {
+          const a = document.createElement("a");
+          a.href = shownSrc;
+          a.download = showingOriginal ? `${previewItem.name}.jpg` : `${previewItem.name}-edited.${extOf(shownSrc)}`;
+          a.click();
+        };
+        return (
+          <div onClick={() => setPreviewItem(null)}
+            style={{ position: "fixed", inset: 0, zIndex: 4000, background: "rgba(15,23,42,0.82)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 20 }}>
+            <div onClick={e => e.stopPropagation()} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14, maxWidth: "94vw", maxHeight: "94vh" }}>
+              {/* Toggle result/original */}
+              {hasResult && (
+                <div style={{ display: "flex", gap: 0, background: "rgba(255,255,255,0.12)", borderRadius: 10, padding: 4 }}>
+                  {([["Result", false], ["Original", true]] as const).map(([label, orig]) => (
+                    <button key={label} onClick={() => setPreviewShowOriginal(orig)}
+                      style={{ padding: "6px 18px", borderRadius: 7, border: "none", cursor: "pointer", fontSize: 13, fontWeight: 700,
+                        background: showingOriginal === orig ? "#fff" : "transparent", color: showingOriginal === orig ? "#6366F1" : "#E2E8F0" }}>
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              )}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={shownSrc} alt={previewItem.name}
+                style={{ maxWidth: "94vw", maxHeight: "76vh", objectFit: "contain", borderRadius: 10, boxShadow: "0 12px 48px rgba(0,0,0,0.5)", background: "#fff" }} />
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <span style={{ color: "#CBD5E1", fontSize: 13, fontWeight: 600, maxWidth: "40vw", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{previewItem.name}</span>
+                <button onClick={download}
+                  style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 22px", background: "linear-gradient(135deg,#6366F1,#8B5CF6)", color: "#fff", border: "none", borderRadius: 10, fontSize: 14, fontWeight: 800, cursor: "pointer", boxShadow: "0 4px 16px rgba(99,102,241,0.5)" }}>
+                  ⬇ Download {showingOriginal ? "Original" : "Result"}
+                </button>
+                <button onClick={() => setPreviewItem(null)}
+                  style={{ padding: "10px 16px", background: "rgba(255,255,255,0.12)", color: "#fff", border: "none", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
