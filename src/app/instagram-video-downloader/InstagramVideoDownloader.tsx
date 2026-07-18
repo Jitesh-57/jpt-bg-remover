@@ -9,6 +9,7 @@ interface Resolved {
 }
 
 const GRAD = "linear-gradient(120deg,#F58529,#DD2A7B,#8134AF)";
+const HERO_IMG = "https://lwworujvfttxkrjfrgav.supabase.co/storage/v1/object/public/landing/Instagram%20video%20downloader%20banner%20design.png";
 
 export default function InstagramVideoDownloader() {
   const [url, setUrl] = useState("");
@@ -104,6 +105,20 @@ export default function InstagramVideoDownloader() {
                   <div style={{ fontSize: 13, color: "#6B7280", marginBottom: 14 }}>Clean HD MP4 — no watermark, no sign-up.</div>
                   <a href={dl(result.media)} style={{ ...btnBase, background: GRAD, color: "#fff", boxShadow: "0 4px 16px rgba(221,42,123,0.35)" }}>⬇ Download Video (HD)</a>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* Creative showcase */}
+          {!result && (
+            <div style={{ maxWidth: 640, margin: "40px auto 0" }}>
+              <div style={{ position: "relative", borderRadius: 22, padding: 8, background: "linear-gradient(135deg,rgba(221,42,123,0.12),rgba(129,52,175,0.10))", boxShadow: "0 24px 60px rgba(221,42,123,0.18)" }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={HERO_IMG}
+                  alt="Download Instagram reels and videos in HD — free, no watermark"
+                  style={{ width: "100%", height: "auto", display: "block", borderRadius: 16, border: "1px solid #F2E6EE" }}
+                />
               </div>
             </div>
           )}
