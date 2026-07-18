@@ -1,7 +1,7 @@
 import type { BlogPost } from "./posts";
 
 // Human-written, high-intent "free tool" posts. Each targets the search terms
-// for one of the free in-browser tools and links straight into that tool's page
+// for one of the free online tools and links straight into that tool's page
 // (compress / convert / crop / rotate / watermark / meme / image-to-pdf), so the
 // blog funnels organic traffic into the tools it describes.
 const IMG = (id: number) =>
@@ -27,7 +27,7 @@ export const TOOL_FREE_POSTS: BlogPost[] = [
     sections: [
       { body: `Almost everyone hits this at some point: an upload form that refuses anything over 100 KB, 200 KB, or 50 KB, and a photo that's five times too big. The good news is you rarely have to sacrifice much quality to get there — most photos have far more data than a small on-screen or form image actually needs. Here's how to hit an exact size target for free.` },
       { heading: "Why your photo is so much bigger than the limit", body: `A modern phone photo is often 3–8 MB. That's 30–80× the size of a 100 KB limit. The size comes from resolution (millions of pixels) and low compression (the phone keeps maximum quality). A form or website almost never needs all that — it displays the image small. Compression throws away detail your eye won't miss, and the file shrinks dramatically.` },
-      { heading: "How to compress to 100 KB for free", body: `Open the compressor, drop your image in, and drag the quality slider down while watching the live size read-out. When it lands near your target — 100 KB, 200 KB, whatever the form wants — download the smaller JPG. It runs entirely in your browser, so nothing is uploaded to a server, and there's no watermark or sign-up.` },
+      { heading: "How to compress to 100 KB for free", body: `Open the compressor, drop your image in, and drag the quality slider down while watching the live size read-out. When it lands near your target — 100 KB, 200 KB, whatever the form wants — download the smaller JPG. It runs entirely online, so nothing is uploaded to a server, and there's no watermark or sign-up.` },
       { heading: "Getting under a really tight limit", body: `If you need to go very small (say under 50 KB) and quality gets rough, resize the image smaller first — a form photo rarely needs to be more than ~1000px wide — then compress. Fewer pixels plus compression gets you tiny files that still look clean at the size they'll actually be viewed.` },
       { heading: "Compress your image now — free", body: `Got a photo that's over the limit? Drop it into the free compressor, slide to your target size, and download — no watermark, no cost, no account.` },
     ],
@@ -50,7 +50,7 @@ export const TOOL_FREE_POSTS: BlogPost[] = [
     sections: [
       { body: `Most email providers cap attachments around 20–25 MB, and a handful of high-res phone photos blow past that fast. Instead of fighting with cloud links for a couple of pictures, it's usually quicker to compress them so they slip under the limit and just send.` },
       { heading: "How small do email photos need to be?", body: `For something the recipient will view on screen — not print — a few hundred KB per photo looks great. That means you can comfortably attach a dozen compressed photos in a single email. Only bump the quality up if the person genuinely needs print-resolution files.` },
-      { heading: "Compress your photos for email — free", body: `Open the compressor, add a photo, drag the quality slider until the size read-out shows a few hundred KB, and download. Repeat for each photo, then attach the smaller versions. It's free, runs in your browser, and adds no watermark.` },
+      { heading: "Compress your photos for email — free", body: `Open the compressor, add a photo, drag the quality slider until the size read-out shows a few hundred KB, and download. Repeat for each photo, then attach the smaller versions. It's free, runs online, and adds no watermark.` },
       { heading: "A quick tip for lots of photos", body: `If you're sending many images, resize them to around 1600px on the long edge before compressing — screens don't need more than that, and the files get much smaller. You'll fit far more into one email without anyone noticing a quality difference.` },
       { heading: "Shrink your email photos now — free", body: `Stop fighting the attachment limit. Compress your photos free and send them in one go — no watermark, no sign-up.` },
     ],
@@ -76,7 +76,7 @@ export const TOOL_FREE_POSTS: BlogPost[] = [
       { body: `Converting JPG to PNG takes one click, but it's worth knowing why you'd do it — because PNG isn't automatically "better," it's better at specific things. Get the reason right and you'll pick the correct format every time.` },
       { heading: "When PNG is the right call", body: `Choose PNG when you need transparency (a logo or cut-out with no background), the sharpest possible edges on graphics and text, or a lossless file you'll edit repeatedly without quality degrading. PNG shines on flat-color graphics, screenshots, and line art.` },
       { heading: "One thing to know first", body: `Converting a JPG to PNG won't add back detail the JPG already lost, and it won't create transparency that wasn't there — a JPG has no transparent areas, so it converts to a PNG with a solid background. PNG mainly helps from this point forward: no further quality loss, and clean edges.` },
-      { heading: "How to convert JPG to PNG free", body: `Open the converter, drop in your JPG, choose PNG, and click convert. Download the PNG instantly. It runs in your browser — your file never leaves your device — with no watermark and no sign-up.` },
+      { heading: "How to convert JPG to PNG free", body: `Open the converter, drop in your JPG, choose PNG, and click convert. Download the PNG instantly. It runs online — your file never leaves your device — with no watermark and no sign-up.` },
       { heading: "Convert your JPG to PNG now — free", body: `Need a PNG? Upload your JPG, pick PNG, and download in seconds — free, private, and watermark-free.` },
     ],
   },
@@ -86,7 +86,7 @@ export const TOOL_FREE_POSTS: BlogPost[] = [
     title: "How to Convert PNG to JPG for Free (Smaller Files, Same Look)",
     metaTitle: "Convert PNG to JPG Free Online | JPT AI",
     metaDescription:
-      "Convert PNG to JPG free online to shrink big files for web and email. Fast, in-browser, no watermark, no sign-up — keeps your photo looking sharp.",
+      "Convert PNG to JPG free online to shrink big files for web and email. Fast, online, no watermark, no sign-up — keeps your photo looking sharp.",
     excerpt:
       "PNG photos can be huge. Converting them to JPG can cut the size by 80% with no visible difference. Here's how to do it free.",
     date: "2026-01-12",
@@ -99,7 +99,7 @@ export const TOOL_FREE_POSTS: BlogPost[] = [
       { body: `PNG is fantastic for graphics, but it's a poor choice for photographs — a photo saved as PNG can be several times larger than the same photo as JPG, with no visible quality gain. If you've got heavy PNG photos slowing a website or clogging an inbox, converting to JPG is the easy win.` },
       { heading: "Why JPG is smaller for photos", body: `JPG uses compression tuned for the smooth gradients and fine detail of real photographs, so it stores them in a fraction of the space. PNG stores every pixel exactly, which is overkill for a photo. For a website hero image or an email attachment, JPG is almost always the better format.` },
       { heading: "The one trade-off", body: `JPG doesn't support transparency, so any transparent areas in your PNG get filled — typically with white — when you convert. If your image genuinely needs a transparent background, keep it as PNG (or use WEBP). For solid photos, that trade-off doesn't apply.` },
-      { heading: "How to convert PNG to JPG free", body: `Open the converter, add your PNG, choose JPG, and click convert. Download the smaller file. Everything happens in your browser, with no watermark and no account needed.` },
+      { heading: "How to convert PNG to JPG free", body: `Open the converter, add your PNG, choose JPG, and click convert. Download the smaller file. Everything happens online, with no watermark and no account needed.` },
       { heading: "Convert your PNG to JPG now — free", body: `Shrink a heavy PNG in seconds. Upload it, pick JPG, and download the smaller file — free and private.` },
     ],
   },
@@ -123,7 +123,7 @@ export const TOOL_FREE_POSTS: BlogPost[] = [
     sections: [
       { body: `If you've ever posted a photo to Instagram and watched it lop off someone's head or your whole caption text, you've met Instagram's auto-crop. The fix is to crop the photo to the platform's exact ratio yourself before you upload — then what you see is what everyone gets.` },
       { heading: "The Instagram sizes that matter", body: `Feed square is 1:1. Portrait feed posts (the tall ones that take up more screen) are 4:5. Stories and Reels are full-screen 9:16. Cropping to the right one of these before you post means no surprise trimming and no ugly borders.` },
-      { heading: "How to crop for Instagram free", body: `Open the cropper, drop your photo in, and tap the ratio you want — Square, Portrait, or Story. It center-crops to that shape and you download it ready to post. No watermark, no sign-up, and it runs right in your browser.` },
+      { heading: "How to crop for Instagram free", body: `Open the cropper, drop your photo in, and tap the ratio you want — Square, Portrait, or Story. It center-crops to that shape and you download it ready to post. No watermark, no sign-up, and it runs online.` },
       { heading: "Bonus: round profile pictures", body: `The same tool has a circle crop for a clean round profile picture. Handy for a matching look across Instagram, WhatsApp, and anywhere else your avatar shows in a circle.` },
       { heading: "Crop your photo for Instagram now — free", body: `Stop letting Instagram crop for you. Upload your photo, tap the ratio, and download the perfect fit — free and watermark-free.` },
     ],
@@ -146,7 +146,7 @@ export const TOOL_FREE_POSTS: BlogPost[] = [
     sections: [
       { body: `Most apps show your profile photo inside a circle, but the file you upload is still a square — so if you crop it wrong, the circle chops off the edges awkwardly. Making an actual round image with a transparent background gives you full control over the framing and a clean result everywhere.` },
       { heading: "Why a real circle crop helps", body: `When you circle-crop and export as PNG, the corners become transparent instead of white. That means the round photo sits cleanly on any background — light or dark — with no square box around it. It's the difference between a polished avatar and one with visible corners.` },
-      { heading: "How to make a round profile picture free", body: `Open the cropper, upload your photo, and choose the Circle option. It crops to the largest centered circle and hands you a transparent PNG. No watermark, no account, all in your browser.` },
+      { heading: "How to make a round profile picture free", body: `Open the cropper, upload your photo, and choose the Circle option. It crops to the largest centered circle and hands you a transparent PNG. No watermark, no account, all online.` },
       { heading: "Framing tip", body: `Center your face and leave a little breathing room around it — circles crop tighter than squares. If your photo is low resolution, run it through the free upscaler first so the round avatar stays sharp.` },
       { heading: "Make your round profile picture now — free", body: `Upload a photo, pick Circle, and download your clean round avatar — free, transparent, and watermark-free.` },
     ],
@@ -171,7 +171,7 @@ export const TOOL_FREE_POSTS: BlogPost[] = [
     sections: [
       { body: `Sideways and upside-down photos are one of the most common little annoyances online — usually the result of how a phone recorded the image's orientation. Rotating it back is a two-second job, and unlike editing pixels, rotating in 90° steps is completely lossless.` },
       { heading: "Why photos upload sideways", body: `Your phone often saves a photo in one orientation and stores a separate "rotate me" flag. Some apps and websites ignore that flag, so the picture shows sideways. Rotating the image itself bakes in the correct orientation so it looks right everywhere.` },
-      { heading: "How to rotate an image free", body: `Open the rotate tool, drop your photo in, and tap Rotate Left, Rotate Right, or 180° until it's upright. Download it. There's no quality loss, no watermark, and no sign-up — it all runs in your browser.` },
+      { heading: "How to rotate an image free", body: `Open the rotate tool, drop your photo in, and tap Rotate Left, Rotate Right, or 180° until it's upright. Download it. There's no quality loss, no watermark, and no sign-up — it all runs online.` },
       { heading: "Also handy for scans", body: `The same tool fixes upside-down or sideways document scans before you share them, and it can flip images horizontally or vertically for mirror effects. One tool, several small headaches solved.` },
       { heading: "Rotate your image now — free", body: `Straighten that sideways photo in one tap — free, lossless, and watermark-free.` },
     ],
@@ -195,7 +195,7 @@ export const TOOL_FREE_POSTS: BlogPost[] = [
       { body: `Flipping an image mirrors it left-to-right or top-to-bottom. It's a small operation with a surprising number of uses, and like rotating, it's lossless — your photo keeps its full quality.` },
       { heading: "When you'd flip an image", body: `Selfies are the big one: front cameras often mirror you, so text on your shirt reads backwards — a horizontal flip fixes it. Flipping is also used for reflection effects, for matching the direction a subject faces in a layout, and for correcting scanned pages that came out reversed.` },
       { heading: "Horizontal vs vertical", body: `A horizontal flip swaps left and right (the mirror-selfie fix). A vertical flip swaps top and bottom, which is more of a creative or reflection effect. You can combine a flip with a rotation for any orientation you need.` },
-      { heading: "How to flip an image free", body: `Open the tool, add your photo, and hit Flip H or Flip V. Download the result — no quality loss, no watermark, no sign-up, all in your browser.` },
+      { heading: "How to flip an image free", body: `Open the tool, add your photo, and hit Flip H or Flip V. Download the result — no quality loss, no watermark, no sign-up, all online.` },
       { heading: "Flip or mirror your image now — free", body: `Mirror a selfie or create a reflection in one tap — free and watermark-free.` },
     ],
   },
@@ -219,7 +219,7 @@ export const TOOL_FREE_POSTS: BlogPost[] = [
     sections: [
       { body: `If you share photos online — as a photographer, seller, or creator — a watermark is your cheapest form of protection. It signs your work, makes casual theft obvious, and quietly advertises your name every time the image is shared. Adding one should be free and take seconds.` },
       { heading: "What makes a good watermark", body: `The best watermarks are readable but not distracting: your name or brand, sized so it's clearly there without dominating the photo, and at an opacity that lets the image show through. A corner placement is subtle; a repeating tiled pattern across the whole image is much harder to crop out if protection is your priority.` },
-      { heading: "How to add a watermark free", body: `Open the watermark tool, upload your photo, type your text, and choose the position, size, color, and opacity. Apply and download. It runs in your browser, adds no watermark of its own, and needs no sign-up — only your text ends up on the image.` },
+      { heading: "How to add a watermark free", body: `Open the watermark tool, upload your photo, type your text, and choose the position, size, color, and opacity. Apply and download. It runs online, adds no watermark of its own, and needs no sign-up — only your text ends up on the image.` },
       { heading: "Protecting a whole gallery", body: `If you need to brand a batch of photos, the Batch Editor applies the same watermark to up to 100 images at once — ideal for a shoot or a product catalog you want consistently marked.` },
       { heading: "Add your watermark now — free", body: `Sign your work in seconds. Upload a photo, set your text, and download the watermarked version — free, private, and yours alone.` },
     ],
@@ -265,7 +265,7 @@ export const TOOL_FREE_POSTS: BlogPost[] = [
     toolHref: "/meme-generator",
     toolLabel: "Make Your Meme — Free →",
     sections: [
-      { body: `Meme culture runs on speed — the funniest reaction is the one you post before the moment passes. You don't need an app or an account for that, and you definitely don't want some tool's logo stamped across your punchline. A quick browser meme generator does the job free.` },
+      { body: `Meme culture runs on speed — the funniest reaction is the one you post before the moment passes. You don't need an app or an account for that, and you definitely don't want some tool's logo stamped across your punchline. A quick online meme generator does the job free.` },
       { heading: "The classic meme format", body: `The timeless look is bold uppercase Impact font, white with a black outline, one line at the top and one at the bottom. That outline is what keeps the text readable over any image, light or dark. It's instantly recognizable as a meme.` },
       { heading: "How to make a meme free", body: `Open the meme generator, upload any image, and type your top and bottom captions. It renders them in the classic style — and wraps long lines automatically so nothing runs off the edge — then you download it. No app, no watermark, no sign-up.` },
       { heading: "Make it land", body: `Keep captions short and punchy; memes reward brevity. You can fill just the top, just the bottom, or both. Then drop it straight into a group chat, Instagram, or X while it's still funny.` },
@@ -290,9 +290,9 @@ export const TOOL_FREE_POSTS: BlogPost[] = [
     toolHref: "/image-to-pdf",
     toolLabel: "Convert to PDF — Free →",
     sections: [
-      { body: `A lot of official processes still expect a PDF, not a photo — application portals, offices, and printers all prefer it. Turning an image into a PDF is quick, and doing it in the browser means your document never leaves your device.` },
+      { body: `A lot of official processes still expect a PDF, not a photo — application portals, offices, and printers all prefer it. Turning an image into a PDF is quick, and doing it online means your document never leaves your device.` },
       { heading: "Why send a PDF instead of a photo", body: `PDFs open the same way on every device and print predictably at the right size, while a loose image can rotate, resize, or display differently depending on the app. For anything that needs to look official — a signed form, an ID, a receipt — a PDF is the safer, tidier choice.` },
-      { heading: "How to convert an image to PDF free", body: `Open the image-to-PDF tool, upload your JPG, PNG, or WEBP, and click Download as PDF. The PDF page is sized to your image and downloads instantly. It's built right in your browser, with no watermark and no sign-up.` },
+      { heading: "How to convert an image to PDF free", body: `Open the image-to-PDF tool, upload your JPG, PNG, or WEBP, and click Download as PDF. The PDF page is sized to your image and downloads instantly. It's built online, with no watermark and no sign-up.` },
       { heading: "Prep tips", body: `If the photo is dark or crooked — common with quick document snaps — straighten it with the free rotate tool and brighten it with Adjust first, then convert. A clean, upright scan makes a much more professional PDF.` },
       { heading: "Convert your image to PDF now — free", body: `Turn a photo into a shareable PDF in one click — free, private, and watermark-free.` },
     ],
@@ -315,7 +315,7 @@ export const TOOL_FREE_POSTS: BlogPost[] = [
     sections: [
       { body: `"JPG to PDF" is one of those everyday conversions everyone needs eventually — usually for a form, an application, or bundling a photo into a document. The trick is doing it without a watermark slapped across the page or a noticeable drop in quality.` },
       { heading: "Does converting lose quality?", body: `It doesn't have to. A good converter embeds your JPG into the PDF at high quality, so it looks just as sharp on screen and in print as the original. You're wrapping the image in a PDF, not re-compressing it into oblivion.` },
-      { heading: "How to convert JPG to PDF free", body: `Open the tool, upload your JPG, and click Download as PDF. The page matches your image dimensions, so there are no awkward borders. It runs in your browser — your file never uploads to a server — with no watermark and no account.` },
+      { heading: "How to convert JPG to PDF free", body: `Open the tool, upload your JPG, and click Download as PDF. The page matches your image dimensions, so there are no awkward borders. It runs online — your file never uploads to a server — with no watermark and no account.` },
       { heading: "Combining several photos", body: `Need multiple images in one document? Convert each and, if you use a lot of them regularly, keep them organized. For a single clean page per image, this one-click approach is the fastest route.` },
       { heading: "Convert your JPG to PDF now — free", body: `Wrap your photo in a clean PDF in one click — free, high-quality, and watermark-free.` },
     ],

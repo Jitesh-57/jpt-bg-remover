@@ -386,7 +386,7 @@ export const UPSCALE_FREE_POSTS_2: BlogPost[] = [
     title: "The Best Free Photo Enhancer — No App to Download",
     metaTitle: "Best Free Photo Enhancer — No App | JPT AI",
     metaDescription:
-      "Enhance photos free with no app to download. A browser-based photo enhancer that sharpens and upscales images — no install, no watermark, no sign-up.",
+      "Enhance photos free with no app to download. An online photo enhancer that sharpens and upscales images — no install, no watermark, no sign-up.",
     excerpt:
       "The app stores are full of 'free' photo enhancers that nag, watermark, and charge. Here's a free enhancer with nothing to download at all.",
     date: "2025-12-16",
@@ -397,15 +397,15 @@ export const UPSCALE_FREE_POSTS_2: BlogPost[] = [
     toolLabel: LABEL,
     sections: [
       {
-        body: `Search "photo enhancer" in any app store and you'll find dozens of apps that are "free to download" — then hit you with a weekly subscription, watermark every export, or bury you in ads. You installed an app, gave it camera-roll access, and *still* can't get a clean photo out. There's a simpler way: a photo enhancer that runs in your browser with nothing to install.`,
+        body: `Search "photo enhancer" in any app store and you'll find dozens of apps that are "free to download" — then hit you with a weekly subscription, watermark every export, or bury you in ads. You installed an app, gave it camera-roll access, and *still* can't get a clean photo out. There's a simpler way: a photo enhancer that runs online with nothing to install.`,
       },
       {
         heading: "Why 'no app' is actually better",
-        body: `A browser tool means nothing sits on your phone eating storage, no permissions to grant, no background nagging, and no subscription that renews while you forget about it. You open a page, enhance your photo, download it, and close the tab. It works identically on Android, iPhone, and desktop because it's just a website — and a good one won't watermark your result or make you sign up to try it.`,
+        body: `An online tool means nothing sits on your phone eating storage, no permissions to grant, no background nagging, and no subscription that renews while you forget about it. You open a page, enhance your photo, download it, and close the tab. It works identically on Android, iPhone, and desktop because it's just a website — and a good one won't watermark your result or make you sign up to try it.`,
       },
       {
         heading: "What a good free enhancer should do",
-        body: `The essentials: sharpen soft photos and upscale small ones (2× and 4×), keep the download watermark-free, support JPG/PNG/WebP, and not lock you behind a login just to test it. JPT AI's enhancer does exactly that — browser-based, no install, no watermark, unlimited for signed-in users.`,
+        body: `The essentials: sharpen soft photos and upscale small ones (2× and 4×), keep the download watermark-free, support JPG/PNG/WebP, and not lock you behind a login just to test it. JPT AI's enhancer does exactly that — online, no install, no watermark, unlimited for signed-in users.`,
       },
       {
         heading: "The five-minute test",
@@ -413,7 +413,7 @@ export const UPSCALE_FREE_POSTS_2: BlogPost[] = [
       },
       {
         heading: "Enhance a photo now — no app",
-        body: `Skip the app store. Open the free enhancer in your browser, upload a photo, and download a sharper version in seconds — no install, no watermark, no cost.`,
+        body: `Skip the app store. Open the free enhancer online, upload a photo, and download a sharper version in seconds — no install, no watermark, no cost.`,
       },
     ],
   },
@@ -497,26 +497,26 @@ export const UPSCALE_FREE_POSTS_2: BlogPost[] = [
     title: "Enhance Your Photos Free — No App Download Needed",
     metaTitle: "Enhance Photos Free — No Download | JPT AI",
     metaDescription:
-      "Enhance and sharpen photos free with no download. A browser photo enhancer that upscales and clears up images — no app, no watermark, no sign-up.",
+      "Enhance and sharpen photos free with no download. An online photo enhancer that upscales and clears up images — no app, no watermark, no sign-up.",
     excerpt:
-      "You don't need to download anything to enhance a photo. Here's how to sharpen and upscale your pictures free, right in the browser.",
+      "You don't need to download anything to enhance a photo. Here's how to sharpen and upscale your pictures free, right online.",
     date: "2025-12-25",
     readTime: "5 min read",
     category: "Guide",
-    keywords: ["enhance photos free no download", "photo enhancer online no download", "sharpen photo free online", "enhance image free browser"],
+    keywords: ["enhance photos free no download", "photo enhancer online no download", "sharpen photo free online", "enhance image free online"],
     toolHref: HREF,
     toolLabel: LABEL,
     sections: [
       {
-        body: `Downloading software just to fix one photo feels like overkill — and half the "free" downloads come with toolbars, trials, or worse. You don't need any of it. A browser-based photo enhancer lets you sharpen and upscale your pictures with nothing to install, nothing to update, and nothing sitting on your device afterward.`,
+        body: `Downloading software just to fix one photo feels like overkill — and half the "free" downloads come with toolbars, trials, or worse. You don't need any of it. An online photo enhancer lets you sharpen and upscale your pictures with nothing to install, nothing to update, and nothing sitting on your device afterward.`,
       },
       {
-        heading: "Why browser beats download",
+        heading: "Why online beats download",
         body: `A web tool works the instant you open it — no install, no waiting, no storage used, no security worries about random software. It's the same on any device: your work laptop, a friend's computer, your phone. And when you're done, you just close the tab. For a task as simple as "make this photo sharper," that's exactly the right amount of friction: none.`,
       },
       {
         heading: "How to enhance a photo free (no download)",
-        body: `Open the enhancer in your browser, upload a photo, choose 2× or 4× to upscale and sharpen it, and download the improved version. No app, no watermark, no sign-up needed to try it. JPG, PNG, and WebP all work.`,
+        body: `Open the enhancer online, upload a photo, choose 2× or 4× to upscale and sharpen it, and download the improved version. No app, no watermark, no sign-up needed to try it. JPG, PNG, and WebP all work.`,
       },
       {
         heading: "Great for quick, everyday fixes",

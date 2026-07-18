@@ -46,7 +46,7 @@ export const UPSCALE_POSTS: BlogPost[] = [
       },
       {
         heading: "Free, unlimited, no watermark",
-        body: `You should never pay a subscription just to sharpen a thumbnail. JPT AI's basic upscaler is free and unlimited, runs right in your browser, and exports clean images with no watermark. Upscale as many thumbnails as you publish — daily uploads, A/B test variants, back-catalogue refreshes — without hitting a paywall.
+        body: `You should never pay a subscription just to sharpen a thumbnail. JPT AI's basic upscaler is free and unlimited, runs online, and exports clean images with no watermark. Upscale as many thumbnails as you publish — daily uploads, A/B test variants, back-catalogue refreshes — without hitting a paywall.
 
 Ready to lift your click-through rate? Head to sjpt.io, upload your thumbnail image, and download a razor-sharp result in seconds.`,
       },
@@ -89,7 +89,7 @@ Ready to lift your click-through rate? Head to sjpt.io, upload your thumbnail im
       },
       {
         heading: "Free and unlimited for gamers",
-        body: `JPT AI's upscaler is free, unlimited, and watermark-free — perfect for building a whole wallpaper collection or a thumbnail library for your channel. It runs in the browser, so there's nothing to install.
+        body: `JPT AI's upscaler is free, unlimited, and watermark-free — perfect for building a whole wallpaper collection or a thumbnail library for your channel. It runs online, so there's nothing to install.
 
 Level up your captures at sjpt.io — upload a screenshot and download a crisp 4K version in seconds.`,
       },
@@ -132,7 +132,7 @@ Level up your captures at sjpt.io — upload a screenshot and download a crisp 4
       },
       {
         heading: "Preserve memories for free",
-        body: `JPT AI's enhancer is completely free, unlimited, and watermark-free, so you can digitise an entire shoebox of prints without paying per photo. Everything runs in your browser.
+        body: `JPT AI's enhancer is completely free, unlimited, and watermark-free, so you can digitise an entire shoebox of prints without paying per photo. Everything runs online.
 
 Bring your old prints back to life at sjpt.io — upload a scan and download a sharp, enhanced version in seconds.`,
       },
@@ -175,7 +175,7 @@ Bring your old prints back to life at sjpt.io — upload a scan and download a s
       },
       {
         heading: "Free for every pet parent",
-        body: `JPT AI is free, unlimited, and watermark-free, so you can enhance your whole camera roll of pet photos without paying a cent. It works entirely in your browser.
+        body: `JPT AI is free, unlimited, and watermark-free, so you can enhance your whole camera roll of pet photos without paying a cent. It works entirely online.
 
 Give your furry friend the crisp photos they deserve — head to sjpt.io and upload one now.`,
       },
@@ -261,7 +261,7 @@ Make your menu irresistible at sjpt.io — upload a dish photo and download a cr
       },
       {
         heading: "Free and unlimited",
-        body: `JPT AI's upscaler is free, unlimited, and watermark-free — great for hobbyist pilots and property marketers alike. Everything runs in your browser.
+        body: `JPT AI's upscaler is free, unlimited, and watermark-free — great for hobbyist pilots and property marketers alike. Everything runs online.
 
 Give your aerials the resolution they deserve — upload one at sjpt.io and download a crisp version in seconds.`,
       },
@@ -304,7 +304,7 @@ Give your aerials the resolution they deserve — upload one at sjpt.io and down
       },
       {
         heading: "Preserve your heritage for free",
-        body: `JPT AI is free, unlimited, and watermark-free, so you can enhance an entire family archive at no cost. It all runs in your browser — nothing to install.
+        body: `JPT AI is free, unlimited, and watermark-free, so you can enhance an entire family archive at no cost. It all runs online — nothing to install.
 
 Honour your family history at sjpt.io — upload an old photo and download a crisp, enhanced version in seconds.`,
       },
@@ -347,7 +347,7 @@ Honour your family history at sjpt.io — upload an old photo and download a cri
       },
       {
         heading: "Free and instant",
-        body: `JPT AI's upscaler is free, unlimited, and watermark-free, and runs entirely in your browser — no upload limits, no sign-up.
+        body: `JPT AI's upscaler is free, unlimited, and watermark-free, and runs entirely online — no upload limits, no sign-up.
 
 Make that blurry screenshot readable again at sjpt.io in just a few seconds.`,
       },
@@ -390,7 +390,7 @@ Make that blurry screenshot readable again at sjpt.io in just a few seconds.`,
       },
       {
         heading: "Free for every creator",
-        body: `JPT AI's upscaler is free, unlimited, and watermark-free — ideal for creators posting daily. It runs in your browser with nothing to install.
+        body: `JPT AI's upscaler is free, unlimited, and watermark-free — ideal for creators posting daily. It runs online with nothing to install.
 
 Keep your Stories and Reels crisp — upload a photo at sjpt.io and download a sharp version in seconds.`,
       },
@@ -433,7 +433,7 @@ Keep your Stories and Reels crisp — upload a photo at sjpt.io and download a s
       },
       {
         heading: "Free and private",
-        body: `JPT AI's upscaler is free, unlimited, and watermark-free, and processing happens right in your browser. There's no cost and no software to install.
+        body: `JPT AI's upscaler is free, unlimited, and watermark-free, and processing happens online. There's no cost and no software to install.
 
 Sharpen your passport or visa photo at sjpt.io before you submit — it takes just seconds.`,
       },
@@ -476,7 +476,7 @@ Sharpen your passport or visa photo at sjpt.io before you submit — it takes ju
       },
       {
         heading: "Free for artists",
-        body: `JPT AI's upscaler is free, unlimited, and watermark-free — perfect for building a print shop or Etsy store without upfront costs. It runs in your browser.
+        body: `JPT AI's upscaler is free, unlimited, and watermark-free — perfect for building a print shop or Etsy store without upfront costs. It runs online.
 
 Get your art print-ready at sjpt.io — upload your piece and download a high-resolution version in seconds.`,
       },
@@ -519,7 +519,7 @@ Get your art print-ready at sjpt.io — upload your piece and download a high-re
       },
       {
         heading: "Free for every seller",
-        body: `JPT AI's upscaler is free, unlimited, and watermark-free — no subscription, no app. It runs entirely in your browser.
+        body: `JPT AI's upscaler is free, unlimited, and watermark-free — no subscription, no app. It runs entirely online.
 
 Sell your car faster with sharp photos — upload one at sjpt.io and download a crisp version in seconds.`,
       },
@@ -562,7 +562,7 @@ Sell your car faster with sharp photos — upload one at sjpt.io and download a 
       },
       {
         heading: "Free for fashion brands",
-        body: `JPT AI's upscaler is free, unlimited, and watermark-free — ideal for boutique labels and resellers on a budget. It runs in your browser.
+        body: `JPT AI's upscaler is free, unlimited, and watermark-free — ideal for boutique labels and resellers on a budget. It runs online.
 
 Make your lookbook look premium at sjpt.io — upload a photo and download a crisp version in seconds.`,
       },
@@ -605,7 +605,7 @@ Make your lookbook look premium at sjpt.io — upload a photo and download a cri
       },
       {
         heading: "Free and unlimited",
-        body: `JPT AI's upscaler is free, unlimited, and watermark-free — perfect for hobbyist photographers building a print or wallpaper collection. It runs in your browser.
+        body: `JPT AI's upscaler is free, unlimited, and watermark-free — perfect for hobbyist photographers building a print or wallpaper collection. It runs online.
 
 Bring your landscapes to life at sjpt.io — upload a photo and download a crisp 4K version in seconds.`,
       },
@@ -648,7 +648,7 @@ Bring your landscapes to life at sjpt.io — upload a photo and download a crisp
       },
       {
         heading: "Free for every fan",
-        body: `JPT AI's enhancer is free, unlimited, and watermark-free, and runs in your browser. Rescue your whole event album at no cost.
+        body: `JPT AI's enhancer is free, unlimited, and watermark-free, and runs online. Rescue your whole event album at no cost.
 
 Relive the show in sharper detail — upload a concert photo at sjpt.io and enhance it in seconds.`,
       },
@@ -691,7 +691,7 @@ Relive the show in sharper detail — upload a concert photo at sjpt.io and enha
       },
       {
         heading: "Free for new parents",
-        body: `JPT AI is free, unlimited, and watermark-free, and runs right in your browser — no cost, no software, no limits during those busy newborn days.
+        body: `JPT AI is free, unlimited, and watermark-free, and runs online — no cost, no software, no limits during those busy newborn days.
 
 Treasure every moment in crisp detail — upload a baby photo at sjpt.io and enhance it in seconds.`,
       },
@@ -734,7 +734,7 @@ Treasure every moment in crisp detail — upload a baby photo at sjpt.io and enh
       },
       {
         heading: "Free for artists and clients",
-        body: `JPT AI's upscaler is free, unlimited, and watermark-free, and runs in your browser. Prep as many references as a full appointment book needs.
+        body: `JPT AI's upscaler is free, unlimited, and watermark-free, and runs online. Prep as many references as a full appointment book needs.
 
 Get a crystal-clear reference at sjpt.io — upload a design and download a sharp version in seconds.`,
       },
@@ -777,7 +777,7 @@ Get a crystal-clear reference at sjpt.io — upload a design and download a shar
       },
       {
         heading: "Free for indie authors",
-        body: `JPT AI's upscaler is free, unlimited, and watermark-free — ideal for self-publishers watching every rupee. It runs in your browser.
+        body: `JPT AI's upscaler is free, unlimited, and watermark-free — ideal for self-publishers watching every rupee. It runs online.
 
 Give your book a pro cover at sjpt.io — upload your image and download a high-resolution version in seconds.`,
       },
@@ -820,7 +820,7 @@ Give your book a pro cover at sjpt.io — upload your image and download a high-
       },
       {
         heading: "Free and instant",
-        body: `JPT AI's upscaler is free, unlimited, and watermark-free, running entirely in your browser. There are no limits and nothing to install.
+        body: `JPT AI's upscaler is free, unlimited, and watermark-free, running entirely online. There are no limits and nothing to install.
 
 Rescue that call screenshot at sjpt.io — upload it and download a sharper version in seconds.`,
       },
@@ -863,7 +863,7 @@ Rescue that call screenshot at sjpt.io — upload it and download a sharper vers
       },
       {
         heading: "Free and unlimited",
-        body: `JPT AI's upscaler is free, unlimited, and watermark-free, and runs right in your browser — perfect for fixing the endless stream of compressed photos WhatsApp produces.
+        body: `JPT AI's upscaler is free, unlimited, and watermark-free, and runs online — perfect for fixing the endless stream of compressed photos WhatsApp produces.
 
 Restore your WhatsApp photos at sjpt.io — upload one and download a sharp version in seconds.`,
       },

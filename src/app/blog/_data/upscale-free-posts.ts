@@ -16,7 +16,7 @@ export const UPSCALE_FREE_POSTS: BlogPost[] = [
     title: "Free Image Upscaler — No Sign-Up, No Watermark, No Catch",
     metaTitle: "Free Image Upscaler — No Sign Up, No Watermark | JPT AI",
     metaDescription:
-      "A genuinely free image upscaler — no sign-up, no watermark, no daily limit. Upscale any photo 2× or 4× in your browser and download it clean.",
+      "A genuinely free image upscaler — no sign-up, no watermark, no daily limit. Upscale any photo 2× or 4× online and download it clean.",
     excerpt:
       "Most 'free' upscalers slap a watermark on your download or make you buy credits. This one doesn't. Here's a truly free image upscaler with no strings attached.",
     date: "2025-10-02",
@@ -29,7 +29,7 @@ export const UPSCALE_FREE_POSTS: BlogPost[] = [
       {
         body: `Let's be honest about the word "free." You search for a free image upscaler, upload your photo, wait for it to process — and then it hits you with a watermark, or a "sign up to download," or a "you've used your 1 free credit" wall. It's exhausting. I built this guide around a tool that skips all of that: upload, upscale, download. No account, no watermark, no counting your images.
 
-JPT AI's upscaler is free the way "free" is supposed to mean. You don't create a login to try it. You don't get a watermark stamped across your image. And there's no daily cap quietly waiting to stop you on image number four. It runs right in your browser and hands you back a clean, higher-resolution file. That's the whole thing.`,
+JPT AI's upscaler is free the way "free" is supposed to mean. You don't create a login to try it. You don't get a watermark stamped across your image. And there's no daily cap quietly waiting to stop you on image number four. It runs online and hands you back a clean, higher-resolution file. That's the whole thing.`,
       },
       {
         heading: "Why so many 'free' upscalers aren't really free",
@@ -74,7 +74,7 @@ What it doesn't pretend to be: a magic button that recovers detail that was neve
       {
         body: `For years, "make this image bigger without it going blurry" meant one thing: Photoshop. Open it up, Image → Image Size, bump the resolution, and pray. The problem is that Photoshop costs a monthly subscription, has a genuine learning curve, and its basic enlargement still turns fine detail into mush unless you know the tricks.
 
-The good news in 2025 is that you don't need any of that. A free online AI upscaler does a better job of enlarging a photo than manual Photoshop resizing — and it does it in your browser with one click, no install, no subscription.`,
+The good news in 2025 is that you don't need any of that. A free online AI upscaler does a better job of enlarging a photo than manual Photoshop resizing — and it does it online with one click, no install, no subscription.`,
       },
       {
         heading: "Why AI beats Photoshop's resize for enlarging",
@@ -147,9 +147,9 @@ Quick tip: always start from the highest-quality original you have. The more rea
     title: "How to Upscale an Image on Your Phone — Free (Android & iPhone)",
     metaTitle: "Upscale Image on Phone Free — Android & iPhone | JPT AI",
     metaDescription:
-      "No app needed. Upscale and enhance photos free right in your phone's browser — Android or iPhone. 2× or 4×, no watermark, no sign-up.",
+      "No app needed. Upscale and enhance photos free right on your phone — Android or iPhone. 2× or 4×, no watermark, no sign-up.",
     excerpt:
-      "You don't need to install a sketchy app to sharpen a photo on your phone. Here's how to upscale images free, right in your mobile browser.",
+      "You don't need to install a sketchy app to sharpen a photo on your phone. Here's how to upscale images free, right on your phone.",
     date: "2025-10-11",
     readTime: "6 min read",
     category: "Guide",
@@ -160,7 +160,7 @@ Quick tip: always start from the highest-quality original you have. The more rea
       {
         body: `Search your app store for a "photo enhancer" and you'll drown in apps that are free to download but then charge a weekly subscription, bury you in ads, or watermark every export. All you wanted was to make one blurry photo look better. You don't need any of them.
 
-Because the upscaler runs in your browser, it works exactly the same on your phone as on a computer — no app to install, no permissions to grant, no subscription trap. Android or iPhone, it just works.`,
+Because the upscaler runs online, it works exactly the same on your phone as on a computer — no app to install, no permissions to grant, no subscription trap. Android or iPhone, it just works.`,
       },
       {
         heading: "No app, no subscription, no ads",
@@ -168,7 +168,7 @@ Because the upscaler runs in your browser, it works exactly the same on your pho
       },
       {
         heading: "Step by step on your phone",
-        body: `Open your phone's browser and go to the upscaler. Tap to upload and pick a photo from your gallery (or take one). Choose 2× or 4×. When it finishes, tap download — the sharper image saves to your phone, ready to post or send.
+        body: `Go to the upscaler. Tap to upload and pick a photo from your gallery (or take one). Choose 2× or 4×. When it finishes, tap download — the sharper image saves to your phone, ready to post or send.
 
 On both Android and iPhone the downloaded file lands in your Photos/Downloads, so you can share it to WhatsApp, Instagram, or anywhere else immediately.`,
       },
@@ -178,7 +178,7 @@ On both Android and iPhone the downloaded file lands in your Photos/Downloads, s
       },
       {
         heading: "Try it on your phone now",
-        body: `Skip the app store. Open the free upscaler in your mobile browser, upload a photo, and download a crisper version in seconds — no app, no watermark, no cost.`,
+        body: `Skip the app store. Open the free upscaler on your phone, upload a photo, and download a crisper version in seconds — no app, no watermark, no cost.`,
       },
     ],
   },
@@ -211,7 +211,7 @@ For everyone else — bloggers, sellers, social creators, people restoring a few
       },
       {
         heading: "The free alternative",
-        body: `The free route: open the upscaler in your browser, upload your image, pick 2× or 4×, and download. No purchase, no install, no watermark, and no per-image limit for signed-in users. It uses AI super-resolution just like the paid tools, so for typical photos the everyday result is sharp and clean.
+        body: `The free route: open the upscaler online, upload your image, pick 2× or 4×, and download. No purchase, no install, no watermark, and no per-image limit for signed-in users. It uses AI super-resolution just like the paid tools, so for typical photos the everyday result is sharp and clean.
 
 Is it identical to a $99 desktop app on the most extreme cases? No — dedicated software has an edge on very demanding, large-batch professional work. But for the 95% of real-world "make this sharper and bigger" jobs, free does the job and keeps your $99.`,
       },
@@ -566,7 +566,7 @@ If a tool ticks those boxes, it's genuinely free and genuinely useful. If it fai
       },
       {
         heading: "How JPT AI stacks up",
-        body: `JPT AI's upscaler was built around exactly those criteria: no watermark on your download, no sign-up required to try it, unlimited upscaling for signed-in users, real AI super-resolution at 2× and 4×, and support for the common formats. It runs in your browser, so there's nothing to install, and it works the same on a phone or a laptop.`,
+        body: `JPT AI's upscaler was built around exactly those criteria: no watermark on your download, no sign-up required to try it, unlimited upscaling for signed-in users, real AI super-resolution at 2× and 4×, and support for the common formats. It runs online, so there's nothing to install, and it works the same on a phone or a laptop.`,
       },
       {
         heading: "Test any tool with this quick check",

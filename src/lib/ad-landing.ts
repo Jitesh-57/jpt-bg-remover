@@ -38,7 +38,7 @@ export const AD_LANDINGS: AdLanding[] = [
     toolHref: "/upscale",
     title: "Free AI Image Upscaler — Enhance Photos to 4K | JPT AI",
     metaDescription:
-      "Upscale images to 4K free with AI. Sharpen blurry photos 2× or 4× with no quality loss and no watermark. Try it free in your browser.",
+      "Upscale images to 4K free with AI. Sharpen blurry photos 2× or 4× with no quality loss and no watermark. Try it free online.",
     badge: "✨ Free · Up to 4× Resolution",
     headline: "Upscale Photos to Crystal-Clear 4K",
     highlight: "4K",
