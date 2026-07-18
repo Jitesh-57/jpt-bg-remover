@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: { absolute: "Privacy Policy | JPT AI" },
   description: "Privacy Policy for JPT AI — how we collect, use, and protect your data.",
+  alternates: { canonical: "https://www.sjpt.io/privacy" },
+  robots: { index: true, follow: true },
 };
 
 export default function PrivacyPage() {

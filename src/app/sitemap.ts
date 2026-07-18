@@ -36,7 +36,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  if (!PAID_FEATURES_ENABLED) return [...freePages, ...freeBlogPages];
+  // Live upscale landing variants (e.g. /upscale/4k). Other parents redirect
+  // home in free-only mode, so only the upscale variants are indexable here.
+  const freeVariantPages: MetadataRoute.Sitemap = VARIANTS
+    .filter((v) => v.parent === "upscale")
+    .map((v) => ({
+      url: `${BASE}${PARENT_META[v.parent].base}/${v.slug}`,
+      lastModified: now,
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    }));
+
+  if (!PAID_FEATURES_ENABLED) return [...freePages, ...freeVariantPages, ...freeBlogPages];
 
   const paidPages: MetadataRoute.Sitemap = [
     { url: `${BASE}/remove-bg`,        lastModified: now, changeFrequency: "monthly", priority: 0.95 },
