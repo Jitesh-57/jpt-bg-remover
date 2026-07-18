@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: { absolute: "Terms of Service | JPT AI" },
   description: "Terms of Service for JPT AI — rules and conditions for using our AI image editing tools.",
+  alternates: { canonical: "https://www.sjpt.io/terms" },
+  robots: { index: true, follow: true },
 };
 
 export default function TermsPage() {
