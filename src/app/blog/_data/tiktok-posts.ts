@@ -1,16 +1,14 @@
 import type { BlogPost } from "./posts";
 
-// Hero creatives uploaded to Supabase (landing bucket, /blog folder).
-// Filenames contain spaces, so they're URL-encoded here.
-const TT_IMG = "https://lwworujvfttxkrjfrgav.supabase.co/storage/v1/object/public/landing/blog";
-const img = (n: number) => `${TT_IMG}/Tiktok%20watermark%20remover%20blog%20${n}.png`;
+// Hero images are served from Supabase at landing/blog/<slug>.png — the same
+// clean, slug-based convention as the rest of the blog. No explicit `image` is
+// set below, so posts.ts fills each one in with blogImageUrl(slug).
 
 const TOOL_HREF = "/tiktok-watermark-remover";
 const TOOL_LABEL = "Remove TikTok Watermark Free →";
 
 export const TIKTOK_POSTS: BlogPost[] = [
   {
-    image: img(1),
     slug: "download-tiktok-videos-without-a-watermark",
     title: "How to Download TikTok Videos Without a Watermark (Free, HD)",
     metaTitle: "Download TikTok Videos Without a Watermark — Free & HD | JPT AI",
@@ -129,7 +127,6 @@ Ready to save your first clean clip? Head to sjpt.io, open the TikTok Watermark 
     ],
   },
   {
-    image: img(2),
     slug: "tiktok-video-link-downloader",
     title: "TikTok Video Link Downloader: Save Any Clip From a URL (Free)",
     metaTitle: "TikTok Video Link Downloader — Paste a URL, Get a Clean MP4 | JPT AI",
@@ -257,7 +254,6 @@ Ready to try it? Go to sjpt.io, open the TikTok tool, paste a link, and get a cl
     ],
   },
   {
-    image: img(3),
     slug: "tiktok-video-downloader-by-username",
     title: "TikTok Video Downloader by Username: How to Find and Save Clips",
     metaTitle: "TikTok Video Downloader by Username — Find & Save Clips Free | JPT AI",
@@ -381,7 +377,6 @@ Ready to save a creator's clip? Head to sjpt.io, open the TikTok tool, paste the
     ],
   },
   {
-    image: img(4),
     slug: "free-tiktok-video-downloader-apps",
     title: "Free TikTok Video Downloader Apps vs. a No-Install Web Tool",
     metaTitle: "Free TikTok Video Downloader Apps — Or Skip the App Entirely | JPT AI",
@@ -519,7 +514,6 @@ Skip the app store and try it now: go to sjpt.io, paste a TikTok link, and downl
     ],
   },
   {
-    image: img(5),
     slug: "remove-tiktok-watermark-without-signup",
     title: "Remove TikTok Watermark Without Signup: No Account, No App, Free",
     metaTitle: "Remove TikTok Watermark Without Signup — No Account, Free HD | JPT AI",
