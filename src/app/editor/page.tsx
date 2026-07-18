@@ -483,7 +483,7 @@ export default function ImageEditorPage() {
   const [user, setUser] = useState<User | null>(null);
   const [authChecked, setAuthChecked] = useState(false);
   const [showSignInModal, setShowSignInModal] = useState(false);
-  const [signInReason, setSignInReason] = useState<"default" | "unlimited">("default");
+  const [, setSignInReason] = useState<"default" | "unlimited">("default");
   const [anonUsed, setAnonUsed] = useState(0);   // free transforms a guest has used
   const [showAccountModal, setShowAccountModal] = useState(false);
   const [showNoCreditsModal, setShowNoCreditsModal] = useState(false);
@@ -2558,122 +2558,131 @@ export default function ImageEditorPage() {
       )}
 
       {/* ── Sign-in Modal ─────────────────────────────────────────────────── */}
-      {showSignInModal && (
-        <div style={s.modalOverlay} onClick={() => { setShowSignInModal(false); setAuthError(""); }}>
-          <div style={{ ...s.modalBox, maxWidth: 460, textAlign: "left" as const }} onClick={(e) => e.stopPropagation()}>
-            <div style={{ textAlign: "center" as const, marginBottom: 20 }}>
-              <div style={{ fontSize: 40, marginBottom: 8 }}>{signInReason === "unlimited" ? "🚀" : "✨"}</div>
-              <div style={{ ...s.modalTitle, fontSize: 20 }}>
-                {signInReason === "unlimited" ? "Sign up to keep going — it's free" : "Sign in to JPT AI Editor"}
+      {showSignInModal && (() => {
+        const close = () => { setShowSignInModal(false); setAuthError(""); };
+        const perks = [
+          { icon: "🔍", bg: "linear-gradient(135deg,#EEF2FF,#E0E7FF)", title: "Unlimited Image Upscale", desc: "Upscale images 2×, 4× and more — unlimited." },
+          { icon: "✨", bg: "linear-gradient(135deg,#EFF6FF,#DBEAFE)", title: "Unlimited Transformations", desc: "Edit, enhance, convert, compress and more — no limits." },
+          { icon: "🖼️", bg: "linear-gradient(135deg,#ECFDF5,#D1FAE5)", title: "Unlimited Conversions", desc: "Convert JPG, PNG, WEBP or any format — unlimited." },
+          { icon: "⬇️", bg: "linear-gradient(135deg,#FFFBEB,#FEF3C7)", title: "Unlimited Downloads", desc: "Download high-quality images as many times as you want." },
+          { icon: "🛡️", bg: "linear-gradient(135deg,#FDF2F8,#FCE7F3)", title: "No Watermarks", desc: "Clean, professional results every single time." },
+        ];
+        const trust = [
+          { icon: "🛡️", title: "Secure Login", sub: "Your data is safe" },
+          { icon: "🔒", title: "No Password", sub: "Quick & easy" },
+          { icon: "❤️", title: "No Card Needed", sub: "Ever" },
+        ];
+        return (
+        <div style={{ position: "fixed", inset: 0, zIndex: 9999, background: "rgba(15,23,42,0.6)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }} onClick={close}>
+          <div onClick={(e) => e.stopPropagation()} style={{ position: "relative", width: "100%", maxWidth: 900, maxHeight: "94vh", overflowY: "auto", background: "#fff", borderRadius: 24, boxShadow: "0 30px 90px rgba(0,0,0,0.4)", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr" }}>
+
+            {/* Close */}
+            <button onClick={close} aria-label="Close" style={{ position: "absolute", top: 14, right: 14, zIndex: 2, width: 34, height: 34, borderRadius: "50%", border: "none", background: "#fff", boxShadow: "0 2px 10px rgba(0,0,0,0.14)", cursor: "pointer", fontSize: 18, color: "#64748B", lineHeight: 1 }}>×</button>
+
+            {/* ── LEFT: value column ── */}
+            <div style={{ padding: isMobile ? "26px 22px 6px" : "38px 34px", background: "linear-gradient(165deg,#F7F8FF 0%,#FFFFFF 55%,#F3FBF6 100%)" }}>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "#DCFCE7", color: "#16A34A", fontWeight: 800, fontSize: 11.5, letterSpacing: "0.05em", borderRadius: 20, padding: "6px 14px", marginBottom: 18 }}>
+                ♾️ 100% FREE · NO LIMITS · FOREVER
               </div>
-              <p style={{ ...s.modalSub, marginBottom: 0 }}>
-                {signInReason === "unlimited"
-                  ? <>Create a free account and transform <strong>unlimited images</strong> — no limits on Upscale, Resize, or Adjust.</>
-                  : <>Get <strong>unlimited free transforms</strong> when you sign up</>}
+              <h2 style={{ fontSize: isMobile ? "1.7rem" : "2.1rem", fontWeight: 900, lineHeight: 1.1, letterSpacing: "-0.02em", color: "#0F172A", margin: "0 0 12px" }}>
+                Unlimited Access to <span style={{ background: "linear-gradient(120deg,#6366F1,#8B5CF6)", WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", color: "transparent" }}>All Image Tools</span>
+              </h2>
+              <p style={{ fontSize: 15, color: "#4B5563", lineHeight: 1.6, margin: "0 0 22px" }}>
+                Create your free account and enjoy everything without limits. <strong style={{ color: "#16A34A" }}>Always free</strong>, always yours.
               </p>
+
+              {!isMobile && (
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  {perks.map((p) => (
+                    <div key={p.title} style={{ display: "flex", alignItems: "center", gap: 12, background: "#fff", border: "1px solid #EEF0F6", borderRadius: 14, padding: "11px 14px", boxShadow: "0 1px 4px rgba(0,0,0,0.03)" }}>
+                      <div style={{ width: 40, height: 40, flexShrink: 0, borderRadius: 11, background: p.bg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 19 }}>{p.icon}</div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: 13.5, fontWeight: 800, color: "#111827" }}>{p.title}</div>
+                        <div style={{ fontSize: 11.5, color: "#6B7280", lineHeight: 1.4 }}>{p.desc}</div>
+                      </div>
+                      <span style={{ fontSize: 16, color: "#6366F1", fontWeight: 900 }}>∞</span>
+                    </div>
+                  ))}
+                  <div style={{ fontSize: 17, fontWeight: 800, color: "#6366F1", textAlign: "center", marginTop: 8, fontStyle: "italic" }}>Everything. Unlimited. 100% Free.</div>
+                </div>
+              )}
             </div>
 
-            {/* Tab bar */}
-            <div style={{ display: "flex", background: "#F0F0F8", borderRadius: 10, padding: 3, marginBottom: 20 }}>
-              {(["google", "email"] as const).map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => { setAuthTab(tab); setAuthError(""); }}
-                  style={{
-                    flex: 1, padding: "8px", borderRadius: 8, border: "none",
-                    background: authTab === tab ? "#fff" : "none",
-                    fontWeight: 700, fontSize: 13, cursor: "pointer",
-                    color: authTab === tab ? "#6366F1" : "#888",
-                    boxShadow: authTab === tab ? "0 1px 4px rgba(0,0,0,0.1)" : "none",
-                  }}
-                >
-                  {tab === "google" ? "🔵 Google" : "📧 Email"}
-                </button>
-              ))}
-            </div>
+            {/* ── RIGHT: auth column ── */}
+            <div style={{ padding: isMobile ? "8px 22px 26px" : "38px 34px", display: "flex", flexDirection: "column", justifyContent: "center", background: "#fff" }}>
 
-            {/* Google tab */}
-            {authTab === "google" && (
-              <div style={{ display: "flex", flexDirection: "column" as const, gap: 12 }}>
-                <button
-                  onClick={handleGoogleSignIn}
-                  style={{ ...s.modalGoogleBtn, justifyContent: "center" }}
-                >
-                  <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-                  Continue with Google — Free
-                </button>
-                <div style={{ fontSize: 12, color: "#888", textAlign: "center" as const }}>
-                  Quick · No password needed · Works with any Google account
-                </div>
-              </div>
-            )}
-
-            {/* Email tab */}
-            {authTab === "email" && (
-              <div style={{ display: "flex", flexDirection: "column" as const, gap: 12 }}>
-                {/* Login / Signup toggle */}
-                <div style={{ display: "flex", gap: 4, fontSize: 13, justifyContent: "center" }}>
-                  <button
-                    onClick={() => { setAuthMode("login"); setAuthError(""); }}
-                    style={{ background: "none", border: "none", cursor: "pointer", fontWeight: authMode === "login" ? 800 : 400, color: authMode === "login" ? "#6366F1" : "#888", borderBottom: authMode === "login" ? "2px solid #6366F1" : "2px solid transparent", padding: "4px 12px" }}
-                  >Sign in</button>
-                  <button
-                    onClick={() => { setAuthMode("signup"); setAuthError(""); }}
-                    style={{ background: "none", border: "none", cursor: "pointer", fontWeight: authMode === "signup" ? 800 : 400, color: authMode === "signup" ? "#6366F1" : "#888", borderBottom: authMode === "signup" ? "2px solid #6366F1" : "2px solid transparent", padding: "4px 12px" }}
-                  >Create account</button>
-                </div>
-
-                {authMode === "signup" && (
-                  <input
-                    type="text"
-                    placeholder="Your name (optional)"
-                    value={authName}
-                    onChange={(e) => setAuthName(e.target.value)}
-                    style={{ border: "1.5px solid #E0E0EE", borderRadius: 8, padding: "10px 12px", fontSize: 14, fontFamily: "inherit", outline: "none", width: "100%", boxSizing: "border-box" as const }}
-                  />
-                )}
-                <input
-                  type="email"
-                  placeholder="Email address"
-                  value={authEmail}
-                  onChange={(e) => setAuthEmail(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleEmailAuth()}
-                  style={{ border: "1.5px solid #E0E0EE", borderRadius: 8, padding: "10px 12px", fontSize: 14, fontFamily: "inherit", outline: "none", width: "100%", boxSizing: "border-box" as const }}
-                />
-                <input
-                  type="password"
-                  placeholder="Password (min 6 characters)"
-                  value={authPassword}
-                  onChange={(e) => setAuthPassword(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleEmailAuth()}
-                  style={{ border: "1.5px solid #E0E0EE", borderRadius: 8, padding: "10px 12px", fontSize: 14, fontFamily: "inherit", outline: "none", width: "100%", boxSizing: "border-box" as const }}
-                />
-
-                {authError && (
-                  <div style={{ background: "#FFF1F0", border: "1px solid #FFC4C4", borderRadius: 8, padding: "8px 12px", fontSize: 13, color: "#C00" }}>
-                    {authError}
+              {!isMobile && (
+                <div style={{ position: "relative", height: 150, marginBottom: 20, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <div style={{ width: 128, height: 128, borderRadius: "50%", background: "radial-gradient(circle at 50% 40%, #EEF2FF 0%, #F5F3FF 70%)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 64, boxShadow: "inset 0 0 0 1px #EDE9FE" }}>
+                    <span style={{ background: "linear-gradient(120deg,#6366F1,#3B82F6)", WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", color: "transparent" }}>∞</span>
                   </div>
-                )}
+                  <div style={{ position: "absolute", top: 6, left: 8, background: "#EEF2FF", color: "#6366F1", fontSize: 10, fontWeight: 800, borderRadius: 8, padding: "4px 8px" }}>↗ UNLIMITED UPSCALE</div>
+                  <div style={{ position: "absolute", top: 18, right: 0, background: "#EFF6FF", color: "#2563EB", fontSize: 10, fontWeight: 800, borderRadius: 8, padding: "4px 8px" }}>✨ TRANSFORMATIONS</div>
+                  <div style={{ position: "absolute", bottom: 4, left: 0, background: "#ECFDF5", color: "#16A34A", fontSize: 10, fontWeight: 800, borderRadius: 8, padding: "4px 8px" }}>🖼 CONVERSIONS</div>
+                  <div style={{ position: "absolute", bottom: 10, right: 6, background: "#FFFBEB", color: "#D97706", fontSize: 10, fontWeight: 800, borderRadius: 8, padding: "4px 8px" }}>⬇ DOWNLOADS</div>
+                </div>
+              )}
 
-                <button
-                  onClick={handleEmailAuth}
-                  disabled={authLoading}
-                  style={{ ...s.primaryBtn, opacity: authLoading ? 0.7 : 1 }}
-                >
-                  {authLoading
-                    ? <span style={s.btnRow}><span style={s.spin} />{authMode === "signup" ? "Creating account…" : "Signing in…"}</span>
-                    : authMode === "signup" ? "Create Account — Free" : "Sign In"
-                  }
-                </button>
+              <div style={{ textAlign: "center", marginBottom: 16 }}>
+                <div style={{ fontSize: 20, fontWeight: 900, color: "#0F172A" }}>Sign up to keep going — it&apos;s free</div>
+                <div style={{ fontSize: 13, color: "#6B7280", marginTop: 4 }}>No limits on any tool. No credit card. Ever.</div>
               </div>
-            )}
 
-            <button style={{ ...s.modalDismiss, display: "block", margin: "16px auto 0" }} onClick={() => { setShowSignInModal(false); setAuthError(""); }}>
-              Maybe later
-            </button>
+              {/* Google */}
+              <button onClick={handleGoogleSignIn} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, width: "100%", padding: "14px 20px", borderRadius: 14, border: "none", background: "linear-gradient(135deg,#6366F1,#8B5CF6)", color: "#fff", fontSize: 15.5, fontWeight: 800, cursor: "pointer", boxShadow: "0 8px 24px rgba(99,102,241,0.4)" }}>
+                <span style={{ width: 26, height: 26, borderRadius: "50%", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <svg width="15" height="15" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                </span>
+                Continue with Google
+              </button>
+
+              <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "16px 0" }}>
+                <div style={{ height: 1, flex: 1, background: "#E5E7EB" }} />
+                <span style={{ fontSize: 12, color: "#9CA3AF", fontWeight: 700 }}>OR</span>
+                <div style={{ height: 1, flex: 1, background: "#E5E7EB" }} />
+              </div>
+
+              {authTab !== "email" ? (
+                <button onClick={() => { setAuthTab("email"); setAuthError(""); }} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, width: "100%", padding: "13px 20px", borderRadius: 14, border: "1.5px solid #E5E7EB", background: "#fff", color: "#111827", fontSize: 15, fontWeight: 800, cursor: "pointer" }}>
+                  ✉️ Continue with Email
+                </button>
+              ) : (
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  <div style={{ display: "flex", gap: 4, fontSize: 13, justifyContent: "center" }}>
+                    <button onClick={() => { setAuthMode("login"); setAuthError(""); }} style={{ background: "none", border: "none", cursor: "pointer", fontWeight: authMode === "login" ? 800 : 400, color: authMode === "login" ? "#6366F1" : "#888", borderBottom: authMode === "login" ? "2px solid #6366F1" : "2px solid transparent", padding: "4px 12px" }}>Sign in</button>
+                    <button onClick={() => { setAuthMode("signup"); setAuthError(""); }} style={{ background: "none", border: "none", cursor: "pointer", fontWeight: authMode === "signup" ? 800 : 400, color: authMode === "signup" ? "#6366F1" : "#888", borderBottom: authMode === "signup" ? "2px solid #6366F1" : "2px solid transparent", padding: "4px 12px" }}>Create account</button>
+                  </div>
+                  {authMode === "signup" && (
+                    <input type="text" placeholder="Your name (optional)" value={authName} onChange={(e) => setAuthName(e.target.value)} style={{ border: "1.5px solid #E0E0EE", borderRadius: 10, padding: "11px 12px", fontSize: 14, fontFamily: "inherit", outline: "none", width: "100%", boxSizing: "border-box" as const }} />
+                  )}
+                  <input type="email" placeholder="Email address" value={authEmail} onChange={(e) => setAuthEmail(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleEmailAuth()} style={{ border: "1.5px solid #E0E0EE", borderRadius: 10, padding: "11px 12px", fontSize: 14, fontFamily: "inherit", outline: "none", width: "100%", boxSizing: "border-box" as const }} />
+                  <input type="password" placeholder="Password (min 6 characters)" value={authPassword} onChange={(e) => setAuthPassword(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleEmailAuth()} style={{ border: "1.5px solid #E0E0EE", borderRadius: 10, padding: "11px 12px", fontSize: 14, fontFamily: "inherit", outline: "none", width: "100%", boxSizing: "border-box" as const }} />
+                  {authError && <div style={{ background: "#FFF1F0", border: "1px solid #FFC4C4", borderRadius: 8, padding: "8px 12px", fontSize: 13, color: "#C00" }}>{authError}</div>}
+                  <button onClick={handleEmailAuth} disabled={authLoading} style={{ ...s.primaryBtn, opacity: authLoading ? 0.7 : 1 }}>
+                    {authLoading ? <span style={s.btnRow}><span style={s.spin} />{authMode === "signup" ? "Creating account…" : "Signing in…"}</span> : authMode === "signup" ? "Create Account — Free" : "Sign In"}
+                  </button>
+                </div>
+              )}
+
+              {/* Trust badges */}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, marginTop: 18 }}>
+                {trust.map((t) => (
+                  <div key={t.title} style={{ background: "#F8FAFC", border: "1px solid #EEF0F4", borderRadius: 12, padding: "10px 8px", textAlign: "center" }}>
+                    <div style={{ fontSize: 16 }}>{t.icon}</div>
+                    <div style={{ fontSize: 11, fontWeight: 800, color: "#334155", marginTop: 3, lineHeight: 1.2 }}>{t.title}</div>
+                    <div style={{ fontSize: 10, color: "#94A3B8", marginTop: 1 }}>{t.sub}</div>
+                  </div>
+                ))}
+              </div>
+
+              <button onClick={close} style={{ display: "block", margin: "16px auto 0", background: "none", border: "none", color: "#94A3B8", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+                Skip for now ›
+              </button>
+            </div>
           </div>
         </div>
-      )}
+        );
+      })()}
 
       {/* ── No Credits Modal ──────────────────────────────────────────────── */}
       {showNoCreditsModal && (
