@@ -152,7 +152,7 @@ const COMPARISON = [
   { feature: "AI Background Generation", jpt: true, photoshop: false, removebg: false },
   { feature: "No watermark (free tier)", jpt: true, photoshop: false, removebg: false },
   { feature: "No account required to try", jpt: true, photoshop: false, removebg: true },
-  { feature: "Works in browser (no install)", jpt: true, photoshop: false, removebg: true },
+  { feature: "Works online (no install)", jpt: true, photoshop: false, removebg: true },
   { feature: "Batch processing", jpt: true, photoshop: true, removebg: true },
 ];
 
@@ -203,7 +203,7 @@ const FAQS = [
   },
   {
     q: "Do I need to install anything?",
-    a: "No. JPT AI runs entirely in your browser. Sign in and start editing — no downloads, no plugins, no desktop software required.",
+    a: "No. JPT AI runs entirely online. Sign in and start editing — no downloads, no plugins, no desktop software required.",
   },
 ];
 
@@ -466,7 +466,7 @@ export default function LandingPageClient() {
       <section style={s.section}>
         <div style={s.sectionInner}>
           <div style={s.sectionLabel}>FEATURES</div>
-          <h2 style={s.h2}>{PAID_FEATURES_ENABLED ? "Everything you need to edit images with AI" : "Free image tools, right in your browser"}</h2>
+          <h2 style={s.h2}>{PAID_FEATURES_ENABLED ? "Everything you need to edit images with AI" : "Free image tools, online"}</h2>
           <p style={s.sectionSub}>{PAID_FEATURES_ENABLED ? "Six powerful tools in one editor — no plugins, no complex software." : "Fast, free tools in one editor — no plugins, no sign-up, no watermarks."}</p>
           <div style={s.featureGrid}>
             {FEATURES.map((f) => (
