@@ -32,6 +32,20 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
+// Free tool pages linked from every blog post — content-to-tool internal links
+// that spread crawl equity to the money pages.
+const FREE_TOOL_LINKS = [
+  { icon: "🔍", label: "Image Upscaler", href: "/upscale" },
+  { icon: "🗜️", label: "Compress Image", href: "/compress-image" },
+  { icon: "🔄", label: "Convert Image", href: "/convert-image" },
+  { icon: "✂️", label: "Crop Image", href: "/crop-image" },
+  { icon: "↻", label: "Rotate & Flip", href: "/rotate-image" },
+  { icon: "💧", label: "Add Watermark", href: "/watermark-image" },
+  { icon: "😂", label: "Meme Generator", href: "/meme-generator" },
+  { icon: "📄", label: "Image to PDF", href: "/image-to-pdf" },
+  { icon: "🎬", label: "TikTok No-Watermark", href: "/tiktok-watermark-remover" },
+];
+
 function renderBody(body: string) {
   const lines = body.split("\n").filter(Boolean);
   return lines.map((line, i) => {
@@ -117,11 +131,18 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       }
     : null;
 
-  // Related posts — same category first, then fill with others. Internal linking.
+  // Related posts — build a topic cluster: same tool first (e.g. all TikTok
+  // posts link to each other), then same category, then fill with others.
+  // Strong internal linking of a cluster is a ranking signal.
+  const others = POSTS.filter((p) => p.slug !== post.slug);
+  const seen = new Set<string>();
   const related = [
-    ...POSTS.filter((p) => p.slug !== post.slug && p.category === post.category),
-    ...POSTS.filter((p) => p.slug !== post.slug && p.category !== post.category),
-  ].slice(0, 3);
+    ...others.filter((p) => p.toolHref === post.toolHref),
+    ...others.filter((p) => p.category === post.category),
+    ...others,
+  ]
+    .filter((p) => (seen.has(p.slug) ? false : (seen.add(p.slug), true)))
+    .slice(0, 3);
 
   const CATEGORY_COLORS: Record<string, string> = {
     Tutorial: "#6366F1",
@@ -202,6 +223,25 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             <Link href={post.toolHref} style={{ display: "inline-block", background: "#fff", color: "#6366F1", borderRadius: 12, padding: "13px 28px", fontSize: 15, fontWeight: 800, textDecoration: "none", boxShadow: "0 4px 20px rgba(0,0,0,0.15)" }}>
               {post.toolLabel}
             </Link>
+          </div>
+
+          {/* More free tools — content-to-tool internal links */}
+          <div style={{ marginTop: 56 }}>
+            <h2 style={{ fontSize: 22, fontWeight: 800, color: "#111", margin: "0 0 20px", letterSpacing: "-0.3px" }}>
+              More free tools
+            </h2>
+            <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 12 }}>
+              {FREE_TOOL_LINKS.filter((tool) => tool.href !== post.toolHref).map((tool) => (
+                <Link
+                  key={tool.href}
+                  href={tool.href}
+                  style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#fff", border: "1px solid #EAECF0", borderRadius: 999, padding: "9px 16px", fontSize: 14, fontWeight: 600, color: "#334155", textDecoration: "none" }}
+                >
+                  <span aria-hidden style={{ fontSize: 15 }}>{tool.icon}</span>
+                  {tool.label}
+                </Link>
+              ))}
+            </div>
           </div>
 
           {/* Related articles — internal linking for SEO + engagement */}
