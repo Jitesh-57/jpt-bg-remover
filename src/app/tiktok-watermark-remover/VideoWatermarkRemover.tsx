@@ -1,6 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { PAGE_IMAGES } from "@/lib/landing-images";
+
+const HERO_IMG = PAGE_IMAGES["tiktok-watermark-remover"];
 
 interface Resolved {
   title: string;
@@ -131,6 +134,20 @@ export default function VideoWatermarkRemover() {
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* Creative showcase */}
+          {HERO_IMG && !result && (
+            <div style={{ maxWidth: 640, margin: "40px auto 0" }}>
+              <div style={{ position: "relative", borderRadius: 22, padding: 8, background: "linear-gradient(135deg,rgba(99,102,241,0.12),rgba(139,92,246,0.10))", boxShadow: "0 24px 60px rgba(99,102,241,0.18)" }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={HERO_IMG}
+                  alt="Remove the TikTok watermark and download the video in HD — before and after"
+                  style={{ width: "100%", height: "auto", display: "block", borderRadius: 16, border: "1px solid #E6E8F2" }}
+                />
               </div>
             </div>
           )}
