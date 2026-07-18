@@ -40,6 +40,45 @@ const FREE_TOOL_LINKS: { id: string; icon: string; title: string; href: string }
   { id: 'image-to-pdf', icon: '📄', title: 'Image to PDF', href: '/image-to-pdf' },
 ]
 
+// Per-tool floating hero decorations. Two "cards" (left + right) that theme
+// each page — either a colored file badge (text) or a white icon card (emoji).
+type DecoBadge = { text?: string; emoji?: string; color?: string; bg?: string }
+const FILE_BLUE = { color: '#2563EB', bg: 'linear-gradient(135deg,#DBEAFE,#BFDBFE)' }
+const FILE_GREEN = { color: '#16A34A', bg: 'linear-gradient(135deg,#DCFCE7,#BBF7D0)' }
+const FILE_AMBER = { color: '#D97706', bg: 'linear-gradient(135deg,#FEF3C7,#FDE68A)' }
+const FILE_VIOLET = { color: '#7C3AED', bg: 'linear-gradient(135deg,#EDE9FE,#DDD6FE)' }
+const FILE_RED = { color: '#DC2626', bg: 'linear-gradient(135deg,#FEE2E2,#FECACA)' }
+
+const PAGE_DECOR: Record<string, [DecoBadge, DecoBadge]> = {
+  upscale: [{ text: 'HD', ...FILE_BLUE }, { text: '4K', ...FILE_VIOLET }],
+  'remove-bg': [{ emoji: '🪄' }, { emoji: '✂️' }],
+  headshot: [{ emoji: '💼' }, { emoji: '📸' }],
+  'ai-editor': [{ emoji: '✍️' }, { emoji: '🎨' }],
+  'compress-image': [{ text: 'KB', ...FILE_BLUE }, { emoji: '🗜️' }],
+  'convert-image': [{ text: 'PNG', ...FILE_GREEN }, { text: 'WEBP', ...FILE_AMBER }],
+  'crop-image': [{ emoji: '✂️' }, { text: '1:1', ...FILE_BLUE }],
+  'rotate-image': [{ emoji: '🔄' }, { emoji: '🪞' }],
+  'watermark-image': [{ emoji: '🔖' }, { text: '©', ...FILE_VIOLET }],
+  'meme-generator': [{ emoji: '😂' }, { emoji: '💬' }],
+  'image-to-pdf': [{ text: 'PDF', ...FILE_RED }, { emoji: '🖼️' }],
+}
+const DEFAULT_DECOR: [DecoBadge, DecoBadge] = [{ text: 'JPG', ...FILE_BLUE }, { text: 'PNG', ...FILE_GREEN }]
+
+function DecoCard({ badge }: { badge: DecoBadge }) {
+  if (badge.emoji) {
+    return (
+      <div style={{ width: 60, height: 60, borderRadius: 16, background: '#fff', boxShadow: '0 8px 24px rgba(99,102,241,0.16)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26 }}>
+        {badge.emoji}
+      </div>
+    )
+  }
+  return (
+    <div style={{ width: 58, height: 72, borderRadius: 10, background: badge.bg, boxShadow: '0 8px 24px rgba(0,0,0,0.14)', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', paddingBottom: 8 }}>
+      <span style={{ fontSize: 11, fontWeight: 800, color: badge.color }}>{badge.text}</span>
+    </div>
+  )
+}
+
 function readFileAsDataUrl(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const r = new FileReader()
@@ -337,6 +376,8 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
     WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent', color: 'transparent',
   }
 
+  const decor = PAGE_DECOR[pageId] ?? DEFAULT_DECOR
+
   const visual = PAGE_VISUALS[pageId] ?? PAGE_VISUALS['upscale']
   const heroImg = PAGE_IMAGES[pageId]
   const beforeAfter = PAGE_BEFORE_AFTER[pageId]
@@ -392,16 +433,12 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
       <section style={{ position: 'relative', overflow: 'hidden', background: 'linear-gradient(160deg, #F5F5FF 0%, #fff 50%, #F0FDF4 100%)', padding: '80px 24px 72px', textAlign: 'center' }}>
 
-        {/* Floating decorations */}
+        {/* Floating decorations — themed per tool */}
         <div className="jpt-hero-deco" style={{ position: 'absolute', left: '13%', top: 300, transform: 'rotate(-12deg)', pointerEvents: 'none' }}>
-          <div style={{ width: 58, height: 72, borderRadius: 10, background: 'linear-gradient(135deg,#DBEAFE,#BFDBFE)', boxShadow: '0 8px 24px rgba(59,130,246,0.22)', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', paddingBottom: 8 }}>
-            <span style={{ fontSize: 11, fontWeight: 800, color: '#2563EB' }}>JPG</span>
-          </div>
+          <DecoCard badge={decor[0]} />
         </div>
         <div className="jpt-hero-deco" style={{ position: 'absolute', right: '13%', top: 330, transform: 'rotate(11deg)', animationDelay: '1.2s', pointerEvents: 'none' }}>
-          <div style={{ width: 58, height: 72, borderRadius: 10, background: 'linear-gradient(135deg,#DCFCE7,#BBF7D0)', boxShadow: '0 8px 24px rgba(16,185,129,0.22)', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', paddingBottom: 8 }}>
-            <span style={{ fontSize: 11, fontWeight: 800, color: '#16A34A' }}>PNG</span>
-          </div>
+          <DecoCard badge={decor[1]} />
         </div>
         <div className="jpt-hero-deco" style={{ position: 'absolute', left: '20%', top: 210, fontSize: 20, color: '#C4B5FD', animationDelay: '0.6s', pointerEvents: 'none' }}>✦</div>
         <div className="jpt-hero-deco" style={{ position: 'absolute', right: '19%', top: 200, fontSize: 16, color: '#A5B4FC', animationDelay: '2s', pointerEvents: 'none' }}>✦</div>
