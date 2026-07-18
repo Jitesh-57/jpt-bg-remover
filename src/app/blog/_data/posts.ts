@@ -19,6 +19,7 @@ import { UPSCALE_POSTS } from "./upscale-posts";
 import { UPSCALE_FREE_POSTS } from "./upscale-free-posts";
 import { UPSCALE_FREE_POSTS_2 } from "./upscale-free-posts-2";
 import { TOOL_FREE_POSTS } from "./tool-free-posts";
+import { TIKTOK_POSTS } from "./tiktok-posts";
 
 const RAW_POSTS: BlogPost[] = [
   {
@@ -14352,9 +14353,10 @@ Ready to make your listings shine? Head to JPT AI's AI Editor at sjpt.io and enh
 const LIVE_TOOL_PREFIXES = [
   "/upscale", "/compress-image", "/convert-image", "/crop-image",
   "/rotate-image", "/watermark-image", "/meme-generator", "/image-to-pdf",
+  "/tiktok-watermark-remover",
 ];
 
-export const POSTS: BlogPost[] = [...RAW_POSTS, ...UPSCALE_POSTS, ...UPSCALE_FREE_POSTS, ...UPSCALE_FREE_POSTS_2, ...TOOL_FREE_POSTS]
+export const POSTS: BlogPost[] = [...RAW_POSTS, ...UPSCALE_POSTS, ...UPSCALE_FREE_POSTS, ...UPSCALE_FREE_POSTS_2, ...TOOL_FREE_POSTS, ...TIKTOK_POSTS]
   .filter((p) => LIVE_TOOL_PREFIXES.some((pre) => p.toolHref.startsWith(pre)))
   .map((p) => ({ ...p, image: p.image || blogImageUrl(p.slug) }))
   .sort((a, b) => (a.date < b.date ? 1 : -1));
