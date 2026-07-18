@@ -328,6 +328,15 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
       }
     : null
 
+  // Two-tone H1: the last word gets a gradient fill (e.g. "Free Image Compressor").
+  const h1Words = (config.h1 || '').trim().split(/\s+/)
+  const h1Last = h1Words.length > 1 ? h1Words[h1Words.length - 1] : ''
+  const h1First = h1Words.slice(0, h1Words.length - 1).join(' ')
+  const gradientText: React.CSSProperties = {
+    background: 'linear-gradient(120deg,#6366F1,#8B5CF6)',
+    WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent', color: 'transparent',
+  }
+
   const visual = PAGE_VISUALS[pageId] ?? PAGE_VISUALS['upscale']
   const heroImg = PAGE_IMAGES[pageId]
   const beforeAfter = PAGE_BEFORE_AFTER[pageId]
@@ -373,16 +382,41 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
       {breadcrumbLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />}
 
 
+      {/* Hero decoration animation + mobile hide */}
+      <style>{`
+        @keyframes jptFloat { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-12px) } }
+        .jpt-hero-deco { animation: jptFloat 5.5s ease-in-out infinite; }
+        @media (max-width: 900px) { .jpt-hero-deco { display: none !important; } }
+      `}</style>
+
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
-      <section style={{ background: 'linear-gradient(160deg, #F5F5FF 0%, #fff 50%, #F0FDF4 100%)', padding: '80px 24px 72px', textAlign: 'center' }}>
-        <div style={{ maxWidth: 780, margin: '0 auto' }}>
+      <section style={{ position: 'relative', overflow: 'hidden', background: 'linear-gradient(160deg, #F5F5FF 0%, #fff 50%, #F0FDF4 100%)', padding: '80px 24px 72px', textAlign: 'center' }}>
+
+        {/* Floating decorations */}
+        <div className="jpt-hero-deco" style={{ position: 'absolute', left: '13%', top: 300, transform: 'rotate(-12deg)', pointerEvents: 'none' }}>
+          <div style={{ width: 58, height: 72, borderRadius: 10, background: 'linear-gradient(135deg,#DBEAFE,#BFDBFE)', boxShadow: '0 8px 24px rgba(59,130,246,0.22)', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', paddingBottom: 8 }}>
+            <span style={{ fontSize: 11, fontWeight: 800, color: '#2563EB' }}>JPG</span>
+          </div>
+        </div>
+        <div className="jpt-hero-deco" style={{ position: 'absolute', right: '13%', top: 330, transform: 'rotate(11deg)', animationDelay: '1.2s', pointerEvents: 'none' }}>
+          <div style={{ width: 58, height: 72, borderRadius: 10, background: 'linear-gradient(135deg,#DCFCE7,#BBF7D0)', boxShadow: '0 8px 24px rgba(16,185,129,0.22)', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', paddingBottom: 8 }}>
+            <span style={{ fontSize: 11, fontWeight: 800, color: '#16A34A' }}>PNG</span>
+          </div>
+        </div>
+        <div className="jpt-hero-deco" style={{ position: 'absolute', left: '20%', top: 210, fontSize: 20, color: '#C4B5FD', animationDelay: '0.6s', pointerEvents: 'none' }}>✦</div>
+        <div className="jpt-hero-deco" style={{ position: 'absolute', right: '19%', top: 200, fontSize: 16, color: '#A5B4FC', animationDelay: '2s', pointerEvents: 'none' }}>✦</div>
+        <div className="jpt-hero-deco" style={{ position: 'absolute', left: '17%', top: 430, width: 14, height: 14, borderRadius: '50%', border: '2px solid #C7D2FE', animationDelay: '1.6s', pointerEvents: 'none' }} />
+        <div className="jpt-hero-deco" style={{ position: 'absolute', right: '22%', top: 420, width: 22, height: 22, borderRadius: '50%', border: '2px solid #BBF7D0', animationDelay: '0.9s', pointerEvents: 'none' }} />
+        <div className="jpt-hero-deco" style={{ position: 'absolute', right: '15%', top: 250, fontSize: 22, color: '#8B5CF6', animationDelay: '2.4s', pointerEvents: 'none' }}>✓</div>
+
+        <div style={{ position: 'relative', maxWidth: 780, margin: '0 auto' }}>
           {/* Badge */}
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#EEF2FF', color: '#6366F1', fontWeight: 700, fontSize: 12, borderRadius: 20, padding: '6px 14px', marginBottom: 28, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-            ✦ JPT AI
+            ☁️ JPT AI
           </div>
 
           <h1 style={{ fontSize: 'clamp(2.2rem, 5vw, 3.6rem)', fontWeight: 900, color: '#0F172A', lineHeight: 1.1, letterSpacing: '-0.03em', margin: '0 0 20px' }}>
-            {config.h1}
+            {h1Last ? (<>{h1First} <span style={gradientText}>{h1Last}</span></>) : (<span style={gradientText}>{config.h1}</span>)}
           </h1>
           <p style={{ fontSize: 'clamp(1rem, 2vw, 1.2rem)', color: '#4B5563', lineHeight: 1.7, maxWidth: 560, margin: '0 auto 36px' }}>
             {config.subtitle}
@@ -483,10 +517,9 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
             </div>
           </div>
         ) : heroImg ? (
-          <div style={{ maxWidth: 900, margin: '56px auto 0', borderRadius: 24, overflow: 'hidden', boxShadow: '0 24px 80px rgba(0,0,0,0.16)', position: 'relative' }}>
+          <div style={{ position: 'relative', maxWidth: 940, margin: '56px auto 0', borderRadius: 24, overflow: 'hidden', background: '#fff', padding: 10, boxShadow: '0 24px 80px rgba(99,102,241,0.16)', border: '1px solid #EEF0FF' }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={heroImg} alt={`${config.h1} — free online tool, no watermark (${visual.label})`} style={{ display: 'block', width: '100%', height: 'auto' }} />
-            <span style={{ position: 'absolute', bottom: 16, right: 16, padding: '8px 16px', background: 'rgba(99,102,241,0.92)', color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', borderRadius: 10, boxShadow: '0 4px 16px rgba(0,0,0,0.2)' }}>✨ {visual.label}</span>
+            <img src={heroImg} alt={`${config.h1} — free online tool, no watermark (${visual.label})`} style={{ display: 'block', width: '100%', height: 'auto', borderRadius: 16 }} />
           </div>
         ) : (
           <div style={{ maxWidth: 820, margin: '56px auto 0', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, borderRadius: 24, overflow: 'hidden', boxShadow: '0 24px 80px rgba(0,0,0,0.12)' }}>
@@ -503,9 +536,10 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
         )}
       </section>
 
-      {/* ── PRODUCT HIGHLIGHTS BAR ───────────────────────────────────────── */}
-      <section style={{ background: '#0F172A', padding: '20px 24px' }}>
-        <div style={{ maxWidth: 960, margin: '0 auto', display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', gap: 16 }}>
+      {/* ── "PERFECT FOR" CHIP BAR ───────────────────────────────────────── */}
+      <section style={{ background: '#fff', padding: '30px 24px 10px' }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, flexWrap: 'wrap' }}>
+          <span style={{ fontSize: 14, fontWeight: 800, color: '#0F172A', marginRight: 4 }}>Perfect for</span>
           {({
             upscale: [
               { icon: '🔍', label: '2× & 4× Super-Resolution' },
@@ -585,9 +619,9 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
               { icon: '⚡', label: 'Instant, Unlimited & Free' },
             ],
           } as Record<string, { icon: string; label: string }[]>)[pageId]?.map(item => (
-            <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ fontSize: 18 }}>{item.icon}</span>
-              <span style={{ fontSize: 13, fontWeight: 600, color: '#CBD5E1', whiteSpace: 'nowrap' }}>{item.label}</span>
+            <div key={item.label} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#F5F6FB', border: '1px solid #EAECF5', borderRadius: 999, padding: '8px 14px' }}>
+              <span style={{ fontSize: 15 }}>{item.icon}</span>
+              <span style={{ fontSize: 12.5, fontWeight: 700, color: '#475569', whiteSpace: 'nowrap' }}>{item.label}</span>
             </div>
           ))}
         </div>
