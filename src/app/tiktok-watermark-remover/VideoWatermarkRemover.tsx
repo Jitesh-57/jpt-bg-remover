@@ -181,6 +181,57 @@ export default function VideoWatermarkRemover() {
         </p>
       </section>
 
+      {/* WHY BEST */}
+      <section style={{ padding: "72px 24px", background: "#0F172A" }}>
+        <div style={{ maxWidth: 1080, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 12 }}>
+            <h2 style={{ fontSize: "clamp(1.7rem,3vw,2.2rem)", fontWeight: 900, color: "#fff", margin: 0, letterSpacing: "-0.02em", lineHeight: 1.2 }}>
+              Why <span style={{ color: "#818CF8" }}>JPT AI</span> is the best free TikTok watermark remover
+            </h2>
+            <p style={{ fontSize: 14, color: "#94A3B8", margin: "12px 0 0" }}>The simplest way to save clean, watermark-free TikTok videos in HD.</p>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 18, marginTop: 44 }}>
+            {[
+              { icon: "👍", title: "Entirely Free to Use", accent: "#F59E0B", desc: "Remove the TikTok watermark and download videos in seconds. No hidden fees, no charges — completely free, every time." },
+              { icon: "🎬", title: "HD Video + MP3 Audio", accent: "#818CF8", desc: "Save clean, watermark-free videos in crisp HD quality — or pull just the sound out as an MP3 in one tap." },
+              { icon: "🖥️", title: "Works on Any Device", accent: "#34D399", desc: "Runs smoothly on Windows, Mac, Linux, iPhone, iPad and Android — nothing to download, nothing to install." },
+            ].map((c) => (
+              <div key={c.title} style={{ background: "#1E293B", border: "1px solid #263349", borderRadius: 18, padding: "28px 24px" }}>
+                <div style={{ fontSize: 30, marginBottom: 14 }}>{c.icon}</div>
+                <h3 style={{ fontSize: 17, fontWeight: 800, margin: "0 0 10px", color: c.accent }}>{c.title}</h3>
+                <p style={{ fontSize: 13.5, color: "#94A3B8", lineHeight: 1.65, margin: 0 }}>{c.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* WHY CHOOSE */}
+      <section style={{ padding: "72px 24px", background: "#0B1120" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 12 }}>
+            <h2 style={{ fontSize: "clamp(1.7rem,3vw,2.2rem)", fontWeight: 900, color: "#fff", margin: 0, letterSpacing: "-0.02em", lineHeight: 1.2 }}>
+              Why choose <span style={{ color: "#818CF8" }}>JPT AI</span> for TikTok downloads
+            </h2>
+            <p style={{ fontSize: 14, color: "#94A3B8", margin: "12px 0 0", maxWidth: 640, marginLeft: "auto", marginRight: "auto" }}>
+              Save high-quality TikTok videos without the watermark and without the hassle. Just paste, and download.
+            </p>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 18, marginTop: 44 }}>
+            {[
+              { icon: "🎯", title: "Intuitive & Perfect Results", desc: "A clean, one-paste flow with easy-to-follow steps and flawless output. Remove the watermark effortlessly and keep the full quality of your TikTok videos." },
+              { icon: "⚡", title: "No Install, No Sign-Up", desc: "No apps to download and no account to create. Paste a TikTok link and get your clean, watermark-free video instantly — free and unlimited." },
+            ].map((c) => (
+              <div key={c.title} style={{ background: "#111827", border: "1px solid #1F2937", borderRadius: 18, padding: "30px 26px" }}>
+                <div style={{ fontSize: 30, marginBottom: 14 }}>{c.icon}</div>
+                <h3 style={{ fontSize: 18, fontWeight: 800, margin: "0 0 10px", color: "#fff" }}>{c.title}</h3>
+                <p style={{ fontSize: 14, color: "#94A3B8", lineHeight: 1.7, margin: 0 }}>{c.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* FAQ */}
       <section style={{ padding: "40px 24px 88px", background: "#F9FAFB" }}>
         <div style={{ maxWidth: 720, margin: "0 auto" }}>
