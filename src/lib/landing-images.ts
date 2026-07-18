@@ -16,6 +16,14 @@ export const PAGE_IMAGES: Record<string, string> = {
   upscale: landingImg("page-upscale.png"),
   "ai-editor": landingImg("page-ai-editor.png"),
   headshot: landingImg("page-ai-headshot.png"),
+  // Free tool pages — before/after showcase images (Supabase "landing" bucket).
+  "compress-image": landingImg("image-compressor-before-after.png"),
+  "convert-image": landingImg("image-converter-before-after.png"),
+  "crop-image": landingImg("image-cropper-before-after.png"),
+  "rotate-image": landingImg("rotate-flip-before-after.png"),
+  "watermark-image": landingImg("add-text-watermark-before-after.png"),
+  "meme-generator": landingImg("meme-generator-before-after.png"),
+  "image-to-pdf": landingImg("photo-to-pdf-before-after.png"),
 };
 
 // Before/after pairs for split-view showcases (Supabase Storage).
