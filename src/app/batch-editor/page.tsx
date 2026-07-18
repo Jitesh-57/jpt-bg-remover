@@ -123,7 +123,7 @@ export default function BatchEditorPage() {
   const [rotateFlipV, setRotateFlipV] = useState(false);
   const [compressQuality, setCompressQuality] = useState(70);
   const [convertFormat, setConvertFormat] = useState<"png" | "jpeg" | "webp">("jpeg");
-  const [wmText, setWmText] = useState("© JPT AI");
+  const [wmText, setWmText] = useState("");
   const [wmPosition, setWmPosition] = useState<WatermarkPosition>("bottom-right");
   const [wmFontScale, setWmFontScale] = useState(5);
   const [wmColor, setWmColor] = useState("#ffffff");
@@ -427,12 +427,12 @@ export default function BatchEditorPage() {
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           <div>
             <label style={optionLabel}>Watermark text</label>
-            <input type="text" value={wmText} onChange={e => setWmText(e.target.value)} style={inputStyle} placeholder="© Your Brand" />
+            <input type="text" value={wmText} onChange={e => setWmText(e.target.value)} style={inputStyle} placeholder="Add your watermark here" />
           </div>
           <div>
             <label style={optionLabel}>Position</label>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6, marginTop: 4 }}>
-              {(["top-left", "top-right", "center", "bottom-left", "bottom-right", "tiled"] as WatermarkPosition[]).map(p => (
+              {(["tiled", "top-left", "top-right", "center", "bottom-left", "bottom-right"] as WatermarkPosition[]).map(p => (
                 <button key={p} onClick={() => setWmPosition(p)} style={{
                   padding: "8px 4px", borderRadius: 8, fontSize: 10.5, fontWeight: 700, cursor: "pointer",
                   border: wmPosition === p ? "2px solid #6366F1" : "1.5px solid #E5E7EB",

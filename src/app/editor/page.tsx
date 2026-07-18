@@ -447,7 +447,7 @@ export default function ImageEditorPage() {
   const [compressQuality, setCompressQuality] = useState(70);
   const [convertFormat, setConvertFormat] = useState<"png" | "jpeg" | "webp">("png");
   // Watermark / Meme
-  const [wmText, setWmText] = useState("© JPT AI");
+  const [wmText, setWmText] = useState("");
   const [wmPosition, setWmPosition] = useState<WatermarkPosition>("bottom-right");
   const [wmFontScale, setWmFontScale] = useState(5);
   const [wmColor, setWmColor] = useState("#ffffff");
@@ -2102,11 +2102,11 @@ export default function ImageEditorPage() {
                 <p style={s.panelSub}>Add a text watermark — free, no credits</p>
                 <div style={s.panelSection}>
                   <label style={s.inputLabel}>Watermark text</label>
-                  <input type="text" value={wmText} onChange={(e) => setWmText(e.target.value)} placeholder="© Your Brand" style={s.numInput} />
+                  <input type="text" value={wmText} onChange={(e) => setWmText(e.target.value)} placeholder="Add your watermark here" style={s.numInput} />
                 </div>
                 <label style={s.inputLabel}>Position</label>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6, margin: "6px 0 12px" }}>
-                  {(["top-left", "top-right", "center", "bottom-left", "bottom-right", "tiled"] as WatermarkPosition[]).map((p) => (
+                  {(["tiled", "top-left", "top-right", "center", "bottom-left", "bottom-right"] as WatermarkPosition[]).map((p) => (
                     <button key={p} onClick={() => setWmPosition(p)} style={{
                       padding: "9px 4px", borderRadius: 9, fontSize: 10.5, fontWeight: 700, cursor: "pointer",
                       border: wmPosition === p ? "2px solid #6366F1" : "1.5px solid #E0E0EE",
