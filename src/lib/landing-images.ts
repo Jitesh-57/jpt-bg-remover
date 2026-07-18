@@ -24,7 +24,7 @@ export const PAGE_IMAGES: Record<string, string> = {
   "watermark-image": landingImg("add-text-watermark-before-after.png"),
   "meme-generator": landingImg("meme-generator-before-after.png"),
   "image-to-pdf": landingImg("photo-to-pdf-before-after.png"),
-  "tiktok-watermark-remover": landingImg("Tiktok%20watermark%20remover.png"),
+  "tiktok-watermark-remover": landingImg("tiktok-watermark-remover-hero.png"),
 };
 
 // Before/after pairs for split-view showcases (Supabase Storage).
