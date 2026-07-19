@@ -32,6 +32,7 @@ const FREE_TOOLS = [
   { labelKey: "Image to PDF",     href: "/image-to-pdf" },
   { labelKey: "TikTok Watermark Remover", href: "/tiktok-watermark-remover" },
   { labelKey: "Instagram Video Downloader", href: "/instagram-video-downloader" },
+  { labelKey: "YouTube Video Downloader", href: "/youtube-video-downloader" },
 ];
 
 const ALL_COMPANY = [
