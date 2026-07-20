@@ -21,8 +21,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/meme-generator`,   lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/image-to-pdf`,     lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/tiktok-watermark-remover`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
-    { url: `${BASE}/instagram-video-downloader`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
-    { url: `${BASE}/youtube-video-downloader`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     // /editor is noindex (tool UI) — excluded from sitemap
     { url: `${BASE}/batch-editor`,     lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/blog`,             lastModified: now, changeFrequency: "weekly",  priority: 0.8 },
