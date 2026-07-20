@@ -15,6 +15,10 @@ const nextConfig = {
         destination: 'https://www.sjpt.io/:path*',
         permanent: true,
       },
+      // Removed video tools (free resolvers couldn't reliably download).
+      // 301 to the home page so old sitemap/crawled URLs don't 404.
+      { source: '/instagram-video-downloader', destination: '/', permanent: true },
+      { source: '/youtube-video-downloader', destination: '/', permanent: true },
     ];
   },
   webpack: (config) => {

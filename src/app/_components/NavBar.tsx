@@ -44,8 +44,6 @@ const FREE_IMAGE_TOOLS = [
   { icon: "😂", label: "Meme Generator",  desc: "Top & bottom meme text",        href: "/meme-generator", free: true },
   { icon: "📄", label: "Image to PDF",    desc: "JPG & PNG to PDF",              href: "/image-to-pdf", free: true },
   { icon: "🎬", label: "TikTok No-Watermark", desc: "Download TikTok, no watermark", href: "/tiktok-watermark-remover", free: true },
-  { icon: "📸", label: "Instagram Downloader", desc: "Download Reels & videos in HD", href: "/instagram-video-downloader", free: true },
-  { icon: "▶️", label: "YouTube Downloader", desc: "Download YouTube videos in HD", href: "/youtube-video-downloader", free: true },
 ];
 
 // In free-only mode show the free image tools + the editor. In paid mode keep
