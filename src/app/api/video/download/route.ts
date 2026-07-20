@@ -7,7 +7,7 @@ export const maxDuration = 60;
 // the user gets a real file download (cross-origin <a download> won't force it).
 // Restricted to known downloader media hosts (TikTok, Instagram, cobalt) to
 // avoid an open proxy.
-const ALLOWED = /(^|\.)tikwm\.com$|tiktok|byteoversea|muscdn|akamaized|ibyteimg|bytecdn|douyin|tiktokcdn|instagram|cdninstagram|fbcdn|cobalt|googlevideo|youtube|ytimg/i;
+const ALLOWED = /(^|\.)tikwm\.com$|tiktok|byteoversea|muscdn|akamaized|ibyteimg|bytecdn|douyin|tiktokcdn|instagram|cdninstagram|fbcdn|cobalt|googlevideo|youtube|ytimg|piped/i;
 // The configured cobalt instance may serve tunnel URLs from its own host.
 let COBALT_HOST = "";
 try { COBALT_HOST = new URL(process.env.COBALT_API || "https://cobalt-api.kwiatekmiki.com").host.toLowerCase(); } catch { /* ignore */ }

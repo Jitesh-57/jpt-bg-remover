@@ -97,7 +97,50 @@ async function viaInstagramApi(url: string): Promise<Media | null> {
   }
 }
 
-// Strategy 2 — cobalt instances (tries each until one resolves).
+// Strategy 2 — scrape the public embed page (often works when the API
+// IP-blocks). The embed HTML for public video posts includes the video_url.
+async function viaInstagramEmbed(url: string): Promise<Media | null> {
+  const shortcode = extractShortcode(url);
+  if (!shortcode) return null;
+  for (const path of [`reel/${shortcode}/embed/captioned/`, `p/${shortcode}/embed/captioned/`, `reel/${shortcode}/embed/`]) {
+    try {
+      const r = await fetchWithTimeout(
+        `https://www.instagram.com/${path}`,
+        {
+          headers: {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36",
+            Accept: "text/html",
+          },
+          cache: "no-store",
+        },
+        9000
+      );
+      if (!r.ok) continue;
+      const html = await r.text();
+      // Look for the video url in the embedded JSON, then the og:video meta.
+      let m = html.match(/"video_url":"(https:\\?\/\\?\/[^"]+?)"/);
+      let media = m ? m[1].replace(/\\u0026/g, "&").replace(/\\\//g, "/") : "";
+      if (!media) {
+        m = html.match(/property="og:video"\s+content="([^"]+)"/);
+        media = m ? m[1] : "";
+      }
+      if (!media) continue;
+      const cap = html.match(/"caption":"([^"]{0,120})"/);
+      return {
+        title: cap ? cap[1].replace(/\\n/g, " ").slice(0, 80) : "Instagram video",
+        author: "",
+        cover: "",
+        media,
+        filename: `jpt-instagram-${shortcode}.mp4`,
+      };
+    } catch {
+      /* try next path */
+    }
+  }
+  return null;
+}
+
+// Strategy 3 — cobalt instances (tries each until one resolves).
 async function viaCobalt(url: string): Promise<Media | null> {
   for (const base of COBALT_INSTANCES) {
     try {
@@ -145,7 +188,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const result = (await viaInstagramApi(url)) || (await viaCobalt(url));
+    const result = (await viaInstagramApi(url)) || (await viaInstagramEmbed(url)) || (await viaCobalt(url));
     if (!result) {
       return NextResponse.json(
         { error: "Couldn't fetch this video. Make sure the reel/post is public (not a private account), then try again." },
