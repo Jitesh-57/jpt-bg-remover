@@ -9,18 +9,55 @@ export const maxDuration = 30;
 // datacenter IPs directly. Falls back to cobalt if Piped is unavailable.
 const YT_RE = /(youtube\.com|youtu\.be)\//i;
 
-// Piped API instances (no key). Override/extend with PIPED_APIS (comma-sep).
-const PIPED_INSTANCES = (
-  process.env.PIPED_APIS ||
-  [
-    "https://pipedapi.kavin.rocks",
-    "https://pipedapi.leptons.xyz",
-    "https://pipedapi.nosebs.ru",
-    "https://piped-api.privacy.com.de",
-    "https://pipedapi.adminforge.de",
-  ].join(",")
-)
-  .split(",").map((s) => s.trim().replace(/\/+$/, "")).filter(Boolean);
+// Static fallback Piped API instances. The live list is fetched at runtime
+// (below) so it self-heals as instances come and go; this is the backup.
+const PIPED_FALLBACK = [
+  "https://pipedapi.kavin.rocks",
+  "https://pipedapi.leptons.xyz",
+  "https://pipedapi.nosebs.ru",
+  "https://piped-api.privacy.com.de",
+  "https://pipedapi.adminforge.de",
+  "https://pipedapi.reallyaweso.me",
+  "https://api.piped.private.coffee",
+  "https://pipedapi.ducks.party",
+];
+
+// Resolve the list of Piped API bases to try: env override → live directory →
+// static fallback.
+async function pipedInstances(): Promise<string[]> {
+  if (process.env.PIPED_APIS) {
+    return process.env.PIPED_APIS.split(",").map((s) => s.trim().replace(/\/+$/, "")).filter(Boolean);
+  }
+  try {
+    const r = await fetchWithTimeout("https://piped-instances.kavin.rocks/", { headers: { Accept: "application/json" }, cache: "no-store" }, 6000);
+    if (r.ok) {
+      const list = (await r.json()) as any[];
+      const urls = (Array.isArray(list) ? list : [])
+        .map((i) => (i?.api_url as string) || "")
+        .map((s) => s.trim().replace(/\/+$/, ""))
+        .filter(Boolean);
+      if (urls.length) return urls;
+    }
+  } catch {
+    /* fall back to static list */
+  }
+  return PIPED_FALLBACK;
+}
+
+// Resolve with the first of many promises that yields a non-null result.
+function firstNonNull<T>(promises: Promise<T | null>[]): Promise<T | null> {
+  return new Promise((resolve) => {
+    let remaining = promises.length;
+    if (!remaining) return resolve(null);
+    let settled = false;
+    for (const p of promises) {
+      p.then((v) => {
+        if (v != null && !settled) { settled = true; resolve(v); }
+        else if (--remaining === 0 && !settled) resolve(null);
+      }).catch(() => { if (--remaining === 0 && !settled) resolve(null); });
+    }
+  });
+}
 
 // Cobalt fallback instances (no key). Override with COBALT_APIS / COBALT_API.
 const COBALT_INSTANCES = (
@@ -48,35 +85,40 @@ async function fetchWithTimeout(url: string, init: RequestInit, ms: number): Pro
 
 const qNum = (q?: string) => parseInt(String(q || "").replace(/[^0-9]/g, ""), 10) || 0;
 
-// Strategy 1 — Piped. Returns a muxed (video+audio) MP4 stream.
+// Query one Piped instance for a muxed (video+audio) MP4 stream.
+async function tryPipedInstance(base: string, id: string): Promise<Resolved | null> {
+  try {
+    const r = await fetchWithTimeout(`${base}/streams/${id}`, {
+      headers: { Accept: "application/json", "User-Agent": "Mozilla/5.0" },
+      cache: "no-store",
+    }, 8000);
+    if (!r.ok) return null;
+    const j = (await r.json()) as any;
+    const streams: any[] = Array.isArray(j.videoStreams) ? j.videoStreams : [];
+    // Muxed progressive streams have audio (videoOnly === false).
+    const muxed = streams
+      .filter((s) => s && s.videoOnly === false && s.url && /mp4/i.test(`${s.mimeType || ""}${s.format || ""}`))
+      .sort((a, b) => qNum(b.quality) - qNum(a.quality));
+    const pick = muxed[0];
+    if (!pick?.url) return null;
+    return {
+      title: j.title || "YouTube video",
+      author: j.uploader || "",
+      cover: j.thumbnailUrl || "",
+      media: pick.url,
+      filename: `jpt-youtube-${id}.mp4`,
+    };
+  } catch {
+    return null;
+  }
+}
+
+// Strategy 1 — Piped. Races many live instances; first muxed MP4 wins.
 async function viaPiped(url: string): Promise<Resolved | null> {
   const id = videoId(url);
   if (!id) return null;
-  for (const base of PIPED_INSTANCES) {
-    try {
-      const r = await fetchWithTimeout(`${base}/streams/${id}`, {
-        headers: { Accept: "application/json", "User-Agent": "Mozilla/5.0" },
-        cache: "no-store",
-      }, 9000);
-      if (!r.ok) continue;
-      const j = (await r.json()) as any;
-      const streams: any[] = Array.isArray(j.videoStreams) ? j.videoStreams : [];
-      // Muxed progressive streams have audio (videoOnly === false).
-      const muxed = streams
-        .filter((s) => s && s.videoOnly === false && s.url && /mp4/i.test(`${s.mimeType || ""}${s.format || ""}`))
-        .sort((a, b) => qNum(b.quality) - qNum(a.quality));
-      const pick = muxed[0];
-      if (!pick?.url) continue;
-      return {
-        title: j.title || "YouTube video",
-        author: j.uploader || "",
-        cover: j.thumbnailUrl || "",
-        media: pick.url,
-        filename: `jpt-youtube-${id}.mp4`,
-      };
-    } catch { /* try next instance */ }
-  }
-  return null;
+  const instances = (await pipedInstances()).slice(0, 14);
+  return firstNonNull(instances.map((base) => tryPipedInstance(base, id)));
 }
 
 // YouTube oembed — public, no key. Best-effort metadata for the cobalt path.
