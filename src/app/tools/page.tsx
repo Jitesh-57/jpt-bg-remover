@@ -3,6 +3,8 @@ import Link from "next/link";
 import { CONVERSIONS, buildContent } from "@/lib/conversions";
 import { COMPRESSIONS } from "@/lib/compressions";
 import { CROPS } from "@/lib/crops";
+import ToolIcon, { iconKeyForHref } from "@/app/editor/ToolIcon";
+import ScrollReveal from "@/app/_components/ScrollReveal";
 
 const BASE = "https://www.sjpt.io";
 const URL = `${BASE}/tools`;
@@ -86,6 +88,7 @@ export default function ToolsPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
+      <ScrollReveal />
 
       <div style={{ fontFamily: "system-ui,-apple-system,sans-serif", color: "#111827", background: "#fff" }}>
         {/* HERO */}
@@ -110,7 +113,7 @@ export default function ToolsPage() {
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(230px,1fr))", gap: 16 }}>
               {CORE_TOOLS.map((t) => (
                 <Link key={t.href} href={t.href} style={{ display: "flex", gap: 12, alignItems: "flex-start", background: "#fff", border: "1px solid #EAECF5", borderRadius: 16, padding: "18px 18px", textDecoration: "none", boxShadow: "0 6px 20px rgba(30,41,90,.05)" }}>
-                  <span style={{ fontSize: 26, lineHeight: 1 }}>{t.icon}</span>
+                  <ToolIcon id={iconKeyForHref(t.href)} size={40} />
                   <span>
                     <span style={{ display: "block", fontSize: 15.5, fontWeight: 800, color: "#111827" }}>{t.name}</span>
                     <span style={{ display: "block", fontSize: 13, color: "#6B7280", marginTop: 3 }}>{t.desc}</span>

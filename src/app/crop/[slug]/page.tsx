@@ -4,6 +4,7 @@ import Link from "next/link";
 import { CROPS, getCrop, buildCropContent } from "@/lib/crops";
 import { blogCreative } from "@/lib/creative-images";
 import SafeImage from "@/app/_components/SafeImage";
+import ScrollReveal from "@/app/_components/ScrollReveal";
 
 const BASE = "https://www.sjpt.io";
 
@@ -51,6 +52,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(appLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
+      <ScrollReveal />
 
       <div style={{ fontFamily: "system-ui,-apple-system,sans-serif", color: "#111827", background: "#fff" }}>
         <section style={{ background: "linear-gradient(160deg,#FAF5FF 0%,#fff 55%,#FFF5FA 100%)", padding: "64px 24px 52px", textAlign: "center" }}>

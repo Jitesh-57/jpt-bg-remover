@@ -4,6 +4,7 @@ import Link from "next/link";
 import { CONVERSIONS, getConversion, buildContent } from "@/lib/conversions";
 import { blogCreative } from "@/lib/creative-images";
 import SafeImage from "@/app/_components/SafeImage";
+import ScrollReveal from "@/app/_components/ScrollReveal";
 
 const BASE = "https://www.sjpt.io";
 
@@ -62,6 +63,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(appLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
+      <ScrollReveal />
 
       <div style={{ fontFamily: "system-ui,-apple-system,sans-serif", color: "#111827", background: "#fff" }}>
         {/* HERO */}
