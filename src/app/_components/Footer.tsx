@@ -34,6 +34,7 @@ const FREE_TOOLS = [
 ];
 
 const ALL_COMPANY = [
+  { labelKey: "All Tools", href: "/tools" },
   { labelKey: "Pricing", href: "/pricing" },
   { labelKey: "Blog",    href: "/blog" },
   { labelKey: "Contact", href: "mailto:patil.jitesh866@gmail.com" },
