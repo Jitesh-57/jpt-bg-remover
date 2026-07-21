@@ -2,6 +2,7 @@
 
 import { useRef, useState, useCallback, useEffect } from "react";
 import PricingModal from "@/app/_components/PricingModal";
+import ToolIcon from "@/app/editor/ToolIcon";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
 import {
   cropToAspectRatio, rotateFlipImage, compressToJpeg, convertImageFormat,
@@ -538,9 +539,10 @@ export default function BatchEditorPage() {
               const active = selectedTools.has(t.id);
               return (
                 <button key={t.id} onClick={() => toggleTool(t.id)}
-                  style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4, padding: "8px 14px", borderRadius: 12, border: "2px solid", borderColor: active ? "#6366F1" : "transparent", background: active ? "#EEEEFF" : "#F5F5F5", cursor: "pointer", minWidth: 64, flexShrink: 0 }}>
-                  <span style={{ fontSize: 20 }}>{t.icon}</span>
+                  style={{ position: "relative", display: "flex", flexDirection: "column", alignItems: "center", gap: 4, padding: "8px 14px", borderRadius: 12, border: "2px solid", borderColor: active ? "#6366F1" : "transparent", background: active ? "#EEEEFF" : "#F5F5F5", cursor: "pointer", minWidth: 64, flexShrink: 0 }}>
+                  <ToolIcon id={t.id} active={active} size={32} />
                   <span style={{ fontSize: 10, fontWeight: 600, color: active ? "#6366F1" : "#666", whiteSpace: "nowrap" }}>{t.label}</span>
+                  <span style={{ position: "absolute", top: 4, right: 4, width: 16, height: 16, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", background: active ? "#6366F1" : "#E0E7FF", color: active ? "#fff" : "#6366F1", fontSize: 11, fontWeight: 800, lineHeight: 1 }}>{active ? "✓" : "+"}</span>
                 </button>
               );
             })}
@@ -785,20 +787,13 @@ export default function BatchEditorPage() {
                 const active = selectedTools.has(t.id);
                 const optOpen = openOptionsFor === t.id;
                 return (
-                  <button key={t.id} onClick={() => toggleTool(t.id)} style={{
+                  <button key={t.id} onClick={() => toggleTool(t.id)} title={active ? `Remove ${t.label}` : `Add ${t.label}`} style={{
                     padding: "10px 12px", borderRadius: 10, textAlign: "left", cursor: "pointer",
                     border: active ? "2px solid #6366F1" : "1.5px solid #E5E7EB",
                     background: optOpen ? "#EEF2FF" : active ? "#F5F3FF" : "#FAFAFA",
                     display: "flex", alignItems: "center", gap: 10,
                   }}>
-                    <div style={{
-                      width: 18, height: 18, borderRadius: 5, border: active ? "2px solid #6366F1" : "2px solid #D1D5DB",
-                      background: active ? "#6366F1" : "transparent", flexShrink: 0,
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                    }}>
-                      {active && <span style={{ color: "#fff", fontSize: 12, lineHeight: 1 }}>✓</span>}
-                    </div>
-                    <span style={{ fontSize: 16 }}>{t.icon}</span>
+                    <ToolIcon id={t.id} active={active} size={34} />
                     <div style={{ flex: 1 }}>
                       <div style={{ fontSize: 13, fontWeight: 700, color: active ? "#6366F1" : "#111" }}>{t.label}</div>
                       <div style={{ fontSize: 11, color: "#9CA3AF" }}>
@@ -806,7 +801,13 @@ export default function BatchEditorPage() {
                         {t.aiOnly && " · Paid plan"}
                       </div>
                     </div>
-                    {active && <span style={{ fontSize: 14, color: "#6366F1", fontWeight: 700 }}>›</span>}
+                    {/* Add / added affordance (replaces the checkbox tickmark) */}
+                    <span style={{
+                      width: 24, height: 24, borderRadius: "50%", flexShrink: 0,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      background: active ? "linear-gradient(135deg,#6366F1,#8B5CF6)" : "#EEF2FF",
+                      color: active ? "#fff" : "#6366F1", fontSize: 16, fontWeight: 800, lineHeight: 1,
+                    }}>{active ? "✓" : "+"}</span>
                   </button>
                 );
               })}
