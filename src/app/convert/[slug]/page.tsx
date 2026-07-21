@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { CONVERSIONS, getConversion, buildContent } from "@/lib/conversions";
+import { blogCreative } from "@/lib/creative-images";
+import SafeImage from "@/app/_components/SafeImage";
 
 const BASE = "https://www.sjpt.io";
 
@@ -81,6 +83,12 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             <Link href={toolHref} style={{ display: "inline-block", background: GRAD, color: "#fff", borderRadius: 12, padding: "15px 34px", fontSize: 16, fontWeight: 800, textDecoration: "none", boxShadow: "0 8px 24px rgba(99,102,241,0.35)" }}>
               Convert {ct.fromLabel} to {ct.toLabel} →
             </Link>
+            <SafeImage
+              src={blogCreative(`convert-${slug}`)}
+              alt={`Convert ${ct.fromLabel} to ${ct.toLabel} — before and after`}
+              wrapperStyle={{ maxWidth: 600, margin: "40px auto 0" }}
+              style={{ width: "100%", height: "auto", display: "block", borderRadius: 16, border: "1px solid #E6E8F2", boxShadow: "0 18px 50px rgba(99,102,241,0.14)" }}
+            />
           </div>
         </section>
 

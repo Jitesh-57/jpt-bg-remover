@@ -297,6 +297,44 @@ async function compressOnCanvas(dataUrl: string, quality: number): Promise<strin
   return canvas.toDataURL("image/jpeg", Math.min(1, Math.max(0.05, quality)));
 }
 
+// Re-encode a JPEG at a target width/height and quality.
+async function jpegAtScale(dataUrl: string, scale: number, quality: number): Promise<string> {
+  const img = await loadImg(dataUrl);
+  const w = Math.max(48, Math.round(img.naturalWidth * scale));
+  const h = Math.max(48, Math.round(img.naturalHeight * scale));
+  const canvas = document.createElement("canvas");
+  canvas.width = w; canvas.height = h;
+  const ctx = canvas.getContext("2d")!;
+  ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, w, h);
+  ctx.drawImage(img, 0, 0, w, h);
+  return canvas.toDataURL("image/jpeg", Math.min(1, Math.max(0.05, quality)));
+}
+
+// Compress to at most `targetKb` KB: binary-search JPEG quality, then
+// progressively downscale if the image can't fit at full resolution.
+async function compressToTargetKb(dataUrl: string, targetKb: number): Promise<string> {
+  const target = targetKb * 1024;
+  const bestUnder = async (url: string): Promise<string | null> => {
+    let lo = 0.05, hi = 0.95, best: string | null = null;
+    for (let i = 0; i < 7; i++) {
+      const q = (lo + hi) / 2;
+      const out = await compressOnCanvas(url, q);
+      if (dataUrlBytes(out) <= target) { best = out; lo = q; } else { hi = q; }
+    }
+    return best;
+  };
+  let best = await bestUnder(dataUrl);
+  if (best) return best;
+  // Too big even at low quality — downscale in steps and retry.
+  let scale = 1;
+  for (let i = 0; i < 7 && !best; i++) {
+    scale *= 0.8;
+    const scaled = await jpegAtScale(dataUrl, scale, 0.85);
+    best = await bestUnder(scaled);
+  }
+  return best || jpegAtScale(dataUrl, scale, 0.4);
+}
+
 // Convert to a target format. PNG/WEBP keep transparency; JPG flattens to white.
 async function convertOnCanvas(dataUrl: string, format: "png" | "jpeg" | "webp"): Promise<string> {
   const img = await loadImg(dataUrl);
@@ -454,6 +492,7 @@ export default function ImageEditorPage() {
   // Crop / Rotate / Compress / Convert
   const [cropRatio, setCropRatio] = useState<string>("1:1");
   const [compressQuality, setCompressQuality] = useState(70);
+  const [compressTargetKb, setCompressTargetKb] = useState(0); // 0 = quality mode
   const [convertFormat, setConvertFormat] = useState<"png" | "jpeg" | "webp">("png");
   // Watermark / Meme
   const [wmText, setWmText] = useState("");
@@ -634,6 +673,16 @@ export default function ImageEditorPage() {
       const to = (qs.get("to") || "").toLowerCase();
       const fmt = to === "jpg" ? "jpeg" : to;
       if (fmt === "png" || fmt === "jpeg" || fmt === "webp") setConvertFormat(fmt);
+    }
+    // Optional target size (KB) for Compress — e.g. /editor?tool=compress&target=100
+    if (toolParam === "compress") {
+      const tk = parseInt(qs.get("target") || "0", 10);
+      if (tk > 0) setCompressTargetKb(tk);
+    }
+    // Optional aspect ratio for Crop — e.g. /editor?tool=crop&ratio=1:1
+    if (toolParam === "crop") {
+      const ratio = (qs.get("ratio") || "").toLowerCase();
+      if (/^\d+:\d+$/.test(ratio) || ratio === "circle") setCropRatio(ratio);
     }
 
     // 2. Pending image/prompt from sessionStorage (from My Library "Open in Editor")
@@ -1067,14 +1116,16 @@ export default function ImageEditorPage() {
     setProcessing(true); setError(null);
     try {
       const before = dataUrlBytes(src);
-      const result = await compressOnCanvas(src, compressQuality / 100);
+      const result = compressTargetKb > 0
+        ? await compressToTargetKb(src, compressTargetKb)
+        : await compressOnCanvas(src, compressQuality / 100);
       const after = dataUrlBytes(result);
       const pct = before > 0 ? Math.max(0, Math.round((1 - after / before) * 100)) : 0;
       setEditHistory(prev => working ? [...prev, working] : prev);
       setWorking(result);
       setToolResult({ title: `Compressed to ${humanSize(after)}`, detail: `${humanSize(before)} → ${humanSize(after)} · ${pct}% smaller` });
       recordAnonTransform();
-      autoSaveToDrive(result, "compress", `${compressQuality}%`);
+      autoSaveToDrive(result, "compress", compressTargetKb > 0 ? `${compressTargetKb}KB` : `${compressQuality}%`);
     }
     catch { setError("Compress failed."); }
     finally { setProcessing(false); }
@@ -2162,19 +2213,39 @@ export default function ImageEditorPage() {
                 <div style={s.panelContent}>
                   <div style={s.panelTitle}>🗜️ Compress</div>
                   <p style={s.panelSub}>Shrink file size for web &amp; email — free</p>
-                  <div style={s.sliderRow}>
-                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                      <span style={s.inputLabel}>Quality</span>
-                      <span style={{ fontSize: 12, fontWeight: 700, color: "#6366F1" }}>{compressQuality}%</span>
-                    </div>
-                    <input type="range" min={10} max={95} value={compressQuality} onChange={(e) => setCompressQuality(parseInt(e.target.value))} style={{ width: "100%" }} />
-                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "#AAA", marginTop: 2 }}>
-                      <span>Smaller file</span><span>Higher quality</span>
-                    </div>
+                  {/* Mode toggle: by quality vs to a target size */}
+                  <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
+                    <button onClick={() => setCompressTargetKb(0)} style={{ flex: 1, padding: "9px 8px", borderRadius: 9, border: compressTargetKb === 0 ? "2px solid #6366F1" : "1.5px solid #E0E0EE", background: compressTargetKb === 0 ? "#EEEEFF" : "#FAFAFA", color: compressTargetKb === 0 ? "#6366F1" : "#999", cursor: "pointer", fontWeight: 800, fontSize: 12.5 }}>By quality</button>
+                    <button onClick={() => setCompressTargetKb(compressTargetKb || 100)} style={{ flex: 1, padding: "9px 8px", borderRadius: 9, border: compressTargetKb > 0 ? "2px solid #6366F1" : "1.5px solid #E0E0EE", background: compressTargetKb > 0 ? "#EEEEFF" : "#FAFAFA", color: compressTargetKb > 0 ? "#6366F1" : "#999", cursor: "pointer", fontWeight: 800, fontSize: 12.5 }}>Target size</button>
                   </div>
+                  {compressTargetKb > 0 ? (
+                    <div style={s.sliderRow}>
+                      <span style={s.inputLabel}>Target size (KB)</span>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 6 }}>
+                        <input type="number" min={5} max={5000} value={compressTargetKb} onChange={(e) => setCompressTargetKb(Math.max(5, parseInt(e.target.value) || 0))} style={{ width: 100, padding: "9px 10px", borderRadius: 9, border: "1.5px solid #E0E0EE", fontSize: 14, fontWeight: 700 }} />
+                        <span style={{ fontSize: 12, color: "#888" }}>KB or smaller</span>
+                      </div>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 10 }}>
+                        {[20, 50, 100, 200, 500].map((k) => (
+                          <button key={k} onClick={() => setCompressTargetKb(k)} style={{ padding: "5px 11px", borderRadius: 999, border: compressTargetKb === k ? "1.5px solid #6366F1" : "1px solid #E0E0EE", background: compressTargetKb === k ? "#EEEEFF" : "#fff", color: compressTargetKb === k ? "#6366F1" : "#888", cursor: "pointer", fontSize: 12, fontWeight: 700 }}>{k}KB</button>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <div style={s.sliderRow}>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                        <span style={s.inputLabel}>Quality</span>
+                        <span style={{ fontSize: 12, fontWeight: 700, color: "#6366F1" }}>{compressQuality}%</span>
+                      </div>
+                      <input type="range" min={10} max={95} value={compressQuality} onChange={(e) => setCompressQuality(parseInt(e.target.value))} style={{ width: "100%" }} />
+                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "#AAA", marginTop: 2 }}>
+                        <span>Smaller file</span><span>Higher quality</span>
+                      </div>
+                    </div>
+                  )}
                   <div style={{ fontSize: 12, color: "#888", marginBottom: 10 }}>Current size: ~{humanSize(dataUrlBytes(src))}</div>
                   <button style={{ ...s.primaryBtn, ...(processing ? s.btnOff : {}) }} disabled={processing} onClick={handleCompress}>
-                    {processing ? <span style={s.btnRow}><span style={s.spin} />Compressing…</span> : "🗜️ Compress Image"}
+                    {processing ? <span style={s.btnRow}><span style={s.spin} />Compressing…</span> : compressTargetKb > 0 ? `🗜️ Compress to ${compressTargetKb}KB` : "🗜️ Compress Image"}
                   </button>
                   {resultBlock() || <p style={{ fontSize: 12, color: "#94A3B8", marginTop: 10, textAlign: "center" }}>Compress, then download the smaller JPG.</p>}
                 </div>

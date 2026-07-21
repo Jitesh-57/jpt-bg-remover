@@ -3,6 +3,8 @@ import { POSTS } from "./blog/_data/posts";
 import { VARIANTS, PARENT_META } from "@/lib/landing-variants";
 import { CREATIVE_APPS, CREATIVE_BASE } from "@/lib/creative-apps";
 import { CONVERSIONS } from "@/lib/conversions";
+import { COMPRESSIONS } from "@/lib/compressions";
+import { CROPS } from "@/lib/crops";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
 
 const BASE = "https://www.sjpt.io";
@@ -48,15 +50,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     }));
 
-  // Programmatic image-conversion landing pages (e.g. /convert/png-to-jpg).
+  // Programmatic tool landing pages (conversions, compress-to-size, crop presets).
   const conversionPages: MetadataRoute.Sitemap = CONVERSIONS.map((c) => ({
-    url: `${BASE}/convert/${c.slug}`,
-    lastModified: now,
-    changeFrequency: "monthly" as const,
-    priority: 0.85,
+    url: `${BASE}/convert/${c.slug}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.85,
   }));
+  const compressPages: MetadataRoute.Sitemap = COMPRESSIONS.map((c) => ({
+    url: `${BASE}/compress/${c.slug}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.85,
+  }));
+  const cropPages: MetadataRoute.Sitemap = CROPS.map((c) => ({
+    url: `${BASE}/crop/${c.slug}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.85,
+  }));
+  const programmaticPages = [...conversionPages, ...compressPages, ...cropPages];
 
-  if (!PAID_FEATURES_ENABLED) return [...freePages, ...freeVariantPages, ...conversionPages, ...freeBlogPages];
+  if (!PAID_FEATURES_ENABLED) return [...freePages, ...freeVariantPages, ...programmaticPages, ...freeBlogPages];
 
   const paidPages: MetadataRoute.Sitemap = [
     { url: `${BASE}/remove-bg`,        lastModified: now, changeFrequency: "monthly", priority: 0.95 },
