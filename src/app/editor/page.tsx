@@ -1524,7 +1524,7 @@ export default function ImageEditorPage() {
   // ── Render ────────────────────────────────────────────────────────────────────
 
   return (
-    <div style={{ ...s.root, ...(!isMobile ? { height: "calc(100dvh - 52px)", overflow: "hidden" } : {}) }}>
+    <div style={{ ...s.root, ...(!isMobile ? { height: "calc(100dvh - 56px)", overflow: "hidden" } : {}) }}>
       {/* Always-mounted file input so Upload New Image works after an image is loaded */}
       <input ref={fileInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={(e) => { if (e.target.files?.[0]) { handleFile(e.target.files[0]); e.target.value = ""; } }} />
 
@@ -2904,7 +2904,7 @@ export default function ImageEditorPage() {
 const s: Record<string, React.CSSProperties> = {
   root: { minHeight: "100vh", background: "#F6F7FB", fontFamily: "system-ui,-apple-system,sans-serif", color: "#111", display: "flex", flexDirection: "column" },
 
-  pageHeader: { background: "rgba(255,255,255,0.97)", borderBottom: "1px solid #EAECF0", backdropFilter: "blur(8px)", position: "sticky", top: 52, zIndex: 90 },
+  pageHeader: { background: "rgba(255,255,255,0.97)", borderBottom: "1px solid #EAECF0", backdropFilter: "blur(8px)", position: "relative" as const, zIndex: 90, flexShrink: 0 },
   pageHeaderInner: { maxWidth: 1400, margin: "0 auto", padding: "8px 20px", display: "flex", alignItems: "center", gap: 12 },
   pageIcon: { fontSize: 18 },
   pageTitle: { fontSize: 14, fontWeight: 700, color: "#222", marginRight: 8 },
@@ -2921,7 +2921,7 @@ const s: Record<string, React.CSSProperties> = {
   creditsLow: { background: "#FEF3C7", color: "#D97706" },
   googleBtn: { display: "flex", alignItems: "center", gap: 8, background: "#fff", border: "1px solid #DDD", borderRadius: 8, padding: "6px 14px", fontSize: 13, fontWeight: 600, color: "#333", textDecoration: "none", whiteSpace: "nowrap" as const },
 
-  layout: { display: "flex", flex: 1, minHeight: 0 },
+  layout: { display: "flex", flex: 1, minHeight: 0, overflow: "hidden" },
   sidebar: { width: 72, flexShrink: 0, background: "#fff", borderRight: "1px solid #EAECF0", display: "flex", flexDirection: "column" as const, padding: "12px 6px", gap: 4, overflowY: "auto" as const },
   toolBtn: { width: "100%", display: "flex", flexDirection: "column" as const, alignItems: "center", gap: 4, padding: "10px 4px", borderRadius: 10, border: "none", background: "none", cursor: "pointer", color: "#555" },
   toolBtnActive: { background: "#EEEEFF", color: "#6366F1" },
