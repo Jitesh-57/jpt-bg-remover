@@ -10,6 +10,7 @@ import {
 } from "@/lib/analytics";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
 import { applyWatermark, renderMeme, type WatermarkPosition } from "@/lib/tools-canvas";
+import ToolIcon from "./ToolIcon";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -1620,7 +1621,7 @@ export default function ImageEditorPage() {
               title={`${t.label}${t.free || ["resize", "adjust"].includes(t.id ?? "") ? " (Free)" : ` (${CREDIT_COST} credits, or a free trial)`}`}
               style={{ ...s.toolBtn, ...(activeTool === t.id ? s.toolBtnActive : {}), ...(!hasImage ? { opacity: 0.35, cursor: "not-allowed" } : {}) }}
             >
-              <span style={{ fontSize: 22 }}>{t.icon}</span>
+              <ToolIcon id={t.id ?? "default"} active={activeTool === t.id} size={38} />
               <span style={s.toolLabel}>{t.label}</span>
             </button>
           ))}
