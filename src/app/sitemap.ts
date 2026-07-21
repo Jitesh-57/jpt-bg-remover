@@ -2,6 +2,7 @@ import { MetadataRoute } from "next";
 import { POSTS } from "./blog/_data/posts";
 import { VARIANTS, PARENT_META } from "@/lib/landing-variants";
 import { CREATIVE_APPS, CREATIVE_BASE } from "@/lib/creative-apps";
+import { CONVERSIONS } from "@/lib/conversions";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
 
 const BASE = "https://www.sjpt.io";
@@ -47,7 +48,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     }));
 
-  if (!PAID_FEATURES_ENABLED) return [...freePages, ...freeVariantPages, ...freeBlogPages];
+  // Programmatic image-conversion landing pages (e.g. /convert/png-to-jpg).
+  const conversionPages: MetadataRoute.Sitemap = CONVERSIONS.map((c) => ({
+    url: `${BASE}/convert/${c.slug}`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.85,
+  }));
+
+  if (!PAID_FEATURES_ENABLED) return [...freePages, ...freeVariantPages, ...conversionPages, ...freeBlogPages];
 
   const paidPages: MetadataRoute.Sitemap = [
     { url: `${BASE}/remove-bg`,        lastModified: now, changeFrequency: "monthly", priority: 0.95 },
