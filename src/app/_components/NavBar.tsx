@@ -6,6 +6,7 @@ import { createSupabaseClient } from "@/lib/supabase";
 import { trackSignUp, setAnalyticsUser, trackSignInClicked, trackSignInFailed, trackPaymentPopupTriggered } from "@/lib/analytics";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
+import ToolIcon, { iconKeyForHref } from "@/app/editor/ToolIcon";
 
 const PricingModal = lazy(() => import("./PricingModal"));
 
@@ -197,7 +198,7 @@ export default function NavBar() {
                           onMouseEnter={e => (e.currentTarget.style.background = "#F5F5FF")}
                           onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
                         >
-                          <div style={{ width: 36, height: 36, background: "#EEF2FF", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }}>{item.icon}</div>
+                          <ToolIcon id={iconKeyForHref(item.href)} size={36} />
                           <div>
                             <div style={{ fontSize: 14, fontWeight: 700, color: "#111827" }}>{item.label}</div>
                             <div style={{ fontSize: 12, color: "#6B7280", marginTop: 1 }}>{item.desc}</div>
@@ -226,7 +227,7 @@ export default function NavBar() {
                         <a key={item.href} href={item.href} onClick={() => setShowToolsDropdown(false)}
                           style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 10px", borderRadius: 10, textDecoration: "none" }}
                         >
-                          <div style={{ width: 38, height: 38, background: "#EEF2FF", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 19, flexShrink: 0 }}>{item.icon}</div>
+                          <ToolIcon id={iconKeyForHref(item.href)} size={38} />
                           <div>
                             <div style={{ fontSize: 14.5, fontWeight: 700, color: "#111827" }}>{item.label}</div>
                             <div style={{ fontSize: 12, color: "#6B7280", marginTop: 1 }}>{item.desc}</div>

@@ -1524,7 +1524,7 @@ export default function ImageEditorPage() {
   // ── Render ────────────────────────────────────────────────────────────────────
 
   return (
-    <div style={s.root}>
+    <div style={{ ...s.root, ...(!isMobile ? { height: "calc(100dvh - 52px)", overflow: "hidden" } : {}) }}>
       {/* Always-mounted file input so Upload New Image works after an image is loaded */}
       <input ref={fileInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={(e) => { if (e.target.files?.[0]) { handleFile(e.target.files[0]); e.target.value = ""; } }} />
 
@@ -2922,7 +2922,7 @@ const s: Record<string, React.CSSProperties> = {
   googleBtn: { display: "flex", alignItems: "center", gap: 8, background: "#fff", border: "1px solid #DDD", borderRadius: 8, padding: "6px 14px", fontSize: 13, fontWeight: 600, color: "#333", textDecoration: "none", whiteSpace: "nowrap" as const },
 
   layout: { display: "flex", flex: 1, minHeight: 0 },
-  sidebar: { width: 72, flexShrink: 0, background: "#fff", borderRight: "1px solid #EAECF0", display: "flex", flexDirection: "column" as const, padding: "12px 6px", gap: 4 },
+  sidebar: { width: 72, flexShrink: 0, background: "#fff", borderRight: "1px solid #EAECF0", display: "flex", flexDirection: "column" as const, padding: "12px 6px", gap: 4, overflowY: "auto" as const },
   toolBtn: { width: "100%", display: "flex", flexDirection: "column" as const, alignItems: "center", gap: 4, padding: "10px 4px", borderRadius: 10, border: "none", background: "none", cursor: "pointer", color: "#555" },
   toolBtnActive: { background: "#EEEEFF", color: "#6366F1" },
   toolLabel: { fontSize: 9, fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: 0.5, lineHeight: 1 },

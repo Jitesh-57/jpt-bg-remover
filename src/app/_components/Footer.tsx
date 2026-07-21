@@ -49,7 +49,7 @@ export default function Footer() {
   const { t, locale, setLocale } = useLanguage();
   const [langOpen, setLangOpen] = useState(false);
   const pathname = usePathname();
-  if (pathname?.startsWith("/lp/")) return null;
+  if (pathname?.startsWith("/lp/") || pathname === "/editor") return null;
 
   const currentLang = LANGUAGES.find(l => l.code === locale) ?? LANGUAGES[0];
 

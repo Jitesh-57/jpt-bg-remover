@@ -68,8 +68,38 @@ const GLYPHS: Record<string, React.ReactNode> = {
     <path d="M4 20a5 5 0 0 1 10 0" />
     <path d="M15 5l5 5M20 5l-5 5" />
   </>),
+  tiktok: (<>
+    <rect x="3" y="6" width="18" height="13" rx="2" />
+    <path d="M3 10h18M8 6l1.5 4M13 6l1.5 4" />
+  </>),
+  batch: (<>
+    <rect x="8" y="3" width="12" height="12" rx="2" />
+    <path d="M4 8v11a2 2 0 0 0 2 2h11" />
+  </>),
+  editor: (<>
+    <path d="M4 20l1-4L15 6l3 3L8 19z" />
+    <path d="M13.5 7.5l3 3" />
+  </>),
   default: (<><rect x="4" y="4" width="16" height="16" rx="3" /><path d="M8 12h8" /></>),
 };
+
+// Map a tool page href to an icon key (for the nav + /tools hub).
+export function iconKeyForHref(href: string): string {
+  const map: Record<string, string> = {
+    "/upscale": "upscale",
+    "/compress-image": "compress",
+    "/convert-image": "convert",
+    "/crop-image": "crop",
+    "/rotate-image": "rotate",
+    "/watermark-image": "watermark",
+    "/meme-generator": "meme",
+    "/image-to-pdf": "pdf",
+    "/tiktok-watermark-remover": "tiktok",
+    "/editor": "editor",
+    "/batch-editor": "batch",
+  };
+  return map[href] || "default";
+}
 
 export default function ToolIcon({ id, active, size = 40 }: { id: string; active?: boolean; size?: number }) {
   const gid = `tgrad-${id}`;
