@@ -29,12 +29,22 @@ const CORE_TOOLS = [
   { icon: "🧩", name: "Batch Editor", desc: "Process many images at once", href: "/batch-editor" },
 ];
 
-function Chips({ items }: { items: { href: string; label: string }[] }) {
+function Chips({ items, icon = "→" }: { items: { href: string; label: string }[]; icon?: string }) {
   return (
-    <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(210px,1fr))", gap: 12 }}>
       {items.map((i) => (
-        <Link key={i.href} href={i.href} style={{ display: "inline-flex", alignItems: "center", background: "#F5F6FB", border: "1px solid #EAECF5", borderRadius: 999, padding: "9px 16px", fontSize: 14, fontWeight: 600, color: "#334155", textDecoration: "none" }}>
-          {i.label}
+        <Link
+          key={i.href}
+          href={i.href}
+          style={{
+            display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10,
+            background: "#fff", border: "1px solid #EAECF5", borderRadius: 14, padding: "14px 16px",
+            fontSize: 14.5, fontWeight: 700, color: "#1E293B", textDecoration: "none",
+            boxShadow: "0 4px 14px rgba(30,41,90,.05)",
+          }}
+        >
+          <span>{i.label}</span>
+          <span aria-hidden style={{ color: "#6366F1", fontWeight: 800, flexShrink: 0 }}>{icon}</span>
         </Link>
       ))}
     </div>
