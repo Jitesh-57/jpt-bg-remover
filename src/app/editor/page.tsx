@@ -623,9 +623,17 @@ export default function ImageEditorPage() {
     });
 
     // 1. URL tool param — e.g. /editor?tool=upscale
-    const toolParam = new URLSearchParams(window.location.search).get("tool") as Tool;
+    const qs = new URLSearchParams(window.location.search);
+    const toolParam = qs.get("tool") as Tool;
     if (toolParam && TOOLS.some(t => t.id === toolParam)) {
       setActiveTool(toolParam);
+    }
+    // Optional target format for the Convert tool — e.g. /editor?tool=convert&to=jpeg
+    // (used by the /convert/<slug> landing pages to preselect the output).
+    if (toolParam === "convert") {
+      const to = (qs.get("to") || "").toLowerCase();
+      const fmt = to === "jpg" ? "jpeg" : to;
+      if (fmt === "png" || fmt === "jpeg" || fmt === "webp") setConvertFormat(fmt);
     }
 
     // 2. Pending image/prompt from sessionStorage (from My Library "Open in Editor")
