@@ -207,6 +207,9 @@ export default function NavBar() {
                     </div>
                   </div>
                 ))}
+                <a href="/tools" onClick={() => setShowToolsDropdown(false)} style={{ gridColumn: "1 / -1", marginTop: 12, paddingTop: 14, borderTop: "1px solid #F1F5F9", textAlign: "center", fontSize: 13.5, fontWeight: 800, color: "#6366F1", textDecoration: "none" }}>
+                  View all free tools →
+                </a>
               </div>
             )}
           </div>
@@ -233,6 +236,9 @@ export default function NavBar() {
                     </div>
                   </div>
                 ))}
+                <a href="/tools" onClick={() => setShowToolsDropdown(false)} style={{ display: "block", marginTop: 10, paddingTop: 14, borderTop: "1px solid #F1F5F9", textAlign: "center", fontSize: 14, fontWeight: 800, color: "#6366F1", textDecoration: "none" }}>
+                  View all free tools →
+                </a>
               </div>
             </div>
           )}

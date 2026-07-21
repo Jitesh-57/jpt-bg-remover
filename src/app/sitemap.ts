@@ -15,6 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Only the free, live pages are indexed in free-only mode.
   const freePages: MetadataRoute.Sitemap = [
     { url: BASE,                       lastModified: now, changeFrequency: "weekly",  priority: 1.0 },
+    { url: `${BASE}/tools`,            lastModified: now, changeFrequency: "weekly",  priority: 0.9 },
     { url: `${BASE}/upscale`,          lastModified: now, changeFrequency: "monthly", priority: 0.95 },
     { url: `${BASE}/compress-image`,   lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/convert-image`,    lastModified: now, changeFrequency: "monthly", priority: 0.9 },
