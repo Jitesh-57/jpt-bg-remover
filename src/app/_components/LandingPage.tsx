@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState, DragEvent } from 'react'
+import { useRef, useState, useEffect, DragEvent } from 'react'
 import FAQAccordion from './FAQAccordion'
 import { PageSEO } from '@/lib/page-config'
 import { PAGE_IMAGES, PAGE_BEFORE_AFTER } from '@/lib/landing-images'
@@ -383,6 +383,28 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
   const beforeAfter = PAGE_BEFORE_AFTER[pageId]
   const fileRef = useRef<HTMLInputElement>(null)
   const [isDragging, setIsDragging] = useState(false)
+  const rootRef = useRef<HTMLDivElement>(null)
+
+  // Scroll-reveal: sections fade + rise into view as the user scrolls. Applied
+  // generically to every <section>, so all pages using this component animate.
+  // The reveal class is added by JS, so with JS off the content stays visible.
+  useEffect(() => {
+    const root = rootRef.current
+    if (!root) return
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return
+    const sections = Array.from(root.querySelectorAll('section')) as HTMLElement[]
+    sections.forEach((el) => el.classList.add('jpt-reveal'))
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) { e.target.classList.add('jpt-in'); io.unobserve(e.target) }
+        })
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -8% 0px' }
+    )
+    sections.forEach((el) => io.observe(el))
+    return () => io.disconnect()
+  }, [])
 
   const editorTool = PAGE_TOOL[pageId]
 
@@ -416,18 +438,32 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
   }
 
   return (
-    <div style={{ fontFamily: 'system-ui, -apple-system, sans-serif', color: '#111827', background: '#fff' }}>
+    <div ref={rootRef} style={{ fontFamily: 'system-ui, -apple-system, sans-serif', color: '#111827', background: '#fff' }}>
 
       {/* Structured data for rich results */}
       {faqLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />}
       {breadcrumbLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />}
 
 
-      {/* Hero decoration animation + mobile hide */}
+      {/* Animations: floating hero decor, scroll reveal, CTA shine */}
       <style>{`
         @keyframes jptFloat { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-12px) } }
         .jpt-hero-deco { animation: jptFloat 5.5s ease-in-out infinite; }
         @media (max-width: 900px) { .jpt-hero-deco { display: none !important; } }
+
+        /* Scroll-reveal — added to every <section> by JS. */
+        .jpt-reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1); will-change: opacity, transform; }
+        .jpt-reveal.jpt-in { opacity: 1; transform: none; }
+
+        /* Sweeping shine across primary CTAs. */
+        @keyframes jptShine { 0% { left: -60% } 60%,100% { left: 130% } }
+        .jpt-shine { position: relative; overflow: hidden; }
+        .jpt-shine::after { content: ''; position: absolute; top: 0; left: -60%; width: 45%; height: 100%; background: linear-gradient(100deg, transparent, rgba(255,255,255,.45), transparent); transform: skewX(-18deg); animation: jptShine 3.6s ease-in-out infinite; pointer-events: none; }
+
+        @media (prefers-reduced-motion: reduce) {
+          .jpt-reveal { opacity: 1 !important; transform: none !important; }
+          .jpt-hero-deco, .jpt-shine::after { animation: none !important; }
+        }
       `}</style>
 
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
@@ -494,6 +530,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
               </div>
 
               <button
+                className="jpt-shine"
                 onClick={e => { e.stopPropagation(); fileRef.current?.click() }}
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 8,
