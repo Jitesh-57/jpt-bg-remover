@@ -740,7 +740,7 @@ export default function ImageEditorPage() {
 
   // Free tools are unlimited for signed-in users. Anonymous visitors get 5
   // free transforms, then must sign up (unlimited afterwards, no credits).
-  const ANON_FREE_TRANSFORMS = 5;
+  const ANON_FREE_TRANSFORMS = 2;
   const anonBlocked = (): boolean => {
     if (!authChecked || user) return false; // signed in → unlimited
     let used = 0;
@@ -1523,6 +1523,17 @@ export default function ImageEditorPage() {
 
   // ── Render ────────────────────────────────────────────────────────────────────
 
+  // Overlay shown over the image while a transformation is processing.
+  const processingOverlay = (
+    <div style={{ position: "absolute", inset: 0, zIndex: 30, borderRadius: 16, overflow: "hidden", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 14, background: "rgba(15,23,42,0.58)", backdropFilter: "blur(2px)" }}>
+      {/* sweeping scan line across the image */}
+      <div style={{ position: "absolute", left: 0, right: 0, top: 0, height: "42%", background: "linear-gradient(180deg, transparent, rgba(139,92,246,0.45), rgba(99,102,241,0.18), transparent)", animation: "jptScan 1.5s ease-in-out infinite", pointerEvents: "none" }} />
+      <div style={{ position: "relative", width: 52, height: 52, border: "4px solid rgba(255,255,255,0.25)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
+      <div style={{ position: "relative", color: "#fff", fontWeight: 800, fontSize: 15, textAlign: "center", padding: "0 18px" }}>Please wait — we&apos;re processing your image…</div>
+      <div style={{ position: "relative", color: "rgba(255,255,255,0.82)", fontSize: 12.5 }}>{processingLabel || "This usually takes just a moment"}</div>
+    </div>
+  );
+
   return (
     <div style={{ ...s.root, ...(!isMobile ? { height: "calc(100dvh - 56px)", overflow: "hidden" } : {}) }}>
       {/* Always-mounted file input so Upload New Image works after an image is loaded */}
@@ -1766,12 +1777,7 @@ export default function ImageEditorPage() {
                     </div>
 
                     {/* Processing overlay */}
-                    {processing && (
-                      <div style={{ ...s.imgOverlay, position: "absolute", inset: 0, zIndex: 5 }}>
-                        <div style={s.spinner} />
-                        <span style={{ color: "#fff", fontSize: 13, marginTop: 10 }}>{processingLabel || "Processing…"}</span>
-                      </div>
-                    )}
+                    {processing && processingOverlay}
                   </div>
 
                   {/* Action buttons below slider */}
@@ -1791,6 +1797,7 @@ export default function ImageEditorPage() {
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
                   <div style={s.imgWrap}>
                     <img src={original?.dataUrl || ""} alt="original" style={s.mainImg} />
+                    {processing && processingOverlay}
                   </div>
                   <span style={s.dimLabel}>{original?.w} × {original?.h}px</span>
                 </div>
@@ -2397,7 +2404,7 @@ export default function ImageEditorPage() {
               }}
               style={{ display: "flex", flexDirection: "column" as const, alignItems: "center", gap: 3, padding: "6px 10px", borderRadius: 10, border: "none", background: activeTool === t.id ? "#EEEEFF" : "transparent", cursor: "pointer", minWidth: 52, flexShrink: 0, opacity: !hasImage ? 0.35 : 1 }}
             >
-              <span style={{ fontSize: 20 }}>{t.icon}</span>
+              <ToolIcon id={t.id ?? "default"} active={activeTool === t.id} size={30} />
               <span style={{ fontSize: 9, fontWeight: 700, color: activeTool === t.id ? "#6366F1" : "#888", whiteSpace: "nowrap" as const }}>{t.label}</span>
             </button>
           ))}
