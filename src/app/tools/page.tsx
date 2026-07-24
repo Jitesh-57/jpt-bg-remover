@@ -38,6 +38,7 @@ function Chips({ items, icon = "→" }: { items: { href: string; label: string }
         <Link
           key={i.href}
           href={i.href}
+          className="jpt-hover"
           style={{
             display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10,
             background: "#fff", border: "1px solid #EAECF5", borderRadius: 14, padding: "14px 16px",
@@ -112,7 +113,7 @@ export default function ToolsPage() {
             <SectionTitle sub="The essentials — one click to open each editor.">Core tools</SectionTitle>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(230px,1fr))", gap: 16 }}>
               {CORE_TOOLS.map((t) => (
-                <Link key={t.href} href={t.href} style={{ display: "flex", gap: 12, alignItems: "flex-start", background: "#fff", border: "1px solid #EAECF5", borderRadius: 16, padding: "18px 18px", textDecoration: "none", boxShadow: "0 6px 20px rgba(30,41,90,.05)" }}>
+                <Link key={t.href} href={t.href} className="jpt-hover" style={{ display: "flex", gap: 12, alignItems: "flex-start", background: "#fff", border: "1px solid #EAECF5", borderRadius: 16, padding: "18px 18px", textDecoration: "none", boxShadow: "0 6px 20px rgba(30,41,90,.05)" }}>
                   <ToolIcon id={iconKeyForHref(t.href)} size={40} />
                   <span>
                     <span style={{ display: "block", fontSize: 15.5, fontWeight: 800, color: "#111827" }}>{t.name}</span>
