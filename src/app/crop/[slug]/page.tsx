@@ -66,7 +66,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             <p style={{ fontSize: "clamp(1rem,2vw,1.12rem)", color: "#4B5563", lineHeight: 1.7, maxWidth: 580, margin: "0 auto 30px" }}>
               Free online crop tool — no watermark, no sign-up. Crops in one click, right in your browser.
             </p>
-            <Link href={toolHref} style={{ display: "inline-block", background: GRAD, color: "#fff", borderRadius: 12, padding: "15px 34px", fontSize: 16, fontWeight: 800, textDecoration: "none", boxShadow: "0 8px 24px rgba(139,92,246,0.35)" }}>
+            <Link href={toolHref} className="jpt-hover" style={{ display: "inline-block", background: GRAD, color: "#fff", borderRadius: 12, padding: "15px 34px", fontSize: 16, fontWeight: 800, textDecoration: "none", boxShadow: "0 8px 24px rgba(139,92,246,0.35)" }}>
               Open the crop tool →
             </Link>
             <SafeImage
@@ -97,7 +97,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
               ))}
             </div>
             <div style={{ textAlign: "center", marginTop: 36 }}>
-              <Link href={toolHref} style={{ display: "inline-block", background: GRAD, color: "#fff", borderRadius: 12, padding: "13px 30px", fontSize: 15, fontWeight: 800, textDecoration: "none" }}>Crop your image now</Link>
+              <Link href={toolHref} className="jpt-hover" style={{ display: "inline-block", background: GRAD, color: "#fff", borderRadius: 12, padding: "13px 30px", fontSize: 15, fontWeight: 800, textDecoration: "none" }}>Crop your image now</Link>
             </div>
           </div>
         </section>
@@ -119,7 +119,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             <h2 style={{ fontSize: 20, fontWeight: 800, color: "#0F172A", margin: "0 0 20px", letterSpacing: "-0.02em" }}>More crop presets</h2>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
               {related.map((r) => (
-                <Link key={r.slug} href={`/crop/${r.slug}`} style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#F5F6FB", border: "1px solid #EAECF5", borderRadius: 999, padding: "9px 16px", fontSize: 14, fontWeight: 600, color: "#334155", textDecoration: "none" }}>
+                <Link key={r.slug} href={`/crop/${r.slug}`} className="jpt-hover" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#F5F6FB", border: "1px solid #EAECF5", borderRadius: 999, padding: "9px 16px", fontSize: 14, fontWeight: 600, color: "#334155", textDecoration: "none" }}>
                   {r.h1.replace(/ \(.*\)$/, "")}
                 </Link>
               ))}

@@ -84,3 +84,9 @@ body { margin: 0; padding: 0; }
 
 /* Editor "processing" scan sweep over the image. */
 @keyframes jptScan { 0% { transform: translateY(-130%); } 100% { transform: translateY(130%); } }
+
+/* Hover feedback for cards, chips and buttons (opt-in via .jpt-hover). */
+.jpt-hover { transition: transform .16s cubic-bezier(.2,.7,.3,1), box-shadow .18s ease, border-color .16s ease, background-color .16s ease; }
+.jpt-hover:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(30,41,90,.13); border-color: #C7D2FE; }
+.jpt-hover:active { transform: translateY(-1px); }
+@media (prefers-reduced-motion: reduce) { .jpt-hover, .jpt-hover:hover { transform: none !important; } }
