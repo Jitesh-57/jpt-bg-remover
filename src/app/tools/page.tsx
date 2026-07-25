@@ -28,6 +28,7 @@ const CORE_TOOLS = [
   { icon: "😂", name: "Meme Generator", desc: "Top & bottom meme text", href: "/meme-generator" },
   { icon: "📄", name: "Image to PDF", desc: "JPG & PNG to PDF", href: "/image-to-pdf" },
   { icon: "🎬", name: "TikTok No-Watermark", desc: "Download TikTok videos clean", href: "/tiktok-watermark-remover" },
+  { icon: "🪄", name: "Watermark Remover", desc: "Erase watermarks from photos", href: "/watermark-remover" },
   { icon: "🧩", name: "Batch Editor", desc: "Process many images at once", href: "/batch-editor" },
 ];
 

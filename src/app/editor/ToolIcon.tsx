@@ -95,6 +95,7 @@ export function iconKeyForHref(href: string): string {
     "/meme-generator": "meme",
     "/image-to-pdf": "pdf",
     "/tiktok-watermark-remover": "tiktok",
+    "/watermark-remover": "remove-bg",
     "/editor": "editor",
     "/batch-editor": "batch",
   };
