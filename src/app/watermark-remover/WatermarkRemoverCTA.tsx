@@ -4,7 +4,7 @@ import { useCallback, useRef, useState } from "react";
 
 // Where the "Remove Watermark" action sends the visitor. This page captures
 // watermark-remover search traffic and hands it off to the recommended tool.
-const REMOVER_URL = "https://www.gostudio.ai/watermark-remover";
+const REMOVER_URL = "https://www.gostudio.ai/watermark-remover?utm_source=jitesh-patil&utm_medium=sjpt";
 const GRAD = "linear-gradient(120deg,#6366F1,#8B5CF6)";
 
 /**

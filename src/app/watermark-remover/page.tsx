@@ -231,7 +231,7 @@ export default function Page() {
           <div style={{ maxWidth: 760, margin: "0 auto", background: GRAD, borderRadius: 22, padding: "40px 30px", textAlign: "center" }}>
             <h2 style={{ fontSize: "clamp(1.5rem,3vw,2rem)", fontWeight: 900, color: "#fff", margin: "0 0 12px", letterSpacing: "-0.02em" }}>Ready to remove your watermark?</h2>
             <p style={{ margin: "0 0 24px", fontSize: 15.5, color: "rgba(255,255,255,.92)" }}>Upload your image and get a clean, watermark-free result — free to try, no sign-up.</p>
-            <a href="https://www.gostudio.ai/watermark-remover" rel="sponsored nofollow noopener" className="jpt-hover" style={{ display: "inline-block", background: "#fff", color: "#6366F1", borderRadius: 12, padding: "15px 34px", fontSize: 16, fontWeight: 800, textDecoration: "none" }}>
+            <a href="https://www.gostudio.ai/watermark-remover?utm_source=jitesh-patil&utm_medium=sjpt" rel="sponsored nofollow noopener" className="jpt-hover" style={{ display: "inline-block", background: "#fff", color: "#6366F1", borderRadius: 12, padding: "15px 34px", fontSize: 16, fontWeight: 800, textDecoration: "none" }}>
               Remove Watermark Now →
             </a>
           </div>
