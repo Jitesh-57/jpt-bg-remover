@@ -23,6 +23,7 @@ import { TIKTOK_POSTS } from "./tiktok-posts";
 import { SEO_POSTS } from "./seo-posts";
 import { SEO_POSTS_2 } from "./seo-posts-2";
 import { SEO_POSTS_3 } from "./seo-posts-3";
+import { SEO_POSTS_4 } from "./seo-posts-4";
 
 const RAW_POSTS: BlogPost[] = [
   {
@@ -14356,10 +14357,10 @@ Ready to make your listings shine? Head to JPT AI's AI Editor at sjpt.io and enh
 const LIVE_TOOL_PREFIXES = [
   "/upscale", "/compress-image", "/convert-image", "/crop-image",
   "/rotate-image", "/watermark-image", "/meme-generator", "/image-to-pdf",
-  "/tiktok-watermark-remover",
+  "/tiktok-watermark-remover", "/watermark-remover",
 ];
 
-export const POSTS: BlogPost[] = [...RAW_POSTS, ...UPSCALE_POSTS, ...UPSCALE_FREE_POSTS, ...UPSCALE_FREE_POSTS_2, ...TOOL_FREE_POSTS, ...TIKTOK_POSTS, ...SEO_POSTS, ...SEO_POSTS_2, ...SEO_POSTS_3]
+export const POSTS: BlogPost[] = [...RAW_POSTS, ...UPSCALE_POSTS, ...UPSCALE_FREE_POSTS, ...UPSCALE_FREE_POSTS_2, ...TOOL_FREE_POSTS, ...TIKTOK_POSTS, ...SEO_POSTS, ...SEO_POSTS_2, ...SEO_POSTS_3, ...SEO_POSTS_4]
   .filter((p) => LIVE_TOOL_PREFIXES.some((pre) => p.toolHref.startsWith(pre)))
   .map((p) => ({ ...p, image: p.image || blogImageUrl(p.slug) }))
   .sort((a, b) => (a.date < b.date ? 1 : -1));

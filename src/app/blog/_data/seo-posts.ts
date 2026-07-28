@@ -1,5 +1,4 @@
 import type { BlogPost } from "./posts";
-import { blogCreative } from "@/lib/creative-images";
 
 // Keyword-targeted, full-length SEO posts supporting the free tools.
 // Batch 1 of the 30-post plan. Each links into a live free tool so it
@@ -18,7 +17,7 @@ const P = (
   toolHref: string,
   toolLabel: string,
   sections: { heading?: string; body: string }[],
-): BlogPost => ({ slug, title, metaTitle, metaDescription, excerpt, date, readTime: "10 min read", category, keywords, toolHref, toolLabel, image: blogCreative(slug), sections });
+): BlogPost => ({ slug, title, metaTitle, metaDescription, excerpt, date, readTime: "10 min read", category, keywords, toolHref, toolLabel, image: `/blog-heroes/${slug}.jpg`, sections });
 
 const FAQ = (pairs: [string, string][]) =>
   pairs.map(([q, a]) => `**${q}**\n${a}`).join("\n\n");
