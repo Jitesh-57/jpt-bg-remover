@@ -1,5 +1,4 @@
 import type { BlogPost } from "./posts";
-import { blogCreative } from "@/lib/creative-images";
 
 // Keyword-targeted SEO posts — batch 3 (21–30). Each links to a live free
 // tool so it publishes, and uses a hero from the Supabase "Blogs" bucket.
@@ -8,7 +7,7 @@ const P = (
   slug: string, title: string, metaTitle: string, metaDescription: string, excerpt: string,
   date: string, category: string, keywords: string[], toolHref: string, toolLabel: string,
   sections: { heading?: string; body: string }[],
-): BlogPost => ({ slug, title, metaTitle, metaDescription, excerpt, date, readTime: "10 min read", category, keywords, toolHref, toolLabel, image: blogCreative(slug), sections });
+): BlogPost => ({ slug, title, metaTitle, metaDescription, excerpt, date, readTime: "10 min read", category, keywords, toolHref, toolLabel, image: `/blog-heroes/${slug}.jpg`, sections });
 
 const FAQ = (pairs: [string, string][]) => pairs.map(([q, a]) => `**${q}**\n${a}`).join("\n\n");
 
