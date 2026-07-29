@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
-import { FREE_TRIAL_LIMIT } from "@/lib/auth";
+import { FREE_TRIAL_LIMIT, resolveUnlimited } from "@/lib/auth";
 
 export const runtime = "nodejs";
 
@@ -30,7 +30,8 @@ export async function GET(req: NextRequest) {
     .single() as { data: { name?: string; picture?: string; credits?: number; plan?: string } | null };
 
   const credits = profile ? (profile.credits ?? 0) : 0;
-  const plan = profile?.plan || "free";
+  // Honour "unlimited" only while its 30-day window is open, else fall to free.
+  const { plan, expiresAt: planExpiresAt } = resolveUnlimited(profile?.plan, user.user_metadata);
 
   const trialToolsUsedRaw = user.user_metadata?.trial_tools_used;
   const trialToolsUsed: string[] = Array.isArray(trialToolsUsedRaw)
@@ -45,6 +46,7 @@ export async function GET(req: NextRequest) {
     picture: profile?.picture || user.user_metadata?.avatar_url,
     credits,
     plan,
+    planExpiresAt,
     trialToolsUsed,
     trialsRemaining: Math.max(0, FREE_TRIAL_LIMIT - trialToolsUsed.length),
   });

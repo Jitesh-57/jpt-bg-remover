@@ -14,12 +14,12 @@ declare global {
 const GRAD = "linear-gradient(135deg,#6366F1,#8B5CF6)";
 
 const FEATURES = [
-  "Unlimited transformations — no credits, no caps",
+  "Unlimited transformations for 30 days",
   "Unlimited 4× AI upscaling",
   "Unlimited batch processing",
   "Access to every tool on JPT AI",
-  "No watermark",
-  "One-time payment — no subscription",
+  "No watermark · no credits, no caps",
+  "One-time payment — no subscription, no auto-renew",
 ];
 
 export default function PricingPage() {
@@ -125,7 +125,7 @@ export default function PricingPage() {
           Go Unlimited for {UNLIMITED_PRICE_LABEL}
         </h1>
         <p style={{ fontSize: 18, color: "#6B7280", margin: 0 }}>
-          One simple payment unlocks every tool with unlimited transformations. No subscription, no credits to count.
+          One payment unlocks every tool with unlimited transformations for 30 days. No subscription, no auto-renew, no credits to count.
         </p>
       </div>
 

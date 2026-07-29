@@ -59,6 +59,23 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Failed to update credits" }, { status: 500 });
   }
 
+  // The "Unlimited" purchase is a one-time, 30-day pass (no subscription). Store
+  // the expiry in Supabase Auth user_metadata so it needs no DB schema change;
+  // the auth layer downgrades to "free" once it passes.
+  let expiresAt: string | undefined;
+  if (plan === "unlimited") {
+    expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+    try {
+      const { data } = await admin.auth.admin.getUserById(session!.userId);
+      const md = data?.user?.user_metadata || {};
+      await admin.auth.admin.updateUserById(session!.userId, {
+        user_metadata: { ...md, unlimited_expires_at: expiresAt },
+      });
+    } catch (e) {
+      console.error("[verify-payment] could not set unlimited expiry:", (e as Error).message);
+    }
+  }
+
   // Record the purchase for audit
   void admin.from("purchases").insert({
     user_id: session!.userId,
@@ -69,5 +86,5 @@ export async function POST(req: NextRequest) {
     amount_paise: PLAN_CREDITS[plan].amountPaise,
   }); // non-blocking, table may not exist yet
 
-  return NextResponse.json({ success: true, plan, credits: newCredits });
+  return NextResponse.json({ success: true, plan, credits: newCredits, expiresAt });
 }
