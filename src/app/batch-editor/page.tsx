@@ -2,6 +2,7 @@
 
 import { useRef, useState, useCallback, useEffect } from "react";
 import PricingModal from "@/app/_components/PricingModal";
+import UnlimitedModal from "@/app/_components/UnlimitedModal";
 import ToolIcon from "@/app/editor/ToolIcon";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
 import {
@@ -139,6 +140,8 @@ export default function BatchEditorPage() {
   const removeBgImageRef = useRef<HTMLInputElement>(null);
   const [openOptionsFor, setOpenOptionsFor] = useState<TransformType | null>(null);
   const [showPricingModal, setShowPricingModal] = useState(false);
+  // Batch processing is a Pro feature — gated by the one-time Unlimited plan.
+  const [showUnlimitedModal, setShowUnlimitedModal] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [previewItem, setPreviewItem] = useState<BatchItem | null>(null);
   const [previewShowOriginal, setPreviewShowOriginal] = useState(false);
@@ -319,13 +322,10 @@ export default function BatchEditorPage() {
   const runBatch = async () => {
     if (!pendingItems.length || processing || !selectedTools.size) return;
 
-    const hasAiTool = TRANSFORMS.some(t => selectedTools.has(t.id) && t.aiOnly);
-    if (hasAiTool && user?.plan === "free") {
-      setShowPricingModal(true);
-      return;
-    }
-    if (creditsNeeded > (user?.credits ?? 0)) {
-      setShowPricingModal(true);
+    // Batch processing is a Pro feature — require the one-time Unlimited plan.
+    // The editor opens freely; only running a transformation is gated.
+    if (user?.plan !== "unlimited") {
+      setShowUnlimitedModal(true);
       return;
     }
 
@@ -502,6 +502,19 @@ export default function BatchEditorPage() {
             setShowPricingModal(false);
           }}
           prefillUser={user ? { name: user.name, email: user.email } : undefined}
+        />
+      )}
+
+      {showUnlimitedModal && (
+        <UnlimitedModal
+          onClose={() => setShowUnlimitedModal(false)}
+          loggedIn={!!user}
+          reason="batch processing"
+          prefillUser={user ? { name: user.name, email: user.email } : undefined}
+          onSuccess={() => {
+            setUser(u => u ? { ...u, plan: "unlimited" } : u);
+            setShowUnlimitedModal(false);
+          }}
         />
       )}
 
@@ -755,6 +768,8 @@ export default function BatchEditorPage() {
             >
               {processing
                 ? `Processing… ${processedCount}/${totalToProcess}`
+                : user?.plan !== "unlimited"
+                ? `🔒 Run on ${totalPending} Image${totalPending !== 1 ? "s" : ""} — Pro`
                 : `⚡ Run on ${totalPending} Image${totalPending !== 1 ? "s" : ""}`}
             </button>
             {processing && (
@@ -851,7 +866,9 @@ export default function BatchEditorPage() {
           >
             {processing
               ? `Processing… ${processedCount}/${totalToProcess}`
-              : `⚡ Run on ${totalPending} Image${totalPending !== 1 ? "s" : ""}`}
+              : user?.plan !== "unlimited"
+                ? `🔒 Run on ${totalPending} Image${totalPending !== 1 ? "s" : ""} — Pro`
+                : `⚡ Run on ${totalPending} Image${totalPending !== 1 ? "s" : ""}`}
           </button>
 
           {processing && (

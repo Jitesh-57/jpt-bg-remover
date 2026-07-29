@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { trackBeginCheckout, trackPurchase, trackBuyButtonClicked, trackPaymentFailed } from "@/lib/analytics";
+import { UNLIMITED_PRICE_LABEL, UNLIMITED_PRICE_SUB } from "@/app/_components/UnlimitedModal";
 
 declare global {
   interface Window {
@@ -10,27 +11,38 @@ declare global {
   }
 }
 
-const plans = [
-  { name: "Starter", planKey: "starter", price: "₹499",  credits: 50,  transformations: "~25",  popular: false, accent: "#6366F1", bg: "linear-gradient(135deg, #f8f7ff 0%, #eef2ff 100%)", border: "#c7d2fe" },
-  { name: "Creator", planKey: "creator", price: "₹999",  credits: 100, transformations: "~50",  popular: false, accent: "#6366F1", bg: "linear-gradient(135deg, #f8f7ff 0%, #eef2ff 100%)", border: "#c7d2fe" },
-  { name: "Pro",     planKey: "pro",     price: "₹2499", credits: 300, transformations: "~150", popular: true,  accent: "#fff",    bg: "linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)",  border: "#6366F1" },
+const GRAD = "linear-gradient(135deg,#6366F1,#8B5CF6)";
+
+const FEATURES = [
+  "Unlimited transformations — no credits, no caps",
+  "Unlimited 4× AI upscaling",
+  "Unlimited batch processing",
+  "Access to every tool on JPT AI",
+  "No watermark",
+  "One-time payment — no subscription",
 ];
 
 export default function PricingPage() {
-  const { t } = useLanguage();
-  const [loading, setLoading] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
   const [statusMsg, setStatusMsg] = useState<{ text: string; ok: boolean } | null>(null);
   const [prefillUser, setPrefillUser] = useState<{ name?: string; email?: string } | null>(null);
 
   useEffect(() => {
-    fetch("/api/auth/google/me").then(r => r.json()).then((d: { authenticated?: boolean; name?: string; email?: string }) => {
-      if (d.authenticated) setPrefillUser({ name: d.name, email: d.email });
+    fetch("/api/auth/google/me").then(r => r.json()).then((d: { authenticated?: boolean; name?: string; email?: string; plan?: string }) => {
+      if (d.authenticated) { setLoggedIn(true); setPrefillUser({ name: d.name, email: d.email }); }
     }).catch(() => {});
   }, []);
 
-  async function handleBuy(planKey: string) {
-    setLoading(planKey);
+  function signInWithGoogle() {
+    window.location.href = `/api/auth/google?next=${encodeURIComponent("/pricing")}`;
+  }
+
+  async function handleBuy() {
+    setLoading(true);
     setStatusMsg(null);
+    trackBuyButtonClicked("unlimited", 415);
+    trackBeginCheckout("unlimited", 415);
 
     try {
       if (!window.Razorpay) {
@@ -46,15 +58,14 @@ export default function PricingPage() {
       const orderRes = await fetch("/api/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan: planKey }),
+        body: JSON.stringify({ plan: "unlimited" }),
       });
-      const orderData = await orderRes.json() as {
-        order_id?: string; amount?: number; currency?: string; credits?: number; error?: string;
-      };
+      const orderData = await orderRes.json() as { order_id?: string; amount?: number; currency?: string; error?: string };
 
       if (!orderRes.ok || !orderData.order_id) {
-        setStatusMsg({ text: orderData.error || "Failed to create order", ok: false });
-        setLoading(null);
+        trackPaymentFailed("unlimited", orderData.error || "order_creation_failed");
+        setStatusMsg({ text: orderData.error || "Failed to start checkout", ok: false });
+        setLoading(false);
         return;
       }
 
@@ -64,12 +75,13 @@ export default function PricingPage() {
         amount: orderData.amount,
         currency: orderData.currency || "INR",
         name: "JPT AI",
-        description: `${planKey.charAt(0).toUpperCase() + planKey.slice(1)} Plan — ${orderData.credits} credits`,
+        description: "Unlimited — all tools, unlimited transformations",
         theme: { color: "#6366F1" },
         modal: {
           ondismiss() {
-            setStatusMsg({ text: t.pricingPaymentCancelled, ok: false });
-            setLoading(null);
+            trackPaymentFailed("unlimited", "cancelled_by_user");
+            setStatusMsg({ text: "Payment cancelled", ok: false });
+            setLoading(false);
           },
         },
         handler: async (response: { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string }) => {
@@ -77,147 +89,100 @@ export default function PricingPage() {
             const verifyRes = await fetch("/api/verify-payment", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ ...response, plan: planKey }),
+              body: JSON.stringify({ ...response, plan: "unlimited" }),
             });
-            const data = await verifyRes.json() as { success?: boolean; credits?: number; error?: string };
+            const data = await verifyRes.json() as { success?: boolean; error?: string };
             if (data.success) {
-              setStatusMsg({ text: `🎉 Payment successful! You now have ${data.credits} credits.`, ok: true });
+              setStatusMsg({ text: "🎉 You're Unlimited! Every tool is unlocked.", ok: true });
+              trackPurchase("unlimited", 415, 0);
             } else {
-              setStatusMsg({ text: data.error || t.pricingVerificationFailed, ok: false });
+              trackPaymentFailed("unlimited", data.error || "verification_failed");
+              setStatusMsg({ text: data.error || "Verification failed", ok: false });
             }
           } catch {
-            setStatusMsg({ text: t.pricingVerificationError, ok: false });
+            setStatusMsg({ text: "Verification request failed", ok: false });
           }
-          setLoading(null);
+          setLoading(false);
         },
         prefill: { name: prefillUser?.name || "", email: prefillUser?.email || "" },
       });
 
       rzp.open();
     } catch (e) {
+      trackPaymentFailed("unlimited", String(e));
       setStatusMsg({ text: String(e), ok: false });
-      setLoading(null);
+      setLoading(false);
     }
   }
 
   return (
-    <main style={{ minHeight: "100vh", background: "#F9FAFB", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "60px 20px" }}>
-      <div style={{ textAlign: "center", marginBottom: 56 }}>
+    <main style={{ minHeight: "100vh", background: "linear-gradient(160deg,#F5F5FF 0%,#fff 55%,#F0FDF4 100%)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "60px 20px", fontFamily: "system-ui,-apple-system,sans-serif" }}>
+      <div style={{ textAlign: "center", marginBottom: 40, maxWidth: 620 }}>
         <div style={{ display: "inline-block", background: "#EEF2FF", color: "#6366F1", fontWeight: 700, fontSize: 13, borderRadius: 20, padding: "6px 16px", marginBottom: 20, letterSpacing: "0.05em", textTransform: "uppercase" }}>
-          {t.pricingBadge}
+          One plan · everything unlocked
         </div>
         <h1 style={{ fontSize: "clamp(2rem, 5vw, 3rem)", fontWeight: 900, color: "#111827", margin: "0 0 16px", letterSpacing: "-0.02em" }}>
-          {t.pricingH1}
+          Go Unlimited for {UNLIMITED_PRICE_LABEL}
         </h1>
-        <p style={{ fontSize: 18, color: "#6B7280", margin: 0, fontWeight: 400 }}>
-          {t.pricingSubtitle}
+        <p style={{ fontSize: 18, color: "#6B7280", margin: 0 }}>
+          One simple payment unlocks every tool with unlimited transformations. No subscription, no credits to count.
         </p>
       </div>
 
       {statusMsg && (
-        <div style={{
-          marginBottom: 32,
-          padding: "14px 24px",
-          borderRadius: 12,
-          background: statusMsg.ok ? "#ECFDF5" : "#FEF2F2",
-          color: statusMsg.ok ? "#065F46" : "#991B1B",
-          fontSize: 15,
-          fontWeight: 600,
-          maxWidth: 480,
-          textAlign: "center",
-        }}>
+        <div style={{ marginBottom: 28, padding: "14px 24px", borderRadius: 12, background: statusMsg.ok ? "#ECFDF5" : "#FEF2F2", color: statusMsg.ok ? "#065F46" : "#991B1B", fontSize: 15, fontWeight: 600, maxWidth: 480, textAlign: "center" }}>
           {statusMsg.text}
         </div>
       )}
 
-      <div style={{ display: "flex", gap: 24, flexWrap: "wrap", justifyContent: "center", alignItems: "stretch", maxWidth: 1000, width: "100%" }}>
-        {plans.map((plan) => (
-          <div
-            key={plan.name}
-            style={{
-              position: "relative",
-              background: plan.bg,
-              border: `2px solid ${plan.border}`,
-              borderRadius: 20,
-              padding: "36px 32px",
-              minWidth: 260,
-              maxWidth: 300,
-              flex: "1 1 260px",
-              boxShadow: plan.popular ? "0 20px 60px rgba(99,102,241,0.35)" : "0 4px 24px rgba(0,0,0,0.07)",
-              display: "flex",
-              flexDirection: "column",
-              transform: plan.popular ? "scale(1.04)" : "none",
-            }}
+      {/* Single plan card */}
+      <div style={{ position: "relative", background: "#fff", border: "2px solid #C7D2FE", borderRadius: 24, padding: "40px 36px", maxWidth: 420, width: "100%", boxShadow: "0 24px 70px rgba(99,102,241,0.22)" }}>
+        <div style={{ position: "absolute", top: -15, left: "50%", transform: "translateX(-50%)", background: "#F59E0B", color: "#fff", fontWeight: 800, fontSize: 12, borderRadius: 20, padding: "5px 16px", letterSpacing: "0.05em", textTransform: "uppercase", whiteSpace: "nowrap" }}>
+          ✨ Unlimited
+        </div>
+
+        <div style={{ textAlign: "center", marginBottom: 26 }}>
+          <div style={{ fontSize: 13, fontWeight: 800, color: "#6366F1", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 10 }}>Unlimited</div>
+          <div style={{ fontSize: 64, fontWeight: 900, color: "#111827", letterSpacing: "-0.03em", lineHeight: 1 }}>{UNLIMITED_PRICE_LABEL}</div>
+          <div style={{ fontSize: 14, color: "#6B7280", marginTop: 6 }}>{UNLIMITED_PRICE_SUB}</div>
+        </div>
+
+        <ul style={{ listStyle: "none", margin: "0 0 28px", padding: 0, display: "flex", flexDirection: "column", gap: 12 }}>
+          {FEATURES.map((f) => (
+            <li key={f} style={{ display: "flex", alignItems: "center", gap: 11, fontSize: 15, color: "#374151", fontWeight: 600 }}>
+              <span style={{ width: 22, height: 22, borderRadius: "50%", background: "#ECFDF5", color: "#10B981", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 900, flexShrink: 0 }}>✓</span>
+              {f}
+            </li>
+          ))}
+        </ul>
+
+        {loggedIn ? (
+          <button
+            onClick={handleBuy}
+            disabled={loading}
+            className="jpt-hover"
+            style={{ width: "100%", padding: "16px", background: loading ? "#9CA3AF" : GRAD, color: "#fff", border: "none", borderRadius: 12, fontWeight: 800, fontSize: 17, cursor: loading ? "not-allowed" : "pointer", boxShadow: "0 8px 24px rgba(99,102,241,0.35)" }}
           >
-            {plan.popular && (
-              <div style={{ position: "absolute", top: -16, left: "50%", transform: "translateX(-50%)", background: "#F59E0B", color: "#fff", fontWeight: 800, fontSize: 12, borderRadius: 20, padding: "5px 16px", letterSpacing: "0.05em", textTransform: "uppercase", boxShadow: "0 2px 8px rgba(245,158,11,0.4)" }}>
-                ⭐ Most Popular
-              </div>
-            )}
-
-            <div style={{ marginBottom: 8 }}>
-              <span style={{ fontSize: 14, fontWeight: 700, color: plan.popular ? "rgba(255,255,255,0.75)" : "#6366F1", textTransform: "uppercase", letterSpacing: "0.08em" }}>
-                {plan.name}
-              </span>
-            </div>
-
-            <div style={{ marginBottom: 24 }}>
-              <span style={{ fontSize: 56, fontWeight: 900, color: plan.popular ? "#fff" : "#111827", letterSpacing: "-0.03em", lineHeight: 1 }}>
-                {plan.price}
-              </span>
-            </div>
-
-            <div style={{ marginBottom: 28, flex: 1 }}>
-              <div style={{ background: plan.popular ? "rgba(255,255,255,0.15)" : "#fff", borderRadius: 12, padding: "16px 20px", marginBottom: 16 }}>
-                <div style={{ fontWeight: 800, fontSize: 28, color: plan.popular ? "#fff" : "#6366F1" }}>{plan.credits}</div>
-                <div style={{ fontSize: 13, color: plan.popular ? "rgba(255,255,255,0.8)" : "#6B7280", fontWeight: 500 }}>{t.pricingAiCredits}</div>
-              </div>
-
-              <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 10 }}>
-                <li style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 14, color: plan.popular ? "rgba(255,255,255,0.9)" : "#374151" }}>
-                  <span style={{ color: plan.popular ? "#A5F3C0" : "#10B981", fontWeight: 700, fontSize: 16 }}>✓</span>
-                  {plan.transformations} {t.pricingTransformations}
-                </li>
-                {[t.pricingBgRemoval, t.pricingAiEditing, t.pricingProUpscale].map(f => (
-                  <li key={f} style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 14, color: plan.popular ? "rgba(255,255,255,0.9)" : "#374151" }}>
-                    <span style={{ color: plan.popular ? "#A5F3C0" : "#10B981", fontWeight: 700, fontSize: 16 }}>✓</span>
-                    {f}
-                  </li>
-                ))}
-                <li style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 14, color: plan.popular ? "rgba(255,255,255,0.9)" : "#374151", fontWeight: 600 }}>
-                  <span style={{ color: plan.popular ? "#FCD34D" : "#F59E0B", fontWeight: 700, fontSize: 16 }}>★</span>
-                  {t.pricingCreditsExpiry}
-                </li>
-              </ul>
-            </div>
-
+            {loading ? "Processing…" : `Get Unlimited — ${UNLIMITED_PRICE_LABEL} →`}
+          </button>
+        ) : (
+          <>
             <button
-              onClick={() => handleBuy(plan.planKey)}
-              disabled={loading !== null}
-              style={{
-                display: "block",
-                width: "100%",
-                textAlign: "center",
-                padding: "14px 24px",
-                background: loading === plan.planKey ? "#9CA3AF" : plan.popular ? "#fff" : "#6366F1",
-                color: plan.popular ? "#6366F1" : "#fff",
-                borderRadius: 10,
-                fontWeight: 800,
-                fontSize: 15,
-                border: "none",
-                cursor: loading !== null ? "not-allowed" : "pointer",
-                boxShadow: plan.popular ? "0 4px 16px rgba(255,255,255,0.3)" : "0 4px 16px rgba(99,102,241,0.3)",
-                transition: "opacity 0.15s",
-              }}
+              onClick={signInWithGoogle}
+              className="jpt-hover"
+              style={{ width: "100%", padding: "15px", background: "#fff", color: "#374151", border: "1.5px solid #E5E7EB", borderRadius: 12, fontWeight: 800, fontSize: 15.5, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}
             >
-              {loading === plan.planKey ? t.pricingProcessing : `${t.pricingBuyBtn} →`}
+              <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.27-4.74 3.27-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.84 14.1a6.6 6.6 0 0 1 0-4.2V7.06H2.18a11 11 0 0 0 0 9.88l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1A11 11 0 0 0 2.18 7.06l3.66 2.84C6.71 7.3 9.14 5.38 12 5.38z"/></svg>
+              Continue with Google to unlock
             </button>
-          </div>
-        ))}
+            <p style={{ fontSize: 12.5, color: "#9AA1B4", textAlign: "center", margin: "12px 0 0" }}>
+              Sign in so your Unlimited access is saved to your account.
+            </p>
+          </>
+        )}
       </div>
 
-      <div style={{ marginTop: 48, textAlign: "center", color: "#9CA3AF", fontSize: 14 }}>
-        <p style={{ margin: "0 0 8px" }}>All plans include access to all AI tools. Credits are shared across tools.</p>
+      <div style={{ marginTop: 40, textAlign: "center", color: "#9CA3AF", fontSize: 14 }}>
         <p style={{ margin: 0 }}>Questions? <a href="mailto:support@jptai.com" style={{ color: "#6366F1", fontWeight: 600, textDecoration: "none" }}>Contact us</a></p>
       </div>
     </main>

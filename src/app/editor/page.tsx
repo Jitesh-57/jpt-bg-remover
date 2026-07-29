@@ -11,6 +11,7 @@ import {
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
 import { applyWatermark, renderMeme, type WatermarkPosition } from "@/lib/tools-canvas";
 import ToolIcon from "./ToolIcon";
+import UnlimitedModal from "@/app/_components/UnlimitedModal";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -528,6 +529,9 @@ export default function ImageEditorPage() {
   const [showAccountModal, setShowAccountModal] = useState(false);
   const [showNoCreditsModal, setShowNoCreditsModal] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  // Single "Unlimited" plan gate — used for 4× upscaling (a Pro feature).
+  const [showUnlimitedModal, setShowUnlimitedModal] = useState(false);
+  const [unlimitedReason, setUnlimitedReason] = useState<string>("");
   // Initialise from the real viewport so the first paint already uses the
   // mobile (bottom-sheet) layout — avoids the panel flashing on the right.
   const [isMobile, setIsMobile] = useState(() =>
@@ -737,6 +741,8 @@ export default function ImageEditorPage() {
   // Don't gate until the auth check has completed — avoids false sign-in
   // prompts during the brief window after OAuth redirect while cookies resolve.
   const requireSignIn = () => { if (!authChecked) return true; if (!user) { setShowSignInModal(true); return true; } return false; };
+  // Single $5 Unlimited plan — the one and only upgrade popup across the app.
+  const openUnlimited = (reason = "") => { setUnlimitedReason(reason); setShowUnlimitedModal(true); };
 
   // Free tools are unlimited for signed-in users. Anonymous visitors get 5
   // free transforms, then must sign up (unlimited afterwards, no credits).
@@ -823,10 +829,10 @@ export default function ImageEditorPage() {
     if (res.status === 401) { onBlocked?.(); setShowSignInModal(true); return null; }
     if (res.status === 402) {
       onBlocked?.();
-      if (data.upgradeRequired) { setShowUpgradeModal(true); } else { setShowNoCreditsModal(true); }
+      if (data.upgradeRequired) { openUnlimited(); } else { setShowNoCreditsModal(true); }
       return null;
     }
-    if (res.status === 403) { onBlocked?.(); setShowUpgradeModal(true); return null; }
+    if (res.status === 403) { onBlocked?.(); openUnlimited(); return null; }
     if (res.status === 429) { throw new Error("Too many requests. Please wait a minute and try again."); }
     if (!res.ok) { throw new Error(data.error || "Request failed"); }
 
@@ -941,11 +947,15 @@ export default function ImageEditorPage() {
     if (!src || processing) return;
 
     const isPro = upscaleMode === "pro";
-    // Pro upscale is an AI tool — gated by sign-in + trial/credits.
-    // Normal upscale is free & unlimited for signed-in users; anonymous
-    // visitors get one free transform, then are asked to sign up.
+    const isUnlimited = user?.plan === "unlimited";
+    // Pro (AI) upscale is gated by sign-in + trial/credits.
+    // Normal 2× upscale is free & unlimited for everyone (no account needed).
+    // Normal 4× upscale is a Pro feature — unlocked by the one-time Unlimited plan.
     if (isPro && requireSignIn()) return;
-    if (!isPro && anonBlocked()) return;
+    if (!isPro && upscaleScale === "4x" && !isUnlimited) {
+      openUnlimited("4× upscaling");
+      return;
+    }
     if (isPro) trackTransformButtonClicked("upscale-pro");
     setProcessing(true); setProcessingLabel(`${isPro ? "AI Pro" : ""} Upscaling ${upscaleScale}…`); setError(null);
     const prevCredits = user?.credits ?? 0;
@@ -1624,7 +1634,7 @@ export default function ImageEditorPage() {
                 const trialAvailable = !trialUsedForTool && (user.trialsRemaining ?? 0) > 0;
                 if (t.paid && !isPaidUser && !trialAvailable) {
                   setBlockedTool(t);
-                  setShowUpgradeModal(true);
+                  openUnlimited();
                   return;
                 }
                 setActiveTool(activeTool === t.id ? null : t.id);
@@ -1965,7 +1975,7 @@ export default function ImageEditorPage() {
                         const trialAvailable = !trialUsedForUpscalePro && (user?.trialsRemaining ?? 0) > 0;
                         if (m.key === "pro" && !isPaidUser && !trialAvailable) {
                           setBlockedTool({ id: "upscale", icon: "✨", label: "Upscale (Pro)" });
-                          setShowUpgradeModal(true);
+                          openUnlimited();
                           return;
                         }
                         setUpscaleMode(m.key);
@@ -2000,6 +2010,7 @@ export default function ImageEditorPage() {
                           onClick={() => setUpscaleScale(sc)}
                           title={tooLarge ? `Image too large for ${sc} upscaling (output would exceed 8000px)` : undefined}
                           style={{
+                            position: "relative",
                             flex: 1, padding: "12px 8px", borderRadius: 10,
                             border: upscaleScale === sc ? "2px solid #6366F1" : "1.5px solid #E0E0EE",
                             background: upscaleScale === sc ? "#EEEEFF" : "#FAFAFA",
@@ -2008,9 +2019,12 @@ export default function ImageEditorPage() {
                             opacity: tooLarge ? 0.5 : 1,
                           }}
                         >
+                          {sc === "4x" && upscaleMode !== "pro" && user?.plan !== "unlimited" && (
+                            <span style={{ position: "absolute", top: -8, right: -6, background: "linear-gradient(120deg,#7C3AED,#EC4899)", color: "#fff", fontSize: 8.5, fontWeight: 900, letterSpacing: "0.06em", borderRadius: 999, padding: "2px 6px", boxShadow: "0 2px 6px rgba(124,58,237,0.4)" }}>PRO</span>
+                          )}
                           {sc}
                           <div style={{ fontSize: 10, fontWeight: 600, marginTop: 2, color: tooLarge ? "#CCC" : upscaleScale === sc ? "#6366F1" : "#AAA" }}>
-                            {tooLarge ? "Too large" : sc === "2x" ? "Enhance" : "Ultra"}
+                            {tooLarge ? "Too large" : sc === "2x" ? "Enhance · Free" : "Ultra · Pro"}
                           </div>
                         </button>
                       );
@@ -2067,6 +2081,8 @@ export default function ImageEditorPage() {
                     ? `⚠️ Resolution Limit Reached`
                     : upscaleMode === "pro"
                     ? `✨ Pro Upscale ${upscaleScale}`
+                    : upscaleScale === "4x" && user?.plan !== "unlimited"
+                    ? `🔒 Unlock 4× — Go Unlimited`
                     : `🔍 Upscale ${upscaleScale}`}
                 </button>
                 {resultBlock()}
@@ -2397,7 +2413,7 @@ export default function ImageEditorPage() {
                 const isPaidUser = !!(user.plan && user.plan !== "free");
                 const trialUsedForTool = !!(t.id && user.trialToolsUsed?.includes(t.id));
                 const trialAvailable = !trialUsedForTool && (user.trialsRemaining ?? 0) > 0;
-                if (t.paid && !isPaidUser && !trialAvailable) { setBlockedTool(t); setShowUpgradeModal(true); return; }
+                if (t.paid && !isPaidUser && !trialAvailable) { setBlockedTool(t); openUnlimited(); return; }
                 const next = activeTool === t.id ? null : t.id;
                 setActiveTool(next);
                 setMobileSheetOpen(!!next);
@@ -2627,7 +2643,7 @@ export default function ImageEditorPage() {
                     Free plan · {user.trialsRemaining ?? 0} of {FREE_TRIAL_LIMIT} free trials left
                   </div>
                 )}
-                <button style={{ ...s.primaryBtn, marginTop: 4 }} onClick={() => { setShowAccountModal(false); setShowUpgradeModal(true); }}>
+                <button style={{ ...s.primaryBtn, marginTop: 4 }} onClick={() => { setShowAccountModal(false); openUnlimited(); }}>
                   🚀 {user.plan === "free" ? "Upgrade Plan" : "Get More Credits"}
                 </button>
               </>
@@ -2808,12 +2824,26 @@ export default function ImageEditorPage() {
               <div style={{ fontWeight: 700, marginBottom: 8 }}>Always free (no credits needed):</div>
               <div>↔️ Resize &nbsp;·&nbsp; 🎨 Color Adjust &nbsp;·&nbsp; 🔍 Normal Upscale</div>
             </div>
-            <button style={s.primaryBtn} onClick={() => { setShowNoCreditsModal(false); setShowUpgradeModal(true); }}>
+            <button style={s.primaryBtn} onClick={() => { setShowNoCreditsModal(false); openUnlimited(); }}>
               💳 Get More Credits
             </button>
             <button style={s.modalDismiss} onClick={() => setShowNoCreditsModal(false)}>Maybe later</button>
           </div>
         </div>
+      )}
+
+      {/* ── Unlimited plan modal (4× upscale gate) ────────────────────────── */}
+      {showUnlimitedModal && (
+        <UnlimitedModal
+          onClose={() => setShowUnlimitedModal(false)}
+          loggedIn={!!user}
+          reason={unlimitedReason}
+          prefillUser={{ name: user?.name, email: user?.email }}
+          onSuccess={() => {
+            setUser(u => u ? { ...u, plan: "unlimited" } : u);
+            setShowUnlimitedModal(false);
+          }}
+        />
       )}
 
       {/* ── Upgrade Modal ─────────────────────────────────────────────────── */}
