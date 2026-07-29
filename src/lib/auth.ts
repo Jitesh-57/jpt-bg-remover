@@ -28,7 +28,26 @@ export const FREE_TRIAL_LIMIT = 5;
 // Billing is now on the paid tier, so the normal 5-free-trial system is back on.
 export const AI_TOOLS_PAID_ONLY = false;
 
-export type Plan = "free" | "starter" | "creator" | "pro";
+export type Plan = "free" | "starter" | "creator" | "pro" | "unlimited";
+
+// The one-time "Unlimited" purchase grants unlimited access for 30 days (no
+// subscription). The expiry is stored in Supabase Auth user_metadata
+// (unlimited_expires_at) to avoid a DB schema change. Once past, the effective
+// plan falls back to "free".
+export const UNLIMITED_DAYS = 30;
+
+export function resolveUnlimited(
+  profilePlan: string | null | undefined,
+  metadata: Record<string, unknown> | undefined,
+): { plan: Plan; expiresAt: string | null } {
+  const base = (profilePlan as Plan) || "free";
+  if (base !== "unlimited") return { plan: base, expiresAt: null };
+  const exp = metadata?.unlimited_expires_at;
+  if (typeof exp === "string" && new Date(exp).getTime() > Date.now()) {
+    return { plan: "unlimited", expiresAt: exp };
+  }
+  return { plan: "free", expiresAt: null }; // missing or expired → downgraded
+}
 
 export interface ProfileRow {
   credits: number;
@@ -47,6 +66,7 @@ export interface KVUser {
 export interface SessionPayload {
   userId: string; email: string; name: string; picture?: string;
   provider: "google" | "email"; credits: number; plan: Plan;
+  planExpiresAt?: string | null;
   trialToolsUsed: string[]; trialsRemaining: number;
   iat: number; exp: number;
 }
@@ -149,7 +169,8 @@ export async function checkAuth(req: NextRequest): Promise<
     .eq("id", user.id)
     .single() as { data: ProfileRow | null };
 
-  const plan: Plan = (profile?.plan as Plan) || "free";
+  // "unlimited" is only honoured while its 30-day window is still open.
+  const { plan, expiresAt: planExpiresAt } = resolveUnlimited(profile?.plan, user.user_metadata);
   let credits: number;
 
   if (!profile) {
@@ -182,6 +203,7 @@ export async function checkAuth(req: NextRequest): Promise<
       provider: (user.app_metadata?.provider || "email") as "google" | "email",
       credits,
       plan,
+      planExpiresAt,
       trialToolsUsed,
       trialsRemaining: Math.max(0, FREE_TRIAL_LIMIT - trialToolsUsed.length),
       iat: 0, exp: 0,

@@ -7,7 +7,7 @@ import { trackBeginCheckout, trackPurchase, trackBuyButtonClicked, trackPaymentF
 // access to every tool. Priced in INR (~$5) so it works with the existing
 // Razorpay (INR) setup out of the box.
 export const UNLIMITED_PRICE_LABEL = "$5";
-export const UNLIMITED_PRICE_SUB = "one-time · billed as ₹415";
+export const UNLIMITED_PRICE_SUB = "30 days unlimited · one-time (billed ₹415)";
 
 interface Props {
   onClose: () => void;
@@ -25,11 +25,11 @@ declare global {
 }
 
 const FEATURES = [
+  "Unlimited transformations for 30 days",
   "Unlimited 4× upscaling",
   "Unlimited batch processing",
-  "Access to every tool",
-  "No watermark · no limits",
-  "One-time payment — no subscription",
+  "Access to every tool · no watermark",
+  "One-time payment — no subscription, no auto-renew",
 ];
 
 export default function UnlimitedModal({ onClose, loggedIn, reason, prefillUser, onSuccess }: Props) {
