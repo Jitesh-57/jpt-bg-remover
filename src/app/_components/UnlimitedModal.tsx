@@ -6,8 +6,8 @@ import { trackBeginCheckout, trackPurchase, trackBuyButtonClicked, trackPaymentF
 // Single "Unlimited" plan — one-time unlock for unlimited transformations and
 // access to every tool. Priced in INR (~$5) so it works with the existing
 // Razorpay (INR) setup out of the box.
-export const UNLIMITED_PRICE_LABEL = "₹415";
-export const UNLIMITED_PRICE_SUB = "≈ $5 · one-time";
+export const UNLIMITED_PRICE_LABEL = "$5";
+export const UNLIMITED_PRICE_SUB = "one-time · billed as ₹415";
 
 interface Props {
   onClose: () => void;

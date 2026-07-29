@@ -266,15 +266,14 @@ export default function NavBar() {
 
           <div style={{ flex: 1 }} />
 
-          {/* Pricing — right side (hidden in free-only mode) */}
-          {PAID_FEATURES_ENABLED && (
-            <a href="/pricing"
-              style={{ padding: "7px 14px", color: "#94A3B8", fontSize: 14, fontWeight: 600, textDecoration: "none", borderRadius: 8 }}
-              onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
-              onMouseLeave={e => (e.currentTarget.style.color = "#94A3B8")}>
-              {t.navPricing}
-            </a>
-          )}
+          {/* Go Unlimited — single $5 plan, always visible */}
+          <a href="/pricing"
+            style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 15px", color: "#fff", fontSize: 14, fontWeight: 800, textDecoration: "none", borderRadius: 999, background: "linear-gradient(120deg,#6366F1,#8B5CF6)", border: "1px solid rgba(255,255,255,0.15)", boxShadow: "0 4px 14px rgba(99,102,241,0.4)" }}
+            onMouseEnter={e => (e.currentTarget.style.opacity = "0.9")}
+            onMouseLeave={e => (e.currentTarget.style.opacity = "1")}>
+            <span style={{ fontSize: 13 }}>✨</span>
+            Go Unlimited
+          </a>
 
           {/* Auth */}
           {user ? (
