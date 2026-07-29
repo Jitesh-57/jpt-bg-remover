@@ -11,6 +11,7 @@ import {
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
 import { applyWatermark, renderMeme, type WatermarkPosition } from "@/lib/tools-canvas";
 import ToolIcon from "./ToolIcon";
+import UnlimitedModal from "@/app/_components/UnlimitedModal";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -528,6 +529,9 @@ export default function ImageEditorPage() {
   const [showAccountModal, setShowAccountModal] = useState(false);
   const [showNoCreditsModal, setShowNoCreditsModal] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  // Single "Unlimited" plan gate — used for 4× upscaling (a Pro feature).
+  const [showUnlimitedModal, setShowUnlimitedModal] = useState(false);
+  const [unlimitedReason, setUnlimitedReason] = useState<string>("");
   // Initialise from the real viewport so the first paint already uses the
   // mobile (bottom-sheet) layout — avoids the panel flashing on the right.
   const [isMobile, setIsMobile] = useState(() =>
@@ -941,11 +945,16 @@ export default function ImageEditorPage() {
     if (!src || processing) return;
 
     const isPro = upscaleMode === "pro";
-    // Pro upscale is an AI tool — gated by sign-in + trial/credits.
-    // Normal upscale is free & unlimited for signed-in users; anonymous
-    // visitors get one free transform, then are asked to sign up.
+    const isUnlimited = user?.plan === "unlimited";
+    // Pro (AI) upscale is gated by sign-in + trial/credits.
+    // Normal 2× upscale is free & unlimited for everyone (no account needed).
+    // Normal 4× upscale is a Pro feature — unlocked by the one-time Unlimited plan.
     if (isPro && requireSignIn()) return;
-    if (!isPro && anonBlocked()) return;
+    if (!isPro && upscaleScale === "4x" && !isUnlimited) {
+      setUnlimitedReason("4× upscaling");
+      setShowUnlimitedModal(true);
+      return;
+    }
     if (isPro) trackTransformButtonClicked("upscale-pro");
     setProcessing(true); setProcessingLabel(`${isPro ? "AI Pro" : ""} Upscaling ${upscaleScale}…`); setError(null);
     const prevCredits = user?.credits ?? 0;
@@ -2000,6 +2009,7 @@ export default function ImageEditorPage() {
                           onClick={() => setUpscaleScale(sc)}
                           title={tooLarge ? `Image too large for ${sc} upscaling (output would exceed 8000px)` : undefined}
                           style={{
+                            position: "relative",
                             flex: 1, padding: "12px 8px", borderRadius: 10,
                             border: upscaleScale === sc ? "2px solid #6366F1" : "1.5px solid #E0E0EE",
                             background: upscaleScale === sc ? "#EEEEFF" : "#FAFAFA",
@@ -2008,9 +2018,12 @@ export default function ImageEditorPage() {
                             opacity: tooLarge ? 0.5 : 1,
                           }}
                         >
+                          {sc === "4x" && upscaleMode !== "pro" && user?.plan !== "unlimited" && (
+                            <span style={{ position: "absolute", top: -8, right: -6, background: "linear-gradient(120deg,#7C3AED,#EC4899)", color: "#fff", fontSize: 8.5, fontWeight: 900, letterSpacing: "0.06em", borderRadius: 999, padding: "2px 6px", boxShadow: "0 2px 6px rgba(124,58,237,0.4)" }}>PRO</span>
+                          )}
                           {sc}
                           <div style={{ fontSize: 10, fontWeight: 600, marginTop: 2, color: tooLarge ? "#CCC" : upscaleScale === sc ? "#6366F1" : "#AAA" }}>
-                            {tooLarge ? "Too large" : sc === "2x" ? "Enhance" : "Ultra"}
+                            {tooLarge ? "Too large" : sc === "2x" ? "Enhance · Free" : "Ultra · Pro"}
                           </div>
                         </button>
                       );
@@ -2067,6 +2080,8 @@ export default function ImageEditorPage() {
                     ? `⚠️ Resolution Limit Reached`
                     : upscaleMode === "pro"
                     ? `✨ Pro Upscale ${upscaleScale}`
+                    : upscaleScale === "4x" && user?.plan !== "unlimited"
+                    ? `🔒 Unlock 4× — Go Unlimited`
                     : `🔍 Upscale ${upscaleScale}`}
                 </button>
                 {resultBlock()}
@@ -2814,6 +2829,20 @@ export default function ImageEditorPage() {
             <button style={s.modalDismiss} onClick={() => setShowNoCreditsModal(false)}>Maybe later</button>
           </div>
         </div>
+      )}
+
+      {/* ── Unlimited plan modal (4× upscale gate) ────────────────────────── */}
+      {showUnlimitedModal && (
+        <UnlimitedModal
+          onClose={() => setShowUnlimitedModal(false)}
+          loggedIn={!!user}
+          reason={unlimitedReason}
+          prefillUser={{ name: user?.name, email: user?.email }}
+          onSuccess={() => {
+            setUser(u => u ? { ...u, plan: "unlimited" } : u);
+            setShowUnlimitedModal(false);
+          }}
+        />
       )}
 
       {/* ── Upgrade Modal ─────────────────────────────────────────────────── */}

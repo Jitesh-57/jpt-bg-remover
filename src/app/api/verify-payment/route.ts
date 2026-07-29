@@ -4,10 +4,11 @@ import { checkAuth, createAdminSupabase } from "@/lib/auth";
 
 export const runtime = "nodejs";
 
-const PLAN_CREDITS: Record<string, { credits: number }> = {
-  starter: { credits: 50 },
-  creator: { credits: 100 },
-  pro:     { credits: 300 },
+const PLAN_CREDITS: Record<string, { credits: number; amountPaise: number }> = {
+  starter:   { credits: 50,     amountPaise: 49900  },
+  creator:   { credits: 100,    amountPaise: 99900  },
+  pro:       { credits: 300,    amountPaise: 249900 },
+  unlimited: { credits: 999999, amountPaise: 41500  },
 };
 
 export async function POST(req: NextRequest) {
@@ -65,7 +66,7 @@ export async function POST(req: NextRequest) {
     razorpay_payment_id,
     plan,
     credits_added: planCredits,
-    amount_paise: planCredits === 50 ? 500 : planCredits === 100 ? 1000 : 2500,
+    amount_paise: PLAN_CREDITS[plan].amountPaise,
   }); // non-blocking, table may not exist yet
 
   return NextResponse.json({ success: true, plan, credits: newCredits });

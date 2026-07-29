@@ -5,9 +5,11 @@ import { checkAuth } from "@/lib/auth";
 export const runtime = "nodejs";
 
 const PLANS: Record<string, { amountPaise: number; credits: number; planName: string }> = {
-  starter: { amountPaise: 49900,  credits: 50,  planName: "starter" },
-  creator: { amountPaise: 99900,  credits: 100, planName: "creator" },
-  pro:     { amountPaise: 249900, credits: 300, planName: "pro"     },
+  starter:   { amountPaise: 49900,  credits: 50,     planName: "starter"   },
+  creator:   { amountPaise: 99900,  credits: 100,    planName: "creator"   },
+  pro:       { amountPaise: 249900, credits: 300,    planName: "pro"       },
+  // One-time "Unlimited" unlock (~$5) — unlimited transformations + all tools.
+  unlimited: { amountPaise: 41500,  credits: 999999, planName: "unlimited" },
 };
 
 export async function POST(req: NextRequest) {
