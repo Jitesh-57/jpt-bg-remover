@@ -12,6 +12,7 @@ import { PAID_FEATURES_ENABLED } from "@/lib/features";
 import { applyWatermark, renderMeme, type WatermarkPosition } from "@/lib/tools-canvas";
 import ToolIcon from "./ToolIcon";
 import UnlimitedModal from "@/app/_components/UnlimitedModal";
+import SignInModal from "@/app/_components/SignInModal";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -524,7 +525,7 @@ export default function ImageEditorPage() {
   const [user, setUser] = useState<User | null>(null);
   const [authChecked, setAuthChecked] = useState(false);
   const [showSignInModal, setShowSignInModal] = useState(false);
-  const [, setSignInReason] = useState<"default" | "unlimited">("default");
+  const [signInReason, setSignInReason] = useState<"default" | "unlimited">("default");
   const [anonUsed, setAnonUsed] = useState(0);   // free transforms a guest has used
   const [showAccountModal, setShowAccountModal] = useState(false);
   const [showNoCreditsModal, setShowNoCreditsModal] = useState(false);
@@ -621,14 +622,7 @@ export default function ImageEditorPage() {
     }
   }
 
-  // Email auth form state
-  const [authTab, setAuthTab] = useState<"google" | "email">("google");
-  const [authMode, setAuthMode] = useState<"login" | "signup">("login");
-  const [authEmail, setAuthEmail] = useState("");
-  const [authPassword, setAuthPassword] = useState("");
-  const [authName, setAuthName] = useState("");
-  const [authError, setAuthError] = useState("");
-  const [authLoading, setAuthLoading] = useState(false);
+  // (Sign-in form state now lives in the shared SignInModal component.)
 
   // ── Effects ──────────────────────────────────────────────────────────────────
 
@@ -742,11 +736,16 @@ export default function ImageEditorPage() {
   // prompts during the brief window after OAuth redirect while cookies resolve.
   const requireSignIn = () => { if (!authChecked) return true; if (!user) { setShowSignInModal(true); return true; } return false; };
   // Single $5 Unlimited plan — the one and only upgrade popup across the app.
-  const openUnlimited = (reason = "") => { setUnlimitedReason(reason); setShowUnlimitedModal(true); };
+  // The single $5 Unlimited plan gate. Not signed in → show the sign-in popup
+  // first; signed in but not unlimited → show the $5 pricing popup.
+  const openUnlimited = (reason = "") => {
+    if (!user) { setSignInReason("default"); setShowSignInModal(true); return; }
+    setUnlimitedReason(reason); setShowUnlimitedModal(true);
+  };
 
-  // Free tools are unlimited for signed-in users. Anonymous visitors get 5
-  // free transforms, then must sign up (unlimited afterwards, no credits).
-  const ANON_FREE_TRANSFORMS = 2;
+  // Free basic tools give anonymous visitors 5 trials, then they must sign in
+  // (basic tools stay free for signed-in users; 4× upscale & batch are Pro).
+  const ANON_FREE_TRANSFORMS = 5;
   const anonBlocked = (): boolean => {
     if (!authChecked || user) return false; // signed in → unlimited
     let used = 0;
@@ -949,13 +948,15 @@ export default function ImageEditorPage() {
     const isPro = upscaleMode === "pro";
     const isUnlimited = user?.plan === "unlimited";
     // Pro (AI) upscale is gated by sign-in + trial/credits.
-    // Normal 2× upscale is free & unlimited for everyone (no account needed).
+    // Normal 2× upscale is a free basic tool (5 trials for guests, then sign in).
     // Normal 4× upscale is a Pro feature — unlocked by the one-time Unlimited plan.
     if (isPro && requireSignIn()) return;
     if (!isPro && upscaleScale === "4x" && !isUnlimited) {
       openUnlimited("4× upscaling");
       return;
     }
+    // Normal 2× upscale is a free basic tool — counts toward a guest's 5 trials.
+    if (!isPro && anonBlocked()) return;
     if (isPro) trackTransformButtonClicked("upscale-pro");
     setProcessing(true); setProcessingLabel(`${isPro ? "AI Pro" : ""} Upscaling ${upscaleScale}…`); setError(null);
     const prevCredits = user?.credits ?? 0;
@@ -1014,39 +1015,6 @@ export default function ImageEditorPage() {
     (window as unknown as { __jptPersistContext?: () => void }).__jptPersistContext = persistContextForAuth;
     return () => { delete (window as unknown as { __jptPersistContext?: () => void }).__jptPersistContext; };
   });
-
-  const handleGoogleSignIn = () => {
-    persistContextForAuth();
-    const next = window.location.pathname + window.location.search;
-    window.location.href = `/api/auth/google?next=${encodeURIComponent(next)}`;
-  };
-
-  const handleEmailAuth = async () => {
-    if (!authEmail.trim() || !authPassword.trim()) { setAuthError("Email and password required"); return; }
-    setAuthLoading(true); setAuthError("");
-    try {
-      const url  = authMode === "signup" ? "/api/auth/signup" : "/api/auth/login";
-      const body = authMode === "signup"
-        ? { email: authEmail.trim(), password: authPassword, name: authName.trim() }
-        : { email: authEmail.trim(), password: authPassword };
-      const res  = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
-      const data = await res.json() as { ok?: boolean; email?: string; name?: string; credits?: number; error?: string; needsConfirmation?: boolean };
-      if (!res.ok) {
-        if (res.status === 503) setAuthError("Email auth not yet enabled. Please use Google Sign-in.");
-        else setAuthError(data.error || "Authentication failed");
-        return;
-      }
-      if (data.needsConfirmation) {
-        setAuthError("✅ Check your email and click the confirmation link, then sign in.");
-        return;
-      }
-      setShowSignInModal(false);
-      setAuthEmail(""); setAuthPassword(""); setAuthName(""); setAuthError("");
-      persistContextForAuth();
-      window.location.reload();
-    } catch { setAuthError("Network error. Please try again."); }
-    finally { setAuthLoading(false); }
-  };
 
   const handleResize = async () => {
     const src = working || original?.dataUrl;
@@ -2653,7 +2621,7 @@ export default function ImageEditorPage() {
               </div>
             )}
             <button style={{ ...s.ghostBtn, width: "100%", justifyContent: "center", marginTop: 8 }}
-              onClick={async () => { await fetch("/api/auth/google/logout", { method: "POST" }); setUser(null); setShowAccountModal(false); setAuthTab("google"); setAuthEmail(""); setAuthPassword(""); }}>
+              onClick={async () => { await fetch("/api/auth/google/logout", { method: "POST" }); setUser(null); setShowAccountModal(false); }}>
               Sign out
             </button>
           </div>
@@ -2661,152 +2629,13 @@ export default function ImageEditorPage() {
       )}
 
       {/* ── Sign-in Modal ─────────────────────────────────────────────────── */}
-      {showSignInModal && (() => {
-        const close = () => { setShowSignInModal(false); setAuthError(""); };
-        const perks = [
-          { icon: "🔍", bg: "linear-gradient(135deg,#EEF2FF,#E0E7FF)", title: "Unlimited Image Upscale", desc: "Upscale images 2×, 4× and more — unlimited." },
-          { icon: "✨", bg: "linear-gradient(135deg,#EFF6FF,#DBEAFE)", title: "Unlimited Transformations", desc: "Edit, enhance, convert, compress and more — no limits." },
-          { icon: "🖼️", bg: "linear-gradient(135deg,#ECFDF5,#D1FAE5)", title: "Unlimited Conversions", desc: "Convert JPG, PNG, WEBP or any format — unlimited." },
-          { icon: "⬇️", bg: "linear-gradient(135deg,#FFFBEB,#FEF3C7)", title: "Unlimited Downloads", desc: "Download high-quality images as many times as you want." },
-          { icon: "🛡️", bg: "linear-gradient(135deg,#FDF2F8,#FCE7F3)", title: "No Watermarks", desc: "Clean, professional results every single time." },
-        ];
-        const trust = [
-          { icon: "🛡️", title: "Secure Login", sub: "Your data is safe", bg: "#ECFDF5" },
-          { icon: "🔒", title: "No Password Needed", sub: "Quick & easy", bg: "#EEF2FF" },
-          { icon: "❤️", title: "No Credit Card Required", sub: "Ever", bg: "#FDF2F8" },
-        ];
-        return (
-        <div style={{ position: "fixed", inset: 0, zIndex: 9999, background: "rgba(15,23,42,0.6)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }} onClick={close}>
-          <div onClick={(e) => e.stopPropagation()} style={{ position: "relative", width: "100%", maxWidth: 900, maxHeight: "94vh", overflowY: "auto", background: "#fff", borderRadius: 24, boxShadow: "0 30px 90px rgba(0,0,0,0.4)", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr" }}>
-
-            {/* Close */}
-            <button onClick={close} aria-label="Close" style={{ position: "absolute", top: 14, right: 14, zIndex: 2, width: 34, height: 34, borderRadius: "50%", border: "none", background: "#fff", boxShadow: "0 2px 10px rgba(0,0,0,0.14)", cursor: "pointer", fontSize: 18, color: "#64748B", lineHeight: 1 }}>×</button>
-
-            {/* ── LEFT: value column ── */}
-            <div style={{ padding: isMobile ? "26px 22px 6px" : "38px 34px", background: "linear-gradient(165deg,#F7F8FF 0%,#FFFFFF 55%,#F3FBF6 100%)" }}>
-              <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "#DCFCE7", color: "#16A34A", fontWeight: 800, fontSize: 11.5, letterSpacing: "0.05em", borderRadius: 20, padding: "6px 14px", marginBottom: 18 }}>
-                ♾️ 100% FREE · NO LIMITS · FOREVER
-              </div>
-              <h2 style={{ fontSize: isMobile ? "1.7rem" : "2.1rem", fontWeight: 900, lineHeight: 1.1, letterSpacing: "-0.02em", color: "#0F172A", margin: "0 0 12px" }}>
-                Unlimited Access to <span style={{ background: "linear-gradient(120deg,#6366F1,#8B5CF6)", WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", color: "transparent" }}>All AI Image Tools</span>
-              </h2>
-              <p style={{ fontSize: 15, color: "#4B5563", lineHeight: 1.6, margin: "0 0 22px" }}>
-                Create your free account and enjoy everything without limits. <strong style={{ color: "#16A34A" }}>Always free</strong>, always yours.
-              </p>
-
-              {!isMobile && (
-                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                  {perks.map((p) => (
-                    <div key={p.title} style={{ display: "flex", alignItems: "center", gap: 12, background: "#fff", border: "1px solid #EEF0F6", borderRadius: 14, padding: "11px 14px", boxShadow: "0 1px 4px rgba(0,0,0,0.03)" }}>
-                      <div style={{ width: 40, height: 40, flexShrink: 0, borderRadius: 11, background: p.bg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 19 }}>{p.icon}</div>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: 13.5, fontWeight: 800, color: "#111827" }}>{p.title}</div>
-                        <div style={{ fontSize: 11.5, color: "#6B7280", lineHeight: 1.4 }}>{p.desc}</div>
-                      </div>
-                      <span style={{ fontSize: 16, color: "#6366F1", fontWeight: 900 }}>∞</span>
-                    </div>
-                  ))}
-                  <div style={{ textAlign: "center", marginTop: 12 }}>
-                    <span style={{ fontSize: 18, fontWeight: 800, color: "#6366F1", fontStyle: "italic", borderBottom: "3px solid #C7D2FE", paddingBottom: 3 }}>Everything. Unlimited. 100% Free.</span>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* ── RIGHT: auth column ── */}
-            <div style={{ padding: isMobile ? "8px 22px 26px" : "38px 34px", display: "flex", flexDirection: "column", justifyContent: "center", background: "#fff" }}>
-
-              {!isMobile && (
-                <div style={{ position: "relative", height: 258, marginBottom: 18 }}>
-                  {/* soft backdrop */}
-                  <div style={{ position: "absolute", top: 30, left: "50%", transform: "translateX(-50%)", width: 210, height: 190, borderRadius: "50%", background: "radial-gradient(circle at 50% 45%, #F1EEFF 0%, #F7FBFF 70%, transparent 100%)" }} />
-                  {/* central infinity */}
-                  <div style={{ position: "absolute", top: 74, left: "50%", transform: "translateX(-50%)", fontSize: 96, fontWeight: 900, lineHeight: 1, background: "linear-gradient(120deg,#7C3AED 0%,#6366F1 45%,#3B82F6 100%)", WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", color: "transparent", filter: "drop-shadow(0 10px 18px rgba(99,102,241,0.35))" }}>∞</div>
-
-                  {(() => {
-                    const card = (x: React.CSSProperties, ic: string, bg: string, l1: string, l2: string) => (
-                      <div style={{ position: "absolute", ...x, display: "flex", alignItems: "center", gap: 8, background: "#fff", borderRadius: 12, padding: "7px 10px", boxShadow: "0 6px 18px rgba(15,23,42,0.12)" }}>
-                        <div style={{ width: 30, height: 30, borderRadius: 9, background: bg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15, flexShrink: 0 }}>{ic}</div>
-                        <div style={{ fontSize: 9.5, fontWeight: 800, color: "#334155", lineHeight: 1.15, letterSpacing: "0.02em" }}>{l1}<br />{l2}</div>
-                      </div>
-                    );
-                    return <>
-                      {card({ top: 0, left: 0 }, "↗", "linear-gradient(135deg,#EDE9FE,#DDD6FE)", "UNLIMITED", "UPSCALE")}
-                      {card({ top: 14, right: 0 }, "✨", "linear-gradient(135deg,#DBEAFE,#BFDBFE)", "UNLIMITED", "TRANSFORMATIONS")}
-                      {card({ bottom: 8, left: 0 }, "🖼️", "linear-gradient(135deg,#DCFCE7,#BBF7D0)", "UNLIMITED", "CONVERSIONS")}
-                      {card({ bottom: 0, right: 6 }, "⬇️", "linear-gradient(135deg,#FEF3C7,#FDE68A)", "UNLIMITED", "DOWNLOADS")}
-                    </>;
-                  })()}
-
-                  {/* small accents */}
-                  <div style={{ position: "absolute", top: 74, left: 40, width: 26, height: 26, borderRadius: "50%", background: "#22C55E", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 900, boxShadow: "0 4px 12px rgba(34,197,94,0.4)" }}>✓</div>
-                  <div style={{ position: "absolute", bottom: 70, left: 66, width: 30, height: 30, borderRadius: 9, background: "linear-gradient(135deg,#60A5FA,#3B82F6)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, boxShadow: "0 4px 12px rgba(59,130,246,0.4)" }}>▶</div>
-                  <div style={{ position: "absolute", top: 96, right: 74, fontSize: 15, color: "#FBBF24" }}>✦</div>
-                  <div style={{ position: "absolute", top: 60, left: "50%", fontSize: 11, color: "#A78BFA" }}>✦</div>
-                  <div style={{ position: "absolute", bottom: 92, right: 30, fontSize: 12, color: "#F472B6" }}>✦</div>
-                </div>
-              )}
-
-              {/* Google */}
-              <div style={{ position: "relative" }}>
-                <span style={{ position: "absolute", top: -11, right: 14, zIndex: 1, background: "#fff", color: "#6366F1", fontSize: 10, fontWeight: 800, borderRadius: 20, padding: "3px 10px", boxShadow: "0 2px 8px rgba(0,0,0,0.12)", letterSpacing: "0.03em" }}>🛡️ FAST &amp; SECURE</span>
-                <button onClick={handleGoogleSignIn} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, width: "100%", padding: "15px 20px", borderRadius: 14, border: "none", background: "linear-gradient(135deg,#6366F1,#8B5CF6)", color: "#fff", fontSize: 16, fontWeight: 800, cursor: "pointer", boxShadow: "0 8px 24px rgba(99,102,241,0.4)" }}>
-                  <span style={{ width: 28, height: 28, borderRadius: "50%", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-                  </span>
-                  Continue with Google
-                </button>
-              </div>
-
-              <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "16px 0" }}>
-                <div style={{ height: 1, flex: 1, background: "#E5E7EB" }} />
-                <span style={{ fontSize: 12, color: "#9CA3AF", fontWeight: 700 }}>OR</span>
-                <div style={{ height: 1, flex: 1, background: "#E5E7EB" }} />
-              </div>
-
-              {authTab !== "email" ? (
-                <button onClick={() => { setAuthTab("email"); setAuthError(""); }} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, width: "100%", padding: "13px 20px", borderRadius: 14, border: "1.5px solid #E5E7EB", background: "#fff", color: "#111827", fontSize: 15, fontWeight: 800, cursor: "pointer" }}>
-                  ✉️ Continue with Email
-                </button>
-              ) : (
-                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                  <div style={{ display: "flex", gap: 4, fontSize: 13, justifyContent: "center" }}>
-                    <button onClick={() => { setAuthMode("login"); setAuthError(""); }} style={{ background: "none", border: "none", cursor: "pointer", fontWeight: authMode === "login" ? 800 : 400, color: authMode === "login" ? "#6366F1" : "#888", borderBottom: authMode === "login" ? "2px solid #6366F1" : "2px solid transparent", padding: "4px 12px" }}>Sign in</button>
-                    <button onClick={() => { setAuthMode("signup"); setAuthError(""); }} style={{ background: "none", border: "none", cursor: "pointer", fontWeight: authMode === "signup" ? 800 : 400, color: authMode === "signup" ? "#6366F1" : "#888", borderBottom: authMode === "signup" ? "2px solid #6366F1" : "2px solid transparent", padding: "4px 12px" }}>Create account</button>
-                  </div>
-                  {authMode === "signup" && (
-                    <input type="text" placeholder="Your name (optional)" value={authName} onChange={(e) => setAuthName(e.target.value)} style={{ border: "1.5px solid #E0E0EE", borderRadius: 10, padding: "11px 12px", fontSize: 14, fontFamily: "inherit", outline: "none", width: "100%", boxSizing: "border-box" as const }} />
-                  )}
-                  <input type="email" placeholder="Email address" value={authEmail} onChange={(e) => setAuthEmail(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleEmailAuth()} style={{ border: "1.5px solid #E0E0EE", borderRadius: 10, padding: "11px 12px", fontSize: 14, fontFamily: "inherit", outline: "none", width: "100%", boxSizing: "border-box" as const }} />
-                  <input type="password" placeholder="Password (min 6 characters)" value={authPassword} onChange={(e) => setAuthPassword(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleEmailAuth()} style={{ border: "1.5px solid #E0E0EE", borderRadius: 10, padding: "11px 12px", fontSize: 14, fontFamily: "inherit", outline: "none", width: "100%", boxSizing: "border-box" as const }} />
-                  {authError && <div style={{ background: "#FFF1F0", border: "1px solid #FFC4C4", borderRadius: 8, padding: "8px 12px", fontSize: 13, color: "#C00" }}>{authError}</div>}
-                  <button onClick={handleEmailAuth} disabled={authLoading} style={{ ...s.primaryBtn, opacity: authLoading ? 0.7 : 1 }}>
-                    {authLoading ? <span style={s.btnRow}><span style={s.spin} />{authMode === "signup" ? "Creating account…" : "Signing in…"}</span> : authMode === "signup" ? "Create Account — Free" : "Sign In"}
-                  </button>
-                </div>
-              )}
-
-              {/* Trust badges */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, marginTop: 18 }}>
-                {trust.map((t) => (
-                  <div key={t.title} style={{ background: "#F8FAFC", border: "1px solid #EEF0F4", borderRadius: 12, padding: "10px 9px", display: "flex", alignItems: "center", gap: 8 }}>
-                    <div style={{ width: 26, height: 26, borderRadius: 8, background: t.bg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, flexShrink: 0 }}>{t.icon}</div>
-                    <div style={{ minWidth: 0 }}>
-                      <div style={{ fontSize: 10.5, fontWeight: 800, color: "#334155", lineHeight: 1.15 }}>{t.title}</div>
-                      <div style={{ fontSize: 9.5, color: "#94A3B8", marginTop: 1 }}>{t.sub}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <button onClick={close} style={{ display: "block", margin: "16px auto 0", background: "none", border: "none", color: "#94A3B8", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
-                Skip for now ›
-              </button>
-            </div>
-          </div>
-        </div>
-        );
-      })()}
+      {showSignInModal && (
+        <SignInModal
+          reason={signInReason}
+          onClose={() => setShowSignInModal(false)}
+          onBeforeAuth={persistContextForAuth}
+        />
+      )}
 
       {/* ── No Credits Modal ──────────────────────────────────────────────── */}
       {showNoCreditsModal && (
