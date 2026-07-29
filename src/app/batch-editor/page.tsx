@@ -3,6 +3,7 @@
 import { useRef, useState, useCallback, useEffect } from "react";
 import PricingModal from "@/app/_components/PricingModal";
 import UnlimitedModal from "@/app/_components/UnlimitedModal";
+import SignInModal from "@/app/_components/SignInModal";
 import ToolIcon from "@/app/editor/ToolIcon";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
 import {
@@ -142,6 +143,7 @@ export default function BatchEditorPage() {
   const [showPricingModal, setShowPricingModal] = useState(false);
   // Batch processing is a Pro feature — gated by the one-time Unlimited plan.
   const [showUnlimitedModal, setShowUnlimitedModal] = useState(false);
+  const [showSignInModal, setShowSignInModal] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [previewItem, setPreviewItem] = useState<BatchItem | null>(null);
   const [previewShowOriginal, setPreviewShowOriginal] = useState(false);
@@ -322,12 +324,10 @@ export default function BatchEditorPage() {
   const runBatch = async () => {
     if (!pendingItems.length || processing || !selectedTools.size) return;
 
-    // Batch processing is a Pro feature — require the one-time Unlimited plan.
-    // The editor opens freely; only running a transformation is gated.
-    if (user?.plan !== "unlimited") {
-      setShowUnlimitedModal(true);
-      return;
-    }
+    // Batch processing is a Pro feature. Not signed in → show the sign-in popup
+    // first; signed in but not unlimited → show the $5 pricing popup.
+    if (!user) { setShowSignInModal(true); return; }
+    if (user.plan !== "unlimited") { setShowUnlimitedModal(true); return; }
 
     // Ordered tools to apply in sequence
     const toolOrder: TransformType[] = ["crop", "rotate", "resize", "adjust", "upscale", "remove-bg", "ai-edit", "generate-bg", "watermark", "compress", "convert"];
@@ -516,6 +516,10 @@ export default function BatchEditorPage() {
             setShowUnlimitedModal(false);
           }}
         />
+      )}
+
+      {showSignInModal && (
+        <SignInModal reason="default" onClose={() => setShowSignInModal(false)} />
       )}
 
       {/* Header */}
