@@ -35,13 +35,23 @@ export default function UpscaleTool() {
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState("");
   const [drag, setDrag] = useState(false);
+  const [dragBar, setDragBar] = useState(false);
+  const [notice, setNotice] = useState("");
 
   const [showSignIn, setShowSignIn] = useState(false);
   const [signInReason, setSignInReason] = useState<"default" | "unlimited">("default");
   const [showUnlimited, setShowUnlimited] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const bottomInputRef = useRef<HTMLInputElement>(null);
   const isUnlimited = user?.plan === "unlimited";
+
+  // Auto-dismiss the toast.
+  useEffect(() => {
+    if (!notice) return;
+    const t = setTimeout(() => setNotice(""), 3800);
+    return () => clearTimeout(t);
+  }, [notice]);
 
   useEffect(() => {
     fetch("/api/auth/google/me").then((r) => r.json()).then((d: { authenticated?: boolean; name?: string; email?: string; plan?: string }) => {
@@ -80,6 +90,15 @@ export default function UpscaleTool() {
     };
     reader.readAsDataURL(file);
   }, []);
+
+  // Uploading another image while one is still upscaling: notify and ignore.
+  const handleNewUpload = useCallback((file: File | undefined) => {
+    if (processing) {
+      setNotice("Your image is still upscaling — please wait, then upload another.");
+      return;
+    }
+    handleFile(file);
+  }, [processing, handleFile]);
 
   const reset = () => {
     setSrc(null); setSrcDims(null); setResult(null); setResultDims(null); setError("");
@@ -215,6 +234,29 @@ export default function UpscaleTool() {
               <button onClick={() => { setSignInReason("default"); setShowSignIn(true); }} style={{ background: "none", border: "none", color: "#6366F1", fontWeight: 700, cursor: "pointer", padding: 0, fontSize: 12.5 }}>Sign in free</button> to keep using the basic tools.
             </p>
           )}
+
+          {/* Persistent "upload another image" bar */}
+          <div
+            onDragOver={(e) => { e.preventDefault(); setDragBar(true); }}
+            onDragLeave={() => setDragBar(false)}
+            onDrop={(e) => { e.preventDefault(); setDragBar(false); handleNewUpload(e.dataTransfer.files?.[0]); }}
+            style={{ marginTop: 20, display: "flex", alignItems: "center", justifyContent: "center", gap: 14, flexWrap: "wrap", border: `1.5px dashed ${dragBar ? "#6366F1" : "#D8DCEE"}`, borderRadius: 14, padding: "16px 20px", background: dragBar ? "#EEF2FF" : "#FBFBFE" }}
+          >
+            <input ref={bottomInputRef} type="file" accept="image/*" onChange={(e) => { handleNewUpload(e.target.files?.[0]); if (bottomInputRef.current) bottomInputRef.current.value = ""; }} style={{ display: "none" }} />
+            <button onClick={() => bottomInputRef.current?.click()} className="jpt-hover" style={{ display: "inline-flex", alignItems: "center", gap: 9, background: GRAD, color: "#fff", border: "none", borderRadius: 11, padding: "12px 22px", fontSize: 14.5, fontWeight: 800, cursor: "pointer", boxShadow: "0 6px 16px rgba(99,102,241,0.3)" }}>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 16V4M12 4l-4 4M12 4l4 4" /><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" /></svg>
+              Upload another image
+            </button>
+            <span style={{ fontSize: 13.5, color: "#9AA1B4", fontWeight: 600 }}>or just drop here</span>
+          </div>
+        </div>
+      )}
+
+      {/* Busy / status toast */}
+      {notice && (
+        <div style={{ position: "fixed", top: 74, left: "50%", transform: "translateX(-50%)", zIndex: 10000, background: "#0F172A", color: "#fff", borderRadius: 12, padding: "12px 20px", fontSize: 14, fontWeight: 700, boxShadow: "0 12px 34px rgba(0,0,0,0.3)", display: "flex", alignItems: "center", gap: 10, maxWidth: "92vw" }}>
+          <span style={{ width: 18, height: 18, border: "2px solid rgba(255,255,255,0.4)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin 0.8s linear infinite", flexShrink: 0 }} />
+          {notice}
         </div>
       )}
 
