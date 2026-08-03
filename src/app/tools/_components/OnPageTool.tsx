@@ -66,6 +66,7 @@ export default function OnPageTool({ actionLabel, controls, onTransform, resultT
   const [dragBar, setDragBar] = useState(false);
   const [notice, setNotice] = useState("");
   const [showSignIn, setShowSignIn] = useState(false);
+  const [preview, setPreview] = useState<HistItem | null>(null);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const bottomInputRef = useRef<HTMLInputElement>(null);
@@ -108,15 +109,6 @@ export default function OnPageTool({ actionLabel, controls, onTransform, resultT
     const r = new FileReader(); r.onload = () => loadImage(r.result as string); r.readAsDataURL(file);
   }, [processing, result, resultDims, resultTagState, loadImage]);
 
-  const openHistory = (i: number) => {
-    const item = history[i];
-    const rest = history.filter((_, idx) => idx !== i);
-    const next = result && resultDims ? [{ dataUrl: result, w: resultDims.w, h: resultDims.h, tag: resultTagState }, ...rest].slice(0, HISTORY_MAX) : rest;
-    setHistory(next);
-    setResult(item.dataUrl); setResultDims({ w: item.w, h: item.h }); setResultTagState(item.tag);
-    setActiveIsHistory(true); setShowOriginal(false);
-  };
-
   const reset = () => { setSrc(null); setSrcDims(null); setResult(null); setResultDims(null); setActiveIsHistory(false); setShowOriginal(false); setError(""); if (inputRef.current) inputRef.current.value = ""; };
 
   const run = async () => {
@@ -156,10 +148,10 @@ export default function OnPageTool({ actionLabel, controls, onTransform, resultT
         <>
           <div style={{ display: "grid", gridTemplateColumns: isWide ? "1fr 268px 236px" : "1fr", gap: 16, alignItems: "stretch" }}>
             {/* LEFT — image */}
-            <div style={{ ...cardStyle, position: "relative", padding: 16, display: "flex", flexDirection: "column", minHeight: 360 }}>
-              <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", background: "#F7F8FC", borderRadius: 12, overflow: "hidden" }}>
+            <div style={{ ...cardStyle, position: "relative", padding: 16, display: "flex", flexDirection: "column", minHeight: 520 }}>
+              <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", background: "#F7F8FC", borderRadius: 12, overflow: "hidden", minHeight: 440 }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={displaySrc || undefined} alt={showingResult ? "Result" : "Original"} style={{ maxWidth: "100%", maxHeight: 440, objectFit: "contain", display: "block" }} />
+                <img src={displaySrc || undefined} alt={showingResult ? "Result" : "Original"} style={{ maxWidth: "100%", maxHeight: 600, objectFit: "contain", display: "block" }} />
               </div>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 10, gap: 10 }}>
                 <span style={{ fontSize: 12.5, fontWeight: 700, color: showingResult ? "#059669" : "#64748B" }}>
@@ -210,7 +202,7 @@ export default function OnPageTool({ actionLabel, controls, onTransform, resultT
               ) : (
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                   {history.map((h, i) => (
-                    <button key={i} onClick={() => openHistory(i)} title={`${h.tag} · ${h.w}×${h.h}`} style={{ position: "relative", aspectRatio: "1 / 1", borderRadius: 10, border: "1px solid #E6E8F2", overflow: "hidden", cursor: "pointer", padding: 0, background: `#F3F4FB center/cover no-repeat url(${h.dataUrl})` }}>
+                    <button key={i} onClick={() => setPreview(h)} title={`${h.tag} · ${h.w}×${h.h}`} style={{ position: "relative", aspectRatio: "1 / 1", borderRadius: 10, border: "1px solid #E6E8F2", overflow: "hidden", cursor: "pointer", padding: 0, background: `#F3F4FB center/cover no-repeat url(${h.dataUrl})` }}>
                       {h.tag && <span style={{ position: "absolute", bottom: 4, left: 4, background: "rgba(15,23,42,0.72)", color: "#fff", fontSize: 9, fontWeight: 800, borderRadius: 6, padding: "1px 6px" }}>{h.tag}</span>}
                     </button>
                   ))}
@@ -244,6 +236,18 @@ export default function OnPageTool({ actionLabel, controls, onTransform, resultT
         </div>
       )}
       {showSignIn && <SignInModal reason="unlimited" onClose={() => setShowSignIn(false)} />}
+
+      {preview && (
+        <div onClick={() => setPreview(null)} style={{ position: "fixed", inset: 0, zIndex: 10001, background: "rgba(15,23,42,0.8)", backdropFilter: "blur(4px)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 20, gap: 14 }}>
+          <button onClick={() => setPreview(null)} aria-label="Close" style={{ position: "absolute", top: 18, right: 20, width: 38, height: 38, borderRadius: "50%", border: "none", background: "rgba(255,255,255,0.15)", color: "#fff", fontSize: 20, cursor: "pointer" }}>×</button>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img onClick={(e) => e.stopPropagation()} src={preview.dataUrl} alt="Preview" style={{ maxWidth: "94vw", maxHeight: "78vh", objectFit: "contain", borderRadius: 12, boxShadow: "0 20px 60px rgba(0,0,0,0.5)" }} />
+          <div onClick={(e) => e.stopPropagation()} style={{ display: "flex", alignItems: "center", gap: 14 }}>
+            <span style={{ color: "rgba(255,255,255,0.85)", fontSize: 13.5, fontWeight: 700 }}>{preview.tag ? `${preview.tag} · ` : ""}{preview.w}×{preview.h}</span>
+            <a href={preview.dataUrl} download={`${downloadBase}.${extOf(preview.dataUrl)}`} className="jpt-hover" style={{ background: GRAD, color: "#fff", borderRadius: 11, padding: "11px 22px", fontSize: 14.5, fontWeight: 800, textDecoration: "none", boxShadow: "0 8px 20px rgba(99,102,241,0.4)" }}>⬇ Download</a>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
