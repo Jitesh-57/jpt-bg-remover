@@ -19,11 +19,11 @@ export const metadata: Metadata = {
 };
 
 const CORE_TOOLS = [
-  { icon: "🔍", name: "Image Upscaler", desc: "Enhance resolution up to 4×", href: "/upscale" },
-  { icon: "🗜️", name: "Compress Image", desc: "Reduce file size to KB", href: "/compress-image" },
-  { icon: "🔀", name: "Convert Format", desc: "JPG · PNG · WebP", href: "/convert-image" },
-  { icon: "✂️", name: "Crop Image", desc: "Social ratios + circle crop", href: "/crop-image" },
-  { icon: "🔄", name: "Rotate & Flip", desc: "Turn or mirror photos", href: "/rotate-image" },
+  { icon: "🔍", name: "Image Upscaler", desc: "Enhance resolution up to 4×", href: "/tools/upscale" },
+  { icon: "🗜️", name: "Compress Image", desc: "Reduce file size to KB", href: "/tools/compress" },
+  { icon: "🔀", name: "Convert Format", desc: "JPG · PNG · WebP", href: "/tools/convert" },
+  { icon: "✂️", name: "Crop Image", desc: "Social ratios + presets", href: "/tools/crop" },
+  { icon: "🔄", name: "Rotate & Flip", desc: "Turn or mirror photos", href: "/tools/rotate" },
   { icon: "🔖", name: "Add Watermark", desc: "Text watermark on photos", href: "/watermark-image" },
   { icon: "😂", name: "Meme Generator", desc: "Top & bottom meme text", href: "/meme-generator" },
   { icon: "📄", name: "Image to PDF", desc: "JPG & PNG to PDF", href: "/image-to-pdf" },
