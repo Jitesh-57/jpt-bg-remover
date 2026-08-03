@@ -16,11 +16,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const freePages: MetadataRoute.Sitemap = [
     { url: BASE,                       lastModified: now, changeFrequency: "weekly",  priority: 1.0 },
     { url: `${BASE}/tools`,            lastModified: now, changeFrequency: "weekly",  priority: 0.9 },
-    { url: `${BASE}/tools/upscale`,    lastModified: now, changeFrequency: "monthly", priority: 0.9 },
-    { url: `${BASE}/tools/compress`,   lastModified: now, changeFrequency: "monthly", priority: 0.9 },
-    { url: `${BASE}/tools/convert`,    lastModified: now, changeFrequency: "monthly", priority: 0.9 },
-    { url: `${BASE}/tools/crop`,       lastModified: now, changeFrequency: "monthly", priority: 0.9 },
-    { url: `${BASE}/tools/rotate`,     lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/upscale`,          lastModified: now, changeFrequency: "monthly", priority: 0.95 },
     { url: `${BASE}/compress-image`,   lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/convert-image`,    lastModified: now, changeFrequency: "monthly", priority: 0.9 },

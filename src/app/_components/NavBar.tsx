@@ -36,11 +36,11 @@ const ALL_TOOLS = [
 
 // The free, in-browser canvas tools (each has its own SEO landing page).
 const FREE_IMAGE_TOOLS = [
-  { icon: "🔍", label: "Image Upscaler",  desc: "Enhance resolution up to 4×",   href: "/tools/upscale", free: true },
-  { icon: "🗜️", label: "Compress Image",  desc: "Reduce file size to KB",        href: "/tools/compress", free: true },
-  { icon: "🔀", label: "Convert Format",  desc: "JPG · PNG · WEBP",              href: "/tools/convert", free: true },
-  { icon: "✂️", label: "Crop Image",      desc: "Social ratios + presets",       href: "/tools/crop", free: true },
-  { icon: "🔄", label: "Rotate & Flip",   desc: "Turn or mirror photos",         href: "/tools/rotate", free: true },
+  { icon: "🔍", label: "Image Upscaler",  desc: "Enhance resolution up to 4×",   href: "/upscale", free: true },
+  { icon: "🗜️", label: "Compress Image",  desc: "Reduce file size to KB",        href: "/compress-image", free: true },
+  { icon: "🔀", label: "Convert Format",  desc: "JPG · PNG · WEBP",              href: "/convert-image", free: true },
+  { icon: "✂️", label: "Crop Image",      desc: "Social ratios + circle crop",   href: "/crop-image", free: true },
+  { icon: "🔄", label: "Rotate & Flip",   desc: "Turn or mirror photos",         href: "/rotate-image", free: true },
   { icon: "🔖", label: "Add Watermark",   desc: "Text watermark on photos",      href: "/watermark-image", free: true },
   { icon: "😂", label: "Meme Generator",  desc: "Top & bottom meme text",        href: "/meme-generator", free: true },
   { icon: "📄", label: "Image to PDF",    desc: "JPG & PNG to PDF",              href: "/image-to-pdf", free: true },
