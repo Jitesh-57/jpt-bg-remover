@@ -98,6 +98,11 @@ export function iconKeyForHref(href: string): string {
     "/watermark-remover": "remove-bg",
     "/editor": "editor",
     "/batch-editor": "batch",
+    "/tools/upscale": "upscale",
+    "/tools/compress": "compress",
+    "/tools/convert": "convert",
+    "/tools/crop": "crop",
+    "/tools/rotate": "rotate",
   };
   return map[href] || "default";
 }
