@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 };
 
 const CORE_TOOLS = [
-  { icon: "🔍", name: "Image Upscaler", desc: "Enhance resolution up to 4×", href: "/upscale" },
+  { icon: "🔍", name: "Image Upscaler", desc: "Enhance resolution up to 4×", href: "/" },
   { icon: "🗜️", name: "Compress Image", desc: "Reduce file size to KB", href: "/compress-image" },
   { icon: "🔀", name: "Convert Format", desc: "JPG · PNG · WebP", href: "/convert-image" },
   { icon: "✂️", name: "Crop Image", desc: "Social ratios + circle crop", href: "/crop-image" },

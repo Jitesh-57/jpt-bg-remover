@@ -5,6 +5,7 @@ import { CREATIVE_APPS, CREATIVE_BASE } from "@/lib/creative-apps";
 import { CONVERSIONS } from "@/lib/conversions";
 import { COMPRESSIONS } from "@/lib/compressions";
 import { CROPS } from "@/lib/crops";
+import { ALTERNATIVES } from "@/lib/alternatives";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
 
 const BASE = "https://www.sjpt.io";
@@ -16,7 +17,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const freePages: MetadataRoute.Sitemap = [
     { url: BASE,                       lastModified: now, changeFrequency: "weekly",  priority: 1.0 },
     { url: `${BASE}/tools`,            lastModified: now, changeFrequency: "weekly",  priority: 0.9 },
-    { url: `${BASE}/upscale`,          lastModified: now, changeFrequency: "monthly", priority: 0.95 },
+    // /upscale is 301'd to / (identical content) — the home page is the upscaler.
+    // Not listed here so we don't advertise a redirecting URL to crawlers.
     { url: `${BASE}/compress-image`,   lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/convert-image`,    lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/crop-image`,       lastModified: now, changeFrequency: "monthly", priority: 0.9 },
@@ -28,6 +30,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/watermark-remover`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     // /editor is noindex (tool UI) — excluded from sitemap
     { url: `${BASE}/batch-editor`,     lastModified: now, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${BASE}/alternatives`,     lastModified: now, changeFrequency: "monthly", priority: 0.85 },
     { url: `${BASE}/blog`,             lastModified: now, changeFrequency: "weekly",  priority: 0.8 },
     { url: `${BASE}/privacy`,          lastModified: now, changeFrequency: "yearly",  priority: 0.3 },
     { url: `${BASE}/terms`,            lastModified: now, changeFrequency: "yearly",  priority: 0.3 },
@@ -62,7 +65,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const cropPages: MetadataRoute.Sitemap = CROPS.map((c) => ({
     url: `${BASE}/crop/${c.slug}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.85,
   }));
-  const programmaticPages = [...conversionPages, ...compressPages, ...cropPages];
+  const alternativePages: MetadataRoute.Sitemap = ALTERNATIVES.map((a) => ({
+    url: `${BASE}/alternatives/${a.slug}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.85,
+  }));
+  const programmaticPages = [...conversionPages, ...compressPages, ...cropPages, ...alternativePages];
 
   if (!PAID_FEATURES_ENABLED) return [...freePages, ...freeVariantPages, ...programmaticPages, ...freeBlogPages];
 
@@ -96,5 +102,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.85,
   }));
 
-  return [...freePages, ...paidPages, ...variantPages, ...creativePages, ...blogPages];
+  return [...freePages, ...paidPages, ...variantPages, ...creativePages, ...alternativePages, ...blogPages];
 }

@@ -13,6 +13,7 @@ import { applyWatermark, renderMeme, type WatermarkPosition } from "@/lib/tools-
 import ToolIcon from "./ToolIcon";
 import UnlimitedModal from "@/app/_components/UnlimitedModal";
 import SignInModal from "@/app/_components/SignInModal";
+import SharePrompt, { shouldShowSharePrompt } from "@/app/_components/SharePrompt";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -533,6 +534,7 @@ export default function ImageEditorPage() {
   // Single "Unlimited" plan gate — used for 4× upscaling (a Pro feature).
   const [showUnlimitedModal, setShowUnlimitedModal] = useState(false);
   const [unlimitedReason, setUnlimitedReason] = useState<string>("");
+  const [sharePromptOpen, setSharePromptOpen] = useState(false);
   // Initialise from the real viewport so the first paint already uses the
   // mobile (bottom-sheet) layout — avoids the panel flashing on the right.
   const [isMobile, setIsMobile] = useState(() =>
@@ -1326,6 +1328,7 @@ export default function ImageEditorPage() {
     const a = document.createElement("a");
     a.href = url; a.download = `${original?.name || "image"}-edited.${ext}`;
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    if (shouldShowSharePrompt()) setSharePromptOpen(true);
   };
 
   // Green "what just happened" summary + an in-panel Download button. Shown
@@ -2674,6 +2677,13 @@ export default function ImageEditorPage() {
           }}
         />
       )}
+
+      {/* ── Post-download share prompt (viral loop) ──────────────────────── */}
+      <SharePrompt
+        open={sharePromptOpen}
+        onClose={() => setSharePromptOpen(false)}
+        tool={activeTool || "editor"}
+      />
 
       {/* ── Upgrade Modal ─────────────────────────────────────────────────── */}
       {showUpgradeModal && (
