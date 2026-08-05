@@ -92,7 +92,7 @@ const RELATED = [
   { href: "/compress-image", label: "Compress Image" },
   { href: "/convert-image", label: "Convert Image" },
   { href: "/crop-image", label: "Crop Image" },
-  { href: "/upscale", label: "Image Upscaler" },
+  { href: "/", label: "Image Upscaler" },
   { href: "/watermark-image", label: "Add Watermark" },
 ];
 
