@@ -4,10 +4,10 @@ import { useState } from "react";
 import { trackBeginCheckout, trackPurchase, trackBuyButtonClicked, trackPaymentFailed } from "@/lib/analytics";
 
 // Single "Unlimited" plan — one-time unlock for unlimited transformations and
-// access to every tool. Priced in INR (~$5) so it works with the existing
+// access to every tool. Priced in INR (~$3) so it works with the existing
 // Razorpay (INR) setup out of the box.
-export const UNLIMITED_PRICE_LABEL = "$5";
-export const UNLIMITED_PRICE_SUB = "30 days unlimited · one-time (billed ₹415)";
+export const UNLIMITED_PRICE_LABEL = "$3";
+export const UNLIMITED_PRICE_SUB = "30 days unlimited · one-time (billed ₹249)";
 
 interface Props {
   onClose: () => void;
@@ -44,8 +44,8 @@ export default function UnlimitedModal({ onClose, loggedIn, reason, prefillUser,
   async function handleBuy() {
     setLoading(true);
     setStatusMsg(null);
-    trackBuyButtonClicked("unlimited", 415);
-    trackBeginCheckout("unlimited", 415);
+    trackBuyButtonClicked("unlimited", 249);
+    trackBeginCheckout("unlimited", 249);
 
     try {
       if (!window.Razorpay) {
@@ -102,7 +102,7 @@ export default function UnlimitedModal({ onClose, loggedIn, reason, prefillUser,
             const verifyData = await verifyRes.json() as { success?: boolean; error?: string };
             if (verifyData.success) {
               setStatusMsg({ text: "🎉 You're Unlimited! Enjoy every tool.", ok: true });
-              trackPurchase("unlimited", 415, 0);
+              trackPurchase("unlimited", 249, 0);
               onSuccess?.();
             } else {
               trackPaymentFailed("unlimited", verifyData.error || "verification_failed");

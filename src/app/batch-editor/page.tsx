@@ -4,6 +4,7 @@ import { useRef, useState, useCallback, useEffect } from "react";
 import PricingModal from "@/app/_components/PricingModal";
 import UnlimitedModal from "@/app/_components/UnlimitedModal";
 import SignInModal from "@/app/_components/SignInModal";
+import SharePrompt, { shouldShowSharePrompt } from "@/app/_components/SharePrompt";
 import ToolIcon from "@/app/editor/ToolIcon";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
 import {
@@ -144,6 +145,7 @@ export default function BatchEditorPage() {
   // Batch processing is a Pro feature — gated by the one-time Unlimited plan.
   const [showUnlimitedModal, setShowUnlimitedModal] = useState(false);
   const [showSignInModal, setShowSignInModal] = useState(false);
+  const [sharePromptOpen, setSharePromptOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [previewItem, setPreviewItem] = useState<BatchItem | null>(null);
   const [previewShowOriginal, setPreviewShowOriginal] = useState(false);
@@ -325,7 +327,7 @@ export default function BatchEditorPage() {
     if (!pendingItems.length || processing || !selectedTools.size) return;
 
     // Batch processing is a Pro feature. Not signed in → show the sign-in popup
-    // first; signed in but not unlimited → show the $5 pricing popup.
+    // first; signed in but not unlimited → show the $3 pricing popup.
     if (!user) { setShowSignInModal(true); return; }
     if (user.plan !== "unlimited") { setShowUnlimitedModal(true); return; }
 
@@ -363,6 +365,7 @@ export default function BatchEditorPage() {
       a.href = done[0].resultDataUrl!;
       a.download = `${done[0].name}-edited.${extOf(done[0].resultDataUrl!)}`;
       a.click();
+      if (shouldShowSharePrompt()) setSharePromptOpen(true);
       return;
     }
     const JSZip = (await import("jszip")).default;
@@ -376,6 +379,7 @@ export default function BatchEditorPage() {
     const a = document.createElement("a");
     a.href = url; a.download = "jpt-batch-edited.zip"; a.click();
     URL.revokeObjectURL(url);
+    if (shouldShowSharePrompt()) setSharePromptOpen(true);
   };
 
   const downloadSingle = (item: BatchItem) => {
@@ -384,6 +388,7 @@ export default function BatchEditorPage() {
     a.href = item.resultDataUrl;
     a.download = `${item.name}-edited.${extOf(item.resultDataUrl)}`;
     a.click();
+    if (shouldShowSharePrompt()) setSharePromptOpen(true);
   };
 
   // Option UI for the new free tools — shared between the mobile and desktop
@@ -521,6 +526,8 @@ export default function BatchEditorPage() {
       {showSignInModal && (
         <SignInModal reason="default" onClose={() => setShowSignInModal(false)} />
       )}
+
+      <SharePrompt open={sharePromptOpen} onClose={() => setSharePromptOpen(false)} tool="batch-editor" />
 
       {/* Header */}
       <div style={{ background: "#fff", borderBottom: "1px solid #E5E7EB", padding: "14px 28px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>

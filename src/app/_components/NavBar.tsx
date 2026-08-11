@@ -18,7 +18,7 @@ const ALL_TOOLS = [
   {
     section: "AI Tools",
     items: [
-      { icon: "🔍", label: "AI Upscale",     desc: "Enhance resolution up to 4×",           href: "/upscale", free: true },
+      { icon: "🔍", label: "AI Upscale",     desc: "Enhance resolution up to 4×",           href: "/", free: true },
       { icon: "🪄", label: "Remove BG (AI)",  desc: "AI-powered, higher quality",            href: "/remove-bg", free: false },
       { icon: "🎯", label: "AI Headshot",    desc: "Professional headshots from any photo", href: "/ai-headshot", free: false },
       { icon: "✍️", label: "AI Editor",     desc: "Edit images with text prompts",         href: "/ai-editor", free: false },
@@ -36,7 +36,7 @@ const ALL_TOOLS = [
 
 // The free, in-browser canvas tools (each has its own SEO landing page).
 const FREE_IMAGE_TOOLS = [
-  { icon: "🔍", label: "Image Upscaler",  desc: "Enhance resolution up to 4×",   href: "/upscale", free: true },
+  { icon: "🔍", label: "Image Upscaler",  desc: "Enhance resolution up to 4×",   href: "/", free: true },
   { icon: "🗜️", label: "Compress Image",  desc: "Reduce file size to KB",        href: "/compress-image", free: true },
   { icon: "🔀", label: "Convert Format",  desc: "JPG · PNG · WEBP",              href: "/convert-image", free: true },
   { icon: "✂️", label: "Crop Image",      desc: "Social ratios + circle crop",   href: "/crop-image", free: true },
@@ -266,7 +266,7 @@ export default function NavBar() {
 
           <div style={{ flex: 1 }} />
 
-          {/* Go Unlimited — single $5 / 30-day plan. Shows active status once owned. */}
+          {/* Go Unlimited — single $3 / 30-day plan. Shows active status once owned. */}
           <a href="/pricing"
             style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 15px", color: "#fff", fontSize: 14, fontWeight: 800, textDecoration: "none", borderRadius: 999, background: user?.plan === "unlimited" ? "linear-gradient(120deg,#10B981,#0EA5E9)" : "linear-gradient(120deg,#6366F1,#8B5CF6)", border: "1px solid rgba(255,255,255,0.15)", boxShadow: "0 4px 14px rgba(99,102,241,0.4)" }}
             onMouseEnter={e => (e.currentTarget.style.opacity = "0.9")}

@@ -7,7 +7,7 @@ import { LANGUAGES } from "@/lib/i18n/translations";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
 
 const AI_TOOLS = [
-  { labelKey: "AI Upscale",         href: "/upscale" },
+  { labelKey: "AI Upscale",         href: "/" },
   { labelKey: "Remove Background",  href: "/remove-bg" },
   { labelKey: "AI Headshot",        href: "/ai-headshot" },
   { labelKey: "AI Editor",          href: "/ai-editor" },
@@ -22,7 +22,7 @@ const ALL_TOOLS = [
 
 // Free, in-browser tools — the SEO landing pages. Shown in free-only mode.
 const FREE_TOOLS = [
-  { labelKey: "Image Upscaler",   href: "/upscale" },
+  { labelKey: "Image Upscaler",   href: "/" },
   { labelKey: "Image Compressor", href: "/compress-image" },
   { labelKey: "Image Converter",  href: "/convert-image" },
   { labelKey: "Crop Image",       href: "/crop-image" },
@@ -35,6 +35,7 @@ const FREE_TOOLS = [
 
 const ALL_COMPANY = [
   { labelKey: "All Tools", href: "/tools" },
+  { labelKey: "Alternatives", href: "/alternatives" },
   { labelKey: "Pricing", href: "/pricing" },
   { labelKey: "Blog",    href: "/blog" },
   { labelKey: "Contact", href: "mailto:patil.jitesh866@gmail.com" },

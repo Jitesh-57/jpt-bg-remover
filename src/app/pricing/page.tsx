@@ -41,8 +41,8 @@ export default function PricingPage() {
   async function handleBuy() {
     setLoading(true);
     setStatusMsg(null);
-    trackBuyButtonClicked("unlimited", 415);
-    trackBeginCheckout("unlimited", 415);
+    trackBuyButtonClicked("unlimited", 249);
+    trackBeginCheckout("unlimited", 249);
 
     try {
       if (!window.Razorpay) {
@@ -94,7 +94,7 @@ export default function PricingPage() {
             const data = await verifyRes.json() as { success?: boolean; error?: string };
             if (data.success) {
               setStatusMsg({ text: "🎉 You're Unlimited! Every tool is unlocked.", ok: true });
-              trackPurchase("unlimited", 415, 0);
+              trackPurchase("unlimited", 249, 0);
             } else {
               trackPaymentFailed("unlimited", data.error || "verification_failed");
               setStatusMsg({ text: data.error || "Verification failed", ok: false });
