@@ -737,9 +737,9 @@ export default function ImageEditorPage() {
   // Don't gate until the auth check has completed — avoids false sign-in
   // prompts during the brief window after OAuth redirect while cookies resolve.
   const requireSignIn = () => { if (!authChecked) return true; if (!user) { setShowSignInModal(true); return true; } return false; };
-  // Single $5 Unlimited plan — the one and only upgrade popup across the app.
-  // The single $5 Unlimited plan gate. Not signed in → show the sign-in popup
-  // first; signed in but not unlimited → show the $5 pricing popup.
+  // Single $3 Unlimited plan — the one and only upgrade popup across the app.
+  // The single $3 Unlimited plan gate. Not signed in → show the sign-in popup
+  // first; signed in but not unlimited → show the $3 pricing popup.
   const openUnlimited = (reason = "") => {
     if (!user) { setSignInReason("default"); setShowSignInModal(true); return; }
     setUnlimitedReason(reason); setShowUnlimitedModal(true);

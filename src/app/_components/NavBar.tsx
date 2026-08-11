@@ -266,7 +266,7 @@ export default function NavBar() {
 
           <div style={{ flex: 1 }} />
 
-          {/* Go Unlimited — single $5 / 30-day plan. Shows active status once owned. */}
+          {/* Go Unlimited — single $3 / 30-day plan. Shows active status once owned. */}
           <a href="/pricing"
             style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 15px", color: "#fff", fontSize: 14, fontWeight: 800, textDecoration: "none", borderRadius: 999, background: user?.plan === "unlimited" ? "linear-gradient(120deg,#10B981,#0EA5E9)" : "linear-gradient(120deg,#6366F1,#8B5CF6)", border: "1px solid rgba(255,255,255,0.15)", boxShadow: "0 4px 14px rgba(99,102,241,0.4)" }}
             onMouseEnter={e => (e.currentTarget.style.opacity = "0.9")}

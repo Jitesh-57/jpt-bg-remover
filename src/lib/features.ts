@@ -18,6 +18,6 @@ export const PAID_ROUTE_PREFIXES = [
   "/ai-headshot",
   "/headshot",
   "/remove-bg",
-  // "/pricing" stays public — it now sells the single $5 Unlimited plan.
+  // "/pricing" stays public — it now sells the single $3 Unlimited plan.
   "/generations",
 ];

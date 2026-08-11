@@ -327,7 +327,7 @@ export default function BatchEditorPage() {
     if (!pendingItems.length || processing || !selectedTools.size) return;
 
     // Batch processing is a Pro feature. Not signed in → show the sign-in popup
-    // first; signed in but not unlimited → show the $5 pricing popup.
+    // first; signed in but not unlimited → show the $3 pricing popup.
     if (!user) { setShowSignInModal(true); return; }
     if (user.plan !== "unlimited") { setShowUnlimitedModal(true); return; }
 

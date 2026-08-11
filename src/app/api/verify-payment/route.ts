@@ -8,7 +8,7 @@ const PLAN_CREDITS: Record<string, { credits: number; amountPaise: number }> = {
   starter:   { credits: 50,     amountPaise: 49900  },
   creator:   { credits: 100,    amountPaise: 99900  },
   pro:       { credits: 300,    amountPaise: 249900 },
-  unlimited: { credits: 999999, amountPaise: 41500  },
+  unlimited: { credits: 999999, amountPaise: 24900  },
 };
 
 export async function POST(req: NextRequest) {
