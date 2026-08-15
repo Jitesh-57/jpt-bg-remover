@@ -5,6 +5,7 @@ import NavBar from "./_components/NavBar";
 import Footer from "./_components/Footer";
 import Analytics from "./_components/Analytics";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const BASE = "https://www.sjpt.io";
 // Origin that serves all landing/blog/tool imagery — preconnected below so the
@@ -121,6 +122,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           {children}
           <Footer />
         </LanguageProvider>
+        <SpeedInsights />
       </body>
     </html>
   );
