@@ -87,6 +87,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="dns-prefetch" href="https://sjpt-chat.vercel.app" />
         <meta name="google-site-verification" content="oaUjZEOCATyjaE5OvAHr6gXTXGjt6wJnk436SYbf1O4" />
         <meta name="google-adsense-account" content="ca-pub-6299138657923728" />
+        {/* Google AdSense loader — placed as a raw <script> in <head> exactly
+            where the AdSense crawler and the "code snippet" site-verification
+            look for it. Auto ads serves units from this single loader. */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6299138657923728"
+          crossOrigin="anonymous"
+        />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
@@ -111,15 +119,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </noscript>
         {/* End Google Tag Manager (noscript) */}
         <Analytics />
-        {/* Google AdSense (Auto ads) — client ca-pub-6299138657923728. Loaded
-            after hydration so it never blocks first paint; Auto ads places
-            units across the site once approved. */}
-        <Script
-          id="google-adsense"
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6299138657923728"
-          strategy="afterInteractive"
-          crossOrigin="anonymous"
-        />
         {/* SJPT support chatbot widget — loaded lazily so it doesn't block render. */}
         <Script
           src="https://sjpt-chat.vercel.app/widget.js"
