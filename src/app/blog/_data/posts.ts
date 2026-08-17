@@ -29,6 +29,7 @@ import { SEO_POSTS_6 } from "./seo-posts-6";
 import { SEO_POSTS_7 } from "./seo-posts-7";
 import { SEO_POSTS_8 } from "./seo-posts-8";
 import { SEO_POSTS_9 } from "./seo-posts-9";
+import { SEO_POSTS_10 } from "./seo-posts-10";
 
 const RAW_POSTS: BlogPost[] = [
   {
@@ -14365,7 +14366,7 @@ const LIVE_TOOL_PREFIXES = [
   "/tiktok-watermark-remover", "/watermark-remover", "/batch-editor",
 ];
 
-export const POSTS: BlogPost[] = [...RAW_POSTS, ...UPSCALE_POSTS, ...UPSCALE_FREE_POSTS, ...UPSCALE_FREE_POSTS_2, ...TOOL_FREE_POSTS, ...TIKTOK_POSTS, ...SEO_POSTS, ...SEO_POSTS_2, ...SEO_POSTS_3, ...SEO_POSTS_4, ...SEO_POSTS_5, ...SEO_POSTS_6, ...SEO_POSTS_7, ...SEO_POSTS_8, ...SEO_POSTS_9]
+export const POSTS: BlogPost[] = [...RAW_POSTS, ...UPSCALE_POSTS, ...UPSCALE_FREE_POSTS, ...UPSCALE_FREE_POSTS_2, ...TOOL_FREE_POSTS, ...TIKTOK_POSTS, ...SEO_POSTS, ...SEO_POSTS_2, ...SEO_POSTS_3, ...SEO_POSTS_4, ...SEO_POSTS_5, ...SEO_POSTS_6, ...SEO_POSTS_7, ...SEO_POSTS_8, ...SEO_POSTS_9, ...SEO_POSTS_10]
   .filter((p) => LIVE_TOOL_PREFIXES.some((pre) => p.toolHref.startsWith(pre)))
   .map((p) => ({ ...p, image: p.image || blogImageUrl(p.slug) }))
   .sort((a, b) => (a.date < b.date ? 1 : -1));
