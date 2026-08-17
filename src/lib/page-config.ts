@@ -390,6 +390,35 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
       { q: 'Do I need to install anything?', a: 'No. It works online — no app or software required.' },
     ],
   },
+  'resize-image': {
+    page_id: 'resize-image',
+    title: 'Free Image Resizer — Resize Photos to Any Pixel Size | JPT AI',
+    meta_description:
+      'Resize images online for free. Change photo dimensions to exact pixels or a percentage — keep the aspect ratio locked. No watermark, no sign-up, private in-browser.',
+    og_title: 'Free Image Resizer — Resize Photos Online to Any Size | JPT AI',
+    og_description: 'Resize any image to exact pixels free online. Lock the aspect ratio, no watermark, no sign-up.',
+    og_image: '',
+    keywords: 'resize image free, image resizer online free, resize photo to pixels free, change image dimensions free, resize picture online free, resize image without losing quality',
+    h1: 'Free Image Resizer',
+    subtitle:
+      'Resize any photo to the exact width and height you need — free online. Enter pixels, keep the aspect ratio locked, and download instantly. No watermark, no sign-up.',
+    cta_text: 'Resize Your Image Free',
+    features: [
+      { icon: '↔️', title: 'Exact Pixel Sizes', desc: 'Type the width and height you need — down to the pixel' },
+      { icon: '🔒', title: 'Lock Aspect Ratio', desc: 'Keep proportions so your image never looks stretched' },
+      { icon: '⚡', title: 'Online & Private', desc: 'Resizing runs on your device — nothing is uploaded to a server' },
+      { icon: '📥', title: 'Free Download', desc: 'Download the resized image instantly — no watermark, no limits' },
+    ],
+    faq: [
+      { q: 'How do I resize an image for free?', a: 'Upload your photo, enter the width and height in pixels (or unlock the ratio to set them independently), then download. It is free, needs no sign-up, and adds no watermark.' },
+      { q: 'Can I resize an image to an exact pixel size?', a: 'Yes. Type the exact width and height you need — for example 1080×1080 — and the image is resized to match.' },
+      { q: 'Will resizing keep the aspect ratio?', a: 'By default the aspect ratio is locked, so changing the width updates the height automatically and your image never looks stretched. You can unlock it to set each side freely.' },
+      { q: 'Does resizing reduce quality?', a: 'Making an image smaller keeps it crisp. To make an image larger without blur, use the AI upscaler instead, which adds real detail.' },
+      { q: 'Is my image uploaded to a server?', a: 'No. Resizing runs entirely in your browser, so your photo stays private on your device.' },
+      { q: 'Is there a watermark or limit?', a: 'No watermark and no limits — resize as many images as you like, completely free.' },
+      { q: 'Do I need to install anything?', a: 'No. It works online — no app or software needed.' },
+    ],
+  },
 }
 
 export async function getPageConfig(pageId: string): Promise<PageSEO> {
