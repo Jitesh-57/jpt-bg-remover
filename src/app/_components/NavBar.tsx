@@ -18,7 +18,7 @@ const ALL_TOOLS = [
   {
     section: "AI Tools",
     items: [
-      { icon: "🔍", label: "AI Upscale",     desc: "Enhance resolution up to 4×",           href: "/", free: true },
+      { icon: "🔍", label: "AI Upscale",     desc: "Enhance resolution up to 4×",           href: "/upscale", free: true },
       { icon: "🪄", label: "Remove BG (AI)",  desc: "AI-powered, higher quality",            href: "/remove-bg", free: false },
       { icon: "🎯", label: "AI Headshot",    desc: "Professional headshots from any photo", href: "/ai-headshot", free: false },
       { icon: "✍️", label: "AI Editor",     desc: "Edit images with text prompts",         href: "/ai-editor", free: false },
@@ -36,7 +36,7 @@ const ALL_TOOLS = [
 
 // The free, in-browser canvas tools (each has its own SEO landing page).
 const FREE_IMAGE_TOOLS = [
-  { icon: "🔍", label: "Image Upscaler",  desc: "Enhance resolution up to 4×",   href: "/", free: true },
+  { icon: "🔍", label: "Image Upscaler",  desc: "Enhance resolution up to 4×",   href: "/upscale", free: true },
   { icon: "🗜️", label: "Compress Image",  desc: "Reduce file size to KB",        href: "/compress-image", free: true },
   { icon: "🔀", label: "Convert Format",  desc: "JPG · PNG · WEBP",              href: "/convert-image", free: true },
   { icon: "✂️", label: "Crop Image",      desc: "Social ratios + circle crop",   href: "/crop-image", free: true },

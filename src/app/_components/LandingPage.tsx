@@ -31,7 +31,7 @@ const PAGE_TOOL: Record<string, string> = {
 
 // Free, online tools — used for the "More free tools" cross-link hub.
 const FREE_TOOL_LINKS: { id: string; icon: string; title: string; href: string }[] = [
-  { id: 'upscale', icon: '🔍', title: 'Image Upscaler', href: '/' },
+  { id: 'upscale', icon: '🔍', title: 'Image Upscaler', href: '/upscale' },
   { id: 'compress-image', icon: '🗜️', title: 'Image Compressor', href: '/compress-image' },
   { id: 'convert-image', icon: '🔀', title: 'Image Converter', href: '/convert-image' },
   { id: 'crop-image', icon: '✂️', title: 'Crop Image', href: '/crop-image' },

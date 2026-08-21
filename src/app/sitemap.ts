@@ -17,8 +17,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const freePages: MetadataRoute.Sitemap = [
     { url: BASE,                       lastModified: now, changeFrequency: "weekly",  priority: 1.0 },
     { url: `${BASE}/tools`,            lastModified: now, changeFrequency: "weekly",  priority: 0.9 },
-    // /upscale is 301'd to / (identical content) — the home page is the upscaler.
-    // Not listed here so we don't advertise a redirecting URL to crawlers.
+    { url: `${BASE}/upscale`,          lastModified: now, changeFrequency: "monthly", priority: 0.95 },
     { url: `${BASE}/compress-image`,   lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/convert-image`,    lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/crop-image`,       lastModified: now, changeFrequency: "monthly", priority: 0.9 },
