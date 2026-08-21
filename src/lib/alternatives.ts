@@ -20,7 +20,7 @@ interface ToolInfo {
 export const TOOLS: Record<ToolKey, ToolInfo> = {
   "remove-bg": { label: "Background Remover", href: "/editor?tool=remove-bg", verb: "remove image backgrounds" },
   editor:      { label: "Photo Editor",       href: "/editor",                verb: "edit your photos" },
-  upscale:     { label: "Image Upscaler",     href: "/upscale",                      verb: "upscale images" },
+  upscale:     { label: "Image Upscaler",     href: "/",                      verb: "upscale images" },
   compress:    { label: "Image Compressor",   href: "/compress-image",        verb: "compress images" },
   convert:     { label: "Image Converter",    href: "/convert-image",         verb: "convert image formats" },
   pdf:         { label: "Image to PDF",        href: "/image-to-pdf",          verb: "turn images into PDFs" },
