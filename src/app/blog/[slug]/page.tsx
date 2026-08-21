@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 // Free tool pages linked from every blog post — content-to-tool internal links
 // that spread crawl equity to the money pages.
 const FREE_TOOL_LINKS = [
-  { icon: "🔍", label: "Image Upscaler", href: "/" },
+  { icon: "🔍", label: "Image Upscaler", href: "/upscale" },
   { icon: "🗜️", label: "Compress Image", href: "/compress-image" },
   { icon: "🔄", label: "Convert Image", href: "/convert-image" },
   { icon: "✂️", label: "Crop Image", href: "/crop-image" },

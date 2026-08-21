@@ -90,3 +90,20 @@ body { margin: 0; padding: 0; }
 .jpt-hover:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(30,41,90,.13); border-color: #C7D2FE; }
 .jpt-hover:active { transform: translateY(-1px); }
 @media (prefers-reduced-motion: reduce) { .jpt-hover, .jpt-hover:hover { transform: none !important; } }
+
+/* ── Home hub animations ─────────────────────────────────────────────────── */
+/* Slowly drifting gradient for the hero background. */
+@keyframes jptGradient { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+.jpt-animated-grad { background-size: 220% 220%; animation: jptGradient 14s ease infinite; }
+/* Gentle float for hero visuals / badges. */
+@keyframes jptFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+.jpt-float { animation: jptFloat 6s ease-in-out infinite; }
+/* Entrance rise for above-the-fold hero content (staggered via inline delay). */
+@keyframes jptRise { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.jpt-rise { animation: jptRise .8s cubic-bezier(.16,1,.3,1) both; }
+/* Soft conic glow blob behind the hero. */
+@keyframes jptSpinSlow { to { transform: rotate(360deg); } }
+.jpt-glow { animation: jptSpinSlow 26s linear infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .jpt-animated-grad, .jpt-float, .jpt-rise, .jpt-glow { animation: none !important; }
+}
