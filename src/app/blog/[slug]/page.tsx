@@ -43,6 +43,9 @@ const FREE_TOOL_LINKS = [
   { icon: "💧", label: "Add Watermark", href: "/watermark-image" },
   { icon: "😂", label: "Meme Generator", href: "/meme-generator" },
   { icon: "📄", label: "Image to PDF", href: "/image-to-pdf" },
+  { icon: "↔️", label: "Resize Image", href: "/resize-image" },
+  { icon: "🫥", label: "Blur Image", href: "/blur-image" },
+  { icon: "🔳", label: "QR Code Generator", href: "/qr-code-generator" },
   { icon: "🎬", label: "TikTok No-Watermark", href: "/tiktok-watermark-remover" },
 ];
 
