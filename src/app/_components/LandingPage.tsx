@@ -40,6 +40,8 @@ const FREE_TOOL_LINKS: { id: string; icon: string; title: string; href: string }
   { id: 'watermark-image', icon: '🔖', title: 'Add Watermark', href: '/watermark-image' },
   { id: 'meme-generator', icon: '😂', title: 'Meme Generator', href: '/meme-generator' },
   { id: 'image-to-pdf', icon: '📄', title: 'Image to PDF', href: '/image-to-pdf' },
+  { id: 'blur-image', icon: '🫥', title: 'Blur Image', href: '/blur-image' },
+  { id: 'qr-code-generator', icon: '🔳', title: 'QR Code Generator', href: '/qr-code-generator' },
 ]
 
 // Per-tool floating hero decorations. Two "cards" (left + right) that theme
@@ -580,23 +582,23 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
 
         {/* Showcase visual — before/after split, single image, or gradient fallback */}
         {beforeAfter ? (
-          <div style={{ maxWidth: 820, margin: '56px auto 0', borderRadius: 24, overflow: 'hidden', boxShadow: '0 24px 80px rgba(0,0,0,0.16)', display: 'flex', position: 'relative' }}>
+          <div style={{ maxWidth: 820, margin: '56px auto 0', borderRadius: 24, overflow: 'hidden', boxShadow: '0 24px 80px rgba(0,0,0,0.16)', display: 'flex', position: 'relative', aspectRatio: '16 / 10' }}>
             <div style={{ flex: 1, position: 'relative' }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={beforeAfter.before} alt={`${config.h1} — before (low resolution photo)`} style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(1.5px)', imageRendering: 'pixelated' }} />
+              <img src={beforeAfter.before} alt={`${config.h1} — before (low resolution photo)`} loading="eager" decoding="async" style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(1.5px)', imageRendering: 'pixelated' }} />
               <span style={{ position: 'absolute', bottom: 14, left: 14, padding: '6px 14px', background: 'rgba(0,0,0,0.6)', color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', borderRadius: 8 }}>Low-Res Input</span>
             </div>
             <div style={{ width: 3, background: '#fff', flexShrink: 0 }} />
             <div style={{ flex: 1, position: 'relative' }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={beforeAfter.after} alt={`${config.h1} — after (free 4K enhanced result, no watermark)`} style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src={beforeAfter.after} alt={`${config.h1} — after (free 4K enhanced result, no watermark)`} loading="eager" fetchPriority="high" decoding="async" style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }} />
               <span style={{ position: 'absolute', bottom: 14, right: 14, padding: '6px 14px', background: 'rgba(99,102,241,0.92)', color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', borderRadius: 8 }}>✨ 4K AI Upscaled</span>
             </div>
           </div>
         ) : heroImg ? (
           <div style={{ position: 'relative', maxWidth: 940, margin: '56px auto 0', borderRadius: 24, overflow: 'hidden', background: '#fff', padding: 10, boxShadow: '0 24px 80px rgba(99,102,241,0.16)', border: '1px solid #EEF0FF' }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={heroImg} alt={`${config.h1} — free online tool, no watermark (${visual.label})`} style={{ display: 'block', width: '100%', height: 'auto', borderRadius: 16 }} />
+            <img src={heroImg} alt={`${config.h1} — free online tool, no watermark (${visual.label})`} loading="eager" fetchPriority="high" decoding="async" width={1200} height={750} style={{ display: 'block', width: '100%', height: 'auto', borderRadius: 16 }} />
           </div>
         ) : (
           <div style={{ maxWidth: 820, margin: '56px auto 0', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, borderRadius: 24, overflow: 'hidden', boxShadow: '0 24px 80px rgba(0,0,0,0.12)' }}>
