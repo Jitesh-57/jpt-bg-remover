@@ -1,20 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // 301 redirect any sjpt.in traffic that reaches this deployment to sjpt.io
   async redirects() {
     return [
-      {
-        source: '/:path*',
-        has: [{ type: 'host', value: 'sjpt.in' }],
-        destination: 'https://www.sjpt.io/:path*',
-        permanent: true,
-      },
-      {
-        source: '/:path*',
-        has: [{ type: 'host', value: 'www.sjpt.in' }],
-        destination: 'https://www.sjpt.io/:path*',
-        permanent: true,
-      },
       // Removed video tools (free resolvers couldn't reliably download).
       // 301 to the home page so old sitemap/crawled URLs don't 404.
       { source: '/instagram-video-downloader', destination: '/', permanent: true },

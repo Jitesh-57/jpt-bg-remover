@@ -32,11 +32,12 @@ function maybeCleanup() {
   });
 }
 
-// The single canonical host. All other production hostnames (the old .in
-// domain, the non-www .io apex) 301-redirect here so Google consolidates all
-// ranking signals onto one URL instead of splitting them across duplicates.
+// The single canonical host. The non-www .io apex 301-redirects here so Google
+// consolidates ranking signals onto one URL instead of splitting them across
+// duplicates. (The old sjpt.in domain has been retired and removed in Vercel,
+// so it no longer reaches this deployment.)
 const CANONICAL_HOST = "www.sjpt.io";
-const REDIRECT_HOSTS = new Set(["sjpt.in", "www.sjpt.in", "sjpt.io"]);
+const REDIRECT_HOSTS = new Set(["sjpt.io"]);
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
