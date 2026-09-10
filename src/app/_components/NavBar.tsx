@@ -169,20 +169,20 @@ export default function NavBar() {
 
   return (
     <>
-      <nav style={{ position: "sticky", top: 0, zIndex: 999, background: "#0F172A", borderBottom: "1px solid rgba(255,255,255,0.08)", height: 56, display: "flex", alignItems: "center", padding: "0 24px" }}>
-        <div style={{ maxWidth: 1200, width: "100%", margin: "0 auto", display: "flex", alignItems: "center", gap: 8 }}>
+      <nav style={{ position: "sticky", top: 0, zIndex: 999, background: "var(--bg-elevated)", borderBottom: "1px solid rgba(255,255,255,0.08)", height: 56, display: "flex", alignItems: "center", padding: "0 16px" }}>
+        <div style={{ maxWidth: 1200, width: "100%", margin: "0 auto", display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
 
-          {/* Brand */}
-          <a href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none", marginRight: 8 }}>
-            <span style={{ fontSize: 18, fontWeight: 900, color: "#6366F1" }}>✦</span>
-            <span style={{ fontSize: 16, fontWeight: 900, color: "#fff", letterSpacing: "-0.02em" }}>JPT AI</span>
+          {/* Brand — never wraps, never shrinks (the larger base font used to break this on phones) */}
+          <a href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none", marginRight: 8, flexShrink: 0, whiteSpace: "nowrap" }}>
+            <span style={{ fontSize: 18, fontWeight: 900, color: "var(--accent)" }}>✦</span>
+            <span style={{ fontSize: 16, fontWeight: 900, color: "var(--text)", letterSpacing: "-0.02em", whiteSpace: "nowrap" }}>JPT AI</span>
           </a>
 
           {/* AI Tools Dropdown */}
           <div ref={dropdownRef} style={{ position: "relative" }}>
             <button
               onClick={() => setShowToolsDropdown(v => !v)}
-              style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", background: showToolsDropdown ? "rgba(99,102,241,0.15)" : "transparent", border: "none", borderRadius: 8, color: "#E2E8F0", fontSize: 14, fontWeight: 600, cursor: "pointer" }}
+              style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", background: showToolsDropdown ? "rgba(15,157,107,0.15)" : "transparent", border: "none", borderRadius: 8, color: "var(--text-muted)", fontSize: 14, fontWeight: 600, cursor: "pointer" }}
             >
               {PAID_FEATURES_ENABLED ? "AI Tools" : "Tools"}
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ transform: showToolsDropdown ? "rotate(180deg)" : "none", opacity: 0.7 }}>
@@ -191,28 +191,28 @@ export default function NavBar() {
             </button>
 
             {showToolsDropdown && !isMobile && (
-              <div style={{ position: "absolute", top: "calc(100% + 12px)", left: 0, background: "#fff", borderRadius: 16, boxShadow: "0 20px 60px rgba(0,0,0,0.18)", border: "1px solid #F1F5F9", padding: "20px", minWidth: 580, zIndex: 1000, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 0 }}>
+              <div style={{ position: "absolute", top: "calc(100% + 12px)", left: 0, background: "var(--surface)", borderRadius: 16, boxShadow: "0 20px 60px rgba(0,0,0,0.18)", border: "1px solid var(--border)", padding: "20px", minWidth: 580, zIndex: 1000, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 0 }}>
                 {TOOLS.map((group, gi) => (
-                  <div key={gi} style={{ padding: gi === 0 ? "0 20px 0 0" : "0 0 0 20px", borderRight: gi === 0 ? "1px solid #F1F5F9" : "none" }}>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: "#94A3B8", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 12 }}>{group.section}</div>
+                  <div key={gi} style={{ padding: gi === 0 ? "0 20px 0 0" : "0 0 0 20px", borderRight: gi === 0 ? "1px solid var(--surface-2)" : "none" }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: "var(--text-faint)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 12 }}>{group.section}</div>
                     <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
                       {group.items.map(item => (
                         <a key={item.href} href={item.href} onClick={() => setShowToolsDropdown(false)}
                           style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 12px", borderRadius: 10, textDecoration: "none" }}
-                          onMouseEnter={e => (e.currentTarget.style.background = "#F5F5FF")}
+                          onMouseEnter={e => (e.currentTarget.style.background = "var(--surface-2)")}
                           onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
                         >
                           <ToolIcon id={iconKeyForHref(item.href)} size={36} />
                           <div>
-                            <div style={{ fontSize: 14, fontWeight: 700, color: "#111827" }}>{item.label}</div>
-                            <div style={{ fontSize: 12, color: "#6B7280", marginTop: 1 }}>{item.desc}</div>
+                            <div style={{ fontSize: 14, fontWeight: 700, color: "var(--text)" }}>{item.label}</div>
+                            <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 1 }}>{item.desc}</div>
                           </div>
                         </a>
                       ))}
                     </div>
                   </div>
                 ))}
-                <a href="/tools" onClick={() => setShowToolsDropdown(false)} style={{ gridColumn: "1 / -1", marginTop: 12, paddingTop: 14, borderTop: "1px solid #F1F5F9", textAlign: "center", fontSize: 13.5, fontWeight: 800, color: "#6366F1", textDecoration: "none" }}>
+                <a href="/tools" onClick={() => setShowToolsDropdown(false)} style={{ gridColumn: "1 / -1", marginTop: 12, paddingTop: 14, borderTop: "1px solid var(--border)", textAlign: "center", fontSize: 13.5, fontWeight: 800, color: "var(--accent)", textDecoration: "none" }}>
                   View all free tools →
                 </a>
               </div>
@@ -221,11 +221,11 @@ export default function NavBar() {
 
           {showToolsDropdown && isMobile && (
             <div onClick={() => setShowToolsDropdown(false)} style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(15,23,42,0.55)" }}>
-              <div onClick={e => e.stopPropagation()} style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "#fff", borderRadius: "20px 20px 0 0", boxShadow: "0 -10px 40px rgba(0,0,0,0.25)", maxHeight: "78vh", overflowY: "auto", padding: "10px 16px calc(20px + env(safe-area-inset-bottom))" }}>
-                <div style={{ width: 36, height: 4, background: "#E2E8F0", borderRadius: 2, margin: "4px auto 14px" }} />
+              <div onClick={e => e.stopPropagation()} style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "var(--surface)", borderRadius: "20px 20px 0 0", boxShadow: "0 -10px 40px rgba(0,0,0,0.25)", maxHeight: "78vh", overflowY: "auto", padding: "10px 16px calc(20px + env(safe-area-inset-bottom))" }}>
+                <div style={{ width: 36, height: 4, background: "var(--surface-2)", borderRadius: 2, margin: "4px auto 14px" }} />
                 {TOOLS.map((group, gi) => (
                   <div key={gi} style={{ marginBottom: gi === TOOLS.length - 1 ? 0 : 18 }}>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: "#94A3B8", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>{group.section}</div>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: "var(--text-faint)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>{group.section}</div>
                     <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
                       {group.items.map(item => (
                         <a key={item.href} href={item.href} onClick={() => setShowToolsDropdown(false)}
@@ -233,15 +233,15 @@ export default function NavBar() {
                         >
                           <ToolIcon id={iconKeyForHref(item.href)} size={38} />
                           <div>
-                            <div style={{ fontSize: 14.5, fontWeight: 700, color: "#111827" }}>{item.label}</div>
-                            <div style={{ fontSize: 12, color: "#6B7280", marginTop: 1 }}>{item.desc}</div>
+                            <div style={{ fontSize: 14.5, fontWeight: 700, color: "var(--text)" }}>{item.label}</div>
+                            <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 1 }}>{item.desc}</div>
                           </div>
                         </a>
                       ))}
                     </div>
                   </div>
                 ))}
-                <a href="/tools" onClick={() => setShowToolsDropdown(false)} style={{ display: "block", marginTop: 10, paddingTop: 14, borderTop: "1px solid #F1F5F9", textAlign: "center", fontSize: 14, fontWeight: 800, color: "#6366F1", textDecoration: "none" }}>
+                <a href="/tools" onClick={() => setShowToolsDropdown(false)} style={{ display: "block", marginTop: 10, paddingTop: 14, borderTop: "1px solid var(--border)", textAlign: "center", fontSize: 14, fontWeight: 800, color: "var(--accent)", textDecoration: "none" }}>
                   View all free tools →
                 </a>
               </div>
@@ -250,18 +250,18 @@ export default function NavBar() {
 
           {/* Blog */}
           <a href="/blog"
-            style={{ padding: "7px 14px", color: "#E2E8F0", fontSize: 14, fontWeight: 600, textDecoration: "none", borderRadius: 8 }}
+            style={{ padding: "7px 14px", color: "var(--text-muted)", fontSize: 14, fontWeight: 600, textDecoration: "none", borderRadius: 8 }}
             onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
-            onMouseLeave={e => (e.currentTarget.style.color = "#E2E8F0")}>
+            onMouseLeave={e => (e.currentTarget.style.color = "var(--border)")}>
             Blog
           </a>
 
           {/* Creative Apps — standalone navbar link (hidden in free-only mode) */}
           {PAID_FEATURES_ENABLED && (
             <a href="/creative"
-              style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", color: "#E2E8F0", fontSize: 14, fontWeight: 600, textDecoration: "none", borderRadius: 8, background: "rgba(99,102,241,0.12)", border: "1px solid rgba(99,102,241,0.25)" }}
-              onMouseEnter={e => { e.currentTarget.style.background = "rgba(99,102,241,0.22)"; e.currentTarget.style.borderColor = "rgba(99,102,241,0.5)"; }}
-              onMouseLeave={e => { e.currentTarget.style.background = "rgba(99,102,241,0.12)"; e.currentTarget.style.borderColor = "rgba(99,102,241,0.25)"; }}>
+              style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", color: "var(--text-muted)", fontSize: 14, fontWeight: 600, textDecoration: "none", borderRadius: 8, background: "rgba(15,157,107,0.12)", border: "1px solid rgba(15,157,107,0.25)" }}
+              onMouseEnter={e => { e.currentTarget.style.background = "rgba(15,157,107,0.22)"; e.currentTarget.style.borderColor = "rgba(15,157,107,0.5)"; }}
+              onMouseLeave={e => { e.currentTarget.style.background = "rgba(15,157,107,0.12)"; e.currentTarget.style.borderColor = "rgba(15,157,107,0.25)"; }}>
               <span style={{ fontSize: 13 }}>✦</span>
               Creative Apps
             </a>
@@ -271,7 +271,7 @@ export default function NavBar() {
 
           {/* Go Unlimited — single $3 / 30-day plan. Shows active status once owned. */}
           <a href="/pricing"
-            style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 15px", color: "#fff", fontSize: 14, fontWeight: 800, textDecoration: "none", borderRadius: 999, background: user?.plan === "unlimited" ? "linear-gradient(120deg,#10B981,#0EA5E9)" : "linear-gradient(120deg,#6366F1,#8B5CF6)", border: "1px solid rgba(255,255,255,0.15)", boxShadow: "0 4px 14px rgba(99,102,241,0.4)" }}
+            style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 15px", color: "#fff", fontSize: 14, fontWeight: 800, textDecoration: "none", borderRadius: 999, background: user?.plan === "unlimited" ? "linear-gradient(120deg,var(--success),var(--accent-2))" : "linear-gradient(120deg,var(--accent),var(--accent-2))", border: "1px solid rgba(255,255,255,0.15)", boxShadow: "0 4px 14px rgba(15,157,107,0.4)" }}
             onMouseEnter={e => (e.currentTarget.style.opacity = "0.9")}
             onMouseLeave={e => (e.currentTarget.style.opacity = "1")}>
             <span style={{ fontSize: 13 }}>✨</span>
@@ -282,64 +282,64 @@ export default function NavBar() {
           {user ? (
             <div style={{ position: "relative" }}>
               <button onClick={() => setShowMenu(!showMenu)}
-                style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 10px 6px 6px", background: "rgba(99,102,241,0.15)", border: "1px solid rgba(99,102,241,0.3)", borderRadius: 24, cursor: "pointer" }}>
+                style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 10px 6px 6px", background: "rgba(15,157,107,0.15)", border: "1px solid rgba(15,157,107,0.3)", borderRadius: 24, cursor: "pointer" }}>
                 {user.picture
                   ? <img src={user.picture} alt="" style={{ width: 28, height: 28, borderRadius: "50%", flexShrink: 0 }} />
-                  : <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#6366F1", color: "#fff", fontSize: 13, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>{user.name[0]}</div>}
-                <span style={{ fontSize: 13, fontWeight: 600, color: "#E2E8F0" }}>{user.name.split(" ")[0]}</span>
+                  : <div style={{ width: 28, height: 28, borderRadius: "50%", background: "var(--accent)", color: "#fff", fontSize: 13, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>{user.name[0]}</div>}
+                <span style={{ fontSize: 13, fontWeight: 600, color: "var(--text-muted)" }}>{user.name.split(" ")[0]}</span>
                 {PAID_FEATURES_ENABLED && (
-                  <span style={{ fontSize: 11, background: "#6366F1", color: "#fff", padding: "2px 8px", borderRadius: 12, fontWeight: 700 }}>
+                  <span style={{ fontSize: 11, background: "var(--accent)", color: "#fff", padding: "2px 8px", borderRadius: 12, fontWeight: 700 }}>
                     {user.plan === "free" ? `🎁 ${user.trialsRemaining}` : `⚡ ${user.credits}`}
                   </span>
                 )}
               </button>
               {showMenu && !isMobile && (
-                <div style={{ position: "absolute", top: "calc(100% + 10px)", right: 0, background: "#fff", border: "1px solid #E5E7EB", borderRadius: 14, boxShadow: "0 8px 30px rgba(0,0,0,0.15)", minWidth: 220, zIndex: 1000, overflow: "hidden" }}>
-                  <div style={{ padding: "14px 16px", borderBottom: "1px solid #F3F4F6", background: "#F9FAFB" }}>
-                    <div style={{ fontWeight: 700, fontSize: 14, color: "#111" }}>{user.name}</div>
-                    <div style={{ fontSize: 12, color: "#6B7280", marginTop: 2 }}>{user.email}</div>
+                <div style={{ position: "absolute", top: "calc(100% + 10px)", right: 0, background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 14, boxShadow: "0 8px 30px rgba(0,0,0,0.15)", minWidth: 220, zIndex: 1000, overflow: "hidden" }}>
+                  <div style={{ padding: "14px 16px", borderBottom: "1px solid var(--border)", background: "var(--surface-2)" }}>
+                    <div style={{ fontWeight: 700, fontSize: 14, color: "var(--text)" }}>{user.name}</div>
+                    <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 2 }}>{user.email}</div>
                   </div>
                   {PAID_FEATURES_ENABLED && user.plan === "free" && user.trialsRemaining === 0 && (
-                    <div style={{ margin: "10px 12px 4px", background: "linear-gradient(135deg,#EEF2FF,#F5F3FF)", border: "1px solid #C7D2FE", borderRadius: 12, padding: "12px 14px" }}>
-                      <div style={{ fontSize: 11, fontWeight: 700, color: "#6366F1", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>🎁 Free trials used up</div>
-                      <div style={{ fontSize: 11, color: "#6B7280", marginTop: 5 }}>You&apos;ve used all {FREE_TRIAL_LIMIT} free trials, one per tool.</div>
-                      <div style={{ fontSize: 11, color: "#6366F1", fontWeight: 600, marginTop: 4 }}>Unlock all AI features with a paid plan</div>
+                    <div style={{ margin: "10px 12px 4px", background: "linear-gradient(135deg,var(--accent-soft),var(--surface-2))", border: "1px solid var(--accent-border)", borderRadius: 12, padding: "12px 14px" }}>
+                      <div style={{ fontSize: 11, fontWeight: 700, color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>🎁 Free trials used up</div>
+                      <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 5 }}>You&apos;ve used all {FREE_TRIAL_LIMIT} free trials, one per tool.</div>
+                      <div style={{ fontSize: 11, color: "var(--accent)", fontWeight: 600, marginTop: 4 }}>Unlock all AI features with a paid plan</div>
                       <button onClick={() => { trackPaymentPopupTriggered("trial_exhausted"); setShowPricing(true); setShowMenu(false); }}
-                        style={{ marginTop: 8, width: "100%", padding: "7px 12px", background: "#6366F1", color: "#fff", border: "none", borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
+                        style={{ marginTop: 8, width: "100%", padding: "7px 12px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
                         Buy Paid Plan
                       </button>
                     </div>
                   )}
                   {PAID_FEATURES_ENABLED && user.plan === "free" && user.trialsRemaining > 0 && (
-                    <div style={{ margin: "10px 12px 4px", background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 10, padding: "8px 12px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div style={{ margin: "10px 12px 4px", background: "var(--success-soft)", border: "1px solid var(--success-soft)", borderRadius: 10, padding: "8px 12px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                       <div>
-                        <div style={{ fontSize: 11, fontWeight: 700, color: "#16A34A", textTransform: "uppercase", letterSpacing: "0.06em" }}>Free trials</div>
-                        <div style={{ fontSize: 12, color: "#4B5563", marginTop: 2 }}>{user.trialsRemaining} of {FREE_TRIAL_LIMIT} left · one per tool</div>
+                        <div style={{ fontSize: 11, fontWeight: 700, color: "var(--success)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Free trials</div>
+                        <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 2 }}>{user.trialsRemaining} of {FREE_TRIAL_LIMIT} left · one per tool</div>
                       </div>
-                      <div style={{ fontSize: 20, fontWeight: 900, color: "#16A34A" }}>{user.trialsRemaining}</div>
+                      <div style={{ fontSize: 20, fontWeight: 900, color: "var(--success)" }}>{user.trialsRemaining}</div>
                     </div>
                   )}
                   <div style={{ padding: "6px 0" }}>
                     {PAID_FEATURES_ENABLED && (
                       <>
                         <a href="/generations" onClick={() => setShowMenu(false)}
-                          style={{ display: "block", padding: "10px 16px", fontSize: 13, color: "#111", textDecoration: "none", fontWeight: 500 }}
-                          onMouseEnter={e => (e.currentTarget.style.background = "#F5F5FF")}
+                          style={{ display: "block", padding: "10px 16px", fontSize: 13, color: "var(--text)", textDecoration: "none", fontWeight: 500 }}
+                          onMouseEnter={e => (e.currentTarget.style.background = "var(--surface-2)")}
                           onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
                           ✦ My Generations
                         </a>
                         <button onClick={() => { trackPaymentPopupTriggered("manual"); setShowPricing(true); setShowMenu(false); }}
-                          style={{ width: "100%", padding: "10px 16px", background: "none", border: "none", textAlign: "left", fontSize: 13, color: "#6366F1", cursor: "pointer", fontWeight: 600 }}
-                          onMouseEnter={e => (e.currentTarget.style.background = "#F5F5FF")}
+                          style={{ width: "100%", padding: "10px 16px", background: "none", border: "none", textAlign: "left", fontSize: 13, color: "var(--accent)", cursor: "pointer", fontWeight: 600 }}
+                          onMouseEnter={e => (e.currentTarget.style.background = "var(--surface-2)")}
                           onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
                           💳 Buy Credits
                         </button>
                       </>
                     )}
-                    <div style={{ borderTop: "1px solid #F3F4F6", margin: "4px 0" }} />
+                    <div style={{ borderTop: "1px solid var(--border)", margin: "4px 0" }} />
                     <button onClick={handleLogout}
-                      style={{ width: "100%", padding: "10px 16px", background: "none", border: "none", textAlign: "left", fontSize: 13, color: "#EF4444", cursor: "pointer", fontWeight: 500 }}
-                      onMouseEnter={e => (e.currentTarget.style.background = "#FFF1F0")}
+                      style={{ width: "100%", padding: "10px 16px", background: "none", border: "none", textAlign: "left", fontSize: 13, color: "var(--danger)", cursor: "pointer", fontWeight: 500 }}
+                      onMouseEnter={e => (e.currentTarget.style.background = "var(--danger-soft)")}
                       onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
                       🚪 Sign Out
                     </button>
@@ -351,47 +351,47 @@ export default function NavBar() {
 
           {showMenu && isMobile && user && (
             <div onClick={() => setShowMenu(false)} style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(15,23,42,0.55)" }}>
-              <div onClick={e => e.stopPropagation()} style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "#fff", borderRadius: "20px 20px 0 0", boxShadow: "0 -10px 40px rgba(0,0,0,0.25)", maxHeight: "82vh", overflowY: "auto", padding: "10px 0 calc(10px + env(safe-area-inset-bottom))" }}>
-                <div style={{ width: 36, height: 4, background: "#E2E8F0", borderRadius: 2, margin: "4px auto 10px" }} />
-                <div style={{ padding: "10px 16px", borderBottom: "1px solid #F3F4F6", background: "#F9FAFB" }}>
-                  <div style={{ fontWeight: 700, fontSize: 15, color: "#111" }}>{user.name}</div>
-                  <div style={{ fontSize: 12, color: "#6B7280", marginTop: 2 }}>{user.email}</div>
+              <div onClick={e => e.stopPropagation()} style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "var(--surface)", borderRadius: "20px 20px 0 0", boxShadow: "0 -10px 40px rgba(0,0,0,0.25)", maxHeight: "82vh", overflowY: "auto", padding: "10px 0 calc(10px + env(safe-area-inset-bottom))" }}>
+                <div style={{ width: 36, height: 4, background: "var(--surface-2)", borderRadius: 2, margin: "4px auto 10px" }} />
+                <div style={{ padding: "10px 16px", borderBottom: "1px solid var(--border)", background: "var(--surface-2)" }}>
+                  <div style={{ fontWeight: 700, fontSize: 15, color: "var(--text)" }}>{user.name}</div>
+                  <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 2 }}>{user.email}</div>
                 </div>
                 {PAID_FEATURES_ENABLED && user.plan === "free" && user.trialsRemaining === 0 && (
-                  <div style={{ margin: "12px 16px 4px", background: "linear-gradient(135deg,#EEF2FF,#F5F3FF)", border: "1px solid #C7D2FE", borderRadius: 12, padding: "12px 14px" }}>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: "#6366F1", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>🎁 Free trials used up</div>
-                    <div style={{ fontSize: 11, color: "#6B7280", marginTop: 5 }}>You&apos;ve used all {FREE_TRIAL_LIMIT} free trials, one per tool.</div>
+                  <div style={{ margin: "12px 16px 4px", background: "linear-gradient(135deg,var(--accent-soft),var(--surface-2))", border: "1px solid var(--accent-border)", borderRadius: 12, padding: "12px 14px" }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>🎁 Free trials used up</div>
+                    <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 5 }}>You&apos;ve used all {FREE_TRIAL_LIMIT} free trials, one per tool.</div>
                     <button onClick={() => { trackPaymentPopupTriggered("trial_exhausted"); setShowPricing(true); setShowMenu(false); }}
-                      style={{ marginTop: 8, width: "100%", padding: "10px 12px", background: "#6366F1", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+                      style={{ marginTop: 8, width: "100%", padding: "10px 12px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
                       Buy Paid Plan
                     </button>
                   </div>
                 )}
                 {PAID_FEATURES_ENABLED && user.plan === "free" && user.trialsRemaining > 0 && (
-                  <div style={{ margin: "12px 16px 4px", background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 10, padding: "10px 12px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <div style={{ margin: "12px 16px 4px", background: "var(--success-soft)", border: "1px solid var(--success-soft)", borderRadius: 10, padding: "10px 12px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                     <div>
-                      <div style={{ fontSize: 11, fontWeight: 700, color: "#16A34A", textTransform: "uppercase", letterSpacing: "0.06em" }}>Free trials</div>
-                      <div style={{ fontSize: 12, color: "#4B5563", marginTop: 2 }}>{user.trialsRemaining} of {FREE_TRIAL_LIMIT} left · one per tool</div>
+                      <div style={{ fontSize: 11, fontWeight: 700, color: "var(--success)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Free trials</div>
+                      <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 2 }}>{user.trialsRemaining} of {FREE_TRIAL_LIMIT} left · one per tool</div>
                     </div>
-                    <div style={{ fontSize: 20, fontWeight: 900, color: "#16A34A" }}>{user.trialsRemaining}</div>
+                    <div style={{ fontSize: 20, fontWeight: 900, color: "var(--success)" }}>{user.trialsRemaining}</div>
                   </div>
                 )}
                 <div style={{ padding: "8px 0" }}>
                   {PAID_FEATURES_ENABLED && (
                     <>
                       <a href="/generations" onClick={() => setShowMenu(false)}
-                        style={{ display: "block", padding: "14px 16px", fontSize: 14.5, color: "#111", textDecoration: "none", fontWeight: 600 }}>
+                        style={{ display: "block", padding: "14px 16px", fontSize: 14.5, color: "var(--text)", textDecoration: "none", fontWeight: 600 }}>
                         ✦ My Generations
                       </a>
                       <button onClick={() => { trackPaymentPopupTriggered("manual"); setShowPricing(true); setShowMenu(false); }}
-                        style={{ width: "100%", padding: "14px 16px", background: "none", border: "none", textAlign: "left", fontSize: 14.5, color: "#6366F1", cursor: "pointer", fontWeight: 700 }}>
+                        style={{ width: "100%", padding: "14px 16px", background: "none", border: "none", textAlign: "left", fontSize: 14.5, color: "var(--accent)", cursor: "pointer", fontWeight: 700 }}>
                         💳 Buy Credits
                       </button>
                     </>
                   )}
-                  <div style={{ borderTop: "1px solid #F3F4F6", margin: "4px 0" }} />
+                  <div style={{ borderTop: "1px solid var(--border)", margin: "4px 0" }} />
                   <button onClick={handleLogout}
-                    style={{ width: "100%", padding: "14px 16px", background: "none", border: "none", textAlign: "left", fontSize: 14.5, color: "#EF4444", cursor: "pointer", fontWeight: 600 }}>
+                    style={{ width: "100%", padding: "14px 16px", background: "none", border: "none", textAlign: "left", fontSize: 14.5, color: "var(--danger)", cursor: "pointer", fontWeight: 600 }}>
                     🚪 Sign Out
                   </button>
                 </div>
@@ -401,10 +401,10 @@ export default function NavBar() {
 
           {!user && (
             <div style={{ display: "flex", gap: 8 }}>
-              <button onClick={openModal} style={{ padding: "7px 16px", background: "transparent", color: "#E2E8F0", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+              <button onClick={openModal} style={{ padding: "7px 16px", background: "transparent", color: "var(--text-muted)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
                 {t.navSignIn}
               </button>
-              <button onClick={openModal} style={{ padding: "7px 16px", background: "#6366F1", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer", boxShadow: "0 2px 8px rgba(99,102,241,0.4)" }}>
+              <button onClick={openModal} style={{ padding: "7px 16px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer", boxShadow: "0 2px 8px rgba(15,157,107,0.4)" }}>
                 {t.getStarted}
               </button>
             </div>
@@ -427,16 +427,16 @@ export default function NavBar() {
 
       {showModal && (
         <div onClick={closeModal} style={{ position: "fixed", inset: 0, zIndex: 9999, background: "rgba(0,0,0,0.55)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20, backdropFilter: "blur(4px)" }}>
-          <div onClick={e => e.stopPropagation()} style={{ background: "#fff", borderRadius: 20, padding: 32, maxWidth: 440, width: "100%", boxShadow: "0 24px 80px rgba(0,0,0,0.3)" }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: "var(--surface)", borderRadius: 20, padding: 32, maxWidth: 440, width: "100%", boxShadow: "0 24px 80px rgba(0,0,0,0.3)" }}>
             <div style={{ textAlign: "center", marginBottom: 24 }}>
               <div style={{ fontSize: 44, marginBottom: 8 }}>✨</div>
-              <div style={{ fontWeight: 900, fontSize: 22, color: "#111", marginBottom: 6 }}>Sign in to JPT AI</div>
-              <p style={{ fontSize: 14, color: "#666", margin: 0 }}>Get <strong>10 free AI credits</strong> to start editing</p>
+              <div style={{ fontWeight: 900, fontSize: 22, color: "var(--text)", marginBottom: 6 }}>Sign in to JPT AI</div>
+              <p style={{ fontSize: 14, color: "var(--text-muted)", margin: 0 }}>Get <strong>10 free AI credits</strong> to start editing</p>
             </div>
-            <div style={{ display: "flex", background: "#F0F0F8", borderRadius: 10, padding: 3, marginBottom: 22 }}>
+            <div style={{ display: "flex", background: "var(--surface-2)", borderRadius: 10, padding: 3, marginBottom: 22 }}>
               {(["google", "email"] as const).map(t => (
                 <button key={t} onClick={() => { setTab(t); setAuthError(""); }}
-                  style={{ flex: 1, padding: "9px", borderRadius: 8, border: "none", background: tab === t ? "#fff" : "none", fontWeight: 700, fontSize: 13, cursor: "pointer", color: tab === t ? "#6366F1" : "#888", boxShadow: tab === t ? "0 1px 4px rgba(0,0,0,0.1)" : "none" }}>
+                  style={{ flex: 1, padding: "9px", borderRadius: 8, border: "none", background: tab === t ? "var(--surface-3)" : "none", fontWeight: 700, fontSize: 13, cursor: "pointer", color: tab === t ? "var(--accent)" : "var(--text-faint)", boxShadow: tab === t ? "0 1px 4px rgba(0,0,0,0.1)" : "none" }}>
                   {t === "google" ? "🔵 Google" : "📧 Email"}
                 </button>
               ))}
@@ -444,11 +444,11 @@ export default function NavBar() {
             {tab === "google" && (
               <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 <button onClick={handleGoogleSignIn}
-                  style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, padding: "13px 20px", background: "#fff", border: "1.5px solid #E0E0EE", borderRadius: 10, cursor: "pointer", color: "#222", fontWeight: 700, fontSize: 14, boxShadow: "0 1px 4px rgba(0,0,0,0.06)", width: "100%" }}>
+                  style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, padding: "13px 20px", background: "var(--surface)", border: "1.5px solid var(--border)", borderRadius: 10, cursor: "pointer", color: "var(--text)", fontWeight: 700, fontSize: 14, boxShadow: "0 1px 4px rgba(0,0,0,0.06)", width: "100%" }}>
                   <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
                   Continue with Google
                 </button>
-                <div style={{ fontSize: 12, color: "#999", textAlign: "center" }}>Quick · No password needed · Works with any Google account</div>
+                <div style={{ fontSize: 12, color: "var(--text-faint)", textAlign: "center" }}>Quick · No password needed · Works with any Google account</div>
               </div>
             )}
             {tab === "email" && (
@@ -456,7 +456,7 @@ export default function NavBar() {
                 <div style={{ display: "flex", gap: 4, justifyContent: "center", borderBottom: "1px solid #F0F0F0", paddingBottom: 12, marginBottom: 4 }}>
                   {(["login", "signup"] as const).map(m => (
                     <button key={m} onClick={() => { setMode(m); setAuthError(""); }}
-                      style={{ background: "none", border: "none", cursor: "pointer", fontWeight: mode === m ? 800 : 400, color: mode === m ? "#6366F1" : "#888", borderBottom: mode === m ? "2px solid #6366F1" : "2px solid transparent", padding: "4px 16px", fontSize: 14 }}>
+                      style={{ background: "none", border: "none", cursor: "pointer", fontWeight: mode === m ? 800 : 400, color: mode === m ? "var(--accent)" : "var(--text-faint)", borderBottom: mode === m ? "2px solid var(--accent)" : "2px solid transparent", padding: "4px 16px", fontSize: 14 }}>
                       {m === "login" ? "Sign in" : "Create account"}
                     </button>
                   ))}
@@ -465,22 +465,22 @@ export default function NavBar() {
                 <input type="email" placeholder="Email address" value={email} onChange={e => setEmail(e.target.value)} onKeyDown={e => e.key === "Enter" && handleEmailAuth()} style={inputStyle} />
                 <input type="password" placeholder="Password (min 6 characters)" value={password} onChange={e => setPassword(e.target.value)} onKeyDown={e => e.key === "Enter" && handleEmailAuth()} style={inputStyle} />
                 {authError && (
-                  <div style={{ background: "#FFF1F0", border: "1px solid #FFC4C4", borderRadius: 8, padding: "8px 12px", fontSize: 13, color: "#C00" }}>{authError}</div>
+                  <div style={{ background: "var(--danger-soft)", border: "1px solid var(--danger-soft)", borderRadius: 8, padding: "8px 12px", fontSize: 13, color: "#C00" }}>{authError}</div>
                 )}
                 <button onClick={handleEmailAuth} disabled={authLoading}
-                  style={{ padding: "12px", background: authLoading ? "#A5B4FC" : "#6366F1", color: "#fff", border: "none", borderRadius: 10, fontWeight: 800, fontSize: 15, cursor: authLoading ? "not-allowed" : "pointer" }}>
+                  style={{ padding: "12px", background: authLoading ? "var(--accent)" : "var(--accent)", color: "#fff", border: "none", borderRadius: 10, fontWeight: 800, fontSize: 15, cursor: authLoading ? "not-allowed" : "pointer" }}>
                   {authLoading ? "Please wait…" : mode === "signup" ? "✦ Create Account" : "→ Sign In"}
                 </button>
-                <p style={{ fontSize: 12, color: "#999", textAlign: "center", margin: 0 }}>
+                <p style={{ fontSize: 12, color: "var(--text-faint)", textAlign: "center", margin: 0 }}>
                   {mode === "signup" ? "Already have an account? " : "Don't have an account? "}
                   <button onClick={() => { setMode(mode === "signup" ? "login" : "signup"); setAuthError(""); }}
-                    style={{ background: "none", border: "none", color: "#6366F1", fontWeight: 700, cursor: "pointer", padding: 0, fontSize: 12 }}>
+                    style={{ background: "none", border: "none", color: "var(--accent)", fontWeight: 700, cursor: "pointer", padding: 0, fontSize: 12 }}>
                     {mode === "signup" ? "Sign in" : "Create one"}
                   </button>
                 </p>
               </div>
             )}
-            <button onClick={closeModal} style={{ display: "block", width: "100%", marginTop: 18, padding: "8px", background: "none", border: "none", color: "#AAA", fontSize: 13, cursor: "pointer" }}>
+            <button onClick={closeModal} style={{ display: "block", width: "100%", marginTop: 18, padding: "8px", background: "none", border: "none", color: "var(--text-faint)", fontSize: 13, cursor: "pointer" }}>
               Cancel
             </button>
           </div>
@@ -490,4 +490,4 @@ export default function NavBar() {
   );
 }
 
-const inputStyle: React.CSSProperties = { border: "1.5px solid #E0E0EE", borderRadius: 8, padding: "11px 12px", fontSize: 14, outline: "none", width: "100%", boxSizing: "border-box" };
+const inputStyle: React.CSSProperties = { border: "1.5px solid var(--border)", borderRadius: 8, padding: "11px 12px", fontSize: 14, outline: "none", width: "100%", boxSizing: "border-box" };

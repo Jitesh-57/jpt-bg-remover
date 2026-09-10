@@ -32,7 +32,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
   {
     slug: "saree-photoshoot",
     emoji: "🥻",
-    gradient: ["#7C3AED", "#DB2777"],
+    gradient: ["var(--accent-2)", "#DB2777"],
     title: "AI Saree Photoshoot — Vintage Saree Portrait Maker Free | JPT AI",
     metaDescription:
       "Create a viral vintage saree photoshoot free online. Upload a selfie and AI turns it into a cinematic saree portrait on the page — no app, no watermark.",
@@ -70,7 +70,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
   {
     slug: "retro-bollywood",
     emoji: "🎬",
-    gradient: ["#B45309", "#DC2626"],
+    gradient: ["#B45309", "var(--danger)"],
     title: "Retro 90s Bollywood Photo Editor — Free Cinematic AI | JPT AI",
     metaDescription:
       "Make viral retro 90s Bollywood photos free online. Upload a selfie and AI applies a cinematic vintage film look on the page — no app, no watermark.",
@@ -108,7 +108,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
   {
     slug: "restore-old-photos",
     emoji: "🖼️",
-    gradient: ["#475569", "#0EA5E9"],
+    gradient: ["var(--text-muted)", "var(--accent-2)"],
     title: "Restore Old Photos Free — AI Photo Restoration Online | JPT AI",
     metaDescription:
       "Restore old, blurry and damaged photos free online. Upload a vintage photo and AI recovers detail and clarity on the page — no app, no watermark.",
@@ -184,7 +184,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
   {
     slug: "pet-portrait",
     emoji: "🐶",
-    gradient: ["#7C2D12", "#16A34A"],
+    gradient: ["#7C2D12", "var(--success)"],
     title: "AI Pet Portrait Maker — Royal & Cartoon Pet Photos Free | JPT AI",
     metaDescription:
       "Create fun AI pet portraits free online. Upload your pet's photo and AI makes royal or cartoon art on the page — no app needed, no watermark.",
@@ -203,7 +203,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
   {
     slug: "anime-style",
     emoji: "🎨",
-    gradient: ["#7C3AED", "#2563EB"],
+    gradient: ["var(--accent-2)", "#2563EB"],
     title: "AI Anime Style Photo Converter — Turn Photo Into Anime Free | JPT AI",
     metaDescription:
       "Turn photos into anime-style art free online. Upload a selfie and AI converts it to hand-drawn animation style on the page — no app, no watermark.",
@@ -222,7 +222,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
   {
     slug: "passport-photo",
     emoji: "🛂",
-    gradient: ["#0369A1", "#64748B"],
+    gradient: ["#0369A1", "var(--text-muted)"],
     title: "AI Passport Photo Maker — White Background ID Photo Free | JPT AI",
     metaDescription:
       "Make a passport / ID photo free online. Upload a selfie and AI creates a clean white-background headshot on the page — no app, no watermark.",
@@ -241,7 +241,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
   {
     slug: "background-changer",
     emoji: "🌅",
-    gradient: ["#0891B2", "#7C3AED"],
+    gradient: ["#0891B2", "var(--accent-2)"],
     title: "AI Background Changer — Replace Photo Background Free | JPT AI",
     metaDescription:
       "Change any photo background free online. Upload your photo and AI replaces the background with a studio scene on the page — no app, no watermark.",
@@ -336,7 +336,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
   {
     slug: "gym-transformation",
     emoji: "💪",
-    gradient: ["#0F172A", "#DC2626"],
+    gradient: ["var(--text)", "var(--danger)"],
     title: "AI Gym Transformation Photo — Fitness Physique Preview Free | JPT AI",
     metaDescription:
       "Visualize a fitter you with an AI gym transformation photo free online. Upload a photo and AI shows a toned physique preview — no watermark.",
@@ -355,7 +355,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
   {
     slug: "ghibli-style",
     emoji: "🌿",
-    gradient: ["#16A34A", "#0EA5E9"],
+    gradient: ["var(--success)", "var(--accent-2)"],
     title: "AI Ghibli Style Photo Converter — Studio Anime Art Free | JPT AI",
     metaDescription:
       "Turn photos into dreamy Ghibli-style anime art free online. Upload a selfie and AI redraws it in a hand-painted studio anime style — no watermark.",
@@ -374,7 +374,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
   {
     slug: "y2k-aesthetic",
     emoji: "💿",
-    gradient: ["#DB2777", "#7C3AED"],
+    gradient: ["#DB2777", "var(--accent-2)"],
     title: "AI Y2K Aesthetic Photo Filter — 2000s Style Photo Free | JPT AI",
     metaDescription:
       "Create a viral Y2K aesthetic photo free online. Upload a selfie and AI applies a 2000s-style filter on the page — no app, no watermark.",
@@ -393,7 +393,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
   {
     slug: "wedding-invite-photo",
     emoji: "💌",
-    gradient: ["#BE185D", "#D97706"],
+    gradient: ["#BE185D", "var(--warn)"],
     title: "AI Wedding Invitation Photo Maker — Elegant Couple Portrait Free | JPT AI",
     metaDescription:
       "Create an elegant AI wedding invitation photo free online. Upload a couple photo and AI makes a refined portrait for your invite — no watermark.",
@@ -488,7 +488,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
   {
     slug: "lego-minifigure",
     emoji: "🧱",
-    gradient: ["#DC2626", "#FACC15"],
+    gradient: ["var(--danger)", "#FACC15"],
     title: "AI Lego Minifigure Maker — Turn Photo Into a Lego Figure Free | JPT AI",
     metaDescription:
       "Turn your photo into a Lego minifigure free online. Upload a photo and AI renders a collectible brick-style figure on the page — no watermark.",
@@ -507,7 +507,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
   {
     slug: "pixar-avatar",
     emoji: "🎬",
-    gradient: ["#0EA5E9", "#F97316"],
+    gradient: ["var(--accent-2)", "#F97316"],
     title: "AI Pixar Avatar Maker — 3D Cartoon Character Photo Free | JPT AI",
     metaDescription:
       "Turn your photo into a Pixar-style 3D cartoon avatar free online. Upload a selfie and AI renders an animated-movie character on the page — no watermark.",
@@ -545,7 +545,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
   {
     slug: "age-progression",
     emoji: "⏳",
-    gradient: ["#475569", "#94A3B8"],
+    gradient: ["var(--text-muted)", "var(--text-faint)"],
     title: "AI Age Progression Photo — See Yourself Older or Younger Free | JPT AI",
     metaDescription:
       "See yourself older or younger with the AI age progression photo tool free online. Upload a selfie and AI ages the photo on the page — no watermark.",
@@ -564,7 +564,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
   {
     slug: "superhero-costume",
     emoji: "🦸",
-    gradient: ["#1D4ED8", "#DC2626"],
+    gradient: ["#1D4ED8", "var(--danger)"],
     title: "AI Superhero Costume Maker — Turn Photo Into a Hero Free | JPT AI",
     metaDescription:
       "Turn your photo into a superhero free online. Upload a selfie and AI dresses you in a heroic costume on the page — no app, no watermark.",
@@ -602,7 +602,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
   {
     slug: "90s-yearbook-photo",
     emoji: "📒",
-    gradient: ["#0D9488", "#D97706"],
+    gradient: ["#0D9488", "var(--warn)"],
     title: "AI 90s Yearbook Photo Maker — Retro School Portrait Free | JPT AI",
     metaDescription:
       "Create a viral 90s yearbook photo free online. Upload a selfie and AI applies a retro school-portrait look on the page — no app, no watermark.",
@@ -678,7 +678,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
   {
     slug: "comic-book-cover",
     emoji: "💥",
-    gradient: ["#DC2626", "#FACC15"],
+    gradient: ["var(--danger)", "#FACC15"],
     title: "AI Comic Book Cover Maker — Superhero Comic Portrait Free | JPT AI",
     metaDescription:
       "Turn your photo into a comic book cover free online. Upload a photo and AI illustrates you as a comic-style superhero cover on the page — no app, no watermark.",
@@ -697,7 +697,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
   {
     slug: "coastal-cowgirl",
     emoji: "🤠",
-    gradient: ["#D97706", "#0EA5E9"],
+    gradient: ["var(--warn)", "var(--accent-2)"],
     title: "Coastal Cowgirl Aesthetic AI Photoshoot — Free Photo Filter | JPT AI",
     metaDescription:
       "Get the viral coastal cowgirl aesthetic free online. Upload a selfie and AI styles a breezy denim-and-boots beach look on the page — no app, no watermark.",
@@ -792,7 +792,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
   {
     slug: "astronaut-photoshoot",
     emoji: "🚀",
-    gradient: ["#1E1B4B", "#0EA5E9"],
+    gradient: ["#1E1B4B", "var(--accent-2)"],
     title: "AI Astronaut Photo Maker — Space Suit Portrait Free | JPT AI",
     metaDescription:
       "Turn your photo into an astronaut portrait free online. Upload a selfie and AI puts you in a space suit among the stars on the page — no app, no watermark.",
@@ -811,7 +811,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
   {
     slug: "pixel-art-avatar",
     emoji: "👾",
-    gradient: ["#22C55E", "#6366F1"],
+    gradient: ["#22C55E", "var(--accent)"],
     title: "AI Pixel Art Avatar Maker — 8-Bit Photo Generator Free | JPT AI",
     metaDescription:
       "Turn your photo into 8-bit pixel art free online. Upload a selfie and AI creates a retro pixel-art avatar on the page — no app, no watermark.",

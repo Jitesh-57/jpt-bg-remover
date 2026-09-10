@@ -205,8 +205,8 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient, appNam
           onDrop={(e) => { e.preventDefault(); onFile(e.dataTransfer.files?.[0]); }}
           style={{
             position: "relative", aspectRatio: "1 / 1", borderRadius: 18, overflow: "hidden",
-            border: original ? "1px solid #E5E7EB" : "2px dashed #C7D2FE",
-            background: original ? "#000" : "#F5F5FF", cursor: original ? "default" : "pointer",
+            border: original ? "1px solid var(--border)" : "2px dashed var(--accent-border)",
+            background: original ? "#000" : "var(--surface-2)", cursor: original ? "default" : "pointer",
             display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center",
           }}
         >
@@ -216,25 +216,25 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient, appNam
           ) : (
             <div style={{ padding: 24 }}>
               <div style={{ fontSize: 34, marginBottom: 10 }}>📂</div>
-              <div style={{ fontSize: 15, fontWeight: 800, color: "#4338CA" }}>Upload your photo</div>
-              <div style={{ fontSize: 12.5, color: "#6B7280", marginTop: 4 }}>Click or drag &amp; drop · JPG, PNG, WEBP</div>
+              <div style={{ fontSize: 15, fontWeight: 800, color: "var(--accent)" }}>Upload your photo</div>
+              <div style={{ fontSize: 12.5, color: "var(--text-muted)", marginTop: 4 }}>Click or drag &amp; drop · JPG, PNG, WEBP</div>
             </div>
           )}
           {original && (
             <button onClick={pick}
-              style={{ position: "absolute", top: 10, right: 10, padding: "6px 12px", background: "rgba(255,255,255,0.92)", border: "none", borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: "pointer", color: "#4338CA" }}>
+              style={{ position: "absolute", top: 10, right: 10, padding: "6px 12px", background: "rgba(255,255,255,0.92)", border: "none", borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: "pointer", color: "var(--accent)" }}>
               Change
             </button>
           )}
         </div>
 
         {/* OUTPUT */}
-        <div style={{ position: "relative", aspectRatio: "1 / 1", borderRadius: 18, overflow: "hidden", border: "1px solid #E5E7EB", background: result ? "#000" : `linear-gradient(135deg, ${gradient[0]}, ${gradient[1]})`, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center" }}>
+        <div style={{ position: "relative", aspectRatio: "1 / 1", borderRadius: 18, overflow: "hidden", border: "1px solid var(--border)", background: result ? "#000" : `linear-gradient(135deg, ${gradient[0]}, ${gradient[1]})`, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center" }}>
           {result ? (
             <>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={result} alt="AI result" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
-              <span style={{ position: "absolute", bottom: 12, right: 12, padding: "6px 14px", background: "rgba(99,102,241,0.92)", color: "#fff", fontSize: 12, fontWeight: 700, borderRadius: 8 }}>{badge}</span>
+              <span style={{ position: "absolute", bottom: 12, right: 12, padding: "6px 14px", background: "rgba(15,157,107,0.92)", color: "#fff", fontSize: 12, fontWeight: 700, borderRadius: 8 }}>{badge}</span>
             </>
           ) : busy ? (
             <div style={{ color: "#fff" }}>
@@ -255,30 +255,30 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient, appNam
       <div style={{ textAlign: "center", marginTop: 24 }}>
         {!original ? (
           <button onClick={pick}
-            style={{ background: "linear-gradient(135deg,#6366F1,#8B5CF6)", color: "#fff", fontWeight: 800, fontSize: 16, padding: "15px 38px", borderRadius: 14, border: "none", cursor: "pointer", boxShadow: "0 8px 30px rgba(99,102,241,0.4)" }}>
+            style={{ background: "linear-gradient(135deg,var(--accent),var(--accent-2))", color: "#fff", fontWeight: 800, fontSize: 16, padding: "15px 38px", borderRadius: 14, border: "none", cursor: "pointer", boxShadow: "0 8px 30px rgba(15,157,107,0.4)" }}>
             📂 Upload Photo to Start
           </button>
         ) : (
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
             {result && (
               <button onClick={pick} disabled={busy}
-                style={{ background: "#fff", color: "#4338CA", fontWeight: 800, fontSize: 16, padding: "15px 28px", borderRadius: 14, border: "1.5px solid #C7D2FE", cursor: busy ? "default" : "pointer" }}>
+                style={{ background: "var(--surface)", color: "var(--accent)", fontWeight: 800, fontSize: 16, padding: "15px 28px", borderRadius: 14, border: "1.5px solid var(--accent-border)", cursor: busy ? "default" : "pointer" }}>
                 📂 Upload New Image
               </button>
             )}
             <button onClick={generate} disabled={busy}
-              style={{ background: busy ? "#A5B4FC" : "linear-gradient(135deg,#6366F1,#8B5CF6)", color: "#fff", fontWeight: 800, fontSize: 16, padding: "15px 38px", borderRadius: 14, border: "none", cursor: busy ? "default" : "pointer", boxShadow: "0 8px 30px rgba(99,102,241,0.4)" }}>
+              style={{ background: busy ? "var(--accent)" : "linear-gradient(135deg,var(--accent),var(--accent-2))", color: "#fff", fontWeight: 800, fontSize: 16, padding: "15px 38px", borderRadius: 14, border: "none", cursor: busy ? "default" : "pointer", boxShadow: "0 8px 30px rgba(15,157,107,0.4)" }}>
               {busy ? "Working…" : result ? "↻ Generate Again" : `${cta} →`}
             </button>
             {result && (
               <a href={result} download={`jpt-${slug}.png`} onClick={() => trackDownloadButtonClicked(`creative:${slug}`)}
-                style={{ background: "#0F172A", color: "#fff", fontWeight: 800, fontSize: 16, padding: "15px 30px", borderRadius: 14, textDecoration: "none" }}>
+                style={{ background: "var(--bg-elevated)", color: "#fff", fontWeight: 800, fontSize: 16, padding: "15px 30px", borderRadius: 14, textDecoration: "none" }}>
                 ⬇ {t.creativeDownload}
               </a>
             )}
           </div>
         )}
-        <div style={{ marginTop: 12, fontSize: 12.5, color: "#9CA3AF" }}>
+        <div style={{ marginTop: 12, fontSize: 12.5, color: "var(--text-faint)" }}>
           🎁 New users get 5 free trials, one per tool — try this app free · 2 credits per generation after that
         </div>
       </div>
@@ -292,7 +292,7 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient, appNam
 
       {/* Free-trial note after a successful trial generation */}
       {trialDone && status === "done" && (
-        <Notice color="#4338CA" bg="#EEF2FF">
+        <Notice color="var(--accent)" bg="var(--accent-soft)">
           🎁 That was your free trial for this app
           {trialsRemaining !== null && trialsRemaining > 0
             ? ` — you have ${trialsRemaining} more free trial${trialsRemaining === 1 ? "" : "s"} for other tools or apps, or `
@@ -306,7 +306,7 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient, appNam
         </Notice>
       )}
       {status === "error" && message && (
-        <Notice color="#B91C1C" bg="#FEF2F2">{message}</Notice>
+        <Notice color="#B91C1C" bg="var(--danger-soft)">{message}</Notice>
       )}
 
       {showPricing && (

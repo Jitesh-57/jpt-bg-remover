@@ -4,7 +4,7 @@ import { ALTERNATIVES, TOOLS, type ToolKey } from "@/lib/alternatives";
 import ScrollReveal from "@/app/_components/ScrollReveal";
 
 const BASE = "https://www.sjpt.io";
-const GRAD = "linear-gradient(120deg,#6366F1,#8B5CF6)";
+const GRAD = "linear-gradient(120deg,var(--accent),var(--accent-2))";
 
 export const metadata: Metadata = {
   title: { absolute: "Free Alternatives to Popular Image Tools (No Watermark) | sjpt.io" },
@@ -48,42 +48,42 @@ export default function AlternativesIndex() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }} />
       <ScrollReveal />
 
-      <div style={{ fontFamily: "system-ui,-apple-system,sans-serif", color: "#111827", background: "#fff" }}>
-        <section style={{ background: "linear-gradient(160deg,#F5F5FF 0%,#fff 55%,#F0FDF4 100%)", padding: "64px 24px 48px", textAlign: "center" }}>
+      <div style={{ fontFamily: "system-ui,-apple-system,sans-serif", color: "var(--text)", background: "var(--surface)" }}>
+        <section style={{ background: "linear-gradient(160deg,var(--surface-2) 0%,var(--surface) 55%,var(--success-soft) 100%)", padding: "64px 24px 48px", textAlign: "center" }}>
           <div style={{ maxWidth: 760, margin: "0 auto" }}>
-            <div style={{ fontSize: 13, color: "#6B7280", marginBottom: 18 }}>
-              <Link href="/" style={{ color: "#6B7280", textDecoration: "none" }}>Home</Link>
+            <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 18 }}>
+              <Link href="/" style={{ color: "var(--text-muted)", textDecoration: "none" }}>Home</Link>
               {" / "}
-              <span style={{ color: "#374151" }}>Alternatives</span>
+              <span style={{ color: "var(--text-muted)" }}>Alternatives</span>
             </div>
-            <h1 style={{ fontSize: "clamp(2rem,5vw,3rem)", fontWeight: 900, lineHeight: 1.14, letterSpacing: "-0.03em", color: "#0F172A", margin: "0 0 16px" }}>
+            <h1 style={{ fontSize: "clamp(2rem,5vw,3rem)", fontWeight: 900, lineHeight: 1.14, letterSpacing: "-0.03em", color: "var(--text)", margin: "0 0 16px" }}>
               Free{" "}
               <span style={{ background: GRAD, WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", color: "transparent" }}>alternatives</span>{" "}
               to the tools you know
             </h1>
-            <p style={{ fontSize: "clamp(1rem,2vw,1.12rem)", color: "#4B5563", lineHeight: 1.7, maxWidth: 600, margin: "0 auto" }}>
+            <p style={{ fontSize: "clamp(1rem,2vw,1.12rem)", color: "var(--text-muted)", lineHeight: 1.7, maxWidth: 600, margin: "0 auto" }}>
               Hit a paywall, watermark or sign-up wall? sjpt.io does the same core jobs — free, in your browser, with nothing to install.
             </p>
           </div>
         </section>
 
-        <section style={{ padding: "48px 24px 72px", background: "#fff" }}>
+        <section style={{ padding: "48px 24px 72px", background: "var(--surface)" }}>
           <div style={{ maxWidth: 900, margin: "0 auto", display: "grid", gap: 40 }}>
             {grouped.map((g) => (
               <div key={g.tool}>
                 <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", flexWrap: "wrap", gap: 8, marginBottom: 16 }}>
-                  <h2 style={{ fontSize: 20, fontWeight: 800, color: "#0F172A", margin: 0, letterSpacing: "-0.02em" }}>
+                  <h2 style={{ fontSize: 20, fontWeight: 800, color: "var(--text)", margin: 0, letterSpacing: "-0.02em" }}>
                     {g.info.label} alternatives
                   </h2>
-                  <Link href={g.info.href} style={{ fontSize: 14, fontWeight: 700, color: "#6366F1", textDecoration: "none" }}>
+                  <Link href={g.info.href} style={{ fontSize: 14, fontWeight: 700, color: "var(--accent)", textDecoration: "none" }}>
                     Open free tool →
                   </Link>
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(230px,1fr))", gap: 12 }}>
                   {g.items.map((a) => (
-                    <Link key={a.slug} href={`/alternatives/${a.slug}`} className="jpt-hover" style={{ display: "block", background: "#F8F9FC", border: "1px solid #EAECF5", borderRadius: 14, padding: "16px 18px", textDecoration: "none" }}>
-                      <div style={{ fontSize: 15.5, fontWeight: 800, color: "#111827" }}>{a.name} alternative</div>
-                      <div style={{ fontSize: 13, color: "#6B7280", marginTop: 4 }}>Free {a.category} — no watermark</div>
+                    <Link key={a.slug} href={`/alternatives/${a.slug}`} className="jpt-hover" style={{ display: "block", background: "var(--surface-2)", border: "1px solid var(--border)", borderRadius: 14, padding: "16px 18px", textDecoration: "none" }}>
+                      <div style={{ fontSize: 15.5, fontWeight: 800, color: "var(--text)" }}>{a.name} alternative</div>
+                      <div style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 4 }}>Free {a.category} — no watermark</div>
                     </Link>
                   ))}
                 </div>

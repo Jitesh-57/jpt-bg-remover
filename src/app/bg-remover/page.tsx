@@ -79,19 +79,19 @@ export default function BgRemoverPage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#F8FAFC', padding: '40px 24px' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--surface-2)', padding: '40px 24px' }}>
       <div style={{ maxWidth: 900, margin: '0 auto' }}>
 
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#EEF2FF', borderRadius: 20, padding: '6px 16px', marginBottom: 16 }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--accent-soft)', borderRadius: 20, padding: '6px 16px', marginBottom: 16 }}>
             <span style={{ fontSize: 16 }}>🪄</span>
-            <span style={{ fontSize: 13, fontWeight: 700, color: '#6366F1' }}>AI-Powered · Paid Plan</span>
+            <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--accent)' }}>AI-Powered · Paid Plan</span>
           </div>
-          <h1 style={{ fontSize: 40, fontWeight: 900, color: '#0F172A', margin: '0 0 12px', letterSpacing: '-0.02em' }}>
+          <h1 style={{ fontSize: 40, fontWeight: 900, color: 'var(--text)', margin: '0 0 12px', letterSpacing: '-0.02em' }}>
             Remove Background
           </h1>
-          <p style={{ fontSize: 17, color: '#64748B', margin: 0 }}>
+          <p style={{ fontSize: 17, color: 'var(--text-muted)', margin: 0 }}>
             AI-powered background removal with clean, precise edges.
           </p>
         </div>
@@ -104,19 +104,19 @@ export default function BgRemoverPage() {
               onDragOver={e => { e.preventDefault(); setDragging(true) }}
               onDragLeave={() => setDragging(false)}
               onDrop={handleDrop}
-              style={{ border: `2px dashed ${dragging ? '#6366F1' : '#CBD5E1'}`, borderRadius: 20, padding: '60px 40px', textAlign: 'center', cursor: 'pointer', background: dragging ? '#EEF2FF' : '#fff', transition: 'all 0.2s' }}
+              style={{ border: `2px dashed ${dragging ? 'var(--accent)' : 'var(--border)'}`, borderRadius: 20, padding: '60px 40px', textAlign: 'center', cursor: 'pointer', background: dragging ? 'var(--accent-soft)' : 'var(--surface-3)', transition: 'all 0.2s' }}
             >
               <div style={{ fontSize: 52, marginBottom: 16 }}>🖼️</div>
-              <div style={{ fontSize: 20, fontWeight: 800, color: '#0F172A', marginBottom: 8 }}>Drop your image here</div>
-              <div style={{ fontSize: 15, color: '#64748B', marginBottom: 24 }}>or click to browse — JPG, PNG, WebP supported</div>
-              <div style={{ display: 'inline-block', padding: '12px 28px', background: '#6366F1', color: '#fff', borderRadius: 10, fontWeight: 700, fontSize: 15 }}>
+              <div style={{ fontSize: 20, fontWeight: 800, color: 'var(--text)', marginBottom: 8 }}>Drop your image here</div>
+              <div style={{ fontSize: 15, color: 'var(--text-muted)', marginBottom: 24 }}>or click to browse — JPG, PNG, WebP supported</div>
+              <div style={{ display: 'inline-block', padding: '12px 28px', background: 'var(--accent)', color: '#fff', borderRadius: 10, fontWeight: 700, fontSize: 15 }}>
                 Choose Image
               </div>
               <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); e.target.value = '' }} />
             </div>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginTop: 32 }}>
               {['✨ Gemini AI quality', '🎯 AI-powered precision', '⚡ Results in seconds', '🖼️ Transparent PNG output', '🔓 Included in paid plans'].map(f => (
-                <div key={f} style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: 20, padding: '8px 16px', fontSize: 13, color: '#374151', fontWeight: 600 }}>{f}</div>
+                <div key={f} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 20, padding: '8px 16px', fontSize: 13, color: 'var(--text-muted)', fontWeight: 600 }}>{f}</div>
               ))}
             </div>
           </>
@@ -124,14 +124,14 @@ export default function BgRemoverPage() {
 
         {/* Sign-in required */}
         {status === 'auth-required' && (
-          <div style={{ background: '#fff', borderRadius: 20, padding: 48, textAlign: 'center', boxShadow: '0 4px 20px rgba(0,0,0,0.06)' }}>
+          <div style={{ background: 'var(--surface)', borderRadius: 20, padding: 48, textAlign: 'center', boxShadow: '0 4px 20px rgba(0,0,0,0.06)' }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>🔐</div>
-            <h2 style={{ fontSize: 24, fontWeight: 800, color: '#0F172A', margin: '0 0 12px' }}>Sign in to continue</h2>
-            <p style={{ fontSize: 16, color: '#64748B', margin: '0 0 24px' }}>AI background removal is available on paid plans. Sign in to continue.</p>
-            <a href="/auth/signin" style={{ display: 'inline-block', padding: '14px 32px', background: '#6366F1', color: '#fff', borderRadius: 12, fontWeight: 800, fontSize: 16, textDecoration: 'none' }}>
+            <h2 style={{ fontSize: 24, fontWeight: 800, color: 'var(--text)', margin: '0 0 12px' }}>Sign in to continue</h2>
+            <p style={{ fontSize: 16, color: 'var(--text-muted)', margin: '0 0 24px' }}>AI background removal is available on paid plans. Sign in to continue.</p>
+            <a href="/auth/signin" style={{ display: 'inline-block', padding: '14px 32px', background: 'var(--accent)', color: '#fff', borderRadius: 12, fontWeight: 800, fontSize: 16, textDecoration: 'none' }}>
               Sign In
             </a>
-            <button onClick={reset} style={{ display: 'block', margin: '16px auto 0', background: 'none', border: 'none', color: '#94A3B8', cursor: 'pointer', fontSize: 14 }}>
+            <button onClick={reset} style={{ display: 'block', margin: '16px auto 0', background: 'none', border: 'none', color: 'var(--text-faint)', cursor: 'pointer', fontSize: 14 }}>
               ← Try another image
             </button>
           </div>
@@ -139,14 +139,14 @@ export default function BgRemoverPage() {
 
         {/* Upgrade required */}
         {status === 'upgrade-required' && (
-          <div style={{ background: '#fff', borderRadius: 20, padding: 48, textAlign: 'center', boxShadow: '0 4px 20px rgba(0,0,0,0.06)' }}>
+          <div style={{ background: 'var(--surface)', borderRadius: 20, padding: 48, textAlign: 'center', boxShadow: '0 4px 20px rgba(0,0,0,0.06)' }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>✨</div>
-            <h2 style={{ fontSize: 24, fontWeight: 800, color: '#0F172A', margin: '0 0 12px' }}>Upgrade to remove backgrounds</h2>
-            <p style={{ fontSize: 16, color: '#64748B', margin: '0 0 24px' }}>AI background removal is a premium feature. Upgrade to a paid plan to use it.</p>
-            <a href="/pricing" style={{ display: 'inline-block', padding: '14px 32px', background: '#6366F1', color: '#fff', borderRadius: 12, fontWeight: 800, fontSize: 16, textDecoration: 'none' }}>
+            <h2 style={{ fontSize: 24, fontWeight: 800, color: 'var(--text)', margin: '0 0 12px' }}>Upgrade to remove backgrounds</h2>
+            <p style={{ fontSize: 16, color: 'var(--text-muted)', margin: '0 0 24px' }}>AI background removal is a premium feature. Upgrade to a paid plan to use it.</p>
+            <a href="/pricing" style={{ display: 'inline-block', padding: '14px 32px', background: 'var(--accent)', color: '#fff', borderRadius: 12, fontWeight: 800, fontSize: 16, textDecoration: 'none' }}>
               View Plans
             </a>
-            <button onClick={reset} style={{ display: 'block', margin: '16px auto 0', background: 'none', border: 'none', color: '#94A3B8', cursor: 'pointer', fontSize: 14 }}>
+            <button onClick={reset} style={{ display: 'block', margin: '16px auto 0', background: 'none', border: 'none', color: 'var(--text-faint)', cursor: 'pointer', fontSize: 14 }}>
               ← Try another image
             </button>
           </div>
@@ -154,14 +154,14 @@ export default function BgRemoverPage() {
 
         {/* Processing */}
         {status === 'processing' && original && (
-          <div style={{ background: '#fff', borderRadius: 20, padding: 32, boxShadow: '0 4px 20px rgba(0,0,0,0.06)' }}>
+          <div style={{ background: 'var(--surface)', borderRadius: 20, padding: 32, boxShadow: '0 4px 20px rgba(0,0,0,0.06)' }}>
             <img src={original} alt="original" style={{ width: '100%', maxHeight: 400, objectFit: 'contain', borderRadius: 12, marginBottom: 24 }} />
             <div style={{ textAlign: 'center' }}>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 12, padding: '16px 28px', background: '#EEF2FF', borderRadius: 12 }}>
-                <div style={{ width: 20, height: 20, border: '3px solid #6366F1', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
-                <span style={{ fontSize: 15, fontWeight: 700, color: '#6366F1' }}>🪄 Removing background…</span>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 12, padding: '16px 28px', background: 'var(--accent-soft)', borderRadius: 12 }}>
+                <div style={{ width: 20, height: 20, border: '3px solid var(--accent)', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+                <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--accent)' }}>🪄 Removing background…</span>
               </div>
-              <p style={{ fontSize: 13, color: '#94A3B8', marginTop: 12 }}>AI is processing your image. This takes 5–15 seconds.</p>
+              <p style={{ fontSize: 13, color: 'var(--text-faint)', marginTop: 12 }}>AI is processing your image. This takes 5–15 seconds.</p>
             </div>
             <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
           </div>
@@ -169,12 +169,12 @@ export default function BgRemoverPage() {
 
         {/* Error */}
         {status === 'error' && (
-          <div style={{ background: '#fff', borderRadius: 20, padding: 32, boxShadow: '0 4px 20px rgba(0,0,0,0.06)', textAlign: 'center' }}>
+          <div style={{ background: 'var(--surface)', borderRadius: 20, padding: 32, boxShadow: '0 4px 20px rgba(0,0,0,0.06)', textAlign: 'center' }}>
             {original && <img src={original} alt="original" style={{ width: '100%', maxHeight: 300, objectFit: 'contain', borderRadius: 12, marginBottom: 24 }} />}
-            <div style={{ background: '#FFF1F0', border: '1px solid #FCA5A5', borderRadius: 10, padding: 16, color: '#B91C1C', fontSize: 14, marginBottom: 16 }}>
+            <div style={{ background: 'var(--danger-soft)', border: '1px solid var(--danger-soft)', borderRadius: 10, padding: 16, color: '#B91C1C', fontSize: 14, marginBottom: 16 }}>
               <strong>Error:</strong> {error}
             </div>
-            <button onClick={reset} style={{ padding: '12px 28px', background: '#6366F1', color: '#fff', border: 'none', borderRadius: 10, cursor: 'pointer', fontWeight: 700, fontSize: 15 }}>Try Again</button>
+            <button onClick={reset} style={{ padding: '12px 28px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 10, cursor: 'pointer', fontWeight: 700, fontSize: 15 }}>Try Again</button>
           </div>
         )}
 
@@ -184,30 +184,30 @@ export default function BgRemoverPage() {
             <div style={{ display: 'flex', justifyContent: 'center', gap: 4, marginBottom: 20 }}>
               {(['After', 'Before'] as const).map(label => (
                 <button key={label} onClick={() => setShowOriginal(label === 'Before')}
-                  style={{ padding: '8px 20px', borderRadius: 8, border: 'none', cursor: 'pointer', fontWeight: 700, fontSize: 14, background: (label === 'Before') === showOriginal ? '#6366F1' : '#F1F5F9', color: (label === 'Before') === showOriginal ? '#fff' : '#374151' }}>
+                  style={{ padding: '8px 20px', borderRadius: 8, border: 'none', cursor: 'pointer', fontWeight: 700, fontSize: 14, background: (label === 'Before') === showOriginal ? 'var(--accent)' : 'var(--surface-2)', color: (label === 'Before') === showOriginal ? '#fff' : 'var(--text-muted)' }}>
                   {label}
                 </button>
               ))}
             </div>
 
-            <div style={{ background: '#fff', borderRadius: 20, overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', marginBottom: 20 }}>
-              <div style={{ backgroundImage: showOriginal ? 'none' : 'repeating-conic-gradient(#e2e8f0 0% 25%, #fff 0% 50%) 0 0 / 20px 20px', background: showOriginal ? '#F8FAFC' : undefined, padding: 20, display: 'flex', justifyContent: 'center', minHeight: 300, alignItems: 'center' }}>
+            <div style={{ background: 'var(--surface)', borderRadius: 20, overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', marginBottom: 20 }}>
+              <div style={{ backgroundImage: showOriginal ? 'none' : 'repeating-conic-gradient(var(--border) 0% 25%, var(--surface) 0% 50%) 0 0 / 20px 20px', background: showOriginal ? 'var(--surface-2)' : undefined, padding: 20, display: 'flex', justifyContent: 'center', minHeight: 300, alignItems: 'center' }}>
                 <img src={showOriginal ? original : result} alt={showOriginal ? 'original' : 'background removed'} style={{ maxWidth: '100%', maxHeight: 500, objectFit: 'contain', borderRadius: 8 }} />
               </div>
             </div>
 
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
               <button onClick={downloadResult}
-                style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '14px 32px', background: '#6366F1', color: '#fff', border: 'none', borderRadius: 12, fontWeight: 800, fontSize: 16, cursor: 'pointer', boxShadow: '0 4px 14px rgba(99,102,241,0.4)' }}>
+                style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '14px 32px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 12, fontWeight: 800, fontSize: 16, cursor: 'pointer', boxShadow: '0 4px 14px rgba(15,157,107,0.4)' }}>
                 ⬇ Download PNG
               </button>
               <button onClick={reset}
-                style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '14px 24px', background: '#F1F5F9', color: '#374151', border: 'none', borderRadius: 12, fontWeight: 700, fontSize: 16, cursor: 'pointer' }}>
+                style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '14px 24px', background: 'var(--surface-2)', color: 'var(--text-muted)', border: 'none', borderRadius: 12, fontWeight: 700, fontSize: 16, cursor: 'pointer' }}>
                 🖼️ New Image
               </button>
             </div>
 
-            <p style={{ textAlign: 'center', fontSize: 13, color: '#94A3B8', marginTop: 16 }}>
+            <p style={{ textAlign: 'center', fontSize: 13, color: 'var(--text-faint)', marginTop: 16 }}>
               Result is a transparent PNG — perfect for logos, product photos, and profile pictures.
             </p>
           </div>

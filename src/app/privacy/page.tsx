@@ -9,14 +9,14 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <main style={{ fontFamily: "system-ui,-apple-system,sans-serif", color: "#111", background: "#fff", minHeight: "100vh" }}>
+    <main style={{ fontFamily: "system-ui,-apple-system,sans-serif", color: "var(--text)", background: "var(--surface)", minHeight: "100vh" }}>
       <div style={{ maxWidth: 780, margin: "0 auto", padding: "60px 24px 80px" }}>
         <h1 style={{ fontSize: 36, fontWeight: 900, marginBottom: 8 }}>Privacy Policy</h1>
-        <p style={{ color: "#666", fontSize: 14, marginBottom: 48 }}>Last updated: June 23, 2025</p>
+        <p style={{ color: "var(--text-muted)", fontSize: 14, marginBottom: 48 }}>Last updated: June 23, 2025</p>
 
         <Section title="1. Introduction">
           JPT AI (&quot;we&quot;, &quot;our&quot;, or &quot;us&quot;) operates the website{" "}
-          <a href="https://www.sjpt.io" style={{ color: "#6366F1" }}>www.sjpt.io</a> and provides AI-powered image editing tools. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our service.
+          <a href="https://www.sjpt.io" style={{ color: "var(--accent)" }}>www.sjpt.io</a> and provides AI-powered image editing tools. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our service.
         </Section>
 
         <Section title="2. Information We Collect">
@@ -70,7 +70,7 @@ export default function PrivacyPage() {
             <li>Withdraw consent at any time</li>
           </ul>
           To exercise these rights, contact us at{" "}
-          <a href="mailto:support@sjpt.io" style={{ color: "#6366F1" }}>support@sjpt.io</a>.
+          <a href="mailto:support@sjpt.io" style={{ color: "var(--accent)" }}>support@sjpt.io</a>.
         </Section>
 
         <Section title="8. Cookies">
@@ -89,8 +89,8 @@ export default function PrivacyPage() {
           If you have questions about this Privacy Policy, please contact us at:
           <br /><br />
           <b>JPT AI</b><br />
-          Email: <a href="mailto:support@sjpt.io" style={{ color: "#6366F1" }}>support@sjpt.io</a><br />
-          Website: <a href="https://www.sjpt.io" style={{ color: "#6366F1" }}>www.sjpt.io</a>
+          Email: <a href="mailto:support@sjpt.io" style={{ color: "var(--accent)" }}>support@sjpt.io</a><br />
+          Website: <a href="https://www.sjpt.io" style={{ color: "var(--accent)" }}>www.sjpt.io</a>
         </Section>
       </div>
     </main>
@@ -100,8 +100,8 @@ export default function PrivacyPage() {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div style={{ marginBottom: 36 }}>
-      <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 12, color: "#111" }}>{title}</h2>
-      <p style={{ fontSize: 15, lineHeight: 1.8, color: "#444", margin: 0 }}>{children}</p>
+      <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 12, color: "var(--text)" }}>{title}</h2>
+      <p style={{ fontSize: 15, lineHeight: 1.8, color: "var(--text-muted)", margin: 0 }}>{children}</p>
     </div>
   );
 }

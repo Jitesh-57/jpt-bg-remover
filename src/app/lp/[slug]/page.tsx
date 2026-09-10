@@ -32,7 +32,7 @@ export default function AdLandingPage({ params }: { params: { slug: string } }) 
     <main
       style={{
         minHeight: "100vh",
-        background: "linear-gradient(160deg,#0F172A 0%,#1E1B4B 100%)",
+        background: "linear-gradient(160deg,var(--text) 0%,#1E1B4B 100%)",
         color: "#fff",
         display: "flex",
         flexDirection: "column",
@@ -44,33 +44,33 @@ export default function AdLandingPage({ params }: { params: { slug: string } }) 
     >
       <div style={{ maxWidth: 720 }}>
         <a href="/" style={{ display: "inline-flex", alignItems: "center", gap: 8, textDecoration: "none", marginBottom: 32 }}>
-          <span style={{ fontSize: 20, fontWeight: 900, color: "#818CF8" }}>✦</span>
+          <span style={{ fontSize: 20, fontWeight: 900, color: "var(--accent)" }}>✦</span>
           <span style={{ fontSize: 18, fontWeight: 900, color: "#fff" }}>JPT AI</span>
         </a>
 
-        <div style={{ display: "inline-block", padding: "6px 14px", background: "rgba(129,140,248,0.15)", border: "1px solid rgba(129,140,248,0.35)", borderRadius: 999, fontSize: 13, fontWeight: 700, color: "#C7D2FE", marginBottom: 24 }}>
+        <div style={{ display: "inline-block", padding: "6px 14px", background: "rgba(15,157,107,0.15)", border: "1px solid rgba(15,157,107,0.35)", borderRadius: 999, fontSize: 13, fontWeight: 700, color: "var(--accent)", marginBottom: 24 }}>
           {lp.badge}
         </div>
 
         <h1 style={{ fontSize: 48, fontWeight: 900, lineHeight: 1.1, margin: "0 0 20px", letterSpacing: "-0.02em" }}>
           {before}
-          <span style={{ background: "linear-gradient(90deg,#818CF8,#C084FC)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>{lp.highlight}</span>
+          <span style={{ background: "linear-gradient(90deg,var(--accent),#C084FC)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>{lp.highlight}</span>
           {after}
         </h1>
 
-        <p style={{ fontSize: 19, color: "#CBD5E1", lineHeight: 1.5, margin: "0 0 32px" }}>{lp.subhead}</p>
+        <p style={{ fontSize: 19, color: "var(--text-muted)", lineHeight: 1.5, margin: "0 0 32px" }}>{lp.subhead}</p>
 
         <AdLandingCTA href={lp.toolHref} label={lp.cta} tool={lp.tool} />
 
         <div style={{ display: "flex", flexWrap: "wrap", gap: 20, justifyContent: "center", marginTop: 40 }}>
           {lp.bullets.map((b) => (
-            <div key={b} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14, color: "#E2E8F0" }}>
+            <div key={b} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14, color: "var(--text-muted)" }}>
               <span style={{ color: "#34D399", fontWeight: 900 }}>✓</span> {b}
             </div>
           ))}
         </div>
 
-        <div style={{ marginTop: 48, fontSize: 13, color: "#94A3B8" }}>
+        <div style={{ marginTop: 48, fontSize: 13, color: "var(--text-faint)" }}>
           ⭐ 4.8/5 · Trusted by thousands of creators and businesses
         </div>
       </div>

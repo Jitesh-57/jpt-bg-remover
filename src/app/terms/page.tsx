@@ -9,14 +9,14 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <main style={{ fontFamily: "system-ui,-apple-system,sans-serif", color: "#111", background: "#fff", minHeight: "100vh" }}>
+    <main style={{ fontFamily: "system-ui,-apple-system,sans-serif", color: "var(--text)", background: "var(--surface)", minHeight: "100vh" }}>
       <div style={{ maxWidth: 780, margin: "0 auto", padding: "60px 24px 80px" }}>
         <h1 style={{ fontSize: 36, fontWeight: 900, marginBottom: 8 }}>Terms of Service</h1>
-        <p style={{ color: "#666", fontSize: 14, marginBottom: 48 }}>Last updated: June 23, 2025</p>
+        <p style={{ color: "var(--text-muted)", fontSize: 14, marginBottom: 48 }}>Last updated: June 23, 2025</p>
 
         <Section title="1. Acceptance of Terms">
           By accessing or using JPT AI (&quot;the Service&quot;) at{" "}
-          <a href="https://www.sjpt.io" style={{ color: "#6366F1" }}>www.sjpt.io</a>, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Service.
+          <a href="https://www.sjpt.io" style={{ color: "var(--accent)" }}>www.sjpt.io</a>, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Service.
         </Section>
 
         <Section title="2. Description of Service">
@@ -55,7 +55,7 @@ export default function TermsPage() {
 
         <Section title="7. Privacy">
           Your use of the Service is also governed by our{" "}
-          <a href="/privacy" style={{ color: "#6366F1" }}>Privacy Policy</a>, which is incorporated into these Terms by reference.
+          <a href="/privacy" style={{ color: "var(--accent)" }}>Privacy Policy</a>, which is incorporated into these Terms by reference.
         </Section>
 
         <Section title="8. Disclaimer of Warranties">
@@ -82,8 +82,8 @@ export default function TermsPage() {
           If you have questions about these Terms of Service, please contact us at:
           <br /><br />
           <b>JPT AI</b><br />
-          Email: <a href="mailto:support@sjpt.io" style={{ color: "#6366F1" }}>support@sjpt.io</a><br />
-          Website: <a href="https://www.sjpt.io" style={{ color: "#6366F1" }}>www.sjpt.io</a>
+          Email: <a href="mailto:support@sjpt.io" style={{ color: "var(--accent)" }}>support@sjpt.io</a><br />
+          Website: <a href="https://www.sjpt.io" style={{ color: "var(--accent)" }}>www.sjpt.io</a>
         </Section>
       </div>
     </main>
@@ -93,8 +93,8 @@ export default function TermsPage() {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div style={{ marginBottom: 36 }}>
-      <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 12, color: "#111" }}>{title}</h2>
-      <p style={{ fontSize: 15, lineHeight: 1.8, color: "#444", margin: 0 }}>{children}</p>
+      <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 12, color: "var(--text)" }}>{title}</h2>
+      <p style={{ fontSize: 15, lineHeight: 1.8, color: "var(--text-muted)", margin: 0 }}>{children}</p>
     </div>
   );
 }
