@@ -233,3 +233,14 @@ a { color: inherit; }
   }
   nav > div::-webkit-scrollbar { display: none; }
 }
+
+/* Footer column grid. minmax(0,…) lets columns shrink below their longest
+   label so a long link can't blow the page out horizontally on phones. */
+.jpt-footer-grid {
+  display: grid;
+  grid-template-columns: minmax(0,2fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);
+  gap: 40px;
+}
+@media (max-width: 760px) {
+  .jpt-footer-grid { grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 30px; }
+}

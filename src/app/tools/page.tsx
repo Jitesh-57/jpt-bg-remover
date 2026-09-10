@@ -153,6 +153,17 @@ export default function ToolsPage() {
           </div>
         </section>
 
+        {/* TRENDING: 80s AI photo prompts */}
+        <section style={{ padding: "8px 24px 40px", background: "var(--surface)" }}>
+          <div style={{ maxWidth: 1080, margin: "0 auto", background: "var(--surface-2)", border: "1px solid var(--accent-border)", borderRadius: 20, padding: "26px 28px", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
+            <div style={{ minWidth: 240 }}>
+              <div style={{ fontSize: 20, fontWeight: 900, color: "var(--text)", marginBottom: 6 }}>🔥 100 free 80s AI photo prompts</div>
+              <p style={{ margin: 0, fontSize: 15, color: "var(--text-muted)" }}>Copy-paste prompts for ChatGPT &amp; Gemini that keep your real face — then finish the image with the tools above.</p>
+            </div>
+            <Link href="/80s-ai-photo-prompts" className="jpt-btn jpt-btn-primary" style={{ textDecoration: "none" }}>Get the prompts →</Link>
+          </div>
+        </section>
+
         {/* BLOG CTA */}
         <section style={{ padding: "8px 24px 72px", background: "var(--surface)" }}>
           <div style={{ maxWidth: 1080, margin: "0 auto", background: "linear-gradient(135deg,var(--accent),var(--accent-2))", borderRadius: 20, padding: "32px 30px", textAlign: "center" }}>
