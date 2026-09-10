@@ -175,7 +175,7 @@ export default function NavBar() {
           {/* Brand — never wraps, never shrinks (the larger base font used to break this on phones) */}
           <a href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none", marginRight: 8, flexShrink: 0, whiteSpace: "nowrap" }}>
             <span style={{ fontSize: 18, fontWeight: 900, color: "var(--accent)" }}>✦</span>
-            <span style={{ fontSize: 16, fontWeight: 900, color: "#fff", letterSpacing: "-0.02em", whiteSpace: "nowrap" }}>JPT AI</span>
+            <span style={{ fontSize: 16, fontWeight: 900, color: "var(--text)", letterSpacing: "-0.02em", whiteSpace: "nowrap" }}>JPT AI</span>
           </a>
 
           {/* AI Tools Dropdown */}
