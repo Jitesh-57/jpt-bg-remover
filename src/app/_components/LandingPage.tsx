@@ -47,10 +47,10 @@ const FREE_TOOL_LINKS: { id: string; icon: string; title: string; href: string }
 // Per-tool floating hero decorations. Two "cards" (left + right) that theme
 // each page — either a colored file badge (text) or a white icon card (emoji).
 type DecoBadge = { text?: string; emoji?: string; color?: string; bg?: string }
-const FILE_BLUE = { color: '#2563EB', bg: 'linear-gradient(135deg,#DBEAFE,#BFDBFE)' }
+const FILE_BLUE = { color: '#0F766E', bg: 'linear-gradient(135deg,#CCFBF1,#99F6E4)' }
 const FILE_GREEN = { color: 'var(--success)', bg: 'linear-gradient(135deg,#DCFCE7,var(--success-soft))' }
 const FILE_AMBER = { color: 'var(--warn)', bg: 'linear-gradient(135deg,#FEF3C7,#FDE68A)' }
-const FILE_VIOLET = { color: 'var(--accent-2)', bg: 'linear-gradient(135deg,var(--accent-soft),#DDD6FE)' }
+const FILE_VIOLET = { color: 'var(--accent)', bg: 'linear-gradient(135deg,var(--accent-soft),#A7F3D0)' }
 const FILE_RED = { color: 'var(--danger)', bg: 'linear-gradient(135deg,var(--danger-soft),var(--danger-soft))' }
 
 const PAGE_DECOR: Record<string, [DecoBadge, DecoBadge]> = {
@@ -72,7 +72,7 @@ const DEFAULT_DECOR: [DecoBadge, DecoBadge] = [{ text: 'JPG', ...FILE_BLUE }, { 
 function DecoCard({ badge }: { badge: DecoBadge }) {
   if (badge.emoji) {
     return (
-      <div style={{ width: 60, height: 60, borderRadius: 16, background: 'var(--surface)', boxShadow: '0 8px 24px rgba(99,102,241,0.16)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26 }}>
+      <div style={{ width: 60, height: 60, borderRadius: 16, background: 'var(--surface)', boxShadow: '0 8px 24px rgba(15,157,107,0.16)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26 }}>
         {badge.emoji}
       </div>
     )
@@ -314,7 +314,7 @@ const PAGE_VISUALS: Record<string, { before: string; after: string; label: strin
     label: 'Smaller File',
   },
   'convert-image': {
-    before: 'linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)',
+    before: 'linear-gradient(135deg, #CCFBF1 0%, #99F6E4 100%)',
     after: 'linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%)',
     label: 'Converted',
   },
@@ -334,7 +334,7 @@ const PAGE_VISUALS: Record<string, { before: string; after: string; label: strin
     label: 'PDF Ready',
   },
   'watermark-image': {
-    before: 'linear-gradient(135deg, var(--accent-soft) 0%, #ddd6fe 100%)',
+    before: 'linear-gradient(135deg, var(--accent-soft) 0%, #A7F3D0 100%)',
     after: 'linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%)',
     label: 'Watermarked',
   },
@@ -481,7 +481,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
         <div className="jpt-hero-deco" style={{ position: 'absolute', right: '13%', top: 330, transform: 'rotate(11deg)', animationDelay: '1.2s', pointerEvents: 'none' }}>
           <DecoCard badge={decor[1]} />
         </div>
-        <div className="jpt-hero-deco" style={{ position: 'absolute', left: '20%', top: 210, fontSize: 20, color: '#C4B5FD', animationDelay: '0.6s', pointerEvents: 'none' }}>✦</div>
+        <div className="jpt-hero-deco" style={{ position: 'absolute', left: '20%', top: 210, fontSize: 20, color: 'var(--accent-2)', animationDelay: '0.6s', pointerEvents: 'none' }}>✦</div>
         <div className="jpt-hero-deco" style={{ position: 'absolute', right: '19%', top: 200, fontSize: 16, color: 'var(--accent)', animationDelay: '2s', pointerEvents: 'none' }}>✦</div>
         <div className="jpt-hero-deco" style={{ position: 'absolute', left: '17%', top: 430, width: 14, height: 14, borderRadius: '50%', border: '2px solid var(--accent-border)', animationDelay: '1.6s', pointerEvents: 'none' }} />
         <div className="jpt-hero-deco" style={{ position: 'absolute', right: '22%', top: 420, width: 22, height: 22, borderRadius: '50%', border: '2px solid var(--success-soft)', animationDelay: '0.9s', pointerEvents: 'none' }} />
@@ -518,7 +518,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
                 padding: '36px 32px 28px',
                 cursor: 'pointer',
                 transition: 'border-color 0.18s, background 0.18s',
-                boxShadow: isDragging ? '0 0 0 4px rgba(99,102,241,0.12)' : '0 2px 24px rgba(99,102,241,0.07)',
+                boxShadow: isDragging ? '0 0 0 4px rgba(15,157,107,0.12)' : '0 2px 24px rgba(15,157,107,0.07)',
               }}
               onClick={() => fileRef.current?.click()}
             >
@@ -541,7 +541,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
                   display: 'inline-flex', alignItems: 'center', gap: 8,
                   background: 'linear-gradient(135deg,var(--accent),var(--accent-2))', color: '#fff',
                   fontWeight: 800, fontSize: 15, padding: '13px 32px', borderRadius: 12,
-                  border: 'none', cursor: 'pointer', boxShadow: '0 6px 22px rgba(99,102,241,0.38)',
+                  border: 'none', cursor: 'pointer', boxShadow: '0 6px 22px rgba(15,157,107,0.38)',
                   letterSpacing: '-0.01em', marginBottom: 16,
                 }}
               >
@@ -569,7 +569,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
             <>
               <button
                 onClick={handleCTAClick}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg, var(--accent), var(--accent-2))', color: '#fff', fontWeight: 800, fontSize: 16, padding: '16px 36px', borderRadius: 14, border: 'none', cursor: 'pointer', boxShadow: '0 8px 30px rgba(99,102,241,0.4)', letterSpacing: '-0.01em' }}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg, var(--accent), var(--accent-2))', color: '#fff', fontWeight: 800, fontSize: 16, padding: '16px 36px', borderRadius: 14, border: 'none', cursor: 'pointer', boxShadow: '0 8px 30px rgba(15,157,107,0.4)', letterSpacing: '-0.01em' }}
               >
                 {config.cta_text || 'Try It Free'} →
               </button>
@@ -592,11 +592,11 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
             <div style={{ flex: 1, position: 'relative' }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={beforeAfter.after} alt={`${config.h1} — after (free 4K enhanced result, no watermark)`} loading="eager" fetchPriority="high" decoding="async" style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }} />
-              <span style={{ position: 'absolute', bottom: 14, right: 14, padding: '6px 14px', background: 'rgba(99,102,241,0.92)', color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', borderRadius: 8 }}>✨ 4K AI Upscaled</span>
+              <span style={{ position: 'absolute', bottom: 14, right: 14, padding: '6px 14px', background: 'rgba(15,157,107,0.92)', color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', borderRadius: 8 }}>✨ 4K AI Upscaled</span>
             </div>
           </div>
         ) : heroImg ? (
-          <div style={{ position: 'relative', maxWidth: 940, margin: '56px auto 0', borderRadius: 24, overflow: 'hidden', background: 'var(--surface)', padding: 10, boxShadow: '0 24px 80px rgba(99,102,241,0.16)', border: '1px solid var(--accent-soft)' }}>
+          <div style={{ position: 'relative', maxWidth: 940, margin: '56px auto 0', borderRadius: 24, overflow: 'hidden', background: 'var(--surface)', padding: 10, boxShadow: '0 24px 80px rgba(15,157,107,0.16)', border: '1px solid var(--accent-soft)' }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={heroImg} alt={`${config.h1} — free online tool, no watermark (${visual.label})`} loading="eager" fetchPriority="high" decoding="async" width={1200} height={750} style={{ display: 'block', width: '100%', height: 'auto', borderRadius: 16 }} />
           </div>
@@ -609,7 +609,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
             </div>
             <div style={{ position: 'relative', height: 280, background: visual.after, display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
               <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(circle at 30% 40%, rgba(255,255,255,0.18) 0%, transparent 60%)' }} />
-              <span style={{ position: 'relative', padding: '10px 16px', background: 'rgba(99,102,241,0.85)', color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', borderTopLeftRadius: 10 }}>✨ {visual.label}</span>
+              <span style={{ position: 'relative', padding: '10px 16px', background: 'rgba(15,157,107,0.85)', color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', borderTopLeftRadius: 10 }}>✨ {visual.label}</span>
             </div>
           </div>
         )}
@@ -717,7 +717,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 20 }}>
               {config.features.map((f, i) => (
                 <div key={i} style={{ background: 'var(--surface-2)', border: '1.5px solid var(--border)', borderRadius: 20, padding: '28px 24px', transition: 'transform 0.2s, box-shadow 0.2s' }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = '0 8px 32px rgba(99,102,241,0.12)'; (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-2px)'; }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = '0 8px 32px rgba(15,157,107,0.12)'; (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-2px)'; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = 'none'; (e.currentTarget as HTMLDivElement).style.transform = 'none'; }}>
                   <div style={{ width: 52, height: 52, background: 'linear-gradient(135deg, var(--accent-soft), var(--accent-soft))', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, marginBottom: 16 }}>{f.icon}</div>
                   <h3 style={{ fontSize: 16, fontWeight: 800, color: 'var(--text)', margin: '0 0 8px' }}>{f.title}</h3>
@@ -742,7 +742,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
                 {i < HOW_IT_WORKS.length - 1 && (
                   <div style={{ display: 'none' /* hidden on mobile */ }} />
                 )}
-                <div style={{ width: 72, height: 72, background: 'var(--surface)', border: '2px solid var(--accent-soft)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', boxShadow: '0 4px 20px rgba(99,102,241,0.12)' }}>
+                <div style={{ width: 72, height: 72, background: 'var(--surface)', border: '2px solid var(--accent-soft)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', boxShadow: '0 4px 20px rgba(15,157,107,0.12)' }}>
                   <span style={{ fontSize: 22, fontWeight: 900, color: 'var(--accent)', fontVariantNumeric: 'tabular-nums' }}>{step.step}</span>
                 </div>
                 <h3 style={{ fontSize: 17, fontWeight: 800, color: 'var(--text)', margin: '0 0 10px' }}>{step.title}</h3>
@@ -757,17 +757,17 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
       <section style={{ padding: '88px 24px', background: 'var(--surface)' }}>
         <div style={{ maxWidth: 760, margin: '0 auto' }}>
           <div style={{ background: 'var(--bg-elevated)', borderRadius: 28, padding: '56px 48px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
-            <div style={{ position: 'absolute', top: -60, right: -60, width: 240, height: 240, background: 'radial-gradient(circle, rgba(99,102,241,0.3) 0%, transparent 70%)', pointerEvents: 'none' }} />
-            <div style={{ position: 'absolute', bottom: -40, left: -40, width: 180, height: 180, background: 'radial-gradient(circle, rgba(139,92,246,0.3) 0%, transparent 70%)', pointerEvents: 'none' }} />
+            <div style={{ position: 'absolute', top: -60, right: -60, width: 240, height: 240, background: 'radial-gradient(circle, rgba(15,157,107,0.3) 0%, transparent 70%)', pointerEvents: 'none' }} />
+            <div style={{ position: 'absolute', bottom: -40, left: -40, width: 180, height: 180, background: 'radial-gradient(circle, rgba(20,184,166,0.3) 0%, transparent 70%)', pointerEvents: 'none' }} />
             <div style={{ position: 'relative' }}>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(99,102,241,0.25)', color: 'var(--accent)', fontWeight: 700, fontSize: 12, borderRadius: 20, padding: '6px 14px', marginBottom: 20, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Free to try</div>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(15,157,107,0.25)', color: 'var(--accent)', fontWeight: 700, fontSize: 12, borderRadius: 20, padding: '6px 14px', marginBottom: 20, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Free to try</div>
               <h2 style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', fontWeight: 900, color: '#fff', margin: '0 0 14px', letterSpacing: '-0.02em' }}>
                 Ready to transform your images?
               </h2>
               <p style={{ fontSize: 16, color: 'var(--text-faint)', margin: '0 0 32px' }}>100% free · No sign-up required · No watermark.</p>
               <a
                 href={toolHref}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg, var(--accent), var(--accent-2))', color: '#fff', fontWeight: 800, fontSize: 16, padding: '16px 40px', borderRadius: 14, textDecoration: 'none', boxShadow: '0 8px 30px rgba(99,102,241,0.5)' }}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg, var(--accent), var(--accent-2))', color: '#fff', fontWeight: 800, fontSize: 16, padding: '16px 40px', borderRadius: 14, textDecoration: 'none', boxShadow: '0 8px 30px rgba(15,157,107,0.5)' }}
               >
                 {config.cta_text || 'Try It Free'} →
               </a>
@@ -904,7 +904,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
               {FREE_TOOL_LINKS.filter(l => l.id !== pageId).map(l => (
                 <a key={l.id} href={l.href}
                   style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, padding: '22px 16px', textDecoration: 'none', boxShadow: '0 2px 12px rgba(0,0,0,0.04)', transition: 'transform 0.18s, box-shadow 0.18s' }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 8px 28px rgba(99,102,241,0.16)'; (e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(-2px)'; }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 8px 28px rgba(15,157,107,0.16)'; (e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(-2px)'; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 2px 12px rgba(0,0,0,0.04)'; (e.currentTarget as HTMLAnchorElement).style.transform = 'none'; }}>
                   <span style={{ fontSize: 30 }}>{l.icon}</span>
                   <span style={{ fontSize: 14, fontWeight: 800, color: 'var(--text)', textAlign: 'center' }}>{l.title}</span>

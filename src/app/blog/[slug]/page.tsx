@@ -150,7 +150,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const CATEGORY_COLORS: Record<string, string> = {
     Tutorial: "var(--accent)",
     Guide: "var(--accent-2)",
-    News: "#0EA5E9",
+    News: "var(--accent-2)",
   };
 
   return (
@@ -196,7 +196,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             )}
 
             {/* Intro box */}
-            <div style={{ background: "linear-gradient(135deg, var(--accent-soft), var(--surface-2))", border: "1px solid rgba(99,102,241,0.2)", borderRadius: 14, padding: "20px 24px", marginBottom: 40 }}>
+            <div style={{ background: "linear-gradient(135deg, var(--accent-soft), var(--surface-2))", border: "1px solid rgba(15,157,107,0.2)", borderRadius: 14, padding: "20px 24px", marginBottom: 40 }}>
               <p style={{ margin: 0, fontSize: 17, color: "var(--text-muted)", lineHeight: 1.7, fontStyle: "italic" }}>
                 {post.excerpt}
               </p>

@@ -9,7 +9,7 @@ export default function FAQAccordion({ faqs }: { faqs: PageFAQ[] }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
       {faqs.map((faq, i) => (
-        <div key={i} style={{ border: '1.5px solid var(--border)', borderRadius: 14, overflow: 'hidden', boxShadow: open === i ? '0 4px 20px rgba(99,102,241,0.08)' : 'none', transition: 'box-shadow 0.2s' }}>
+        <div key={i} style={{ border: '1.5px solid var(--border)', borderRadius: 14, overflow: 'hidden', boxShadow: open === i ? '0 4px 20px rgba(15,157,107,0.08)' : 'none', transition: 'box-shadow 0.2s' }}>
           <button
             onClick={() => setOpen(open === i ? null : i)}
             style={{ width: '100%', textAlign: 'left', padding: '18px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: open === i ? 'var(--surface-2)' : 'var(--surface-3)', border: 'none', cursor: 'pointer', gap: 16 }}

@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 const CATEGORY_COLORS: Record<string, string> = {
   Tutorial: "var(--accent)",
   Guide: "var(--accent-2)",
-  News: "#0EA5E9",
+  News: "var(--accent-2)",
 };
 
 export default function BlogIndexPage() {
@@ -33,7 +33,7 @@ export default function BlogIndexPage() {
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: 56 }}>
-          <div style={{ display: "inline-block", background: "rgba(99,102,241,0.1)", color: "var(--accent)", border: "1px solid rgba(99,102,241,0.2)", borderRadius: 100, padding: "5px 14px", fontSize: 12, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", marginBottom: 16 }}>
+          <div style={{ display: "inline-block", background: "rgba(15,157,107,0.1)", color: "var(--accent)", border: "1px solid rgba(15,157,107,0.2)", borderRadius: 100, padding: "5px 14px", fontSize: 12, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", marginBottom: 16 }}>
             Blog
           </div>
           <h1 style={{ margin: "0 0 14px", fontSize: "clamp(28px, 4vw, 42px)", fontWeight: 900, color: "var(--text)", letterSpacing: "-0.8px", lineHeight: 1.15 }}>

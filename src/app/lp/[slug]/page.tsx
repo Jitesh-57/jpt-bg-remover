@@ -44,17 +44,17 @@ export default function AdLandingPage({ params }: { params: { slug: string } }) 
     >
       <div style={{ maxWidth: 720 }}>
         <a href="/" style={{ display: "inline-flex", alignItems: "center", gap: 8, textDecoration: "none", marginBottom: 32 }}>
-          <span style={{ fontSize: 20, fontWeight: 900, color: "#818CF8" }}>✦</span>
+          <span style={{ fontSize: 20, fontWeight: 900, color: "var(--accent)" }}>✦</span>
           <span style={{ fontSize: 18, fontWeight: 900, color: "#fff" }}>JPT AI</span>
         </a>
 
-        <div style={{ display: "inline-block", padding: "6px 14px", background: "rgba(129,140,248,0.15)", border: "1px solid rgba(129,140,248,0.35)", borderRadius: 999, fontSize: 13, fontWeight: 700, color: "var(--accent)", marginBottom: 24 }}>
+        <div style={{ display: "inline-block", padding: "6px 14px", background: "rgba(15,157,107,0.15)", border: "1px solid rgba(15,157,107,0.35)", borderRadius: 999, fontSize: 13, fontWeight: 700, color: "var(--accent)", marginBottom: 24 }}>
           {lp.badge}
         </div>
 
         <h1 style={{ fontSize: 48, fontWeight: 900, lineHeight: 1.1, margin: "0 0 20px", letterSpacing: "-0.02em" }}>
           {before}
-          <span style={{ background: "linear-gradient(90deg,#818CF8,#C084FC)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>{lp.highlight}</span>
+          <span style={{ background: "linear-gradient(90deg,var(--accent),#C084FC)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>{lp.highlight}</span>
           {after}
         </h1>
 

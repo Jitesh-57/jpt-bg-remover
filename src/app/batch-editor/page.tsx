@@ -872,7 +872,7 @@ export default function BatchEditorPage() {
               background: processing || !totalPending || !selectedTools.size ? "var(--accent-border)" : "linear-gradient(135deg, var(--accent), var(--accent-2))",
               color: "#fff", border: "none", borderRadius: 10, fontWeight: 800, fontSize: 15,
               cursor: processing || !totalPending || !selectedTools.size ? "not-allowed" : "pointer",
-              boxShadow: !processing && totalPending && selectedTools.size ? "0 4px 16px rgba(99,102,241,0.4)" : "none",
+              boxShadow: !processing && totalPending && selectedTools.size ? "0 4px 16px rgba(15,157,107,0.4)" : "none",
             }}
           >
             {processing
@@ -1145,7 +1145,7 @@ export default function BatchEditorPage() {
                       style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", cursor: "zoom-in" }} />
 
                     {item.status === "processing" && (
-                      <div style={{ position: "absolute", inset: 0, background: "rgba(99,102,241,0.65)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                      <div style={{ position: "absolute", inset: 0, background: "rgba(15,157,107,0.65)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8 }}>
                         <div style={{ width: 26, height: 26, border: "3px solid rgba(255,255,255,0.35)", borderTop: "3px solid #fff", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
                         <span style={{ color: "#fff", fontSize: 11, fontWeight: 600 }}>Processing…</span>
                       </div>
@@ -1210,7 +1210,7 @@ export default function BatchEditorPage() {
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                 <span style={{ color: "var(--text-muted)", fontSize: 13, fontWeight: 600, maxWidth: "40vw", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{previewItem.name}</span>
                 <button onClick={download}
-                  style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 22px", background: "linear-gradient(135deg,var(--accent),var(--accent-2))", color: "#fff", border: "none", borderRadius: 10, fontSize: 14, fontWeight: 800, cursor: "pointer", boxShadow: "0 4px 16px rgba(99,102,241,0.5)" }}>
+                  style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 22px", background: "linear-gradient(135deg,var(--accent),var(--accent-2))", color: "#fff", border: "none", borderRadius: 10, fontSize: 14, fontWeight: 800, cursor: "pointer", boxShadow: "0 4px 16px rgba(15,157,107,0.5)" }}>
                   ⬇ Download {showingOriginal ? "Original" : "Result"}
                 </button>
                 <button onClick={() => setPreviewItem(null)}

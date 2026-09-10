@@ -83,7 +83,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             <p style={{ fontSize: "clamp(1rem,2vw,1.12rem)", color: "var(--text-muted)", lineHeight: 1.7, maxWidth: 600, margin: "0 auto 30px" }}>
               {ct.heroSub}
             </p>
-            <Link href={ct.tool.href} className="jpt-hover" style={{ display: "inline-block", background: GRAD, color: "#fff", borderRadius: 12, padding: "15px 34px", fontSize: 16, fontWeight: 800, textDecoration: "none", boxShadow: "0 8px 24px rgba(99,102,241,0.35)" }}>
+            <Link href={ct.tool.href} className="jpt-hover" style={{ display: "inline-block", background: GRAD, color: "#fff", borderRadius: 12, padding: "15px 34px", fontSize: 16, fontWeight: 800, textDecoration: "none", boxShadow: "0 8px 24px rgba(15,157,107,0.35)" }}>
               Try the free {ct.tool.label} →
             </Link>
           </div>

@@ -409,7 +409,7 @@ export default function LandingPageClient() {
           </div>
 
           {/* Hero showcase — AI before/after with prompt callouts */}
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginTop: 18, background: "var(--accent-soft)", color: "var(--accent)", fontSize: 14, fontWeight: 800, padding: "7px 16px", borderRadius: 100, border: "1px solid rgba(99,102,241,0.2)" }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginTop: 18, background: "var(--accent-soft)", color: "var(--accent)", fontSize: 14, fontWeight: 800, padding: "7px 16px", borderRadius: 100, border: "1px solid rgba(15,157,107,0.2)" }}>
             ✨ See what you can do with prompts
           </div>
           <div style={s.heroShowcase}>
@@ -426,11 +426,11 @@ export default function LandingPageClient() {
               { top: "76%", label: "✨ Style", prompt: "“cinematic warm glow”" },
             ].map((c) => (
               <div key={c.label} style={{ position: "absolute", top: c.top, right: "3%", display: "flex", alignItems: "center", gap: 6, maxWidth: "44%" }}>
-                <div style={{ background: "rgba(12,12,22,0.82)", borderRadius: 10, padding: "6px 10px", boxShadow: "0 4px 14px rgba(0,0,0,0.25)", border: "1px solid rgba(99,102,241,0.3)" }}>
+                <div style={{ background: "rgba(12,12,22,0.82)", borderRadius: 10, padding: "6px 10px", boxShadow: "0 4px 14px rgba(0,0,0,0.25)", border: "1px solid rgba(15,157,107,0.3)" }}>
                   <div style={{ fontSize: 11, fontWeight: 800, color: "var(--accent)", lineHeight: 1.2 }}>{c.label}</div>
                   <div style={{ fontSize: 11, color: "var(--text-muted)", lineHeight: 1.2, whiteSpace: "nowrap" as const }}>{c.prompt}</div>
                 </div>
-                <div style={{ width: 7, height: 7, borderRadius: "50%", background: "var(--accent)", flexShrink: 0, boxShadow: "0 0 0 3px rgba(99,102,241,0.3)" }} />
+                <div style={{ width: 7, height: 7, borderRadius: "50%", background: "var(--accent)", flexShrink: 0, boxShadow: "0 0 0 3px rgba(15,157,107,0.3)" }} />
               </div>
             ))}
           </div>
@@ -472,7 +472,7 @@ export default function LandingPageClient() {
             {FEATURES.map((f) => (
               <div key={f.title} style={{ ...s.featureCard, cursor: "pointer" }}
                 onClick={() => handleFeatureCardClick(f.tool)}
-                onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = "0 8px 32px rgba(99,102,241,0.18)"; (e.currentTarget as HTMLDivElement).style.transform = "translateY(-3px)"; }}
+                onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = "0 8px 32px rgba(15,157,107,0.18)"; (e.currentTarget as HTMLDivElement).style.transform = "translateY(-3px)"; }}
                 onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = "0 2px 14px rgba(0,0,0,0.05)"; (e.currentTarget as HTMLDivElement).style.transform = "none"; }}>
                 <div style={s.featureImgWrap}>
                   {f.tool === "remove-bg" ? (
@@ -765,7 +765,7 @@ const s: Record<string, React.CSSProperties> = {
   // Hero
   hero: { background: "linear-gradient(160deg, var(--accent-soft) 0%, #FAFAFE 60%, var(--surface) 100%)", padding: "72px 24px 80px", textAlign: "center" },
   heroInner: { maxWidth: 760, margin: "0 auto", display: "flex", flexDirection: "column", alignItems: "center", gap: 20 },
-  badge: { display: "inline-block", background: "rgba(99,102,241,0.1)", color: "var(--accent)", border: "1px solid rgba(99,102,241,0.2)", borderRadius: 100, padding: "6px 16px", fontSize: 13, fontWeight: 700 },
+  badge: { display: "inline-block", background: "rgba(15,157,107,0.1)", color: "var(--accent)", border: "1px solid rgba(15,157,107,0.2)", borderRadius: 100, padding: "6px 16px", fontSize: 13, fontWeight: 700 },
   h1: { margin: 0, fontSize: "clamp(36px, 6vw, 58px)", fontWeight: 900, letterSpacing: "-1.5px", lineHeight: 1.1 },
   h1Accent: { background: "linear-gradient(135deg, var(--accent), var(--accent-2))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" },
   heroPara: { margin: 0, fontSize: 18, color: "var(--text-muted)", lineHeight: 1.7, maxWidth: 580 },
@@ -810,7 +810,7 @@ const s: Record<string, React.CSSProperties> = {
   featureDesc: { margin: 0, fontSize: 14, color: "var(--text-muted)", lineHeight: 1.65 },
 
   // Hero showcase
-  heroShowcase: { position: "relative", width: "100%", maxWidth: 880, marginTop: 16, borderRadius: 20, overflow: "hidden", boxShadow: "0 20px 60px rgba(99,102,241,0.25)", border: "1px solid rgba(99,102,241,0.15)" },
+  heroShowcase: { position: "relative", width: "100%", maxWidth: 880, marginTop: 16, borderRadius: 20, overflow: "hidden", boxShadow: "0 20px 60px rgba(15,157,107,0.25)", border: "1px solid rgba(15,157,107,0.15)" },
   heroShowcaseImg: { width: "100%", display: "block" },
   heroShowcaseBadge: { position: "absolute", bottom: 14, right: 14, background: "rgba(15,23,42,0.85)", color: "#fff", fontSize: 12, fontWeight: 700, padding: "6px 12px", borderRadius: 100, backdropFilter: "blur(4px)" },
 

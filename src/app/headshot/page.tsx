@@ -912,7 +912,7 @@ const s: Record<string, React.CSSProperties> = {
   cardMeta: { padding: "10px 12px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8 },
   cardName: { fontSize: 12, fontWeight: 700, color: "var(--text)" },
   cardTag: { fontSize: 10, background: "#EEEEF8", color: "var(--accent)", borderRadius: 4, padding: "2px 6px", fontWeight: 600 },
-  cardHover: { position: "absolute", inset: 0, background: "rgba(99,102,241,0.14)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 800, color: "#fff", opacity: 0, transition: "opacity 0.15s", backdropFilter: "blur(2px)", textShadow: "0 1px 4px rgba(0,0,0,0.4)" },
+  cardHover: { position: "absolute", inset: 0, background: "rgba(15,157,107,0.14)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 800, color: "#fff", opacity: 0, transition: "opacity 0.15s", backdropFilter: "blur(2px)", textShadow: "0 1px 4px rgba(0,0,0,0.4)" },
   dlIconBtn: { flexShrink: 0, width: 32, height: 32, borderRadius: 8, border: "1px solid var(--border)", background: "var(--surface-2)", cursor: "pointer", fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-muted)" },
   dangerIconBtn: { flexShrink: 0, width: 32, height: 32, borderRadius: 8, border: "1px solid #FFD0D0", background: "#FFF1F1", cursor: "pointer", fontSize: 20, lineHeight: 1, display: "flex", alignItems: "center", justifyContent: "center", color: "#C62828" },
   emptyLib: { background: "var(--surface)", borderRadius: 20, padding: "60px 40px", textAlign: "center" as const, boxShadow: "0 2px 12px rgba(0,0,0,0.06)", display: "flex", flexDirection: "column" as const, alignItems: "center" },

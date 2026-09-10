@@ -234,7 +234,7 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient, appNam
             <>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={result} alt="AI result" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
-              <span style={{ position: "absolute", bottom: 12, right: 12, padding: "6px 14px", background: "rgba(99,102,241,0.92)", color: "#fff", fontSize: 12, fontWeight: 700, borderRadius: 8 }}>{badge}</span>
+              <span style={{ position: "absolute", bottom: 12, right: 12, padding: "6px 14px", background: "rgba(15,157,107,0.92)", color: "#fff", fontSize: 12, fontWeight: 700, borderRadius: 8 }}>{badge}</span>
             </>
           ) : busy ? (
             <div style={{ color: "#fff" }}>
@@ -255,7 +255,7 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient, appNam
       <div style={{ textAlign: "center", marginTop: 24 }}>
         {!original ? (
           <button onClick={pick}
-            style={{ background: "linear-gradient(135deg,var(--accent),var(--accent-2))", color: "#fff", fontWeight: 800, fontSize: 16, padding: "15px 38px", borderRadius: 14, border: "none", cursor: "pointer", boxShadow: "0 8px 30px rgba(99,102,241,0.4)" }}>
+            style={{ background: "linear-gradient(135deg,var(--accent),var(--accent-2))", color: "#fff", fontWeight: 800, fontSize: 16, padding: "15px 38px", borderRadius: 14, border: "none", cursor: "pointer", boxShadow: "0 8px 30px rgba(15,157,107,0.4)" }}>
             📂 Upload Photo to Start
           </button>
         ) : (
@@ -267,7 +267,7 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient, appNam
               </button>
             )}
             <button onClick={generate} disabled={busy}
-              style={{ background: busy ? "var(--accent)" : "linear-gradient(135deg,var(--accent),var(--accent-2))", color: "#fff", fontWeight: 800, fontSize: 16, padding: "15px 38px", borderRadius: 14, border: "none", cursor: busy ? "default" : "pointer", boxShadow: "0 8px 30px rgba(99,102,241,0.4)" }}>
+              style={{ background: busy ? "var(--accent)" : "linear-gradient(135deg,var(--accent),var(--accent-2))", color: "#fff", fontWeight: 800, fontSize: 16, padding: "15px 38px", borderRadius: 14, border: "none", cursor: busy ? "default" : "pointer", boxShadow: "0 8px 30px rgba(15,157,107,0.4)" }}>
               {busy ? "Working…" : result ? "↻ Generate Again" : `${cta} →`}
             </button>
             {result && (

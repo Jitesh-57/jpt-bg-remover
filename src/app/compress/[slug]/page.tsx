@@ -45,7 +45,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     { "@type": "ListItem", position: 3, name: ct.h1, item: url },
   ] };
 
-  const GRAD = "linear-gradient(120deg,#0EA5E9,var(--accent))";
+  const GRAD = "linear-gradient(120deg,var(--accent-2),var(--accent))";
 
   return (
     <>

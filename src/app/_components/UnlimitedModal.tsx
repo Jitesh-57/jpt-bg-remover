@@ -164,7 +164,7 @@ export default function UnlimitedModal({ onClose, loggedIn, reason, prefillUser,
               onClick={handleBuy}
               disabled={loading}
               className="jpt-hover"
-              style={{ width: "100%", padding: "15px", background: loading ? "var(--text-faint)" : "linear-gradient(120deg,var(--accent),var(--accent-2))", color: "#fff", border: "none", borderRadius: 12, fontWeight: 800, fontSize: 16, cursor: loading ? "not-allowed" : "pointer", boxShadow: "0 8px 22px rgba(99,102,241,0.35)" }}
+              style={{ width: "100%", padding: "15px", background: loading ? "var(--text-faint)" : "linear-gradient(120deg,var(--accent),var(--accent-2))", color: "#fff", border: "none", borderRadius: 12, fontWeight: 800, fontSize: 16, cursor: loading ? "not-allowed" : "pointer", boxShadow: "0 8px 22px rgba(15,157,107,0.35)" }}
             >
               {loading ? "Processing…" : `Get Unlimited — ${UNLIMITED_PRICE_LABEL} →`}
             </button>

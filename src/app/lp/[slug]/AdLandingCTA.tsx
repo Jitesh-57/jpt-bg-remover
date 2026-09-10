@@ -23,7 +23,7 @@ export default function AdLandingCTA({ href, label, tool }: { href: string; labe
         fontWeight: 800,
         borderRadius: 12,
         textDecoration: "none",
-        boxShadow: "0 8px 30px rgba(99,102,241,0.45)",
+        boxShadow: "0 8px 30px rgba(15,157,107,0.45)",
       }}
     >
       {label}

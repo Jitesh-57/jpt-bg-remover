@@ -214,7 +214,7 @@ function PreviewModal({
                 color: "#fff", border: "none", borderRadius: 12,
                 fontWeight: 700, fontSize: 13, cursor: "pointer",
                 display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-                boxShadow: "0 4px 14px rgba(99,102,241,0.4)",
+                boxShadow: "0 4px 14px rgba(15,157,107,0.4)",
               }}
             >
               🖼️ Open in AI Editor

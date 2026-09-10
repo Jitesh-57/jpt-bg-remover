@@ -66,14 +66,14 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             <p style={{ fontSize: "clamp(1rem,2vw,1.12rem)", color: "var(--text-muted)", lineHeight: 1.7, maxWidth: 580, margin: "0 auto 30px" }}>
               Free online crop tool — no watermark, no sign-up. Crops in one click, right in your browser.
             </p>
-            <Link href={toolHref} className="jpt-hover" style={{ display: "inline-block", background: GRAD, color: "#fff", borderRadius: 12, padding: "15px 34px", fontSize: 16, fontWeight: 800, textDecoration: "none", boxShadow: "0 8px 24px rgba(139,92,246,0.35)" }}>
+            <Link href={toolHref} className="jpt-hover" style={{ display: "inline-block", background: GRAD, color: "#fff", borderRadius: 12, padding: "15px 34px", fontSize: 16, fontWeight: 800, textDecoration: "none", boxShadow: "0 8px 24px rgba(20,184,166,0.35)" }}>
               Open the crop tool →
             </Link>
             <SafeImage
               src={blogCreative(slug)}
               alt={`${ct.h1} — before and after`}
               wrapperStyle={{ maxWidth: 600, margin: "40px auto 0" }}
-              style={{ width: "100%", height: "auto", display: "block", borderRadius: 16, border: "1px solid #EEE0EA", boxShadow: "0 18px 50px rgba(139,92,246,0.14)" }}
+              style={{ width: "100%", height: "auto", display: "block", borderRadius: 16, border: "1px solid #EEE0EA", boxShadow: "0 18px 50px rgba(20,184,166,0.14)" }}
             />
           </div>
         </section>

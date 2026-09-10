@@ -1508,7 +1508,7 @@ export default function ImageEditorPage() {
   const processingOverlay = (
     <div style={{ position: "absolute", inset: 0, zIndex: 30, borderRadius: 16, overflow: "hidden", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 14, background: "rgba(15,23,42,0.58)", backdropFilter: "blur(2px)" }}>
       {/* sweeping scan line across the image */}
-      <div style={{ position: "absolute", left: 0, right: 0, top: 0, height: "42%", background: "linear-gradient(180deg, transparent, rgba(139,92,246,0.45), rgba(99,102,241,0.18), transparent)", animation: "jptScan 1.5s ease-in-out infinite", pointerEvents: "none" }} />
+      <div style={{ position: "absolute", left: 0, right: 0, top: 0, height: "42%", background: "linear-gradient(180deg, transparent, rgba(20,184,166,0.45), rgba(15,157,107,0.18), transparent)", animation: "jptScan 1.5s ease-in-out infinite", pointerEvents: "none" }} />
       <div style={{ position: "relative", width: 52, height: 52, border: "4px solid rgba(255,255,255,0.25)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
       <div style={{ position: "relative", color: "#fff", fontWeight: 800, fontSize: 15, textAlign: "center", padding: "0 18px" }}>Please wait — we&apos;re processing your image…</div>
       <div style={{ position: "relative", color: "rgba(255,255,255,0.82)", fontSize: 12.5 }}>{processingLabel || "This usually takes just a moment"}</div>
@@ -1574,7 +1574,7 @@ export default function ImageEditorPage() {
                 </button>
               ) : (
                 <button
-                  style={{ padding: "7px 14px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: 20, fontSize: 12, fontWeight: 800, cursor: "pointer", whiteSpace: "nowrap" as const, boxShadow: "0 2px 8px rgba(99,102,241,0.4)" }}
+                  style={{ padding: "7px 14px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: 20, fontSize: 12, fontWeight: 800, cursor: "pointer", whiteSpace: "nowrap" as const, boxShadow: "0 2px 8px rgba(15,157,107,0.4)" }}
                   onClick={() => { setSignInReason("unlimited"); setShowSignInModal(true); }}
                 >
                   Sign up free — unlimited →
@@ -1752,7 +1752,7 @@ export default function ImageEditorPage() {
                       <div style={{ fontSize: 11, fontWeight: 700 }}>Original</div>
                       {original && <div style={{ fontSize: 10, opacity: 0.75, marginTop: 1 }}>{original.w} × {original.h}px</div>}
                     </div>
-                    <div style={{ position: "absolute", top: 12, right: 12, zIndex: 4, background: "rgba(99,102,241,0.85)", backdropFilter: "blur(4px)", color: "#fff", padding: "4px 10px", borderRadius: 6, pointerEvents: "none" }}>
+                    <div style={{ position: "absolute", top: 12, right: 12, zIndex: 4, background: "rgba(15,157,107,0.85)", backdropFilter: "blur(4px)", color: "#fff", padding: "4px 10px", borderRadius: 6, pointerEvents: "none" }}>
                       <div style={{ fontSize: 11, fontWeight: 700 }}>✨ Result</div>
                       {workingSize && <div style={{ fontSize: 10, opacity: 0.85, marginTop: 1 }}>{workingSize.w} × {workingSize.h}px</div>}
                     </div>

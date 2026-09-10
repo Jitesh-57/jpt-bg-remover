@@ -182,7 +182,7 @@ export default function NavBar() {
           <div ref={dropdownRef} style={{ position: "relative" }}>
             <button
               onClick={() => setShowToolsDropdown(v => !v)}
-              style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", background: showToolsDropdown ? "rgba(99,102,241,0.15)" : "transparent", border: "none", borderRadius: 8, color: "var(--text-muted)", fontSize: 14, fontWeight: 600, cursor: "pointer" }}
+              style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", background: showToolsDropdown ? "rgba(15,157,107,0.15)" : "transparent", border: "none", borderRadius: 8, color: "var(--text-muted)", fontSize: 14, fontWeight: 600, cursor: "pointer" }}
             >
               {PAID_FEATURES_ENABLED ? "AI Tools" : "Tools"}
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ transform: showToolsDropdown ? "rotate(180deg)" : "none", opacity: 0.7 }}>
@@ -259,9 +259,9 @@ export default function NavBar() {
           {/* Creative Apps — standalone navbar link (hidden in free-only mode) */}
           {PAID_FEATURES_ENABLED && (
             <a href="/creative"
-              style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", color: "var(--text-muted)", fontSize: 14, fontWeight: 600, textDecoration: "none", borderRadius: 8, background: "rgba(99,102,241,0.12)", border: "1px solid rgba(99,102,241,0.25)" }}
-              onMouseEnter={e => { e.currentTarget.style.background = "rgba(99,102,241,0.22)"; e.currentTarget.style.borderColor = "rgba(99,102,241,0.5)"; }}
-              onMouseLeave={e => { e.currentTarget.style.background = "rgba(99,102,241,0.12)"; e.currentTarget.style.borderColor = "rgba(99,102,241,0.25)"; }}>
+              style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", color: "var(--text-muted)", fontSize: 14, fontWeight: 600, textDecoration: "none", borderRadius: 8, background: "rgba(15,157,107,0.12)", border: "1px solid rgba(15,157,107,0.25)" }}
+              onMouseEnter={e => { e.currentTarget.style.background = "rgba(15,157,107,0.22)"; e.currentTarget.style.borderColor = "rgba(15,157,107,0.5)"; }}
+              onMouseLeave={e => { e.currentTarget.style.background = "rgba(15,157,107,0.12)"; e.currentTarget.style.borderColor = "rgba(15,157,107,0.25)"; }}>
               <span style={{ fontSize: 13 }}>✦</span>
               Creative Apps
             </a>
@@ -271,7 +271,7 @@ export default function NavBar() {
 
           {/* Go Unlimited — single $3 / 30-day plan. Shows active status once owned. */}
           <a href="/pricing"
-            style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 15px", color: "#fff", fontSize: 14, fontWeight: 800, textDecoration: "none", borderRadius: 999, background: user?.plan === "unlimited" ? "linear-gradient(120deg,var(--success),#0EA5E9)" : "linear-gradient(120deg,var(--accent),var(--accent-2))", border: "1px solid rgba(255,255,255,0.15)", boxShadow: "0 4px 14px rgba(99,102,241,0.4)" }}
+            style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 15px", color: "#fff", fontSize: 14, fontWeight: 800, textDecoration: "none", borderRadius: 999, background: user?.plan === "unlimited" ? "linear-gradient(120deg,var(--success),var(--accent-2))" : "linear-gradient(120deg,var(--accent),var(--accent-2))", border: "1px solid rgba(255,255,255,0.15)", boxShadow: "0 4px 14px rgba(15,157,107,0.4)" }}
             onMouseEnter={e => (e.currentTarget.style.opacity = "0.9")}
             onMouseLeave={e => (e.currentTarget.style.opacity = "1")}>
             <span style={{ fontSize: 13 }}>✨</span>
@@ -282,7 +282,7 @@ export default function NavBar() {
           {user ? (
             <div style={{ position: "relative" }}>
               <button onClick={() => setShowMenu(!showMenu)}
-                style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 10px 6px 6px", background: "rgba(99,102,241,0.15)", border: "1px solid rgba(99,102,241,0.3)", borderRadius: 24, cursor: "pointer" }}>
+                style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 10px 6px 6px", background: "rgba(15,157,107,0.15)", border: "1px solid rgba(15,157,107,0.3)", borderRadius: 24, cursor: "pointer" }}>
                 {user.picture
                   ? <img src={user.picture} alt="" style={{ width: 28, height: 28, borderRadius: "50%", flexShrink: 0 }} />
                   : <div style={{ width: 28, height: 28, borderRadius: "50%", background: "var(--accent)", color: "#fff", fontSize: 13, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>{user.name[0]}</div>}
@@ -404,7 +404,7 @@ export default function NavBar() {
               <button onClick={openModal} style={{ padding: "7px 16px", background: "transparent", color: "var(--text-muted)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
                 {t.navSignIn}
               </button>
-              <button onClick={openModal} style={{ padding: "7px 16px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer", boxShadow: "0 2px 8px rgba(99,102,241,0.4)" }}>
+              <button onClick={openModal} style={{ padding: "7px 16px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer", boxShadow: "0 2px 8px rgba(15,157,107,0.4)" }}>
                 {t.getStarted}
               </button>
             </div>

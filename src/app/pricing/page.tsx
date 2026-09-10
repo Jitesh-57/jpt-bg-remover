@@ -136,7 +136,7 @@ export default function PricingPage() {
       )}
 
       {/* Single plan card */}
-      <div style={{ position: "relative", background: "var(--surface)", border: "2px solid var(--accent-border)", borderRadius: 24, padding: "40px 36px", maxWidth: 420, width: "100%", boxShadow: "0 24px 70px rgba(99,102,241,0.22)" }}>
+      <div style={{ position: "relative", background: "var(--surface)", border: "2px solid var(--accent-border)", borderRadius: 24, padding: "40px 36px", maxWidth: 420, width: "100%", boxShadow: "0 24px 70px rgba(15,157,107,0.22)" }}>
         <div style={{ position: "absolute", top: -15, left: "50%", transform: "translateX(-50%)", background: "var(--warn)", color: "#fff", fontWeight: 800, fontSize: 12, borderRadius: 20, padding: "5px 16px", letterSpacing: "0.05em", textTransform: "uppercase", whiteSpace: "nowrap" }}>
           ✨ Unlimited
         </div>
@@ -161,7 +161,7 @@ export default function PricingPage() {
             onClick={handleBuy}
             disabled={loading}
             className="jpt-hover"
-            style={{ width: "100%", padding: "16px", background: loading ? "var(--text-faint)" : GRAD, color: "#fff", border: "none", borderRadius: 12, fontWeight: 800, fontSize: 17, cursor: loading ? "not-allowed" : "pointer", boxShadow: "0 8px 24px rgba(99,102,241,0.35)" }}
+            style={{ width: "100%", padding: "16px", background: loading ? "var(--text-faint)" : GRAD, color: "#fff", border: "none", borderRadius: 12, fontWeight: 800, fontSize: 17, cursor: loading ? "not-allowed" : "pointer", boxShadow: "0 8px 24px rgba(15,157,107,0.35)" }}
           >
             {loading ? "Processing…" : `Get Unlimited — ${UNLIMITED_PRICE_LABEL} →`}
           </button>

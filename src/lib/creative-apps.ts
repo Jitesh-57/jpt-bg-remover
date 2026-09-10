@@ -108,7 +108,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
   {
     slug: "restore-old-photos",
     emoji: "🖼️",
-    gradient: ["var(--text-muted)", "#0EA5E9"],
+    gradient: ["var(--text-muted)", "var(--accent-2)"],
     title: "Restore Old Photos Free — AI Photo Restoration Online | JPT AI",
     metaDescription:
       "Restore old, blurry and damaged photos free online. Upload a vintage photo and AI recovers detail and clarity on the page — no app, no watermark.",
@@ -355,7 +355,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
   {
     slug: "ghibli-style",
     emoji: "🌿",
-    gradient: ["var(--success)", "#0EA5E9"],
+    gradient: ["var(--success)", "var(--accent-2)"],
     title: "AI Ghibli Style Photo Converter — Studio Anime Art Free | JPT AI",
     metaDescription:
       "Turn photos into dreamy Ghibli-style anime art free online. Upload a selfie and AI redraws it in a hand-painted studio anime style — no watermark.",
@@ -507,7 +507,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
   {
     slug: "pixar-avatar",
     emoji: "🎬",
-    gradient: ["#0EA5E9", "#F97316"],
+    gradient: ["var(--accent-2)", "#F97316"],
     title: "AI Pixar Avatar Maker — 3D Cartoon Character Photo Free | JPT AI",
     metaDescription:
       "Turn your photo into a Pixar-style 3D cartoon avatar free online. Upload a selfie and AI renders an animated-movie character on the page — no watermark.",
@@ -697,7 +697,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
   {
     slug: "coastal-cowgirl",
     emoji: "🤠",
-    gradient: ["var(--warn)", "#0EA5E9"],
+    gradient: ["var(--warn)", "var(--accent-2)"],
     title: "Coastal Cowgirl Aesthetic AI Photoshoot — Free Photo Filter | JPT AI",
     metaDescription:
       "Get the viral coastal cowgirl aesthetic free online. Upload a selfie and AI styles a breezy denim-and-boots beach look on the page — no app, no watermark.",
@@ -792,7 +792,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
   {
     slug: "astronaut-photoshoot",
     emoji: "🚀",
-    gradient: ["#1E1B4B", "#0EA5E9"],
+    gradient: ["#1E1B4B", "var(--accent-2)"],
     title: "AI Astronaut Photo Maker — Space Suit Portrait Free | JPT AI",
     metaDescription:
       "Turn your photo into an astronaut portrait free online. Upload a selfie and AI puts you in a space suit among the stars on the page — no app, no watermark.",

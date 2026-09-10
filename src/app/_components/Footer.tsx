@@ -74,7 +74,7 @@ export default function Footer() {
             <div style={{ display: "flex", gap: 12 }}>
               <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter"
                 style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-faint)", textDecoration: "none", fontSize: 16 }}
-                onMouseEnter={e => (e.currentTarget.style.background = "rgba(99,102,241,0.2)")}
+                onMouseEnter={e => (e.currentTarget.style.background = "rgba(15,157,107,0.2)")}
                 onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,255,255,0.06)")}>
                 𝕏
               </a>
@@ -137,7 +137,7 @@ export default function Footer() {
               <button
                 onClick={() => setLangOpen(v => !v)}
                 style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, padding: "6px 12px", color: "var(--text-muted)", fontSize: 13, cursor: "pointer", fontWeight: 600 }}
-                onMouseEnter={e => (e.currentTarget.style.background = "rgba(99,102,241,0.15)")}
+                onMouseEnter={e => (e.currentTarget.style.background = "rgba(15,157,107,0.15)")}
                 onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,255,255,0.06)")}
               >
                 <span>{currentLang.flag}</span>
@@ -150,7 +150,7 @@ export default function Footer() {
                     <button
                       key={lang.code}
                       onClick={() => { setLocale(lang.code); setLangOpen(false); }}
-                      style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 10px", borderRadius: 8, border: "none", background: locale === lang.code ? "rgba(99,102,241,0.2)" : "transparent", color: locale === lang.code ? "#818CF8" : "var(--text-faint)", fontSize: 13, cursor: "pointer", fontWeight: locale === lang.code ? 700 : 400, textAlign: "left" }}
+                      style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 10px", borderRadius: 8, border: "none", background: locale === lang.code ? "rgba(15,157,107,0.2)" : "transparent", color: locale === lang.code ? "var(--accent)" : "var(--text-faint)", fontSize: 13, cursor: "pointer", fontWeight: locale === lang.code ? 700 : 400, textAlign: "left" }}
                       onMouseEnter={e => { if (locale !== lang.code) e.currentTarget.style.background = "rgba(255,255,255,0.06)"; }}
                       onMouseLeave={e => { if (locale !== lang.code) e.currentTarget.style.background = "transparent"; }}
                     >
