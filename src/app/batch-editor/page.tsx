@@ -402,8 +402,8 @@ export default function BatchEditorPage() {
             {["1:1", "4:5", "9:16", "16:9", "3:2", "circle"].map(r => (
               <button key={r} onClick={() => setCropRatio(r)} style={{
                 padding: "9px 4px", borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: "pointer",
-                border: cropRatio === r ? "2px solid #6366F1" : "1.5px solid #E5E7EB",
-                background: cropRatio === r ? "#EEF2FF" : "#fff", color: cropRatio === r ? "#6366F1" : "#6B7280",
+                border: cropRatio === r ? "2px solid var(--accent)" : "1.5px solid var(--border)",
+                background: cropRatio === r ? "var(--accent-soft)" : "var(--surface-3)", color: cropRatio === r ? "var(--accent)" : "var(--text-muted)",
               }}>{r === "circle" ? "○ Circle" : r}</button>
             ))}
           </div>
@@ -416,16 +416,16 @@ export default function BatchEditorPage() {
             {([0, 90, 180, 270] as const).map(d => (
               <button key={d} onClick={() => setRotateDeg(d)} style={{
                 flex: 1, padding: "10px 0", borderRadius: 8, fontSize: 13, fontWeight: 800, cursor: "pointer",
-                border: rotateDeg === d ? "2px solid #6366F1" : "1.5px solid #E5E7EB",
-                background: rotateDeg === d ? "#EEF2FF" : "#fff", color: rotateDeg === d ? "#6366F1" : "#6B7280",
+                border: rotateDeg === d ? "2px solid var(--accent)" : "1.5px solid var(--border)",
+                background: rotateDeg === d ? "var(--accent-soft)" : "var(--surface-3)", color: rotateDeg === d ? "var(--accent)" : "var(--text-muted)",
               }}>{d}°</button>
             ))}
           </div>
           <div style={{ display: "flex", gap: 12 }}>
-            <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#6B7280", cursor: "pointer" }}>
+            <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "var(--text-muted)", cursor: "pointer" }}>
               <input type="checkbox" checked={rotateFlipH} onChange={e => setRotateFlipH(e.target.checked)} /> Flip H
             </label>
-            <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#6B7280", cursor: "pointer" }}>
+            <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "var(--text-muted)", cursor: "pointer" }}>
               <input type="checkbox" checked={rotateFlipV} onChange={e => setRotateFlipV(e.target.checked)} /> Flip V
             </label>
           </div>
@@ -443,8 +443,8 @@ export default function BatchEditorPage() {
               {(["tiled", "top-left", "top-right", "center", "bottom-left", "bottom-right"] as WatermarkPosition[]).map(p => (
                 <button key={p} onClick={() => setWmPosition(p)} style={{
                   padding: "8px 4px", borderRadius: 8, fontSize: 10.5, fontWeight: 700, cursor: "pointer",
-                  border: wmPosition === p ? "2px solid #6366F1" : "1.5px solid #E5E7EB",
-                  background: wmPosition === p ? "#EEF2FF" : "#fff", color: wmPosition === p ? "#6366F1" : "#6B7280",
+                  border: wmPosition === p ? "2px solid var(--accent)" : "1.5px solid var(--border)",
+                  background: wmPosition === p ? "var(--accent-soft)" : "var(--surface-3)", color: wmPosition === p ? "var(--accent)" : "var(--text-muted)",
                 }}>{p.replace("-", " ")}</button>
               ))}
             </div>
@@ -452,24 +452,24 @@ export default function BatchEditorPage() {
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <div style={{ flex: 1 }}>
               <label style={optionLabel}>Size {wmFontScale}%</label>
-              <input type="range" min={2} max={15} value={wmFontScale} onChange={e => setWmFontScale(+e.target.value)} style={{ width: "100%", accentColor: "#6366F1" }} />
+              <input type="range" min={2} max={15} value={wmFontScale} onChange={e => setWmFontScale(+e.target.value)} style={{ width: "100%", accentColor: "var(--accent)" }} />
             </div>
             <div>
               <label style={optionLabel}>Color</label>
-              <input type="color" value={wmColor} onChange={e => setWmColor(e.target.value)} style={{ width: 40, height: 34, borderRadius: 8, border: "1.5px solid #E5E7EB", cursor: "pointer", padding: 2 }} />
+              <input type="color" value={wmColor} onChange={e => setWmColor(e.target.value)} style={{ width: 40, height: 34, borderRadius: 8, border: "1.5px solid var(--border)", cursor: "pointer", padding: 2 }} />
             </div>
           </div>
           <div>
             <label style={optionLabel}>Opacity {wmOpacity}%</label>
-            <input type="range" min={10} max={100} value={wmOpacity} onChange={e => setWmOpacity(+e.target.value)} style={{ width: "100%", accentColor: "#6366F1" }} />
+            <input type="range" min={10} max={100} value={wmOpacity} onChange={e => setWmOpacity(+e.target.value)} style={{ width: "100%", accentColor: "var(--accent)" }} />
           </div>
         </div>
       )}
       {which === "compress" && (
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           <label style={optionLabel}>JPEG quality {compressQuality}%</label>
-          <input type="range" min={10} max={95} value={compressQuality} onChange={e => setCompressQuality(+e.target.value)} style={{ width: "100%", accentColor: "#6366F1" }} />
-          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "#9CA3AF" }}>
+          <input type="range" min={10} max={95} value={compressQuality} onChange={e => setCompressQuality(+e.target.value)} style={{ width: "100%", accentColor: "var(--accent)" }} />
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "var(--text-faint)" }}>
             <span>Smaller file</span><span>Higher quality</span>
           </div>
         </div>
@@ -481,8 +481,8 @@ export default function BatchEditorPage() {
             {(["png", "jpeg", "webp"] as const).map(f => (
               <button key={f} onClick={() => setConvertFormat(f)} style={{
                 flex: 1, padding: "11px 0", borderRadius: 8, fontSize: 13, fontWeight: 800, cursor: "pointer", textTransform: "uppercase",
-                border: convertFormat === f ? "2px solid #6366F1" : "1.5px solid #E5E7EB",
-                background: convertFormat === f ? "#EEF2FF" : "#fff", color: convertFormat === f ? "#6366F1" : "#6B7280",
+                border: convertFormat === f ? "2px solid var(--accent)" : "1.5px solid var(--border)",
+                background: convertFormat === f ? "var(--accent-soft)" : "var(--surface-3)", color: convertFormat === f ? "var(--accent)" : "var(--text-muted)",
               }}>{f === "jpeg" ? "JPG" : f}</button>
             ))}
           </div>
@@ -497,7 +497,7 @@ export default function BatchEditorPage() {
   const totalToProcess = processing ? items.filter(i => i.status !== "pending").length + processedCount : 0;
 
   return (
-    <div style={{ minHeight: "100vh", background: "#F9FAFB", fontFamily: "system-ui, sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: "var(--surface-2)", fontFamily: "system-ui, sans-serif" }}>
 
       {showPricingModal && (
         <PricingModal
@@ -530,25 +530,25 @@ export default function BatchEditorPage() {
       <SharePrompt open={sharePromptOpen} onClose={() => setSharePromptOpen(false)} tool="batch-editor" />
 
       {/* Header */}
-      <div style={{ background: "#fff", borderBottom: "1px solid #E5E7EB", padding: "14px 28px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
+      <div style={{ background: "var(--surface)", borderBottom: "1px solid var(--border)", padding: "14px 28px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <a href="/" style={{ color: "#6366F1", fontWeight: 900, fontSize: 17, textDecoration: "none" }}>✦ JPT AI</a>
-          <span style={{ color: "#D1D5DB" }}>|</span>
-          <span style={{ fontWeight: 800, fontSize: 15, color: "#111" }}>⚡ Batch Editor</span>
-          <span style={{ background: "#EEF2FF", color: "#6366F1", fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 20 }}>Up to 100 images</span>
+          <a href="/" style={{ color: "var(--accent)", fontWeight: 900, fontSize: 17, textDecoration: "none" }}>✦ JPT AI</a>
+          <span style={{ color: "var(--text-muted)" }}>|</span>
+          <span style={{ fontWeight: 800, fontSize: 15, color: "var(--text)" }}>⚡ Batch Editor</span>
+          <span style={{ background: "var(--accent-soft)", color: "var(--accent)", fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 20 }}>Up to 100 images</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           {user && PAID_FEATURES_ENABLED && (
-            <span style={{ background: "#F3F4F6", padding: "6px 12px", borderRadius: 20, fontSize: 13, color: "#374151", fontWeight: 600 }}>
+            <span style={{ background: "var(--surface-2)", padding: "6px 12px", borderRadius: 20, fontSize: 13, color: "var(--text-muted)", fontWeight: 600 }}>
               ⚡ {user.credits} credits
             </span>
           )}
           {doneCount > 0 && (
-            <button onClick={downloadAll} style={{ padding: "9px 20px", background: "#6366F1", color: "#fff", border: "none", borderRadius: 8, fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+            <button onClick={downloadAll} style={{ padding: "9px 20px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: 8, fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
               ⬇ Download All ({doneCount})
             </button>
           )}
-          <a href="/editor" style={{ padding: "8px 14px", background: "#fff", color: "#6366F1", border: "1.5px solid #6366F1", borderRadius: 8, fontWeight: 600, fontSize: 13, textDecoration: "none" }}>
+          <a href="/editor" style={{ padding: "8px 14px", background: "var(--surface)", color: "var(--accent)", border: "1.5px solid var(--accent)", borderRadius: 8, fontWeight: 600, fontSize: 13, textDecoration: "none" }}>
             Single Editor
           </a>
         </div>
@@ -558,15 +558,15 @@ export default function BatchEditorPage() {
 
         {/* ── Mobile: Tool Tab Strip ────────────────────────────────────────── */}
         {isMobile && (
-          <div style={{ display: "flex", overflowX: "auto", background: "#fff", borderBottom: "1px solid #EAEAEA", padding: "8px 12px", gap: 8, WebkitOverflowScrolling: "touch" as unknown as React.CSSProperties["WebkitOverflowScrolling"], flexShrink: 0 }}>
+          <div style={{ display: "flex", overflowX: "auto", background: "var(--surface)", borderBottom: "1px solid #EAEAEA", padding: "8px 12px", gap: 8, WebkitOverflowScrolling: "touch" as unknown as React.CSSProperties["WebkitOverflowScrolling"], flexShrink: 0 }}>
             {TRANSFORMS.map(t => {
               const active = selectedTools.has(t.id);
               return (
                 <button key={t.id} onClick={() => toggleTool(t.id)}
-                  style={{ position: "relative", display: "flex", flexDirection: "column", alignItems: "center", gap: 4, padding: "8px 14px", borderRadius: 12, border: "2px solid", borderColor: active ? "#6366F1" : "transparent", background: active ? "#EEEEFF" : "#F5F5F5", cursor: "pointer", minWidth: 64, flexShrink: 0 }}>
+                  style={{ position: "relative", display: "flex", flexDirection: "column", alignItems: "center", gap: 4, padding: "8px 14px", borderRadius: 12, border: "2px solid", borderColor: active ? "var(--accent)" : "transparent", background: active ? "var(--border)" : "#F5F5F5", cursor: "pointer", minWidth: 64, flexShrink: 0 }}>
                   <ToolIcon id={t.id} active={active} size={32} />
-                  <span style={{ fontSize: 10, fontWeight: 600, color: active ? "#6366F1" : "#666", whiteSpace: "nowrap" }}>{t.label}</span>
-                  <span style={{ position: "absolute", top: 4, right: 4, width: 16, height: 16, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", background: active ? "#6366F1" : "#E0E7FF", color: active ? "#fff" : "#6366F1", fontSize: 11, fontWeight: 800, lineHeight: 1 }}>{active ? "✓" : "+"}</span>
+                  <span style={{ fontSize: 10, fontWeight: 600, color: active ? "var(--accent)" : "var(--text-muted)", whiteSpace: "nowrap" }}>{t.label}</span>
+                  <span style={{ position: "absolute", top: 4, right: 4, width: 16, height: 16, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", background: active ? "var(--accent)" : "var(--accent-soft)", color: active ? "#fff" : "var(--accent)", fontSize: 11, fontWeight: 800, lineHeight: 1 }}>{active ? "✓" : "+"}</span>
                 </button>
               );
             })}
@@ -577,10 +577,10 @@ export default function BatchEditorPage() {
         {isMobile && openOptionsFor && (() => {
           const t = TRANSFORMS.find(x => x.id === openOptionsFor)!;
           return (
-            <div style={{ width: "100%", background: "#fff", borderBottom: "1px solid #E5E7EB", padding: 16, display: "flex", flexDirection: "column", gap: 16 }}>
+            <div style={{ width: "100%", background: "var(--surface)", borderBottom: "1px solid var(--border)", padding: 16, display: "flex", flexDirection: "column", gap: 16 }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
-                <div style={{ fontWeight: 800, fontSize: 14, color: "#111" }}>{t.icon} {t.label} Options</div>
-                <button onClick={() => setOpenOptionsFor(null)} style={{ background: "none", border: "none", fontSize: 18, color: "#9CA3AF", cursor: "pointer", lineHeight: 1, padding: "0 2px" }}>×</button>
+                <div style={{ fontWeight: 800, fontSize: 14, color: "var(--text)" }}>{t.icon} {t.label} Options</div>
+                <button onClick={() => setOpenOptionsFor(null)} style={{ background: "none", border: "none", fontSize: 18, color: "var(--text-faint)", cursor: "pointer", lineHeight: 1, padding: "0 2px" }}>×</button>
               </div>
 
               {openOptionsFor === "resize" && (
@@ -595,7 +595,7 @@ export default function BatchEditorPage() {
                       <input type="number" value={resizeH} min={1} max={8000} onChange={e => setResizeH(+e.target.value)} disabled={lockAspect} style={{ ...inputStyle, opacity: lockAspect ? 0.5 : 1 }} />
                     </div>
                   </div>
-                  <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#6B7280", cursor: "pointer" }}>
+                  <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "var(--text-muted)", cursor: "pointer" }}>
                     <input type="checkbox" checked={lockAspect} onChange={e => setLockAspect(e.target.checked)} />
                     Lock aspect ratio (height auto)
                   </label>
@@ -611,10 +611,10 @@ export default function BatchEditorPage() {
                   ].map(({ label, value, set }) => (
                     <div key={label} style={{ marginBottom: 10 }}>
                       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
-                        <span style={{ fontSize: 12, fontWeight: 600, color: "#374151" }}>{label}</span>
-                        <span style={{ fontSize: 12, color: "#6366F1", fontWeight: 700 }}>{value}%</span>
+                        <span style={{ fontSize: 12, fontWeight: 600, color: "var(--text-muted)" }}>{label}</span>
+                        <span style={{ fontSize: 12, color: "var(--accent)", fontWeight: 700 }}>{value}%</span>
                       </div>
-                      <input type="range" min={0} max={200} value={value} onChange={e => set(+e.target.value)} style={{ width: "100%", accentColor: "#6366F1" }} />
+                      <input type="range" min={0} max={200} value={value} onChange={e => set(+e.target.value)} style={{ width: "100%", accentColor: "var(--accent)" }} />
                     </div>
                   ))}
                 </div>
@@ -625,7 +625,7 @@ export default function BatchEditorPage() {
                   {PAID_FEATURES_ENABLED && (
                   <div>
                     <label style={optionLabel}>Mode</label>
-                    <div style={{ display: "flex", gap: 0, background: "#F3F4F6", borderRadius: 10, padding: 4, marginTop: 6 }}>
+                    <div style={{ display: "flex", gap: 0, background: "var(--surface-2)", borderRadius: 10, padding: 4, marginTop: 6 }}>
                       {([
                         { key: "normal", label: "⚡ Normal", sub: "1 credit/image" },
                         { key: "pro", label: "✨ Pro AI", sub: "2 credits · AI" },
@@ -637,17 +637,17 @@ export default function BatchEditorPage() {
                           setUpscaleMode(m.key);
                         }} style={{
                           flex: 1, padding: "8px 6px", borderRadius: 7, border: "none", cursor: "pointer",
-                          background: upscaleMode === m.key ? "#fff" : "transparent",
+                          background: upscaleMode === m.key ? "var(--surface-3)" : "transparent",
                           boxShadow: upscaleMode === m.key ? "0 1px 6px rgba(0,0,0,0.10)" : "none",
                           transition: "all 0.15s",
                         }}>
-                          <div style={{ fontSize: 12, fontWeight: 700, color: upscaleMode === m.key ? "#6366F1" : "#888" }}>{m.label}</div>
-                          <div style={{ fontSize: 10, color: upscaleMode === m.key ? "#6366F1" : "#AAA", marginTop: 1 }}>{m.sub}</div>
+                          <div style={{ fontSize: 12, fontWeight: 700, color: upscaleMode === m.key ? "var(--accent)" : "var(--text-faint)" }}>{m.label}</div>
+                          <div style={{ fontSize: 10, color: upscaleMode === m.key ? "var(--accent)" : "var(--text-faint)", marginTop: 1 }}>{m.sub}</div>
                         </button>
                       ))}
                     </div>
                     {upscaleMode === "pro" && (
-                      <p style={{ fontSize: 11, color: "#7C3AED", margin: "6px 0 0", fontWeight: 600 }}>✨ AI-enhanced — sharper detail & texture recovery</p>
+                      <p style={{ fontSize: 11, color: "var(--accent-2)", margin: "6px 0 0", fontWeight: 600 }}>✨ AI-enhanced — sharper detail & texture recovery</p>
                     )}
                   </div>
                   )}
@@ -657,9 +657,9 @@ export default function BatchEditorPage() {
                       {(["2x", "4x"] as const).map(s => (
                         <button key={s} onClick={() => setUpscaleScale(s)} style={{
                           flex: 1, padding: "12px 0", borderRadius: 8,
-                          border: upscaleScale === s ? "2px solid #6366F1" : "1.5px solid #E5E7EB",
-                          background: upscaleScale === s ? "#EEF2FF" : "#fff",
-                          color: upscaleScale === s ? "#6366F1" : "#6B7280",
+                          border: upscaleScale === s ? "2px solid var(--accent)" : "1.5px solid var(--border)",
+                          background: upscaleScale === s ? "var(--accent-soft)" : "var(--surface-3)",
+                          color: upscaleScale === s ? "var(--accent)" : "var(--text-muted)",
                           fontWeight: 800, fontSize: 15, cursor: "pointer",
                         }}>
                           {s === "2x" ? "2×" : "4×"}
@@ -667,7 +667,7 @@ export default function BatchEditorPage() {
                       ))}
                     </div>
                   </div>
-                  <p style={{ fontSize: 11, color: "#9CA3AF", margin: 0 }}>
+                  <p style={{ fontSize: 11, color: "var(--text-faint)", margin: 0 }}>
                     {PAID_FEATURES_ENABLED
                       ? (upscaleMode === "pro"
                           ? `Pro ${upscaleScale} — AI texture recovery, 2 credits/image`
@@ -697,21 +697,21 @@ export default function BatchEditorPage() {
                       { val: "image",       label: "🖼 Custom Image",  hint: "Upload a background" },
                     ] as const).map(opt => (
                       <button key={opt.val} onClick={() => setRemoveBgOutput(opt.val)} style={{
-                        padding: "10px 8px", borderRadius: 8, border: removeBgOutput === opt.val ? "2px solid #6366F1" : "1.5px solid #E5E7EB",
-                        background: removeBgOutput === opt.val ? "#EEF2FF" : "#fff",
-                        color: removeBgOutput === opt.val ? "#6366F1" : "#374151",
+                        padding: "10px 8px", borderRadius: 8, border: removeBgOutput === opt.val ? "2px solid var(--accent)" : "1.5px solid var(--border)",
+                        background: removeBgOutput === opt.val ? "var(--accent-soft)" : "var(--surface-3)",
+                        color: removeBgOutput === opt.val ? "var(--accent)" : "var(--text-muted)",
                         fontWeight: removeBgOutput === opt.val ? 800 : 600, fontSize: 11, cursor: "pointer", textAlign: "left",
                       }}>
                         <div>{opt.label}</div>
-                        <div style={{ fontSize: 10, color: "#9CA3AF", fontWeight: 400 }}>{opt.hint}</div>
+                        <div style={{ fontSize: 10, color: "var(--text-faint)", fontWeight: 400 }}>{opt.hint}</div>
                       </button>
                     ))}
                   </div>
                   {removeBgOutput === "color" && (
                     <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                       <input type="color" value={removeBgColor} onChange={e => setRemoveBgColor(e.target.value)}
-                        style={{ width: 40, height: 40, borderRadius: 8, border: "1.5px solid #E5E7EB", cursor: "pointer", padding: 2 }} />
-                      <span style={{ fontSize: 12, color: "#6B7280" }}>{removeBgColor}</span>
+                        style={{ width: 40, height: 40, borderRadius: 8, border: "1.5px solid var(--border)", cursor: "pointer", padding: 2 }} />
+                      <span style={{ fontSize: 12, color: "var(--text-muted)" }}>{removeBgColor}</span>
                     </div>
                   )}
                   {removeBgOutput === "image" && (
@@ -728,7 +728,7 @@ export default function BatchEditorPage() {
                           <button onClick={() => setRemoveBgImageDataUrl(null)} style={{ position: "absolute", top: 4, right: 4, background: "rgba(0,0,0,0.5)", border: "none", borderRadius: "50%", width: 20, height: 20, color: "#fff", fontSize: 12, cursor: "pointer" }}>×</button>
                         </div>
                       ) : (
-                        <button onClick={() => removeBgImageRef.current?.click()} style={{ width: "100%", padding: "10px", border: "1.5px dashed #C7D2FE", borderRadius: 8, background: "#F5F3FF", color: "#6366F1", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
+                        <button onClick={() => removeBgImageRef.current?.click()} style={{ width: "100%", padding: "10px", border: "1.5px dashed var(--accent-border)", borderRadius: 8, background: "var(--surface-2)", color: "var(--accent)", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
                           + Upload background image
                         </button>
                       )}
@@ -752,18 +752,18 @@ export default function BatchEditorPage() {
 
         {/* ── Mobile: Run button + status ───────────────────────────────────── */}
         {isMobile && (
-          <div style={{ background: "#fff", borderBottom: "1px solid #E5E7EB", padding: "12px 16px", display: "flex", flexDirection: "column", gap: 8, flexShrink: 0 }}>
+          <div style={{ background: "var(--surface)", borderBottom: "1px solid var(--border)", padding: "12px 16px", display: "flex", flexDirection: "column", gap: 8, flexShrink: 0 }}>
             {PAID_FEATURES_ENABLED && items.length > 0 && selectedTools.size > 0 && (
-              <div style={{ background: creditsNeeded > (user?.credits ?? 0) && creditsNeeded > 0 ? "#FEF2F2" : "#F0FDF4", borderRadius: 10, padding: "8px 12px", border: `1px solid ${creditsNeeded > (user?.credits ?? 0) && creditsNeeded > 0 ? "#FECACA" : "#BBF7D0"}`, fontSize: 12 }}>
+              <div style={{ background: creditsNeeded > (user?.credits ?? 0) && creditsNeeded > 0 ? "var(--danger-soft)" : "var(--success-soft)", borderRadius: 10, padding: "8px 12px", border: `1px solid ${creditsNeeded > (user?.credits ?? 0) && creditsNeeded > 0 ? "var(--danger-soft)" : "var(--success-soft)"}`, fontSize: 12 }}>
                 {TRANSFORMS.filter(t => selectedTools.has(t.id) && effectiveCredits(t) > 0).map(t => (
-                  <div key={t.id} style={{ display: "flex", justifyContent: "space-between", color: "#6B7280", marginBottom: 2 }}>
+                  <div key={t.id} style={{ display: "flex", justifyContent: "space-between", color: "var(--text-muted)", marginBottom: 2 }}>
                     <span>{t.icon} {t.label}</span>
                     <span>{effectiveCredits(t)} × {totalPending} = <strong>{effectiveCredits(t) * totalPending}</strong></span>
                   </div>
                 ))}
-                <div style={{ borderTop: "1px solid #E5E7EB", marginTop: 4, paddingTop: 4, display: "flex", justifyContent: "space-between", fontWeight: 700 }}>
+                <div style={{ borderTop: "1px solid var(--border)", marginTop: 4, paddingTop: 4, display: "flex", justifyContent: "space-between", fontWeight: 700 }}>
                   <span>Total</span>
-                  <span style={{ color: creditsNeeded > (user?.credits ?? 0) ? "#EF4444" : "#10B981" }}>{creditsNeeded} credits</span>
+                  <span style={{ color: creditsNeeded > (user?.credits ?? 0) ? "var(--danger)" : "var(--success)" }}>{creditsNeeded} credits</span>
                 </div>
               </div>
             )}
@@ -772,7 +772,7 @@ export default function BatchEditorPage() {
               disabled={processing || !totalPending || !selectedTools.size}
               style={{
                 padding: "12px",
-                background: processing || !totalPending || !selectedTools.size ? "#C7D2FE" : "linear-gradient(135deg, #6366F1, #8B5CF6)",
+                background: processing || !totalPending || !selectedTools.size ? "var(--accent-border)" : "linear-gradient(135deg, var(--accent), var(--accent-2))",
                 color: "#fff", border: "none", borderRadius: 10, fontWeight: 800, fontSize: 15,
                 cursor: processing || !totalPending || !selectedTools.size ? "not-allowed" : "pointer",
               }}
@@ -785,29 +785,29 @@ export default function BatchEditorPage() {
             </button>
             {processing && (
               <div>
-                <div style={{ height: 6, background: "#E5E7EB", borderRadius: 3, overflow: "hidden" }}>
-                  <div style={{ height: "100%", background: "linear-gradient(90deg, #6366F1, #8B5CF6)", width: `${totalToProcess ? Math.round((processedCount / totalToProcess) * 100) : 0}%`, transition: "width 0.4s" }} />
+                <div style={{ height: 6, background: "var(--surface-2)", borderRadius: 3, overflow: "hidden" }}>
+                  <div style={{ height: "100%", background: "linear-gradient(90deg, var(--accent), var(--accent-2))", width: `${totalToProcess ? Math.round((processedCount / totalToProcess) * 100) : 0}%`, transition: "width 0.4s" }} />
                 </div>
-                <div style={{ fontSize: 12, color: "#9CA3AF", marginTop: 5, textAlign: "center" }}>
+                <div style={{ fontSize: 12, color: "var(--text-faint)", marginTop: 5, textAlign: "center" }}>
                   {totalToProcess ? Math.round((processedCount / totalToProcess) * 100) : 0}% — {processedCount}/{totalToProcess} images
                 </div>
               </div>
             )}
             {!processing && doneCount > 0 && (
-              <div style={{ background: "#ECFDF5", borderRadius: 10, padding: "8px 12px", textAlign: "center" }}>
-                <div style={{ fontSize: 13, fontWeight: 700, color: "#065F46" }}>✅ {doneCount} done{errorCount > 0 ? ` · ${errorCount} failed` : ""}</div>
+              <div style={{ background: "var(--success-soft)", borderRadius: 10, padding: "8px 12px", textAlign: "center" }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: "var(--success)" }}>✅ {doneCount} done{errorCount > 0 ? ` · ${errorCount} failed` : ""}</div>
               </div>
             )}
           </div>
         )}
 
         {/* ── Desktop: Left Panel ───────────────────────────────────────────────────── */}
-        {!isMobile && <div style={{ width: 300, minWidth: 280, background: "#fff", borderRight: "1px solid #E5E7EB", overflowY: "auto", padding: 20, display: "flex", flexDirection: "column", gap: 18 }}>
+        {!isMobile && <div style={{ width: 300, minWidth: 280, background: "var(--surface)", borderRight: "1px solid var(--border)", overflowY: "auto", padding: 20, display: "flex", flexDirection: "column", gap: 18 }}>
 
           {/* Tool multi-select */}
           <div>
             <div style={sectionLabel}>Select Transformations</div>
-            <p style={{ fontSize: 12, color: "#9CA3AF", margin: "0 0 10px" }}>Pick one or more — applied in sequence to each image</p>
+            <p style={{ fontSize: 12, color: "var(--text-faint)", margin: "0 0 10px" }}>Pick one or more — applied in sequence to each image</p>
             <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
               {TRANSFORMS.map(t => {
                 const active = selectedTools.has(t.id);
@@ -815,14 +815,14 @@ export default function BatchEditorPage() {
                 return (
                   <button key={t.id} onClick={() => toggleTool(t.id)} title={active ? `Remove ${t.label}` : `Add ${t.label}`} style={{
                     padding: "10px 12px", borderRadius: 10, textAlign: "left", cursor: "pointer",
-                    border: active ? "2px solid #6366F1" : "1.5px solid #E5E7EB",
-                    background: optOpen ? "#EEF2FF" : active ? "#F5F3FF" : "#FAFAFA",
+                    border: active ? "2px solid var(--accent)" : "1.5px solid var(--border)",
+                    background: optOpen ? "var(--accent-soft)" : active ? "var(--surface-2)" : "var(--surface-2)",
                     display: "flex", alignItems: "center", gap: 10,
                   }}>
                     <ToolIcon id={t.id} active={active} size={34} />
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: active ? "#6366F1" : "#111" }}>{t.label}</div>
-                      <div style={{ fontSize: 11, color: "#9CA3AF" }}>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: active ? "var(--accent)" : "var(--text)" }}>{t.label}</div>
+                      <div style={{ fontSize: 11, color: "var(--text-faint)" }}>
                         {t.creditsEach === 0 ? "Free" : `${t.creditsEach} credit/image`}
                         {t.aiOnly && " · Paid plan"}
                       </div>
@@ -831,8 +831,8 @@ export default function BatchEditorPage() {
                     <span style={{
                       width: 24, height: 24, borderRadius: "50%", flexShrink: 0,
                       display: "flex", alignItems: "center", justifyContent: "center",
-                      background: active ? "linear-gradient(135deg,#6366F1,#8B5CF6)" : "#EEF2FF",
-                      color: active ? "#fff" : "#6366F1", fontSize: 16, fontWeight: 800, lineHeight: 1,
+                      background: active ? "linear-gradient(135deg,var(--accent),var(--accent-2))" : "var(--accent-soft)",
+                      color: active ? "#fff" : "var(--accent)", fontSize: 16, fontWeight: 800, lineHeight: 1,
                     }}>{active ? "✓" : "+"}</span>
                   </button>
                 );
@@ -842,24 +842,24 @@ export default function BatchEditorPage() {
 
           {/* Credit summary */}
           {PAID_FEATURES_ENABLED && items.length > 0 && selectedTools.size > 0 && (
-            <div style={{ background: creditsNeeded > (user?.credits ?? 0) && creditsNeeded > 0 ? "#FEF2F2" : "#F0FDF4", borderRadius: 10, padding: "12px 14px", border: `1px solid ${creditsNeeded > (user?.credits ?? 0) && creditsNeeded > 0 ? "#FECACA" : "#BBF7D0"}` }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "#374151", marginBottom: 6 }}>💳 Credit Summary</div>
+            <div style={{ background: creditsNeeded > (user?.credits ?? 0) && creditsNeeded > 0 ? "var(--danger-soft)" : "var(--success-soft)", borderRadius: 10, padding: "12px 14px", border: `1px solid ${creditsNeeded > (user?.credits ?? 0) && creditsNeeded > 0 ? "var(--danger-soft)" : "var(--success-soft)"}` }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--text-muted)", marginBottom: 6 }}>💳 Credit Summary</div>
               {TRANSFORMS.filter(t => selectedTools.has(t.id) && effectiveCredits(t) > 0).map(t => (
-                <div key={t.id} style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "#6B7280", marginBottom: 2 }}>
+                <div key={t.id} style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "var(--text-muted)", marginBottom: 2 }}>
                   <span>{t.icon} {t.label}{t.id === "upscale" && upscaleMode === "pro" ? " (Pro)" : ""}</span>
                   <span>{effectiveCredits(t)} × {totalPending} = <strong>{effectiveCredits(t) * totalPending}</strong></span>
                 </div>
               ))}
-              <div style={{ borderTop: "1px solid #E5E7EB", marginTop: 6, paddingTop: 6, display: "flex", justifyContent: "space-between", fontSize: 13, fontWeight: 700 }}>
+              <div style={{ borderTop: "1px solid var(--border)", marginTop: 6, paddingTop: 6, display: "flex", justifyContent: "space-between", fontSize: 13, fontWeight: 700 }}>
                 <span>Total</span>
-                <span style={{ color: creditsNeeded > (user?.credits ?? 0) ? "#EF4444" : "#10B981" }}>{creditsNeeded} credits</span>
+                <span style={{ color: creditsNeeded > (user?.credits ?? 0) ? "var(--danger)" : "var(--success)" }}>{creditsNeeded} credits</span>
               </div>
               {user && creditsNeeded > 0 && (
-                <div style={{ fontSize: 12, marginTop: 4, color: creditsNeeded > user.credits ? "#EF4444" : "#6B7280" }}>
+                <div style={{ fontSize: 12, marginTop: 4, color: creditsNeeded > user.credits ? "var(--danger)" : "var(--text-muted)" }}>
                   {creditsNeeded > user.credits ? `⚠ Need ${creditsNeeded - user.credits} more` : `✓ You have ${user.credits}`}
                 </div>
               )}
-              {creditsNeeded === 0 && <div style={{ fontSize: 12, color: "#10B981", marginTop: 2 }}>✓ Free — no credits needed</div>}
+              {creditsNeeded === 0 && <div style={{ fontSize: 12, color: "var(--success)", marginTop: 2 }}>✓ Free — no credits needed</div>}
             </div>
           )}
 
@@ -869,7 +869,7 @@ export default function BatchEditorPage() {
             disabled={processing || !totalPending || !selectedTools.size}
             style={{
               padding: "14px",
-              background: processing || !totalPending || !selectedTools.size ? "#C7D2FE" : "linear-gradient(135deg, #6366F1, #8B5CF6)",
+              background: processing || !totalPending || !selectedTools.size ? "var(--accent-border)" : "linear-gradient(135deg, var(--accent), var(--accent-2))",
               color: "#fff", border: "none", borderRadius: 10, fontWeight: 800, fontSize: 15,
               cursor: processing || !totalPending || !selectedTools.size ? "not-allowed" : "pointer",
               boxShadow: !processing && totalPending && selectedTools.size ? "0 4px 16px rgba(99,102,241,0.4)" : "none",
@@ -884,18 +884,18 @@ export default function BatchEditorPage() {
 
           {processing && (
             <div>
-              <div style={{ height: 6, background: "#E5E7EB", borderRadius: 3, overflow: "hidden" }}>
-                <div style={{ height: "100%", background: "linear-gradient(90deg, #6366F1, #8B5CF6)", width: `${totalToProcess ? Math.round((processedCount / totalToProcess) * 100) : 0}%`, transition: "width 0.4s" }} />
+              <div style={{ height: 6, background: "var(--surface-2)", borderRadius: 3, overflow: "hidden" }}>
+                <div style={{ height: "100%", background: "linear-gradient(90deg, var(--accent), var(--accent-2))", width: `${totalToProcess ? Math.round((processedCount / totalToProcess) * 100) : 0}%`, transition: "width 0.4s" }} />
               </div>
-              <div style={{ fontSize: 12, color: "#9CA3AF", marginTop: 5, textAlign: "center" }}>
+              <div style={{ fontSize: 12, color: "var(--text-faint)", marginTop: 5, textAlign: "center" }}>
                 {totalToProcess ? Math.round((processedCount / totalToProcess) * 100) : 0}% — {processedCount}/{totalToProcess} images
               </div>
             </div>
           )}
 
           {!processing && doneCount > 0 && (
-            <div style={{ background: "#ECFDF5", borderRadius: 10, padding: "10px 14px", textAlign: "center" }}>
-              <div style={{ fontSize: 14, fontWeight: 700, color: "#065F46" }}>✅ {doneCount} done{errorCount > 0 ? ` · ${errorCount} failed` : ""}</div>
+            <div style={{ background: "var(--success-soft)", borderRadius: 10, padding: "10px 14px", textAlign: "center" }}>
+              <div style={{ fontSize: 14, fontWeight: 700, color: "var(--success)" }}>✅ {doneCount} done{errorCount > 0 ? ` · ${errorCount} failed` : ""}</div>
             </div>
           )}
         </div>}
@@ -904,10 +904,10 @@ export default function BatchEditorPage() {
         {!isMobile && openOptionsFor && (() => {
           const t = TRANSFORMS.find(x => x.id === openOptionsFor)!;
           return (
-            <div style={{ width: 270, minWidth: 250, background: "#fff", borderRight: "1px solid #E5E7EB", overflowY: "auto", padding: 20, display: "flex", flexDirection: "column", gap: 16 }}>
+            <div style={{ width: 270, minWidth: 250, background: "var(--surface)", borderRight: "1px solid var(--border)", overflowY: "auto", padding: 20, display: "flex", flexDirection: "column", gap: 16 }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
-                <div style={{ fontWeight: 800, fontSize: 14, color: "#111" }}>{t.icon} {t.label} Options</div>
-                <button onClick={() => setOpenOptionsFor(null)} style={{ background: "none", border: "none", fontSize: 18, color: "#9CA3AF", cursor: "pointer", lineHeight: 1, padding: "0 2px" }}>×</button>
+                <div style={{ fontWeight: 800, fontSize: 14, color: "var(--text)" }}>{t.icon} {t.label} Options</div>
+                <button onClick={() => setOpenOptionsFor(null)} style={{ background: "none", border: "none", fontSize: 18, color: "var(--text-faint)", cursor: "pointer", lineHeight: 1, padding: "0 2px" }}>×</button>
               </div>
 
               {openOptionsFor === "resize" && (
@@ -922,7 +922,7 @@ export default function BatchEditorPage() {
                       <input type="number" value={resizeH} min={1} max={8000} onChange={e => setResizeH(+e.target.value)} disabled={lockAspect} style={{ ...inputStyle, opacity: lockAspect ? 0.5 : 1 }} />
                     </div>
                   </div>
-                  <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#6B7280", cursor: "pointer" }}>
+                  <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "var(--text-muted)", cursor: "pointer" }}>
                     <input type="checkbox" checked={lockAspect} onChange={e => setLockAspect(e.target.checked)} />
                     Lock aspect ratio (height auto)
                   </label>
@@ -938,10 +938,10 @@ export default function BatchEditorPage() {
                   ].map(({ label, value, set }) => (
                     <div key={label} style={{ marginBottom: 10 }}>
                       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
-                        <span style={{ fontSize: 12, fontWeight: 600, color: "#374151" }}>{label}</span>
-                        <span style={{ fontSize: 12, color: "#6366F1", fontWeight: 700 }}>{value}%</span>
+                        <span style={{ fontSize: 12, fontWeight: 600, color: "var(--text-muted)" }}>{label}</span>
+                        <span style={{ fontSize: 12, color: "var(--accent)", fontWeight: 700 }}>{value}%</span>
                       </div>
-                      <input type="range" min={0} max={200} value={value} onChange={e => set(+e.target.value)} style={{ width: "100%", accentColor: "#6366F1" }} />
+                      <input type="range" min={0} max={200} value={value} onChange={e => set(+e.target.value)} style={{ width: "100%", accentColor: "var(--accent)" }} />
                     </div>
                   ))}
                 </div>
@@ -952,7 +952,7 @@ export default function BatchEditorPage() {
                   {PAID_FEATURES_ENABLED && (
                   <div>
                     <label style={optionLabel}>Mode</label>
-                    <div style={{ display: "flex", gap: 0, background: "#F3F4F6", borderRadius: 10, padding: 4, marginTop: 6 }}>
+                    <div style={{ display: "flex", gap: 0, background: "var(--surface-2)", borderRadius: 10, padding: 4, marginTop: 6 }}>
                       {([
                         { key: "normal", label: "⚡ Normal", sub: "1 credit/image" },
                         { key: "pro", label: "✨ Pro AI", sub: "2 credits · AI" },
@@ -964,17 +964,17 @@ export default function BatchEditorPage() {
                           setUpscaleMode(m.key);
                         }} style={{
                           flex: 1, padding: "8px 6px", borderRadius: 7, border: "none", cursor: "pointer",
-                          background: upscaleMode === m.key ? "#fff" : "transparent",
+                          background: upscaleMode === m.key ? "var(--surface-3)" : "transparent",
                           boxShadow: upscaleMode === m.key ? "0 1px 6px rgba(0,0,0,0.10)" : "none",
                           transition: "all 0.15s",
                         }}>
-                          <div style={{ fontSize: 12, fontWeight: 700, color: upscaleMode === m.key ? "#6366F1" : "#888" }}>{m.label}</div>
-                          <div style={{ fontSize: 10, color: upscaleMode === m.key ? "#6366F1" : "#AAA", marginTop: 1 }}>{m.sub}</div>
+                          <div style={{ fontSize: 12, fontWeight: 700, color: upscaleMode === m.key ? "var(--accent)" : "var(--text-faint)" }}>{m.label}</div>
+                          <div style={{ fontSize: 10, color: upscaleMode === m.key ? "var(--accent)" : "var(--text-faint)", marginTop: 1 }}>{m.sub}</div>
                         </button>
                       ))}
                     </div>
                     {upscaleMode === "pro" && (
-                      <p style={{ fontSize: 11, color: "#7C3AED", margin: "6px 0 0", fontWeight: 600 }}>✨ AI-enhanced — sharper detail & texture recovery</p>
+                      <p style={{ fontSize: 11, color: "var(--accent-2)", margin: "6px 0 0", fontWeight: 600 }}>✨ AI-enhanced — sharper detail & texture recovery</p>
                     )}
                   </div>
                   )}
@@ -984,9 +984,9 @@ export default function BatchEditorPage() {
                       {(["2x", "4x"] as const).map(s => (
                         <button key={s} onClick={() => setUpscaleScale(s)} style={{
                           flex: 1, padding: "12px 0", borderRadius: 8,
-                          border: upscaleScale === s ? "2px solid #6366F1" : "1.5px solid #E5E7EB",
-                          background: upscaleScale === s ? "#EEF2FF" : "#fff",
-                          color: upscaleScale === s ? "#6366F1" : "#6B7280",
+                          border: upscaleScale === s ? "2px solid var(--accent)" : "1.5px solid var(--border)",
+                          background: upscaleScale === s ? "var(--accent-soft)" : "var(--surface-3)",
+                          color: upscaleScale === s ? "var(--accent)" : "var(--text-muted)",
                           fontWeight: 800, fontSize: 15, cursor: "pointer",
                         }}>
                           {s === "2x" ? "2×" : "4×"}
@@ -994,7 +994,7 @@ export default function BatchEditorPage() {
                       ))}
                     </div>
                   </div>
-                  <p style={{ fontSize: 11, color: "#9CA3AF", margin: 0 }}>
+                  <p style={{ fontSize: 11, color: "var(--text-faint)", margin: 0 }}>
                     {PAID_FEATURES_ENABLED
                       ? (upscaleMode === "pro"
                           ? `Pro ${upscaleScale} — AI texture recovery, 2 credits/image`
@@ -1024,21 +1024,21 @@ export default function BatchEditorPage() {
                       { val: "image",       label: "🖼 Custom Image",  hint: "Upload a background" },
                     ] as const).map(opt => (
                       <button key={opt.val} onClick={() => setRemoveBgOutput(opt.val)} style={{
-                        padding: "10px 8px", borderRadius: 8, border: removeBgOutput === opt.val ? "2px solid #6366F1" : "1.5px solid #E5E7EB",
-                        background: removeBgOutput === opt.val ? "#EEF2FF" : "#fff",
-                        color: removeBgOutput === opt.val ? "#6366F1" : "#374151",
+                        padding: "10px 8px", borderRadius: 8, border: removeBgOutput === opt.val ? "2px solid var(--accent)" : "1.5px solid var(--border)",
+                        background: removeBgOutput === opt.val ? "var(--accent-soft)" : "var(--surface-3)",
+                        color: removeBgOutput === opt.val ? "var(--accent)" : "var(--text-muted)",
                         fontWeight: removeBgOutput === opt.val ? 800 : 600, fontSize: 11, cursor: "pointer", textAlign: "left",
                       }}>
                         <div>{opt.label}</div>
-                        <div style={{ fontSize: 10, color: "#9CA3AF", fontWeight: 400 }}>{opt.hint}</div>
+                        <div style={{ fontSize: 10, color: "var(--text-faint)", fontWeight: 400 }}>{opt.hint}</div>
                       </button>
                     ))}
                   </div>
                   {removeBgOutput === "color" && (
                     <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                       <input type="color" value={removeBgColor} onChange={e => setRemoveBgColor(e.target.value)}
-                        style={{ width: 40, height: 40, borderRadius: 8, border: "1.5px solid #E5E7EB", cursor: "pointer", padding: 2 }} />
-                      <span style={{ fontSize: 12, color: "#6B7280" }}>{removeBgColor}</span>
+                        style={{ width: 40, height: 40, borderRadius: 8, border: "1.5px solid var(--border)", cursor: "pointer", padding: 2 }} />
+                      <span style={{ fontSize: 12, color: "var(--text-muted)" }}>{removeBgColor}</span>
                     </div>
                   )}
                   {removeBgOutput === "image" && (
@@ -1055,7 +1055,7 @@ export default function BatchEditorPage() {
                           <button onClick={() => setRemoveBgImageDataUrl(null)} style={{ position: "absolute", top: 4, right: 4, background: "rgba(0,0,0,0.5)", border: "none", borderRadius: "50%", width: 20, height: 20, color: "#fff", fontSize: 12, cursor: "pointer" }}>×</button>
                         </div>
                       ) : (
-                        <button onClick={() => removeBgImageRef.current?.click()} style={{ width: "100%", padding: "10px", border: "1.5px dashed #C7D2FE", borderRadius: 8, background: "#F5F3FF", color: "#6366F1", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
+                        <button onClick={() => removeBgImageRef.current?.click()} style={{ width: "100%", padding: "10px", border: "1.5px dashed var(--accent-border)", borderRadius: 8, background: "var(--surface-2)", color: "var(--accent)", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
                           + Upload background image
                         </button>
                       )}
@@ -1087,9 +1087,9 @@ export default function BatchEditorPage() {
             onDrop={e => { e.preventDefault(); setDragOver(false); addFiles(e.dataTransfer.files); }}
             onClick={() => !items.length && fileInputRef.current?.click()}
             style={{
-              border: `2px dashed ${dragOver ? "#6366F1" : "#D1D5DB"}`,
+              border: `2px dashed ${dragOver ? "var(--accent)" : "var(--border)"}`,
               borderRadius: 16, padding: items.length ? "14px 20px" : "48px 24px",
-              background: dragOver ? "#EEF2FF" : "#fff",
+              background: dragOver ? "var(--accent-soft)" : "var(--surface-3)",
               display: "flex", alignItems: "center",
               justifyContent: items.length ? "space-between" : "center",
               flexWrap: "wrap", gap: 12,
@@ -1100,25 +1100,25 @@ export default function BatchEditorPage() {
             {items.length === 0 ? (
               <div style={{ textAlign: "center" }}>
                 <div style={{ fontSize: 48, marginBottom: 12 }}>🖼</div>
-                <div style={{ fontWeight: 800, fontSize: 18, color: "#111", marginBottom: 6 }}>
-                  Drop images here or <span style={{ color: "#6366F1" }}>click to browse</span>
+                <div style={{ fontWeight: 800, fontSize: 18, color: "var(--text)", marginBottom: 6 }}>
+                  Drop images here or <span style={{ color: "var(--accent)" }}>click to browse</span>
                 </div>
-                <div style={{ fontSize: 14, color: "#9CA3AF" }}>JPG · PNG · WEBP — up to {MAX_IMAGES} images</div>
+                <div style={{ fontSize: 14, color: "var(--text-faint)" }}>JPG · PNG · WEBP — up to {MAX_IMAGES} images</div>
               </div>
             ) : (
               <>
-                <div style={{ fontSize: 14, color: "#6B7280" }}>
-                  <strong style={{ color: "#111" }}>{items.length}</strong> image{items.length !== 1 ? "s" : ""} loaded
-                  {items.length < MAX_IMAGES && <span style={{ color: "#9CA3AF" }}> · drag more to add</span>}
+                <div style={{ fontSize: 14, color: "var(--text-muted)" }}>
+                  <strong style={{ color: "var(--text)" }}>{items.length}</strong> image{items.length !== 1 ? "s" : ""} loaded
+                  {items.length < MAX_IMAGES && <span style={{ color: "var(--text-faint)" }}> · drag more to add</span>}
                 </div>
                 <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                  <button onClick={() => fileInputRef.current?.click()} style={{ padding: "8px 16px", background: "#6366F1", color: "#fff", border: "none", borderRadius: 8, fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+                  <button onClick={() => fileInputRef.current?.click()} style={{ padding: "8px 16px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: 8, fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
                     + Add More
                   </button>
-                  <button onClick={() => setItems(prev => prev.filter(i => i.status !== "done"))} style={{ padding: "8px 14px", background: "#fff", color: "#6B7280", border: "1.5px solid #E5E7EB", borderRadius: 8, fontWeight: 600, fontSize: 13, cursor: "pointer" }}>
+                  <button onClick={() => setItems(prev => prev.filter(i => i.status !== "done"))} style={{ padding: "8px 14px", background: "var(--surface)", color: "var(--text-muted)", border: "1.5px solid var(--border)", borderRadius: 8, fontWeight: 600, fontSize: 13, cursor: "pointer" }}>
                     Clear Done
                   </button>
-                  <button onClick={() => setItems([])} style={{ padding: "8px 14px", background: "#fff", color: "#EF4444", border: "1.5px solid #FCA5A5", borderRadius: 8, fontWeight: 600, fontSize: 13, cursor: "pointer" }}>
+                  <button onClick={() => setItems([])} style={{ padding: "8px 14px", background: "var(--surface)", color: "var(--danger)", border: "1.5px solid var(--danger-soft)", borderRadius: 8, fontWeight: 600, fontSize: 13, cursor: "pointer" }}>
                     Clear All
                   </button>
                 </div>
@@ -1134,11 +1134,11 @@ export default function BatchEditorPage() {
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 10 }}>
               {items.map(item => (
                 <div key={item.id} style={{
-                  background: "#fff", borderRadius: 12, overflow: "hidden",
-                  border: `2px solid ${item.status === "done" ? "#10B981" : item.status === "error" ? "#EF4444" : item.status === "processing" ? "#6366F1" : "#E5E7EB"}`,
+                  background: "var(--surface)", borderRadius: 12, overflow: "hidden",
+                  border: `2px solid ${item.status === "done" ? "var(--success)" : item.status === "error" ? "var(--danger)" : item.status === "processing" ? "var(--accent)" : "var(--border)"}`,
                   boxShadow: item.status === "done" ? "0 2px 8px rgba(16,185,129,0.15)" : "0 1px 4px rgba(0,0,0,0.05)",
                 }}>
-                  <div style={{ position: "relative", aspectRatio: "1", background: "#F3F4F6", overflow: "hidden" }}>
+                  <div style={{ position: "relative", aspectRatio: "1", background: "var(--surface-2)", overflow: "hidden" }}>
                     <img src={item.resultDataUrl || item.originalDataUrl} alt={item.name}
                       onClick={() => { setPreviewShowOriginal(false); setPreviewItem(item); }}
                       title="Click to preview"
@@ -1151,7 +1151,7 @@ export default function BatchEditorPage() {
                       </div>
                     )}
                     {item.status === "done" && (
-                      <div style={{ position: "absolute", top: 6, left: 6, background: "#10B981", borderRadius: "50%", width: 22, height: 22, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 12, fontWeight: 800 }}>✓</div>
+                      <div style={{ position: "absolute", top: 6, left: 6, background: "var(--success)", borderRadius: "50%", width: 22, height: 22, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 12, fontWeight: 800 }}>✓</div>
                     )}
                     {item.status === "error" && (
                       <div style={{ position: "absolute", inset: 0, background: "rgba(239,68,68,0.75)", display: "flex", alignItems: "center", justifyContent: "center", padding: 8 }}>
@@ -1165,9 +1165,9 @@ export default function BatchEditorPage() {
                   </div>
 
                   <div style={{ padding: "8px 10px", display: "flex", alignItems: "center", gap: 4 }}>
-                    <span style={{ fontSize: 11, color: "#6B7280", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", flex: 1 }} title={item.name}>{item.name}</span>
+                    <span style={{ fontSize: 11, color: "var(--text-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", flex: 1 }} title={item.name}>{item.name}</span>
                     {item.resultDataUrl && (
-                      <button onClick={() => downloadSingle(item)} title="Download" style={{ background: "none", border: "none", cursor: "pointer", fontSize: 14, color: "#6366F1", padding: 2, flexShrink: 0 }}>⬇</button>
+                      <button onClick={() => downloadSingle(item)} title="Download" style={{ background: "none", border: "none", cursor: "pointer", fontSize: 14, color: "var(--accent)", padding: 2, flexShrink: 0 }}>⬇</button>
                     )}
                   </div>
                 </div>
@@ -1198,7 +1198,7 @@ export default function BatchEditorPage() {
                   {([["Result", false], ["Original", true]] as const).map(([label, orig]) => (
                     <button key={label} onClick={() => setPreviewShowOriginal(orig)}
                       style={{ padding: "6px 18px", borderRadius: 7, border: "none", cursor: "pointer", fontSize: 13, fontWeight: 700,
-                        background: showingOriginal === orig ? "#fff" : "transparent", color: showingOriginal === orig ? "#6366F1" : "#E2E8F0" }}>
+                        background: showingOriginal === orig ? "var(--surface-3)" : "transparent", color: showingOriginal === orig ? "var(--accent)" : "var(--text-muted)" }}>
                       {label}
                     </button>
                   ))}
@@ -1206,11 +1206,11 @@ export default function BatchEditorPage() {
               )}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={shownSrc} alt={previewItem.name}
-                style={{ maxWidth: "94vw", maxHeight: "76vh", objectFit: "contain", borderRadius: 10, boxShadow: "0 12px 48px rgba(0,0,0,0.5)", background: "#fff" }} />
+                style={{ maxWidth: "94vw", maxHeight: "76vh", objectFit: "contain", borderRadius: 10, boxShadow: "0 12px 48px rgba(0,0,0,0.5)", background: "var(--surface)" }} />
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <span style={{ color: "#CBD5E1", fontSize: 13, fontWeight: 600, maxWidth: "40vw", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{previewItem.name}</span>
+                <span style={{ color: "var(--text-muted)", fontSize: 13, fontWeight: 600, maxWidth: "40vw", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{previewItem.name}</span>
                 <button onClick={download}
-                  style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 22px", background: "linear-gradient(135deg,#6366F1,#8B5CF6)", color: "#fff", border: "none", borderRadius: 10, fontSize: 14, fontWeight: 800, cursor: "pointer", boxShadow: "0 4px 16px rgba(99,102,241,0.5)" }}>
+                  style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 22px", background: "linear-gradient(135deg,var(--accent),var(--accent-2))", color: "#fff", border: "none", borderRadius: 10, fontSize: 14, fontWeight: 800, cursor: "pointer", boxShadow: "0 4px 16px rgba(99,102,241,0.5)" }}>
                   ⬇ Download {showingOriginal ? "Original" : "Result"}
                 </button>
                 <button onClick={() => setPreviewItem(null)}
@@ -1230,8 +1230,8 @@ export default function BatchEditorPage() {
 
 // ─── Styles ───────────────────────────────────────────────────────────────────
 
-const sectionLabel: React.CSSProperties = { fontSize: 11, fontWeight: 700, color: "#9CA3AF", textTransform: "uppercase", letterSpacing: "0.08em" };
-const optionBox: React.CSSProperties = { background: "#F9FAFB", border: "1px solid #E5E7EB", borderRadius: 10, padding: "12px 14px", display: "flex", flexDirection: "column", gap: 8 };
-const optionTitle: React.CSSProperties = { fontSize: 13, fontWeight: 700, color: "#374151", marginBottom: 2 };
-const optionLabel: React.CSSProperties = { fontSize: 12, color: "#6B7280", fontWeight: 600 };
-const inputStyle: React.CSSProperties = { width: "100%", padding: "8px 10px", border: "1.5px solid #E5E7EB", borderRadius: 8, fontSize: 13, outline: "none", boxSizing: "border-box", fontFamily: "inherit" };
+const sectionLabel: React.CSSProperties = { fontSize: 11, fontWeight: 700, color: "var(--text-faint)", textTransform: "uppercase", letterSpacing: "0.08em" };
+const optionBox: React.CSSProperties = { background: "var(--surface-2)", border: "1px solid var(--border)", borderRadius: 10, padding: "12px 14px", display: "flex", flexDirection: "column", gap: 8 };
+const optionTitle: React.CSSProperties = { fontSize: 13, fontWeight: 700, color: "var(--text-muted)", marginBottom: 2 };
+const optionLabel: React.CSSProperties = { fontSize: 12, color: "var(--text-muted)", fontWeight: 600 };
+const inputStyle: React.CSSProperties = { width: "100%", padding: "8px 10px", border: "1.5px solid var(--border)", borderRadius: 8, fontSize: 13, outline: "none", boxSizing: "border-box", fontFamily: "inherit" };

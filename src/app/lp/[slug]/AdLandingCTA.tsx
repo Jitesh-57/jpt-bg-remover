@@ -17,7 +17,7 @@ export default function AdLandingCTA({ href, label, tool }: { href: string; labe
       style={{
         display: "inline-block",
         padding: "16px 40px",
-        background: "#6366F1",
+        background: "var(--accent)",
         color: "#fff",
         fontSize: 18,
         fontWeight: 800,

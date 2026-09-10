@@ -45,13 +45,13 @@ function Chips({ items, icon = "→" }: { items: { href: string; label: string }
           className="jpt-hover"
           style={{
             display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10,
-            background: "#fff", border: "1px solid #EAECF5", borderRadius: 14, padding: "14px 16px",
-            fontSize: 14.5, fontWeight: 700, color: "#1E293B", textDecoration: "none",
+            background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 14, padding: "14px 16px",
+            fontSize: 14.5, fontWeight: 700, color: "var(--text)", textDecoration: "none",
             boxShadow: "0 4px 14px rgba(30,41,90,.05)",
           }}
         >
           <span>{i.label}</span>
-          <span aria-hidden style={{ color: "#6366F1", fontWeight: 800, flexShrink: 0 }}>{icon}</span>
+          <span aria-hidden style={{ color: "var(--accent)", fontWeight: 800, flexShrink: 0 }}>{icon}</span>
         </Link>
       ))}
     </div>
@@ -61,8 +61,8 @@ function Chips({ items, icon = "→" }: { items: { href: string; label: string }
 function SectionTitle({ children, sub }: { children: React.ReactNode; sub?: string }) {
   return (
     <div style={{ marginBottom: 20 }}>
-      <h2 style={{ fontSize: "clamp(1.4rem,3vw,1.9rem)", fontWeight: 800, color: "#0F172A", margin: 0, letterSpacing: "-0.02em" }}>{children}</h2>
-      {sub && <p style={{ fontSize: 14.5, color: "#6B7280", margin: "6px 0 0" }}>{sub}</p>}
+      <h2 style={{ fontSize: "clamp(1.4rem,3vw,1.9rem)", fontWeight: 800, color: "var(--text)", margin: 0, letterSpacing: "-0.02em" }}>{children}</h2>
+      {sub && <p style={{ fontSize: 14.5, color: "var(--text-muted)", margin: "6px 0 0" }}>{sub}</p>}
     </div>
   );
 }
@@ -95,33 +95,33 @@ export default function ToolsPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
       <ScrollReveal />
 
-      <div style={{ fontFamily: "system-ui,-apple-system,sans-serif", color: "#111827", background: "#fff" }}>
+      <div style={{ fontFamily: "system-ui,-apple-system,sans-serif", color: "var(--text)", background: "var(--surface)" }}>
         {/* HERO */}
-        <section style={{ background: "linear-gradient(160deg,#F5F5FF 0%,#fff 55%,#F0FDF4 100%)", padding: "64px 24px 44px", textAlign: "center" }}>
+        <section style={{ background: "linear-gradient(160deg,var(--surface-2) 0%,var(--surface) 55%,var(--success-soft) 100%)", padding: "64px 24px 44px", textAlign: "center" }}>
           <div style={{ maxWidth: 760, margin: "0 auto" }}>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "#EEF2FF", color: "#6366F1", fontWeight: 700, fontSize: 12, borderRadius: 20, padding: "6px 14px", marginBottom: 22, letterSpacing: "0.06em", textTransform: "uppercase" }}>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "var(--accent-soft)", color: "var(--accent)", fontWeight: 700, fontSize: 12, borderRadius: 20, padding: "6px 14px", marginBottom: 22, letterSpacing: "0.06em", textTransform: "uppercase" }}>
               ✦ 100% FREE · NO SIGN-UP
             </div>
-            <h1 style={{ fontSize: "clamp(2.1rem,5vw,3.2rem)", fontWeight: 900, lineHeight: 1.12, letterSpacing: "-0.03em", color: "#0F172A", margin: "0 0 14px" }}>
+            <h1 style={{ fontSize: "clamp(2.1rem,5vw,3.2rem)", fontWeight: 900, lineHeight: 1.12, letterSpacing: "-0.03em", color: "var(--text)", margin: "0 0 14px" }}>
               All Free Image Tools
             </h1>
-            <p style={{ fontSize: "clamp(1rem,2vw,1.15rem)", color: "#4B5563", lineHeight: 1.7, maxWidth: 560, margin: "0 auto" }}>
+            <p style={{ fontSize: "clamp(1rem,2vw,1.15rem)", color: "var(--text-muted)", lineHeight: 1.7, maxWidth: 560, margin: "0 auto" }}>
               Every JPT AI tool in one place — convert, compress, crop, upscale and more. All free, no watermark, nothing to install.
             </p>
           </div>
         </section>
 
         {/* CORE TOOLS */}
-        <section style={{ padding: "48px 24px", background: "#fff" }}>
+        <section style={{ padding: "48px 24px", background: "var(--surface)" }}>
           <div style={{ maxWidth: 1080, margin: "0 auto" }}>
             <SectionTitle sub="The essentials — one click to open each editor.">Core tools</SectionTitle>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(230px,1fr))", gap: 16 }}>
               {CORE_TOOLS.map((t) => (
-                <Link key={t.href} href={t.href} className="jpt-hover" style={{ display: "flex", gap: 12, alignItems: "flex-start", background: "#fff", border: "1px solid #EAECF5", borderRadius: 16, padding: "18px 18px", textDecoration: "none", boxShadow: "0 6px 20px rgba(30,41,90,.05)" }}>
+                <Link key={t.href} href={t.href} className="jpt-hover" style={{ display: "flex", gap: 12, alignItems: "flex-start", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 16, padding: "18px 18px", textDecoration: "none", boxShadow: "0 6px 20px rgba(30,41,90,.05)" }}>
                   <ToolIcon id={iconKeyForHref(t.href)} size={40} />
                   <span>
-                    <span style={{ display: "block", fontSize: 15.5, fontWeight: 800, color: "#111827" }}>{t.name}</span>
-                    <span style={{ display: "block", fontSize: 13, color: "#6B7280", marginTop: 3 }}>{t.desc}</span>
+                    <span style={{ display: "block", fontSize: 15.5, fontWeight: 800, color: "var(--text)" }}>{t.name}</span>
+                    <span style={{ display: "block", fontSize: 13, color: "var(--text-muted)", marginTop: 3 }}>{t.desc}</span>
                   </span>
                 </Link>
               ))}
@@ -130,7 +130,7 @@ export default function ToolsPage() {
         </section>
 
         {/* CONVERSIONS */}
-        <section style={{ padding: "16px 24px 40px", background: "#fff" }}>
+        <section style={{ padding: "16px 24px 40px", background: "var(--surface)" }}>
           <div style={{ maxWidth: 1080, margin: "0 auto" }}>
             <SectionTitle sub="Convert between formats — free and instant.">Image converters</SectionTitle>
             <Chips items={convertChips} />
@@ -138,7 +138,7 @@ export default function ToolsPage() {
         </section>
 
         {/* COMPRESS */}
-        <section style={{ padding: "16px 24px 40px", background: "#fff" }}>
+        <section style={{ padding: "16px 24px 40px", background: "var(--surface)" }}>
           <div style={{ maxWidth: 1080, margin: "0 auto" }}>
             <SectionTitle sub="Hit an exact file size for uploads, forms and email.">Compress to a target size</SectionTitle>
             <Chips items={compressChips} />
@@ -146,7 +146,7 @@ export default function ToolsPage() {
         </section>
 
         {/* CROP */}
-        <section style={{ padding: "16px 24px 56px", background: "#fff" }}>
+        <section style={{ padding: "16px 24px 56px", background: "var(--surface)" }}>
           <div style={{ maxWidth: 1080, margin: "0 auto" }}>
             <SectionTitle sub="Crop to the exact shape each platform needs.">Crop presets</SectionTitle>
             <Chips items={cropChips} />
@@ -154,11 +154,11 @@ export default function ToolsPage() {
         </section>
 
         {/* BLOG CTA */}
-        <section style={{ padding: "8px 24px 72px", background: "#fff" }}>
-          <div style={{ maxWidth: 1080, margin: "0 auto", background: "linear-gradient(135deg,#6366F1,#8B5CF6)", borderRadius: 20, padding: "32px 30px", textAlign: "center" }}>
+        <section style={{ padding: "8px 24px 72px", background: "var(--surface)" }}>
+          <div style={{ maxWidth: 1080, margin: "0 auto", background: "linear-gradient(135deg,var(--accent),var(--accent-2))", borderRadius: 20, padding: "32px 30px", textAlign: "center" }}>
             <div style={{ fontSize: 22, fontWeight: 900, color: "#fff", marginBottom: 8 }}>Guides &amp; tutorials</div>
             <p style={{ margin: "0 0 18px", fontSize: 15, color: "rgba(255,255,255,.9)" }}>How-tos for every tool on the blog.</p>
-            <Link href="/blog" style={{ display: "inline-block", background: "#fff", color: "#6366F1", borderRadius: 12, padding: "12px 26px", fontSize: 15, fontWeight: 800, textDecoration: "none" }}>Read the blog →</Link>
+            <Link href="/blog" style={{ display: "inline-block", background: "var(--surface)", color: "var(--accent)", borderRadius: 12, padding: "12px 26px", fontSize: 15, fontWeight: 800, textDecoration: "none" }}>Read the blog →</Link>
           </div>
         </section>
       </div>

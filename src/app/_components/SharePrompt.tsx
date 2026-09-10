@@ -17,7 +17,7 @@ import { trackEvent } from "@/lib/analytics";
 const SHARE_URL = "https://www.sjpt.io/?ref=share";
 const SHARE_TEXT =
   "I just edited my photo for free at sjpt.io — remove backgrounds, upscale, convert & more. No watermark, no sign-up. 🎨";
-const GRAD = "linear-gradient(120deg,#6366F1,#8B5CF6)";
+const GRAD = "linear-gradient(120deg,var(--accent),var(--accent-2))";
 
 type Net = { key: string; label: string; icon: string; color: string; href: string };
 
@@ -147,7 +147,7 @@ export default function SharePrompt({
         style={{
           width: "100%",
           maxWidth: 420,
-          background: "#fff",
+          background: "var(--surface)",
           borderRadius: 20,
           padding: "28px 24px 24px",
           boxShadow: "0 24px 60px rgba(15,23,42,0.28)",
@@ -167,7 +167,7 @@ export default function SharePrompt({
             background: "transparent",
             fontSize: 22,
             lineHeight: 1,
-            color: "#9CA3AF",
+            color: "var(--text-faint)",
             cursor: "pointer",
           }}
         >
@@ -175,10 +175,10 @@ export default function SharePrompt({
         </button>
 
         <div style={{ fontSize: 32, marginBottom: 6 }}>🎉</div>
-        <h2 style={{ fontSize: 20, fontWeight: 900, color: "#0F172A", margin: "0 0 6px", letterSpacing: "-0.02em" }}>
+        <h2 style={{ fontSize: 20, fontWeight: 900, color: "var(--text)", margin: "0 0 6px", letterSpacing: "-0.02em" }}>
           Download started!
         </h2>
-        <p style={{ fontSize: 14.5, color: "#6B7280", lineHeight: 1.6, margin: "0 0 20px" }}>
+        <p style={{ fontSize: 14.5, color: "var(--text-muted)", lineHeight: 1.6, margin: "0 0 20px" }}>
           Loved it? Help a friend find sjpt.io — it&apos;s free, no watermark, no sign-up.
         </p>
 
@@ -236,9 +236,9 @@ export default function SharePrompt({
           onClick={copyLink}
           style={{
             width: "100%",
-            background: copied ? "#F0FDF4" : "#F5F6FB",
-            color: copied ? "#16A34A" : "#334155",
-            border: `1px solid ${copied ? "#BBF7D0" : "#E5E7EB"}`,
+            background: copied ? "var(--success-soft)" : "var(--surface-2)",
+            color: copied ? "var(--success)" : "var(--text)",
+            border: `1px solid ${copied ? "var(--success-soft)" : "var(--border)"}`,
             borderRadius: 12,
             padding: "12px 16px",
             fontSize: 14,
@@ -259,7 +259,7 @@ export default function SharePrompt({
             marginTop: 14,
             border: "none",
             background: "transparent",
-            color: "#9CA3AF",
+            color: "var(--text-faint)",
             fontSize: 13,
             fontWeight: 600,
             cursor: "pointer",

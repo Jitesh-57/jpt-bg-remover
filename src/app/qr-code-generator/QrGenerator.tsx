@@ -6,12 +6,12 @@ import QRCode from "qrcode";
 // Fully client-side QR generator — nothing is uploaded or sent to a server.
 // Renders to a PNG data URL for preview/download and can also export SVG.
 
-const GRAD = "linear-gradient(120deg,#6366F1,#8B5CF6)";
+const GRAD = "linear-gradient(120deg,var(--accent),var(--accent-2))";
 type EC = "L" | "M" | "Q" | "H";
 
 export default function QrGenerator() {
   const [text, setText] = useState("https://www.sjpt.io");
-  const [fg, setFg] = useState("#111827");
+  const [fg, setFg] = useState("var(--text)");
   const [bg, setBg] = useState("#ffffff");
   const [size, setSize] = useState(512);
   const [ec, setEc] = useState<EC>("M");
@@ -79,16 +79,16 @@ export default function QrGenerator() {
     }
   };
 
-  const label: React.CSSProperties = { fontSize: 13, fontWeight: 700, color: "#374151", marginBottom: 6, display: "block" };
+  const label: React.CSSProperties = { fontSize: 13, fontWeight: 700, color: "var(--text-muted)", marginBottom: 6, display: "block" };
   const inputStyle: React.CSSProperties = {
-    width: "100%", padding: "11px 13px", borderRadius: 10, border: "1px solid #E5E7EB",
-    fontSize: 14, color: "#111827", background: "#fff", outline: "none",
+    width: "100%", padding: "11px 13px", borderRadius: 10, border: "1px solid var(--border)",
+    fontSize: 14, color: "var(--text)", background: "var(--surface)", outline: "none",
   };
 
   return (
     <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,320px)", gap: 28, alignItems: "start" }} className="qr-grid">
       {/* Controls */}
-      <div style={{ background: "#fff", border: "1px solid #EAECF5", borderRadius: 18, padding: "22px 22px 24px" }}>
+      <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 18, padding: "22px 22px 24px" }}>
         <label style={label} htmlFor="qr-text">Text or URL</label>
         <textarea
           id="qr-text"
@@ -103,15 +103,15 @@ export default function QrGenerator() {
           <div>
             <label style={label} htmlFor="qr-fg">Foreground</label>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <input id="qr-fg" type="color" value={fg} onChange={(e) => setFg(e.target.value)} style={{ width: 40, height: 38, border: "1px solid #E5E7EB", borderRadius: 8, background: "#fff", cursor: "pointer" }} />
-              <span style={{ fontSize: 13, color: "#6B7280" }}>{fg}</span>
+              <input id="qr-fg" type="color" value={fg} onChange={(e) => setFg(e.target.value)} style={{ width: 40, height: 38, border: "1px solid var(--border)", borderRadius: 8, background: "var(--surface)", cursor: "pointer" }} />
+              <span style={{ fontSize: 13, color: "var(--text-muted)" }}>{fg}</span>
             </div>
           </div>
           <div>
             <label style={label} htmlFor="qr-bg">Background</label>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <input id="qr-bg" type="color" value={bg} onChange={(e) => setBg(e.target.value)} style={{ width: 40, height: 38, border: "1px solid #E5E7EB", borderRadius: 8, background: "#fff", cursor: "pointer" }} />
-              <span style={{ fontSize: 13, color: "#6B7280" }}>{bg}</span>
+              <input id="qr-bg" type="color" value={bg} onChange={(e) => setBg(e.target.value)} style={{ width: 40, height: 38, border: "1px solid var(--border)", borderRadius: 8, background: "var(--surface)", cursor: "pointer" }} />
+              <span style={{ fontSize: 13, color: "var(--text-muted)" }}>{bg}</span>
             </div>
           </div>
         </div>
@@ -119,7 +119,7 @@ export default function QrGenerator() {
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
           <div>
             <label style={label} htmlFor="qr-size">Size: {size}px</label>
-            <input id="qr-size" type="range" min={128} max={1024} step={32} value={size} onChange={(e) => setSize(Number(e.target.value))} style={{ width: "100%", accentColor: "#6366F1" }} />
+            <input id="qr-size" type="range" min={128} max={1024} step={32} value={size} onChange={(e) => setSize(Number(e.target.value))} style={{ width: "100%", accentColor: "var(--accent)" }} />
           </div>
           <div>
             <label style={label} htmlFor="qr-ec">Error correction</label>
@@ -132,17 +132,17 @@ export default function QrGenerator() {
           </div>
         </div>
 
-        {error && <p style={{ color: "#DC2626", fontSize: 13, fontWeight: 600, marginTop: 16 }}>{error}</p>}
+        {error && <p style={{ color: "var(--danger)", fontSize: 13, fontWeight: 600, marginTop: 16 }}>{error}</p>}
       </div>
 
       {/* Preview + download */}
-      <div style={{ background: "#F8F9FC", border: "1px solid #EAECF5", borderRadius: 18, padding: 22, textAlign: "center", position: "sticky", top: 20 }}>
+      <div style={{ background: "var(--surface-2)", border: "1px solid var(--border)", borderRadius: 18, padding: 22, textAlign: "center", position: "sticky", top: 20 }}>
         <div style={{ background: bg, borderRadius: 14, padding: 16, display: "inline-block", minWidth: 180, minHeight: 180, boxShadow: "0 6px 20px rgba(15,23,42,0.08)" }}>
           {pngUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={pngUrl} alt="Your QR code" style={{ width: "100%", maxWidth: 240, height: "auto", display: "block" }} />
           ) : (
-            <div style={{ width: 200, height: 200, display: "flex", alignItems: "center", justifyContent: "center", color: "#9CA3AF", fontSize: 13 }}>
+            <div style={{ width: 200, height: 200, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-faint)", fontSize: 13 }}>
               Type something to generate
             </div>
           )}
@@ -160,12 +160,12 @@ export default function QrGenerator() {
           <button
             onClick={downloadSvg}
             disabled={!pngUrl}
-            style={{ background: "#fff", color: "#334155", border: "1px solid #E5E7EB", borderRadius: 11, padding: "11px 18px", fontSize: 14, fontWeight: 700, cursor: pngUrl ? "pointer" : "not-allowed", opacity: pngUrl ? 1 : 0.5 }}
+            style={{ background: "var(--surface)", color: "var(--text)", border: "1px solid var(--border)", borderRadius: 11, padding: "11px 18px", fontSize: 14, fontWeight: 700, cursor: pngUrl ? "pointer" : "not-allowed", opacity: pngUrl ? 1 : 0.5 }}
           >
             Download SVG
           </button>
         </div>
-        <p style={{ fontSize: 12, color: "#9CA3AF", marginTop: 14, lineHeight: 1.5 }}>
+        <p style={{ fontSize: 12, color: "var(--text-faint)", marginTop: 14, lineHeight: 1.5 }}>
           Generated in your browser — nothing is uploaded.
         </p>
       </div>

@@ -5,7 +5,7 @@ import { useCallback, useRef, useState } from "react";
 // Where the "Remove Watermark" action sends the visitor. This page captures
 // watermark-remover search traffic and hands it off to the recommended tool.
 const REMOVER_URL = "https://www.gostudio.ai/watermark-remover?utm_source=jitesh-patil&utm_medium=sjpt";
-const GRAD = "linear-gradient(120deg,#6366F1,#8B5CF6)";
+const GRAD = "linear-gradient(120deg,var(--accent),var(--accent-2))";
 
 /**
  * Upload widget for the watermark-remover landing page. The visitor drops or
@@ -40,8 +40,8 @@ export default function WatermarkRemoverCTA() {
           style={{
             display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
             gap: 12, padding: "40px 24px", cursor: "pointer", textAlign: "center",
-            border: `2px dashed ${drag ? "#6366F1" : "#C7CDF5"}`, borderRadius: 18,
-            background: drag ? "#EEF2FF" : "#FafBff", transition: "all .15s",
+            border: `2px dashed ${drag ? "var(--accent)" : "#C7CDF5"}`, borderRadius: 18,
+            background: drag ? "var(--accent-soft)" : "var(--surface-2)", transition: "all .15s",
           }}
         >
           <input
@@ -54,18 +54,18 @@ export default function WatermarkRemoverCTA() {
           <span style={{ width: 54, height: 54, borderRadius: 14, background: GRAD, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 8px 20px rgba(99,102,241,0.3)" }}>
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 16V4M12 4l-4 4M12 4l4 4" /><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" /></svg>
           </span>
-          <span style={{ fontSize: 17, fontWeight: 800, color: "#0F172A" }}>Drop an image or click to upload</span>
-          <span style={{ fontSize: 13.5, color: "#6B7280" }}>JPG, PNG, WEBP — nothing to install, free to try</span>
+          <span style={{ fontSize: 17, fontWeight: 800, color: "var(--text)" }}>Drop an image or click to upload</span>
+          <span style={{ fontSize: 13.5, color: "var(--text-muted)" }}>JPG, PNG, WEBP — nothing to install, free to try</span>
         </label>
       ) : (
-        <div style={{ background: "#fff", border: "1px solid #E6E8F2", borderRadius: 18, padding: 16, boxShadow: "0 18px 50px rgba(99,102,241,0.12)" }}>
+        <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 18, padding: 16, boxShadow: "0 18px 50px rgba(99,102,241,0.12)" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={preview} alt="Your uploaded image" style={{ width: "100%", maxHeight: 320, objectFit: "contain", borderRadius: 12, display: "block", background: "#F5F6FB" }} />
+          <img src={preview} alt="Your uploaded image" style={{ width: "100%", maxHeight: 320, objectFit: "contain", borderRadius: 12, display: "block", background: "var(--surface-2)" }} />
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginTop: 12, flexWrap: "wrap" }}>
-            <span style={{ fontSize: 13, color: "#6B7280", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 200 }}>{fileName}</span>
+            <span style={{ fontSize: 13, color: "var(--text-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 200 }}>{fileName}</span>
             <button
               onClick={() => { setPreview(null); setFileName(""); if (inputRef.current) inputRef.current.value = ""; }}
-              style={{ fontSize: 13, fontWeight: 700, color: "#6366F1", background: "none", border: "none", cursor: "pointer" }}
+              style={{ fontSize: 13, fontWeight: 700, color: "var(--accent)", background: "none", border: "none", cursor: "pointer" }}
             >
               Choose another
             </button>

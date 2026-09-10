@@ -6,7 +6,7 @@ import { useCallback, useRef, useState } from "react";
 // browser and never uploaded. Drag a box over the area you want to hide, and it's
 // blurred or pixelated at full resolution. Undo/reset supported; download is PNG.
 
-const GRAD = "linear-gradient(120deg,#6366F1,#8B5CF6)";
+const GRAD = "linear-gradient(120deg,var(--accent),var(--accent-2))";
 type Mode = "blur" | "pixelate";
 type Rect = { x: number; y: number; w: number; h: number };
 
@@ -38,7 +38,7 @@ export default function BlurTool() {
     ctx.drawImage(work, 0, 0, work.width, work.height, 0, 0, disp.width, disp.height);
     if (sel && sel.w > 1 && sel.h > 1) {
       ctx.save();
-      ctx.strokeStyle = "#6366F1";
+      ctx.strokeStyle = "var(--accent)";
       ctx.lineWidth = 2;
       ctx.setLineDash([6, 4]);
       ctx.strokeRect(sel.x, sel.y, sel.w, sel.h);
@@ -185,12 +185,12 @@ export default function BlurTool() {
 
   const btn: React.CSSProperties = {
     padding: "10px 16px", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer",
-    border: "1px solid #E5E7EB", background: "#fff", color: "#334155",
+    border: "1px solid var(--border)", background: "var(--surface)", color: "var(--text)",
   };
   const seg = (active: boolean): React.CSSProperties => ({
     ...btn, flex: 1, textAlign: "center",
-    background: active ? GRAD : "#fff", color: active ? "#fff" : "#334155",
-    border: active ? "none" : "1px solid #E5E7EB",
+    background: active ? GRAD : "var(--surface-3)", color: active ? "#fff" : "var(--text)",
+    border: active ? "none" : "1px solid var(--border)",
   });
 
   return (
@@ -202,28 +202,28 @@ export default function BlurTool() {
           onDrop={(e) => { e.preventDefault(); setDragOver(false); const f = e.dataTransfer.files[0]; if (f) loadFile(f); }}
           onClick={() => fileRef.current?.click()}
           style={{
-            border: `2px dashed ${dragOver ? "#6366F1" : "#CBD5E1"}`, borderRadius: 18,
-            background: dragOver ? "#EEF2FF" : "#F8F9FC", padding: "56px 24px", textAlign: "center", cursor: "pointer",
+            border: `2px dashed ${dragOver ? "var(--accent)" : "var(--border)"}`, borderRadius: 18,
+            background: dragOver ? "var(--accent-soft)" : "var(--surface-2)", padding: "56px 24px", textAlign: "center", cursor: "pointer",
           }}
         >
           <div style={{ fontSize: 40, marginBottom: 12 }}>🫥</div>
-          <div style={{ fontSize: 17, fontWeight: 800, color: "#0F172A", marginBottom: 6 }}>Drop an image or click to upload</div>
-          <div style={{ fontSize: 13.5, color: "#6B7280" }}>Your image stays in your browser — nothing is uploaded.</div>
+          <div style={{ fontSize: 17, fontWeight: 800, color: "var(--text)", marginBottom: 6 }}>Drop an image or click to upload</div>
+          <div style={{ fontSize: 13.5, color: "var(--text-muted)" }}>Your image stays in your browser — nothing is uploaded.</div>
           <input ref={fileRef} type="file" accept="image/*" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) loadFile(f); }} />
         </div>
       ) : (
         <div>
           {/* Controls */}
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 16, alignItems: "flex-end", marginBottom: 18, background: "#fff", border: "1px solid #EAECF5", borderRadius: 14, padding: "16px 18px" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 16, alignItems: "flex-end", marginBottom: 18, background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 14, padding: "16px 18px" }}>
             <div style={{ display: "flex", gap: 8, minWidth: 200, flex: "1 1 200px" }}>
               <button onClick={() => setMode("blur")} style={seg(mode === "blur")}>Blur</button>
               <button onClick={() => setMode("pixelate")} style={seg(mode === "pixelate")}>Pixelate</button>
             </div>
             <div style={{ flex: "1 1 200px", minWidth: 180 }}>
-              <label htmlFor="intensity" style={{ fontSize: 13, fontWeight: 700, color: "#374151", display: "block", marginBottom: 6 }}>
+              <label htmlFor="intensity" style={{ fontSize: 13, fontWeight: 700, color: "var(--text-muted)", display: "block", marginBottom: 6 }}>
                 {mode === "blur" ? "Blur strength" : "Block size"}: {intensity}
               </label>
-              <input id="intensity" type="range" min={6} max={48} value={intensity} onChange={(e) => setIntensity(Number(e.target.value))} style={{ width: "100%", accentColor: "#6366F1" }} />
+              <input id="intensity" type="range" min={6} max={48} value={intensity} onChange={(e) => setIntensity(Number(e.target.value))} style={{ width: "100%", accentColor: "var(--accent)" }} />
             </div>
             <div style={{ display: "flex", gap: 8 }}>
               <button onClick={undo} disabled={!canUndo} style={{ ...btn, opacity: canUndo ? 1 : 0.5, cursor: canUndo ? "pointer" : "not-allowed" }}>Undo</button>
@@ -231,11 +231,11 @@ export default function BlurTool() {
             </div>
           </div>
 
-          <p style={{ fontSize: 13.5, color: "#6B7280", margin: "0 0 12px", textAlign: "center" }}>
+          <p style={{ fontSize: 13.5, color: "var(--text-muted)", margin: "0 0 12px", textAlign: "center" }}>
             Drag a box over the area you want to hide. Repeat for as many areas as you like.
           </p>
 
-          <div style={{ textAlign: "center", background: "#F1F5F9", borderRadius: 14, padding: 14 }}>
+          <div style={{ textAlign: "center", background: "var(--surface-2)", borderRadius: 14, padding: 14 }}>
             <canvas
               ref={displayRef}
               onPointerDown={onDown}

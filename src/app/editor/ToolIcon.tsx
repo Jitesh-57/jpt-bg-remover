@@ -112,7 +112,7 @@ export default function ToolIcon({ id, active, size = 40 }: { id: string; active
       style={{
         width: size, height: size, borderRadius: size * 0.28,
         display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
-        background: active ? "linear-gradient(135deg,#6366F1,#8B5CF6)" : "#EEF2FF",
+        background: active ? "linear-gradient(135deg,var(--accent),var(--accent-2))" : "var(--accent-soft)",
         boxShadow: active ? "0 6px 16px rgba(99,102,241,0.35)" : "none",
         transition: "background .15s",
       }}
@@ -121,7 +121,7 @@ export default function ToolIcon({ id, active, size = 40 }: { id: string; active
         stroke={active ? "#fff" : `url(#${gid})`} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
         <defs>
           <linearGradient id={gid} x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#6366F1" /><stop offset="1" stopColor="#8B5CF6" />
+            <stop stopColor="var(--accent)" /><stop offset="1" stopColor="var(--accent-2)" />
           </linearGradient>
         </defs>
         {glyph}

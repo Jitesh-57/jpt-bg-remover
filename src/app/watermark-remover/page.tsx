@@ -7,7 +7,7 @@ import WatermarkRemoverCTA from "./WatermarkRemoverCTA";
 
 const BASE = "https://www.sjpt.io";
 const URL = `${BASE}/watermark-remover`;
-const GRAD = "linear-gradient(120deg,#6366F1,#8B5CF6)";
+const GRAD = "linear-gradient(120deg,var(--accent),var(--accent-2))";
 
 export const metadata: Metadata = {
   title: { absolute: "Best Free Watermark Remover — Remove Watermark From Photos Online | JPT AI" },
@@ -62,27 +62,27 @@ const STEPS = [
 /** Labeled before/after frame. Shows a placeholder until the creative is uploaded to the Blogs bucket. */
 function Frame({ name, label, alt }: { name: string; label: string; alt: string }) {
   return (
-    <div style={{ position: "relative", flex: 1, minWidth: 0, aspectRatio: "4 / 3", borderRadius: 14, overflow: "hidden", border: "1px solid #E6E8F2", background: "linear-gradient(135deg,#EEF2FF,#F5F3FF)" }}>
-      <span style={{ position: "absolute", top: 10, left: 10, zIndex: 2, fontSize: 11, fontWeight: 800, letterSpacing: "0.08em", textTransform: "uppercase", color: label === "After" ? "#059669" : "#6366F1", background: "#fff", borderRadius: 999, padding: "4px 10px", boxShadow: "0 2px 8px rgba(0,0,0,.06)" }}>{label}</span>
+    <div style={{ position: "relative", flex: 1, minWidth: 0, aspectRatio: "4 / 3", borderRadius: 14, overflow: "hidden", border: "1px solid var(--border)", background: "linear-gradient(135deg,var(--accent-soft),var(--surface-2))" }}>
+      <span style={{ position: "absolute", top: 10, left: 10, zIndex: 2, fontSize: 11, fontWeight: 800, letterSpacing: "0.08em", textTransform: "uppercase", color: label === "After" ? "var(--success)" : "var(--accent)", background: "var(--surface)", borderRadius: 999, padding: "4px 10px", boxShadow: "0 2px 8px rgba(0,0,0,.06)" }}>{label}</span>
       <SafeImage
         src={blogCreative(name)}
         alt={alt}
         wrapperStyle={{ position: "absolute", inset: 0 }}
         style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
       />
-      <span style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, color: "#A5AECB" }}>{label} image</span>
+      <span style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, color: "var(--text-faint)" }}>{label} image</span>
     </div>
   );
 }
 
 function BeforeAfter({ id, caption }: { id: number; caption: string }) {
   return (
-    <div style={{ background: "#fff", border: "1px solid #EAECF5", borderRadius: 18, padding: 16, boxShadow: "0 8px 24px rgba(30,41,90,.05)" }}>
+    <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 18, padding: 16, boxShadow: "0 8px 24px rgba(30,41,90,.05)" }}>
       <div style={{ display: "flex", gap: 12, alignItems: "stretch" }}>
         <Frame name={`watermark-before-${id}`} label="Before" alt={`${caption} — with watermark`} />
         <Frame name={`watermark-after-${id}`} label="After" alt={`${caption} — watermark removed`} />
       </div>
-      <p style={{ fontSize: 13.5, color: "#6B7280", textAlign: "center", margin: "12px 0 2px", fontWeight: 600 }}>{caption}</p>
+      <p style={{ fontSize: 13.5, color: "var(--text-muted)", textAlign: "center", margin: "12px 0 2px", fontWeight: 600 }}>{caption}</p>
     </div>
   );
 }
@@ -122,22 +122,22 @@ export default function Page() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
       <ScrollReveal />
 
-      <div style={{ fontFamily: "system-ui,-apple-system,sans-serif", color: "#111827", background: "#fff" }}>
+      <div style={{ fontFamily: "system-ui,-apple-system,sans-serif", color: "var(--text)", background: "var(--surface)" }}>
         {/* HERO */}
-        <section style={{ background: "linear-gradient(160deg,#F5F5FF 0%,#fff 55%,#F0FDF4 100%)", padding: "60px 24px 52px" }}>
+        <section style={{ background: "linear-gradient(160deg,var(--surface-2) 0%,var(--surface) 55%,var(--success-soft) 100%)", padding: "60px 24px 52px" }}>
           <div style={{ maxWidth: 760, margin: "0 auto", textAlign: "center" }}>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "#EEF2FF", color: "#6366F1", fontWeight: 700, fontSize: 12, borderRadius: 20, padding: "6px 14px", marginBottom: 20, letterSpacing: "0.06em", textTransform: "uppercase" }}>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "var(--accent-soft)", color: "var(--accent)", fontWeight: 700, fontSize: 12, borderRadius: 20, padding: "6px 14px", marginBottom: 20, letterSpacing: "0.06em", textTransform: "uppercase" }}>
               ✦ Best Free Watermark Remover
             </div>
-            <h1 style={{ fontSize: "clamp(2.1rem,5vw,3.2rem)", fontWeight: 900, lineHeight: 1.12, letterSpacing: "-0.03em", color: "#0F172A", margin: "0 0 16px" }}>
+            <h1 style={{ fontSize: "clamp(2.1rem,5vw,3.2rem)", fontWeight: 900, lineHeight: 1.12, letterSpacing: "-0.03em", color: "var(--text)", margin: "0 0 16px" }}>
               Remove Watermarks From Photos{" "}
               <span style={{ background: GRAD, WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", color: "transparent" }}>in Seconds</span>
             </h1>
-            <p style={{ fontSize: "clamp(1rem,2vw,1.15rem)", color: "#4B5563", lineHeight: 1.7, maxWidth: 580, margin: "0 auto 30px" }}>
+            <p style={{ fontSize: "clamp(1rem,2vw,1.15rem)", color: "var(--text-muted)", lineHeight: 1.7, maxWidth: 580, margin: "0 auto 30px" }}>
               The best free AI watermark remover online. Erase logos, text, timestamps and stock watermarks from any image — no software, no sign-up. Just upload and click.
             </p>
             <WatermarkRemoverCTA />
-            <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 18, marginTop: 26, fontSize: 13.5, color: "#6B7280", fontWeight: 600 }}>
+            <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 18, marginTop: 26, fontSize: 13.5, color: "var(--text-muted)", fontWeight: 600 }}>
               <span>✓ Free to try</span>
               <span>✓ No sign-up</span>
               <span>✓ Works on any device</span>
@@ -147,11 +147,11 @@ export default function Page() {
         </section>
 
         {/* BEFORE / AFTER SHOWCASE */}
-        <section style={{ padding: "56px 24px", background: "#fff" }}>
+        <section style={{ padding: "56px 24px", background: "var(--surface)" }}>
           <div style={{ maxWidth: 1000, margin: "0 auto" }}>
             <div style={{ textAlign: "center", marginBottom: 34 }}>
-              <h2 style={{ fontSize: "clamp(1.5rem,3vw,2.1rem)", fontWeight: 800, color: "#0F172A", margin: "0 0 10px", letterSpacing: "-0.02em" }}>See the watermark disappear</h2>
-              <p style={{ fontSize: 15.5, color: "#6B7280", margin: 0 }}>Real before &amp; after results — clean images with no trace of the original watermark.</p>
+              <h2 style={{ fontSize: "clamp(1.5rem,3vw,2.1rem)", fontWeight: 800, color: "var(--text)", margin: "0 0 10px", letterSpacing: "-0.02em" }}>See the watermark disappear</h2>
+              <p style={{ fontSize: 15.5, color: "var(--text-muted)", margin: 0 }}>Real before &amp; after results — clean images with no trace of the original watermark.</p>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 20 }}>
               <BeforeAfter id={1} caption="Logo watermark removed from a product photo" />
@@ -163,20 +163,20 @@ export default function Page() {
         </section>
 
         {/* WHY BEST — FEATURES */}
-        <section style={{ padding: "56px 24px", background: "#F9FAFB" }}>
+        <section style={{ padding: "56px 24px", background: "var(--surface-2)" }}>
           <div style={{ maxWidth: 1000, margin: "0 auto" }}>
             <div style={{ textAlign: "center", marginBottom: 38 }}>
-              <h2 style={{ fontSize: "clamp(1.5rem,3vw,2.1rem)", fontWeight: 800, color: "#0F172A", margin: "0 0 10px", letterSpacing: "-0.02em" }}>Why it&apos;s the best watermark remover</h2>
-              <p style={{ fontSize: 15.5, color: "#6B7280", margin: 0 }}>Built to make watermarks vanish without leaving a smudge behind.</p>
+              <h2 style={{ fontSize: "clamp(1.5rem,3vw,2.1rem)", fontWeight: 800, color: "var(--text)", margin: "0 0 10px", letterSpacing: "-0.02em" }}>Why it&apos;s the best watermark remover</h2>
+              <p style={{ fontSize: 15.5, color: "var(--text-muted)", margin: 0 }}>Built to make watermarks vanish without leaving a smudge behind.</p>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 18 }}>
               {FEATURES.map((f) => (
-                <div key={f.t} style={{ background: "#fff", border: "1px solid #EAECF5", borderRadius: 16, padding: "24px 22px", boxShadow: "0 6px 20px rgba(30,41,90,.04)" }}>
-                  <span style={{ width: 44, height: 44, borderRadius: 12, background: "#EEF2FF", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14 }}>
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6366F1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={f.icon} /></svg>
+                <div key={f.t} style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 16, padding: "24px 22px", boxShadow: "0 6px 20px rgba(30,41,90,.04)" }}>
+                  <span style={{ width: 44, height: 44, borderRadius: 12, background: "var(--accent-soft)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14 }}>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={f.icon} /></svg>
                   </span>
-                  <h3 style={{ fontSize: 16.5, fontWeight: 800, color: "#111827", margin: "0 0 8px" }}>{f.t}</h3>
-                  <p style={{ fontSize: 14, color: "#6B7280", lineHeight: 1.65, margin: 0 }}>{f.d}</p>
+                  <h3 style={{ fontSize: 16.5, fontWeight: 800, color: "var(--text)", margin: "0 0 8px" }}>{f.t}</h3>
+                  <p style={{ fontSize: 14, color: "var(--text-muted)", lineHeight: 1.65, margin: 0 }}>{f.d}</p>
                 </div>
               ))}
             </div>
@@ -184,15 +184,15 @@ export default function Page() {
         </section>
 
         {/* HOW IT WORKS */}
-        <section style={{ padding: "56px 24px", background: "#fff" }}>
+        <section style={{ padding: "56px 24px", background: "var(--surface)" }}>
           <div style={{ maxWidth: 900, margin: "0 auto" }}>
-            <h2 style={{ fontSize: "clamp(1.5rem,3vw,2.1rem)", fontWeight: 800, color: "#0F172A", margin: "0 0 34px", letterSpacing: "-0.02em", textAlign: "center" }}>How to remove a watermark</h2>
+            <h2 style={{ fontSize: "clamp(1.5rem,3vw,2.1rem)", fontWeight: 800, color: "var(--text)", margin: "0 0 34px", letterSpacing: "-0.02em", textAlign: "center" }}>How to remove a watermark</h2>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(230px,1fr))", gap: 24 }}>
               {STEPS.map((s, i) => (
-                <div key={i} style={{ background: "#F8F9FC", border: "1px solid #EAECF5", borderRadius: 16, padding: "24px 22px" }}>
+                <div key={i} style={{ background: "var(--surface-2)", border: "1px solid var(--border)", borderRadius: 16, padding: "24px 22px" }}>
                   <div style={{ width: 40, height: 40, borderRadius: "50%", background: GRAD, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, marginBottom: 14 }}>{i + 1}</div>
-                  <h3 style={{ fontSize: 16, fontWeight: 800, color: "#111827", margin: "0 0 8px" }}>{s.t}</h3>
-                  <p style={{ fontSize: 14, color: "#6B7280", lineHeight: 1.65, margin: 0 }}>{s.d}</p>
+                  <h3 style={{ fontSize: 16, fontWeight: 800, color: "var(--text)", margin: "0 0 8px" }}>{s.t}</h3>
+                  <p style={{ fontSize: 14, color: "var(--text-muted)", lineHeight: 1.65, margin: 0 }}>{s.d}</p>
                 </div>
               ))}
             </div>
@@ -200,13 +200,13 @@ export default function Page() {
         </section>
 
         {/* WHAT YOU CAN REMOVE */}
-        <section style={{ padding: "8px 24px 56px", background: "#fff" }}>
+        <section style={{ padding: "8px 24px 56px", background: "var(--surface)" }}>
           <div style={{ maxWidth: 820, margin: "0 auto", textAlign: "center" }}>
-            <h2 style={{ fontSize: "clamp(1.4rem,3vw,1.9rem)", fontWeight: 800, color: "#0F172A", margin: "0 0 22px", letterSpacing: "-0.02em" }}>What you can remove</h2>
+            <h2 style={{ fontSize: "clamp(1.4rem,3vw,1.9rem)", fontWeight: 800, color: "var(--text)", margin: "0 0 22px", letterSpacing: "-0.02em" }}>What you can remove</h2>
             <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 12 }}>
               {REMOVES.map((r) => (
-                <span key={r} style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#F5F6FB", border: "1px solid #EAECF5", borderRadius: 999, padding: "10px 18px", fontSize: 14.5, fontWeight: 700, color: "#334155" }}>
-                  <span style={{ color: "#6366F1" }}>✓</span>{r}
+                <span key={r} style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "var(--surface-2)", border: "1px solid var(--border)", borderRadius: 999, padding: "10px 18px", fontSize: 14.5, fontWeight: 700, color: "var(--text)" }}>
+                  <span style={{ color: "var(--accent)" }}>✓</span>{r}
                 </span>
               ))}
             </div>
@@ -214,40 +214,40 @@ export default function Page() {
         </section>
 
         {/* FAQ */}
-        <section style={{ padding: "56px 24px", background: "#F9FAFB" }}>
+        <section style={{ padding: "56px 24px", background: "var(--surface-2)" }}>
           <div style={{ maxWidth: 720, margin: "0 auto" }}>
-            <h2 style={{ fontSize: "clamp(1.5rem,3vw,2rem)", fontWeight: 800, color: "#0F172A", margin: "0 0 28px", letterSpacing: "-0.02em", textAlign: "center" }}>Frequently asked questions</h2>
+            <h2 style={{ fontSize: "clamp(1.5rem,3vw,2rem)", fontWeight: 800, color: "var(--text)", margin: "0 0 28px", letterSpacing: "-0.02em", textAlign: "center" }}>Frequently asked questions</h2>
             {FAQS.map((f) => (
-              <details key={f.q} style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 12, padding: "14px 18px", marginBottom: 10 }}>
-                <summary style={{ fontSize: 15, fontWeight: 700, color: "#111827", cursor: "pointer" }}>{f.q}</summary>
-                <p style={{ fontSize: 14, color: "#6B7280", lineHeight: 1.7, margin: "10px 0 0" }}>{f.a}</p>
+              <details key={f.q} style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 12, padding: "14px 18px", marginBottom: 10 }}>
+                <summary style={{ fontSize: 15, fontWeight: 700, color: "var(--text)", cursor: "pointer" }}>{f.q}</summary>
+                <p style={{ fontSize: 14, color: "var(--text-muted)", lineHeight: 1.7, margin: "10px 0 0" }}>{f.a}</p>
               </details>
             ))}
           </div>
         </section>
 
         {/* FINAL CTA */}
-        <section style={{ padding: "8px 24px 56px", background: "#F9FAFB" }}>
+        <section style={{ padding: "8px 24px 56px", background: "var(--surface-2)" }}>
           <div style={{ maxWidth: 760, margin: "0 auto", background: GRAD, borderRadius: 22, padding: "40px 30px", textAlign: "center" }}>
             <h2 style={{ fontSize: "clamp(1.5rem,3vw,2rem)", fontWeight: 900, color: "#fff", margin: "0 0 12px", letterSpacing: "-0.02em" }}>Ready to remove your watermark?</h2>
             <p style={{ margin: "0 0 24px", fontSize: 15.5, color: "rgba(255,255,255,.92)" }}>Upload your image and get a clean, watermark-free result — free to try, no sign-up.</p>
-            <a href="https://www.gostudio.ai/watermark-remover?utm_source=jitesh-patil&utm_medium=sjpt" rel="sponsored nofollow noopener" className="jpt-hover" style={{ display: "inline-block", background: "#fff", color: "#6366F1", borderRadius: 12, padding: "15px 34px", fontSize: 16, fontWeight: 800, textDecoration: "none" }}>
+            <a href="https://www.gostudio.ai/watermark-remover?utm_source=jitesh-patil&utm_medium=sjpt" rel="sponsored nofollow noopener" className="jpt-hover" style={{ display: "inline-block", background: "var(--surface)", color: "var(--accent)", borderRadius: 12, padding: "15px 34px", fontSize: 16, fontWeight: 800, textDecoration: "none" }}>
               Remove Watermark Now →
             </a>
           </div>
         </section>
 
         {/* RELATED FREE TOOLS — internal linking */}
-        <section style={{ padding: "48px 24px 72px", background: "#fff" }}>
+        <section style={{ padding: "48px 24px 72px", background: "var(--surface)" }}>
           <div style={{ maxWidth: 900, margin: "0 auto" }}>
-            <h2 style={{ fontSize: 20, fontWeight: 800, color: "#0F172A", margin: "0 0 20px", letterSpacing: "-0.02em" }}>More free image tools</h2>
+            <h2 style={{ fontSize: 20, fontWeight: 800, color: "var(--text)", margin: "0 0 20px", letterSpacing: "-0.02em" }}>More free image tools</h2>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
               {RELATED.map((r) => (
-                <Link key={r.href} href={r.href} className="jpt-hover" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#F5F6FB", border: "1px solid #EAECF5", borderRadius: 999, padding: "9px 16px", fontSize: 14, fontWeight: 600, color: "#334155", textDecoration: "none" }}>
+                <Link key={r.href} href={r.href} className="jpt-hover" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "var(--surface-2)", border: "1px solid var(--border)", borderRadius: 999, padding: "9px 16px", fontSize: 14, fontWeight: 600, color: "var(--text)", textDecoration: "none" }}>
                   {r.label}
                 </Link>
               ))}
-              <Link href="/tools" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#EEF2FF", border: "1px solid #C7CDF5", borderRadius: 999, padding: "9px 16px", fontSize: 14, fontWeight: 700, color: "#6366F1", textDecoration: "none" }}>
+              <Link href="/tools" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "var(--accent-soft)", border: "1px solid #C7CDF5", borderRadius: 999, padding: "9px 16px", fontSize: 14, fontWeight: 700, color: "var(--accent)", textDecoration: "none" }}>
                 All tools →
               </Link>
             </div>

@@ -353,7 +353,7 @@ export default function LandingPageClient() {
             <span style={{ fontSize: 40 }}>🖼️</span>
             <div>
               <div style={s.dropTitle}>{t.heroDropTitle}</div>
-              <div style={s.dropHint}>or <span style={{ color: "#6366F1", fontWeight: 700 }}>click to browse</span> &nbsp;·&nbsp; JPG · PNG · WEBP</div>
+              <div style={s.dropHint}>or <span style={{ color: "var(--accent)", fontWeight: 700 }}>click to browse</span> &nbsp;·&nbsp; JPG · PNG · WEBP</div>
             </div>
           </div>
 
@@ -409,7 +409,7 @@ export default function LandingPageClient() {
           </div>
 
           {/* Hero showcase — AI before/after with prompt callouts */}
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginTop: 18, background: "#EEF2FF", color: "#4338CA", fontSize: 14, fontWeight: 800, padding: "7px 16px", borderRadius: 100, border: "1px solid rgba(99,102,241,0.2)" }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginTop: 18, background: "var(--accent-soft)", color: "var(--accent)", fontSize: 14, fontWeight: 800, padding: "7px 16px", borderRadius: 100, border: "1px solid rgba(99,102,241,0.2)" }}>
             ✨ See what you can do with prompts
           </div>
           <div style={s.heroShowcase}>
@@ -426,11 +426,11 @@ export default function LandingPageClient() {
               { top: "76%", label: "✨ Style", prompt: "“cinematic warm glow”" },
             ].map((c) => (
               <div key={c.label} style={{ position: "absolute", top: c.top, right: "3%", display: "flex", alignItems: "center", gap: 6, maxWidth: "44%" }}>
-                <div style={{ background: "rgba(255,255,255,0.95)", borderRadius: 10, padding: "6px 10px", boxShadow: "0 4px 14px rgba(0,0,0,0.25)", border: "1px solid rgba(99,102,241,0.3)" }}>
-                  <div style={{ fontSize: 11, fontWeight: 800, color: "#4338CA", lineHeight: 1.2 }}>{c.label}</div>
-                  <div style={{ fontSize: 11, color: "#6B7280", lineHeight: 1.2, whiteSpace: "nowrap" as const }}>{c.prompt}</div>
+                <div style={{ background: "rgba(12,12,22,0.82)", borderRadius: 10, padding: "6px 10px", boxShadow: "0 4px 14px rgba(0,0,0,0.25)", border: "1px solid rgba(99,102,241,0.3)" }}>
+                  <div style={{ fontSize: 11, fontWeight: 800, color: "var(--accent)", lineHeight: 1.2 }}>{c.label}</div>
+                  <div style={{ fontSize: 11, color: "var(--text-muted)", lineHeight: 1.2, whiteSpace: "nowrap" as const }}>{c.prompt}</div>
                 </div>
-                <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#6366F1", flexShrink: 0, boxShadow: "0 0 0 3px rgba(99,102,241,0.3)" }} />
+                <div style={{ width: 7, height: 7, borderRadius: "50%", background: "var(--accent)", flexShrink: 0, boxShadow: "0 0 0 3px rgba(99,102,241,0.3)" }} />
               </div>
             ))}
           </div>
@@ -438,7 +438,7 @@ export default function LandingPageClient() {
       </section>
 
       {/* ── Product Highlights Bar ─────────────────────────────────────────── */}
-      <section style={{ background: "#0F172A", padding: "20px 24px" }}>
+      <section style={{ background: "var(--bg-elevated)", padding: "20px 24px" }}>
         <div style={{ maxWidth: 1000, margin: "0 auto", display: "flex", justifyContent: "space-around", flexWrap: "wrap", gap: 16 }}>
           {(PAID_FEATURES_ENABLED ? [
             { icon: "🪄", label: "AI Background Removal" },
@@ -456,7 +456,7 @@ export default function LandingPageClient() {
           ]).map(item => (
             <div key={item.label} style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <span style={{ fontSize: 18 }}>{item.icon}</span>
-              <span style={{ fontSize: 13, fontWeight: 600, color: "#CBD5E1", whiteSpace: "nowrap" }}>{item.label}</span>
+              <span style={{ fontSize: 13, fontWeight: 600, color: "var(--text-muted)", whiteSpace: "nowrap" }}>{item.label}</span>
             </div>
           ))}
         </div>
@@ -500,7 +500,7 @@ export default function LandingPageClient() {
                         />
                       </div>
                       {/* Divider line */}
-                      <div style={{ position: "absolute", left: "50%", top: 0, bottom: 0, width: 2, background: "#fff", boxShadow: "0 0 6px rgba(0,0,0,0.3)" }} />
+                      <div style={{ position: "absolute", left: "50%", top: 0, bottom: 0, width: 2, background: "var(--surface)", boxShadow: "0 0 6px rgba(0,0,0,0.3)" }} />
                     </div>
                   ) : (
                     <img src={f.img} alt={f.title} style={s.featureImg} loading="lazy" />
@@ -510,7 +510,7 @@ export default function LandingPageClient() {
                   <div style={s.featureIcon}>{f.icon}</div>
                   <div style={s.featureTitle}>{f.title}</div>
                   <p style={s.featureDesc}>{f.desc}</p>
-                  <div style={{ fontSize: 12, color: "#6366F1", fontWeight: 700, marginTop: 8 }}>Upload image to try →</div>
+                  <div style={{ fontSize: 12, color: "var(--accent)", fontWeight: 700, marginTop: 8 }}>Upload image to try →</div>
                 </div>
               </div>
             ))}
@@ -549,7 +549,7 @@ export default function LandingPageClient() {
                 <div style={{ fontSize: 30, marginBottom: 10 }}>{u.icon}</div>
                 <div style={s.useCaseTitle}>{u.title}</div>
                 {"stat" in u && u.stat && (
-                  <div style={{ display: "inline-block", background: "#EEF2FF", color: "#6366F1", fontSize: 11, fontWeight: 800, borderRadius: 20, padding: "3px 10px", marginBottom: 8, letterSpacing: 0.3 }}>
+                  <div style={{ display: "inline-block", background: "var(--accent-soft)", color: "var(--accent)", fontSize: 11, fontWeight: 800, borderRadius: 20, padding: "3px 10px", marginBottom: 8, letterSpacing: 0.3 }}>
                     📈 {u.stat}
                   </div>
                 )}
@@ -568,18 +568,18 @@ export default function LandingPageClient() {
           <p style={s.sectionSub}>Real results from real users — no stock photos or made-up reviews.</p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
             {TESTIMONIALS.map((t) => (
-              <div key={t.name} style={{ background: "#fff", borderRadius: 16, padding: "24px 22px", border: "1px solid #E5E7EF", boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
+              <div key={t.name} style={{ background: "var(--surface)", borderRadius: 16, padding: "24px 22px", border: "1px solid var(--border)", boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
                 <div style={{ display: "flex", gap: 4, marginBottom: 14 }}>
                   {Array.from({ length: t.stars }).map((_, i) => (
-                    <span key={i} style={{ color: "#F59E0B", fontSize: 16 }}>★</span>
+                    <span key={i} style={{ color: "var(--warn)", fontSize: 16 }}>★</span>
                   ))}
                 </div>
-                <p style={{ margin: "0 0 18px", fontSize: 14, color: "#374151", lineHeight: 1.7, fontStyle: "italic" }}>&ldquo;{t.quote}&rdquo;</p>
+                <p style={{ margin: "0 0 18px", fontSize: 14, color: "var(--text-muted)", lineHeight: 1.7, fontStyle: "italic" }}>&ldquo;{t.quote}&rdquo;</p>
                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                  <div style={{ width: 40, height: 40, borderRadius: "50%", background: "linear-gradient(135deg, #6366F1, #8B5CF6)", color: "#fff", fontSize: 14, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center" }}>{t.avatar}</div>
+                  <div style={{ width: 40, height: 40, borderRadius: "50%", background: "linear-gradient(135deg, var(--accent), var(--accent-2))", color: "#fff", fontSize: 14, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center" }}>{t.avatar}</div>
                   <div>
-                    <div style={{ fontSize: 14, fontWeight: 800, color: "#111" }}>{t.name}</div>
-                    <div style={{ fontSize: 12, color: "#6B7280" }}>{t.role}</div>
+                    <div style={{ fontSize: 14, fontWeight: 800, color: "var(--text)" }}>{t.name}</div>
+                    <div style={{ fontSize: 12, color: "var(--text-muted)" }}>{t.role}</div>
                   </div>
                 </div>
               </div>
@@ -597,25 +597,25 @@ export default function LandingPageClient() {
           <div style={{ overflowX: "auto" }}>
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
               <thead>
-                <tr style={{ borderBottom: "2px solid #E5E7EB" }}>
-                  <th style={{ textAlign: "left", padding: "12px 16px", color: "#6B7280", fontWeight: 700, fontSize: 13 }}>Feature</th>
-                  <th style={{ textAlign: "center", padding: "12px 16px", color: "#6366F1", fontWeight: 900, fontSize: 13, background: "#EEF2FF", borderRadius: "12px 12px 0 0" }}>✦ JPT AI</th>
-                  <th style={{ textAlign: "center", padding: "12px 16px", color: "#6B7280", fontWeight: 700, fontSize: 13 }}>Photoshop</th>
-                  <th style={{ textAlign: "center", padding: "12px 16px", color: "#6B7280", fontWeight: 700, fontSize: 13 }}>remove.bg</th>
+                <tr style={{ borderBottom: "2px solid var(--border)" }}>
+                  <th style={{ textAlign: "left", padding: "12px 16px", color: "var(--text-muted)", fontWeight: 700, fontSize: 13 }}>Feature</th>
+                  <th style={{ textAlign: "center", padding: "12px 16px", color: "var(--accent)", fontWeight: 900, fontSize: 13, background: "var(--accent-soft)", borderRadius: "12px 12px 0 0" }}>✦ JPT AI</th>
+                  <th style={{ textAlign: "center", padding: "12px 16px", color: "var(--text-muted)", fontWeight: 700, fontSize: 13 }}>Photoshop</th>
+                  <th style={{ textAlign: "center", padding: "12px 16px", color: "var(--text-muted)", fontWeight: 700, fontSize: 13 }}>remove.bg</th>
                 </tr>
               </thead>
               <tbody>
                 {COMPARISON.map((row, i) => (
-                  <tr key={row.feature} style={{ borderBottom: "1px solid #F3F4F6", background: i % 2 === 0 ? "#fff" : "#FAFAFA" }}>
-                    <td style={{ padding: "12px 16px", color: "#374151", fontWeight: 500 }}>{row.feature}</td>
-                    <td style={{ textAlign: "center", padding: "12px 16px", background: "#EEF2FF" }}>
-                      <span style={{ color: row.jpt ? "#10B981" : "#EF4444", fontSize: 18, fontWeight: 900 }}>{row.jpt ? "✓" : "✗"}</span>
+                  <tr key={row.feature} style={{ borderBottom: "1px solid var(--border)", background: i % 2 === 0 ? "var(--surface-3)" : "var(--surface-2)" }}>
+                    <td style={{ padding: "12px 16px", color: "var(--text-muted)", fontWeight: 500 }}>{row.feature}</td>
+                    <td style={{ textAlign: "center", padding: "12px 16px", background: "var(--accent-soft)" }}>
+                      <span style={{ color: row.jpt ? "var(--success)" : "var(--danger)", fontSize: 18, fontWeight: 900 }}>{row.jpt ? "✓" : "✗"}</span>
                     </td>
                     <td style={{ textAlign: "center", padding: "12px 16px" }}>
-                      <span style={{ color: row.photoshop ? "#10B981" : "#EF4444", fontSize: 18, fontWeight: 900 }}>{row.photoshop ? "✓" : "✗"}</span>
+                      <span style={{ color: row.photoshop ? "var(--success)" : "var(--danger)", fontSize: 18, fontWeight: 900 }}>{row.photoshop ? "✓" : "✗"}</span>
                     </td>
                     <td style={{ textAlign: "center", padding: "12px 16px" }}>
-                      <span style={{ color: row.removebg ? "#10B981" : "#EF4444", fontSize: 18, fontWeight: 900 }}>{row.removebg ? "✓" : "✗"}</span>
+                      <span style={{ color: row.removebg ? "var(--success)" : "var(--danger)", fontSize: 18, fontWeight: 900 }}>{row.removebg ? "✓" : "✗"}</span>
                     </td>
                   </tr>
                 ))}
@@ -630,24 +630,24 @@ export default function LandingPageClient() {
         <div style={{ maxWidth: 860, margin: "0 auto" }}>
           <div style={s.sectionLabel}>ABOUT JPT AI</div>
           <h2 style={{ ...s.h2, marginBottom: 28 }}>The best free AI image editor online — no watermark, no signup friction</h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(380px, 1fr))", gap: 32, fontSize: 15, color: "#4B5563", lineHeight: 1.8 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(380px, 1fr))", gap: 32, fontSize: 15, color: "var(--text-muted)", lineHeight: 1.8 }}>
             <div>
-              <h3 style={{ fontSize: 17, fontWeight: 800, color: "#111827", marginBottom: 10 }}>Free AI Background Remover</h3>
+              <h3 style={{ fontSize: 17, fontWeight: 800, color: "var(--text)", marginBottom: 10 }}>Free AI Background Remover</h3>
               <p style={{ margin: "0 0 16px" }}>JPT AI&apos;s background remover uses deep learning to detect and separate subjects from any background in seconds. Whether you&apos;re editing product photos for e-commerce, removing backgrounds from portraits, or preparing images for marketing materials — our AI delivers clean cutouts with no manual effort.</p>
               <p style={{ margin: 0 }}>Unlike other online background removers, JPT AI outputs full-resolution PNG with transparency — no watermarks, no degraded quality, free to use.</p>
             </div>
             <div>
-              <h3 style={{ fontSize: 17, fontWeight: 800, color: "#111827", marginBottom: 10 }}>AI Image Upscaler — Upscale to 4K Online Free</h3>
+              <h3 style={{ fontSize: 17, fontWeight: 800, color: "var(--text)", marginBottom: 10 }}>AI Image Upscaler — Upscale to 4K Online Free</h3>
               <p style={{ margin: "0 0 16px" }}>Our AI upscaler uses super-resolution technology to enhance image quality by up to 4×. Restore old blurry photos, enlarge low-resolution product images, or upscale AI-generated art to print quality — all without Photoshop.</p>
               <p style={{ margin: 0 }}>Perfect for e-commerce sellers who need high-resolution product photos, photographers restoring old images, and creators upscaling AI-generated artwork.</p>
             </div>
             <div>
-              <h3 style={{ fontSize: 17, fontWeight: 800, color: "#111827", marginBottom: 10 }}>Edit Images with Text Prompts</h3>
+              <h3 style={{ fontSize: 17, fontWeight: 800, color: "var(--text)", marginBottom: 10 }}>Edit Images with Text Prompts</h3>
               <p style={{ margin: "0 0 16px" }}>Describe any edit in plain English and JPT AI makes it happen. &ldquo;Make the background a sunset&rdquo;, &ldquo;add professional studio lighting&rdquo;, &ldquo;remove the object on the left&rdquo; — no Photoshop skills required.</p>
               <p style={{ margin: 0 }}>This is the fastest way to edit photos online for non-designers, social media managers, and anyone who needs quick, high-quality image edits without learning complex software.</p>
             </div>
             <div>
-              <h3 style={{ fontSize: 17, fontWeight: 800, color: "#111827", marginBottom: 10 }}>AI Headshots & Professional Photos</h3>
+              <h3 style={{ fontSize: 17, fontWeight: 800, color: "var(--text)", marginBottom: 10 }}>AI Headshots & Professional Photos</h3>
               <p style={{ margin: "0 0 16px" }}>Create professional AI headshots for LinkedIn, company directories, and resumes. Remove distracting backgrounds, replace with clean office or outdoor environments, and look polished in every photo.</p>
               <p style={{ margin: 0 }}>LinkedIn profiles with professional headshots get 21× more profile views. JPT AI makes it possible without expensive photography sessions.</p>
             </div>
@@ -656,7 +656,7 @@ export default function LandingPageClient() {
       </section>
 
       {/* ── FAQ ────────────────────────────────────────────────────────────── */}
-      <section style={{ ...s.section, background: "#fff" }}>
+      <section style={{ ...s.section, background: "var(--surface)" }}>
         <div style={{ ...s.sectionInner, maxWidth: 780 }}>
           <div style={s.sectionLabel}>FAQ</div>
           <h2 style={{ ...s.h2, marginBottom: 40 }}>Frequently asked questions about JPT AI</h2>
@@ -699,15 +699,15 @@ export default function LandingPageClient() {
               {pendingType === "upload" && uploadImage
                 ? <div style={{ marginBottom: 12, borderRadius: 10, overflow: "hidden", maxHeight: 110 }}><img src={uploadImage.url} alt="preview" style={{ width: "100%", height: 110, objectFit: "cover" }} /></div>
                 : <div style={{ fontSize: 40, marginBottom: 8 }}>✨</div>}
-              <div style={{ fontWeight: 900, fontSize: 20, color: "#111" }}>Sign in to JPT AI</div>
-              <p style={{ fontSize: 13, color: "#666", margin: "4px 0 0" }}>Get <strong>10 free AI credits</strong> to start editing</p>
+              <div style={{ fontWeight: 900, fontSize: 20, color: "var(--text)" }}>Sign in to JPT AI</div>
+              <p style={{ fontSize: 13, color: "var(--text-muted)", margin: "4px 0 0" }}>Get <strong>10 free AI credits</strong> to start editing</p>
             </div>
 
             {/* Tab switcher */}
-            <div style={{ display: "flex", background: "#F0F0F8", borderRadius: 10, padding: 3, marginBottom: 18 }}>
+            <div style={{ display: "flex", background: "var(--surface-2)", borderRadius: 10, padding: 3, marginBottom: 18 }}>
               {(["google", "email"] as const).map(t => (
                 <button key={t} onClick={() => { setAuthTab(t); setAuthError(""); }}
-                  style={{ flex: 1, padding: "8px", borderRadius: 8, border: "none", background: authTab === t ? "#fff" : "none", fontWeight: 700, fontSize: 13, cursor: "pointer", color: authTab === t ? "#6366F1" : "#888", boxShadow: authTab === t ? "0 1px 4px rgba(0,0,0,0.1)" : "none" }}>
+                  style={{ flex: 1, padding: "8px", borderRadius: 8, border: "none", background: authTab === t ? "var(--surface-3)" : "none", fontWeight: 700, fontSize: 13, cursor: "pointer", color: authTab === t ? "var(--accent)" : "var(--text-faint)", boxShadow: authTab === t ? "0 1px 4px rgba(0,0,0,0.1)" : "none" }}>
                   {t === "google" ? "🔵 Google" : "📧 Email"}
                 </button>
               ))}
@@ -719,7 +719,7 @@ export default function LandingPageClient() {
                   <GoogleIcon />
                   Continue with Google
                 </button>
-                <div style={{ fontSize: 12, color: "#999", textAlign: "center" as const }}>Quick · No password needed</div>
+                <div style={{ fontSize: 12, color: "var(--text-faint)", textAlign: "center" as const }}>Quick · No password needed</div>
               </div>
             )}
 
@@ -728,22 +728,22 @@ export default function LandingPageClient() {
                 <div style={{ display: "flex", gap: 4, justifyContent: "center", borderBottom: "1px solid #F0F0F0", paddingBottom: 10, marginBottom: 4 }}>
                   {(["signup", "login"] as const).map(m => (
                     <button key={m} onClick={() => { setAuthMode(m); setAuthError(""); }}
-                      style={{ background: "none", border: "none", cursor: "pointer", fontWeight: authMode === m ? 800 : 400, color: authMode === m ? "#6366F1" : "#888", borderBottom: authMode === m ? "2px solid #6366F1" : "2px solid transparent", padding: "4px 14px", fontSize: 14 }}>
+                      style={{ background: "none", border: "none", cursor: "pointer", fontWeight: authMode === m ? 800 : 400, color: authMode === m ? "var(--accent)" : "var(--text-faint)", borderBottom: authMode === m ? "2px solid var(--accent)" : "2px solid transparent", padding: "4px 14px", fontSize: 14 }}>
                       {m === "signup" ? "Create account" : "Sign in"}
                     </button>
                   ))}
                 </div>
                 {authMode === "signup" && (
                   <input type="text" placeholder="Your name (optional)" value={authName} onChange={e => setAuthName(e.target.value)}
-                    style={{ border: "1.5px solid #E0E0EE", borderRadius: 8, padding: "10px 12px", fontSize: 14, outline: "none", width: "100%", boxSizing: "border-box" as const }} />
+                    style={{ border: "1.5px solid var(--border)", borderRadius: 8, padding: "10px 12px", fontSize: 14, outline: "none", width: "100%", boxSizing: "border-box" as const }} />
                 )}
                 <input type="email" placeholder="Email address" value={authEmail} onChange={e => setAuthEmail(e.target.value)}
-                  style={{ border: "1.5px solid #E0E0EE", borderRadius: 8, padding: "10px 12px", fontSize: 14, outline: "none", width: "100%", boxSizing: "border-box" as const }} />
+                  style={{ border: "1.5px solid var(--border)", borderRadius: 8, padding: "10px 12px", fontSize: 14, outline: "none", width: "100%", boxSizing: "border-box" as const }} />
                 <input type="password" placeholder="Password (min 6 chars)" value={authPassword} onChange={e => setAuthPassword(e.target.value)} onKeyDown={e => e.key === "Enter" && handleEmailAuth()}
-                  style={{ border: "1.5px solid #E0E0EE", borderRadius: 8, padding: "10px 12px", fontSize: 14, outline: "none", width: "100%", boxSizing: "border-box" as const }} />
-                {authError && <div style={{ background: "#FFF1F0", border: "1px solid #FFC4C4", borderRadius: 8, padding: "8px 12px", fontSize: 13, color: "#C00" }}>{authError}</div>}
+                  style={{ border: "1.5px solid var(--border)", borderRadius: 8, padding: "10px 12px", fontSize: 14, outline: "none", width: "100%", boxSizing: "border-box" as const }} />
+                {authError && <div style={{ background: "var(--danger-soft)", border: "1px solid var(--danger-soft)", borderRadius: 8, padding: "8px 12px", fontSize: 13, color: "#C00" }}>{authError}</div>}
                 <button onClick={handleEmailAuth} disabled={authLoading}
-                  style={{ padding: "11px", background: authLoading ? "#A5B4FC" : "#6366F1", color: "#fff", border: "none", borderRadius: 10, fontWeight: 800, fontSize: 14, cursor: authLoading ? "not-allowed" : "pointer" }}>
+                  style={{ padding: "11px", background: authLoading ? "var(--accent)" : "var(--accent)", color: "#fff", border: "none", borderRadius: 10, fontWeight: 800, fontSize: 14, cursor: authLoading ? "not-allowed" : "pointer" }}>
                   {authLoading ? "Please wait…" : authMode === "signup" ? "✦ Create Account — Free" : "→ Sign In"}
                 </button>
               </div>
@@ -760,54 +760,54 @@ export default function LandingPageClient() {
 // ─── Styles ───────────────────────────────────────────────────────────────────
 
 const s: Record<string, React.CSSProperties> = {
-  root: { fontFamily: "system-ui,-apple-system,sans-serif", color: "#111", background: "#fff" },
+  root: { fontFamily: "system-ui,-apple-system,sans-serif", color: "var(--text)", background: "var(--surface)" },
 
   // Hero
-  hero: { background: "linear-gradient(160deg, #F0F0FF 0%, #FAFAFE 60%, #fff 100%)", padding: "72px 24px 80px", textAlign: "center" },
+  hero: { background: "linear-gradient(160deg, var(--accent-soft) 0%, #FAFAFE 60%, var(--surface) 100%)", padding: "72px 24px 80px", textAlign: "center" },
   heroInner: { maxWidth: 760, margin: "0 auto", display: "flex", flexDirection: "column", alignItems: "center", gap: 20 },
-  badge: { display: "inline-block", background: "rgba(99,102,241,0.1)", color: "#6366F1", border: "1px solid rgba(99,102,241,0.2)", borderRadius: 100, padding: "6px 16px", fontSize: 13, fontWeight: 700 },
+  badge: { display: "inline-block", background: "rgba(99,102,241,0.1)", color: "var(--accent)", border: "1px solid rgba(99,102,241,0.2)", borderRadius: 100, padding: "6px 16px", fontSize: 13, fontWeight: 700 },
   h1: { margin: 0, fontSize: "clamp(36px, 6vw, 58px)", fontWeight: 900, letterSpacing: "-1.5px", lineHeight: 1.1 },
-  h1Accent: { background: "linear-gradient(135deg, #6366F1, #8B5CF6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" },
-  heroPara: { margin: 0, fontSize: 18, color: "#555", lineHeight: 1.7, maxWidth: 580 },
+  h1Accent: { background: "linear-gradient(135deg, var(--accent), var(--accent-2))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" },
+  heroPara: { margin: 0, fontSize: 18, color: "var(--text-muted)", lineHeight: 1.7, maxWidth: 580 },
 
-  dropZone: { width: "100%", maxWidth: 620, display: "flex", alignItems: "center", gap: 16, background: "#fff", border: "2px dashed #D0D0F0", borderRadius: 16, padding: "22px 28px", cursor: "pointer", transition: "all 0.2s", boxSizing: "border-box" },
-  dropZoneActive: { borderColor: "#6366F1", background: "#EEEEFF" },
+  dropZone: { width: "100%", maxWidth: 620, display: "flex", alignItems: "center", gap: 16, background: "var(--surface)", border: "2px dashed #D0D0F0", borderRadius: 16, padding: "22px 28px", cursor: "pointer", transition: "all 0.2s", boxSizing: "border-box" },
+  dropZoneActive: { borderColor: "var(--accent)", background: "var(--surface-2)" },
   dropTitle: { fontSize: 16, fontWeight: 700, marginBottom: 4 },
-  dropHint: { fontSize: 13, color: "#888" },
+  dropHint: { fontSize: 13, color: "var(--text-faint)" },
 
   orRow: { display: "flex", alignItems: "center", gap: 12, width: "100%", maxWidth: 620 },
   orLine: { flex: 1, height: 1, background: "#E0E0F0" },
-  orText: { fontSize: 12, color: "#AAA", fontWeight: 600, whiteSpace: "nowrap" },
+  orText: { fontSize: 12, color: "var(--text-faint)", fontWeight: 600, whiteSpace: "nowrap" },
 
   promptBar: { display: "flex", gap: 8, width: "100%", maxWidth: 620, alignItems: "center" },
-  attachBtn: { width: 46, height: 46, borderRadius: 10, border: "1.5px solid #E0E0EE", background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "all 0.15s" },
+  attachBtn: { width: 46, height: 46, borderRadius: 10, border: "1.5px solid var(--border)", background: "var(--surface)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "all 0.15s" },
   refThumb: { position: "relative", flexShrink: 0 },
-  removeRef: { position: "absolute", top: -6, right: -6, width: 18, height: 18, borderRadius: "50%", background: "#EF4444", color: "#fff", border: "none", cursor: "pointer", fontSize: 11, display: "flex", alignItems: "center", justifyContent: "center", padding: 0, fontWeight: 700 },
-  promptInput: { flex: 1, height: 46, border: "1.5px solid #E0E0EE", borderRadius: 10, padding: "0 14px", fontSize: 14, fontFamily: "inherit", outline: "none", background: "#fff", color: "#111", minWidth: 0 },
-  generateBtn: { height: 46, background: "linear-gradient(135deg,#6366F1,#8B5CF6)", color: "#fff", border: "none", borderRadius: 10, padding: "0 20px", fontSize: 14, fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0, transition: "opacity 0.2s" },
+  removeRef: { position: "absolute", top: -6, right: -6, width: 18, height: 18, borderRadius: "50%", background: "var(--danger)", color: "#fff", border: "none", cursor: "pointer", fontSize: 11, display: "flex", alignItems: "center", justifyContent: "center", padding: 0, fontWeight: 700 },
+  promptInput: { flex: 1, height: 46, border: "1.5px solid var(--border)", borderRadius: 10, padding: "0 14px", fontSize: 14, fontFamily: "inherit", outline: "none", background: "var(--surface)", color: "var(--text)", minWidth: 0 },
+  generateBtn: { height: 46, background: "linear-gradient(135deg,var(--accent),var(--accent-2))", color: "#fff", border: "none", borderRadius: 10, padding: "0 20px", fontSize: 14, fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0, transition: "opacity 0.2s" },
   generateBtnOff: { opacity: 0.45, cursor: "not-allowed" },
 
   statsRow: { display: "flex", gap: 32, marginTop: 4 },
   statItem: { display: "flex", flexDirection: "column", alignItems: "center", gap: 2 },
-  statVal: { fontSize: 22, fontWeight: 900, color: "#6366F1" },
-  statLabel: { fontSize: 11, color: "#999", fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.5 },
+  statVal: { fontSize: 22, fontWeight: 900, color: "var(--accent)" },
+  statLabel: { fontSize: 11, color: "var(--text-faint)", fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.5 },
 
   // Sections
-  section: { padding: "80px 24px", background: "#fff" },
+  section: { padding: "80px 24px", background: "var(--surface)" },
   sectionInner: { maxWidth: 1100, margin: "0 auto" },
-  sectionLabel: { fontSize: 11, fontWeight: 800, letterSpacing: 2, color: "#6366F1", textTransform: "uppercase", marginBottom: 12 },
+  sectionLabel: { fontSize: 11, fontWeight: 800, letterSpacing: 2, color: "var(--accent)", textTransform: "uppercase", marginBottom: 12 },
   h2: { margin: "0 0 12px", fontSize: "clamp(26px, 4vw, 38px)", fontWeight: 900, letterSpacing: "-0.8px", lineHeight: 1.15 },
-  sectionSub: { margin: "0 0 48px", fontSize: 16, color: "#666", lineHeight: 1.6 },
+  sectionSub: { margin: "0 0 48px", fontSize: 16, color: "var(--text-muted)", lineHeight: 1.6 },
 
   // Feature grid
   featureGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 22 },
-  featureCard: { background: "#fff", borderRadius: 18, border: "1px solid #EAECF0", overflow: "hidden", boxShadow: "0 2px 14px rgba(0,0,0,0.05)", display: "flex", flexDirection: "column" },
-  featureImgWrap: { width: "100%", aspectRatio: "16 / 9", overflow: "hidden", background: "#F0F0F8" },
+  featureCard: { background: "var(--surface)", borderRadius: 18, border: "1px solid var(--border)", overflow: "hidden", boxShadow: "0 2px 14px rgba(0,0,0,0.05)", display: "flex", flexDirection: "column" },
+  featureImgWrap: { width: "100%", aspectRatio: "16 / 9", overflow: "hidden", background: "var(--surface-2)" },
   featureImg: { width: "100%", height: "100%", objectFit: "cover", display: "block" },
   featureBody: { padding: "20px 22px 24px" },
   featureIcon: { fontSize: 28, marginBottom: 10 },
   featureTitle: { fontSize: 16, fontWeight: 800, marginBottom: 8 },
-  featureDesc: { margin: 0, fontSize: 14, color: "#555", lineHeight: 1.65 },
+  featureDesc: { margin: 0, fontSize: 14, color: "var(--text-muted)", lineHeight: 1.65 },
 
   // Hero showcase
   heroShowcase: { position: "relative", width: "100%", maxWidth: 880, marginTop: 16, borderRadius: 20, overflow: "hidden", boxShadow: "0 20px 60px rgba(99,102,241,0.25)", border: "1px solid rgba(99,102,241,0.15)" },
@@ -816,46 +816,46 @@ const s: Record<string, React.CSSProperties> = {
 
   // Steps
   stepsRow: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 20 },
-  stepCard: { background: "#fff", borderRadius: 16, padding: "28px 24px", textAlign: "center", border: "1px solid #E5E7EF", boxShadow: "0 2px 12px rgba(0,0,0,0.05)" },
-  stepNum: { width: 32, height: 32, borderRadius: "50%", background: "linear-gradient(135deg,#6366F1,#8B5CF6)", color: "#fff", fontSize: 14, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto" },
+  stepCard: { background: "var(--surface)", borderRadius: 16, padding: "28px 24px", textAlign: "center", border: "1px solid var(--border)", boxShadow: "0 2px 12px rgba(0,0,0,0.05)" },
+  stepNum: { width: 32, height: 32, borderRadius: "50%", background: "linear-gradient(135deg,var(--accent),var(--accent-2))", color: "#fff", fontSize: 14, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto" },
   stepTitle: { fontSize: 16, fontWeight: 800, marginBottom: 8 },
-  stepDesc: { margin: 0, fontSize: 14, color: "#555", lineHeight: 1.65 },
+  stepDesc: { margin: 0, fontSize: 14, color: "var(--text-muted)", lineHeight: 1.65 },
 
   // Use cases
   useCaseGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 18 },
-  useCaseCard: { background: "#F7F8FC", borderRadius: 14, padding: "22px 20px", border: "1px solid #EAECF0" },
+  useCaseCard: { background: "var(--surface-2)", borderRadius: 14, padding: "22px 20px", border: "1px solid var(--border)" },
   useCaseTitle: { fontSize: 15, fontWeight: 800, marginBottom: 8 },
-  useCaseDesc: { margin: 0, fontSize: 13, color: "#555", lineHeight: 1.65 },
+  useCaseDesc: { margin: 0, fontSize: 13, color: "var(--text-muted)", lineHeight: 1.65 },
 
   // FAQ
   faqGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 20 },
-  faqItem: { background: "#fff", borderRadius: 14, padding: "20px 22px", border: "1px solid #E5E7EF" },
+  faqItem: { background: "var(--surface)", borderRadius: 14, padding: "20px 22px", border: "1px solid var(--border)" },
   faqQ: { fontSize: 15, fontWeight: 800, marginBottom: 8 },
-  faqA: { margin: 0, fontSize: 14, color: "#555", lineHeight: 1.65 },
+  faqA: { margin: 0, fontSize: 14, color: "var(--text-muted)", lineHeight: 1.65 },
 
   // CTA
-  ctaSection: { background: "linear-gradient(135deg, #6366F1, #8B5CF6)", padding: "80px 24px", textAlign: "center" },
+  ctaSection: { background: "linear-gradient(135deg, var(--accent), var(--accent-2))", padding: "80px 24px", textAlign: "center" },
   ctaInner: { maxWidth: 580, margin: "0 auto" },
   ctaH2: { margin: "0 0 14px", fontSize: "clamp(28px, 4vw, 42px)", fontWeight: 900, color: "#fff", letterSpacing: "-0.8px" },
   ctaSub: { margin: "0 0 32px", fontSize: 16, color: "rgba(255,255,255,0.82)", lineHeight: 1.65 },
-  ctaBtn: { display: "inline-flex", alignItems: "center", gap: 10, background: "#fff", color: "#333", borderRadius: 12, padding: "14px 28px", fontSize: 15, fontWeight: 800, textDecoration: "none", boxShadow: "0 4px 24px rgba(0,0,0,0.15)", transition: "transform 0.15s" },
+  ctaBtn: { display: "inline-flex", alignItems: "center", gap: 10, background: "var(--surface)", color: "var(--text-muted)", borderRadius: 12, padding: "14px 28px", fontSize: 15, fontWeight: 800, textDecoration: "none", boxShadow: "0 4px 24px rgba(0,0,0,0.15)", transition: "transform 0.15s" },
 
   // Footer
-  footer: { background: "#111", padding: "32px 24px" },
+  footer: { background: "var(--bg-elevated)", padding: "32px 24px" },
   footerInner: { maxWidth: 1100, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 20, flexWrap: "wrap" },
   footerBrand: { display: "flex", alignItems: "center", gap: 8, color: "#fff", fontSize: 16 },
   footerLinks: { display: "flex", gap: 24 },
-  footerLink: { color: "#999", fontSize: 14, textDecoration: "none" },
-  footerCopy: { color: "#666", fontSize: 13 },
+  footerLink: { color: "var(--text-faint)", fontSize: 14, textDecoration: "none" },
+  footerCopy: { color: "var(--text-muted)", fontSize: 13 },
 
   // Modal
   modalOverlay: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 20, backdropFilter: "blur(6px)" },
-  modalBox: { background: "#fff", borderRadius: 20, padding: "32px 28px", maxWidth: 420, width: "100%", textAlign: "center", boxShadow: "0 32px 80px rgba(0,0,0,0.25)" },
+  modalBox: { background: "var(--surface)", borderRadius: 20, padding: "32px 28px", maxWidth: 420, width: "100%", textAlign: "center", boxShadow: "0 32px 80px rgba(0,0,0,0.25)" },
   modalTitle: { fontSize: 22, fontWeight: 900, letterSpacing: "-0.4px", marginBottom: 10 },
-  modalSub: { margin: "0 0 16px", fontSize: 14, color: "#666", lineHeight: 1.6 },
-  promptPreview: { background: "#F4F5FB", borderRadius: 8, padding: "10px 14px", fontSize: 13, color: "#333", fontStyle: "italic", marginBottom: 16, textAlign: "left" },
+  modalSub: { margin: "0 0 16px", fontSize: 14, color: "var(--text-muted)", lineHeight: 1.6 },
+  promptPreview: { background: "#F4F5FB", borderRadius: 8, padding: "10px 14px", fontSize: 13, color: "var(--text-muted)", fontStyle: "italic", marginBottom: 16, textAlign: "left" },
   modalFeatures: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 20, textAlign: "left" },
-  modalFeatureRow: { display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#333" },
-  modalGoogleBtn: { display: "flex", alignItems: "center", justifyContent: "center", gap: 10, background: "#fff", border: "1.5px solid #DDD", borderRadius: 10, padding: "12px 20px", fontSize: 14, fontWeight: 700, color: "#333", cursor: "pointer", width: "100%", boxSizing: "border-box", boxShadow: "0 1px 4px rgba(0,0,0,0.08)" },
-  modalDismiss: { marginTop: 12, background: "none", border: "none", color: "#AAA", fontSize: 13, cursor: "pointer", textDecoration: "underline" },
+  modalFeatureRow: { display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "var(--text-muted)" },
+  modalGoogleBtn: { display: "flex", alignItems: "center", justifyContent: "center", gap: 10, background: "var(--surface)", border: "1.5px solid #DDD", borderRadius: 10, padding: "12px 20px", fontSize: 14, fontWeight: 700, color: "var(--text-muted)", cursor: "pointer", width: "100%", boxSizing: "border-box", boxShadow: "0 1px 4px rgba(0,0,0,0.08)" },
+  modalDismiss: { marginTop: 12, background: "none", border: "none", color: "var(--text-faint)", fontSize: 13, cursor: "pointer", textDecoration: "underline" },
 };

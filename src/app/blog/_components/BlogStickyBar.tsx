@@ -110,8 +110,8 @@ export default function BlogStickyBar({ toolHref, toolLabel }: BlogStickyBarProp
         }} />
 
         <div style={{
-          background: '#fff',
-          borderTop: '1px solid #EAECF0',
+          background: 'var(--surface)',
+          borderTop: '1px solid var(--border)',
           boxShadow: '0 -4px 32px rgba(0,0,0,0.10)',
           padding: '14px 20px',
         }}>
@@ -126,11 +126,11 @@ export default function BlogStickyBar({ toolHref, toolLabel }: BlogStickyBarProp
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 2 }}>
                 <span style={{ fontSize: 18, lineHeight: 1 }}>{icon}</span>
-                <span style={{ fontSize: 14, fontWeight: 800, color: '#111827', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                <span style={{ fontSize: 14, fontWeight: 800, color: 'var(--text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   Try it free — no sign up needed
                 </span>
               </div>
-              <div style={{ fontSize: 12, color: '#9CA3AF', paddingLeft: 26 }}>
+              <div style={{ fontSize: 12, color: 'var(--text-faint)', paddingLeft: 26 }}>
                 {editorTool ? 'Upload an image and we\'ll open it for you' : 'Open the tool and get started instantly'}
               </div>
             </div>
@@ -142,7 +142,7 @@ export default function BlogStickyBar({ toolHref, toolLabel }: BlogStickyBarProp
               style={{
                 flexShrink: 0,
                 display: 'inline-flex', alignItems: 'center', gap: 8,
-                background: loading ? '#A5B4FC' : 'linear-gradient(135deg,#6366F1,#8B5CF6)',
+                background: loading ? 'var(--accent)' : 'linear-gradient(135deg,var(--accent),var(--accent-2))',
                 color: '#fff',
                 border: 'none',
                 borderRadius: 12,

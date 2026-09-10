@@ -17,17 +17,17 @@ interface GenItem {
 const TOOL_META: Record<string, { icon: string; color: string; bg: string; label: string }> = {
   "headshot":      { icon: "🎯", color: "#EC4899", bg: "#FDF2F8", label: "Headshot" },
   "headshot-edit": { icon: "✏️", color: "#F97316", bg: "#FFF7ED", label: "Headshot Edit" },
-  "generate-bg":   { icon: "🌅", color: "#F59E0B", bg: "#FFFBEB", label: "Generate BG" },
+  "generate-bg":   { icon: "🌅", color: "var(--warn)", bg: "#FFFBEB", label: "Generate BG" },
   "ai-background": { icon: "🌄", color: "#F97316", bg: "#FFF7ED", label: "AI Background" },
-  "upscale":       { icon: "🔍", color: "#6366F1", bg: "#EEF2FF", label: "Upscale" },
-  "ai-edit":       { icon: "✨", color: "#8B5CF6", bg: "#F5F3FF", label: "AI Edit" },
-  "remove-bg":     { icon: "✂️", color: "#10B981", bg: "#ECFDF5", label: "Remove BG" },
+  "upscale":       { icon: "🔍", color: "var(--accent)", bg: "var(--accent-soft)", label: "Upscale" },
+  "ai-edit":       { icon: "✨", color: "var(--accent-2)", bg: "var(--surface-2)", label: "AI Edit" },
+  "remove-bg":     { icon: "✂️", color: "var(--success)", bg: "var(--success-soft)", label: "Remove BG" },
   "resize":        { icon: "↔️", color: "#06B6D4", bg: "#ECFEFF", label: "Resize" },
   "adjust":        { icon: "🎨", color: "#EC4899", bg: "#FDF2F8", label: "Adjust" },
 };
 
 function getToolMeta(tool: string) {
-  return TOOL_META[tool] ?? { icon: "🖼️", color: "#6B7280", bg: "#F3F4F6", label: tool };
+  return TOOL_META[tool] ?? { icon: "🖼️", color: "var(--text-muted)", bg: "var(--surface-2)", label: tool };
 }
 
 function timeAgo(ts: number): string {
@@ -198,7 +198,7 @@ function PreviewModal({
                 <span>{timeAgo(item.timestamp)}</span>
                 {full
                   ? <span style={{ color: "#34D399", fontWeight: 700 }}>✓ Full Quality</span>
-                  : <span style={{ color: "#F59E0B" }}>⚠ Low-res preview</span>
+                  : <span style={{ color: "var(--warn)" }}>⚠ Low-res preview</span>
                 }
               </div>
             </div>
@@ -210,7 +210,7 @@ function PreviewModal({
               onClick={() => onOpenInEditor(item)}
               style={{
                 flex: 2, padding: "11px 16px",
-                background: "linear-gradient(135deg, #6366F1, #8B5CF6)",
+                background: "linear-gradient(135deg, var(--accent), var(--accent-2))",
                 color: "#fff", border: "none", borderRadius: 12,
                 fontWeight: 700, fontSize: 13, cursor: "pointer",
                 display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
@@ -274,9 +274,9 @@ function ItemCard({
   return (
     <div
       style={{
-        background: "#fff", borderRadius: 14, overflow: "hidden",
+        background: "var(--surface)", borderRadius: 14, overflow: "hidden",
         boxShadow: isHovered ? "0 10px 30px rgba(0,0,0,0.12)" : "0 2px 8px rgba(0,0,0,0.06)",
-        border: "1px solid #E5E7EB",
+        border: "1px solid var(--border)",
         opacity: deleting ? 0.4 : 1,
         transform: isHovered ? "translateY(-3px)" : "none",
         transition: "all 0.18s ease",
@@ -287,7 +287,7 @@ function ItemCard({
       {/* Thumbnail */}
       <div
         onClick={() => onPreview(item)}
-        style={{ position: "relative", aspectRatio: "4/3", background: "#111", overflow: "hidden", cursor: "pointer" }}
+        style={{ position: "relative", aspectRatio: "4/3", background: "var(--bg-elevated)", overflow: "hidden", cursor: "pointer" }}
       >
         {/* Blurred bg fill for letterboxed images */}
         {cardImg && <img src={cardImg} alt="" aria-hidden style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "blur(14px) brightness(0.4) saturate(1.3)", transform: "scale(1.1)" }} />}
@@ -314,8 +314,8 @@ function ItemCard({
           transition: "background 0.18s", pointerEvents: "none",
         }}>
           <div style={{
-            background: "rgba(255,255,255,0.95)", borderRadius: 30,
-            padding: "8px 16px", fontSize: 13, fontWeight: 700, color: "#111",
+            background: "rgba(12,12,22,0.82)", borderRadius: 30,
+            padding: "8px 16px", fontSize: 13, fontWeight: 700, color: "var(--text)",
             opacity: isHovered ? 1 : 0, transition: "opacity 0.18s",
             display: "flex", alignItems: "center", gap: 6,
           }}>
@@ -337,17 +337,17 @@ function ItemCard({
 
       {/* Footer */}
       <div style={{ padding: "11px 12px 12px" }}>
-        <div style={{ fontSize: 12, fontWeight: 600, color: "#111", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", marginBottom: 2 }}>
+        <div style={{ fontSize: 12, fontWeight: 600, color: "var(--text)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", marginBottom: 2 }}>
           {item.label || item.originalName || "Image"}
         </div>
-        <div style={{ fontSize: 11, color: "#9CA3AF", marginBottom: 10 }}>{timeAgo(item.timestamp)}</div>
+        <div style={{ fontSize: 11, color: "var(--text-faint)", marginBottom: 10 }}>{timeAgo(item.timestamp)}</div>
 
         <div style={{ display: "flex", gap: 5 }}>
           <button
             onClick={() => onOpenInEditor(item)}
             style={{
               flex: 1, padding: "7px 4px", fontSize: 11, fontWeight: 700,
-              background: "linear-gradient(135deg, #6366F1, #8B5CF6)",
+              background: "linear-gradient(135deg, var(--accent), var(--accent-2))",
               color: "#fff", border: "none", borderRadius: 7, cursor: "pointer",
               display: "flex", alignItems: "center", justifyContent: "center", gap: 4,
             }}
@@ -373,14 +373,14 @@ function ItemCard({
                 }
               } catch { if (item.imageUrl) window.open(item.imageUrl, "_blank"); }
             }}
-            style={{ flex: 1, padding: "7px 4px", fontSize: 11, fontWeight: 700, background: "#EEF2FF", color: "#6366F1", border: "none", borderRadius: 7, cursor: "pointer" }}
+            style={{ flex: 1, padding: "7px 4px", fontSize: 11, fontWeight: 700, background: "var(--accent-soft)", color: "var(--accent)", border: "none", borderRadius: 7, cursor: "pointer" }}
           >
             ⬇ Save
           </button>
           <button
             onClick={() => onDelete(item.id)}
             disabled={deleting}
-            style={{ padding: "7px 10px", fontSize: 12, background: "#FEF2F2", color: "#EF4444", border: "none", borderRadius: 7, cursor: deleting ? "not-allowed" : "pointer" }}
+            style={{ padding: "7px 10px", fontSize: 12, background: "var(--danger-soft)", color: "var(--danger)", border: "none", borderRadius: 7, cursor: deleting ? "not-allowed" : "pointer" }}
           >
             {deleting ? "…" : "🗑"}
           </button>
@@ -411,18 +411,18 @@ function Section({
           {icon}
         </div>
         <div style={{ flex: 1 }}>
-          <h2 style={{ margin: 0, fontSize: 19, fontWeight: 800, color: "#111" }}>{title}</h2>
-          <p style={{ margin: 0, fontSize: 13, color: "#6B7280" }}>{subtitle}</p>
+          <h2 style={{ margin: 0, fontSize: 19, fontWeight: 800, color: "var(--text)" }}>{title}</h2>
+          <p style={{ margin: 0, fontSize: 13, color: "var(--text-muted)" }}>{subtitle}</p>
         </div>
-        <span style={{ background: "#F3F4F6", color: "#374151", fontSize: 13, fontWeight: 700, padding: "5px 14px", borderRadius: 20 }}>
+        <span style={{ background: "var(--surface-2)", color: "var(--text-muted)", fontSize: 13, fontWeight: 700, padding: "5px 14px", borderRadius: 20 }}>
           {items.length}
         </span>
       </div>
 
       {items.length === 0 ? (
-        <div style={{ background: "#F9FAFB", border: "2px dashed #E5E7EB", borderRadius: 12, padding: "44px 24px", textAlign: "center" }}>
+        <div style={{ background: "var(--surface-2)", border: "2px dashed var(--border)", borderRadius: 12, padding: "44px 24px", textAlign: "center" }}>
           <div style={{ fontSize: 40, marginBottom: 10 }}>{icon}</div>
-          <p style={{ margin: 0, color: "#9CA3AF", fontSize: 14 }}>{emptyMsg}</p>
+          <p style={{ margin: 0, color: "var(--text-faint)", fontSize: 14 }}>{emptyMsg}</p>
         </div>
       ) : (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))", gap: 16 }}>
@@ -574,9 +574,9 @@ export default function GenerationsPage() {
     return (
       <div style={{ minHeight: "80vh", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 16, padding: 24 }}>
         <div style={{ fontSize: 52 }}>🔐</div>
-        <h2 style={{ fontSize: 22, fontWeight: 800, color: "#111", margin: 0, textAlign: "center" }}>Sign in to view your generations</h2>
-        <p style={{ color: "#666", fontSize: 14, margin: 0, textAlign: "center", maxWidth: 320 }}>All your AI transformations are saved here automatically.</p>
-        <a href="/api/auth/google?next=/generations" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", background: "#6366F1", color: "#fff", borderRadius: 8, textDecoration: "none", fontWeight: 700, fontSize: 14 }}>
+        <h2 style={{ fontSize: 22, fontWeight: 800, color: "var(--text)", margin: 0, textAlign: "center" }}>Sign in to view your generations</h2>
+        <p style={{ color: "var(--text-muted)", fontSize: 14, margin: 0, textAlign: "center", maxWidth: 320 }}>All your AI transformations are saved here automatically.</p>
+        <a href="/api/auth/google?next=/generations" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", background: "var(--accent)", color: "#fff", borderRadius: 8, textDecoration: "none", fontWeight: 700, fontSize: 14 }}>
           Sign In to JPT AI
         </a>
       </div>
@@ -584,7 +584,7 @@ export default function GenerationsPage() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: "#F8F9FC", paddingBottom: 80 }}>
+    <div style={{ minHeight: "100vh", background: "var(--surface-2)", paddingBottom: 80 }}>
 
       {/* Opening editor overlay */}
       {openingEditor && (
@@ -604,11 +604,11 @@ export default function GenerationsPage() {
       )}
 
       {/* Header */}
-      <div style={{ background: "#fff", borderBottom: "1px solid #E5E7EB", padding: "24px 32px" }}>
+      <div style={{ background: "var(--surface)", borderBottom: "1px solid var(--border)", padding: "24px 32px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
           <div>
-            <h1 style={{ margin: 0, fontSize: 28, fontWeight: 900, color: "#111", letterSpacing: "-0.5px" }}>✦ {t.generationsTitle}</h1>
-            <p style={{ margin: "4px 0 0", fontSize: 14, color: "#6B7280" }}>
+            <h1 style={{ margin: 0, fontSize: 28, fontWeight: 900, color: "var(--text)", letterSpacing: "-0.5px" }}>✦ {t.generationsTitle}</h1>
+            <p style={{ margin: "4px 0 0", fontSize: 14, color: "var(--text-muted)" }}>
               {items.length} image{items.length !== 1 ? "s" : ""} · click any card to preview · JPT AI
             </p>
           </div>
@@ -616,7 +616,7 @@ export default function GenerationsPage() {
             <a href="/headshot" style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "10px 18px", background: "#FDF2F8", color: "#EC4899", borderRadius: 8, textDecoration: "none", fontWeight: 700, fontSize: 14 }}>
               🎯 Headshots
             </a>
-            <a href="/editor" style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "10px 18px", background: "#6366F1", color: "#fff", borderRadius: 8, textDecoration: "none", fontWeight: 700, fontSize: 14 }}>
+            <a href="/editor" style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "10px 18px", background: "var(--accent)", color: "#fff", borderRadius: 8, textDecoration: "none", fontWeight: 700, fontSize: 14 }}>
               + New Edit
             </a>
           </div>
@@ -628,13 +628,13 @@ export default function GenerationsPage() {
 
         {loading && (
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14, padding: "80px 0" }}>
-            <div style={{ width: 38, height: 38, border: "3px solid #E5E7EB", borderTop: "3px solid #6366F1", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
-            <p style={{ color: "#6B7280", fontSize: 14, margin: 0 }}>Loading your generations…</p>
+            <div style={{ width: 38, height: 38, border: "3px solid var(--border)", borderTop: "3px solid var(--accent)", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
+            <p style={{ color: "var(--text-muted)", fontSize: 14, margin: 0 }}>Loading your generations…</p>
           </div>
         )}
 
         {!loading && error && (
-          <div style={{ background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: 10, padding: "14px 18px", color: "#EF4444", fontSize: 14 }}>
+          <div style={{ background: "var(--danger-soft)", border: "1px solid var(--danger-soft)", borderRadius: 10, padding: "14px 18px", color: "var(--danger)", fontSize: 14 }}>
             ⚠️ {error}
           </div>
         )}
@@ -642,15 +642,15 @@ export default function GenerationsPage() {
         {!loading && !error && items.length === 0 && (
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "80px 0", gap: 16 }}>
             <div style={{ fontSize: 64 }}>🎨</div>
-            <h3 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: "#111" }}>{t.generationsEmpty}</h3>
-            <p style={{ margin: 0, fontSize: 14, color: "#6B7280", textAlign: "center", maxWidth: 380 }}>
+            <h3 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: "var(--text)" }}>{t.generationsEmpty}</h3>
+            <p style={{ margin: 0, fontSize: 14, color: "var(--text-muted)", textAlign: "center", maxWidth: 380 }}>
               Every image you generate or edit — from the AI Editor or Headshot tool — appears here automatically.
             </p>
             <div style={{ display: "flex", gap: 12 }}>
               <a href="/headshot" style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "12px 22px", background: "#FDF2F8", color: "#EC4899", borderRadius: 8, textDecoration: "none", fontWeight: 700, fontSize: 14 }}>
                 🎯 Try Headshots
               </a>
-              <a href="/editor" style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "12px 22px", background: "#6366F1", color: "#fff", borderRadius: 8, textDecoration: "none", fontWeight: 700, fontSize: 14 }}>
+              <a href="/editor" style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "12px 22px", background: "var(--accent)", color: "#fff", borderRadius: 8, textDecoration: "none", fontWeight: 700, fontSize: 14 }}>
                 🖼️ Open Editor
               </a>
             </div>
@@ -661,7 +661,7 @@ export default function GenerationsPage() {
           <>
             <Section
               title="Generations" subtitle="AI-generated headshots and backgrounds"
-              icon="🌅" accentColor="#F59E0B"
+              icon="🌅" accentColor="var(--warn)"
               items={generations}
               onPreview={setPreviewItem} onOpenInEditor={handleOpenInEditor}
               onDelete={handleDelete} deleting={deleting}
@@ -669,7 +669,7 @@ export default function GenerationsPage() {
             />
             <Section
               title="Edits" subtitle="Upscaled, AI-edited, and transformed images"
-              icon="✨" accentColor="#6366F1"
+              icon="✨" accentColor="var(--accent)"
               items={edits}
               onPreview={setPreviewItem} onOpenInEditor={handleOpenInEditor}
               onDelete={handleDelete} deleting={deleting}

@@ -48,10 +48,10 @@ const FREE_TOOL_LINKS: { id: string; icon: string; title: string; href: string }
 // each page — either a colored file badge (text) or a white icon card (emoji).
 type DecoBadge = { text?: string; emoji?: string; color?: string; bg?: string }
 const FILE_BLUE = { color: '#2563EB', bg: 'linear-gradient(135deg,#DBEAFE,#BFDBFE)' }
-const FILE_GREEN = { color: '#16A34A', bg: 'linear-gradient(135deg,#DCFCE7,#BBF7D0)' }
-const FILE_AMBER = { color: '#D97706', bg: 'linear-gradient(135deg,#FEF3C7,#FDE68A)' }
-const FILE_VIOLET = { color: '#7C3AED', bg: 'linear-gradient(135deg,#EDE9FE,#DDD6FE)' }
-const FILE_RED = { color: '#DC2626', bg: 'linear-gradient(135deg,#FEE2E2,#FECACA)' }
+const FILE_GREEN = { color: 'var(--success)', bg: 'linear-gradient(135deg,#DCFCE7,var(--success-soft))' }
+const FILE_AMBER = { color: 'var(--warn)', bg: 'linear-gradient(135deg,#FEF3C7,#FDE68A)' }
+const FILE_VIOLET = { color: 'var(--accent-2)', bg: 'linear-gradient(135deg,var(--accent-soft),#DDD6FE)' }
+const FILE_RED = { color: 'var(--danger)', bg: 'linear-gradient(135deg,var(--danger-soft),var(--danger-soft))' }
 
 const PAGE_DECOR: Record<string, [DecoBadge, DecoBadge]> = {
   upscale: [{ text: 'HD', ...FILE_BLUE }, { text: '4K', ...FILE_VIOLET }],
@@ -72,7 +72,7 @@ const DEFAULT_DECOR: [DecoBadge, DecoBadge] = [{ text: 'JPG', ...FILE_BLUE }, { 
 function DecoCard({ badge }: { badge: DecoBadge }) {
   if (badge.emoji) {
     return (
-      <div style={{ width: 60, height: 60, borderRadius: 16, background: '#fff', boxShadow: '0 8px 24px rgba(99,102,241,0.16)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26 }}>
+      <div style={{ width: 60, height: 60, borderRadius: 16, background: 'var(--surface)', boxShadow: '0 8px 24px rgba(99,102,241,0.16)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26 }}>
         {badge.emoji}
       </div>
     )
@@ -289,58 +289,58 @@ const PAGE_SEO_CONTENT: Record<string, { heading: string; body: string }[]> = {
 // Gradient hero image previews per page
 const PAGE_VISUALS: Record<string, { before: string; after: string; label: string }> = {
   upscale: {
-    before: 'linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%)',
-    after: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+    before: 'linear-gradient(135deg, var(--border) 0%, var(--border) 100%)',
+    after: 'linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%)',
     label: 'Enhanced Resolution',
   },
   'remove-bg': {
-    before: 'linear-gradient(135deg, #fde68a 0%, #fca5a5 100%)',
-    after: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+    before: 'linear-gradient(135deg, #fde68a 0%, var(--danger-soft) 100%)',
+    after: 'linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%)',
     label: 'Clean Cutout',
   },
   headshot: {
-    before: 'linear-gradient(135deg, #d1fae5 0%, #6ee7b7 100%)',
-    after: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+    before: 'linear-gradient(135deg, var(--success-soft) 0%, #6ee7b7 100%)',
+    after: 'linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%)',
     label: 'Pro Headshot',
   },
   'ai-editor': {
     before: 'linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%)',
-    after: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+    after: 'linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%)',
     label: 'AI Edited',
   },
   'compress-image': {
-    before: 'linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)',
-    after: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+    before: 'linear-gradient(135deg, var(--danger-soft) 0%, var(--danger-soft) 100%)',
+    after: 'linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%)',
     label: 'Smaller File',
   },
   'convert-image': {
     before: 'linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)',
-    after: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+    after: 'linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%)',
     label: 'Converted',
   },
   'crop-image': {
-    before: 'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)',
-    after: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+    before: 'linear-gradient(135deg, #dcfce7 0%, var(--success-soft) 100%)',
+    after: 'linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%)',
     label: 'Cropped',
   },
   'rotate-image': {
     before: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)',
-    after: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+    after: 'linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%)',
     label: 'Rotated',
   },
   'image-to-pdf': {
-    before: 'linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%)',
-    after: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+    before: 'linear-gradient(135deg, var(--accent-soft) 0%, var(--accent-border) 100%)',
+    after: 'linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%)',
     label: 'PDF Ready',
   },
   'watermark-image': {
-    before: 'linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%)',
-    after: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+    before: 'linear-gradient(135deg, var(--accent-soft) 0%, #ddd6fe 100%)',
+    after: 'linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%)',
     label: 'Watermarked',
   },
   'meme-generator': {
     before: 'linear-gradient(135deg, #fef9c3 0%, #fde68a 100%)',
-    after: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+    after: 'linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%)',
     label: 'Meme Ready',
   },
 }
@@ -377,7 +377,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
   const h1Last = h1Words.length > 1 ? h1Words[h1Words.length - 1] : ''
   const h1First = h1Words.slice(0, h1Words.length - 1).join(' ')
   const gradientText: React.CSSProperties = {
-    background: 'linear-gradient(120deg,#6366F1,#8B5CF6)',
+    background: 'linear-gradient(120deg,var(--accent),var(--accent-2))',
     WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent', color: 'transparent',
   }
 
@@ -443,7 +443,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
   }
 
   return (
-    <div ref={rootRef} style={{ fontFamily: 'system-ui, -apple-system, sans-serif', color: '#111827', background: '#fff' }}>
+    <div ref={rootRef} style={{ fontFamily: 'system-ui, -apple-system, sans-serif', color: 'var(--text)', background: 'var(--surface)' }}>
 
       {/* Structured data for rich results */}
       {faqLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />}
@@ -472,7 +472,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
       `}</style>
 
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
-      <section style={{ position: 'relative', overflow: 'hidden', background: 'linear-gradient(160deg, #F5F5FF 0%, #fff 50%, #F0FDF4 100%)', padding: '80px 24px 72px', textAlign: 'center' }}>
+      <section style={{ position: 'relative', overflow: 'hidden', background: 'linear-gradient(160deg, var(--surface-2) 0%, var(--surface) 50%, var(--success-soft) 100%)', padding: '80px 24px 72px', textAlign: 'center' }}>
 
         {/* Floating decorations — themed per tool */}
         <div className="jpt-hero-deco" style={{ position: 'absolute', left: '13%', top: 300, transform: 'rotate(-12deg)', pointerEvents: 'none' }}>
@@ -482,21 +482,21 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
           <DecoCard badge={decor[1]} />
         </div>
         <div className="jpt-hero-deco" style={{ position: 'absolute', left: '20%', top: 210, fontSize: 20, color: '#C4B5FD', animationDelay: '0.6s', pointerEvents: 'none' }}>✦</div>
-        <div className="jpt-hero-deco" style={{ position: 'absolute', right: '19%', top: 200, fontSize: 16, color: '#A5B4FC', animationDelay: '2s', pointerEvents: 'none' }}>✦</div>
-        <div className="jpt-hero-deco" style={{ position: 'absolute', left: '17%', top: 430, width: 14, height: 14, borderRadius: '50%', border: '2px solid #C7D2FE', animationDelay: '1.6s', pointerEvents: 'none' }} />
-        <div className="jpt-hero-deco" style={{ position: 'absolute', right: '22%', top: 420, width: 22, height: 22, borderRadius: '50%', border: '2px solid #BBF7D0', animationDelay: '0.9s', pointerEvents: 'none' }} />
-        <div className="jpt-hero-deco" style={{ position: 'absolute', right: '15%', top: 250, fontSize: 22, color: '#8B5CF6', animationDelay: '2.4s', pointerEvents: 'none' }}>✓</div>
+        <div className="jpt-hero-deco" style={{ position: 'absolute', right: '19%', top: 200, fontSize: 16, color: 'var(--accent)', animationDelay: '2s', pointerEvents: 'none' }}>✦</div>
+        <div className="jpt-hero-deco" style={{ position: 'absolute', left: '17%', top: 430, width: 14, height: 14, borderRadius: '50%', border: '2px solid var(--accent-border)', animationDelay: '1.6s', pointerEvents: 'none' }} />
+        <div className="jpt-hero-deco" style={{ position: 'absolute', right: '22%', top: 420, width: 22, height: 22, borderRadius: '50%', border: '2px solid var(--success-soft)', animationDelay: '0.9s', pointerEvents: 'none' }} />
+        <div className="jpt-hero-deco" style={{ position: 'absolute', right: '15%', top: 250, fontSize: 22, color: 'var(--accent-2)', animationDelay: '2.4s', pointerEvents: 'none' }}>✓</div>
 
         <div style={{ position: 'relative', maxWidth: 780, margin: '0 auto' }}>
           {/* Badge */}
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#EEF2FF', color: '#6366F1', fontWeight: 700, fontSize: 12, borderRadius: 20, padding: '6px 14px', marginBottom: 28, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'var(--accent-soft)', color: 'var(--accent)', fontWeight: 700, fontSize: 12, borderRadius: 20, padding: '6px 14px', marginBottom: 28, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
             ☁️ JPT AI
           </div>
 
-          <h1 style={{ fontSize: 'clamp(2.2rem, 5vw, 3.6rem)', fontWeight: 900, color: '#0F172A', lineHeight: 1.1, letterSpacing: '-0.03em', margin: '0 0 20px' }}>
+          <h1 style={{ fontSize: 'clamp(2.2rem, 5vw, 3.6rem)', fontWeight: 900, color: 'var(--text)', lineHeight: 1.1, letterSpacing: '-0.03em', margin: '0 0 20px' }}>
             {h1Last ? (<>{h1First} <span style={gradientText}>{h1Last}</span></>) : (<span style={gradientText}>{config.h1}</span>)}
           </h1>
-          <p style={{ fontSize: 'clamp(1rem, 2vw, 1.2rem)', color: '#4B5563', lineHeight: 1.7, maxWidth: 560, margin: '0 auto 36px' }}>
+          <p style={{ fontSize: 'clamp(1rem, 2vw, 1.2rem)', color: 'var(--text-muted)', lineHeight: 1.7, maxWidth: 560, margin: '0 auto 36px' }}>
             {config.subtitle}
           </p>
 
@@ -512,9 +512,9 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
               onDrop={handleDrop}
               style={{
                 maxWidth: 540, margin: '0 auto',
-                border: `2px dashed ${isDragging ? '#6366F1' : '#C4C9F0'}`,
+                border: `2px dashed ${isDragging ? 'var(--accent)' : '#C4C9F0'}`,
                 borderRadius: 20,
-                background: isDragging ? '#EEF2FF' : '#FAFBFF',
+                background: isDragging ? 'var(--accent-soft)' : 'var(--surface-2)',
                 padding: '36px 32px 28px',
                 cursor: 'pointer',
                 transition: 'border-color 0.18s, background 0.18s',
@@ -523,14 +523,14 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
               onClick={() => fileRef.current?.click()}
             >
               {/* Upload icon */}
-              <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'linear-gradient(135deg,#EEF2FF,#E0E7FF)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', fontSize: 24 }}>
+              <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'linear-gradient(135deg,var(--accent-soft),var(--accent-soft))', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', fontSize: 24 }}>
                 📤
               </div>
 
-              <div style={{ fontSize: 15, fontWeight: 700, color: '#111827', marginBottom: 6 }}>
+              <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)', marginBottom: 6 }}>
                 Drop your image here
               </div>
-              <div style={{ fontSize: 13, color: '#9CA3AF', marginBottom: 22 }}>
+              <div style={{ fontSize: 13, color: 'var(--text-faint)', marginBottom: 22 }}>
                 or click to browse from your device
               </div>
 
@@ -539,7 +539,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
                 onClick={e => { e.stopPropagation(); fileRef.current?.click() }}
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 8,
-                  background: 'linear-gradient(135deg,#6366F1,#8B5CF6)', color: '#fff',
+                  background: 'linear-gradient(135deg,var(--accent),var(--accent-2))', color: '#fff',
                   fontWeight: 800, fontSize: 15, padding: '13px 32px', borderRadius: 12,
                   border: 'none', cursor: 'pointer', boxShadow: '0 6px 22px rgba(99,102,241,0.38)',
                   letterSpacing: '-0.01em', marginBottom: 16,
@@ -549,19 +549,19 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
               </button>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, justifyContent: 'center', marginBottom: 14 }}>
-                <div style={{ height: 1, flex: 1, background: '#E5E7EB' }} />
-                <span style={{ fontSize: 12, color: '#CBD5E1', fontWeight: 600 }}>or drop image anywhere</span>
-                <div style={{ height: 1, flex: 1, background: '#E5E7EB' }} />
+                <div style={{ height: 1, flex: 1, background: 'var(--surface-2)' }} />
+                <span style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 600 }}>or drop image anywhere</span>
+                <div style={{ height: 1, flex: 1, background: 'var(--surface-2)' }} />
               </div>
 
               <div style={{ fontSize: 11, color: '#C4C8D4', lineHeight: 1.6 }}>
                 Supports JPG · JPEG · PNG · WEBP · up to 16 MB
               </div>
-              <div style={{ fontSize: 11, color: '#D1D5DB', marginTop: 10 }}>
+              <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 10 }}>
                 By uploading you agree to our{' '}
-                <a href="/terms" onClick={e => e.stopPropagation()} style={{ color: '#9CA3AF', textDecoration: 'underline' }}>Terms of Use</a>
+                <a href="/terms" onClick={e => e.stopPropagation()} style={{ color: 'var(--text-faint)', textDecoration: 'underline' }}>Terms of Use</a>
                 {' '}and{' '}
-                <a href="/privacy" onClick={e => e.stopPropagation()} style={{ color: '#9CA3AF', textDecoration: 'underline' }}>Privacy Policy</a>
+                <a href="/privacy" onClick={e => e.stopPropagation()} style={{ color: 'var(--text-faint)', textDecoration: 'underline' }}>Privacy Policy</a>
               </div>
             </div>
           ) : (
@@ -569,11 +569,11 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
             <>
               <button
                 onClick={handleCTAClick}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg, #6366F1, #8B5CF6)', color: '#fff', fontWeight: 800, fontSize: 16, padding: '16px 36px', borderRadius: 14, border: 'none', cursor: 'pointer', boxShadow: '0 8px 30px rgba(99,102,241,0.4)', letterSpacing: '-0.01em' }}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg, var(--accent), var(--accent-2))', color: '#fff', fontWeight: 800, fontSize: 16, padding: '16px 36px', borderRadius: 14, border: 'none', cursor: 'pointer', boxShadow: '0 8px 30px rgba(99,102,241,0.4)', letterSpacing: '-0.01em' }}
               >
                 {config.cta_text || 'Try It Free'} →
               </button>
-              <div style={{ fontSize: 13, color: '#9CA3AF', marginTop: 12 }}>
+              <div style={{ fontSize: 13, color: 'var(--text-faint)', marginTop: 12 }}>
                 No credit card required · 5 free trials included
               </div>
             </>
@@ -588,7 +588,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
               <img src={beforeAfter.before} alt={`${config.h1} — before (low resolution photo)`} loading="eager" decoding="async" style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(1.5px)', imageRendering: 'pixelated' }} />
               <span style={{ position: 'absolute', bottom: 14, left: 14, padding: '6px 14px', background: 'rgba(0,0,0,0.6)', color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', borderRadius: 8 }}>Low-Res Input</span>
             </div>
-            <div style={{ width: 3, background: '#fff', flexShrink: 0 }} />
+            <div style={{ width: 3, background: 'var(--surface)', flexShrink: 0 }} />
             <div style={{ flex: 1, position: 'relative' }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={beforeAfter.after} alt={`${config.h1} — after (free 4K enhanced result, no watermark)`} loading="eager" fetchPriority="high" decoding="async" style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -596,7 +596,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
             </div>
           </div>
         ) : heroImg ? (
-          <div style={{ position: 'relative', maxWidth: 940, margin: '56px auto 0', borderRadius: 24, overflow: 'hidden', background: '#fff', padding: 10, boxShadow: '0 24px 80px rgba(99,102,241,0.16)', border: '1px solid #EEF0FF' }}>
+          <div style={{ position: 'relative', maxWidth: 940, margin: '56px auto 0', borderRadius: 24, overflow: 'hidden', background: 'var(--surface)', padding: 10, boxShadow: '0 24px 80px rgba(99,102,241,0.16)', border: '1px solid var(--accent-soft)' }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={heroImg} alt={`${config.h1} — free online tool, no watermark (${visual.label})`} loading="eager" fetchPriority="high" decoding="async" width={1200} height={750} style={{ display: 'block', width: '100%', height: 'auto', borderRadius: 16 }} />
           </div>
@@ -616,9 +616,9 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
       </section>
 
       {/* ── "PERFECT FOR" CHIP BAR ───────────────────────────────────────── */}
-      <section style={{ background: '#fff', padding: '30px 24px 10px' }}>
+      <section style={{ background: 'var(--surface)', padding: '30px 24px 10px' }}>
         <div style={{ maxWidth: 1000, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, flexWrap: 'wrap' }}>
-          <span style={{ fontSize: 14, fontWeight: 800, color: '#0F172A', marginRight: 4 }}>Perfect for</span>
+          <span style={{ fontSize: 14, fontWeight: 800, color: 'var(--text)', marginRight: 4 }}>Perfect for</span>
           {({
             upscale: [
               { icon: '🔍', label: '2× & 4× Super-Resolution' },
@@ -698,9 +698,9 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
               { icon: '⚡', label: 'Instant, Unlimited & Free' },
             ],
           } as Record<string, { icon: string; label: string }[]>)[pageId]?.map(item => (
-            <div key={item.label} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#F5F6FB', border: '1px solid #EAECF5', borderRadius: 999, padding: '8px 14px' }}>
+            <div key={item.label} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 999, padding: '8px 14px' }}>
               <span style={{ fontSize: 15 }}>{item.icon}</span>
-              <span style={{ fontSize: 12.5, fontWeight: 700, color: '#475569', whiteSpace: 'nowrap' }}>{item.label}</span>
+              <span style={{ fontSize: 12.5, fontWeight: 700, color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>{item.label}</span>
             </div>
           ))}
         </div>
@@ -708,20 +708,20 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
 
       {/* ── FEATURES ─────────────────────────────────────────────────────── */}
       {config.features?.length > 0 && (
-        <section style={{ padding: '88px 24px', background: '#fff' }}>
+        <section style={{ padding: '88px 24px', background: 'var(--surface)' }}>
           <div style={{ maxWidth: 1100, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 56 }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: '#6366F1', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>Features</div>
-              <h2 style={{ fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', fontWeight: 900, color: '#0F172A', margin: 0, letterSpacing: '-0.02em' }}>Everything you need, nothing you don&apos;t</h2>
+              <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>Features</div>
+              <h2 style={{ fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', fontWeight: 900, color: 'var(--text)', margin: 0, letterSpacing: '-0.02em' }}>Everything you need, nothing you don&apos;t</h2>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 20 }}>
               {config.features.map((f, i) => (
-                <div key={i} style={{ background: '#F9FAFB', border: '1.5px solid #F3F4F6', borderRadius: 20, padding: '28px 24px', transition: 'transform 0.2s, box-shadow 0.2s' }}
+                <div key={i} style={{ background: 'var(--surface-2)', border: '1.5px solid var(--border)', borderRadius: 20, padding: '28px 24px', transition: 'transform 0.2s, box-shadow 0.2s' }}
                   onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = '0 8px 32px rgba(99,102,241,0.12)'; (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-2px)'; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = 'none'; (e.currentTarget as HTMLDivElement).style.transform = 'none'; }}>
-                  <div style={{ width: 52, height: 52, background: 'linear-gradient(135deg, #EEF2FF, #E0E7FF)', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, marginBottom: 16 }}>{f.icon}</div>
-                  <h3 style={{ fontSize: 16, fontWeight: 800, color: '#111827', margin: '0 0 8px' }}>{f.title}</h3>
-                  <p style={{ fontSize: 14, color: '#6B7280', lineHeight: 1.6, margin: 0 }}>{f.desc}</p>
+                  <div style={{ width: 52, height: 52, background: 'linear-gradient(135deg, var(--accent-soft), var(--accent-soft))', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, marginBottom: 16 }}>{f.icon}</div>
+                  <h3 style={{ fontSize: 16, fontWeight: 800, color: 'var(--text)', margin: '0 0 8px' }}>{f.title}</h3>
+                  <p style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>{f.desc}</p>
                 </div>
               ))}
             </div>
@@ -730,11 +730,11 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
       )}
 
       {/* ── HOW IT WORKS ─────────────────────────────────────────────────── */}
-      <section style={{ padding: '88px 24px', background: 'linear-gradient(160deg, #F5F5FF 0%, #EEF2FF 100%)' }}>
+      <section style={{ padding: '88px 24px', background: 'linear-gradient(160deg, var(--surface-2) 0%, var(--accent-soft) 100%)' }}>
         <div style={{ maxWidth: 960, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
-            <div style={{ fontSize: 12, fontWeight: 700, color: '#6366F1', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>How It Works</div>
-            <h2 style={{ fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', fontWeight: 900, color: '#0F172A', margin: 0, letterSpacing: '-0.02em' }}>Three steps, seconds to complete</h2>
+            <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>How It Works</div>
+            <h2 style={{ fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', fontWeight: 900, color: 'var(--text)', margin: 0, letterSpacing: '-0.02em' }}>Three steps, seconds to complete</h2>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 32, position: 'relative' }}>
             {HOW_IT_WORKS.map((step, i) => (
@@ -742,11 +742,11 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
                 {i < HOW_IT_WORKS.length - 1 && (
                   <div style={{ display: 'none' /* hidden on mobile */ }} />
                 )}
-                <div style={{ width: 72, height: 72, background: '#fff', border: '2px solid #E0E7FF', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', boxShadow: '0 4px 20px rgba(99,102,241,0.12)' }}>
-                  <span style={{ fontSize: 22, fontWeight: 900, color: '#6366F1', fontVariantNumeric: 'tabular-nums' }}>{step.step}</span>
+                <div style={{ width: 72, height: 72, background: 'var(--surface)', border: '2px solid var(--accent-soft)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', boxShadow: '0 4px 20px rgba(99,102,241,0.12)' }}>
+                  <span style={{ fontSize: 22, fontWeight: 900, color: 'var(--accent)', fontVariantNumeric: 'tabular-nums' }}>{step.step}</span>
                 </div>
-                <h3 style={{ fontSize: 17, fontWeight: 800, color: '#111827', margin: '0 0 10px' }}>{step.title}</h3>
-                <p style={{ fontSize: 14, color: '#6B7280', lineHeight: 1.7, margin: 0 }}>{step.desc}</p>
+                <h3 style={{ fontSize: 17, fontWeight: 800, color: 'var(--text)', margin: '0 0 10px' }}>{step.title}</h3>
+                <p style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.7, margin: 0 }}>{step.desc}</p>
               </div>
             ))}
           </div>
@@ -754,20 +754,20 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
       </section>
 
       {/* ── UPLOAD CTA SECTION ───────────────────────────────────────────── */}
-      <section style={{ padding: '88px 24px', background: '#fff' }}>
+      <section style={{ padding: '88px 24px', background: 'var(--surface)' }}>
         <div style={{ maxWidth: 760, margin: '0 auto' }}>
-          <div style={{ background: '#0F172A', borderRadius: 28, padding: '56px 48px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ background: 'var(--bg-elevated)', borderRadius: 28, padding: '56px 48px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', top: -60, right: -60, width: 240, height: 240, background: 'radial-gradient(circle, rgba(99,102,241,0.3) 0%, transparent 70%)', pointerEvents: 'none' }} />
             <div style={{ position: 'absolute', bottom: -40, left: -40, width: 180, height: 180, background: 'radial-gradient(circle, rgba(139,92,246,0.3) 0%, transparent 70%)', pointerEvents: 'none' }} />
             <div style={{ position: 'relative' }}>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(99,102,241,0.25)', color: '#A5B4FC', fontWeight: 700, fontSize: 12, borderRadius: 20, padding: '6px 14px', marginBottom: 20, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Free to try</div>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(99,102,241,0.25)', color: 'var(--accent)', fontWeight: 700, fontSize: 12, borderRadius: 20, padding: '6px 14px', marginBottom: 20, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Free to try</div>
               <h2 style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', fontWeight: 900, color: '#fff', margin: '0 0 14px', letterSpacing: '-0.02em' }}>
                 Ready to transform your images?
               </h2>
-              <p style={{ fontSize: 16, color: '#94A3B8', margin: '0 0 32px' }}>100% free · No sign-up required · No watermark.</p>
+              <p style={{ fontSize: 16, color: 'var(--text-faint)', margin: '0 0 32px' }}>100% free · No sign-up required · No watermark.</p>
               <a
                 href={toolHref}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg, #6366F1, #8B5CF6)', color: '#fff', fontWeight: 800, fontSize: 16, padding: '16px 40px', borderRadius: 14, textDecoration: 'none', boxShadow: '0 8px 30px rgba(99,102,241,0.5)' }}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg, var(--accent), var(--accent-2))', color: '#fff', fontWeight: 800, fontSize: 16, padding: '16px 40px', borderRadius: 14, textDecoration: 'none', boxShadow: '0 8px 30px rgba(99,102,241,0.5)' }}
               >
                 {config.cta_text || 'Try It Free'} →
               </a>
@@ -778,21 +778,21 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
 
       {/* ── Use Cases ────────────────────────────────────────────────────── */}
       {PAGE_USE_CASES[pageId] && (
-        <section style={{ padding: '80px 24px', background: '#fff' }}>
+        <section style={{ padding: '80px 24px', background: 'var(--surface)' }}>
           <div style={{ maxWidth: 1100, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 48 }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: '#6366F1', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>Use Cases</div>
-              <h2 style={{ fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', fontWeight: 900, color: '#0F172A', margin: 0, letterSpacing: '-0.02em' }}>Built for every creative workflow</h2>
+              <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>Use Cases</div>
+              <h2 style={{ fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', fontWeight: 900, color: 'var(--text)', margin: 0, letterSpacing: '-0.02em' }}>Built for every creative workflow</h2>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 20 }}>
               {PAGE_USE_CASES[pageId].map(u => (
-                <div key={u.title} style={{ background: '#F7F8FC', borderRadius: 16, padding: '24px 22px', border: '1px solid #EAECF0' }}>
+                <div key={u.title} style={{ background: 'var(--surface-2)', borderRadius: 16, padding: '24px 22px', border: '1px solid var(--border)' }}>
                   <div style={{ fontSize: 28, marginBottom: 10 }}>{u.icon}</div>
-                  <div style={{ fontSize: 15, fontWeight: 800, color: '#111827', marginBottom: 6 }}>{u.title}</div>
+                  <div style={{ fontSize: 15, fontWeight: 800, color: 'var(--text)', marginBottom: 6 }}>{u.title}</div>
                   {u.stat && (
-                    <div style={{ display: 'inline-block', background: '#EEF2FF', color: '#6366F1', fontSize: 11, fontWeight: 800, borderRadius: 20, padding: '3px 10px', marginBottom: 8 }}>📈 {u.stat}</div>
+                    <div style={{ display: 'inline-block', background: 'var(--accent-soft)', color: 'var(--accent)', fontSize: 11, fontWeight: 800, borderRadius: 20, padding: '3px 10px', marginBottom: 8 }}>📈 {u.stat}</div>
                   )}
-                  <p style={{ margin: 0, fontSize: 13, color: '#6B7280', lineHeight: 1.65 }}>{u.desc}</p>
+                  <p style={{ margin: 0, fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.65 }}>{u.desc}</p>
                 </div>
               ))}
             </div>
@@ -802,24 +802,24 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
 
       {/* ── Testimonials ─────────────────────────────────────────────────── */}
       {PAGE_TESTIMONIALS[pageId] && (
-        <section style={{ padding: '80px 24px', background: 'linear-gradient(160deg, #F5F5FF 0%, #EEF2FF 100%)' }}>
+        <section style={{ padding: '80px 24px', background: 'linear-gradient(160deg, var(--surface-2) 0%, var(--accent-soft) 100%)' }}>
           <div style={{ maxWidth: 1000, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 48 }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: '#6366F1', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>Testimonials</div>
-              <h2 style={{ fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', fontWeight: 900, color: '#0F172A', margin: 0, letterSpacing: '-0.02em' }}>Loved by creators & businesses</h2>
+              <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>Testimonials</div>
+              <h2 style={{ fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', fontWeight: 900, color: 'var(--text)', margin: 0, letterSpacing: '-0.02em' }}>Loved by creators & businesses</h2>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
               {PAGE_TESTIMONIALS[pageId].map(t => (
-                <div key={t.name} style={{ background: '#fff', borderRadius: 16, padding: '24px 22px', border: '1px solid #E5E7EF', boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}>
+                <div key={t.name} style={{ background: 'var(--surface)', borderRadius: 16, padding: '24px 22px', border: '1px solid var(--border)', boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}>
                   <div style={{ display: 'flex', gap: 3, marginBottom: 14 }}>
-                    {Array.from({ length: t.stars }).map((_, i) => <span key={i} style={{ color: '#F59E0B', fontSize: 16 }}>★</span>)}
+                    {Array.from({ length: t.stars }).map((_, i) => <span key={i} style={{ color: 'var(--warn)', fontSize: 16 }}>★</span>)}
                   </div>
-                  <p style={{ margin: '0 0 18px', fontSize: 14, color: '#374151', lineHeight: 1.7, fontStyle: 'italic' }}>&ldquo;{t.quote}&rdquo;</p>
+                  <p style={{ margin: '0 0 18px', fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.7, fontStyle: 'italic' }}>&ldquo;{t.quote}&rdquo;</p>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'linear-gradient(135deg, #6366F1, #8B5CF6)', color: '#fff', fontSize: 14, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{t.avatar}</div>
+                    <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'linear-gradient(135deg, var(--accent), var(--accent-2))', color: '#fff', fontSize: 14, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{t.avatar}</div>
                     <div>
-                      <div style={{ fontSize: 14, fontWeight: 800, color: '#111' }}>{t.name}</div>
-                      <div style={{ fontSize: 12, color: '#6B7280' }}>{t.role}</div>
+                      <div style={{ fontSize: 14, fontWeight: 800, color: 'var(--text)' }}>{t.name}</div>
+                      <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{t.role}</div>
                     </div>
                   </div>
                 </div>
@@ -835,35 +835,35 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
         const alt1 = rows[0].alt1name
         const alt2 = rows[0].alt2name
         return (
-          <section style={{ padding: '80px 24px', background: '#fff' }}>
+          <section style={{ padding: '80px 24px', background: 'var(--surface)' }}>
             <div style={{ maxWidth: 860, margin: '0 auto' }}>
               <div style={{ textAlign: 'center', marginBottom: 48 }}>
-                <div style={{ fontSize: 12, fontWeight: 700, color: '#6366F1', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>Comparison</div>
-                <h2 style={{ fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', fontWeight: 900, color: '#0F172A', margin: '0 0 12px', letterSpacing: '-0.02em' }}>JPT AI vs the alternatives</h2>
-                <p style={{ fontSize: 16, color: '#6B7280', margin: 0 }}>One tool. Everything included. No hidden paywalls.</p>
+                <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>Comparison</div>
+                <h2 style={{ fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', fontWeight: 900, color: 'var(--text)', margin: '0 0 12px', letterSpacing: '-0.02em' }}>JPT AI vs the alternatives</h2>
+                <p style={{ fontSize: 16, color: 'var(--text-muted)', margin: 0 }}>One tool. Everything included. No hidden paywalls.</p>
               </div>
               <div style={{ overflowX: 'auto' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
                   <thead>
-                    <tr style={{ borderBottom: '2px solid #E5E7EB' }}>
-                      <th style={{ textAlign: 'left', padding: '12px 16px', color: '#6B7280', fontWeight: 700, fontSize: 13 }}>Feature</th>
-                      <th style={{ textAlign: 'center', padding: '12px 16px', color: '#6366F1', fontWeight: 900, fontSize: 13, background: '#EEF2FF' }}>✦ JPT AI</th>
-                      <th style={{ textAlign: 'center', padding: '12px 16px', color: '#6B7280', fontWeight: 700, fontSize: 13 }}>{alt1}</th>
-                      <th style={{ textAlign: 'center', padding: '12px 16px', color: '#6B7280', fontWeight: 700, fontSize: 13 }}>{alt2}</th>
+                    <tr style={{ borderBottom: '2px solid var(--border)' }}>
+                      <th style={{ textAlign: 'left', padding: '12px 16px', color: 'var(--text-muted)', fontWeight: 700, fontSize: 13 }}>Feature</th>
+                      <th style={{ textAlign: 'center', padding: '12px 16px', color: 'var(--accent)', fontWeight: 900, fontSize: 13, background: 'var(--accent-soft)' }}>✦ JPT AI</th>
+                      <th style={{ textAlign: 'center', padding: '12px 16px', color: 'var(--text-muted)', fontWeight: 700, fontSize: 13 }}>{alt1}</th>
+                      <th style={{ textAlign: 'center', padding: '12px 16px', color: 'var(--text-muted)', fontWeight: 700, fontSize: 13 }}>{alt2}</th>
                     </tr>
                   </thead>
                   <tbody>
                     {rows.map((row, i) => (
-                      <tr key={row.feature} style={{ borderBottom: '1px solid #F3F4F6', background: i % 2 === 0 ? '#fff' : '#FAFAFA' }}>
-                        <td style={{ padding: '12px 16px', color: '#374151', fontWeight: 500 }}>{row.feature}</td>
-                        <td style={{ textAlign: 'center', padding: '12px 16px', background: '#EEF2FF' }}>
-                          <span style={{ color: row.jpt ? '#10B981' : '#EF4444', fontSize: 18, fontWeight: 900 }}>{row.jpt ? '✓' : '✗'}</span>
+                      <tr key={row.feature} style={{ borderBottom: '1px solid var(--border)', background: i % 2 === 0 ? 'var(--surface-3)' : 'var(--surface-2)' }}>
+                        <td style={{ padding: '12px 16px', color: 'var(--text-muted)', fontWeight: 500 }}>{row.feature}</td>
+                        <td style={{ textAlign: 'center', padding: '12px 16px', background: 'var(--accent-soft)' }}>
+                          <span style={{ color: row.jpt ? 'var(--success)' : 'var(--danger)', fontSize: 18, fontWeight: 900 }}>{row.jpt ? '✓' : '✗'}</span>
                         </td>
                         <td style={{ textAlign: 'center', padding: '12px 16px' }}>
-                          <span style={{ color: row.alt1 ? '#10B981' : '#EF4444', fontSize: 18, fontWeight: 900 }}>{row.alt1 ? '✓' : '✗'}</span>
+                          <span style={{ color: row.alt1 ? 'var(--success)' : 'var(--danger)', fontSize: 18, fontWeight: 900 }}>{row.alt1 ? '✓' : '✗'}</span>
                         </td>
                         <td style={{ textAlign: 'center', padding: '12px 16px' }}>
-                          <span style={{ color: row.alt2 ? '#10B981' : '#EF4444', fontSize: 18, fontWeight: 900 }}>{row.alt2 ? '✓' : '✗'}</span>
+                          <span style={{ color: row.alt2 ? 'var(--success)' : 'var(--danger)', fontSize: 18, fontWeight: 900 }}>{row.alt2 ? '✓' : '✗'}</span>
                         </td>
                       </tr>
                     ))}
@@ -877,12 +877,12 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
 
       {/* ── SEO Content ──────────────────────────────────────────────────── */}
       {PAGE_SEO_CONTENT[pageId] && (
-        <section style={{ padding: '80px 24px', background: '#F9FAFB' }}>
+        <section style={{ padding: '80px 24px', background: 'var(--surface-2)' }}>
           <div style={{ maxWidth: 860, margin: '0 auto' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: 36, fontSize: 15, color: '#4B5563', lineHeight: 1.8 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: 36, fontSize: 15, color: 'var(--text-muted)', lineHeight: 1.8 }}>
               {PAGE_SEO_CONTENT[pageId].map(block => (
                 <div key={block.heading}>
-                  <h3 style={{ fontSize: 17, fontWeight: 800, color: '#111827', marginBottom: 10, marginTop: 0 }}>{block.heading}</h3>
+                  <h3 style={{ fontSize: 17, fontWeight: 800, color: 'var(--text)', marginBottom: 10, marginTop: 0 }}>{block.heading}</h3>
                   <p style={{ margin: 0 }}>{block.body}</p>
                 </div>
               ))}
@@ -893,22 +893,22 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
 
       {/* ── More Free Tools (cross-link hub) ─────────────────────────────── */}
       {FREE_TOOL_LINKS.some(l => l.id === pageId) && (
-        <section style={{ padding: '72px 24px', background: 'linear-gradient(160deg, #F5F5FF 0%, #EEF2FF 100%)' }}>
+        <section style={{ padding: '72px 24px', background: 'linear-gradient(160deg, var(--surface-2) 0%, var(--accent-soft) 100%)' }}>
           <div style={{ maxWidth: 1000, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 40 }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: '#6366F1', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>More Free Tools</div>
-              <h2 style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', fontWeight: 900, color: '#0F172A', margin: '0 0 10px', letterSpacing: '-0.02em' }}>All your image tools in one place</h2>
-              <p style={{ fontSize: 16, color: '#6B7280', margin: 0 }}>100% free · No sign-up · No watermark · No install needed</p>
+              <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>More Free Tools</div>
+              <h2 style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', fontWeight: 900, color: 'var(--text)', margin: '0 0 10px', letterSpacing: '-0.02em' }}>All your image tools in one place</h2>
+              <p style={{ fontSize: 16, color: 'var(--text-muted)', margin: 0 }}>100% free · No sign-up · No watermark · No install needed</p>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 14 }}>
               {FREE_TOOL_LINKS.filter(l => l.id !== pageId).map(l => (
                 <a key={l.id} href={l.href}
-                  style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, background: '#fff', border: '1px solid #E5E7EF', borderRadius: 16, padding: '22px 16px', textDecoration: 'none', boxShadow: '0 2px 12px rgba(0,0,0,0.04)', transition: 'transform 0.18s, box-shadow 0.18s' }}
+                  style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, padding: '22px 16px', textDecoration: 'none', boxShadow: '0 2px 12px rgba(0,0,0,0.04)', transition: 'transform 0.18s, box-shadow 0.18s' }}
                   onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 8px 28px rgba(99,102,241,0.16)'; (e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(-2px)'; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 2px 12px rgba(0,0,0,0.04)'; (e.currentTarget as HTMLAnchorElement).style.transform = 'none'; }}>
                   <span style={{ fontSize: 30 }}>{l.icon}</span>
-                  <span style={{ fontSize: 14, fontWeight: 800, color: '#111827', textAlign: 'center' }}>{l.title}</span>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: '#6366F1' }}>Try free →</span>
+                  <span style={{ fontSize: 14, fontWeight: 800, color: 'var(--text)', textAlign: 'center' }}>{l.title}</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--accent)' }}>Try free →</span>
                 </a>
               ))}
             </div>
@@ -918,11 +918,11 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
 
       {/* ── FAQ ──────────────────────────────────────────────────────────── */}
       {config.faq?.length > 0 && (
-        <section style={{ padding: '0 24px 88px', background: '#fff' }}>
+        <section style={{ padding: '0 24px 88px', background: 'var(--surface)' }}>
           <div style={{ maxWidth: 720, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 48 }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: '#6366F1', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>FAQ</div>
-              <h2 style={{ fontSize: 'clamp(1.8rem, 3vw, 2.2rem)', fontWeight: 900, color: '#0F172A', margin: 0, letterSpacing: '-0.02em' }}>Frequently Asked Questions</h2>
+              <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>FAQ</div>
+              <h2 style={{ fontSize: 'clamp(1.8rem, 3vw, 2.2rem)', fontWeight: 900, color: 'var(--text)', margin: 0, letterSpacing: '-0.02em' }}>Frequently Asked Questions</h2>
             </div>
             <FAQAccordion faqs={config.faq} />
           </div>

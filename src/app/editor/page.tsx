@@ -592,7 +592,7 @@ export default function ImageEditorPage() {
         currency: orderData.currency || "INR",
         name: "JPT AI",
         description: `${planKey.charAt(0).toUpperCase() + planKey.slice(1)} Plan — ${orderData.credits} credits`,
-        theme: { color: "#6366F1" },
+        theme: { color: "var(--accent)" },
         modal: { ondismiss() { trackPaymentFailed(planKey, "cancelled_by_user"); setBuyingPlan(null); } },
         handler: async (response: { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string }) => {
           try {
@@ -1334,12 +1334,12 @@ export default function ImageEditorPage() {
   // Green "what just happened" summary + an in-panel Download button. Shown
   // inside each free tool's panel right after an operation completes.
   const resultBlock = () => toolResult && (
-    <div style={{ marginTop: 12, background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 12, padding: "12px 14px" }}>
-      <div style={{ fontSize: 13, fontWeight: 800, color: "#16A34A", display: "flex", alignItems: "center", gap: 6 }}>✓ {toolResult.title}</div>
-      {toolResult.detail && <div style={{ fontSize: 12, color: "#4B5563", marginTop: 3 }}>{toolResult.detail}</div>}
+    <div style={{ marginTop: 12, background: "var(--success-soft)", border: "1px solid var(--success-soft)", borderRadius: 12, padding: "12px 14px" }}>
+      <div style={{ fontSize: 13, fontWeight: 800, color: "var(--success)", display: "flex", alignItems: "center", gap: 6 }}>✓ {toolResult.title}</div>
+      {toolResult.detail && <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 3 }}>{toolResult.detail}</div>}
       <button
         onClick={handleDownload}
-        style={{ ...s.primaryBtn, marginTop: 10, background: "linear-gradient(135deg,#10B981,#059669)" }}
+        style={{ ...s.primaryBtn, marginTop: 10, background: "linear-gradient(135deg,var(--success),var(--success))" }}
       >
         ⬇ Download
       </button>
@@ -1536,7 +1536,7 @@ export default function ImageEditorPage() {
           )}
 
           <div style={s.pageHeaderRight}>
-            <a href="/batch-editor" style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "6px 12px", background: "#F0F0FF", color: "#6366F1", border: "1.5px solid #C7D2FE", borderRadius: 20, fontSize: 12, fontWeight: 700, textDecoration: "none", whiteSpace: "nowrap" as const }}>
+            <a href="/batch-editor" style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "6px 12px", background: "var(--accent-soft)", color: "var(--accent)", border: "1.5px solid var(--accent-border)", borderRadius: 20, fontSize: 12, fontWeight: 700, textDecoration: "none", whiteSpace: "nowrap" as const }}>
               ⚡ Batch (100 images)
             </a>
             {hasImage && working && (
@@ -1549,7 +1549,7 @@ export default function ImageEditorPage() {
                   : <span style={s.avatarFallback}>{user.name[0]}</span>}
                 <span style={s.userName}>{user.name.split(" ")[0]}</span>
                 {!PAID_FEATURES_ENABLED ? (
-                  <span style={{ ...s.creditsBadge, background: "#DCFCE7", color: "#16A34A" }}>♾️ Free</span>
+                  <span style={{ ...s.creditsBadge, background: "#DCFCE7", color: "var(--success)" }}>♾️ Free</span>
                 ) : user.plan === "free" ? (
                   <span style={{ ...s.creditsBadge, ...((user.trialsRemaining ?? 0) === 0 ? s.creditsEmpty : {}) }}>
                     🎁 {user.trialsRemaining ?? 0}
@@ -1568,13 +1568,13 @@ export default function ImageEditorPage() {
                   onClick={() => { setSignInReason("default"); setShowSignInModal(true); }}
                   title="Sign up free for unlimited edits"
                 >
-                  <span style={{ ...s.creditsBadge, background: "#EEF2FF", color: "#6366F1" }}>
+                  <span style={{ ...s.creditsBadge, background: "var(--accent-soft)", color: "var(--accent)" }}>
                     🎁 {anonLeft} free edit{anonLeft === 1 ? "" : "s"} left
                   </span>
                 </button>
               ) : (
                 <button
-                  style={{ padding: "7px 14px", background: "#6366F1", color: "#fff", border: "none", borderRadius: 20, fontSize: 12, fontWeight: 800, cursor: "pointer", whiteSpace: "nowrap" as const, boxShadow: "0 2px 8px rgba(99,102,241,0.4)" }}
+                  style={{ padding: "7px 14px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: 20, fontSize: 12, fontWeight: 800, cursor: "pointer", whiteSpace: "nowrap" as const, boxShadow: "0 2px 8px rgba(99,102,241,0.4)" }}
                   onClick={() => { setSignInReason("unlimited"); setShowSignInModal(true); }}
                 >
                   Sign up free — unlimited →
@@ -1624,23 +1624,23 @@ export default function ImageEditorPage() {
 
           {/* Saved session banner */}
           {!hasImage && savedSession && (
-            <div style={{ background: "linear-gradient(135deg,#EEF2FF,#F5F3FF)", border: "2px solid #6366F1", borderRadius: 14, padding: "20px 24px", marginBottom: 20, display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" as const }}>
+            <div style={{ background: "linear-gradient(135deg,var(--accent-soft),var(--surface-2))", border: "2px solid var(--accent)", borderRadius: 14, padding: "20px 24px", marginBottom: 20, display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" as const }}>
               <div style={{ flex: 1, minWidth: 200 }}>
-                <div style={{ fontWeight: 800, fontSize: 15, color: "#111", marginBottom: 4 }}>↩ Continue where you left off</div>
-                <div style={{ fontSize: 13, color: "#555" }}>
+                <div style={{ fontWeight: 800, fontSize: 15, color: "var(--text)", marginBottom: 4 }}>↩ Continue where you left off</div>
+                <div style={{ fontSize: 13, color: "var(--text-muted)" }}>
                   <strong>{savedSession.name}</strong> · {savedSession.w}×{savedSession.h}px · saved {Math.round((Date.now() - savedSession.ts) / 60000)}m ago
                 </div>
               </div>
               <div style={{ display: "flex", gap: 10 }}>
                 <button
                   onClick={() => restoreSession(savedSession)}
-                  style={{ padding: "10px 20px", background: "#6366F1", color: "#fff", border: "none", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer" }}
+                  style={{ padding: "10px 20px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer" }}
                 >
                   Resume Editing
                 </button>
                 <button
                   onClick={discardSession}
-                  style={{ padding: "10px 16px", background: "#fff", color: "#666", border: "1px solid #E0E0EE", borderRadius: 8, fontWeight: 600, fontSize: 14, cursor: "pointer" }}
+                  style={{ padding: "10px 16px", background: "var(--surface)", color: "var(--text-muted)", border: "1px solid var(--border)", borderRadius: 8, fontWeight: 600, fontSize: 14, cursor: "pointer" }}
                 >
                   Discard
                 </button>
@@ -1657,14 +1657,14 @@ export default function ImageEditorPage() {
               onClick={() => fileInputRef.current?.click()}
             >
               <div style={{ fontSize: 60, marginBottom: 16 }}>🖼</div>
-              <p style={s.uploadTitle}>Drop an image or <span style={{ color: "#6366F1", fontWeight: 700 }}>click to browse</span></p>
+              <p style={s.uploadTitle}>Drop an image or <span style={{ color: "var(--accent)", fontWeight: 700 }}>click to browse</span></p>
               <p style={s.uploadHint}>JPG · PNG · WEBP — choose a tool from the left</p>
               <div style={s.featureRow}>
                 {TOOLS.map((t) => <span key={t.id} style={s.featureChip}>{t.icon} {t.label}</span>)}
               </div>
               {!user && (
                 <div style={s.signInHint}>
-                  <button onClick={() => setShowSignInModal(true)} style={{ color: "#6366F1", fontWeight: 600, textDecoration: "none", background: "none", border: "none", cursor: "pointer", padding: 0 }}>Sign up free</button> to transform unlimited images — no limits on any tool
+                  <button onClick={() => setShowSignInModal(true)} style={{ color: "var(--accent)", fontWeight: 600, textDecoration: "none", background: "none", border: "none", cursor: "pointer", padding: 0 }}>Sign up free</button> to transform unlimited images — no limits on any tool
                 </div>
               )}
               {error && <div style={s.errBox}>{error}</div>}
@@ -1682,11 +1682,11 @@ export default function ImageEditorPage() {
                 <div style={{ width: "100%", maxWidth: 860 }}>
                   {/* Zoom controls */}
                   <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8, justifyContent: "flex-end" }}>
-                    {zoom > 1 && <span style={{ fontSize: 11, color: "#6366F1", fontWeight: 600 }}>Drag the ⟺ handle to compare · drag elsewhere to pan</span>}
-                    <span style={{ fontSize: 11, color: "#888", fontWeight: 600 }}>🔍 {Math.round(zoom * 100)}%</span>
-                    <button onClick={() => setZoom(z => Math.min(4, +(z + 0.25).toFixed(2)))} style={{ padding: "4px 10px", borderRadius: 6, border: "1px solid #E0E0EE", background: "#fff", cursor: "pointer", fontSize: 14, fontWeight: 700, color: "#555" }}>+</button>
-                    <button onClick={() => { setZoom(z => { const nz = Math.max(1, +(z - 0.25).toFixed(2)); if (nz === 1) { setPanX(0); setPanY(0); } return nz; }); }} style={{ padding: "4px 10px", borderRadius: 6, border: "1px solid #E0E0EE", background: "#fff", cursor: "pointer", fontSize: 14, fontWeight: 700, color: "#555" }}>−</button>
-                    {zoom > 1 && <button onClick={() => { setZoom(1); setPanX(0); setPanY(0); }} style={{ padding: "4px 10px", borderRadius: 6, border: "1px solid #E0E0EE", background: "#fff", cursor: "pointer", fontSize: 11, fontWeight: 600, color: "#6366F1" }}>Reset</button>}
+                    {zoom > 1 && <span style={{ fontSize: 11, color: "var(--accent)", fontWeight: 600 }}>Drag the ⟺ handle to compare · drag elsewhere to pan</span>}
+                    <span style={{ fontSize: 11, color: "var(--text-faint)", fontWeight: 600 }}>🔍 {Math.round(zoom * 100)}%</span>
+                    <button onClick={() => setZoom(z => Math.min(4, +(z + 0.25).toFixed(2)))} style={{ padding: "4px 10px", borderRadius: 6, border: "1px solid var(--border)", background: "var(--surface)", cursor: "pointer", fontSize: 14, fontWeight: 700, color: "var(--text-muted)" }}>+</button>
+                    <button onClick={() => { setZoom(z => { const nz = Math.max(1, +(z - 0.25).toFixed(2)); if (nz === 1) { setPanX(0); setPanY(0); } return nz; }); }} style={{ padding: "4px 10px", borderRadius: 6, border: "1px solid var(--border)", background: "var(--surface)", cursor: "pointer", fontSize: 14, fontWeight: 700, color: "var(--text-muted)" }}>−</button>
+                    {zoom > 1 && <button onClick={() => { setZoom(1); setPanX(0); setPanY(0); }} style={{ padding: "4px 10px", borderRadius: 6, border: "1px solid var(--border)", background: "var(--surface)", cursor: "pointer", fontSize: 11, fontWeight: 600, color: "var(--accent)" }}>Reset</button>}
                   </div>
                   <div
                     ref={sliderContainerRef}
@@ -1739,11 +1739,11 @@ export default function ImageEditorPage() {
                       </div>
                       {/* Divider + handle */}
                       <div
-                        style={{ position: "absolute", top: 0, bottom: 0, left: `${sliderPos}%`, width: 3, background: "#fff", boxShadow: "0 0 8px rgba(0,0,0,0.4)", transform: "translateX(-50%)", cursor: "ew-resize", zIndex: 3 }}
+                        style={{ position: "absolute", top: 0, bottom: 0, left: `${sliderPos}%`, width: 3, background: "var(--surface)", boxShadow: "0 0 8px rgba(0,0,0,0.4)", transform: "translateX(-50%)", cursor: "ew-resize", zIndex: 3 }}
                         onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); setIsDragging(true); }}
                         onTouchStart={(e) => { e.preventDefault(); setIsDragging(true); }}
                       >
-                        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 44, height: 44, borderRadius: "50%", background: "#fff", boxShadow: "0 2px 12px rgba(0,0,0,0.3)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, color: "#555" }}>⟺</div>
+                        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 44, height: 44, borderRadius: "50%", background: "var(--surface)", boxShadow: "0 2px 12px rgba(0,0,0,0.3)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, color: "var(--text-muted)" }}>⟺</div>
                       </div>
                     </div>
 
@@ -1771,7 +1771,7 @@ export default function ImageEditorPage() {
                         setWorking(prev ?? null);
                       }}>↩ Undo</button>
                     )}
-                    <button style={{ ...s.ghostBtn, color: "#EF4444", borderColor: "#FCA5A5" }} onClick={() => { setWorking(null); setEditHistory([]); setSelectedTemplate(null); setCustomBgPrompt(""); }}>⏮ Reset</button>
+                    <button style={{ ...s.ghostBtn, color: "var(--danger)", borderColor: "var(--danger-soft)" }} onClick={() => { setWorking(null); setEditHistory([]); setSelectedTemplate(null); setCustomBgPrompt(""); }}>⏮ Reset</button>
                   </div>
                 </div>
               ) : (
@@ -1788,7 +1788,7 @@ export default function ImageEditorPage() {
               <div style={{ display: "flex", justifyContent: "center", marginTop: 20, marginBottom: 8 }}>
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  style={{ display: "flex", alignItems: "center", gap: 8, padding: "11px 24px", background: "#fff", border: "2px solid #6366F1", borderRadius: 10, color: "#6366F1", fontWeight: 700, fontSize: 14, cursor: "pointer" }}
+                  style={{ display: "flex", alignItems: "center", gap: 8, padding: "11px 24px", background: "var(--surface)", border: "2px solid var(--accent)", borderRadius: 10, color: "var(--accent)", fontWeight: 700, fontSize: 14, cursor: "pointer" }}
                 >
                   🖼 Upload New Image
                 </button>
@@ -1802,7 +1802,7 @@ export default function ImageEditorPage() {
         {activeTool && hasImage && (
           <div style={isMobile ? {
             position: "fixed" as const, bottom: 0, left: 0, right: 0, zIndex: 150,
-            background: "#fff", borderRadius: "18px 18px 0 0",
+            background: "var(--surface)", borderRadius: "18px 18px 0 0",
             boxShadow: "0 -6px 32px rgba(0,0,0,0.18)",
             maxHeight: mobileSheetOpen ? "72vh" : 0,
             overflow: "hidden", transition: "max-height 0.3s ease",
@@ -1815,7 +1815,7 @@ export default function ImageEditorPage() {
                 <div style={{ flex: 1 }} />
                 <div style={{ width: 36, height: 4, borderRadius: 2, background: "#D0D0D0", cursor: "pointer" }} onClick={() => setMobileSheetOpen(false)} />
                 <div style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
-                  <button onClick={() => { setMobileSheetOpen(false); setActiveTool(null); }} style={{ background: "none", border: "none", fontSize: 20, color: "#888", cursor: "pointer", padding: "0 4px" }}>×</button>
+                  <button onClick={() => { setMobileSheetOpen(false); setActiveTool(null); }} style={{ background: "none", border: "none", fontSize: 20, color: "var(--text-faint)", cursor: "pointer", padding: "0 4px" }}>×</button>
                 </div>
               </div>
             )}
@@ -1842,12 +1842,12 @@ export default function ImageEditorPage() {
                       style={{
                         padding: "10px",
                         borderRadius: 8,
-                        border: selectedTemplate === tpl.id ? "2px solid #6366F1" : "1.5px solid #E0E0EE",
-                        background: selectedTemplate === tpl.id ? "#EEEEFF" : "#FAFAFC",
+                        border: selectedTemplate === tpl.id ? "2px solid var(--accent)" : "1.5px solid var(--border)",
+                        background: selectedTemplate === tpl.id ? "var(--border)" : "var(--surface-2)",
                         cursor: "pointer",
                         fontSize: 12,
                         fontWeight: 600,
-                        color: "#333",
+                        color: "var(--text-muted)",
                         display: "flex",
                         alignItems: "center",
                         gap: 6,
@@ -1875,7 +1875,7 @@ export default function ImageEditorPage() {
                 )}
 
                 {/* Custom Prompt */}
-                <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid #E0E0EE" }}>
+                <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid var(--border)" }}>
                   <label style={{ ...s.inputLabel, marginBottom: 6, display: "block" }}>Or create custom:</label>
                   <textarea
                     value={customBgPrompt}
@@ -1886,7 +1886,7 @@ export default function ImageEditorPage() {
                     disabled={processing}
                   />
                   <button
-                    style={{ ...s.primaryBtn, background: "linear-gradient(135deg,#4285F4,#8B5CF6)", marginTop: 10, ...(customBgPrompt.trim().length === 0 || processing || !authChecked ? s.btnOff : {}) }}
+                    style={{ ...s.primaryBtn, background: "linear-gradient(135deg,#4285F4,var(--accent-2))", marginTop: 10, ...(customBgPrompt.trim().length === 0 || processing || !authChecked ? s.btnOff : {}) }}
                     disabled={customBgPrompt.trim().length === 0 || processing || !authChecked}
                     onClick={() => handleGenerateBg(customBgPrompt.trim())}
                   >
@@ -1932,7 +1932,7 @@ export default function ImageEditorPage() {
 
                 {/* Mode toggle: Normal / Pro AI — Pro is hidden in free-only mode */}
                 {PAID_FEATURES_ENABLED && (
-                <div style={{ display: "flex", gap: 6, marginBottom: 14, background: "#F3F4F6", borderRadius: 10, padding: 4 }}>
+                <div style={{ display: "flex", gap: 6, marginBottom: 14, background: "var(--surface-2)", borderRadius: 10, padding: 4 }}>
                   {([
                     { key: "normal", label: "⚡ Normal", sub: "Free · unlimited" },
                     { key: "pro", label: "✨ Pro AI", sub: "2 credits · AI" },
@@ -1953,13 +1953,13 @@ export default function ImageEditorPage() {
                       }}
                       style={{
                         flex: 1, padding: "8px 6px", borderRadius: 7, border: "none", cursor: "pointer",
-                        background: upscaleMode === m.key ? "#fff" : "transparent",
+                        background: upscaleMode === m.key ? "var(--surface-3)" : "transparent",
                         boxShadow: upscaleMode === m.key ? "0 1px 6px rgba(0,0,0,0.10)" : "none",
                         transition: "all 0.15s",
                       }}
                     >
-                      <div style={{ fontSize: 12, fontWeight: 700, color: upscaleMode === m.key ? "#6366F1" : "#888" }}>{m.label}</div>
-                      <div style={{ fontSize: 10, color: upscaleMode === m.key ? "#6366F1" : "#AAA", marginTop: 1 }}>{m.sub}</div>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: upscaleMode === m.key ? "var(--accent)" : "var(--text-faint)" }}>{m.label}</div>
+                      <div style={{ fontSize: 10, color: upscaleMode === m.key ? "var(--accent)" : "var(--text-faint)", marginTop: 1 }}>{m.sub}</div>
                     </button>
                   ))}
                 </div>
@@ -1967,7 +1967,7 @@ export default function ImageEditorPage() {
 
                 {/* 2x / 4x toggle */}
                 <div style={{ marginBottom: 12 }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: 0.8, color: "#888", marginBottom: 8 }}>Enhancement Level</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: 0.8, color: "var(--text-faint)", marginBottom: 8 }}>Enhancement Level</div>
                   <div style={{ display: "flex", gap: 8 }}>
                     {(["2x", "4x"] as const).map((sc) => {
                       const curW = workingSize?.w || original?.w || 0;
@@ -1983,18 +1983,18 @@ export default function ImageEditorPage() {
                           style={{
                             position: "relative",
                             flex: 1, padding: "12px 8px", borderRadius: 10,
-                            border: upscaleScale === sc ? "2px solid #6366F1" : "1.5px solid #E0E0EE",
-                            background: upscaleScale === sc ? "#EEEEFF" : "#FAFAFA",
+                            border: upscaleScale === sc ? "2px solid var(--accent)" : "1.5px solid var(--border)",
+                            background: upscaleScale === sc ? "var(--border)" : "var(--surface-2)",
                             cursor: tooLarge ? "not-allowed" : "pointer", fontWeight: 800, fontSize: 18,
-                            color: tooLarge ? "#CCC" : upscaleScale === sc ? "#6366F1" : "#999", transition: "all 0.15s",
+                            color: tooLarge ? "#CCC" : upscaleScale === sc ? "var(--accent)" : "var(--text-faint)", transition: "all 0.15s",
                             opacity: tooLarge ? 0.5 : 1,
                           }}
                         >
                           {sc === "4x" && upscaleMode !== "pro" && user?.plan !== "unlimited" && (
-                            <span style={{ position: "absolute", top: -8, right: -6, background: "linear-gradient(120deg,#7C3AED,#EC4899)", color: "#fff", fontSize: 8.5, fontWeight: 900, letterSpacing: "0.06em", borderRadius: 999, padding: "2px 6px", boxShadow: "0 2px 6px rgba(124,58,237,0.4)" }}>PRO</span>
+                            <span style={{ position: "absolute", top: -8, right: -6, background: "linear-gradient(120deg,var(--accent-2),#EC4899)", color: "#fff", fontSize: 8.5, fontWeight: 900, letterSpacing: "0.06em", borderRadius: 999, padding: "2px 6px", boxShadow: "0 2px 6px rgba(124,58,237,0.4)" }}>PRO</span>
                           )}
                           {sc}
-                          <div style={{ fontSize: 10, fontWeight: 600, marginTop: 2, color: tooLarge ? "#CCC" : upscaleScale === sc ? "#6366F1" : "#AAA" }}>
+                          <div style={{ fontSize: 10, fontWeight: 600, marginTop: 2, color: tooLarge ? "#CCC" : upscaleScale === sc ? "var(--accent)" : "var(--text-faint)" }}>
                             {tooLarge ? "Too large" : sc === "2x" ? "Enhance · Free" : "Ultra · Pro"}
                           </div>
                         </button>
@@ -2034,10 +2034,10 @@ export default function ImageEditorPage() {
                     ...s.primaryBtn,
                     ...((processing || appliedUpscale === upscaleScale) ? s.btnOff : {}),
                     background: upscaleMode === "pro"
-                      ? "linear-gradient(135deg,#7C3AED,#EC4899)"
+                      ? "linear-gradient(135deg,var(--accent-2),#EC4899)"
                       : upscaleScale === "4x"
-                      ? "linear-gradient(135deg,#6366F1,#7C3AED)"
-                      : "linear-gradient(135deg,#6366F1,#8B5CF6)",
+                      ? "linear-gradient(135deg,var(--accent),var(--accent-2))"
+                      : "linear-gradient(135deg,var(--accent),var(--accent-2))",
                   }}
                   disabled={processing || appliedUpscale === upscaleScale || !authChecked || (() => { const m = Math.max(workingSize?.w || original?.w || 0, workingSize?.h || original?.h || 0); return m > 0 && m * (upscaleScale === "4x" ? 4 : 2) > MAX_UPSCALE_OUTPUT_PX; })()}
                   onClick={handleUpscale}
@@ -2075,7 +2075,7 @@ export default function ImageEditorPage() {
                   <label style={s.inputLabel}>Height (px)</label>
                   <input type="number" value={resizeH} min={1} max={4096} onChange={(e) => handleAspectH(parseInt(e.target.value) || 1)} style={s.numInput} />
                 </div>
-                <div style={{ fontSize: 12, color: "#888" }}>Original: {original?.w} × {original?.h}px</div>
+                <div style={{ fontSize: 12, color: "var(--text-faint)" }}>Original: {original?.w} × {original?.h}px</div>
                 <button style={{ ...s.primaryBtn, ...(processing ? s.btnOff : {}) }} disabled={processing} onClick={handleResize}>↔️ Apply Resize</button>
                 {resultBlock()}
               </div>
@@ -2094,25 +2094,25 @@ export default function ImageEditorPage() {
                 {processing && removeBgProgress > 0 && (
                   <div style={{ marginBottom: 14 }}>
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                      <span style={{ fontSize: 13, color: "#374151", fontWeight: 600 }}>
+                      <span style={{ fontSize: 13, color: "var(--text-muted)", fontWeight: 600 }}>
                         {removeBgProgress < 15 ? "Loading model…" : "Removing background…"}
                       </span>
-                      <span style={{ fontSize: 13, color: "#6366F1", fontWeight: 700 }}>{removeBgProgress}%</span>
+                      <span style={{ fontSize: 13, color: "var(--accent)", fontWeight: 700 }}>{removeBgProgress}%</span>
                     </div>
-                    <div style={{ background: "#F1F5F9", borderRadius: 6, height: 8, overflow: "hidden" }}>
-                      <div style={{ height: "100%", background: "linear-gradient(90deg,#6366F1,#8B5CF6)", borderRadius: 6, width: `${removeBgProgress}%`, transition: "width 0.3s" }} />
+                    <div style={{ background: "var(--surface-2)", borderRadius: 6, height: 8, overflow: "hidden" }}>
+                      <div style={{ height: "100%", background: "linear-gradient(90deg,var(--accent),var(--accent-2))", borderRadius: 6, width: `${removeBgProgress}%`, transition: "width 0.3s" }} />
                     </div>
-                    {removeBgProgress < 15 && <p style={{ fontSize: 11, color: "#94A3B8", marginTop: 6, textAlign: "center" }}>First run may take ~10s to load the model</p>}
+                    {removeBgProgress < 15 && <p style={{ fontSize: 11, color: "var(--text-faint)", marginTop: 6, textAlign: "center" }}>First run may take ~10s to load the model</p>}
                   </div>
                 )}
                 <button
-                  style={{ ...s.primaryBtn, background: "linear-gradient(135deg,#6366F1,#8B5CF6)", ...(processing ? s.btnOff : {}) }}
+                  style={{ ...s.primaryBtn, background: "linear-gradient(135deg,var(--accent),var(--accent-2))", ...(processing ? s.btnOff : {}) }}
                   disabled={processing}
                   onClick={handleRemoveBg}
                 >
                   {processing ? <span style={s.btnRow}><span style={s.spin} />Processing…</span> : "🪄 Remove Background"}
                 </button>
-                <p style={{ fontSize: 12, color: "#94A3B8", marginTop: 10, textAlign: "center" }}>
+                <p style={{ fontSize: 12, color: "var(--text-faint)", marginTop: 10, textAlign: "center" }}>
                   Result is a transparent PNG. Use Generate BG to swap in a new background.
                 </p>
               </div>
@@ -2132,7 +2132,7 @@ export default function ImageEditorPage() {
                   <div key={ctrl.label} style={s.sliderRow}>
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
                       <span style={s.inputLabel}>{ctrl.label}</span>
-                      <span style={{ fontSize: 12, fontWeight: 700, color: "#6366F1" }}>{ctrl.value}{ctrl.unit}</span>
+                      <span style={{ fontSize: 12, fontWeight: 700, color: "var(--accent)" }}>{ctrl.value}{ctrl.unit}</span>
                     </div>
                     <input type="range" min={ctrl.min} max={ctrl.max} value={ctrl.value} onChange={(e) => ctrl.set(parseInt(e.target.value))} style={{ width: "100%" }} />
                     <button style={{ ...s.resetSliderBtn, opacity: ctrl.value === ctrl.default ? 0.3 : 1 }} onClick={() => ctrl.set(ctrl.default)} disabled={ctrl.value === ctrl.default}>Reset</button>
@@ -2167,20 +2167,20 @@ export default function ImageEditorPage() {
                       onClick={() => setCropRatio(r.id)}
                       style={{
                         padding: "10px 8px", borderRadius: 10, textAlign: "center",
-                        border: cropRatio === r.id ? "2px solid #6366F1" : "1.5px solid #E0E0EE",
-                        background: cropRatio === r.id ? "#EEEEFF" : "#FAFAFA",
-                        cursor: "pointer", color: cropRatio === r.id ? "#6366F1" : "#666",
+                        border: cropRatio === r.id ? "2px solid var(--accent)" : "1.5px solid var(--border)",
+                        background: cropRatio === r.id ? "var(--border)" : "var(--surface-2)",
+                        cursor: "pointer", color: cropRatio === r.id ? "var(--accent)" : "var(--text-muted)",
                       }}
                     >
                       <div style={{ fontWeight: 800, fontSize: 13 }}>{r.label}</div>
-                      <div style={{ fontSize: 10, fontWeight: 600, marginTop: 2, color: cropRatio === r.id ? "#6366F1" : "#AAA" }}>{r.sub}</div>
+                      <div style={{ fontSize: 10, fontWeight: 600, marginTop: 2, color: cropRatio === r.id ? "var(--accent)" : "var(--text-faint)" }}>{r.sub}</div>
                     </button>
                   ))}
                 </div>
                 <button style={{ ...s.primaryBtn, ...(processing ? s.btnOff : {}) }} disabled={processing} onClick={handleCrop}>
                   {processing ? <span style={s.btnRow}><span style={s.spin} />Cropping…</span> : "✂️ Apply Crop"}
                 </button>
-                {resultBlock() || <p style={{ fontSize: 12, color: "#94A3B8", marginTop: 10, textAlign: "center" }}>Center crop to the chosen ratio.</p>}
+                {resultBlock() || <p style={{ fontSize: 12, color: "var(--text-faint)", marginTop: 10, textAlign: "center" }}>Center crop to the chosen ratio.</p>}
               </div>
             )}
 
@@ -2196,7 +2196,7 @@ export default function ImageEditorPage() {
                   <button style={s.ghostBtn} disabled={processing} onClick={() => applyRotateFlip(0, true, false)}>⇄ Flip H</button>
                   <button style={s.ghostBtn} disabled={processing} onClick={() => applyRotateFlip(0, false, true)}>⇅ Flip V</button>
                 </div>
-                {processing && <p style={{ fontSize: 12, color: "#6366F1", marginTop: 10, textAlign: "center" }}><span style={s.spin} /> Working…</p>}
+                {processing && <p style={{ fontSize: 12, color: "var(--accent)", marginTop: 10, textAlign: "center" }}><span style={s.spin} /> Working…</p>}
                 {resultBlock()}
               </div>
             )}
@@ -2210,19 +2210,19 @@ export default function ImageEditorPage() {
                   <p style={s.panelSub}>Shrink file size for web &amp; email — free</p>
                   {/* Mode toggle: by quality vs to a target size */}
                   <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
-                    <button onClick={() => setCompressTargetKb(0)} style={{ flex: 1, padding: "9px 8px", borderRadius: 9, border: compressTargetKb === 0 ? "2px solid #6366F1" : "1.5px solid #E0E0EE", background: compressTargetKb === 0 ? "#EEEEFF" : "#FAFAFA", color: compressTargetKb === 0 ? "#6366F1" : "#999", cursor: "pointer", fontWeight: 800, fontSize: 12.5 }}>By quality</button>
-                    <button onClick={() => setCompressTargetKb(compressTargetKb || 100)} style={{ flex: 1, padding: "9px 8px", borderRadius: 9, border: compressTargetKb > 0 ? "2px solid #6366F1" : "1.5px solid #E0E0EE", background: compressTargetKb > 0 ? "#EEEEFF" : "#FAFAFA", color: compressTargetKb > 0 ? "#6366F1" : "#999", cursor: "pointer", fontWeight: 800, fontSize: 12.5 }}>Target size</button>
+                    <button onClick={() => setCompressTargetKb(0)} style={{ flex: 1, padding: "9px 8px", borderRadius: 9, border: compressTargetKb === 0 ? "2px solid var(--accent)" : "1.5px solid var(--border)", background: compressTargetKb === 0 ? "var(--border)" : "var(--surface-2)", color: compressTargetKb === 0 ? "var(--accent)" : "var(--text-faint)", cursor: "pointer", fontWeight: 800, fontSize: 12.5 }}>By quality</button>
+                    <button onClick={() => setCompressTargetKb(compressTargetKb || 100)} style={{ flex: 1, padding: "9px 8px", borderRadius: 9, border: compressTargetKb > 0 ? "2px solid var(--accent)" : "1.5px solid var(--border)", background: compressTargetKb > 0 ? "var(--border)" : "var(--surface-2)", color: compressTargetKb > 0 ? "var(--accent)" : "var(--text-faint)", cursor: "pointer", fontWeight: 800, fontSize: 12.5 }}>Target size</button>
                   </div>
                   {compressTargetKb > 0 ? (
                     <div style={s.sliderRow}>
                       <span style={s.inputLabel}>Target size (KB)</span>
                       <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 6 }}>
-                        <input type="number" min={5} max={5000} value={compressTargetKb} onChange={(e) => setCompressTargetKb(Math.max(5, parseInt(e.target.value) || 0))} style={{ width: 100, padding: "9px 10px", borderRadius: 9, border: "1.5px solid #E0E0EE", fontSize: 14, fontWeight: 700 }} />
-                        <span style={{ fontSize: 12, color: "#888" }}>KB or smaller</span>
+                        <input type="number" min={5} max={5000} value={compressTargetKb} onChange={(e) => setCompressTargetKb(Math.max(5, parseInt(e.target.value) || 0))} style={{ width: 100, padding: "9px 10px", borderRadius: 9, border: "1.5px solid var(--border)", fontSize: 14, fontWeight: 700 }} />
+                        <span style={{ fontSize: 12, color: "var(--text-faint)" }}>KB or smaller</span>
                       </div>
                       <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 10 }}>
                         {[20, 50, 100, 200, 500].map((k) => (
-                          <button key={k} onClick={() => setCompressTargetKb(k)} style={{ padding: "5px 11px", borderRadius: 999, border: compressTargetKb === k ? "1.5px solid #6366F1" : "1px solid #E0E0EE", background: compressTargetKb === k ? "#EEEEFF" : "#fff", color: compressTargetKb === k ? "#6366F1" : "#888", cursor: "pointer", fontSize: 12, fontWeight: 700 }}>{k}KB</button>
+                          <button key={k} onClick={() => setCompressTargetKb(k)} style={{ padding: "5px 11px", borderRadius: 999, border: compressTargetKb === k ? "1.5px solid var(--accent)" : "1px solid var(--border)", background: compressTargetKb === k ? "var(--border)" : "var(--surface-3)", color: compressTargetKb === k ? "var(--accent)" : "var(--text-faint)", cursor: "pointer", fontSize: 12, fontWeight: 700 }}>{k}KB</button>
                         ))}
                       </div>
                     </div>
@@ -2230,19 +2230,19 @@ export default function ImageEditorPage() {
                     <div style={s.sliderRow}>
                       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
                         <span style={s.inputLabel}>Quality</span>
-                        <span style={{ fontSize: 12, fontWeight: 700, color: "#6366F1" }}>{compressQuality}%</span>
+                        <span style={{ fontSize: 12, fontWeight: 700, color: "var(--accent)" }}>{compressQuality}%</span>
                       </div>
                       <input type="range" min={10} max={95} value={compressQuality} onChange={(e) => setCompressQuality(parseInt(e.target.value))} style={{ width: "100%" }} />
-                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "#AAA", marginTop: 2 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "var(--text-faint)", marginTop: 2 }}>
                         <span>Smaller file</span><span>Higher quality</span>
                       </div>
                     </div>
                   )}
-                  <div style={{ fontSize: 12, color: "#888", marginBottom: 10 }}>Current size: ~{humanSize(dataUrlBytes(src))}</div>
+                  <div style={{ fontSize: 12, color: "var(--text-faint)", marginBottom: 10 }}>Current size: ~{humanSize(dataUrlBytes(src))}</div>
                   <button style={{ ...s.primaryBtn, ...(processing ? s.btnOff : {}) }} disabled={processing} onClick={handleCompress}>
                     {processing ? <span style={s.btnRow}><span style={s.spin} />Compressing…</span> : compressTargetKb > 0 ? `🗜️ Compress to ${compressTargetKb}KB` : "🗜️ Compress Image"}
                   </button>
-                  {resultBlock() || <p style={{ fontSize: 12, color: "#94A3B8", marginTop: 10, textAlign: "center" }}>Compress, then download the smaller JPG.</p>}
+                  {resultBlock() || <p style={{ fontSize: 12, color: "var(--text-faint)", marginTop: 10, textAlign: "center" }}>Compress, then download the smaller JPG.</p>}
                 </div>
               );
             })()}
@@ -2259,10 +2259,10 @@ export default function ImageEditorPage() {
                       onClick={() => setConvertFormat(f)}
                       style={{
                         flex: 1, padding: "12px 8px", borderRadius: 10,
-                        border: convertFormat === f ? "2px solid #6366F1" : "1.5px solid #E0E0EE",
-                        background: convertFormat === f ? "#EEEEFF" : "#FAFAFA",
+                        border: convertFormat === f ? "2px solid var(--accent)" : "1.5px solid var(--border)",
+                        background: convertFormat === f ? "var(--border)" : "var(--surface-2)",
                         cursor: "pointer", fontWeight: 800, fontSize: 14,
-                        color: convertFormat === f ? "#6366F1" : "#999", textTransform: "uppercase",
+                        color: convertFormat === f ? "var(--accent)" : "var(--text-faint)", textTransform: "uppercase",
                       }}
                     >
                       {f === "jpeg" ? "JPG" : f}
@@ -2273,7 +2273,7 @@ export default function ImageEditorPage() {
                   {processing ? <span style={s.btnRow}><span style={s.spin} />Converting…</span> : `🔀 Convert to ${convertFormat === "jpeg" ? "JPG" : convertFormat.toUpperCase()}`}
                 </button>
                 {resultBlock() || (
-                  <p style={{ fontSize: 12, color: "#94A3B8", marginTop: 10, textAlign: "center" }}>
+                  <p style={{ fontSize: 12, color: "var(--text-faint)", marginTop: 10, textAlign: "center" }}>
                     {convertFormat === "jpeg" ? "JPG flattens transparency to white." : "PNG & WEBP keep transparency."}
                   </p>
                 )}
@@ -2294,23 +2294,23 @@ export default function ImageEditorPage() {
                   {(["tiled", "top-left", "top-right", "center", "bottom-left", "bottom-right"] as WatermarkPosition[]).map((p) => (
                     <button key={p} onClick={() => setWmPosition(p)} style={{
                       padding: "9px 4px", borderRadius: 9, fontSize: 10.5, fontWeight: 700, cursor: "pointer",
-                      border: wmPosition === p ? "2px solid #6366F1" : "1.5px solid #E0E0EE",
-                      background: wmPosition === p ? "#EEEEFF" : "#FAFAFA", color: wmPosition === p ? "#6366F1" : "#888",
+                      border: wmPosition === p ? "2px solid var(--accent)" : "1.5px solid var(--border)",
+                      background: wmPosition === p ? "var(--border)" : "var(--surface-2)", color: wmPosition === p ? "var(--accent)" : "var(--text-faint)",
                       textTransform: "capitalize",
                     }}>{p.replace("-", " ")}</button>
                   ))}
                 </div>
                 <div style={{ display: "flex", gap: 12, alignItems: "flex-end", marginBottom: 10 }}>
                   <div style={{ flex: 1 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between" }}><span style={s.inputLabel}>Size</span><span style={{ fontSize: 12, fontWeight: 700, color: "#6366F1" }}>{wmFontScale}%</span></div>
+                    <div style={{ display: "flex", justifyContent: "space-between" }}><span style={s.inputLabel}>Size</span><span style={{ fontSize: 12, fontWeight: 700, color: "var(--accent)" }}>{wmFontScale}%</span></div>
                     <input type="range" min={2} max={15} value={wmFontScale} onChange={(e) => setWmFontScale(parseInt(e.target.value))} style={{ width: "100%" }} />
                   </div>
                   <div>
                     <div style={s.inputLabel}>Color</div>
-                    <input type="color" value={wmColor} onChange={(e) => setWmColor(e.target.value)} style={{ width: 42, height: 34, borderRadius: 8, border: "1.5px solid #E0E0EE", cursor: "pointer", padding: 2 }} />
+                    <input type="color" value={wmColor} onChange={(e) => setWmColor(e.target.value)} style={{ width: 42, height: 34, borderRadius: 8, border: "1.5px solid var(--border)", cursor: "pointer", padding: 2 }} />
                   </div>
                 </div>
-                <div style={{ display: "flex", justifyContent: "space-between" }}><span style={s.inputLabel}>Opacity</span><span style={{ fontSize: 12, fontWeight: 700, color: "#6366F1" }}>{wmOpacity}%</span></div>
+                <div style={{ display: "flex", justifyContent: "space-between" }}><span style={s.inputLabel}>Opacity</span><span style={{ fontSize: 12, fontWeight: 700, color: "var(--accent)" }}>{wmOpacity}%</span></div>
                 <input type="range" min={10} max={100} value={wmOpacity} onChange={(e) => setWmOpacity(parseInt(e.target.value))} style={{ width: "100%", marginBottom: 12 }} />
                 <button style={{ ...s.primaryBtn, ...(processing ? s.btnOff : {}) }} disabled={processing} onClick={handleWatermark}>
                   {processing ? <span style={s.btnRow}><span style={s.spin} />Applying…</span> : "🔖 Add Watermark"}
@@ -2347,7 +2347,7 @@ export default function ImageEditorPage() {
                 <button style={{ ...s.primaryBtn, ...(processing ? s.btnOff : {}) }} disabled={processing} onClick={openStickerStudio}>
                   😎 Open Sticker Studio
                 </button>
-                <p style={{ fontSize: 12, color: "#94A3B8", marginTop: 10, textAlign: "center" }}>Pick from 150+ emoji stickers, place and resize them on your photo, then apply.</p>
+                <p style={{ fontSize: 12, color: "var(--text-faint)", marginTop: 10, textAlign: "center" }}>Pick from 150+ emoji stickers, place and resize them on your photo, then apply.</p>
                 {resultBlock()}
               </div>
             )}
@@ -2360,7 +2360,7 @@ export default function ImageEditorPage() {
                 <button style={{ ...s.primaryBtn, ...(processing ? s.btnOff : {}) }} disabled={processing} onClick={handleDownloadPdf}>
                   {processing ? <span style={s.btnRow}><span style={s.spin} />Building PDF…</span> : "📄 Download as PDF"}
                 </button>
-                <p style={{ fontSize: 12, color: "#94A3B8", marginTop: 10, textAlign: "center" }}>The PDF page matches your image size and downloads instantly.</p>
+                <p style={{ fontSize: 12, color: "var(--text-faint)", marginTop: 10, textAlign: "center" }}>The PDF page matches your image size and downloads instantly.</p>
               </div>
             )}
 
@@ -2371,7 +2371,7 @@ export default function ImageEditorPage() {
 
       {/* ── Mobile Bottom Tool Strip ──────────────────────────────────────── */}
       {isMobile && (
-        <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 100, background: "#fff", borderTop: "1.5px solid #EAEAEA", display: "flex", overflowX: "auto", padding: "6px 8px 10px", gap: 4, WebkitOverflowScrolling: "touch" as React.CSSProperties["WebkitOverflowScrolling"] }}>
+        <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 100, background: "var(--surface)", borderTop: "1.5px solid #EAEAEA", display: "flex", overflowX: "auto", padding: "6px 8px 10px", gap: 4, WebkitOverflowScrolling: "touch" as React.CSSProperties["WebkitOverflowScrolling"] }}>
           {TOOLS.filter(t => t.id !== null).map(t => (
             <button
               key={t.id}
@@ -2389,10 +2389,10 @@ export default function ImageEditorPage() {
                 setActiveTool(next);
                 setMobileSheetOpen(!!next);
               }}
-              style={{ display: "flex", flexDirection: "column" as const, alignItems: "center", gap: 3, padding: "6px 10px", borderRadius: 10, border: "none", background: activeTool === t.id ? "#EEEEFF" : "transparent", cursor: "pointer", minWidth: 52, flexShrink: 0, opacity: !hasImage ? 0.35 : 1 }}
+              style={{ display: "flex", flexDirection: "column" as const, alignItems: "center", gap: 3, padding: "6px 10px", borderRadius: 10, border: "none", background: activeTool === t.id ? "var(--border)" : "transparent", cursor: "pointer", minWidth: 52, flexShrink: 0, opacity: !hasImage ? 0.35 : 1 }}
             >
               <ToolIcon id={t.id ?? "default"} active={activeTool === t.id} size={30} />
-              <span style={{ fontSize: 9, fontWeight: 700, color: activeTool === t.id ? "#6366F1" : "#888", whiteSpace: "nowrap" as const }}>{t.label}</span>
+              <span style={{ fontSize: 9, fontWeight: 700, color: activeTool === t.id ? "var(--accent)" : "var(--text-faint)", whiteSpace: "nowrap" as const }}>{t.label}</span>
             </button>
           ))}
         </div>
@@ -2403,16 +2403,16 @@ export default function ImageEditorPage() {
         <div style={{ position: "fixed", inset: 0, zIndex: 3000, background: "rgba(15,23,42,0.72)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 16 }}
           onClick={() => setShowStickerStudio(false)}>
           <div onClick={(e) => e.stopPropagation()}
-            style={{ background: "#fff", borderRadius: 18, width: "100%", maxWidth: 620, maxHeight: "94vh", overflow: "hidden", display: "flex", flexDirection: "column", boxShadow: "0 24px 80px rgba(0,0,0,0.35)" }}>
+            style={{ background: "var(--surface)", borderRadius: 18, width: "100%", maxWidth: 620, maxHeight: "94vh", overflow: "hidden", display: "flex", flexDirection: "column", boxShadow: "0 24px 80px rgba(0,0,0,0.35)" }}>
 
             {/* Header */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 18px", borderBottom: "1px solid #EEF0F4" }}>
-              <div style={{ fontWeight: 900, fontSize: 16, color: "#111" }}>😎 Sticker Studio</div>
-              <button onClick={() => setShowStickerStudio(false)} style={{ background: "none", border: "none", fontSize: 22, color: "#9CA3AF", cursor: "pointer", lineHeight: 1 }}>×</button>
+              <div style={{ fontWeight: 900, fontSize: 16, color: "var(--text)" }}>😎 Sticker Studio</div>
+              <button onClick={() => setShowStickerStudio(false)} style={{ background: "none", border: "none", fontSize: 22, color: "var(--text-faint)", cursor: "pointer", lineHeight: 1 }}>×</button>
             </div>
 
             {/* Stage */}
-            <div style={{ flex: 1, overflow: "auto", background: "#F1F5F9", display: "flex", alignItems: "center", justifyContent: "center", padding: 16, minHeight: 240 }}>
+            <div style={{ flex: 1, overflow: "auto", background: "var(--surface-2)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16, minHeight: 240 }}>
               <div
                 ref={stickerStageRef}
                 onPointerMove={onStickerPointerMove}
@@ -2446,7 +2446,7 @@ export default function ImageEditorPage() {
                         cursor: "grab",
                         userSelect: "none",
                         touchAction: "none",
-                        outline: selected ? "2px dashed #6366F1" : "none",
+                        outline: selected ? "2px dashed var(--accent)" : "none",
                         outlineOffset: 3,
                         borderRadius: 4,
                       }}
@@ -2456,7 +2456,7 @@ export default function ImageEditorPage() {
                         <button
                           onPointerDown={(e) => { e.stopPropagation(); }}
                           onClick={(e) => { e.stopPropagation(); removeSticker(st.id); }}
-                          style={{ position: "absolute", top: -10, right: -10, width: 20, height: 20, borderRadius: "50%", border: "none", background: "#EF4444", color: "#fff", fontSize: 13, lineHeight: "20px", cursor: "pointer", padding: 0, boxShadow: "0 1px 4px rgba(0,0,0,0.3)" }}
+                          style={{ position: "absolute", top: -10, right: -10, width: 20, height: 20, borderRadius: "50%", border: "none", background: "var(--danger)", color: "#fff", fontSize: 13, lineHeight: "20px", cursor: "pointer", padding: 0, boxShadow: "0 1px 4px rgba(0,0,0,0.3)" }}
                         >×</button>
                       )}
                     </span>
@@ -2471,11 +2471,11 @@ export default function ImageEditorPage() {
               if (!st) return null;
               return (
                 <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 18px", borderTop: "1px solid #EEF0F4" }}>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: "#6B7280" }}>Size</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: "var(--text-muted)" }}>Size</span>
                   <input type="range" min={4} max={60} value={Math.round(st.size * 100)}
                     onChange={(e) => { const v = parseInt(e.target.value) / 100; setStickers(prev => prev.map(s => s.id === st.id ? { ...s, size: v } : s)); }}
-                    style={{ flex: 1, accentColor: "#6366F1" }} />
-                  <button onClick={() => removeSticker(st.id)} style={{ fontSize: 12, fontWeight: 700, color: "#EF4444", background: "none", border: "1px solid #FCA5A5", borderRadius: 8, padding: "5px 10px", cursor: "pointer" }}>Remove</button>
+                    style={{ flex: 1, accentColor: "var(--accent)" }} />
+                  <button onClick={() => removeSticker(st.id)} style={{ fontSize: 12, fontWeight: 700, color: "var(--danger)", background: "none", border: "1px solid var(--danger-soft)", borderRadius: 8, padding: "5px 10px", cursor: "pointer" }}>Remove</button>
                 </div>
               );
             })()}
@@ -2486,8 +2486,8 @@ export default function ImageEditorPage() {
                 {STICKER_PACKS.map((p, i) => (
                   <button key={p.name} onClick={() => setStickerPack(i)}
                     style={{ flexShrink: 0, padding: "6px 12px", borderRadius: 20, fontSize: 12, fontWeight: 700, cursor: "pointer",
-                      border: stickerPack === i ? "2px solid #6366F1" : "1.5px solid #E5E7EB",
-                      background: stickerPack === i ? "#EEF2FF" : "#fff", color: stickerPack === i ? "#6366F1" : "#6B7280" }}>
+                      border: stickerPack === i ? "2px solid var(--accent)" : "1.5px solid var(--border)",
+                      background: stickerPack === i ? "var(--accent-soft)" : "var(--surface-3)", color: stickerPack === i ? "var(--accent)" : "var(--text-muted)" }}>
                     {p.name}
                   </button>
                 ))}
@@ -2497,7 +2497,7 @@ export default function ImageEditorPage() {
                   <button key={`${em}-${i}`} onClick={() => addSticker(em)}
                     title="Add to image"
                     style={{ fontSize: 24, lineHeight: "38px", height: 38, border: "none", background: "none", cursor: "pointer", borderRadius: 8 }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = "#F1F5F9")}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = "var(--surface-2)")}
                     onMouseLeave={(e) => (e.currentTarget.style.background = "none")}>
                     {em}
                   </button>
@@ -2514,7 +2514,7 @@ export default function ImageEditorPage() {
               </button>
             </div>
           </div>
-          <div style={{ color: "#CBD5E1", fontSize: 12, marginTop: 10 }}>Tap an emoji to add · drag to position · use the slider to resize</div>
+          <div style={{ color: "var(--text-muted)", fontSize: 12, marginTop: 10 }}>Tap an emoji to add · drag to position · use the slider to resize</div>
         </div>
       )}
 
@@ -2526,7 +2526,7 @@ export default function ImageEditorPage() {
             <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 20 }}>
               {user.picture
                 ? <img src={user.picture} alt="" style={{ width: 52, height: 52, borderRadius: "50%", flexShrink: 0 }} />
-                : <div style={{ width: 52, height: 52, borderRadius: "50%", background: "linear-gradient(135deg,#6366F1,#8B5CF6)", color: "#fff", fontSize: 22, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>{user.name[0]}</div>}
+                : <div style={{ width: 52, height: 52, borderRadius: "50%", background: "linear-gradient(135deg,var(--accent),var(--accent-2))", color: "#fff", fontSize: 22, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>{user.name[0]}</div>}
               <div style={{ minWidth: 0 }}>
                 <div style={{ fontWeight: 800, fontSize: 16 }}>{user.name}</div>
                 <div style={{ fontSize: 13, color: "#777", marginTop: 2 }}>{user.email}</div>
@@ -2538,14 +2538,14 @@ export default function ImageEditorPage() {
               <div style={s.creditsSection}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
                   <div style={{ fontWeight: 800, fontSize: 15 }}>🎁 Free Trials</div>
-                  <div style={{ fontWeight: 900, fontSize: 20, color: (user.trialsRemaining ?? 0) === 0 ? "#EF4444" : "#6366F1" }}>
-                    {user.trialsRemaining ?? 0} <span style={{ fontSize: 13, color: "#999", fontWeight: 400 }}>/ {FREE_TRIAL_LIMIT}</span>
+                  <div style={{ fontWeight: 900, fontSize: 20, color: (user.trialsRemaining ?? 0) === 0 ? "var(--danger)" : "var(--accent)" }}>
+                    {user.trialsRemaining ?? 0} <span style={{ fontSize: 13, color: "var(--text-faint)", fontWeight: 400 }}>/ {FREE_TRIAL_LIMIT}</span>
                   </div>
                 </div>
                 <div style={s.creditBarBg}>
-                  <div style={{ ...s.creditBarFill, width: `${((user.trialsRemaining ?? 0) / FREE_TRIAL_LIMIT) * 100}%`, background: (user.trialsRemaining ?? 0) === 0 ? "#EF4444" : "#6366F1" }} />
+                  <div style={{ ...s.creditBarFill, width: `${((user.trialsRemaining ?? 0) / FREE_TRIAL_LIMIT) * 100}%`, background: (user.trialsRemaining ?? 0) === 0 ? "var(--danger)" : "var(--accent)" }} />
                 </div>
-                <div style={{ fontSize: 12, color: "#888", marginTop: 8, lineHeight: 1.6 }}>
+                <div style={{ fontSize: 12, color: "var(--text-faint)", marginTop: 8, lineHeight: 1.6 }}>
                   One free trial per tool — Resize, Adjust and Normal Upscale are always free, no trial needed.
                 </div>
                 {(user.trialsRemaining ?? 0) === 0 && (
@@ -2558,17 +2558,17 @@ export default function ImageEditorPage() {
               <div style={s.creditsSection}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
                   <div style={{ fontWeight: 800, fontSize: 15 }}>⚡ AI Credits</div>
-                  <div style={{ fontWeight: 900, fontSize: 20, color: creditsLeft === 0 ? "#EF4444" : "#6366F1" }}>
-                    {creditsLeft} <span style={{ fontSize: 13, color: "#999", fontWeight: 400 }}>/ {creditsTotal}</span>
+                  <div style={{ fontWeight: 900, fontSize: 20, color: creditsLeft === 0 ? "var(--danger)" : "var(--accent)" }}>
+                    {creditsLeft} <span style={{ fontSize: 13, color: "var(--text-faint)", fontWeight: 400 }}>/ {creditsTotal}</span>
                   </div>
                 </div>
 
                 {/* Progress bar */}
                 <div style={s.creditBarBg}>
-                  <div style={{ ...s.creditBarFill, width: `${(creditsLeft / creditsTotal) * 100}%`, background: creditsLeft === 0 ? "#EF4444" : creditsLeft <= 4 ? "#F59E0B" : "#6366F1" }} />
+                  <div style={{ ...s.creditBarFill, width: `${(creditsLeft / creditsTotal) * 100}%`, background: creditsLeft === 0 ? "var(--danger)" : creditsLeft <= 4 ? "var(--warn)" : "var(--accent)" }} />
                 </div>
 
-                <div style={{ fontSize: 12, color: "#888", marginTop: 8, lineHeight: 1.6 }}>
+                <div style={{ fontSize: 12, color: "var(--text-faint)", marginTop: 8, lineHeight: 1.6 }}>
                   {creditsLeft} credit{creditsLeft === 1 ? "" : "s"} remaining
                 </div>
 
@@ -2599,7 +2599,7 @@ export default function ImageEditorPage() {
                 return (
                   <div key={item.label} style={s.usageItem}>
                     <span>{item.icon} {item.label}</span>
-                    <span style={{ fontWeight: 700, color: item.cost === 0 ? "#10B981" : trialAvailable ? "#16A34A" : "#6366F1" }}>
+                    <span style={{ fontWeight: 700, color: item.cost === 0 ? "var(--success)" : trialAvailable ? "var(--success)" : "var(--accent)" }}>
                       {item.cost === 0 ? "Free" : trialAvailable ? "1 free trial" : user.plan === "free" ? `${item.cost} cr (after trial)` : `${item.cost} cr`}
                     </span>
                   </div>
@@ -2610,7 +2610,7 @@ export default function ImageEditorPage() {
             {PAID_FEATURES_ENABLED ? (
               <>
                 {user.plan === "free" && (
-                  <div style={{ fontSize: 12, color: "#888", textAlign: "center" as const, marginBottom: 8 }}>
+                  <div style={{ fontSize: 12, color: "var(--text-faint)", textAlign: "center" as const, marginBottom: 8 }}>
                     Free plan · {user.trialsRemaining ?? 0} of {FREE_TRIAL_LIMIT} free trials left
                   </div>
                 )}
@@ -2619,7 +2619,7 @@ export default function ImageEditorPage() {
                 </button>
               </>
             ) : (
-              <div style={{ fontSize: 13, color: "#10B981", textAlign: "center" as const, fontWeight: 700, margin: "4px 0 8px", background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 10, padding: "10px 12px" }}>
+              <div style={{ fontSize: 13, color: "var(--success)", textAlign: "center" as const, fontWeight: 700, margin: "4px 0 8px", background: "var(--success-soft)", border: "1px solid var(--success-soft)", borderRadius: 10, padding: "10px 12px" }}>
                 ♾️ Unlimited · 100% Free — no limits on any tool
               </div>
             )}
@@ -2647,7 +2647,7 @@ export default function ImageEditorPage() {
             <div style={{ fontSize: 48, marginBottom: 12 }}>⚡</div>
             <div style={s.modalTitle}>No credits remaining</div>
 
-            <div style={{ fontSize: 13, color: "#555", lineHeight: 1.6, marginBottom: 16, textAlign: "center" as const }}>
+            <div style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.6, marginBottom: 16, textAlign: "center" as const }}>
               You&apos;ve used up your purchased credits. <strong>Buy more to keep using AI features</strong> —<br />
               your credits never expire.
             </div>
@@ -2688,10 +2688,10 @@ export default function ImageEditorPage() {
       {/* ── Upgrade Modal ─────────────────────────────────────────────────── */}
       {showUpgradeModal && (
         <div style={s.modalOverlay} onClick={() => { setShowUpgradeModal(false); setBlockedTool(null); }}>
-          <div style={{ background: "#fff", borderRadius: 24, width: "100%", maxWidth: 580, maxHeight: "90vh", overflowY: "auto" as const, boxShadow: "0 24px 80px rgba(0,0,0,0.22)", position: "relative" }} onClick={(e) => e.stopPropagation()}>
+          <div style={{ background: "var(--surface)", borderRadius: 24, width: "100%", maxWidth: 580, maxHeight: "90vh", overflowY: "auto" as const, boxShadow: "0 24px 80px rgba(0,0,0,0.22)", position: "relative" }} onClick={(e) => e.stopPropagation()}>
 
             {/* Gradient header */}
-            <div style={{ background: "linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #A78BFA 100%)", borderRadius: "24px 24px 0 0", padding: "32px 32px 28px", color: "#fff", position: "relative" }}>
+            <div style={{ background: "linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 50%, #A78BFA 100%)", borderRadius: "24px 24px 0 0", padding: "32px 32px 28px", color: "#fff", position: "relative" }}>
               <button onClick={() => { setShowUpgradeModal(false); setBlockedTool(null); }} style={{ position: "absolute", top: 16, right: 16, background: "rgba(255,255,255,0.2)", border: "none", borderRadius: "50%", width: 32, height: 32, cursor: "pointer", color: "#fff", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center" }}>×</button>
 
               {blockedTool && (
@@ -2729,32 +2729,32 @@ export default function ImageEditorPage() {
 
             {/* Pricing cards */}
             <div style={{ padding: "24px 28px 28px" }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: "#888", textAlign: "center" as const, marginBottom: 16, textTransform: "uppercase" as const, letterSpacing: 1 }}>Choose a plan · one-time payment · credits never expire</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "var(--text-faint)", textAlign: "center" as const, marginBottom: 16, textTransform: "uppercase" as const, letterSpacing: 1 }}>Choose a plan · one-time payment · credits never expire</div>
 
               <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 12, marginBottom: 20 }}>
                 {[
-                  { name: "Starter", planKey: "starter", price: "₹499", credits: 50, perCredit: "₹9.98", color: "#6366F1", features: ["50 AI credits", "~25 transformations", "All AI tools", "No expiry"] },
-                  { name: "Creator", planKey: "creator", price: "₹999", credits: 100, perCredit: "₹9.99", color: "#7C3AED", popular: true, features: ["100 AI credits", "~50 transformations", "All AI tools", "No expiry"] },
+                  { name: "Starter", planKey: "starter", price: "₹499", credits: 50, perCredit: "₹9.98", color: "var(--accent)", features: ["50 AI credits", "~25 transformations", "All AI tools", "No expiry"] },
+                  { name: "Creator", planKey: "creator", price: "₹999", credits: 100, perCredit: "₹9.99", color: "var(--accent-2)", popular: true, features: ["100 AI credits", "~50 transformations", "All AI tools", "No expiry"] },
                   { name: "Pro", planKey: "pro", price: "₹2499", credits: 300, perCredit: "₹8.33", color: "#5B21B6", features: ["300 AI credits", "~150 transformations", "All AI tools", "No expiry"] },
                 ].map((plan) => (
-                  <div key={plan.name} style={{ border: `2px solid ${plan.popular ? plan.color : "#E5E7EB"}`, borderRadius: 16, padding: "18px 14px", textAlign: "center" as const, position: "relative", background: plan.popular ? "#F5F3FF" : "#FAFAFA", transition: "transform 0.1s" }}>
+                  <div key={plan.name} style={{ border: `2px solid ${plan.popular ? plan.color : "var(--text-muted)"}`, borderRadius: 16, padding: "18px 14px", textAlign: "center" as const, position: "relative", background: plan.popular ? "var(--surface-2)" : "var(--surface-2)", transition: "transform 0.1s" }}>
                     {plan.popular && (
                       <div style={{ position: "absolute", top: -11, left: "50%", transform: "translateX(-50%)", background: plan.color, color: "#fff", fontSize: 9, fontWeight: 900, padding: "3px 12px", borderRadius: 20, whiteSpace: "nowrap" as const, letterSpacing: 0.5 }}>
                         ✦ MOST POPULAR
                       </div>
                     )}
-                    <div style={{ fontWeight: 800, fontSize: 13, color: plan.popular ? plan.color : "#666", marginBottom: 6 }}>{plan.name}</div>
-                    <div style={{ fontWeight: 900, fontSize: 30, color: "#111", lineHeight: 1 }}>{plan.price}</div>
-                    <div style={{ fontSize: 11, color: "#999", marginBottom: 10 }}>{plan.perCredit}/credit</div>
+                    <div style={{ fontWeight: 800, fontSize: 13, color: plan.popular ? plan.color : "var(--text-muted)", marginBottom: 6 }}>{plan.name}</div>
+                    <div style={{ fontWeight: 900, fontSize: 30, color: "var(--text)", lineHeight: 1 }}>{plan.price}</div>
+                    <div style={{ fontSize: 11, color: "var(--text-faint)", marginBottom: 10 }}>{plan.perCredit}/credit</div>
                     <div style={{ fontWeight: 800, fontSize: 20, color: plan.color, marginBottom: 4 }}>{plan.credits}</div>
-                    <div style={{ fontSize: 11, color: "#888", marginBottom: 14 }}>AI Credits</div>
+                    <div style={{ fontSize: 11, color: "var(--text-faint)", marginBottom: 14 }}>AI Credits</div>
                     {plan.features.map(f => (
-                      <div key={f} style={{ fontSize: 11, color: "#555", marginBottom: 3, textAlign: "left" as const }}>✓ {f}</div>
+                      <div key={f} style={{ fontSize: 11, color: "var(--text-muted)", marginBottom: 3, textAlign: "left" as const }}>✓ {f}</div>
                     ))}
                     <button
                       onClick={() => handleBuyPlan(plan.planKey)}
                       disabled={buyingPlan !== null}
-                      style={{ display: "block", width: "100%", marginTop: 14, background: buyingPlan === plan.planKey ? "#9CA3AF" : plan.popular ? plan.color : "#111", color: "#fff", borderRadius: 10, padding: "10px 0", fontSize: 13, fontWeight: 700, border: "none", cursor: buyingPlan !== null ? "not-allowed" : "pointer" }}
+                      style={{ display: "block", width: "100%", marginTop: 14, background: buyingPlan === plan.planKey ? "var(--text-faint)" : plan.popular ? plan.color : "var(--text)", color: "#fff", borderRadius: 10, padding: "10px 0", fontSize: 13, fontWeight: 700, border: "none", cursor: buyingPlan !== null ? "not-allowed" : "pointer" }}
                     >
                       {buyingPlan === plan.planKey ? "Processing…" : "Buy Now →"}
                     </button>
@@ -2763,7 +2763,7 @@ export default function ImageEditorPage() {
               </div>
 
               <div style={{ textAlign: "center" as const }}>
-                <button style={{ background: "none", border: "none", color: "#999", fontSize: 13, cursor: "pointer", textDecoration: "underline" }} onClick={() => { setShowUpgradeModal(false); setBlockedTool(null); }}>
+                <button style={{ background: "none", border: "none", color: "var(--text-faint)", fontSize: 13, cursor: "pointer", textDecoration: "underline" }} onClick={() => { setShowUpgradeModal(false); setBlockedTool(null); }}>
                   Maybe later — stay on free plan
                 </button>
               </div>
@@ -2778,114 +2778,114 @@ export default function ImageEditorPage() {
 // ─── Styles ───────────────────────────────────────────────────────────────────
 
 const s: Record<string, React.CSSProperties> = {
-  root: { minHeight: "100vh", background: "#F6F7FB", fontFamily: "system-ui,-apple-system,sans-serif", color: "#111", display: "flex", flexDirection: "column" },
+  root: { minHeight: "100vh", background: "#F6F7FB", fontFamily: "system-ui,-apple-system,sans-serif", color: "var(--text)", display: "flex", flexDirection: "column" },
 
-  pageHeader: { background: "rgba(255,255,255,0.97)", borderBottom: "1px solid #EAECF0", backdropFilter: "blur(8px)", position: "relative" as const, zIndex: 90, flexShrink: 0 },
+  pageHeader: { background: "rgba(12,12,22,0.85)", borderBottom: "1px solid var(--border)", backdropFilter: "blur(8px)", position: "relative" as const, zIndex: 90, flexShrink: 0 },
   pageHeaderInner: { maxWidth: 1400, margin: "0 auto", padding: "8px 20px", display: "flex", alignItems: "center", gap: 12 },
   pageIcon: { fontSize: 18 },
-  pageTitle: { fontSize: 14, fontWeight: 700, color: "#222", marginRight: 8 },
+  pageTitle: { fontSize: 14, fontWeight: 700, color: "var(--text)", marginRight: 8 },
   pageHeaderRight: { display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" as const, marginLeft: "auto" },
   lowCreditsBar: { flex: 1, textAlign: "center" as const, fontSize: 12, fontWeight: 600, color: "#92400E", background: "#FEF3C7", borderRadius: 6, padding: "4px 12px" },
-  dlBtn: { background: "#111", color: "#fff", border: "none", borderRadius: 8, padding: "6px 14px", fontSize: 13, fontWeight: 700, cursor: "pointer" },
-  ghostBtn: { background: "none", border: "1px solid #E0E0E8", borderRadius: 8, padding: "6px 12px", fontSize: 13, cursor: "pointer", color: "#555", display: "flex", alignItems: "center", gap: 6 },
-  userChip: { display: "flex", alignItems: "center", gap: 8, background: "none", border: "1px solid #E0E0E8", borderRadius: 10, padding: "5px 10px", cursor: "pointer" },
+  dlBtn: { background: "var(--bg-elevated)", color: "#fff", border: "none", borderRadius: 8, padding: "6px 14px", fontSize: 13, fontWeight: 700, cursor: "pointer" },
+  ghostBtn: { background: "none", border: "1px solid var(--border)", borderRadius: 8, padding: "6px 12px", fontSize: 13, cursor: "pointer", color: "var(--text-muted)", display: "flex", alignItems: "center", gap: 6 },
+  userChip: { display: "flex", alignItems: "center", gap: 8, background: "none", border: "1px solid var(--border)", borderRadius: 10, padding: "5px 10px", cursor: "pointer" },
   avatar: { width: 26, height: 26, borderRadius: "50%", flexShrink: 0 },
-  avatarFallback: { width: 26, height: 26, borderRadius: "50%", background: "#6366F1", color: "#fff", fontSize: 12, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" },
-  userName: { fontSize: 13, fontWeight: 600, color: "#333" },
-  creditsBadge: { fontSize: 11, fontWeight: 800, background: "#EEEEFF", color: "#6366F1", borderRadius: 6, padding: "2px 7px" },
-  creditsEmpty: { background: "#FEE2E2", color: "#EF4444" },
-  creditsLow: { background: "#FEF3C7", color: "#D97706" },
-  googleBtn: { display: "flex", alignItems: "center", gap: 8, background: "#fff", border: "1px solid #DDD", borderRadius: 8, padding: "6px 14px", fontSize: 13, fontWeight: 600, color: "#333", textDecoration: "none", whiteSpace: "nowrap" as const },
+  avatarFallback: { width: 26, height: 26, borderRadius: "50%", background: "var(--accent)", color: "#fff", fontSize: 12, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" },
+  userName: { fontSize: 13, fontWeight: 600, color: "var(--text-muted)" },
+  creditsBadge: { fontSize: 11, fontWeight: 800, background: "var(--surface-2)", color: "var(--accent)", borderRadius: 6, padding: "2px 7px" },
+  creditsEmpty: { background: "var(--danger-soft)", color: "var(--danger)" },
+  creditsLow: { background: "#FEF3C7", color: "var(--warn)" },
+  googleBtn: { display: "flex", alignItems: "center", gap: 8, background: "var(--surface)", border: "1px solid #DDD", borderRadius: 8, padding: "6px 14px", fontSize: 13, fontWeight: 600, color: "var(--text-muted)", textDecoration: "none", whiteSpace: "nowrap" as const },
 
   layout: { display: "flex", flex: 1, minHeight: 0, overflow: "hidden" },
-  sidebar: { width: 72, flexShrink: 0, background: "#fff", borderRight: "1px solid #EAECF0", display: "flex", flexDirection: "column" as const, padding: "12px 6px", gap: 4, overflowY: "auto" as const },
-  toolBtn: { width: "100%", display: "flex", flexDirection: "column" as const, alignItems: "center", gap: 4, padding: "10px 4px", borderRadius: 10, border: "none", background: "none", cursor: "pointer", color: "#555" },
-  toolBtnActive: { background: "#EEEEFF", color: "#6366F1" },
+  sidebar: { width: 72, flexShrink: 0, background: "var(--surface)", borderRight: "1px solid var(--border)", display: "flex", flexDirection: "column" as const, padding: "12px 6px", gap: 4, overflowY: "auto" as const },
+  toolBtn: { width: "100%", display: "flex", flexDirection: "column" as const, alignItems: "center", gap: 4, padding: "10px 4px", borderRadius: 10, border: "none", background: "none", cursor: "pointer", color: "var(--text-muted)" },
+  toolBtnActive: { background: "var(--surface-2)", color: "var(--accent)" },
   toolLabel: { fontSize: 9, fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: 0.5, lineHeight: 1 },
 
   canvasArea: { flex: 1, minWidth: 0, display: "flex", flexDirection: "column" as const, padding: "20px", gap: 16, overflowY: "auto" as const },
   canvasInner: { display: "flex", flexDirection: "column" as const, gap: 12, alignItems: "center", width: "100%" },
-  uploadZone: { flex: 1, display: "flex", flexDirection: "column" as const, alignItems: "center", justifyContent: "center", border: "2px dashed #D2D4E0", borderRadius: 20, padding: "60px 40px", cursor: "pointer", textAlign: "center" as const, background: "#fff", minHeight: 400 },
+  uploadZone: { flex: 1, display: "flex", flexDirection: "column" as const, alignItems: "center", justifyContent: "center", border: "2px dashed #D2D4E0", borderRadius: 20, padding: "60px 40px", cursor: "pointer", textAlign: "center" as const, background: "var(--surface)", minHeight: 400 },
   uploadTitle: { margin: "0 0 8px", fontSize: 17, fontWeight: 700 },
-  uploadHint: { margin: "0 0 24px", fontSize: 14, color: "#888" },
+  uploadHint: { margin: "0 0 24px", fontSize: 14, color: "var(--text-faint)" },
   featureRow: { display: "flex", flexWrap: "wrap" as const, gap: 8, justifyContent: "center", marginBottom: 16 },
-  featureChip: { background: "#F0F0FA", border: "1px solid #E0E0F0", borderRadius: 20, padding: "5px 12px", fontSize: 12, fontWeight: 600, color: "#6366F1" },
-  signInHint: { fontSize: 13, color: "#888", marginTop: 8 },
+  featureChip: { background: "#F0F0FA", border: "1px solid #E0E0F0", borderRadius: 20, padding: "5px 12px", fontSize: 12, fontWeight: 600, color: "var(--accent)" },
+  signInHint: { fontSize: 13, color: "var(--text-faint)", marginTop: 8 },
 
-  imgWrap: { position: "relative", borderRadius: 16, overflow: "hidden", boxShadow: "0 8px 40px rgba(0,0,0,0.12)", maxWidth: "100%", background: "#fff" },
+  imgWrap: { position: "relative", borderRadius: 16, overflow: "hidden", boxShadow: "0 8px 40px rgba(0,0,0,0.12)", maxWidth: "100%", background: "var(--surface)" },
   checker: { position: "absolute", inset: 0, backgroundImage: "linear-gradient(45deg,#E5E5E5 25%,transparent 25%),linear-gradient(-45deg,#E5E5E5 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#E5E5E5 75%),linear-gradient(-45deg,transparent 75%,#E5E5E5 75%)", backgroundSize: "14px 14px", backgroundPosition: "0 0,0 7px,7px -7px,-7px 0" },
   mainImg: { maxWidth: "min(800px, 100%)", maxHeight: "60vh", display: "block", position: "relative", zIndex: 1, transition: "opacity 0.2s" },
   imgOverlay: { position: "absolute", inset: 0, background: "rgba(0,0,0,0.55)", zIndex: 2, display: "flex", flexDirection: "column" as const, alignItems: "center", justifyContent: "center" },
   spinner: { width: 36, height: 36, border: "3.5px solid rgba(255,255,255,0.25)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin 0.8s linear infinite" },
   imgControls: { display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" as const },
   togglePill: { display: "flex", background: "#EBEBF0", borderRadius: 9, padding: 3 },
-  toggleBtn: { padding: "5px 14px", borderRadius: 7, border: "none", background: "none", fontSize: 12, fontWeight: 600, cursor: "pointer", color: "#888" },
-  toggleActive: { background: "#fff", color: "#111", boxShadow: "0 1px 4px rgba(0,0,0,0.1)" },
-  dimLabel: { fontSize: 12, color: "#AAA" },
+  toggleBtn: { padding: "5px 14px", borderRadius: 7, border: "none", background: "none", fontSize: 12, fontWeight: 600, cursor: "pointer", color: "var(--text-faint)" },
+  toggleActive: { background: "var(--surface)", color: "var(--text)", boxShadow: "0 1px 4px rgba(0,0,0,0.1)" },
+  dimLabel: { fontSize: 12, color: "var(--text-faint)" },
 
   promptBar: { display: "flex", gap: 8, width: "100%", maxWidth: 800, alignItems: "center" },
-  promptInput: { flex: 1, border: "1.5px solid #E0E0EE", borderRadius: 10, padding: "10px 14px", fontSize: 13, fontFamily: "inherit", outline: "none", background: "#fff", color: "#111" },
-  sendBtn: { background: "linear-gradient(135deg,#6366F1,#8B5CF6)", color: "#fff", border: "none", borderRadius: 10, padding: "10px 18px", fontSize: 13, fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap" as const },
-  toolPillBtn: { width: 38, height: 38, borderRadius: 10, border: "1px solid #E0E0EE", background: "#fff", cursor: "pointer", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 },
-  toolPillActive: { background: "#EEEEFF", borderColor: "#6366F1" },
-  errBox: { background: "#FFF1F0", border: "1px solid #FFC4C4", borderRadius: 10, padding: "10px 14px", fontSize: 13, color: "#C00", width: "100%", maxWidth: 800 },
+  promptInput: { flex: 1, border: "1.5px solid var(--border)", borderRadius: 10, padding: "10px 14px", fontSize: 13, fontFamily: "inherit", outline: "none", background: "var(--surface)", color: "var(--text)" },
+  sendBtn: { background: "linear-gradient(135deg,var(--accent),var(--accent-2))", color: "#fff", border: "none", borderRadius: 10, padding: "10px 18px", fontSize: 13, fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap" as const },
+  toolPillBtn: { width: 38, height: 38, borderRadius: 10, border: "1px solid var(--border)", background: "var(--surface)", cursor: "pointer", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 },
+  toolPillActive: { background: "var(--surface-2)", borderColor: "var(--accent)" },
+  errBox: { background: "var(--danger-soft)", border: "1px solid var(--danger-soft)", borderRadius: 10, padding: "10px 14px", fontSize: 13, color: "#C00", width: "100%", maxWidth: 800 },
 
-  toolPanel: { width: 300, flexShrink: 0, background: "#fff", borderLeft: "1px solid #EAECF0", overflowY: "auto" as const },
+  toolPanel: { width: 300, flexShrink: 0, background: "var(--surface)", borderLeft: "1px solid var(--border)", overflowY: "auto" as const },
   panelContent: { padding: "20px 18px", display: "flex", flexDirection: "column" as const, gap: 14 },
   panelTitle: { fontSize: 15, fontWeight: 800, letterSpacing: "-0.3px" },
   panelSub: { margin: 0, fontSize: 12, color: "#777", lineHeight: 1.5 },
   panelSection: { display: "flex", flexDirection: "column" as const, gap: 10 },
-  creditNote: { fontSize: 11, color: "#6366F1", fontWeight: 700, background: "#EEEEFF", borderRadius: 6, padding: "4px 8px", display: "inline-block", alignSelf: "flex-start" },
+  creditNote: { fontSize: 11, color: "var(--accent)", fontWeight: 700, background: "var(--surface-2)", borderRadius: 6, padding: "4px 8px", display: "inline-block", alignSelf: "flex-start" },
 
-  successNote: { background: "#ECFDF5", border: "1px solid #A7F3D0", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#047857", fontWeight: 600 },
+  successNote: { background: "var(--success-soft)", border: "1px solid #A7F3D0", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#047857", fontWeight: 600 },
   retryNote: { background: "#FFF7ED", border: "1px solid #FED7AA", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#92400E" },
-  retryLink: { background: "none", border: "none", color: "#7C3AED", fontWeight: 700, cursor: "pointer", textDecoration: "underline", padding: 0, fontSize: 12 },
-  tabBar: { display: "flex", gap: 2, background: "#F0F0F8", borderRadius: 8, padding: 2 },
-  tabBtn: { flex: 1, padding: "5px 2px", borderRadius: 6, border: "none", background: "none", fontSize: 10, fontWeight: 700, cursor: "pointer", color: "#888" },
-  tabActive: { background: "#fff", color: "#6366F1", boxShadow: "0 1px 4px rgba(0,0,0,0.08)" },
+  retryLink: { background: "none", border: "none", color: "var(--accent-2)", fontWeight: 700, cursor: "pointer", textDecoration: "underline", padding: 0, fontSize: 12 },
+  tabBar: { display: "flex", gap: 2, background: "var(--surface-2)", borderRadius: 8, padding: 2 },
+  tabBtn: { flex: 1, padding: "5px 2px", borderRadius: 6, border: "none", background: "none", fontSize: 10, fontWeight: 700, cursor: "pointer", color: "var(--text-faint)" },
+  tabActive: { background: "var(--surface)", color: "var(--accent)", boxShadow: "0 1px 4px rgba(0,0,0,0.08)" },
   swatchGrid: { display: "flex", flexWrap: "wrap" as const, gap: 6 },
   swatch: { width: 30, height: 30, borderRadius: 7, cursor: "pointer", flexShrink: 0 },
-  colorPicker: { width: 36, height: 36, border: "2px solid #E0E0E8", borderRadius: 6, cursor: "pointer", padding: 2 },
-  smallBtn: { background: "#6366F1", color: "#fff", border: "none", borderRadius: 6, padding: "6px 12px", fontSize: 12, fontWeight: 700, cursor: "pointer" },
-  pendingRow: { display: "flex", alignItems: "center", gap: 8, background: "#F0F0FF", border: "1px solid #C4C4F0", borderRadius: 8, padding: "8px 10px" },
-  xBtn: { background: "none", border: "none", color: "#AAA", cursor: "pointer", fontSize: 13, padding: 2, marginLeft: "auto" },
+  colorPicker: { width: 36, height: 36, border: "2px solid var(--border)", borderRadius: 6, cursor: "pointer", padding: 2 },
+  smallBtn: { background: "var(--accent)", color: "#fff", border: "none", borderRadius: 6, padding: "6px 12px", fontSize: 12, fontWeight: 700, cursor: "pointer" },
+  pendingRow: { display: "flex", alignItems: "center", gap: 8, background: "var(--accent-soft)", border: "1px solid #C4C4F0", borderRadius: 8, padding: "8px 10px" },
+  xBtn: { background: "none", border: "none", color: "var(--text-faint)", cursor: "pointer", fontSize: 13, padding: 2, marginLeft: "auto" },
   gradGrid: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 },
   gradSwatch: { height: 44, borderRadius: 8, border: "none", cursor: "pointer", display: "flex", alignItems: "flex-end", padding: "0 6px 4px" },
-  gradLabel: { fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.9)", textShadow: "0 1px 2px rgba(0,0,0,0.4)" },
+  gradLabel: { fontSize: 9, fontWeight: 700, color: "rgba(12,12,22,0.80)", textShadow: "0 1px 2px rgba(0,0,0,0.4)" },
   changeBgBtn: { position: "absolute", top: 6, right: 6, background: "rgba(0,0,0,0.6)", color: "#fff", border: "none", borderRadius: 6, padding: "3px 8px", fontSize: 11, cursor: "pointer" },
-  uploadBgBtn: { display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "14px", border: "2px dashed #D0D0E0", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 600, color: "#555", background: "#FAFAFC" },
-  aiBadge: { display: "inline-flex", alignSelf: "flex-start", background: "linear-gradient(135deg,#4285F4,#8B5CF6)", color: "#fff", borderRadius: 6, padding: "3px 10px", fontSize: 10, fontWeight: 700 },
-  textarea: { width: "100%", borderRadius: 8, border: "1.5px solid #E0E0EE", padding: "8px 10px", fontSize: 12, fontFamily: "inherit", resize: "vertical" as const, outline: "none", boxSizing: "border-box" as const, lineHeight: 1.5, color: "#222", background: "#FAFAFA" },
+  uploadBgBtn: { display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "14px", border: "2px dashed #D0D0E0", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 600, color: "var(--text-muted)", background: "var(--surface-2)" },
+  aiBadge: { display: "inline-flex", alignSelf: "flex-start", background: "linear-gradient(135deg,#4285F4,var(--accent-2))", color: "#fff", borderRadius: 6, padding: "3px 10px", fontSize: 10, fontWeight: 700 },
+  textarea: { width: "100%", borderRadius: 8, border: "1.5px solid var(--border)", padding: "8px 10px", fontSize: 12, fontFamily: "inherit", resize: "vertical" as const, outline: "none", boxSizing: "border-box" as const, lineHeight: 1.5, color: "var(--text)", background: "var(--surface-2)" },
   suggestions: { display: "flex", flexWrap: "wrap" as const, gap: 5 },
-  chip: { fontSize: 11, color: "#6366F1", background: "#EEEEFF", border: "1px solid #C4C4F4", borderRadius: 6, padding: "3px 8px", cursor: "pointer", fontWeight: 600 },
-  infoCard: { background: "#F7F8FC", borderRadius: 10, padding: "12px 14px", fontSize: 13 },
-  inputLabel: { margin: 0, fontSize: 11, fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: 0.8, color: "#888" },
-  numInput: { width: "100%", border: "1.5px solid #E0E0EE", borderRadius: 8, padding: "8px 10px", fontSize: 14, fontFamily: "inherit", outline: "none", boxSizing: "border-box" as const },
+  chip: { fontSize: 11, color: "var(--accent)", background: "var(--surface-2)", border: "1px solid #C4C4F4", borderRadius: 6, padding: "3px 8px", cursor: "pointer", fontWeight: 600 },
+  infoCard: { background: "var(--surface-2)", borderRadius: 10, padding: "12px 14px", fontSize: 13 },
+  inputLabel: { margin: 0, fontSize: 11, fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: 0.8, color: "var(--text-faint)" },
+  numInput: { width: "100%", border: "1.5px solid var(--border)", borderRadius: 8, padding: "8px 10px", fontSize: 14, fontFamily: "inherit", outline: "none", boxSizing: "border-box" as const },
   sliderRow: { display: "flex", flexDirection: "column" as const, gap: 2 },
-  resetSliderBtn: { background: "none", border: "none", color: "#6366F1", fontSize: 10, cursor: "pointer", textAlign: "right" as const, padding: 0, alignSelf: "flex-end" },
-  primaryBtn: { background: "linear-gradient(135deg,#6366F1,#8B5CF6)", color: "#fff", border: "none", borderRadius: 10, padding: "11px 18px", fontSize: 13, fontWeight: 700, cursor: "pointer", width: "100%", transition: "opacity 0.2s" },
+  resetSliderBtn: { background: "none", border: "none", color: "var(--accent)", fontSize: 10, cursor: "pointer", textAlign: "right" as const, padding: 0, alignSelf: "flex-end" },
+  primaryBtn: { background: "linear-gradient(135deg,var(--accent),var(--accent-2))", color: "#fff", border: "none", borderRadius: 10, padding: "11px 18px", fontSize: 13, fontWeight: 700, cursor: "pointer", width: "100%", transition: "opacity 0.2s" },
   btnOff: { opacity: 0.4, cursor: "not-allowed" as const },
   btnRow: { display: "flex", alignItems: "center", justifyContent: "center", gap: 8 },
   spin: { display: "inline-block", width: 13, height: 13, border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin 0.8s linear infinite" },
 
   // Modals
   modalOverlay: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.55)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 20, backdropFilter: "blur(4px)" },
-  modalBox: { background: "#fff", borderRadius: 20, padding: "32px 28px", maxWidth: 420, width: "100%", textAlign: "center" as const, boxShadow: "0 24px 80px rgba(0,0,0,0.2)" },
+  modalBox: { background: "var(--surface)", borderRadius: 20, padding: "32px 28px", maxWidth: 420, width: "100%", textAlign: "center" as const, boxShadow: "0 24px 80px rgba(0,0,0,0.2)" },
   modalTitle: { fontSize: 22, fontWeight: 800, letterSpacing: "-0.5px", marginBottom: 10 },
-  modalSub: { margin: "0 0 16px", fontSize: 14, color: "#666", lineHeight: 1.6 },
+  modalSub: { margin: "0 0 16px", fontSize: 14, color: "var(--text-muted)", lineHeight: 1.6 },
   modalFeatures: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 20, textAlign: "left" as const },
-  modalFeatureRow: { fontSize: 13, color: "#333", display: "flex", alignItems: "center", gap: 6 },
-  modalGoogleBtn: { display: "flex", alignItems: "center", justifyContent: "center", gap: 10, background: "#fff", border: "1.5px solid #DDD", borderRadius: 10, padding: "12px 20px", fontSize: 14, fontWeight: 700, color: "#333", textDecoration: "none", cursor: "pointer", width: "100%", boxSizing: "border-box" as const, boxShadow: "0 1px 4px rgba(0,0,0,0.08)" },
-  modalDismiss: { marginTop: 12, background: "none", border: "none", color: "#AAA", fontSize: 13, cursor: "pointer", textDecoration: "underline" },
+  modalFeatureRow: { fontSize: 13, color: "var(--text-muted)", display: "flex", alignItems: "center", gap: 6 },
+  modalGoogleBtn: { display: "flex", alignItems: "center", justifyContent: "center", gap: 10, background: "var(--surface)", border: "1.5px solid #DDD", borderRadius: 10, padding: "12px 20px", fontSize: 14, fontWeight: 700, color: "var(--text-muted)", textDecoration: "none", cursor: "pointer", width: "100%", boxSizing: "border-box" as const, boxShadow: "0 1px 4px rgba(0,0,0,0.08)" },
+  modalDismiss: { marginTop: 12, background: "none", border: "none", color: "var(--text-faint)", fontSize: 13, cursor: "pointer", textDecoration: "underline" },
 
   // Account modal specific
-  creditsSection: { background: "#F7F8FC", borderRadius: 12, padding: "16px", marginBottom: 16, textAlign: "left" as const },
-  creditBarBg: { height: 8, background: "#E5E7EB", borderRadius: 100, overflow: "hidden" },
+  creditsSection: { background: "var(--surface-2)", borderRadius: 12, padding: "16px", marginBottom: 16, textAlign: "left" as const },
+  creditBarBg: { height: 8, background: "var(--surface-2)", borderRadius: 100, overflow: "hidden" },
   creditBarFill: { height: "100%", borderRadius: 100, transition: "width 0.4s ease" },
-  noCreditsNote: { marginTop: 10, background: "#FEE2E2", border: "1px solid #FECACA", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#B91C1C", textAlign: "left" as const },
+  noCreditsNote: { marginTop: 10, background: "var(--danger-soft)", border: "1px solid var(--danger-soft)", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#B91C1C", textAlign: "left" as const },
   lowNote: { marginTop: 10, background: "#FEF3C7", border: "1px solid #FDE68A", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#92400E", textAlign: "left" as const },
   usageGrid: { display: "flex", flexDirection: "column" as const, gap: 6, marginBottom: 16, textAlign: "left" as const },
-  usageItem: { display: "flex", justifyContent: "space-between", fontSize: 13, color: "#555", padding: "4px 0", borderBottom: "1px solid #F0F0F0" },
+  usageItem: { display: "flex", justifyContent: "space-between", fontSize: 13, color: "var(--text-muted)", padding: "4px 0", borderBottom: "1px solid #F0F0F0" },
 
   // No credits modal
   noCreditsInfo: { background: "#F0FFF4", border: "1px solid #A7F3D0", borderRadius: 10, padding: "14px", marginBottom: 16, fontSize: 13, color: "#047857", lineHeight: 1.8, textAlign: "left" as const },

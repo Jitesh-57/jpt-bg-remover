@@ -1,92 +1,236 @@
-* { box-sizing: border-box; }
-body { margin: 0; padding: 0; }
+/* ============================================================================
+   sjpt.io — design tokens (dark premium / glass)
+   Every colour, surface, border, radius, shadow and motion value lives here.
+   Components reference these via var(--token), so changing the whole site's
+   look is an edit to THIS FILE ONLY.
+   ========================================================================== */
+:root {
+  /* Canvas & surfaces (dark) */
+  --bg:            #08080F;   /* page canvas */
+  --bg-elevated:   #0C0C16;   /* nav, sticky chrome */
+  --surface:       #101020;   /* cards, panels */
+  --surface-2:     #16162A;   /* nested / alt sections */
+  --surface-3:     #1C1C33;   /* hover, inputs */
+  --surface-glass: rgba(255,255,255,0.04);
 
-/* ── Shared Nav ─────────────────────────────────────────────────────────── */
+  /* Borders */
+  --border:        rgba(255,255,255,0.09);
+  --border-strong: rgba(255,255,255,0.16);
+
+  /* Text */
+  --text:          #F4F5FB;   /* primary */
+  --text-muted:    #A2A6BF;   /* secondary */
+  --text-faint:    #6E7391;   /* tertiary / captions */
+
+  /* Brand accents */
+  --accent:        #818CF8;   /* indigo, brightened for dark */
+  --accent-2:      #A78BFA;   /* violet */
+  --accent-strong: #6366F1;
+  --accent-soft:   rgba(129,140,248,0.13);
+  --accent-border: rgba(129,140,248,0.30);
+  --grad:          linear-gradient(120deg,#818CF8,#A78BFA);
+  --grad-strong:   linear-gradient(120deg,#6366F1,#8B5CF6);
+
+  /* Status */
+  --success:       #34D399;
+  --success-soft:  rgba(52,211,153,0.12);
+  --danger:        #F87171;
+  --danger-soft:   rgba(248,113,113,0.12);
+  --warn:          #FBBF24;
+
+  /* Radii */
+  --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-xl: 22px; --r-2xl: 28px; --r-full: 999px;
+
+  /* Shadows & glow */
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.32);
+  --shadow-md: 0 10px 30px rgba(0,0,0,0.40);
+  --shadow-lg: 0 24px 70px rgba(0,0,0,0.55);
+  --glow:      0 10px 34px rgba(99,102,241,0.42);
+
+  /* Motion */
+  --ease: cubic-bezier(.16,1,.3,1);
+  --dur:  .22s;
+
+  /* Type */
+  --font: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0; padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 17px;               /* larger, more readable base */
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Ambient glow behind the page — gives the dark canvas depth. */
+body::before {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(760px 460px at 12% -8%, rgba(99,102,241,0.16), transparent 62%),
+    radial-gradient(680px 420px at 92% 4%, rgba(139,92,246,0.13), transparent 60%);
+}
+body > * { position: relative; z-index: 1; }
+
+::selection { background: rgba(129,140,248,0.32); color: #fff; }
+
+a { color: inherit; }
+
+/* Scrollbar (dark) */
+* { scrollbar-color: var(--surface-3) transparent; }
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: var(--r-full); }
+*::-webkit-scrollbar-thumb:hover { background: #262646; }
+
+/* ── Typography helpers ─────────────────────────────────────────────────── */
+.jpt-h1 {
+  font-size: clamp(2.6rem, 6vw, 4.4rem);
+  font-weight: 800; line-height: 1.04; letter-spacing: -0.038em;
+  color: var(--text); margin: 0 0 20px;
+}
+.jpt-h2 {
+  font-size: clamp(1.9rem, 3.8vw, 2.8rem);
+  font-weight: 800; line-height: 1.14; letter-spacing: -0.028em;
+  color: var(--text); margin: 0 0 14px;
+}
+.jpt-h3 { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.015em; color: var(--text); margin: 0 0 8px; }
+.jpt-lead { font-size: clamp(1.08rem, 2vw, 1.3rem); color: var(--text-muted); line-height: 1.65; margin: 0; }
+.jpt-muted { color: var(--text-muted); }
+.jpt-grad-text {
+  background: var(--grad); -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+}
+
+/* ── Surfaces ───────────────────────────────────────────────────────────── */
+.jpt-glass {
+  background: var(--surface-glass);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-md);
+}
+.jpt-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ── Buttons ────────────────────────────────────────────────────────────── */
+.jpt-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+  border: none; cursor: pointer; text-decoration: none;
+  font-family: inherit; font-weight: 700; font-size: 16px;
+  padding: 15px 30px; border-radius: var(--r-md);
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) ease, background var(--dur) ease, border-color var(--dur) ease;
+}
+.jpt-btn-primary { background: var(--grad-strong); color: #fff; box-shadow: var(--glow); }
+.jpt-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 16px 44px rgba(99,102,241,0.55); }
+.jpt-btn-ghost {
+  background: var(--surface-glass); color: var(--text);
+  border: 1px solid var(--border-strong); backdrop-filter: blur(10px);
+}
+.jpt-btn-ghost:hover { background: var(--surface-3); border-color: var(--accent-border); transform: translateY(-2px); }
+
+/* Small pill / chip */
+.jpt-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--accent-soft); border: 1px solid var(--accent-border);
+  color: var(--accent); font-size: 13px; font-weight: 700;
+  border-radius: var(--r-full); padding: 7px 15px;
+}
+
+/* ── Shared Nav (glass) ─────────────────────────────────────────────────── */
 .jpt-nav {
   position: sticky; top: 0; z-index: 200;
-  background: #0C0C14;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  backdrop-filter: blur(12px);
+  background: rgba(10,10,20,0.72);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
 }
 .jpt-nav-inner {
   max-width: 1280px; margin: 0 auto;
-  padding: 0 24px; height: 52px;
+  padding: 0 24px; height: 60px;
   display: flex; align-items: center; gap: 14px;
 }
-.jpt-brand {
-  display: flex; align-items: center; gap: 7px;
-  text-decoration: none; flex-shrink: 0;
-}
-.jpt-brand-icon { font-size: 17px; color: #818CF8; }
-.jpt-brand-text { font-size: 15px; font-weight: 800; color: #fff; letter-spacing: -0.3px; }
-.jpt-nav-divider { width: 1px; height: 18px; background: rgba(255,255,255,0.12); flex-shrink: 0; }
+.jpt-brand { display: flex; align-items: center; gap: 8px; text-decoration: none; flex-shrink: 0; }
+.jpt-brand-icon { font-size: 18px; color: var(--accent); }
+.jpt-brand-text { font-size: 16px; font-weight: 800; color: var(--text); letter-spacing: -0.03em; }
+.jpt-nav-divider { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
 .jpt-section-label {
-  font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.3);
+  font-size: 10px; font-weight: 700; color: var(--text-faint);
   text-transform: uppercase; letter-spacing: 0.1em; flex-shrink: 0;
 }
 .jpt-nav-links { display: flex; align-items: center; gap: 2px; }
 .jpt-nav-link {
   display: flex; align-items: center; gap: 6px;
-  padding: 5px 12px; border-radius: 8px;
-  font-size: 13px; font-weight: 600;
-  color: rgba(255,255,255,0.6);
-  text-decoration: none;
-  transition: background 0.15s, color 0.15s;
+  padding: 7px 13px; border-radius: var(--r-sm);
+  font-size: 14px; font-weight: 600;
+  color: var(--text-muted); text-decoration: none;
+  transition: background var(--dur) ease, color var(--dur) ease;
 }
-.jpt-nav-link:hover { background: rgba(255,255,255,0.08); color: #fff; }
+.jpt-nav-link:hover { background: var(--surface-3); color: var(--text); }
 .jpt-gem-badge {
-  font-size: 11px; font-weight: 700; color: #818CF8;
-  background: rgba(129,140,248,0.12);
-  border: 1px solid rgba(129,140,248,0.25);
-  border-radius: 6px; padding: 3px 9px; flex-shrink: 0;
+  font-size: 11px; font-weight: 700; color: var(--accent);
+  background: var(--accent-soft); border: 1px solid var(--accent-border);
+  border-radius: var(--r-sm); padding: 4px 10px; flex-shrink: 0;
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.card-hover:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(0,0,0,0.14) !important;
-}
-.img-card:hover .card-overlay {
-  opacity: 1 !important;
-}
-.tab-btn:hover {
-  background: rgba(99,102,241,0.06) !important;
-}
-.swatch:hover {
-  transform: scale(1.12);
-}
-.chip-btn:hover {
-  background: #DDDEFA !important;
-}
-.ghost-btn:hover {
-  background: #F4F4FA !important;
-}
-.drop-zone:hover {
-  border-color: #6366F1 !important;
-  background: #FAFAFF !important;
-}
-
-/* Scroll-reveal for programmatic pages (added by <ScrollReveal />). */
-.jpt-reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1); will-change: opacity, transform; }
-.jpt-reveal.jpt-in { opacity: 1; transform: none; }
-@media (prefers-reduced-motion: reduce) { .jpt-reveal { opacity: 1 !important; transform: none !important; } }
-
-/* Editor "processing" scan sweep over the image. */
+/* ── Motion ─────────────────────────────────────────────────────────────── */
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .5; } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes jptScan { 0% { transform: translateY(-130%); } 100% { transform: translateY(130%); } }
+@keyframes jptFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@keyframes jptRise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes jptGlowPulse { 0%,100% { opacity: .55; } 50% { opacity: .9; } }
+
+.jpt-float { animation: jptFloat 6s ease-in-out infinite; }
+.jpt-rise  { animation: jptRise .85s var(--ease) both; }
+.jpt-glow-pulse { animation: jptGlowPulse 7s ease-in-out infinite; }
+
+/* Scroll-reveal (added by <ScrollReveal />). */
+.jpt-reveal { opacity: 0; transform: translateY(28px); transition: opacity .8s var(--ease), transform .8s var(--ease); will-change: opacity, transform; }
+.jpt-reveal.jpt-in { opacity: 1; transform: none; }
 
 /* Hover feedback for cards, chips and buttons (opt-in via .jpt-hover). */
-.jpt-hover { transition: transform .16s cubic-bezier(.2,.7,.3,1), box-shadow .18s ease, border-color .16s ease, background-color .16s ease; }
-.jpt-hover:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(30,41,90,.13); border-color: #C7D2FE; }
+.jpt-hover { transition: transform .18s var(--ease), box-shadow .2s ease, border-color .18s ease, background-color .18s ease; }
+.jpt-hover:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--accent-border); background-color: var(--surface-2); }
 .jpt-hover:active { transform: translateY(-1px); }
-@media (prefers-reduced-motion: reduce) { .jpt-hover, .jpt-hover:hover { transform: none !important; } }
+
+/* Legacy hooks kept so existing components keep working. */
+.card-hover:hover { transform: translateY(-3px); box-shadow: var(--shadow-md) !important; }
+.img-card:hover .card-overlay { opacity: 1 !important; }
+.tab-btn:hover { background: var(--surface-3) !important; }
+.swatch:hover { transform: scale(1.12); }
+.chip-btn:hover { background: var(--surface-3) !important; }
+.ghost-btn:hover { background: var(--surface-3) !important; }
+.drop-zone:hover { border-color: var(--accent) !important; background: var(--surface-2) !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  .jpt-reveal { opacity: 1 !important; transform: none !important; }
+  .jpt-hover, .jpt-hover:hover, .jpt-float, .jpt-rise, .jpt-glow-pulse { animation: none !important; transform: none !important; }
+}
+
+/* ── Mobile nav compaction ──────────────────────────────────────────────────
+   The nav is inline-styled, so these overrides need !important. Without them
+   the larger base type overflows the bar on ~390px phones. */
+@media (max-width: 560px) {
+  nav { padding-left: 12px !important; padding-right: 12px !important; }
+  nav a, nav button, nav span { white-space: nowrap; }
+  /* Let the bar scroll horizontally instead of pushing the whole page sideways. */
+  nav > div {
+    overflow-x: auto; overflow-y: visible;
+    -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  }
+  nav > div::-webkit-scrollbar { display: none; }
+}
