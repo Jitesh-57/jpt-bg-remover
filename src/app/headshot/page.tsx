@@ -847,7 +847,7 @@ const steps: Step[] = ["upload", "styles", "gallery", "edit"];
 
 const s: Record<string, React.CSSProperties> = {
   root: { minHeight: "100vh", background: "var(--surface-2)", fontFamily: "system-ui, -apple-system, sans-serif", color: "var(--text)" },
-  header: { position: "sticky", top: 0, zIndex: 100, background: "rgba(12,12,22,0.82)", backdropFilter: "blur(10px)", borderBottom: "1px solid var(--border)" },
+  header: { position: "sticky", top: 0, zIndex: 100, background: "rgba(255,255,255,0.92)", backdropFilter: "blur(10px)", borderBottom: "1px solid var(--border)" },
   headerInner: { maxWidth: 1200, margin: "0 auto", padding: "12px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 },
   logo: { display: "flex", alignItems: "center", gap: 8, cursor: "pointer", flexShrink: 0 },
   logoText: { fontSize: 17, fontWeight: 800, letterSpacing: "-0.4px" },

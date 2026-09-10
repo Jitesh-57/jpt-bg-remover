@@ -647,7 +647,7 @@ export default function BatchEditorPage() {
                       ))}
                     </div>
                     {upscaleMode === "pro" && (
-                      <p style={{ fontSize: 11, color: "var(--accent-2)", margin: "6px 0 0", fontWeight: 600 }}>✨ AI-enhanced — sharper detail & texture recovery</p>
+                      <p style={{ fontSize: 11, color: "var(--accent-strong)", margin: "6px 0 0", fontWeight: 600 }}>✨ AI-enhanced — sharper detail & texture recovery</p>
                     )}
                   </div>
                   )}
@@ -772,7 +772,7 @@ export default function BatchEditorPage() {
               disabled={processing || !totalPending || !selectedTools.size}
               style={{
                 padding: "12px",
-                background: processing || !totalPending || !selectedTools.size ? "var(--accent-border)" : "linear-gradient(135deg, var(--accent), var(--accent-2))",
+                background: processing || !totalPending || !selectedTools.size ? "var(--text-faint)" : "linear-gradient(135deg, var(--accent), var(--accent-2))",
                 color: "#fff", border: "none", borderRadius: 10, fontWeight: 800, fontSize: 15,
                 cursor: processing || !totalPending || !selectedTools.size ? "not-allowed" : "pointer",
               }}
@@ -869,7 +869,7 @@ export default function BatchEditorPage() {
             disabled={processing || !totalPending || !selectedTools.size}
             style={{
               padding: "14px",
-              background: processing || !totalPending || !selectedTools.size ? "var(--accent-border)" : "linear-gradient(135deg, var(--accent), var(--accent-2))",
+              background: processing || !totalPending || !selectedTools.size ? "var(--text-faint)" : "linear-gradient(135deg, var(--accent), var(--accent-2))",
               color: "#fff", border: "none", borderRadius: 10, fontWeight: 800, fontSize: 15,
               cursor: processing || !totalPending || !selectedTools.size ? "not-allowed" : "pointer",
               boxShadow: !processing && totalPending && selectedTools.size ? "0 4px 16px rgba(15,157,107,0.4)" : "none",
@@ -974,7 +974,7 @@ export default function BatchEditorPage() {
                       ))}
                     </div>
                     {upscaleMode === "pro" && (
-                      <p style={{ fontSize: 11, color: "var(--accent-2)", margin: "6px 0 0", fontWeight: 600 }}>✨ AI-enhanced — sharper detail & texture recovery</p>
+                      <p style={{ fontSize: 11, color: "var(--accent-strong)", margin: "6px 0 0", fontWeight: 600 }}>✨ AI-enhanced — sharper detail & texture recovery</p>
                     )}
                   </div>
                   )}

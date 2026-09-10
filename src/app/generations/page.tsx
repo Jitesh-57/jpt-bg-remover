@@ -20,7 +20,7 @@ const TOOL_META: Record<string, { icon: string; color: string; bg: string; label
   "generate-bg":   { icon: "🌅", color: "var(--warn)", bg: "#FFFBEB", label: "Generate BG" },
   "ai-background": { icon: "🌄", color: "#F97316", bg: "#FFF7ED", label: "AI Background" },
   "upscale":       { icon: "🔍", color: "var(--accent)", bg: "var(--accent-soft)", label: "Upscale" },
-  "ai-edit":       { icon: "✨", color: "var(--accent-2)", bg: "var(--surface-2)", label: "AI Edit" },
+  "ai-edit":       { icon: "✨", color: "var(--accent-strong)", bg: "var(--surface-2)", label: "AI Edit" },
   "remove-bg":     { icon: "✂️", color: "var(--success)", bg: "var(--success-soft)", label: "Remove BG" },
   "resize":        { icon: "↔️", color: "#06B6D4", bg: "#ECFEFF", label: "Resize" },
   "adjust":        { icon: "🎨", color: "#EC4899", bg: "#FDF2F8", label: "Adjust" },

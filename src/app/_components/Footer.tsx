@@ -66,7 +66,7 @@ export default function Footer() {
           <div>
             <a href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none", marginBottom: 16 }}>
               <span style={{ fontSize: 20, fontWeight: 900, color: "var(--accent)" }}>✦</span>
-              <span style={{ fontSize: 18, fontWeight: 900, color: "#fff", letterSpacing: "-0.02em" }}>JPT AI</span>
+              <span style={{ fontSize: 18, fontWeight: 900, color: "var(--text)", letterSpacing: "-0.02em" }}>JPT AI</span>
             </a>
             <p style={{ fontSize: 14, lineHeight: 1.7, color: "var(--text-muted)", margin: "0 0 20px", maxWidth: 260 }}>
               {t.footerTagline}

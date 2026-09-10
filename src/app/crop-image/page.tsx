@@ -54,7 +54,7 @@ export default async function Page() {
           <p style={{ fontSize: 15, color: 'var(--text-muted)', margin: '0 0 28px' }}>Crop to the exact shape you need — free, one click, no watermark.</p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center' }}>
             {CROPS.map((c) => (
-              <Link key={c.slug} href={`/crop/${c.slug}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#FAF5FF', border: '1px solid #EEE0FB', borderRadius: 999, padding: '10px 18px', fontSize: 14, fontWeight: 700, color: 'var(--accent-2)', textDecoration: 'none' }}>
+              <Link key={c.slug} href={`/crop/${c.slug}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 999, padding: '10px 18px', fontSize: 14, fontWeight: 700, color: 'var(--accent-strong)', textDecoration: 'none' }}>
                 {c.h1.replace(/ \(.*\)$/, '')}
               </Link>
             ))}

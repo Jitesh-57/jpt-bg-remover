@@ -2734,7 +2734,7 @@ export default function ImageEditorPage() {
               <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 12, marginBottom: 20 }}>
                 {[
                   { name: "Starter", planKey: "starter", price: "₹499", credits: 50, perCredit: "₹9.98", color: "var(--accent)", features: ["50 AI credits", "~25 transformations", "All AI tools", "No expiry"] },
-                  { name: "Creator", planKey: "creator", price: "₹999", credits: 100, perCredit: "₹9.99", color: "var(--accent-2)", popular: true, features: ["100 AI credits", "~50 transformations", "All AI tools", "No expiry"] },
+                  { name: "Creator", planKey: "creator", price: "₹999", credits: 100, perCredit: "₹9.99", color: "var(--accent-strong)", popular: true, features: ["100 AI credits", "~50 transformations", "All AI tools", "No expiry"] },
                   { name: "Pro", planKey: "pro", price: "₹2499", credits: 300, perCredit: "₹8.33", color: "#5B21B6", features: ["300 AI credits", "~150 transformations", "All AI tools", "No expiry"] },
                 ].map((plan) => (
                   <div key={plan.name} style={{ border: `2px solid ${plan.popular ? plan.color : "var(--text-muted)"}`, borderRadius: 16, padding: "18px 14px", textAlign: "center" as const, position: "relative", background: plan.popular ? "var(--surface-2)" : "var(--surface-2)", transition: "transform 0.1s" }}>
@@ -2780,7 +2780,7 @@ export default function ImageEditorPage() {
 const s: Record<string, React.CSSProperties> = {
   root: { minHeight: "100vh", background: "#F6F7FB", fontFamily: "system-ui,-apple-system,sans-serif", color: "var(--text)", display: "flex", flexDirection: "column" },
 
-  pageHeader: { background: "rgba(12,12,22,0.85)", borderBottom: "1px solid var(--border)", backdropFilter: "blur(8px)", position: "relative" as const, zIndex: 90, flexShrink: 0 },
+  pageHeader: { background: "rgba(255,255,255,0.92)", borderBottom: "1px solid var(--border)", backdropFilter: "blur(8px)", position: "relative" as const, zIndex: 90, flexShrink: 0 },
   pageHeaderInner: { maxWidth: 1400, margin: "0 auto", padding: "8px 20px", display: "flex", alignItems: "center", gap: 12 },
   pageIcon: { fontSize: 18 },
   pageTitle: { fontSize: 14, fontWeight: 700, color: "var(--text)", marginRight: 8 },
@@ -2839,7 +2839,7 @@ const s: Record<string, React.CSSProperties> = {
 
   successNote: { background: "var(--success-soft)", border: "1px solid #A7F3D0", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#047857", fontWeight: 600 },
   retryNote: { background: "#FFF7ED", border: "1px solid #FED7AA", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#92400E" },
-  retryLink: { background: "none", border: "none", color: "var(--accent-2)", fontWeight: 700, cursor: "pointer", textDecoration: "underline", padding: 0, fontSize: 12 },
+  retryLink: { background: "none", border: "none", color: "var(--accent-strong)", fontWeight: 700, cursor: "pointer", textDecoration: "underline", padding: 0, fontSize: 12 },
   tabBar: { display: "flex", gap: 2, background: "var(--surface-2)", borderRadius: 8, padding: 2 },
   tabBtn: { flex: 1, padding: "5px 2px", borderRadius: 6, border: "none", background: "none", fontSize: 10, fontWeight: 700, cursor: "pointer", color: "var(--text-faint)" },
   tabActive: { background: "var(--surface)", color: "var(--accent)", boxShadow: "0 1px 4px rgba(0,0,0,0.08)" },

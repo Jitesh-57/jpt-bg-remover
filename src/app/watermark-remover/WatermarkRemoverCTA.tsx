@@ -84,7 +84,7 @@ export default function WatermarkRemoverCTA() {
       >
         Remove Watermark →
       </button>
-      <p style={{ fontSize: 12, color: "#9AA1B4", textAlign: "center", margin: "10px 0 0" }}>
+      <p style={{ fontSize: 12, color: "var(--text-faint)", textAlign: "center", margin: "10px 0 0" }}>
         Opens gostudio.ai — our recommended AI watermark remover.
       </p>
     </div>

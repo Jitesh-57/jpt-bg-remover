@@ -149,8 +149,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   const CATEGORY_COLORS: Record<string, string> = {
     Tutorial: "var(--accent)",
-    Guide: "var(--accent-2)",
-    News: "var(--accent-2)",
+    Guide: "var(--accent-strong)",
+    News: "var(--accent-strong)",
   };
 
   return (

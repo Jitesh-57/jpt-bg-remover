@@ -481,11 +481,11 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
         <div className="jpt-hero-deco" style={{ position: 'absolute', right: '13%', top: 330, transform: 'rotate(11deg)', animationDelay: '1.2s', pointerEvents: 'none' }}>
           <DecoCard badge={decor[1]} />
         </div>
-        <div className="jpt-hero-deco" style={{ position: 'absolute', left: '20%', top: 210, fontSize: 20, color: 'var(--accent-2)', animationDelay: '0.6s', pointerEvents: 'none' }}>✦</div>
+        <div className="jpt-hero-deco" style={{ position: 'absolute', left: '20%', top: 210, fontSize: 20, color: 'var(--accent-strong)', animationDelay: '0.6s', pointerEvents: 'none' }}>✦</div>
         <div className="jpt-hero-deco" style={{ position: 'absolute', right: '19%', top: 200, fontSize: 16, color: 'var(--accent)', animationDelay: '2s', pointerEvents: 'none' }}>✦</div>
         <div className="jpt-hero-deco" style={{ position: 'absolute', left: '17%', top: 430, width: 14, height: 14, borderRadius: '50%', border: '2px solid var(--accent-border)', animationDelay: '1.6s', pointerEvents: 'none' }} />
         <div className="jpt-hero-deco" style={{ position: 'absolute', right: '22%', top: 420, width: 22, height: 22, borderRadius: '50%', border: '2px solid var(--success-soft)', animationDelay: '0.9s', pointerEvents: 'none' }} />
-        <div className="jpt-hero-deco" style={{ position: 'absolute', right: '15%', top: 250, fontSize: 22, color: 'var(--accent-2)', animationDelay: '2.4s', pointerEvents: 'none' }}>✓</div>
+        <div className="jpt-hero-deco" style={{ position: 'absolute', right: '15%', top: 250, fontSize: 22, color: 'var(--accent-strong)', animationDelay: '2.4s', pointerEvents: 'none' }}>✓</div>
 
         <div style={{ position: 'relative', maxWidth: 780, margin: '0 auto' }}>
           {/* Badge */}
@@ -554,7 +554,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
                 <div style={{ height: 1, flex: 1, background: 'var(--surface-2)' }} />
               </div>
 
-              <div style={{ fontSize: 11, color: '#C4C8D4', lineHeight: 1.6 }}>
+              <div style={{ fontSize: 11, color: 'var(--text-faint)', lineHeight: 1.6 }}>
                 Supports JPG · JPEG · PNG · WEBP · up to 16 MB
               </div>
               <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 10 }}>
@@ -756,15 +756,15 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
       {/* ── UPLOAD CTA SECTION ───────────────────────────────────────────── */}
       <section style={{ padding: '88px 24px', background: 'var(--surface)' }}>
         <div style={{ maxWidth: 760, margin: '0 auto' }}>
-          <div style={{ background: 'var(--bg-elevated)', borderRadius: 28, padding: '56px 48px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ background: 'linear-gradient(135deg,#0C3A2A,#071F17)', borderRadius: 28, padding: '56px 48px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', top: -60, right: -60, width: 240, height: 240, background: 'radial-gradient(circle, rgba(15,157,107,0.3) 0%, transparent 70%)', pointerEvents: 'none' }} />
             <div style={{ position: 'absolute', bottom: -40, left: -40, width: 180, height: 180, background: 'radial-gradient(circle, rgba(20,184,166,0.3) 0%, transparent 70%)', pointerEvents: 'none' }} />
             <div style={{ position: 'relative' }}>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(15,157,107,0.25)', color: 'var(--accent)', fontWeight: 700, fontSize: 12, borderRadius: 20, padding: '6px 14px', marginBottom: 20, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Free to try</div>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.14)', color: '#A7F3D0', fontWeight: 700, fontSize: 12, borderRadius: 20, padding: '6px 14px', marginBottom: 20, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Free to try</div>
               <h2 style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', fontWeight: 900, color: '#fff', margin: '0 0 14px', letterSpacing: '-0.02em' }}>
                 Ready to transform your images?
               </h2>
-              <p style={{ fontSize: 16, color: 'var(--text-faint)', margin: '0 0 32px' }}>100% free · No sign-up required · No watermark.</p>
+              <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.78)', margin: '0 0 32px' }}>100% free · No sign-up required · No watermark.</p>
               <a
                 href={toolHref}
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg, var(--accent), var(--accent-2))', color: '#fff', fontWeight: 800, fontSize: 16, padding: '16px 40px', borderRadius: 14, textDecoration: 'none', boxShadow: '0 8px 30px rgba(15,157,107,0.5)' }}
