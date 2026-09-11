@@ -1,17 +1,20 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { PROMPTS, GROUPS, imageCandidates, type Prompt, type GroupId } from "@/lib/prompts-80s";
+import { listBucketImages, matchImages } from "@/lib/prompt-images";
 import { trackEvent } from "@/lib/analytics";
 
 const GROUP_META = Object.fromEntries(GROUPS.map((g) => [g.id, g])) as Record<GroupId, (typeof GROUPS)[number]>;
 
 /** Reference image with a designed fallback: probes each candidate filename in
  *  turn, and renders a generated placeholder once they are all exhausted. */
-function PromptImage({ p }: { p: Prompt }) {
-  const candidates = useMemo(() => imageCandidates(p), [p]);
+function PromptImage({ p, resolved }: { p: Prompt; resolved?: string }) {
+  // A URL matched from the live bucket listing wins; otherwise probe likely names.
+  const candidates = useMemo(() => (resolved ? [resolved] : imageCandidates(p)), [p, resolved]);
   const [idx, setIdx] = useState(0);
   const [loaded, setLoaded] = useState(false);
+  useEffect(() => { setIdx(0); setLoaded(false); }, [resolved]);
   const exhausted = idx >= candidates.length;
   const g = GROUP_META[p.group];
 
@@ -89,7 +92,7 @@ function CopyButton({ text, id, label = "Copy prompt", full = false }: { text: s
   );
 }
 
-function PromptCard({ p }: { p: Prompt }) {
+function PromptCard({ p, resolved }: { p: Prompt; resolved?: string }) {
   const [open, setOpen] = useState(false);
   const g = GROUP_META[p.group];
   return (
@@ -100,7 +103,7 @@ function PromptCard({ p }: { p: Prompt }) {
         background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 18,
       }}
     >
-      <PromptImage p={p} />
+      <PromptImage p={p} resolved={resolved} />
       <div style={{ padding: "16px 17px 17px", display: "flex", flexDirection: "column", gap: 10, flex: 1 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
           <span style={{ fontSize: 12, fontWeight: 900, color: "var(--accent-strong)" }}>#{String(p.n).padStart(2, "0")}</span>
@@ -141,6 +144,15 @@ function PromptCard({ p }: { p: Prompt }) {
 export default function PromptBrowser() {
   const [active, setActive] = useState<GroupId | "all">("all");
   const [q, setQ] = useState("");
+  const [resolvedImages, setResolvedImages] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    let alive = true;
+    listBucketImages().then((files) => {
+      if (alive && files.length) setResolvedImages(matchImages(PROMPTS, files));
+    });
+    return () => { alive = false; };
+  }, []);
 
   const shown = useMemo(() => {
     const needle = q.trim().toLowerCase();
@@ -196,7 +208,7 @@ export default function PromptBrowser() {
 
       {shown.length > 0 ? (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(280px, 100%), 1fr))", gap: 20 }}>
-          {shown.map((p) => <PromptCard key={p.id} p={p} />)}
+          {shown.map((p) => <PromptCard key={p.id} p={p} resolved={resolvedImages[p.id]} />)}
         </div>
       ) : (
         <p style={{ textAlign: "center", color: "var(--text-muted)", padding: "48px 0" }}>

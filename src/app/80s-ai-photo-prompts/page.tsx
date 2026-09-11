@@ -10,14 +10,14 @@ const URL = `${BASE}/80s-ai-photo-prompts`;
 export const metadata: Metadata = {
   title: { absolute: "100 Free 80s AI Photo Prompts (Copy & Paste) — ChatGPT & Gemini | JPT AI" },
   description:
-    "100 free copy-paste prompts for the viral 80s AI photo trend. Yearbook, studio glamour, neon synthwave and Bollywood retro styles that keep your real face. Works in ChatGPT and Gemini.",
+    "100 free copy-paste prompts for the viral 80s AI photo trend. Motorcycle and classic-car portraits, rainy streets, weddings, disco nights and family albums — all written to keep your real face. Works in ChatGPT and Gemini.",
   keywords:
-    "80s ai photo prompt, 80s ai photo trend, chatgpt 80s prompt, 80s yearbook ai, retro ai photo prompt, bollywood retro ai prompt, gemini 80s photo, ai yearbook prompt",
+    "80s ai photo prompt, 80s ai photo trend, chatgpt 80s prompt, retro ai photo prompt, 1980s ai photo, vintage bollywood ai prompt, gemini 80s photo, 80s indian photo prompt, ai photo prompt copy paste",
   alternates: { canonical: URL },
   openGraph: {
     title: "100 Free 80s AI Photo Prompts (Copy & Paste)",
     description:
-      "The viral 80s AI photo trend, solved: 100 ready-made prompts for ChatGPT and Gemini — yearbook, studio glamour, neon and Bollywood retro.",
+      "The viral 80s AI photo trend, solved: 100 ready-made prompts for ChatGPT and Gemini — street, travel, romance, weddings, disco and family portraits.",
     url: URL,
     type: "article",
     siteName: "JPT AI",
@@ -29,19 +29,12 @@ export const metadata: Metadata = {
   },
 };
 
-const STEPS = [
-  { t: "Pick a prompt", d: "Choose a style below and hit Copy. Every prompt already includes the line that stops the AI changing your face." },
-  { t: "Upload a clear photo", d: "Open ChatGPT or Gemini, attach a front-facing, well-lit photo, and paste the prompt. Front-facing works best." },
-  { t: "Generate and refine", d: "If the face drifts, re-send with “keep my exact facial features unchanged”. Try a different year for a different look." },
-  { t: "Polish it here", d: "Bring the result back to sjpt.io to upscale it to 4K, crop it for Instagram, or compress it for sharing — all free." },
-];
-
 const FAQS = [
-  { q: "What is the 80s AI photo trend?", a: "It's a viral trend where people use ChatGPT or Gemini to restyle a normal photo of themselves as an authentic-looking 1980s picture — big hair, shoulder pads, studio lighting and film grain. Popular versions include yearbook portraits, studio glamour shots, neon synthwave and vintage Bollywood styling." },
-  { q: "How do I keep my own face in the photo?", a: "That's the single most important line in the prompt. Every prompt here starts by telling the AI to preserve your exact facial features, bone structure and natural skin tone, and to change only hair, makeup, wardrobe, lighting and background. If the face still drifts, send the instruction again on its own." },
-  { q: "Do these prompts work in Gemini as well as ChatGPT?", a: "Yes. The same prompt structure works in ChatGPT, Google Gemini and most image models — they all respond to the same pattern of identity-lock, styling detail and a specific year." },
+  { q: "What is the 80s AI photo trend?", a: "It's a viral trend where people use ChatGPT or Gemini to restyle a normal photo of themselves as an authentic-looking 1980s picture — big hair, shoulder pads, studio lighting and film grain. The prompts here cover motorcycle and classic-car portraits, rainy streets and tea stalls, cafés and park benches, weddings and receptions, disco floors, village roads, and formal family studio portraits." },
+  { q: "How do I keep my own face in the photo?", a: "That's the single most important instruction, and every prompt here carries it: preserve your recognisable identity, facial features, facial structure and natural skin tone, and do not copy the reference person's face. If the face still drifts, send that instruction again on its own." },
+  { q: "Do these prompts work in Gemini as well as ChatGPT?", a: "Yes. The same prompt structure works in ChatGPT, Google Gemini and most image models — they all respond to the same pattern of identity-lock first, then the scene, styling and camera detail to copy." },
   { q: "What photo should I upload for the best result?", a: "A clear, front-facing, well-lit photo at a decent resolution. Avoid heavy sunglasses, extreme angles and busy backgrounds — the model has more to work with when your face is clearly visible." },
-  { q: "Why do the prompts mention a specific year like 1986?", a: "Naming an exact year rather than just “the 80s” makes the output far more specific — the model picks period-accurate hair, clothing and film stock instead of a generic retro filter. Change the year to shift the look across the decade." },
+  { q: "Do I need a reference image as well as my photo?", a: "These prompts are written to work alongside a reference image — the picture whose composition, pose, framing and styling you want to copy. Upload your own photo as the identity reference, add the reference image, then paste the prompt. The prompt tells the model to take only the look from the reference and keep your face from your photo." },
   { q: "Is it safe to upload my photo to an AI tool?", a: "Use your judgement. Avoid uploading photos containing documents, private surroundings, or other people who haven't agreed to it. Note that some platforms add visible or hidden watermarks to AI-generated images. The free tools on sjpt.io run in your browser, so images you edit here aren't uploaded to a server." },
   { q: "Are these prompts free to use?", a: "Yes — all 100 are free to copy and use, with no sign-up. You'll need access to ChatGPT or Gemini to generate the image itself." },
 ];
@@ -54,12 +47,6 @@ const RELATED = [
 ];
 
 export default function Page() {
-  const howToLd = {
-    "@context": "https://schema.org", "@type": "HowTo",
-    name: "How to do the 80s AI photo trend",
-    description: "Turn a normal photo into an authentic-looking 1980s portrait using a copy-paste prompt in ChatGPT or Gemini.",
-    step: STEPS.map((s, i) => ({ "@type": "HowToStep", position: i + 1, name: s.t, text: s.d })),
-  };
   const faqLd = {
     "@context": "https://schema.org", "@type": "FAQPage",
     mainEntity: FAQS.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
@@ -74,7 +61,6 @@ export default function Page() {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
       <ScrollReveal />
@@ -88,8 +74,8 @@ export default function Page() {
               100 free <span className="jpt-grad-text">80s AI photo</span> prompts
             </h1>
             <p className="jpt-lead" style={{ maxWidth: 620, margin: "0 auto 26px" }}>
-              Copy, paste, and get an authentic-looking 1980s portrait that still looks like you.
-              Yearbook, studio glamour, neon synthwave and vintage Bollywood — works in ChatGPT and Gemini.
+              Pick the look, copy the prompt, keep your own face. Motorcycles and classic cars,
+              rainy streets, weddings, disco nights and family albums — works in ChatGPT and Gemini.
             </p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "10px 20px", justifyContent: "center", fontSize: 14, color: "var(--text-muted)", fontWeight: 600 }}>
               <span>✓ {PROMPT_COUNT} prompts</span>
@@ -100,33 +86,8 @@ export default function Page() {
           </div>
         </section>
 
-        {/* TRUST NOTE */}
-        <section style={{ padding: "0 24px 44px" }}>
-          <div style={{ maxWidth: 780, margin: "0 auto", background: "var(--surface-2)", border: "1px solid var(--border)", borderRadius: 14, padding: "16px 20px", fontSize: 14.5, color: "var(--text-muted)", lineHeight: 1.7 }}>
-            <strong style={{ color: "var(--text)" }}>Before you upload anywhere:</strong> avoid photos showing documents,
-            private surroundings, or other people who haven&apos;t agreed to it. These prompts run in ChatGPT or Gemini —
-            the free editing tools on this site run in your browser, so images you edit <em>here</em> never reach a server.
-          </div>
-        </section>
-
-        {/* HOW IT WORKS */}
-        <section style={{ padding: "0 24px 56px" }}>
-          <div style={{ maxWidth: 1000, margin: "0 auto" }}>
-            <h2 className="jpt-h2" style={{ textAlign: "center" }}>How to do the trend</h2>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(215px,1fr))", gap: 18, marginTop: 28 }}>
-              {STEPS.map((s, i) => (
-                <div key={i} style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 16, padding: "22px 20px" }}>
-                  <div style={{ width: 36, height: 36, borderRadius: "50%", background: "var(--grad-strong)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, marginBottom: 12 }}>{i + 1}</div>
-                  <h3 className="jpt-h3">{s.t}</h3>
-                  <p style={{ fontSize: 14, color: "var(--text-muted)", lineHeight: 1.65, margin: 0 }}>{s.d}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* PROMPTS */}
-        <section style={{ padding: "0 24px 64px" }}>
+        <section style={{ padding: "8px 24px 64px" }}>
           <div style={{ maxWidth: 1240, margin: "0 auto" }}>
             <h2 className="jpt-h2" style={{ textAlign: "center" }}>All {PROMPT_COUNT} prompts</h2>
             <p style={{ textAlign: "center", color: "var(--text-muted)", margin: "0 0 32px" }}>
