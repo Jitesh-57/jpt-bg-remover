@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PromptBrowser from "./PromptBrowser";
 import ScrollReveal from "@/app/_components/ScrollReveal";
-import { PROMPT_COUNT, CATEGORIES } from "@/lib/prompts-80s";
+import { PROMPT_COUNT, GROUPS } from "@/lib/prompts-80s";
 
 const BASE = "https://www.sjpt.io";
 const URL = `${BASE}/80s-ai-photo-prompts`;
@@ -127,10 +127,10 @@ export default function Page() {
 
         {/* PROMPTS */}
         <section style={{ padding: "0 24px 64px" }}>
-          <div style={{ maxWidth: 900, margin: "0 auto" }}>
+          <div style={{ maxWidth: 1240, margin: "0 auto" }}>
             <h2 className="jpt-h2" style={{ textAlign: "center" }}>All {PROMPT_COUNT} prompts</h2>
             <p style={{ textAlign: "center", color: "var(--text-muted)", margin: "0 0 32px" }}>
-              {CATEGORIES.length} styles. Tap any prompt to copy it.
+              {GROUPS.length} styles. Every prompt is written to keep your real face — tap Copy and paste it straight into ChatGPT or Gemini.
             </p>
             <PromptBrowser />
           </div>

@@ -1,231 +1,181 @@
-// 100 copy-paste prompts for the viral 80s AI photo trend.
-//
-// Structure follows the pattern that recurs across every public version of this
-// prompt (see docs research): (1) lock the face, (2) change only hair / makeup /
-// wardrobe / lighting / background, (3) period-accurate detail, (4) anchor to a
-// specific year so it reads as a real photo rather than a filter.
-//
-// To swap in a different prompt set, replace the CATEGORIES array below — the
-// page renders entirely from this file.
+// The 100 80s-AI-photo prompts, exactly as authored. Each prompt is paired with
+// a reference image in the Supabase "Prompt template images" bucket; prompts
+// without an image fall back to a generated placeholder in the UI.
 
-/** Identity lock — appears in every prompt; the single most important line. */
-const LOCK =
-  "Preserve my exact facial features, bone structure, identity and natural skin tone — do not change my face. Change only the hair, makeup, wardrobe, lighting and background.";
+export type GroupId =
+  | "street" | "romance" | "travel" | "family" | "celebration" | "music"
+  | "fashion" | "work" | "cinema" | "college" | "portrait" | "master";
 
-/** Period-authenticity tail, anchored to a specific year. */
-const tail = (year: number) =>
-  `Authentic analogue film grain, slightly faded period colour, shot on 35mm. It should look like a real photograph taken in ${year} — not a filter applied over a modern photo.`;
-
-export interface Prompt {
+export type Prompt = {
   id: string;
+  n: number;
   title: string;
+  group: GroupId;
   text: string;
-}
-export interface PromptCategory {
-  id: string;
-  name: string;
-  emoji: string;
-  blurb: string;
-  prompts: Prompt[];
-}
+  slug: string;
+};
 
-let seq = 0;
-const P = (title: string, scene: string, year = 1986): Prompt => ({
-  id: `p${++seq}`,
-  title,
-  text: `${scene}\n\n${LOCK}\n\n${tail(year)}`,
-});
-
-export const MASTER_TEMPLATE = `Turn this photo into an authentic 1986 studio portrait.
-
-${LOCK}
-
-Style: [describe hair, wardrobe, makeup, background and lighting here].
-
-${tail(1986)}`;
-
-export const CATEGORIES: PromptCategory[] = [
-  {
-    id: "studio-glamour",
-    name: "Studio Glamour",
-    emoji: "✨",
-    blurb: "The classic 80s mall-studio portrait — soft focus, dreamy gradient backdrop, big hair.",
-    prompts: [
-      P("Classic mall studio", "Recreate me as a classic 1980s shopping-mall portrait-studio photograph: voluminous blow-dried hair, soft pastel blue-to-pink gradient backdrop, warm key light with a soft-focus glow filter, shoulders angled to camera."),
-      P("Soft-focus dream", "Style me as a dreamy 1980s glamour portrait with heavy soft-focus, a halo of backlight through big feathered hair, frosted pink lipstick and blue eyeshadow, seated against a mottled grey studio backdrop."),
-      P("Pearl and satin", "Make this a 1985 formal studio glamour shot: satin blouse with a pearl necklace, teased and hair-sprayed hair, rosy blush, gentle vignette and a painted cloud-grey backdrop.", 1985),
-      P("Laser beam backdrop", "Recreate me in an 80s portrait studio with the famous laser-beam backdrop — neon pink and blue beams over black, high-shine hair, a bold blazer and a confident half-smile."),
-      P("Feathered hair icon", "Style me with iconic 1983 feathered, centre-parted hair, soft champagne lighting, a cream silk blouse and a hand-painted sepia studio backdrop.", 1983),
-      P("Glamour with pearls and fog", "Turn this into a high-glamour 80s studio portrait with a light fog machine haze, rim lighting on big curled hair, dangling pearl earrings and a black off-shoulder top."),
-      P("Two-tone gradient", "Recreate me against a two-tone teal-and-magenta airbrushed studio gradient, hair blown out and voluminous, wearing a bold-shouldered jacket, lit with a soft beauty dish."),
-      P("Golden hour studio", "Make this a warm 1987 studio portrait: golden tungsten key light, honey-toned highlights in big wavy hair, a gold chain necklace and a mustard-brown backdrop.", 1987),
-      P("Black velvet portrait", "Style me as an elegant 80s black-velvet-backdrop studio portrait with dramatic side lighting, statement gold earrings, deep red lipstick and sculpted hair."),
-      P("Family portrait day", "Recreate me as the formal 80s portrait-studio photo taken on family portrait day — neat blow-dried hair, a collared shirt or blouse, soft even lighting and a muted blue marbled backdrop."),
-    ],
-  },
-  {
-    id: "yearbook",
-    name: "Yearbook Portrait",
-    emoji: "🎓",
-    blurb: "High-school yearbook energy — awkward charm, gradient backdrop, senior-photo pose.",
-    prompts: [
-      P("Classic senior photo", "Make this my 1986 high-school senior yearbook portrait: neat feathered hair, a collared shirt under a sweater, a blue-to-white gradient backdrop and flat studio lighting."),
-      P("Varsity jacket", "Recreate me as an 80s yearbook photo wearing a varsity letterman jacket over a turtleneck, hair blow-dried and full, seated at a slight angle on a grey mottled backdrop."),
-      P("Big glasses yearbook", "Style me as a 1984 yearbook portrait with oversized tortoiseshell glasses, a striped polo shirt, side-parted hair and a warm brown studio gradient.", 1984),
-      P("Cheer squad", "Make this an 80s yearbook sports portrait: cheer or team uniform, high ponytail with a ribbon, bright even lighting and a school-colours backdrop."),
-      P("Band and orchestra", "Recreate me as the 80s school band yearbook photo — holding a brass instrument, formal band uniform, tidy hair and a deep maroon studio backdrop."),
-      P("Prom king and queen", "Style me as an 80s prom yearbook photo: ruffled tuxedo shirt or taffeta dress, corsage, balloon arch background and a soft-focus flash."),
-      P("Class of '89", "Make this a Class of 1989 yearbook portrait with a bold patterned sweater, crimped hair, subtle soft focus and a laser-blue gradient backdrop.", 1989),
-      P("Debate club formal", "Recreate me as a serious 80s yearbook club portrait: blazer and tie, hair neatly combed, arms folded, lit with hard studio key light on a slate backdrop."),
-      P("Faculty photo", "Style me as an 80s school faculty yearbook portrait — tweed jacket with elbow patches or a smart cardigan, glasses, warm lighting and a bookshelf-painted backdrop."),
-      P("Best smile superlative", "Make this the 'Best Smile' superlative yearbook photo from 1985: bright grin, feathered hair, pastel polo collar popped, sky-blue gradient backdrop.", 1985),
-    ],
-  },
-  {
-    id: "neon-synthwave",
-    name: "Neon Synthwave",
-    emoji: "🌆",
-    blurb: "Miami-Vice neon, grid horizons and chrome — the loudest end of the trend.",
-    prompts: [
-      P("Neon grid horizon", "Recreate me in a 1985 synthwave scene: magenta and cyan neon rim lighting, a glowing wireframe grid horizon behind me, chrome sunset, slicked-back hair and a pastel blazer with rolled sleeves.", 1985),
-      P("Miami night", "Style me as a Miami Vice-era portrait — pastel linen suit over a t-shirt, neon palm-tree signage glowing behind, humid night air, teal and pink light on my face."),
-      P("Arcade glow", "Make this a photo of me lit only by 80s arcade cabinets: multicoloured screen glow across my face, a denim jacket, dark arcade interior with cabinet marquees blurred behind."),
-      P("Chrome and laser", "Recreate me in a neon-lit 80s studio with chrome lettering, laser beams cutting through haze, mirrored sunglasses pushed into big hair and a leather jacket."),
-      P("Synth club portrait", "Style me inside a 1987 synth-pop nightclub: hot pink and electric blue wash lights, fog, big permed hair, a mesh top and heavy eyeliner.", 1987),
-      P("Neon rain street", "Make this a neon-noir 80s street portrait — wet pavement reflecting pink and green neon signage, trench coat, collar up, cinematic side light."),
-      P("VHS tracking lines", "Recreate me as a still from a 1986 VHS tape: visible tracking lines and colour bleed, neon studio lighting, big hair, bold geometric-patterned top."),
-      P("Sunset chrome portrait", "Style me against an airbrushed chrome-and-sunset backdrop with a purple-to-orange gradient sky, wind-blown hair and a bright windbreaker."),
-      P("Neon gym", "Make this an 80s neon aerobics-studio portrait: headband, bright leotard and legwarmers, mirrored wall, magenta and cyan tube lighting."),
-      P("Retro-future portrait", "Recreate me as a retro-futurist 1988 portrait with a chrome-effect jacket, neon geometric shapes floating behind, hard blue key light and a soft magenta fill.", 1988),
-    ],
-  },
-  {
-    id: "bollywood",
-    name: "Bollywood Studio",
-    emoji: "🎬",
-    blurb: "Vintage Hindi-cinema styling — the strongest sub-trend in India right now.",
-    prompts: [
-      P("Mumbai premiere night", "Recreate me outside a Mumbai cinema hall on a 1986 film premiere night: vintage Bollywood posters and a glowing neon marquee behind me, a sequinned gown or a wide-collar patterned shirt, styled voluminous hair, warm cinematic key light."),
-      P("Retro film studio portrait", "Style me as a 1980s Bollywood studio publicity portrait — dramatic single-source lighting, painted studio backdrop, glossy styled hair, statement jewellery, hyper-realistic and cinematic."),
-      P("Song sequence still", "Make this a still from an 80s Hindi film song sequence: bright saturated colours, chiffon and sequins, a garden or hillside set, soft wind machine on the hair, high-contrast film stock."),
-      P("Vintage movie magazine", "Recreate me as a cover portrait for a 1984 Bollywood film magazine: bold direct-to-camera gaze, heavy studio makeup, glamorous styling and rich saturated colour.", 1984),
-      P("Disco night Bombay", "Style me in a 1982 Bombay disco: mirror ball, coloured floor lights, a satin shirt open at the collar or a shimmering dress, bouffant hair and confident posture.", 1982),
-      P("Rain song classic", "Make this a classic 80s Bollywood rain-song still — dramatic backlight through falling rain, soaked styled hair, rich jewel-tone clothing, cinematic contrast."),
-      P("Family drama poster", "Recreate me as the lead in an 80s Hindi family-drama poster portrait: warm amber lighting, traditional formal wear, dignified expression, grainy period film stock."),
-      P("Action hero portrait", "Style me as an 80s Bollywood action-hero publicity still: leather or denim jacket, moustache and styled hair, hard rim light, smoky background, high contrast."),
-      P("Playback singer portrait", "Make this a 1987 recording-studio portrait: vintage microphone, headphones around the neck, warm tungsten light, patterned shirt or elegant saree, soft grain.", 1987),
-      P("Cinema hall lobby", "Recreate me standing in a vintage Indian cinema lobby with hand-painted film hoardings, red carpet and warm bulb lighting, dressed in glamorous 80s eveningwear."),
-    ],
-  },
-  {
-    id: "indian-retro",
-    name: "Saree & Indian Retro",
-    emoji: "🪷",
-    blurb: "Traditional Indian styling with period studio treatment — saree, jewellery, warm grain.",
-    prompts: [
-      P("Silk saree studio", "Recreate me in a rich silk saree with traditional gold jewellery, curled voluminous hair, seated in a 1980s Indian portrait studio with warm tungsten lighting and a painted backdrop."),
-      P("Kurta formal portrait", "Style me in a crisp kurta with a Nehru-collar jacket, neatly styled hair and a moustache, photographed in an 80s Indian studio with soft warm light and a muted backdrop."),
-      P("Wedding album portrait", "Make this a page from an 80s Indian wedding album: heavy bridal or formal wear, layered gold jewellery, marigold garlands, warm flash-lit colour and visible grain."),
-      P("Festival family photo", "Recreate me dressed for a 1980s Diwali celebration — festive traditional clothing, oil lamps glowing warm in the background, candid flash-lit family-album look."),
-      P("Chiffon saree glamour", "Style me in a pastel chiffon saree with statement earrings, soft-focus glamour lighting, big blow-dried hair and a hand-painted garden backdrop."),
-      P("Temple visit portrait", "Make this an 80s photograph taken outside a South Indian temple: traditional silk clothing, jasmine in the hair, bright natural daylight and slightly faded colour."),
-      P("Retro passport formal", "Recreate me as a formal 1985 Indian studio portrait — plain blue backdrop, direct flash, traditional formal clothing, neutral expression, authentic period grain.", 1985),
-      P("Bridal jewellery close portrait", "Style me as an 80s Indian bridal portrait with elaborate gold jewellery, a red and gold saree, kohl-lined eyes, warm dramatic side lighting."),
-      P("Village daylight portrait", "Make this a 1980s outdoor portrait in an Indian courtyard: cotton saree or kurta, natural midday light, mud-brick wall behind, warm faded Kodachrome colour."),
-      P("Anniversary studio photo", "Recreate me in a formal 80s Indian anniversary studio portrait: traditional finery, seated pose, ornate carved chair, warm bulb lighting and soft vignette."),
-    ],
-  },
-  {
-    id: "family-album",
-    name: "Family Album",
-    emoji: "📷",
-    blurb: "Home-photo realism — direct flash, living-room backdrops, faded print colour.",
-    prompts: [
-      P("Living room flash", "Recreate me as a candid 1986 family-album snapshot: harsh direct on-camera flash, patterned wallpaper and a boxy TV behind, casual 80s clothing, red-eye-era colour cast."),
-      P("Birthday party", "Style me at an 80s birthday party — paper hats, a homemade cake with candles, wood-panelled walls, flash-lit and slightly overexposed."),
-      P("Christmas morning", "Make this a 1985 Christmas-morning family photo: pyjamas or a festive jumper, tinsel tree with big coloured bulbs, warm flash, faded print colour.", 1985),
-      P("Backyard barbecue", "Recreate me at an 80s backyard barbecue: casual polo shirt or sundress, garden furniture, bright summer sun, washed-out colour and visible grain."),
-      P("Road trip stop", "Style me leaning against a boxy 80s family car at a roadside stop, windbreaker and jeans, big open sky, sun-faded snapshot colour."),
-      P("Beach holiday", "Make this a 1987 beach-holiday snapshot: bright swimwear or a loose shirt, sunburnt light, sand and sea behind, heavy sun flare and faded borders.", 1987),
-      P("Grandma's front room", "Recreate me sitting in a 1980s front room with floral wallpaper, a doily-covered sideboard and a gas fire, flash-lit and warmly faded."),
-      P("School run morning", "Style me as an 80s candid morning photo — school bag over the shoulder, front door and hedge behind, flat grey daylight, soft grain."),
-      P("New car day", "Make this an 80s 'new car' family photo: proud pose beside a boxy saloon on the driveway, casual clothing, bright overcast light, slightly green-shifted colour."),
-      P("Camping trip", "Recreate me on an 80s camping holiday: fleece and cagoule, canvas tent behind, campfire light on my face, grainy low-light film."),
-    ],
-  },
-  {
-    id: "magazine",
-    name: "Magazine Cover",
-    emoji: "📰",
-    blurb: "Editorial fashion covers — bold type-ready framing and high-gloss styling.",
-    prompts: [
-      P("Fashion cover shoot", "Recreate me as an 80s fashion magazine cover portrait: bold direct gaze, dramatic shoulder-padded outfit, strong beauty lighting, seamless coloured backdrop with space for cover lines."),
-      P("Music magazine", "Style me as an 80s music magazine cover: leather jacket, tousled big hair, moody side light, gritty studio backdrop and high-contrast printing look."),
-      P("Business feature", "Make this an 80s business magazine cover portrait — power suit with strong shoulders, arms crossed, confident expression, corporate grey gradient backdrop."),
-      P("Fitness cover", "Recreate me as an 80s fitness magazine cover: bright leotard or tracksuit, headband, glowing rim light, energetic pose, saturated primary colours."),
-      P("Teen magazine pull-out", "Style me as an 80s teen magazine pull-out poster: bright colour blocking, glossy smile, feathered hair, playful pose and heavy studio flash."),
-      P("Style editorial", "Make this a high-fashion 1988 editorial portrait: avant-garde silhouette, sculptural hair, hard shadow on a coloured wall, saturated film stock.", 1988),
-      P("Cover star glamour", "Recreate me as a glamour magazine cover from 1984: soft-focus beauty lighting, glossy lips, big curled hair, jewel-tone satin and a warm cream backdrop.", 1984),
-      P("Tech magazine feature", "Style me as an 80s technology magazine cover portrait: beige computer terminal glowing beside me, blazer and tie, cool fluorescent office light."),
-      P("Travel magazine", "Make this an 80s travel magazine cover portrait: linen shirt, sun-bleached location background, bright natural light and warm faded Kodachrome tones."),
-      P("Album sleeve", "Recreate me as an 80s vinyl album sleeve portrait: dramatic single-source lighting, bold solid colour background, styled hair and a confident, stylised pose."),
-    ],
-  },
-  {
-    id: "disco",
-    name: "Disco & Nightlife",
-    emoji: "🕺",
-    blurb: "Mirror balls, sequins and dance-floor lighting.",
-    prompts: [
-      P("Mirror ball floor", "Recreate me on an 80s disco dance floor under a mirror ball: scattered light specks across my face, sequinned outfit, big hair, motion in the background."),
-      P("Roller disco", "Style me at an 80s roller disco — bright striped tube socks and shorts or a shiny jumpsuit, neon rink lighting, skates on, energetic pose."),
-      P("VIP booth", "Make this an 80s nightclub VIP booth photo: velvet seating, champagne on the table, satin shirt or a shimmering dress, warm low light and direct flash."),
-      P("Dance floor flash", "Recreate me mid-dance in a 1983 club: harsh direct flash freezing the moment, sweaty glow, patterned shirt, crowded dark background.", 1983),
-      P("Cocktail bar portrait", "Style me at an 80s cocktail bar: neon bar signage behind, a brightly coloured cocktail in hand, sharp blazer, moody warm lighting."),
-      P("Saturday night out", "Make this an 80s Saturday-night-out group-style portrait: bold makeup, statement earrings, big blow-dried hair, flash-lit against a mirrored club wall."),
-      P("Live band front row", "Recreate me at the front row of an 80s gig: stage lights flaring behind, denim jacket with badges, hands up, grainy high-ISO film."),
-      P("Karaoke night", "Style me singing at an 80s karaoke bar — microphone in hand, glowing screen light on my face, patterned shirt, warm smoky interior."),
-      P("Rooftop party", "Make this an 80s rooftop party photo at dusk: city skyline behind, string lights, breezy linen outfit, warm golden flash and faded colour."),
-      P("After-party portrait", "Recreate me at an 80s after-party: dim warm lamplight, loosened tie or a slipped shoulder strap, tired glamorous look, heavy film grain."),
-    ],
-  },
-  {
-    id: "film-poster",
-    name: "Retro Film Poster",
-    emoji: "🎞️",
-    blurb: "Movie-poster framing — dramatic light, painted-poster texture, cinematic grade.",
-    prompts: [
-      P("Action poster hero", "Recreate me as the hero on an 80s action film poster: dramatic low-angle hero shot, hard rim light, smoke and sparks behind, painted-poster texture."),
-      P("Teen comedy poster", "Style me as the lead on an 80s teen comedy poster: bright pastel colour blocking, cheeky grin, school lockers behind, glossy airbrushed finish."),
-      P("Sci-fi one-sheet", "Make this an 80s sci-fi film one-sheet portrait: cool blue rim light, starfield and chrome typography space behind, determined expression, airbrushed poster look."),
-      P("Romance poster", "Recreate me on an 80s romance film poster: soft warm backlight, wind in the hair, gauzy soft focus, pastel sunset gradient."),
-      P("Detective thriller", "Style me as an 80s detective thriller poster portrait: venetian-blind shadows across the face, trench coat, cigarette smoke haze, high-contrast noir grade."),
-      P("Horror poster", "Make this an 80s horror film poster portrait: hard green-blue underlight, deep shadow, fog, unsettling stillness and heavy grain."),
-      P("Dance movie poster", "Recreate me on an 80s dance film poster: mid-motion pose, leg warmers and a cut-off sweatshirt, spotlight from above, dust in the beam."),
-      P("Buddy cop poster", "Style me as one half of an 80s buddy-cop poster: leather jacket, arms folded, city night behind, warm streetlight and a bold cinematic grade."),
-      P("Adventure serial", "Make this an 80s adventure film poster portrait: rugged jacket, sunlit jungle or desert behind, dust in the air, painted-poster warmth."),
-      P("Fantasy epic", "Recreate me on an 80s fantasy epic poster: dramatic mist, torchlight glow, ornate costume, airbrushed painterly texture and rich saturated colour."),
-    ],
-  },
-  {
-    id: "street",
-    name: "Street & Outdoor",
-    emoji: "🛼",
-    blurb: "Candid outdoor 80s — city streets, skate parks, sun-faded daylight.",
-    prompts: [
-      P("City street candid", "Recreate me as a candid 1986 street photograph: walking a busy high street, denim jacket and high-waisted jeans, boxy cars and shopfronts behind, sun-faded colour."),
-      P("Skate park", "Style me at an 80s skate park: skateboard under one foot, band t-shirt, concrete bowl behind, harsh midday sun and grainy colour film."),
-      P("Boombox on the corner", "Make this an 80s street portrait with a boombox on the shoulder, tracksuit and trainers, brick wall with graffiti, hard afternoon light."),
-      P("Bus stop wait", "Recreate me waiting at an 80s bus stop: parka over a jumper, grey overcast light, timetable poster behind, muted washed-out colour."),
-      P("Arcade doorway", "Style me leaning in the doorway of an 80s amusement arcade: neon signage above, denim on denim, evening light mixing with arcade glow."),
-      P("Seaside promenade", "Make this an 80s seaside promenade photo: windbreaker, hair blown sideways, railings and grey sea behind, bright flat daylight and faded print colour."),
-      P("Record shop", "Recreate me flicking through vinyl in an 80s record shop: band tee and leather jacket, crowded racks, warm fluorescent light and heavy grain."),
-      P("Payphone call", "Style me on an 80s street payphone: receiver to the ear, oversized coat, rain-slick pavement, sodium streetlight glow."),
-      P("Football terraces", "Make this an 80s football-terraces photo: scarf held up, crowd behind, cold flat daylight, grainy and slightly underexposed."),
-      P("Neighbourhood bike ride", "Recreate me on a BMX in an 80s suburban street: bright windbreaker, low sun flare, parked boxy cars, warm faded snapshot colour."),
-    ],
-  },
+export const GROUPS: { id: GroupId; name: string; emoji: string; blurb: string }[] = [
+  { id: "travel",      name: "Travel & Vehicles",   emoji: "🛵", blurb: "Motorcycles, classic cars, scooters, trains, buses and the open road." },
+  { id: "street",      name: "Street & Outdoors",   emoji: "🏙️", blurb: "Rainy streets, tea stalls, markets, rooftops, villages and gardens." },
+  { id: "romance",     name: "Romance & Couples",   emoji: "💞", blurb: "Cafés, park benches, picnics, balconies and golden-hour walks." },
+  { id: "work",        name: "Work & Professions",  emoji: "💼", blurb: "Photographers, writers, mechanics, doctors, engineers and shopkeepers." },
+  { id: "family",      name: "Family & Home",       emoji: "🏠", blurb: "Living rooms, road trips, parents and children, studio family portraits." },
+  { id: "college",     name: "Friends & Sport",     emoji: "🏏", blurb: "College steps, group walks, cricket, football and sunset hangouts." },
+  { id: "music",       name: "Music & Nightlife",   emoji: "🎸", blurb: "Record stores, cassette bedrooms, disco floors and stage performances." },
+  { id: "fashion",     name: "Fashion & Studio",    emoji: "✨", blurb: "Editorial studio work, denim, saree styling and direct-flash portraits." },
+  { id: "celebration", name: "Weddings & Parties",  emoji: "🎉", blurb: "Weddings, receptions, engagements, birthdays and house parties." },
+  { id: "cinema",      name: "Cinema & Drama",      emoji: "🎬", blurb: "Theatre entrances, detectives, action heroes and romantic leads." },
+  { id: "portrait",    name: "Portraits & Interiors", emoji: "🪞", blurb: "Windows, mirrors, balconies, bookstores and vintage rooms." },
+  { id: "master",      name: "Master Template",     emoji: "⭐", blurb: "The full-detail template to adapt to any reference image." },
 ];
 
-export const ALL_PROMPTS: Prompt[] = CATEGORIES.flatMap((c) => c.prompts);
-export const PROMPT_COUNT = ALL_PROMPTS.length;
+const slugify = (s: string) =>
+  s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+
+const P = (n: number, title: string, group: GroupId, text: string): Prompt => ({
+  id: `p${String(n).padStart(3, "0")}`,
+  n,
+  title,
+  group,
+  text,
+  slug: slugify(title),
+});
+
+export const PROMPTS: Prompt[] = [
+P(1, "1980s Couple Walking", "romance", `Use my uploaded photo as the identity reference and recreate the same visual concept as the reference image. Preserve my recognizable facial features, facial structure, natural skin tone, and identity. Recreate the same 1980s Indian street setting, full-body framing, walking pose, body positioning, camera angle, composition, clothing style, hairstyle styling, accessories, lighting, background elements, and photographic perspective shown in the reference image. If multiple people are present in my uploaded photo, preserve each person's identity and place them in the corresponding positions. Do not copy the reference people's identities or faces. Use the reference only for composition and visual styling. Create a photorealistic authentic 1980s analog-film photograph with realistic anatomy, natural skin texture, subtle 35mm film grain, natural shadows, and convincing period details.`),
+P(2, "1980s Motorcycle Portrait", "travel", `Use my uploaded photo as the identity reference and recreate the same motorcycle portrait shown in the reference image. Preserve my exact recognizable identity, facial features, facial structure, natural skin tone, and overall likeness. Match the reference image's motorcycle, seated position, hand placement, leg position, body angle, facial direction, full-body framing, camera height, perspective, vintage clothing style, hairstyle styling, accessories, street environment, background composition, lighting, and photographic look. Replace only the reference person's identity with mine. Do not copy the reference person's face or identity. Keep my face recognizable and natural. Create a photorealistic authentic 1980s analog-film photograph with realistic anatomy, natural skin texture, subtle film grain, and authentic period details.`),
+P(3, "1980s Classic Car Portrait", "travel", `Use my uploaded photo as the identity reference and reproduce the same visual composition as the reference image. Preserve my recognizable identity, facial features, facial proportions, natural skin tone, and overall likeness. Recreate the exact type of classic car, standing position, hand placement, body angle, facial direction, clothing silhouette, hairstyle styling, accessories, full-body framing, camera angle, street environment, background arrangement, lighting, and analog photography aesthetic from the reference. Do not reproduce the reference person's identity. Replace the reference person with my identity while keeping the scene visually consistent with the reference. Create a realistic 1980s photograph with natural anatomy, realistic skin texture, subtle 35mm film grain, and authentic period details.`),
+P(4, "1980s Cinema Entrance", "cinema", `Use my uploaded photo as the identity reference and recreate the same cinema-entrance composition shown in the reference image. Preserve my recognizable identity, facial structure, natural skin tone, and facial characteristics. Match the exact arrangement of the people, body positions, poses, clothing silhouettes, hairstyles, accessories, theater entrance, movie posters, vehicles, background activity, camera framing, perspective, lighting, and 1980s cinematic film aesthetic. If multiple people are uploaded, preserve every person's individual identity and place them in the corresponding positions. Do not copy the identities or faces of the reference subjects. Use the reference only for composition and styling. Create a photorealistic authentic 1980s photograph.`),
+P(5, "1980s Café Date", "romance", `Use my uploaded photo as the identity reference and recreate the same 1980s café scene as the reference image. Preserve my recognizable identity and the identity of every uploaded person. Match the same seating positions, body orientation, hand placement, facial direction, clothing silhouettes, hairstyles, accessories, table arrangement, café furniture, window placement, background décor, lighting, camera angle, framing, and analog film appearance. Keep the uploaded faces recognizable and natural. Do not copy the reference people's identities or faces. Use the reference only as a visual template. Create a photorealistic 1980s photograph with authentic period details and subtle 35mm film grain.`),
+P(6, "1980s Rooftop Portrait", "street", `Use my uploaded photo as the identity reference and recreate the same rooftop photograph. Preserve my exact recognizable facial identity, facial structure, natural skin tone, and appearance. Match the reference person's body position, hand placement, stance, facial direction, clothing silhouette, hairstyle styling, accessories, rooftop railing, city background, camera height, perspective, full-body framing, sunset lighting, shadows, and analog film characteristics. Replace the reference person with my identity while keeping the composition and visual style as close as possible to the reference. Do not copy the reference person's identity or face.`),
+P(7, "1980s Train Station Traveler", "travel", `Use my uploaded photo as the identity reference and recreate the same railway-station composition shown in the reference image. Preserve my recognizable identity, facial structure, skin tone, and natural appearance. Match the same standing position, suitcase placement, hand position, body orientation, facial direction, clothing silhouette, hairstyle styling, train position, platform environment, background people, camera angle, framing, lighting, and 1980s analog-film aesthetic. Replace the reference traveler with me while preserving my identity. Do not copy the reference person's face or identity. Create a photorealistic authentic 1980s photograph.`),
+P(8, "1980s Rainy Street", "street", `Use my uploaded photo as the identity reference and recreate the same rainy 1980s street scene. Preserve my recognizable face, facial structure, natural skin tone, and identity. Match the reference's walking direction, umbrella position, hand placement, stride, body posture, facial direction, clothing silhouette, hairstyle styling, street layout, vehicles, storefronts, wet pavement, reflections, camera angle, framing, lighting, rain intensity, and film texture. Keep my face recognizable and natural while reproducing the reference composition. Do not copy the reference person's identity. Create a cinematic photorealistic 1980s analog-film photograph.`),
+P(9, "1980s College Bicycle", "college", `Use my uploaded photo as the identity reference and recreate the same college bicycle portrait. Preserve my recognizable identity, facial features, facial structure, and natural skin tone. Match the reference image's bicycle position, hand placement, book placement, stance, body angle, facial direction, clothing style, hairstyle styling, shoulder bag, college architecture, background students, camera framing, perspective, lighting, and film texture. Replace the reference student with my identity while maintaining the same composition. Do not copy the reference person's face or identity.`),
+P(10, "1980s Family Living Room", "family", `Use my uploaded family photo as the identity reference and recreate the same family composition shown in the reference image. Preserve every person's recognizable identity, facial structure, skin tone, and natural appearance. Match the same number and arrangement of people, seating positions, standing positions, hand placement, body orientation, facial direction, clothing silhouettes, hairstyle styling, furniture, television, telephone, curtains, room layout, camera angle, framing, lighting, and 1980s film aesthetic. Keep each uploaded person's identity intact. Do not copy the reference people's identities or faces. Use the reference only for composition and styling.`),
+P(11, "1980s Record Store", "music", `Use my uploaded photo as the identity reference and recreate the reference image's exact record-store composition. Preserve my recognizable identity, facial features, facial structure, and natural skin tone. Match the same body position, sideways pose, hand position, record placement, clothing silhouette, hairstyle styling, accessories, vinyl shelves, music posters, store layout, camera angle, framing, lighting, and 1980s analog-film appearance. Replace the reference person with my identity without copying their face or identity. Keep my facial features natural and recognizable.`),
+P(12, "1980s Cassette Bedroom", "music", `Use my uploaded photo as the identity reference and recreate the same cassette-bedroom scene shown in the reference image. Preserve my recognizable identity, facial structure, facial features, and natural skin tone. Match the exact seated position, cassette placement, hand position, body angle, clothing silhouette, hairstyle styling, cassette player, posters, furniture, room layout, window placement, camera perspective, framing, lighting, and nostalgic analog-film texture. Replace the reference person with my identity. Do not copy the reference person's face or identity.`),
+P(13, "1980s Public Telephone", "street", `Use my uploaded photo as the identity reference and recreate the same public-telephone scene shown in the reference image. Preserve my recognizable identity and facial features. Match the telephone receiver position, hand placement, body angle, facial direction, clothing silhouette, hairstyle, street environment, vintage advertisements, vehicles, camera framing, perspective, lighting, and authentic 1980s film aesthetic. Replace the reference person with my identity and keep my face natural and recognizable. Do not copy the reference person's identity.`),
+P(14, "1980s Roadside Tea Stall", "street", `Use my uploaded photo as the identity reference and reproduce the same roadside tea-stall composition. Preserve my identity, facial features, facial structure, and natural skin tone. Match the seated position, hand placement, steel tea cup, newspaper, clothing silhouette, hairstyle, table arrangement, tea stall, bicycles, scooters, storefronts, background activity, camera angle, framing, lighting, and analog-film appearance. Replace the reference person with my identity without copying their face or identity. Keep the result photorealistic and authentically 1980s.`),
+P(15, "1980s Newspaper Reader", "street", `Use my uploaded photo as the identity reference and recreate the same newspaper-reader photograph. Preserve my recognizable identity, facial structure, facial features, and natural skin tone. Match the reference person's stance, newspaper position, hand placement, body angle, facial direction, clothing silhouette, hairstyle, newspaper stall, street environment, background objects, camera perspective, framing, lighting, and 1980s analog-film texture. Replace the reference person with my identity while keeping my face recognizable. Do not copy the reference person's identity.`),
+P(16, "1980s Park Bench Couple", "romance", `Use my uploaded photo as the identity reference and recreate the same park-bench couple photograph. Preserve both uploaded identities, facial features, facial structures, and natural skin tones. Match the exact seating arrangement, body orientation, gaze directions, hand positions, clothing silhouettes, hairstyles, accessories, bench position, bicycles, trees, background, camera angle, framing, lighting, and 1980s film aesthetic. Replace the reference couple with the uploaded people while preserving their identities. Do not copy the reference subjects' faces or identities.`),
+P(17, "1980s Balcony Portrait", "portrait", `Use my uploaded photo as the identity reference and recreate the same balcony portrait shown in the reference image. Preserve my recognizable identity, facial structure, facial features, and natural skin tone. Match the balcony position, hand placement on the railing, body angle, facial direction, saree or clothing silhouette, hairstyle, jewelry, background buildings, camera framing, perspective, lighting, and analog-film texture. Replace the reference person with my identity without copying their face or identity.`),
+P(18, "1980s Window Portrait", "portrait", `Use my uploaded photo as the identity reference and recreate the same window portrait. Preserve my recognizable identity, facial features, facial structure, and natural skin tone. Match the reference body orientation, head direction, window placement, hand position, clothing silhouette, hairstyle styling, interior décor, lighting direction, camera angle, framing, depth of field, and 1980s film texture. Replace the reference person with my identity while keeping my face recognizable and natural.`),
+P(19, "1980s Mirror Portrait", "portrait", `Use my uploaded photo as the identity reference and recreate the same mirror portrait shown in the reference image. Preserve my recognizable identity and facial characteristics. Match the exact mirror position, reflection composition, body pose, hand placement, clothing silhouette, hairstyle styling, room décor, furniture, camera perspective, framing, lighting, and analog-film characteristics. Replace the reference person with my identity without copying their face or identity. Keep the reflection consistent with my identity.`),
+P(20, "1980s Fashion Studio", "fashion", `Use my uploaded photo as the identity reference and reproduce the same 1980s fashion-studio portrait. Preserve my recognizable identity, facial features, facial structure, and natural skin tone. Match the reference pose, hand placement, clothing silhouette, hairstyle, accessories, studio backdrop, camera angle, framing, lighting direction, shadows, and professional analog editorial appearance. Replace the reference model with my identity. Do not copy the reference model's face or identity.`),
+P(21, "1980s Leather Jacket Motorcycle", "travel", `Use my uploaded photo as the identity reference and recreate the same leather-jacket motorcycle portrait. Preserve my exact identity, facial features, facial structure, and natural skin tone. Match the motorcycle position, leaning pose, hand placement, leg position, body angle, clothing silhouette, hairstyle, sunglasses, background, camera height, framing, perspective, sunset lighting, shadows, and 1980s analog-film texture. Replace the reference person with my identity without copying their face.`),
+P(22, "1980s Denim Fashion", "fashion", `Use my uploaded photo as the identity reference and recreate the same denim-fashion photograph. Preserve my recognizable identity and facial features. Match the reference stance, hand positions, denim clothing silhouette, hairstyle, accessories, urban wall, background elements, camera framing, perspective, lighting, and 1980s analog-film aesthetic. Replace the reference person with my identity while keeping my face natural and recognizable.`),
+P(23, "1980s Saree Fashion", "fashion", `Use my uploaded photo as the identity reference and recreate the same 1980s saree fashion portrait. Preserve my recognizable identity, facial structure, facial features, and natural skin tone. Match the reference saree silhouette, hand positions, body angle, hairstyle styling, jewelry, doorway, background, camera angle, full-body framing, lighting, and analog-film texture. Replace the reference person with my identity without copying their face or identity.`),
+P(24, "1980s Businessman Portrait", "work", `Use my uploaded photo as the identity reference and recreate the same sophisticated 1980s businessman portrait. Preserve my recognizable identity, facial features, facial structure, and natural skin tone. Match the reference suit silhouette, tie, briefcase position, stance, hand placement, hairstyle, hotel lobby, furniture, background arrangement, camera perspective, full-body framing, lighting, and vintage film texture. Replace the reference person with my identity without copying their face.`),
+P(25, "1980s Hotel Room", "travel", `Use my uploaded photo as the identity reference and recreate the same vintage hotel-room photograph. Preserve my recognizable identity and facial features. Match the seated position, wristwatch gesture, suitcase placement, hand position, clothing silhouette, hairstyle, bed, rotary telephone, furniture, curtains, room layout, camera angle, framing, warm lighting, and 1980s analog-film appearance.`),
+P(26, "1980s Road Trip Couple", "travel", `Use my uploaded photo as the identity reference and recreate the same 1980s road-trip composition. Preserve both uploaded identities, facial features, facial structures, and natural skin tones. Match the reference car position, couple poses, body angles, luggage placement, hand positions, clothing silhouettes, hairstyles, roadside environment, camera perspective, framing, sunset lighting, and analog-film appearance. Do not copy the reference people's identities or faces.`),
+P(27, "1980s Airport Traveler", "travel", `Use my uploaded photo as the identity reference and recreate the same vintage airport portrait. Preserve my recognizable identity, facial structure, facial features, and natural skin tone. Match the suitcase position, hand placement, stance, body angle, clothing silhouette, hairstyle, sunglasses or accessories, airport architecture, background travelers, camera angle, framing, lighting, and authentic 1980s film texture.`),
+P(28, "1980s Bus Stop", "travel", `Use my uploaded photo as the identity reference and recreate the same bus-stop photograph. Preserve my recognizable identity and facial features. Match the reference pose, handbag position, gaze direction, body angle, clothing silhouette, hairstyle, bus-stop structure, vintage bus, bicycles, pedestrians, camera framing, perspective, lighting, and analog-film aesthetic. Replace the reference person with my identity.`),
+P(29, "1980s Bus Window", "travel", `Use my uploaded photo as the identity reference and recreate the same vintage bus-window portrait. Preserve my recognizable identity, facial features, facial structure, and natural skin tone. Match the seated position, hand placement on the window, head direction, clothing silhouette, hairstyle, bus interior, window composition, outside scenery, camera angle, framing, lighting, and 1980s film texture.`),
+P(30, "1980s Train Window", "travel", `Use my uploaded photo as the identity reference and recreate the same train-window photograph. Preserve my recognizable identity and facial features. Match the seated position, elbow placement, hand position, suitcase placement, body angle, facial direction, clothing silhouette, hairstyle, train interior, window, outside scenery, camera perspective, framing, lighting, and analog-film appearance.`),
+P(31, "1980s Village Road", "street", `Use my uploaded photo as the identity reference and recreate the same rural 1980s photograph. Preserve my identity, facial structure, facial features, and natural skin tone. Match the reference bicycle position, walking posture, hand placement, clothing silhouette, hairstyle, village road, traditional houses, trees, farmland, background activity, camera framing, perspective, lighting, and documentary film texture.`),
+P(32, "1980s Village Couple", "street", `Use my uploaded photo as the identity reference and recreate the same village-couple photograph. Preserve both identities and facial characteristics. Match the exact standing positions, body angles, bicycle placement, doorway position, hand placement, clothing silhouettes, hairstyles, rural architecture, background elements, camera angle, framing, and natural lighting. Do not copy the reference people's faces or identities.`),
+P(33, "1980s Garden Portrait", "street", `Use my uploaded photo as the identity reference and recreate the same garden portrait. Preserve my recognizable identity, facial structure, facial features, and natural skin tone. Match the reference pose, hand position touching the tree or branch, clothing silhouette, hairstyle, accessories, garden arrangement, flowers, furniture, camera angle, framing, lighting, and 1980s analog-film appearance.`),
+P(34, "1980s Garden Couple", "romance", `Use my uploaded photo as the identity reference and recreate the same romantic garden-couple photograph. Preserve both identities, facial features, facial structures, and natural skin tones. Match the exact body positions, gaze directions, hand positions, clothing silhouettes, hairstyles, accessories, tree placement, flowers, garden furniture, camera framing, perspective, and golden-hour lighting.`),
+P(35, "1980s Picnic Couple", "romance", `Use my uploaded photo as the identity reference and recreate the same 1980s picnic photograph. Preserve both uploaded identities. Match the exact sitting arrangement, body positions, hand placement, facial directions, picnic basket, thermos, blanket, vintage car, clothing silhouettes, hairstyles, trees, background, camera angle, framing, sunlight, and analog-film texture.`),
+P(36, "1980s Birthday Portrait", "celebration", `Use my uploaded photo as the identity reference and recreate the same 1980s birthday photograph. Preserve my recognizable identity and facial features. Match the reference body position, cake knife placement, hand positions, clothing silhouette, hairstyle, birthday table, cake, balloons, gifts, background guests, camera framing, direct-flash lighting, shadows, and vintage film texture.`),
+P(37, "1980s Wedding Couple", "celebration", `Use my uploaded photo as the identity reference and recreate the same traditional 1980s wedding portrait. Preserve both identities, facial features, facial structures, and natural skin tones. Match the exact wedding pose, body positions, clothing silhouettes, hairstyles, jewelry, hand placement, floral backdrop, decorations, camera angle, framing, direct flash, lighting, and authentic analog-film appearance. Do not copy the reference couple's identities.`),
+P(38, "1980s Wedding Reception", "celebration", `Use my uploaded photo as the identity reference and recreate the same wedding-reception photograph. Preserve both uploaded identities. Match the exact couple positioning, facial directions, hand placement, clothing silhouettes, hairstyles, jewelry, reception table, floral decorations, background guests, venue layout, camera perspective, framing, lighting, and 1980s direct-flash film aesthetic.`),
+P(39, "1980s Engagement Portrait", "celebration", `Use my uploaded photo as the identity reference and recreate the same engagement portrait. Preserve both identities and recognizable facial characteristics. Match the exact couple pose, bouquet position, hand placement, body angles, clothing silhouettes, hairstyles, accessories, floral backdrop, camera angle, framing, lighting, and analog-film texture.`),
+P(40, "1980s Romantic Walk", "romance", `Use my uploaded photo as the identity reference and recreate the same romantic walking photograph. Preserve both identities, facial features, facial structures, and natural skin tones. Match the same walking positions, stride, body orientation, gaze directions, hand positions, clothing silhouettes, hairstyles, accessories, street environment, background, camera angle, framing, lighting, and 1980s cinematic film aesthetic.`),
+P(41, "1980s Disco Couple", "music", `Use my uploaded photo as the identity reference and recreate the same 1980s disco dance photograph. Preserve both identities and recognizable facial characteristics. Match the exact dance pose, body positions, hand placement, facial directions, clothing silhouettes, hairstyles, accessories, mirrored walls, dance floor, stage lights, camera angle, framing, lighting, and analog-film appearance. Do not copy the reference dancers' identities.`),
+P(42, "1980s Disco Portrait", "music", `Use my uploaded photo as the identity reference and recreate the same disco portrait. Preserve my recognizable identity, facial features, facial structure, and natural skin tone. Match the same arm positions, stance, clothing silhouette, hairstyle, sunglasses, accessories, dance floor, mirrored background, stage lighting, camera perspective, framing, and 1980s film texture.`),
+P(43, "1980s Singer on Stage", "music", `Use my uploaded photo as the identity reference and recreate the same 1980s stage-performance photograph. Preserve my recognizable identity and facial features. Match the microphone position, body angle, hand placement, stance, clothing silhouette, hairstyle, stage layout, musicians, speakers, audience, camera angle, framing, concert lighting, and analog-film appearance.`),
+P(44, "1980s Guitarist", "music", `Use my uploaded photo as the identity reference and recreate the same 1980s guitarist portrait. Preserve my identity, facial features, facial structure, and natural skin tone. Match the guitar position, hand placement, stance, leg position, clothing silhouette, hairstyle, stage environment, amplifier, background, camera angle, framing, lighting, and authentic 35mm film texture.`),
+P(45, "1980s Photographer", "work", `Use my uploaded photo as the identity reference and recreate the same vintage photographer portrait. Preserve my recognizable identity and facial characteristics. Match the camera position, hand placement, camera strap, stance, body angle, clothing silhouette, hairstyle, street environment, pedestrians, bicycles, vehicles, camera framing, perspective, lighting, and 1980s analog-film aesthetic.`),
+P(46, "1980s Artist Studio", "work", `Use my uploaded photo as the identity reference and recreate the same artist-studio photograph. Preserve my identity, facial structure, facial features, and natural skin tone. Match the easel position, paintbrush hand, stance, body angle, clothing silhouette, hairstyle, artwork, paint supplies, furniture, window, studio layout, camera angle, framing, lighting, and analog-film texture.`),
+P(47, "1980s Writer at Typewriter", "work", `Use my uploaded photo as the identity reference and recreate the same 1980s writer photograph. Preserve my recognizable identity and facial features. Match the seated position, hand placement, typewriter position, desk arrangement, clothing silhouette, hairstyle, books, papers, rotary telephone, desk lamp, room layout, camera perspective, framing, warm lighting, and film texture.`),
+P(48, "1980s Journalist Portrait", "work", `Use my uploaded photo as the identity reference and recreate the same journalist portrait. Preserve my identity, facial features, facial structure, and natural skin tone. Match the notebook position, vintage camera position, hand placement, stance, clothing silhouette, hairstyle, newspaper-office background, signage, pedestrians, vintage cars, camera framing, lighting, and authentic 1980s documentary-film aesthetic.`),
+P(49, "1980s Newsroom", "work", `Use my uploaded photo as the identity reference and recreate the same newsroom photograph. Preserve my recognizable identity and facial features. Match the seated position, hand placement, newspaper, typewriter, desk arrangement, clothing silhouette, hairstyle, rotary telephone, newspapers, office equipment, background composition, camera angle, framing, lighting, and analog-film texture.`),
+P(50, "1980s Mechanic Garage", "work", `Use my uploaded photo as the identity reference and recreate the same 1980s mechanic-garage photograph. Preserve my identity, facial structure, facial features, and natural skin tone. Match the motorcycle position, wrench hand, stance, body angle, workwear silhouette, hairstyle, tools, spare parts, garage layout, camera perspective, framing, lighting, and authentic analog-film appearance.`),
+P(51, "1980s Shopkeeper", "work", `Use my uploaded photo as the identity reference and recreate the same vintage shopkeeper photograph. Preserve my recognizable identity and facial features. Match the counter position, hand placement, ledger or object position, stance, clothing silhouette, hairstyle, shelves, vintage products, weighing scale, cash box, shop layout, camera angle, framing, lighting, and 1980s film texture.`),
+P(52, "1980s Doctor Portrait", "work", `Use my uploaded photo as the identity reference and recreate the same 1980s doctor portrait. Preserve my recognizable identity, facial features, facial structure, and natural skin tone. Match the clipboard position, stance, hand placement, clothing silhouette, hairstyle, hospital desk, medical equipment, background, camera angle, framing, lighting, and analog-film appearance.`),
+P(53, "1980s Engineer Portrait", "work", `Use my uploaded photo as the identity reference and recreate the same industrial engineer portrait. Preserve my identity and facial characteristics. Match the clipboard position, safety helmet, stance, body angle, hand placement, workwear silhouette, hairstyle, machinery, factory background, camera perspective, framing, lighting, and 1980s film texture.`),
+P(54, "1980s Detective Portrait", "cinema", `Use my uploaded photo as the identity reference and recreate the same fictional 1980s detective portrait. Preserve my recognizable identity, facial features, facial structure, and natural skin tone. Match the detective stance, trench-coat silhouette, notebook position, hand placement, body angle, hairstyle, classic car, streetlight, city environment, camera angle, framing, dramatic lighting, and analog-film texture. Do not copy the reference detective's face or identity.`),
+P(55, "1980s Police Officer", "cinema", `Use my uploaded photo as the identity reference and recreate the same fictional 1980s police portrait. Preserve my recognizable identity and facial features. Match the stance, hand placement, notebook position, uniform silhouette, hairstyle, vintage police vehicle, street environment, background composition, camera angle, framing, lighting, and authentic period-film aesthetic. Do not copy the reference officer's identity.`),
+P(56, "1980s Action Hero", "cinema", `Use my uploaded photo as the identity reference and recreate the same fictional 1980s action-film portrait. Preserve my recognizable identity, facial structure, facial features, and natural skin tone. Match the exact hero pose, hand positions, clothing silhouette, hairstyle, sunglasses, classic car, street environment, low camera angle, full-body framing, dramatic sunset lighting, shadows, and 35mm cinematic film texture. Do not copy the reference person's identity.`),
+P(57, "1980s Romantic Heroine", "cinema", `Use my uploaded photo as the identity reference and recreate the same fictional 1980s romantic-film portrait. Preserve my recognizable identity, facial features, facial structure, and natural skin tone. Match the saree or dress silhouette, hand position, body angle, hairstyle, jewelry, garden environment, flowers, camera angle, framing, golden-hour lighting, depth of field, and analog-film appearance. Do not copy the reference person's identity or face.`),
+P(58, "1980s Beach Portrait", "travel", `Use my uploaded photo as the identity reference and recreate the same vintage beach photograph. Preserve my recognizable identity and facial features. Match the classic car position, hand placement, stance, body angle, clothing silhouette, hairstyle, sunglasses, beach environment, ocean, palm trees, camera framing, perspective, sunlight, and 1980s vacation-film aesthetic.`),
+P(59, "1980s Beach Couple", "travel", `Use my uploaded photo as the identity reference and recreate the same 1980s beach-couple photograph. Preserve both identities and facial characteristics. Match the exact couple arrangement, accessories, hand positions, clothing silhouettes, hairstyles, classic car, luggage, beach background, camera angle, framing, sunlight, shadows, and analog-film appearance. Do not copy the reference people's identities.`),
+P(60, "1980s Hill Station Couple", "travel", `Use my uploaded photo as the identity reference and recreate the same nostalgic hill-station couple photograph. Preserve both identities, facial features, facial structures, and natural skin tones. Match the standing arrangement, clothing silhouettes, hairstyles, hand positions, vintage vehicle, mountain environment, pine trees, mist, camera angle, framing, soft lighting, and 1980s film texture.`),
+P(61, "1980s Travel Couple", "travel", `Use my uploaded photo as the identity reference and recreate the same vintage travel photograph. Preserve both uploaded identities and facial characteristics. Match the luggage placement, hand positions, body orientation, clothing silhouettes, hairstyles, train platform, vintage train, background travelers, camera angle, framing, lighting, and analog-film treatment.`),
+P(62, "1980s Luggage Portrait", "travel", `Use my uploaded photo as the identity reference and recreate the same vintage luggage portrait. Preserve my identity, facial structure, facial features, and natural skin tone. Match the suitcase position, hand placement, stance, body angle, clothing silhouette, hairstyle, railway station, train, background, camera perspective, framing, lighting, and authentic 1980s film texture.`),
+P(63, "1980s Classic Car Interior", "travel", `Use my uploaded photo as the identity reference and recreate the same classic-car interior photograph. Preserve my recognizable identity and facial features. Match the exact seated position, steering-wheel hand placement, open door position, body angle, facial direction, clothing silhouette, hairstyle, dashboard, leather seats, street visible outside, camera perspective, framing, lighting, and analog-film appearance.`),
+P(64, "1980s Couple in Classic Car", "travel", `Use my uploaded photo as the identity reference and recreate the same couple-in-car photograph. Preserve both identities and facial features. Match the exact seating arrangement, body orientation, gaze directions, hand positions, clothing silhouettes, hairstyles, dashboard, leather seats, car interior, street visible outside, camera framing, perspective, lighting, and 1980s film texture.`),
+P(65, "1980s Scooter Ride", "travel", `Use my uploaded photo as the identity reference and recreate the same vintage scooter photograph. Preserve my recognizable identity and facial structure. Match the scooter, riding posture, hand placement, body angle, facial direction, clothing silhouette, hairstyle, street environment, pedestrians, buildings, vehicles, camera perspective, framing, motion, lighting, and analog-film texture.`),
+P(66, "1980s Scooter Couple", "travel", `Use my uploaded photo as the identity reference and recreate the same scooter-couple photograph. Preserve both uploaded identities. Match the scooter, driver and passenger positions, hand placement, body orientation, facial directions, clothing silhouettes, hairstyles, accessories, old city street, background vehicles, camera angle, framing, lighting, and 1980s film aesthetic.`),
+P(67, "1980s Bicycle Ride", "travel", `Use my uploaded photo as the identity reference and recreate the same bicycle-riding photograph. Preserve my recognizable identity and facial features. Match the bicycle, riding posture, hand positions on the handlebars, body angle, clothing silhouette, hairstyle, old city street, pedestrians, storefronts, camera height, framing, slight motion blur, lighting, and analog-film appearance.`),
+P(68, "1980s Friends Walking", "college", `Use my uploaded group photo as the identity reference and recreate the same group-walking photograph. Preserve every person's individual identity, facial features, facial structure, and natural skin tone. Match the exact group arrangement, walking positions, stride, gaze directions, arm positions, clothing silhouettes, hairstyles, accessories, street environment, background vehicles, camera angle, full-body framing, lighting, and 1980s film texture. Do not copy the reference people's identities.`),
+P(69, "1980s Friends on Steps", "college", `Use my uploaded group photo as the identity reference and recreate the same friends-on-steps photograph. Preserve every person's identity and recognizable facial characteristics. Match the exact seating positions, body angles, hand placement, gaze directions, clothing silhouettes, hairstyles, books or accessories, building architecture, background, camera perspective, framing, lighting, and analog-film aesthetic.`),
+P(70, "1980s Motorcycle Friends", "college", `Use my uploaded group photo as the identity reference and recreate the same motorcycle-friends composition. Preserve every person's identity, facial features, and natural appearance. Match the motorcycle arrangement, seated and standing positions, leaning poses, hand placement, body angles, clothing silhouettes, hairstyles, accessories, street background, vintage vehicles, camera angle, framing, sunset lighting, and 1980s film texture.`),
+P(71, "1980s Family Road Trip", "family", `Use my uploaded family photo as the identity reference and recreate the same family road-trip photograph. Preserve every family member's recognizable identity and facial characteristics. Match the exact positions beside the classic car, luggage placement, hand positions, clothing silhouettes, hairstyles, travel accessories, vehicle, road environment, background, camera angle, framing, lighting, and analog-film appearance.`),
+P(72, "1980s Family Picnic", "family", `Use my uploaded family photo as the identity reference and recreate the same family picnic composition. Preserve every person's identity, facial features, facial structure, and natural skin tone. Match the family arrangement, seating and standing positions, picnic basket, thermos, blanket, vintage car, clothing silhouettes, hairstyles, trees, background, camera framing, perspective, sunlight, and 1980s film texture.`),
+P(73, "1980s Father and Son", "family", `Use my uploaded photo as the identity reference and recreate the same father-and-son photograph. Preserve both identities, facial features, facial structures, and natural skin tones. Match the exact body positions, hand placement on the shoulder, toy position, clothing silhouettes, hairstyles, classic car, background, camera angle, framing, lighting, and analog-film appearance.`),
+P(74, "1980s Mother and Daughter", "family", `Use my uploaded photo as the identity reference and recreate the same mother-and-daughter photograph. Preserve both identities and recognizable facial characteristics. Match the exact positions, hand placement on the shoulder, clothing silhouettes, hairstyles, jewelry, furniture, room layout, background, camera perspective, framing, warm lighting, and authentic 1980s film texture.`),
+P(75, "1980s Sibling Portrait", "family", `Use my uploaded photo as the identity reference and recreate the same sibling portrait. Preserve both identities, facial features, facial structures, and natural skin tones. Match the exact bicycle position, sitting and standing positions, hand placement, body angles, facial directions, clothing silhouettes, hairstyles, neighborhood background, camera framing, lighting, and analog-film aesthetic.`),
+P(76, "1980s Vintage Home Portrait", "portrait", `Use my uploaded photo as the identity reference and recreate the same vintage-home portrait. Preserve my recognizable identity, facial features, facial structure, and natural skin tone. Match the chair position, hand placement, book or accessory, clothing silhouette, hairstyle, jewelry, television, wooden furniture, room décor, camera angle, framing, lighting, and 1980s film texture.`),
+P(77, "1980s Television Evening", "family", `Use my uploaded photo as the identity reference and recreate the same television-evening family scene. Preserve every uploaded person's identity and facial characteristics. Match the seating arrangement, gaze directions, hand positions, clothing silhouettes, hairstyles, television placement, furniture, curtains, telephone, room layout, camera angle, framing, warm evening lighting, and analog-film appearance.`),
+P(78, "1980s House Party", "celebration", `Use my uploaded photo as the identity reference and recreate the same 1980s house-party portrait. Preserve my recognizable identity and facial features. Match the stance, soft-drink glass position, hand placement, clothing silhouette, hairstyle, guests, balloons, decorations, room layout, camera framing, direct-flash lighting, shadows, and vintage film texture.`),
+P(79, "1980s Party Couple", "celebration", `Use my uploaded photo as the identity reference and recreate the same party-couple photograph. Preserve both identities, facial features, facial structures, and natural skin tones. Match the exact poses, hand positions, soft-drink glass and handbag positions, clothing silhouettes, hairstyles, guests, decorations, camera angle, framing, direct flash, shadows, and 1980s analog-film aesthetic.`),
+P(80, "1980s Night Café", "romance", `Use my uploaded photo as the identity reference and recreate the same nighttime café photograph. Preserve both identities and facial characteristics. Match the seating positions, gaze directions, hand placement, clothing silhouettes, hairstyles, café table, window, warm interior lights, reflections, old signage, classic cars outside, camera perspective, framing, lighting, and cinematic 1980s film texture.`),
+P(81, "1980s Street Fashion Couple", "fashion", `Use my uploaded photo as the identity reference and recreate the same street-fashion couple photograph. Preserve both identities, facial features, facial structures, and natural skin tones. Match the exact arrangement, hand positions, body angles, clothing silhouettes, hairstyles, sunglasses, accessories, storefronts, scooters, cars, camera angle, framing, lighting, and authentic 1980s fashion-film aesthetic.`),
+P(82, "1980s Looking Back", "street", `Use my uploaded photo as the identity reference and recreate the same looking-back photograph. Preserve my recognizable identity, facial features, facial structure, and natural skin tone. Match the walking direction, over-the-shoulder head position, stride, arm positions, clothing silhouette, hairstyle, street environment, vintage cars and scooters, camera height, framing, perspective, sunset lighting, and analog-film texture.`),
+P(83, "1980s Looking Away", "street", `Use my uploaded photo as the identity reference and recreate the same looking-away portrait. Preserve my recognizable identity and facial characteristics. Match the reference body angle, head direction, hand position, clothing silhouette, hairstyle, jewelry or accessories, street environment, storefronts, vehicles, camera angle, framing, lighting, and 1980s film appearance.`),
+P(84, "1980s Full-Body Street Walk", "street", `Use my uploaded photo as the identity reference and recreate the same full-body street-walking photograph. Preserve my recognizable identity, facial features, facial structure, and natural skin tone. Match the exact walking stride, arm positions, sunglasses or accessories, clothing silhouette, hairstyle, vintage street, vehicles, storefronts, background activity, camera height, perspective, framing, lighting, and analog-film characteristics.`),
+P(85, "1980s Rooftop Couple", "romance", `Use my uploaded photo as the identity reference and recreate the same rooftop-couple composition. Preserve both identities and recognizable facial features. Match the railing positions, body angles, hand placement, gaze directions, clothing silhouettes, hairstyles, city background, water tanks, antennas, camera perspective, full-body framing, golden-hour lighting, shadows, and authentic 1980s film texture.`),
+P(86, "1980s Balcony Couple", "romance", `Use my uploaded photo as the identity reference and recreate the same balcony-couple photograph. Preserve both identities, facial structures, facial features, and natural skin tones. Match the exact balcony arrangement, body positions, hand placement, clothing silhouettes, saree styling, hairstyles, accessories, city skyline, camera angle, framing, evening lighting, and analog-film aesthetic.`),
+P(87, "1980s Vintage Market", "street", `Use my uploaded photo as the identity reference and recreate the same vintage Indian market photograph. Preserve my recognizable identity and facial features. Match the walking pose, shopping-bag position, hand placement, body angle, clothing silhouette, hairstyle, market stalls, bicycles, vendors, scooters, storefronts, background activity, camera angle, framing, natural daylight, and documentary 1980s film texture.`),
+P(88, "1980s Old Bookstore", "portrait", `Use my uploaded photo as the identity reference and recreate the same old-bookstore photograph. Preserve my recognizable identity, facial features, facial structure, and natural skin tone. Match the book position, body angle, stance, hand placement, clothing silhouette, hairstyle, wooden bookshelves, books, rolling ladder or furniture, background layout, camera perspective, framing, warm lighting, and authentic analog-film appearance.`),
+P(89, "1980s Music Room", "music", `Use my uploaded photo as the identity reference and recreate the same vintage music-room photograph. Preserve my recognizable identity and facial features. Match the seated position, cassette placement, hand position, clothing silhouette, hairstyle, cassette player, music posters, tapes, furniture, room layout, camera angle, framing, warm lighting, and 1980s film texture.`),
+P(90, "1980s Cricket Portrait", "college", `Use my uploaded photo as the identity reference and recreate the same 1980s cricket portrait. Preserve my recognizable identity, facial structure, facial features, and natural skin tone. Match the cricket-bat position, stance, body angle, hand placement, clothing silhouette, hairstyle, cricket field, equipment, spectators, camera perspective, framing, lighting, and analog sports-film appearance.`),
+P(91, "1980s Cricket Action", "college", `Use my uploaded photo as the identity reference and recreate the same dynamic cricket-action photograph. Preserve my recognizable identity and facial characteristics. Match the exact action pose, body rotation, bat position, hand placement, leg position, gaze direction, sportswear silhouette, hairstyle, cricket field, spectators, camera angle, framing, motion, lighting, and 1980s sports-film texture. Keep the anatomy realistic.`),
+P(92, "1980s Football Action", "college", `Use my uploaded photo as the identity reference and recreate the same vintage football-action photograph. Preserve my identity, facial features, facial structure, and natural skin tone. Match the running pose, football position, body angle, leg movement, arm positions, clothing silhouette, hairstyle, outdoor field, stadium background, camera perspective, framing, motion blur, lighting, and authentic 1980s sports-film appearance.`),
+P(93, "1980s Black-and-White Studio", "fashion", `Use my uploaded photo as the identity reference and recreate the same black-and-white 1980s studio portrait. Preserve my recognizable identity, facial features, facial structure, and natural appearance. Match the reference chair position, hand placement, body stance, facial direction, clothing silhouette, hairstyle, studio backdrop, camera height, framing, lighting direction, shadows, contrast, and monochrome analog-film texture. Replace the reference person with my identity without altering my recognizable facial characteristics.`),
+P(94, "1980s Instant Film Couple", "romance", `Use my uploaded photo as the identity reference and recreate the same nostalgic 1980s instant-film photograph. Preserve every uploaded person's recognizable identity and facial characteristics. Match the exact couple arrangement, body positions, clothing silhouettes, hairstyles, room décor, lighting, square composition, faded colors, soft contrast, slight exposure imperfections, and authentic instant-film texture. Do not copy the reference people's identities or faces.`),
+P(95, "1980s Direct Flash Portrait", "fashion", `Use my uploaded photo as the identity reference and reproduce the same direct-flash 1980s portrait. Preserve my recognizable identity, facial features, facial structure, and natural skin tone. Match the same sideways stance, hand positions, sunglasses, clothing silhouette, hairstyle, backdrop, camera angle, framing, direct-flash intensity, realistic shadows, skin texture, and analog film grain. Replace the reference person with my identity without copying their face.`),
+P(96, "1980s Luxury Fashion Portrait", "fashion", `Use my uploaded photo as the identity reference and recreate the same luxury 1980s fashion portrait. Preserve my recognizable identity, facial features, facial structure, and natural skin tone. Match the reference pose, decorative chair position, clutch placement, clothing silhouette, hairstyle, jewelry, hotel environment, furniture, background, camera angle, full-body framing, dramatic lighting, shadows, and analog editorial film texture.`),
+P(97, "1980s City Night", "street", `Use my uploaded photo as the identity reference and recreate the same cinematic 1980s nighttime street photograph. Preserve my recognizable identity and facial features. Match the walking pose, stride, sunglasses or accessory position, clothing silhouette, hairstyle, old city street, storefront lights, classic cars, scooters, wet pavement, reflections, camera height, framing, perspective, lighting, and cinematic analog-film appearance.`),
+P(98, "1980s Family Studio Portrait", "family", `Use my uploaded family photo as the identity reference and recreate the same formal 1980s family studio composition. Preserve every person's recognizable identity, facial features, facial structures, and natural skin tones. Match the exact number and arrangement of people, seated and standing positions, body angles, hand placement, clothing silhouettes, hairstyles, accessories, studio backdrop, camera height, framing, direct flash, shadows, and analog-film texture. Do not copy the reference family's identities or faces.`),
+P(99, "1980s Friends at Sunset", "college", `Use my uploaded photo as the identity reference and recreate the same sunset motorcycle-friends photograph. Preserve both uploaded identities and facial characteristics. Match the exact seated and standing positions, motorcycle placement, hand positions, body angles, clothing silhouettes, hairstyles, accessories, background, vintage vehicles, camera height, framing, golden-hour lighting, shadows, and analog-film texture. Replace the reference people with the uploaded identities without copying their faces.`),
+P(100, "Ultimate 1980s Cinematic Template", "master", `Use my uploaded photo as the identity reference and recreate the same image as closely as possible to the supplied reference image. Preserve the uploaded person's recognizable identity, facial features, facial structure, natural skin tone, and overall likeness. If the upload contains multiple people, preserve each person's individual identity.
+
+Match the reference image's composition, subject placement, body proportions, pose, body position, walking direction or seated position, arm positions, hand positions, facial direction, clothing silhouettes, hairstyle styling, accessories, camera height, camera angle, focal perspective, framing, image proportions, environment, architecture, vehicles, background activity, lighting, shadows, depth of field, color treatment, contrast, and analog-film characteristics.
+
+The reference image is a visual template for composition and styling only. Do not copy the reference people's identities, faces, or personal characteristics. Replace them with the identity of the uploaded person or people. Keep the uploaded faces recognizable, natural, and consistent.
+
+Create a convincing authentic 1980s photograph rather than simply applying a retro filter. Use realistic period clothing, hairstyles, accessories, vehicles, architecture, objects, and environmental details. Maintain natural human anatomy, realistic hands, realistic skin texture, believable proportions, subtle 35mm film grain, slight photographic imperfections, authentic vintage color rendering, natural shadows, and realistic depth.
+
+Do not introduce modern objects, modern clothing, modern vehicles, modern architecture, distorted hands, duplicated people, artificial facial features, plastic-looking skin, excessive grain, unrealistic anatomy, or unnecessary changes to the uploaded person's identity.`),
+];
+
+export const PROMPT_COUNT = PROMPTS.length;
+
+// ---------------------------------------------------------------------------
+// Reference images (Supabase Storage, "Prompt template images" bucket).
+//
+// Filenames in the bucket are not knowable from here, so each prompt probes a
+// short list of likely names and falls back to a generated placeholder card if
+// none resolve. To pin an exact filename, add it to IMAGE_OVERRIDES keyed by
+// prompt id — that is the only edit needed.
+// ---------------------------------------------------------------------------
+
+const PROJECT = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://lwworujvfttxkrjfrgav.supabase.co";
+export const IMAGE_BASE = `${PROJECT}/storage/v1/object/public/Prompt template images`;
+
+export const IMAGE_OVERRIDES: Record<string, string> = {
+  // "p001": "1980s Couple Walking.png",
+};
+
+const enc = (name: string) =>
+  `${IMAGE_BASE}/${name}`.split("/").map((part, i) => (i < 3 ? part : encodeURIComponent(part))).join("/");
+
+export function imageCandidates(p: Prompt): string[] {
+  const override = IMAGE_OVERRIDES[p.id];
+  if (override) return [enc(override)];
+  return [`${p.title}.png`, `${p.title}.jpg`, `${p.slug}.png`].map(enc);
+}
