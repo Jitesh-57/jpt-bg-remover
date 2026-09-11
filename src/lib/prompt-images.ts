@@ -8,7 +8,7 @@
 
 import type { Prompt } from "@/lib/prompts-80s";
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://lwworujvfttxkrjfrgav.supabase.co";
 const ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 export const BUCKET = "Prompt template images";
 
@@ -54,7 +54,11 @@ export async function listBucketImages(): Promise<string[]> {
   }
 }
 
-/** Maps prompt id -> image URL, best-effort, by matching names. */
+/** Maps prompt id -> image URL, best-effort, by matching names.
+ *
+ *  Files in the bucket are named "01. 1980s Couple Walking.png", so the
+ *  leading number is an exact key to the prompt number and is tried first.
+ *  Title matching only handles files that carry no index. */
 export function matchImages(prompts: Prompt[], files: string[]): Record<string, string> {
   if (!files.length) return {};
 
@@ -68,25 +72,25 @@ export function matchImages(prompts: Prompt[], files: string[]): Record<string, 
     out[id] = publicUrl(file);
   };
 
-  // Pass 1: exact normalized title match — the strongest signal.
+  // Pass 1: leading index number. Authoritative for this bucket.
   for (const p of prompts) {
-    const key = norm(p.title);
-    const hit = normed.find((f) => !taken.has(f.file) && f.key === key);
+    const hit = normed.find((f) => !taken.has(f.file) && f.num === p.n);
     if (hit) claim(p.id, hit.file);
   }
-  // Pass 2: one name contained in the other ("couple walking" vs "1980s couple walking").
+  // Pass 2: exact normalised title, for any file without an index.
+  for (const p of prompts) {
+    if (out[p.id]) continue;
+    const key = norm(p.title);
+    const hit = normed.find((f) => !taken.has(f.file) && f.num === null && f.key === key);
+    if (hit) claim(p.id, hit.file);
+  }
+  // Pass 3: one name contained in the other.
   for (const p of prompts) {
     if (out[p.id]) continue;
     const key = norm(p.title);
     const hit = normed.find(
-      (f) => !taken.has(f.file) && f.key.length > 3 && (f.key.includes(key) || key.includes(f.key))
+      (f) => !taken.has(f.file) && f.num === null && f.key.length > 3 && (f.key.includes(key) || key.includes(f.key))
     );
-    if (hit) claim(p.id, hit.file);
-  }
-  // Pass 3: fall back to a leading index number ("07.png" -> prompt 7).
-  for (const p of prompts) {
-    if (out[p.id]) continue;
-    const hit = normed.find((f) => !taken.has(f.file) && f.num === p.n);
     if (hit) claim(p.id, hit.file);
   }
   return out;

@@ -9,12 +9,17 @@ const GROUP_META = Object.fromEntries(GROUPS.map((g) => [g.id, g])) as Record<Gr
 
 /** Reference image with a designed fallback: probes each candidate filename in
  *  turn, and renders a generated placeholder once they are all exhausted. */
-function PromptImage({ p, resolved }: { p: Prompt; resolved?: string }) {
-  // A URL matched from the live bucket listing wins; otherwise probe likely names.
-  const candidates = useMemo(() => (resolved ? [resolved] : imageCandidates(p)), [p, resolved]);
+function PromptImage({ p, resolved, listed, settled }: { p: Prompt; resolved?: string; listed: boolean; settled: boolean }) {
+  // A URL matched from the bucket listing wins. Probing guessed filenames is a
+  // last resort for when the listing itself failed; once it has succeeded, an
+  // unmatched prompt genuinely has no image and goes straight to the placeholder.
+  const candidates = useMemo(
+    () => (resolved ? [resolved] : !settled || listed ? [] : imageCandidates(p)),
+    [p, resolved, listed, settled]
+  );
   const [idx, setIdx] = useState(0);
   const [loaded, setLoaded] = useState(false);
-  useEffect(() => { setIdx(0); setLoaded(false); }, [resolved]);
+  useEffect(() => { setIdx(0); setLoaded(false); }, [resolved, listed, settled]);
   const exhausted = idx >= candidates.length;
   const g = GROUP_META[p.group];
 
@@ -92,7 +97,7 @@ function CopyButton({ text, id, label = "Copy prompt", full = false }: { text: s
   );
 }
 
-function PromptCard({ p, resolved }: { p: Prompt; resolved?: string }) {
+function PromptCard({ p, resolved, listed, settled }: { p: Prompt; resolved?: string; listed: boolean; settled: boolean }) {
   const [open, setOpen] = useState(false);
   const g = GROUP_META[p.group];
   return (
@@ -103,7 +108,7 @@ function PromptCard({ p, resolved }: { p: Prompt; resolved?: string }) {
         background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 18,
       }}
     >
-      <PromptImage p={p} resolved={resolved} />
+      <PromptImage p={p} resolved={resolved} listed={listed} settled={settled} />
       <div style={{ padding: "16px 17px 17px", display: "flex", flexDirection: "column", gap: 10, flex: 1 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
           <span style={{ fontSize: 12, fontWeight: 900, color: "var(--accent-strong)" }}>#{String(p.n).padStart(2, "0")}</span>
@@ -141,18 +146,29 @@ function PromptCard({ p, resolved }: { p: Prompt; resolved?: string }) {
   );
 }
 
-export default function PromptBrowser() {
+export default function PromptBrowser({ initialImages = {} }: { initialImages?: Record<string, string> }) {
   const [active, setActive] = useState<GroupId | "all">("all");
   const [q, setQ] = useState("");
-  const [resolvedImages, setResolvedImages] = useState<Record<string, string>>({});
+  const [resolvedImages, setResolvedImages] = useState<Record<string, string>>(initialImages);
+  const [listed, setListed] = useState(Object.keys(initialImages).length > 0);
+  // Until the listing attempt has settled, probing guessed names would only
+  // fire 404s for images the listing is about to resolve properly.
+  const [settled, setSettled] = useState(Object.keys(initialImages).length > 0);
 
   useEffect(() => {
+    if (Object.keys(initialImages).length) return; // server already resolved them
     let alive = true;
-    listBucketImages().then((files) => {
-      if (alive && files.length) setResolvedImages(matchImages(PROMPTS, files));
-    });
+    listBucketImages()
+      .then((files) => {
+        if (!alive) return;
+        if (files.length) {
+          setResolvedImages(matchImages(PROMPTS, files));
+          setListed(true);
+        }
+      })
+      .finally(() => { if (alive) setSettled(true); });
     return () => { alive = false; };
-  }, []);
+  }, [initialImages]);
 
   const shown = useMemo(() => {
     const needle = q.trim().toLowerCase();
@@ -208,7 +224,7 @@ export default function PromptBrowser() {
 
       {shown.length > 0 ? (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(280px, 100%), 1fr))", gap: 20 }}>
-          {shown.map((p) => <PromptCard key={p.id} p={p} resolved={resolvedImages[p.id]} />)}
+          {shown.map((p) => <PromptCard key={p.id} p={p} resolved={resolvedImages[p.id]} listed={listed} settled={settled} />)}
         </div>
       ) : (
         <p style={{ textAlign: "center", color: "var(--text-muted)", padding: "48px 0" }}>

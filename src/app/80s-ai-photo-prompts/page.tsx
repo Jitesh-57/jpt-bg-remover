@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PromptBrowser from "./PromptBrowser";
 import ScrollReveal from "@/app/_components/ScrollReveal";
-import { PROMPT_COUNT, GROUPS } from "@/lib/prompts-80s";
+import { PROMPT_COUNT, GROUPS, PROMPTS } from "@/lib/prompts-80s";
+import { matchImages } from "@/lib/prompt-images";
+import { listBucketImagesServer } from "@/lib/prompt-images.server";
+
+export const revalidate = 300;
 
 const BASE = "https://www.sjpt.io";
 const URL = `${BASE}/80s-ai-photo-prompts`;
@@ -46,7 +50,11 @@ const RELATED = [
   { icon: "🪄", title: "Remove the background", href: "/editor?tool=remove-bg" },
 ];
 
-export default function Page() {
+export default async function Page() {
+  // Resolved on the server so the image URLs ship in the HTML.
+  const files = await listBucketImagesServer();
+  const resolvedImages = matchImages(PROMPTS, files);
+
   const faqLd = {
     "@context": "https://schema.org", "@type": "FAQPage",
     mainEntity: FAQS.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
@@ -93,7 +101,7 @@ export default function Page() {
             <p style={{ textAlign: "center", color: "var(--text-muted)", margin: "0 0 32px" }}>
               {GROUPS.length} styles. Every prompt is written to keep your real face — tap Copy and paste it straight into ChatGPT or Gemini.
             </p>
-            <PromptBrowser />
+            <PromptBrowser initialImages={resolvedImages} />
           </div>
         </section>
 
