@@ -405,7 +405,11 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
           if (e.isIntersecting) { e.target.classList.add('jpt-in'); io.unobserve(e.target) }
         })
       },
-      { threshold: 0.1, rootMargin: '0px 0px -8% 0px' }
+      // threshold 0 + a huge top rootMargin: a percentage threshold can never be
+      // met by a section taller than the viewport, and a section jumped over
+      // (anchor link, restored scroll, fast flick) never transitions to
+      // intersecting — either case leaves it stuck at opacity 0. See ScrollReveal.
+      { threshold: 0, rootMargin: '100000px 0px -8% 0px' }
     )
     sections.forEach((el) => io.observe(el))
     return () => io.disconnect()
@@ -879,7 +883,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
       {PAGE_SEO_CONTENT[pageId] && (
         <section style={{ padding: '80px 24px', background: 'var(--surface-2)' }}>
           <div style={{ maxWidth: 860, margin: '0 auto' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: 36, fontSize: 15, color: 'var(--text-muted)', lineHeight: 1.8 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(360px, 100%), 1fr))', gap: 36, fontSize: 15, color: 'var(--text-muted)', lineHeight: 1.8 }}>
               {PAGE_SEO_CONTENT[pageId].map(block => (
                 <div key={block.heading}>
                   <h3 style={{ fontSize: 17, fontWeight: 800, color: 'var(--text)', marginBottom: 10, marginTop: 0 }}>{block.heading}</h3>

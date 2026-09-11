@@ -251,9 +251,18 @@ export default function NavBar() {
           {/* Blog */}
           <a href="/blog"
             style={{ padding: "7px 14px", color: "var(--text-muted)", fontSize: 14, fontWeight: 600, textDecoration: "none", borderRadius: 8 }}
-            onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
-            onMouseLeave={e => (e.currentTarget.style.color = "var(--border)")}>
+            onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")}
+            onMouseLeave={e => (e.currentTarget.style.color = "var(--text-muted)")}>
             Blog
+          </a>
+
+          {/* 80s AI photo prompts — trending traffic page */}
+          <a href="/80s-ai-photo-prompts"
+            style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", color: "var(--accent-strong)", fontSize: 14, fontWeight: 700, textDecoration: "none", borderRadius: 999, background: "var(--accent-soft)", border: "1px solid var(--accent-border)", whiteSpace: "nowrap" }}
+            onMouseEnter={e => (e.currentTarget.style.opacity = "0.85")}
+            onMouseLeave={e => (e.currentTarget.style.opacity = "1")}>
+            <span style={{ fontSize: 13 }}>🔥</span>
+            80s Prompts
           </a>
 
           {/* Creative Apps — standalone navbar link (hidden in free-only mode) */}

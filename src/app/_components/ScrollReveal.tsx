@@ -20,7 +20,14 @@ export default function ScrollReveal() {
           if (e.isIntersecting) { e.target.classList.add("jpt-in"); io.unobserve(e.target); }
         });
       },
-      { threshold: 0.1, rootMargin: "0px 0px -8% 0px" }
+      // threshold must stay 0: a percentage threshold can never be met by a
+      // section taller than the viewport (e.g. the 80s prompt list), leaving it
+      // stuck at opacity 0.
+      // The huge top rootMargin makes anything already scrolled past count as
+      // intersecting. Without it, a section jumped over (anchor link, restored
+      // scroll position, fast flick) never transitions to intersecting and so
+      // stays at opacity 0 permanently. The -8% bottom keeps the reveal slightly early.
+      { threshold: 0, rootMargin: "100000px 0px -8% 0px" }
     );
     sections.forEach((el) => io.observe(el));
     return () => io.disconnect();

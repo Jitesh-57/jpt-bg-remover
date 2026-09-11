@@ -39,6 +39,7 @@ const FREE_TOOLS = [
 const ALL_COMPANY = [
   { labelKey: "All Tools", href: "/tools" },
   { labelKey: "Alternatives", href: "/alternatives" },
+  { labelKey: "80s AI Prompts", href: "/80s-ai-photo-prompts" },
   { labelKey: "Pricing", href: "/pricing" },
   { labelKey: "Blog",    href: "/blog" },
   { labelKey: "Contact", href: "mailto:patil.jitesh866@gmail.com" },
@@ -60,7 +61,7 @@ export default function Footer() {
   return (
     <footer style={{ background: "var(--bg-elevated)", color: "var(--text-faint)", padding: "60px 24px 32px" }}>
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: 40, marginBottom: 48 }}>
+        <div className="jpt-footer-grid" style={{ marginBottom: 48 }}>
 
           {/* Brand */}
           <div>

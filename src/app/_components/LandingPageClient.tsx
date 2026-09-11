@@ -630,7 +630,7 @@ export default function LandingPageClient() {
         <div style={{ maxWidth: 860, margin: "0 auto" }}>
           <div style={s.sectionLabel}>ABOUT JPT AI</div>
           <h2 style={{ ...s.h2, marginBottom: 28 }}>The best free AI image editor online — no watermark, no signup friction</h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(380px, 1fr))", gap: 32, fontSize: 15, color: "var(--text-muted)", lineHeight: 1.8 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(380px, 100%), 1fr))", gap: 32, fontSize: 15, color: "var(--text-muted)", lineHeight: 1.8 }}>
             <div>
               <h3 style={{ fontSize: 17, fontWeight: 800, color: "var(--text)", marginBottom: 10 }}>Free AI Background Remover</h3>
               <p style={{ margin: "0 0 16px" }}>JPT AI&apos;s background remover uses deep learning to detect and separate subjects from any background in seconds. Whether you&apos;re editing product photos for e-commerce, removing backgrounds from portraits, or preparing images for marketing materials — our AI delivers clean cutouts with no manual effort.</p>
