@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminSupabase } from "@/lib/auth";
 import { editImage, generateFromText } from "@/lib/ai-image";
+import { geminiGenerateFromText } from "@/lib/gemini";
 import { falConfigured, FalError } from "@/lib/fal";
 import { IMAGE_JOBS, type ImageJob } from "@/lib/image-jobs";
 
@@ -181,15 +182,36 @@ export async function GET(req: NextRequest) {
         const fal = e instanceof FalError ? e : null;
         lastError = fal ? `fal ${fal.status}: ${fal.detail || fal.message}` : (e as Error).message;
 
-        // A content-policy rejection is about this prompt and no other, so it
-        // must never stop the run. It is also evidently probabilistic: in
-        // production, watermark-before-3 passed the checker on one run while
-        // its three near-identical siblings were rejected on the next. So it
-        // is retried like any transient failure and only skipped once the
-        // attempts are spent.
+        // fal's content checker turns down a handful of these prompts —
+        // deterministically, as run 6 established by failing the same six on
+        // all three attempts. The subjects are entirely benign (a gold ring on
+        // a worktop, a living room), so the checker is over-triggering rather
+        // than catching anything, and rewording it blind was costing a
+        // production run per guess.
+        //
+        // So a rejected prompt goes to Gemini instead. This is not the blanket
+        // fallback that hid the original 422: that one substituted Gemini's
+        // error for fal's on *every* failure, so a misconfiguration looked
+        // like a rate limit. Here fal's real error is already known, reported
+        // and acted on — the fallback is the action, not a way of avoiding
+        // knowing.
         const policyRejected = !!fal && /content_policy|content checker/i.test(fal.detail || fal.message);
-        if (policyRejected && attempt === RETRIES - 1) {
-          results[key] = `SKIPPED: rejected by fal's content checker on all ${RETRIES} attempts`;
+        if (policyRejected) {
+          try {
+            const viaGemini = await geminiGenerateFromText(job.prompt, { aspect_ratio: job.aspect });
+            const res = await fetch(viaGemini);
+            if (!res.ok) throw new Error(`fetch ${res.status}`);
+            const bytes = Buffer.from(await res.arrayBuffer());
+            const { error } = await supabase.storage
+              .from(job.bucket)
+              .upload(job.path, bytes, { contentType: job.path.endsWith(".jpg") ? "image/jpeg" : "image/png", upsert: true });
+            if (error) throw new Error(`upload failed: ${error.message}`);
+            results[key] = `ok via Gemini (${Math.round(bytes.length / 1024)} KB) — fal's checker refused this prompt`;
+            made += 1;
+            lastError = "";
+          } catch (g) {
+            results[key] = `SKIPPED: fal's checker refused it and Gemini failed too (${(g as Error).message})`;
+          }
           break;
         }
 
