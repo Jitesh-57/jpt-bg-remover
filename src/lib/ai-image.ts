@@ -25,6 +25,11 @@ export function resolveModel(requested?: string): FalModel {
   return requested === "gpt-image" ? "gpt-image" : "nano-banana";
 }
 
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+/** Attempts against fal before considering the other provider. */
+const FAL_ATTEMPTS = 3;
+
 /**
  * Runs the fal path, falling back to Gemini when fal cannot serve the request.
  *
@@ -50,40 +55,64 @@ async function viaFal(
   label: string
 ): Promise<string> {
   if (!falConfigured()) return fallback();
-  try {
-    return await run();
-  } catch (e) {
-    const msg = e instanceof Error ? e.message : String(e);
-    const status = e instanceof FalError ? e.status : 0;
 
-    if (status === 402 || /out of credit/i.test(msg)) throw e;
+  let last: unknown;
+  /*
+    fal is the engine; Gemini is the safety net.
 
-    if (status === 401 || status === 403 || /rejected our key|refused this request/i.test(msg)) {
-      console.error(
-        `[ai-image] fal ${label} refused the request (${status}). ` +
-        `Serving from Gemini instead. fal said: ${msg}`
-      );
-    } else {
-      console.warn(`[ai-image] fal ${label} failed, falling back to Gemini:`, msg);
-    }
-
+    A throttle is the most common failure in production — a burst of
+    generations trips fal's rate limit, which it reports as 429 or as a 403
+    with a rate-limit reason — and it clears within seconds. Falling back on
+    the first refusal meant a momentary throttle silently moved the work to
+    the other provider, so the result came from a different model than the one
+    the user picked. Retrying fal first keeps generations on fal, which is
+    where the balance and the chosen models are.
+  */
+  for (let attempt = 0; attempt < FAL_ATTEMPTS; attempt++) {
     try {
-      return await fallback();
-    } catch (g) {
-      /*
-        Both providers are down. Report that, rather than only the second
-        one's message — "temporarily unavailable due to high demand" names
-        Gemini's rate limit and hides the fact that fal refused first, which
-        sends anyone reading it to the wrong service entirely.
-      */
-      const gmsg = g instanceof Error ? g.message : String(g);
-      console.error(`[ai-image] ${label}: both providers failed. fal: ${msg} | gemini: ${gmsg}`);
-      throw new Error(
-        `${msg} The backup provider also failed (${gmsg}), so this tool is unavailable until one of them is working.`
-      );
+      return await run();
+    } catch (e) {
+      last = e;
+      const fal = e instanceof FalError ? e : null;
+      if (!fal?.transient || attempt === FAL_ATTEMPTS - 1) break;
+      const wait = 1200 * (attempt + 1);
+      console.warn(`[ai-image] fal ${label} throttled (${fal.status}); retrying in ${wait}ms`);
+      await sleep(wait);
     }
   }
-}
+
+  const e = last;
+  const msg = e instanceof Error ? e.message : String(e);
+  const status = e instanceof FalError ? e.status : 0;
+
+  if (status === 402 || /out of credit/i.test(msg)) throw e;
+
+  if (status === 401 || status === 403 || /rejected our key|refused this request/i.test(msg)) {
+    console.error(
+      `[ai-image] fal ${label} refused the request (${status}) after ${FAL_ATTEMPTS} attempts. ` +
+      `Serving from Gemini instead. fal said: ${msg}`
+    );
+  } else {
+    console.warn(`[ai-image] fal ${label} failed, falling back to Gemini:`, msg);
+  }
+
+  try {
+    return await fallback();
+  } catch (g) {
+    /*
+      Both providers are down. Report that, rather than only the second
+      one's message — "temporarily unavailable due to high demand" names
+      Gemini's rate limit and hides the fact that fal refused first, which
+      sends anyone reading it to the wrong service entirely.
+    */
+    const gmsg = g instanceof Error ? g.message : String(g);
+    console.error(`[ai-image] ${label}: both providers failed. fal: ${msg} | gemini: ${gmsg}`);
+    throw new Error(
+      `${msg} The backup provider also failed (${gmsg}), so this tool is unavailable until one of them is working.`
+    );
+  }
+  }
+
 
 export function editImage(
   src: string,
