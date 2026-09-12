@@ -95,8 +95,12 @@ export default function BrandLogo({
       alt="Pixel Shine"
       height={height}
       style={{
-        height, width: asMark ? height : "auto", display: "block",
-        objectFit: "contain", flexShrink: 0, opacity: loaded ? 1 : 0,
+        height, width: asMark ? height : "auto",
+        // Out of flow until it has decoded, so the typeset lockup below holds
+        // the space and the header does not reflow when the file arrives.
+        display: "block", position: loaded ? "static" : "absolute",
+        objectFit: "contain", flexShrink: 0,
+        opacity: loaded ? 1 : 0, pointerEvents: "none",
       }}
       onLoad={(e) => {
         const el = e.currentTarget;
@@ -107,12 +111,26 @@ export default function BrandLogo({
     />
   );
 
-  if (!asMark) return img;
+  /*
+    The typeset lockup is the default, not the last resort.
 
+    It used to be reached only after every candidate had fired onError, and the
+    image was held at opacity 0 until then — so a file that was missing, slow,
+    or behind an unreachable CDN left the header with no brand at all, which is
+    exactly what a 390px screenshot showed. Now the name is always painted and
+    the uploaded export replaces it the moment it decodes.
+  */
   return (
-    <span style={{ display: "inline-flex", alignItems: "center", gap }}>
+    <span style={{ display: "inline-flex", alignItems: "center", gap, position: "relative" }}>
       {img}
-      <Wordmark height={height} dark={dark} />
+      {(!loaded || asMark) && (
+        <>
+          {!loaded && (
+            <span style={{ fontSize: Math.round(height * 0.62), fontWeight: 900, color: "var(--accent)", lineHeight: 1 }}>✦</span>
+          )}
+          {variant !== "mark" && <Wordmark height={height} dark={dark} />}
+        </>
+      )}
     </span>
   );
 }

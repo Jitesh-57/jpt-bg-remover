@@ -316,3 +316,13 @@ a { color: inherit; }
   .jpt-nav-links { display: none !important; }
   .jpt-nav-burger { display: inline-flex !important; }
 }
+
+/* Small phones: "Buy credits" becomes "Buy". With the brand, the menu button,
+   this and Sign in all in a 390px bar, the last button was clipped off the
+   right edge; the shorter label is what makes the row fit. */
+@media (max-width: 430px) {
+  .jpt-buy-long { display: none; }
+  /* Get Started opens the same modal as Sign in; on a phone it only cost the
+     row its last 120px and pushed Sign in off the edge. */
+  .jpt-nav-cta { display: none !important; }
+}
