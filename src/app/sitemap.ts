@@ -111,5 +111,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.85,
   }));
 
-  return dedupe([...freePages, ...paidPages, ...variantPages, ...creativePages, ...alternativePages, ...blogPages]);
+  // programmaticPages must be listed here too: the convert/compress/crop pages
+  // are built in both modes, so leaving them out of the paid branch silently
+  // dropped 23 live pages from the sitemap.
+  return dedupe([...freePages, ...paidPages, ...variantPages, ...creativePages, ...programmaticPages, ...blogPages]);
 }

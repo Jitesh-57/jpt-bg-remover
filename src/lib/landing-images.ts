@@ -20,6 +20,7 @@ export const PAGE_IMAGES: Record<string, string> = {
   "compress-image": landingImg("image-compressor-before-after.png"),
   "convert-image": landingImg("image-converter-before-after.png"),
   "crop-image": landingImg("image-cropper-before-after.png"),
+  "resize-image": landingImg("image-resizer-before-after.png"),
   "rotate-image": landingImg("rotate-flip-before-after.png"),
   "watermark-image": landingImg("add-text-watermark-before-after.png"),
   "meme-generator": landingImg("meme-generator-before-after.png"),

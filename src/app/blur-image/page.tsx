@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import BlurTool from "./BlurTool";
 import PricingSection from "@/app/_components/PricingSection";
+import SafeImage from "@/app/_components/SafeImage";
+import { blogCreative } from "@/lib/creative-images";
 
 const BASE = "https://www.sjpt.io";
 const URL = `${BASE}/blur-image`;
@@ -81,6 +83,16 @@ export default function Page() {
           </div>
         </section>
 
+
+        {/* SHOWCASE — creative slot (Blogs bucket: blur-image-before-after.png) */}
+        <section style={{ padding: "8px 24px 48px", background: "var(--surface)" }}>
+          <SafeImage
+            src={blogCreative("blur-image-before-after")}
+            alt="Blur Image — a face and a licence plate blurred in a photo, before and after"
+            wrapperStyle={{ maxWidth: 900, margin: "0 auto" }}
+            style={{ width: "100%", height: "auto", display: "block", borderRadius: 18, border: "1px solid var(--border)", boxShadow: "0 18px 50px rgba(0,0,0,0.25)" }}
+          />
+        </section>
         {/* HOW IT WORKS */}
         <section style={{ padding: "56px 24px", background: "var(--surface)" }}>
           <div style={{ maxWidth: 900, margin: "0 auto" }}>

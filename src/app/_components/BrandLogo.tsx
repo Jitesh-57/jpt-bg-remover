@@ -37,6 +37,10 @@ export default function BrandLogo({
   // Index into CANDIDATES: bumped on each load error, so a missing variant
   // silently steps down to the next export rather than showing nothing.
   const [step, setStep] = useState(0);
+  // Invisible until it has actually decoded. Without this, each candidate that
+  // 404s paints a broken-image icon and the alt text before the next one is
+  // tried, so the header visibly flickers on the way to the fallback.
+  const [loaded, setLoaded] = useState(false);
   const files = CANDIDATES[variant];
   const src = step < files.length ? landingImg(files[step]) : "";
 
@@ -62,8 +66,9 @@ export default function BrandLogo({
       alt="Pixel Shine"
       width={variant === "mark" ? height : undefined}
       height={height}
-      style={{ height, width: "auto", display: "block", objectFit: "contain", flexShrink: 0 }}
-      onError={() => setStep((s) => s + 1)}
+      style={{ height, width: "auto", display: "block", objectFit: "contain", flexShrink: 0, opacity: loaded ? 1 : 0 }}
+      onLoad={() => setLoaded(true)}
+      onError={() => { setLoaded(false); setStep((s) => s + 1); }}
     />
   );
 }

@@ -35,15 +35,36 @@ async function listBucket(): Promise<string[]> {
 
 const norm = (s: string) => s.replace(IMAGE_EXT, "").toLowerCase().replace(/[^a-z0-9]+/g, "");
 
-/** preset id -> thumbnail URL, for the presets that have an image uploaded. */
-export async function presetImagesFor(appSlug: string, presets: Preset[]): Promise<Record<string, string>> {
+/**
+ * preset id -> thumbnail URL, for the presets that have an image uploaded.
+ *
+ * Three names are tried in order, most specific first:
+ *   <app-slug>__<preset-id>   this app only
+ *   <category>__<preset-id>   every app in the category (66 files cover 200 apps)
+ *   preset__<preset-id>       the last-resort shared thumbnail
+ *
+ * Per-app thumbnails would mean 200 x 6 uploads, so the category name is the
+ * one most worth filling in; the per-app name is there to override it where a
+ * specific app deserves its own artwork.
+ */
+export async function presetImagesFor(
+  appSlug: string,
+  presets: Preset[],
+  cat?: string
+): Promise<Record<string, string>> {
   const files = await listBucket();
   if (!files.length) return {};
   const out: Record<string, string> = {};
   for (const p of presets) {
-    const want = norm(presetImageStem(appSlug, p.id));
-    const hit = files.find((f) => norm(f) === want);
-    if (hit) out[p.id] = publicUrl(hit);
+    const stems = [
+      presetImageStem(appSlug, p.id),
+      ...(cat ? [presetImageStem(cat, p.id)] : []),
+      presetImageStem("preset", p.id),
+    ].map(norm);
+    for (const want of stems) {
+      const hit = files.find((f) => norm(f) === want);
+      if (hit) { out[p.id] = publicUrl(hit); break; }
+    }
   }
   return out;
 }
