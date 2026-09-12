@@ -44,6 +44,27 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 const keyOf = (bucket: string, path: string) => `${bucket}|${path}`;
 
+/** The bucket the skip-list markers live in. */
+const LANDING_BUCKET = "landing";
+
+/**
+ * Where a permanently-refused job is recorded.
+ *
+ * Rotating the queue was not enough. The workflow always calls with hop=0, so
+ * the offset is always zero and that first invocation spends its entire budget
+ * on the stuck cluster before the chain gets a chance to rotate past it. Runs
+ * 7 and 8 both produced nothing for exactly this reason.
+ *
+ * So a job that fal's checker refuses *and* Gemini cannot produce is marked
+ * here, and later runs drop it from the queue entirely. The marker is a real
+ * file in the bucket, which means it is inspectable and, more importantly,
+ * deletable: removing it puts the job back in the queue, so this is a skip
+ * list rather than a permanent verdict.
+ */
+const REFUSED_PREFIX = "refused";
+const refusedMarker = (bucket: string, path: string) =>
+  `${REFUSED_PREFIX}/${bucket}__${path.replace(/\//g, "__")}.txt`;
+
 /** Public URL for a file in a public bucket, for handing to fal as an input. */
 function publicUrl(bucket: string, path: string): string {
   const base = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
@@ -117,15 +138,33 @@ export async function GET(req: NextRequest) {
 
   const started = Date.now();
   const supabase = createAdminSupabase();
-  const todo = await missingJobs(supabase);
+  const all = await missingJobs(supabase);
+
+  // Drop anything previously established as unproducible by either provider.
+  const { data: refusedFiles } = await supabase.storage
+    .from(LANDING_BUCKET)
+    .list(REFUSED_PREFIX, { limit: 1000 });
+  const refused = new Set((refusedFiles || []).map((f) => f.name));
+  const todo = all.filter((j) => !refused.has(refusedMarker(j.bucket, j.path).split("/").pop()!));
+  const skippedPermanently = all.length - todo.length;
 
   if (!todo.length) {
-    return NextResponse.json({ done: true, hop, remaining: 0, note: "every slot already has a file" });
+    return NextResponse.json({
+      done: true, hop, remaining: 0, skippedPermanently,
+      note: skippedPermanently
+        ? `every remaining slot has a file; ${skippedPermanently} are on the skip list (delete landing/${REFUSED_PREFIX}/ to retry them)`
+        : "every slot already has a file",
+    });
   }
 
   const results: Record<string, string> = {};
   let made = 0;
   let failed = 0;
+  // Once Gemini reports its quota is gone it will report the same for every
+  // subsequent job, so stop asking. Without this, marking the thirteen stuck
+  // jobs costs a pointless Gemini round-trip each and eats the whole budget
+  // again — which is what happened on runs 7 and 8.
+  let geminiExhausted = false;
 
   const present = new Set(
     IMAGE_JOBS.filter((j) => !todo.includes(j)).map((j) => keyOf(j.bucket, j.path))
@@ -210,6 +249,7 @@ export async function GET(req: NextRequest) {
         const policyRejected = !!fal && /content_policy|content checker/i.test(fal.detail || fal.message);
         if (policyRejected) {
           try {
+            if (geminiExhausted) throw new Error("Gemini quota already exhausted this run");
             const viaGemini = await geminiGenerateFromText(job.prompt, { aspect_ratio: job.aspect });
             const res = await fetch(viaGemini);
             if (!res.ok) throw new Error(`fetch ${res.status}`);
@@ -222,7 +262,18 @@ export async function GET(req: NextRequest) {
             made += 1;
             lastError = "";
           } catch (g) {
-            results[key] = `SKIPPED: fal's checker refused it and Gemini failed too (${(g as Error).message})`;
+            const gm = (g as Error).message;
+            if (/high demand|quota|exhausted/i.test(gm)) geminiExhausted = true;
+            results[key] = `SKIPPED: fal's checker refused it and Gemini failed too (${gm})`;
+            // Record it so later runs do not spend their budget here again.
+            // Deleting the marker file puts the job back in the queue.
+            await supabase.storage
+              .from(LANDING_BUCKET)
+              .upload(refusedMarker(job.bucket, job.path), Buffer.from(`${new Date().toISOString()} ${gm}`), {
+                contentType: "text/plain",
+                upsert: true,
+              })
+              .catch(() => {});
           }
           break;
         }
@@ -257,6 +308,7 @@ export async function GET(req: NextRequest) {
     hop,
     generatedThisRun: made,
     failedThisRun: failed,
+    skippedPermanently,
     remaining,
     done: remaining === 0,
     chained,
