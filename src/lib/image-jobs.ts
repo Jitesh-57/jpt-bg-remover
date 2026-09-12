@@ -41,6 +41,16 @@ export interface ImageJob {
    * the "sources" set.
    */
   editOf?: string;
+  /**
+   * A source to use when `editOf` does not exist.
+   *
+   * Six of the twelve sources are refused by fal's content checker and Gemini
+   * is out of quota, which left roughly forty app cards unable to be built at
+   * all. A near-enough substitute that does exist is worth far more than a
+   * blank card: a try-on filter demonstrated on the clean portrait rather than
+   * the plain one loses nothing a visitor would notice.
+   */
+  editOfFallback?: string;
 }
 
 const LANDING = "landing";
@@ -143,6 +153,21 @@ const SOURCES: ImageJob[] = Object.entries(SOURCE_SUBJECTS).map(([name, prompt])
   aspect: "4:5",
   prompt: `${prompt} No text, letters or numbers anywhere in the image. ${STYLE}`,
 }));
+
+/**
+ * Substitute for a source that cannot be generated.
+ *
+ * Keyed by the source that is missing. Only the six the checker refuses need
+ * one; the substitute is always a source that has generated successfully.
+ */
+const SOURCE_FALLBACK: Record<string, string> = {
+  "person-plain": "person-clean",
+  "person-body": "person-dim",
+  "couple": "person-clean",
+  "jewellery": "product",
+  "room": "car",
+  "lowres-face": "person-clean",
+};
 
 /** Which source photo an app's card should be built from. */
 const SOURCE_RULES: [RegExp, string][] = [
@@ -373,7 +398,16 @@ const APPS: ImageJob[] = CREATIVE_APPS.map((a) => {
     prompt: noInput
       ? `A single finished example of exactly what this tool produces: ${a.prompt} Presented cleanly and centred, filling the frame, as a portfolio example. No text, letters or numbers anywhere in the image. ${STYLE}`
       : a.prompt,
-    ...(noInput ? {} : { editOf: `sources/${sourceFor(a)}.png` }),
+    ...(noInput
+      ? {}
+      : (() => {
+          const src = sourceFor(a);
+          const alt = SOURCE_FALLBACK[src];
+          return {
+            editOf: `sources/${src}.png`,
+            ...(alt ? { editOfFallback: `sources/${alt}.png` } : {}),
+          };
+        })()),
   };
 });
 
