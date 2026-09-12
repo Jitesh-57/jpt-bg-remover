@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminSupabase } from "@/lib/auth";
-import { generateFromText } from "@/lib/ai-image";
+import { editImage, generateFromText } from "@/lib/ai-image";
 import { falConfigured } from "@/lib/fal";
 import { jobsFor, jobCounts, type ImageJob } from "@/lib/image-jobs";
 
@@ -30,6 +30,15 @@ const TOKEN = process.env.ADMIN_IMAGE_TOKEN || "jptblog2026";
 
 /** bucket + path, joined for set membership. Buckets cannot contain "|". */
 const keyOf = (bucket: string, path: string) => `${bucket}|${path}`;
+
+/** Public URL for a file in a public bucket, for handing to fal as an input. */
+function publicUrl(bucket: string, path: string): string {
+  const base = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+  return `${base}/storage/v1/object/public/${encodeURIComponent(bucket)}/${path
+    .split("/")
+    .map(encodeURIComponent)
+    .join("/")}`;
+}
 
 function baseUrl(req: NextRequest): string {
   return `${req.nextUrl.origin}${req.nextUrl.pathname}`;
@@ -113,12 +122,17 @@ export async function GET(req: NextRequest) {
       // strict: report fal's own error rather than Gemini's rate-limit message,
       // which is what the fallback substitutes and which names the wrong
       // provider, the wrong cause and the wrong remedy.
-      const dataUrl = await generateFromText(job.prompt, {
-        aspect_ratio: job.aspect,
-        model,
-        strict: q.get("allowFallback") !== "1",
-        budgetMs: 120_000,
-      });
+      const strict = q.get("allowFallback") !== "1";
+      const dataUrl = job.editOf
+        ? await editImage(publicUrl(job.bucket, job.editOf), job.prompt, model, job.aspect, {
+            strict, raw: true, budgetMs: 120_000,
+          })
+        : await generateFromText(job.prompt, {
+            aspect_ratio: job.aspect,
+            model,
+            strict,
+            budgetMs: 120_000,
+          });
       const b64 = dataUrl.includes(",") ? dataUrl.split(",")[1] : dataUrl;
       const bytes = Buffer.from(b64, "base64");
       const contentType = job.path.endsWith(".jpg") ? "image/jpeg" : "image/png";

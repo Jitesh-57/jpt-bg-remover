@@ -14,10 +14,11 @@ import { CAT_META, type AppCat } from "@/lib/app-catalog";
 import { presetsFor, PRESET_IMAGE_BUCKET } from "@/lib/app-presets";
 import { categoryOf } from "@/lib/app-content";
 import { CONVERSIONS, buildContent } from "@/lib/conversions";
+import { FAL_ASPECT_RATIOS } from "@/lib/fal";
 import { COMPRESSIONS } from "@/lib/compressions";
 import { CROPS } from "@/lib/crops";
 
-export type JobSet = "home" | "tools" | "apps" | "presets" | "samples" | "programmatic" | "social";
+export type JobSet = "sources" | "home" | "tools" | "apps" | "presets" | "samples" | "programmatic" | "social";
 
 export interface ImageJob {
   /** Which batch this belongs to. */
@@ -26,9 +27,20 @@ export interface ImageJob {
   bucket: string;
   /** Path inside the bucket, including the extension. */
   path: string;
-  /** Aspect ratio string the model understands. */
+  /** Aspect ratio. Must be one of FAL_ASPECT_RATIOS. */
   aspect: string;
   prompt: string;
+  /**
+   * When set, this job is an *edit* of that source image rather than a fresh
+   * generation, and `prompt` is sent to the model exactly as written.
+   *
+   * This is what makes an app's card show what the app actually does. Asking a
+   * text-to-image model to imagine a before/after produces its guess at the
+   * result; running the app's own prompt over a real photo produces the
+   * result. The source is a path in the `landing` bucket, generated once by
+   * the "sources" set.
+   */
+  editOf?: string;
 }
 
 const LANDING = "landing";
@@ -53,7 +65,7 @@ const STYLE =
  * gives two panels about 125px wide on the homepage grid, which is too narrow
  * to read either half — so tall slots stack top and bottom instead.
  */
-function beforeAfter(before: string, after: string, aspect = "16:10"): string {
+function beforeAfter(before: string, after: string, aspect = "16:9"): string {
   const tall = aspect === "4:5" || aspect === "3:4" || aspect === "9:16";
   const geometry = tall
     ? `A single image divided into two equal halves stacked vertically, separated by a thin clean light divider line across the middle.
@@ -64,6 +76,95 @@ Left half: ${before}
 Right half: the SAME subject after the change — ${after}`;
   return `${geometry}
 Both halves must clearly show the same subject from the same angle, so the difference reads as one change rather than two unrelated photos. Absolutely no text, letters, numbers, badges, labels or captions anywhere in the image. ${STYLE}`;
+}
+
+/* ── 0. source photographs ──────────────────────────────────────────────── */
+
+/**
+ * The real input photos every app card is built from.
+ *
+ * Twelve of these, generated once. Each is a deliberately ordinary photograph
+ * — the kind of picture someone would actually upload — because it is the
+ * "before" half of every comparison that uses it, and a before that looks
+ * professionally shot makes the after look like it did nothing.
+ */
+const SOURCE_SUBJECTS: Record<string, string> = {
+  "person-plain": "A plain, honest smartphone selfie of a smiling adult in a simple t-shirt against a blank magnolia wall. Flat, uneven indoor ceiling light. Whole face clearly visible and front-facing. It must look like a real everyday phone photo: slightly soft, unstyled, no retouching.",
+  "person-clean": "A clear front-facing smartphone portrait of an adult against a plain pale wall in even daylight. No glasses, no hat, no jewellery, neutral expression, hair simple and tidy. An ordinary photo, well lit but completely unstyled.",
+  "person-body": "An ordinary smartphone photograph of an adult standing square to camera in a plain fitted t-shirt and jeans, in an undecorated room with a bare wall behind. Flat indoor light, full body in frame.",
+  "person-dim": "An ordinary smartphone snapshot of an adult standing in a dim hallway in everyday clothes. Underexposed, slight motion softness, a warm yellow cast from a ceiling bulb. Clearly an unedited phone photo.",
+  "couple": "An ordinary smartphone snapshot of two adults standing side by side in everyday clothes against a plain wall, flat indoor light, both faces clearly visible, slightly awkward framing.",
+  "pet": "An ordinary snapshot of a friendly dog sitting on a living-room floor, photographed from standing height in flat indoor light. Cluttered domestic background, nothing styled.",
+  "product": "A single consumer product — a pair of over-ear headphones — photographed on a cluttered domestic kitchen worktop under yellow overhead lighting. Crumbs and household objects visible behind it. An honest, unstyled phone photo.",
+  "car": "A used hatchback car photographed in a residential driveway on a dull overcast day. Wheelie bins and a fence visible behind it, puddles on the tarmac, flat grey light.",
+  "jewellery": "A gold ring photographed on a kitchen worktop under warm yellow domestic lighting, slightly out of focus, dust visible on the metal, cluttered surface.",
+  "room": "A living room photographed on a phone in dull daylight: uneven exposure, a cluttered coffee table, a crooked horizon and a washed-out window.",
+  "old-print": "A photograph of an old damaged printed family photo lying on a table: colours faded towards magenta, a crease across one corner, surface scratches, dust and worn edges. Shot flat from above.",
+  "lowres-face": "A deliberately low-resolution, soft and slightly pixelated photograph of an adult's face, head and shoulders against a plain background. It must clearly read as a small image that has been enlarged far past its real size.",
+};
+
+/**
+ * The apps that take no input photo.
+ *
+ * A before/after split would misrepresent these — there is no "before" — so
+ * they get a single example of what the tool produces instead.
+ *
+ * This is an explicit list rather than a pattern, because both patterns I
+ * tried were wrong in both directions. Matching the slug put "comic-book-cover"
+ * in here on account of "book-cover", when it is very much photo-based.
+ * Matching the prompt for a demonstrative missed the removal tools and caught
+ * the profile-picture makers, whose prompts happen not to say "this" even
+ * though a user uploads a photo to every one of them. The list below was read
+ * off the 200 prompts by hand; anything not named here gets a before/after.
+ */
+const NO_INPUT_PHOTO = new Set([
+  "text-to-emoji",
+  "birth-flower-tattoo",
+  "album-cover-generator",
+  "movie-poster-generator",
+  "book-cover-generator",
+  "logo-maker",
+  "gaming-logo-maker",
+  "icon-generator",
+  "ai-character-generator",
+  "linkedin-banner-maker",
+]);
+
+/** Public URL of a source photo in the landing bucket. */
+export function sourceImageUrl(name: string): string {
+  const base = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+  return `${base}/storage/v1/object/public/landing/sources/${name}.png`;
+}
+
+const SOURCES: ImageJob[] = Object.entries(SOURCE_SUBJECTS).map(([name, prompt]) => ({
+  set: "sources" as const,
+  bucket: LANDING,
+  path: `sources/${name}.png`,
+  aspect: "4:5",
+  prompt: `${prompt} No text, letters or numbers anywhere in the image. ${STYLE}`,
+}));
+
+/** Which source photo an app's card should be built from. */
+const SOURCE_RULES: [RegExp, string][] = [
+  [/piercing|beard|glasses|braces|hairstyle|hair-color|bangs|curly|blonde|bald|buzz-cut|long-hair|eyebrow|eye-color|smile|expression|baby-face|no-beard/, "person-clean"],
+  [/unpixelate|unblur|upscal|enlarge|sharpen|denoise|hd-photo|4k|image-enlarger/, "lowres-face"],
+  [/old-photo|restoration|colorize|colourise|black-and-white|yearbook/, "old-print"],
+  [/muscle|\babs\b|six-pack|body-editor|fitness|gym|skinny|slim|outfit|dress|saree|suit|fashion|apparel/, "person-body"],
+  [/\bpet|dog|cat\b/, "pet"],
+  [/couple|wedding|anniversary|engagement|family|group|baby-predictor/, "couple"],
+  [/\bcar\b|automotive|dealer|vehicle|bike|motorcycle|truck|license-plate/, "car"],
+  [/jewel|ring|necklace/, "jewellery"],
+  [/real-estate|house|property|interior|room|home-decor|hotel|architect|restaurant|food/, "room"],
+  [/product|amazon|ecommerce|shopify|ebay|magento|woocommerce|beauty|electronics|gadget|png-maker|white-background|background-remover/, "product"],
+  [/aesthetic|photoshoot|selfie|travel|instagram|facebook|birthday|festival|christmas|graduation|prom|thanksgiving|maternity/, "person-dim"],
+];
+
+/** The source photo an app's creative is built from — exported so the app page
+ * can show that same photo as the "before" beside the generated result. */
+export function sourceFor(app: CreativeApp): string {
+  const hay = `${app.slug} ${app.h1}`.toLowerCase();
+  for (const [re, name] of SOURCE_RULES) if (re.test(hay)) return name;
+  return "person-plain";
 }
 
 /* ── 1. homepage ────────────────────────────────────────────────────────── */
@@ -78,15 +179,15 @@ const HOME: ImageJob[] = [
     ),
   },
   {
-    set: "home", bucket: LANDING, path: "home-step-1.png", aspect: "16:10",
+    set: "home", bucket: LANDING, path: "home-step-1.png", aspect: "16:9",
     prompt: `A photograph being dropped onto a large empty upload area on a dark desk surface: a single printed photo mid-air above a softly glowing rounded rectangle outline, a hand just releasing it. Warm accent light in deep orange. ${STYLE}`,
   },
   {
-    set: "home", bucket: LANDING, path: "home-step-2.png", aspect: "16:10",
+    set: "home", bucket: LANDING, path: "home-step-2.png", aspect: "16:9",
     prompt: `A neat grid of nine small portrait thumbnails on a dark surface, each showing the same person in a different photographic style — studio, outdoor, formal, casual — with one thumbnail clearly highlighted by a deep orange border. ${STYLE}`,
   },
   {
-    set: "home", bucket: LANDING, path: "home-step-3.png", aspect: "16:10",
+    set: "home", bucket: LANDING, path: "home-step-3.png", aspect: "16:9",
     prompt: `A finished high-resolution portrait print resting on a dark desk beside a phone showing the same image, lit warmly, nothing overlaid on the print, clean and uncluttered. ${STYLE}`,
   },
 ];
@@ -94,84 +195,84 @@ const HOME: ImageJob[] = [
 /* ── 2. tool landing pages ──────────────────────────────────────────────── */
 
 const TOOLS: ImageJob[] = [
-  { set: "tools", bucket: LANDING, path: "page-remove-bg.png", aspect: "16:10",
+  { set: "tools", bucket: LANDING, path: "page-remove-bg.png", aspect: "16:9",
     prompt: beforeAfter(
       "a pair of running shoes photographed on a cluttered kitchen worktop with background distractions",
       "the same shoes on a pure white seamless background with a soft contact shadow beneath them, centred with even margins") },
 
-  { set: "tools", bucket: LANDING, path: "page-upscale.png", aspect: "16:10",
+  { set: "tools", bucket: LANDING, path: "page-upscale.png", aspect: "16:9",
     prompt: beforeAfter(
       "a small, soft, slightly pixelated portrait photograph, visibly low resolution",
       "the same portrait sharp and detailed, with clear skin texture and individual strands of hair resolved") },
 
-  { set: "tools", bucket: LANDING, path: "page-ai-editor.png", aspect: "16:10",
+  { set: "tools", bucket: LANDING, path: "page-ai-editor.png", aspect: "16:9",
     prompt: beforeAfter(
       "a plain photo of a person standing in a dim hallway",
       "the same person in the same pose, now outdoors at golden hour with warm low sun rimming the hair and a softly blurred park behind") },
 
-  { set: "tools", bucket: LANDING, path: "page-ai-headshot.png", aspect: "16:10",
+  { set: "tools", bucket: LANDING, path: "page-ai-headshot.png", aspect: "16:9",
     prompt: beforeAfter(
       "a casual selfie of an adult in a t-shirt taken at arm's length against a bedroom wall",
       "the same person as a corporate headshot: charcoal suit, white shirt, neutral grey studio backdrop, even professional lighting") },
 
   // The upscale page shows two separate frames rather than one split image.
-  { set: "tools", bucket: LANDING, path: "upscale-before.jpg", aspect: "16:10",
+  { set: "tools", bucket: LANDING, path: "upscale-before.jpg", aspect: "16:9",
     prompt: `A deliberately low-resolution, soft, slightly pixelated photograph of a young adult's face, framed head and shoulders against a plain background — it must read as a small image that has been enlarged too far. ${STYLE}` },
-  { set: "tools", bucket: LANDING, path: "upscale-after.jpg", aspect: "16:10",
+  { set: "tools", bucket: LANDING, path: "upscale-after.jpg", aspect: "16:9",
     prompt: `A very sharp, high-resolution photograph of a young adult's face, framed head and shoulders against a plain background, with crisp skin texture, visible individual eyelashes and clearly resolved hair strands. Same framing and composition as a standard head-and-shoulders portrait. ${STYLE}` },
 
-  { set: "tools", bucket: LANDING, path: "image-compressor-before-after.png", aspect: "16:10",
+  { set: "tools", bucket: LANDING, path: "image-compressor-before-after.png", aspect: "16:9",
     prompt: beforeAfter(
       "a photograph of a coastal landscape shown large and heavy, with a small stack of storage drives beside it suggesting a very large file",
       "the same landscape photograph looking identical in quality but paired with a single small storage chip, suggesting a far smaller file") },
 
-  { set: "tools", bucket: LANDING, path: "image-converter-before-after.png", aspect: "16:10",
+  { set: "tools", bucket: LANDING, path: "image-converter-before-after.png", aspect: "16:9",
     prompt: beforeAfter(
       "a photograph of a bicycle against a brick wall, shown as a flat rectangular photo print",
       "the same bicycle photograph but cut out onto a transparent checkerboard background, edges clean around the spokes") },
 
-  { set: "tools", bucket: LANDING, path: "image-cropper-before-after.png", aspect: "16:10",
+  { set: "tools", bucket: LANDING, path: "image-cropper-before-after.png", aspect: "16:9",
     prompt: beforeAfter(
       "a wide photograph of a person standing off to one side with a lot of empty space around them",
       "the same photograph cropped tight and square, the person centred and filling the frame") },
 
-  { set: "tools", bucket: LANDING, path: "image-resizer-before-after.png", aspect: "16:10",
+  { set: "tools", bucket: LANDING, path: "image-resizer-before-after.png", aspect: "16:9",
     prompt: beforeAfter(
       "a very large photographic print of a city street laid on a desk, extending past the edges of the frame",
       "the same city street photograph as a small, neat, perfectly proportioned print sitting squarely on the same desk") },
 
-  { set: "tools", bucket: LANDING, path: "rotate-flip-before-after.png", aspect: "16:10",
+  { set: "tools", bucket: LANDING, path: "rotate-flip-before-after.png", aspect: "16:9",
     prompt: beforeAfter(
       "a photograph of a lighthouse lying on its side, rotated ninety degrees the wrong way",
       "the same lighthouse photograph upright and correctly oriented, horizon level") },
 
-  { set: "tools", bucket: LANDING, path: "add-text-watermark-before-after.png", aspect: "16:10",
+  { set: "tools", bucket: LANDING, path: "add-text-watermark-before-after.png", aspect: "16:9",
     prompt: beforeAfter(
       "a clean photograph of a plated dish on a wooden table with nothing over it",
       "the same photograph with a subtle semi-transparent diagonal watermark pattern of simple abstract marks across it, evenly spaced and unobtrusive") },
 
-  { set: "tools", bucket: LANDING, path: "meme-generator-before-after.png", aspect: "16:10",
+  { set: "tools", bucket: LANDING, path: "meme-generator-before-after.png", aspect: "16:9",
     prompt: beforeAfter(
       "a plain photograph of a surprised-looking cat on a sofa",
       "the same photograph with thick empty white caption bars added above and below the image, ready for text but containing none") },
 
-  { set: "tools", bucket: LANDING, path: "photo-to-pdf-before-after.png", aspect: "16:10",
+  { set: "tools", bucket: LANDING, path: "photo-to-pdf-before-after.png", aspect: "16:9",
     prompt: beforeAfter(
       "three loose photographic prints scattered untidily on a dark desk",
       "the same three photographs neatly stacked as pages of a bound document, squared up and aligned") },
 
-  { set: "tools", bucket: LANDING, path: "tiktok-watermark-remover-hero.png", aspect: "16:10",
+  { set: "tools", bucket: LANDING, path: "tiktok-watermark-remover-hero.png", aspect: "16:9",
     prompt: beforeAfter(
       "a phone held in a hand showing a vertical video of a dancer, with a small semi-transparent abstract mark in the corner of the video",
       "the same phone and the same video frame, completely clean with no mark in any corner") },
 
   // Standalone pages (Blogs bucket)
-  { set: "tools", bucket: BLOGS, path: "blur-image-before-after.png", aspect: "16:10",
+  { set: "tools", bucket: BLOGS, path: "blur-image-before-after.png", aspect: "16:9",
     prompt: beforeAfter(
       "a photograph of two people standing beside a parked car, faces and the car's plate clearly visible",
       "the same photograph with the faces and the plate cleanly blurred out, everything else untouched and sharp") },
 
-  { set: "tools", bucket: BLOGS, path: "qr-code-generator-showcase.png", aspect: "16:10",
+  { set: "tools", bucket: BLOGS, path: "qr-code-generator-showcase.png", aspect: "16:9",
     prompt: `A crisp black-and-white QR code printed on a white card resting on a dark desk beside a phone whose camera is pointed at it. The QR code must be a plausible dense square QR pattern. No text anywhere. ${STYLE}` },
 ];
 
@@ -258,44 +359,23 @@ function beforeSubjectFor(app: CreativeApp): string {
   return BEFORE_BY_CAT[categoryOf(app)] || BEFORE_BY_CAT.portrait;
 }
 
-/**
- * The apps that take no input photo.
- *
- * A before/after split would misrepresent these — there is no "before" — so
- * they get a single example of what the tool produces instead.
- *
- * This is an explicit list rather than a pattern, because both patterns I
- * tried were wrong in both directions. Matching the slug put "comic-book-cover"
- * in here on account of "book-cover", when it is very much photo-based.
- * Matching the prompt for a demonstrative missed the removal tools and caught
- * the profile-picture makers, whose prompts happen not to say "this" even
- * though a user uploads a photo to every one of them. The list below was read
- * off the 200 prompts by hand; anything not named here gets a before/after.
- */
-const NO_INPUT_PHOTO = new Set([
-  "text-to-emoji",
-  "birth-flower-tattoo",
-  "album-cover-generator",
-  "movie-poster-generator",
-  "book-cover-generator",
-  "logo-maker",
-  "gaming-logo-maker",
-  "icon-generator",
-  "ai-character-generator",
-  "linkedin-banner-maker",
-]);
-
-const APPS: ImageJob[] = CREATIVE_APPS.map((a) => ({
-  set: "apps" as const,
-  bucket: LANDING,
-  path: `creative/${a.slug}.png`,
-  // 4:5 portrait: these files are the app's card on the homepage and the hub
-  // as well as the showcase on its own page, so the split runs top to bottom.
-  aspect: "4:5",
-  prompt: NO_INPUT_PHOTO.has(a.slug)
-    ? `A single finished example of exactly what this tool produces: ${a.prompt} Presented cleanly and centred, filling the frame, as a portfolio example. Absolutely no text, letters, numbers, badges or captions anywhere in the image. ${STYLE}`
-    : beforeAfter(beforeSubjectFor(a), a.prompt, "4:5"),
-}));
+const APPS: ImageJob[] = CREATIVE_APPS.map((a) => {
+  const noInput = NO_INPUT_PHOTO.has(a.slug);
+  return {
+    set: "apps" as const,
+    bucket: LANDING,
+    path: `creative/${a.slug}.png`,
+    // 4:5 portrait: the card on the homepage and the hub, and the "after" on
+    // the app's own page, where the source photo sits beside it.
+    aspect: "4:5",
+    // The app's own prompt, unchanged — so the image is the tool's real output
+    // rather than a model's impression of it.
+    prompt: noInput
+      ? `A single finished example of exactly what this tool produces: ${a.prompt} Presented cleanly and centred, filling the frame, as a portfolio example. No text, letters or numbers anywhere in the image. ${STYLE}`
+      : a.prompt,
+    ...(noInput ? {} : { editOf: `sources/${sourceFor(a)}.png` }),
+  };
+});
 
 /* ── 4. preset thumbnails, one set per category ─────────────────────────── */
 
@@ -366,7 +446,7 @@ const PROGRAMMATIC: ImageJob[] = [
   ...CONVERSIONS.map((c) => {
     const ct = buildContent(c);
     return {
-      set: "programmatic" as const, bucket: BLOGS, path: `convert-${c.slug}.png`, aspect: "16:10",
+      set: "programmatic" as const, bucket: BLOGS, path: `convert-${c.slug}.png`, aspect: "16:9",
       prompt: beforeAfter(
         `a photograph of a potted plant on a windowsill presented as a single ${ct.fromLabel} file: one plain flat photo print lying on a dark desk`,
         `the same photograph presented as a ${ct.toLabel} file, visually identical in quality, sitting in the same position on the same desk${c.to === "png" ? ", shown against a transparent checkerboard to indicate transparency support" : ""}`
@@ -374,14 +454,14 @@ const PROGRAMMATIC: ImageJob[] = [
     };
   }),
   ...COMPRESSIONS.map((c) => ({
-    set: "programmatic" as const, bucket: BLOGS, path: `${c.slug}.png`, aspect: "16:10",
+    set: "programmatic" as const, bucket: BLOGS, path: `${c.slug}.png`, aspect: "16:9",
     prompt: beforeAfter(
       "a photograph of a harbour at sunset shown alongside a tall stack of storage drives, suggesting a very large file",
       `the same harbour photograph looking identical in quality, now alongside a single small storage chip, suggesting roughly ${c.label}`
     ),
   })),
   ...CROPS.map((c) => ({
-    set: "programmatic" as const, bucket: BLOGS, path: `${c.slug}.png`, aspect: "16:10",
+    set: "programmatic" as const, bucket: BLOGS, path: `${c.slug}.png`, aspect: "16:9",
     prompt: beforeAfter(
       "a wide photograph of an adult standing off-centre with a great deal of empty space around them",
       `the same photograph cropped to the framing described by "${c.h1.replace(/ \(.*\)$/, "")}", the subject correctly placed and filling the frame`
@@ -401,9 +481,32 @@ const SOCIAL: ImageJob[] = [
 
 /* ── the full list ──────────────────────────────────────────────────────── */
 
-export const IMAGE_JOBS: ImageJob[] = [
-  ...HOME, ...TOOLS, ...APPS, ...PRESETS, ...SAMPLES, ...PROGRAMMATIC, ...SOCIAL,
-];
+// Sources first: every app card is an edit of one of them, so they have to
+// exist before the apps set can run.
+export const IMAGE_JOBS: ImageJob[] = assertRatios([
+  ...SOURCES, ...HOME, ...TOOLS, ...APPS, ...PRESETS, ...SAMPLES, ...PROGRAMMATIC, ...SOCIAL,
+]);
+
+/**
+ * Rejects a job list carrying a ratio fal will not accept.
+ *
+ * "16:10" cost a whole production run: 23 jobs each failed with a 422 that the
+ * Gemini fallback then reported as a rate limit. Checking the list when the
+ * module loads turns that into a build failure instead.
+ */
+function assertRatios(jobs: ImageJob[]): ImageJob[] {
+  const allowed = new Set<string>(FAL_ASPECT_RATIOS);
+  const bad = jobs.filter((j) => !allowed.has(j.aspect));
+  if (bad.length) {
+    throw new Error(
+      `Unsupported aspect ratios in image-jobs: ${bad
+        .map((j) => `${j.path} (${j.aspect})`)
+        .slice(0, 5)
+        .join(", ")}. fal accepts: ${FAL_ASPECT_RATIOS.join(", ")}.`
+    );
+  }
+  return jobs;
+}
 
 export function jobsFor(set: string | null): ImageJob[] {
   if (!set || set === "all") return IMAGE_JOBS;
