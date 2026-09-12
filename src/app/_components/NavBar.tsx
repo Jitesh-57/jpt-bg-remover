@@ -333,7 +333,8 @@ export default function NavBar() {
             onMouseEnter={e => (e.currentTarget.style.opacity = "0.9")}
             onMouseLeave={e => (e.currentTarget.style.opacity = "1")}>
             <span style={{ fontSize: 13 }}>✨</span>
-            Buy credits
+            {/* One flex item, so the button's 6px gap does not land mid-label. */}
+            <span>Buy<span className="jpt-buy-long"> credits</span></span>
           </button>
 
           {/* Auth */}
@@ -462,7 +463,10 @@ export default function NavBar() {
               <button onClick={openModal} style={{ padding: "7px 16px", background: "transparent", color: "var(--text-muted)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
                 {t.navSignIn}
               </button>
-              <button onClick={openModal} style={{ padding: "7px 16px", background: "var(--accent-fill)", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer", boxShadow: "0 2px 8px rgba(255,106,26,0.40)" }}>
+              {/* Sign in and Get Started open the same modal, so on a small
+                  phone the second one is redundant and was being clipped off
+                  the right edge. See .jpt-nav-cta. */}
+              <button onClick={openModal} className="jpt-nav-cta" style={{ padding: "7px 16px", background: "var(--accent-fill)", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer", boxShadow: "0 2px 8px rgba(255,106,26,0.40)" }}>
                 {t.getStarted}
               </button>
             </div>
