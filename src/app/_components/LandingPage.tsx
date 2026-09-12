@@ -399,9 +399,11 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
     operatingSystem: 'Web',
     offers: {
       '@type': 'AggregateOffer',
-      priceCurrency: 'USD',
+      // INR: the packs are charged in rupees through Razorpay, so that is the
+      // currency the offer is actually made in.
+      priceCurrency: 'INR',
       lowPrice: '0',
-      highPrice: String(PACKS[PACKS.length - 1].usd),
+      highPrice: String(PACKS[PACKS.length - 1].inr),
       offerCount: String(PACKS.length + 1),
     },
   }

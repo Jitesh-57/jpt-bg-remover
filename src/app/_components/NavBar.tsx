@@ -178,6 +178,29 @@ export default function NavBar() {
             <BrandLogo height={34} variant="wordmark" />
           </a>
 
+          {/*
+            Phones get one control instead of five. Everything that used to sit
+            inline in the bar — Tools, Blog, 80s Prompts, Creative Apps — was
+            still rendered at 390px, so the row overflowed, the brand was
+            clipped off the left edge and the header read as a wall of chips.
+            The sheet below already held the tools tree; the rest of the links
+            are now nested under it, and this button is the way in.
+          */}
+          <button
+            className="jpt-nav-burger"
+            aria-label="Open menu"
+            aria-expanded={showToolsDropdown}
+            onClick={() => setShowToolsDropdown(v => !v)}
+            style={{ alignItems: "center", justifyContent: "center", width: 38, height: 38, flexShrink: 0, background: showToolsDropdown ? "var(--accent-soft)" : "transparent", border: "none", borderRadius: 10, color: "var(--text-muted)", cursor: "pointer", padding: 0 }}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+              <line x1="4" y1="7" x2="20" y2="7" /><line x1="4" y1="12" x2="20" y2="12" /><line x1="4" y1="17" x2="20" y2="17" />
+            </svg>
+          </button>
+
+          {/* Inline links — wide screens only; see .jpt-nav-links */}
+          <div className="jpt-nav-links">
+
           {/* AI Tools Dropdown */}
           <div ref={dropdownRef} style={{ position: "relative" }}>
             <button
@@ -219,6 +242,8 @@ export default function NavBar() {
             )}
           </div>
 
+          </div>
+
           {showToolsDropdown && isMobile && (
             <div onClick={() => setShowToolsDropdown(false)} style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(15,23,42,0.55)" }}>
               <div onClick={e => e.stopPropagation()} style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "var(--surface)", borderRadius: "20px 20px 0 0", boxShadow: "0 -10px 40px rgba(0,0,0,0.25)", maxHeight: "78vh", overflowY: "auto", padding: "10px 16px calc(20px + env(safe-area-inset-bottom))" }}>
@@ -241,12 +266,31 @@ export default function NavBar() {
                     </div>
                   </div>
                 ))}
-                <a href="/tools" onClick={() => setShowToolsDropdown(false)} style={{ display: "block", marginTop: 10, paddingTop: 14, borderTop: "1px solid var(--border)", textAlign: "center", fontSize: 14, fontWeight: 800, color: "var(--accent)", textDecoration: "none" }}>
-                  View all free tools →
-                </a>
+                {/* The links that used to sit inline in the bar, nested here. */}
+                <div style={{ marginTop: 18, paddingTop: 16, borderTop: "1px solid var(--border)" }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: "var(--text-faint)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Browse</div>
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    {[
+                      { icon: "🧰", label: "All free tools", href: "/tools" },
+                      { icon: "📝", label: "Blog", href: "/blog" },
+                      { icon: "🔥", label: "80s AI Photo Prompts", href: "/80s-ai-photo-prompts" },
+                      ...(PAID_FEATURES_ENABLED ? [{ icon: "✦", label: "Creative Apps", href: "/creative" }] : []),
+                      { icon: "💎", label: "Pricing", href: "/pricing" },
+                    ].map(link => (
+                      <a key={link.href} href={link.href} onClick={() => setShowToolsDropdown(false)}
+                        style={{ display: "flex", alignItems: "center", gap: 12, padding: "13px 10px", borderRadius: 10, textDecoration: "none", color: "var(--text)", fontSize: 14.5, fontWeight: 700 }}
+                      >
+                        <span style={{ fontSize: 17, width: 22, textAlign: "center" }}>{link.icon}</span>
+                        {link.label}
+                      </a>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           )}
+
+          <div className="jpt-nav-links">
 
           {/* Blog */}
           <a href="/blog"
@@ -275,6 +319,8 @@ export default function NavBar() {
               Creative Apps
             </a>
           )}
+
+          </div>
 
           <div style={{ flex: 1 }} />
 

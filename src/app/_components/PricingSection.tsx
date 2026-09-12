@@ -61,10 +61,11 @@ export default function PricingSection({ toolName }: { toolName?: string }) {
               <div style={{ fontSize: 12, fontWeight: 800, color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>
                 {p.label}
               </div>
-              <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
-                <span style={{ fontSize: 40, fontWeight: 900, color: "var(--text)", letterSpacing: "-0.03em", lineHeight: 1 }}>${p.usd}</span>
+              <div style={{ display: "flex", alignItems: "baseline", gap: 4, flexWrap: "wrap" }}>
+                <span style={{ fontSize: 40, fontWeight: 900, color: "var(--text)", letterSpacing: "-0.03em", lineHeight: 1 }}>₹{p.inr}</span>
                 <span style={{ fontSize: 13.5, color: "var(--text-faint)", fontWeight: 600 }}>one time</span>
               </div>
+              <div style={{ fontSize: 12.5, color: "var(--text-faint)", marginTop: 4 }}>≈ ${p.usd}</div>
               <div style={{ marginTop: 10, fontSize: 16, fontWeight: 800, color: "var(--text)" }}>{p.credits} credits</div>
               <div style={{ fontSize: 13.5, color: "var(--text-muted)", marginTop: 2 }}>≈ {p.generations} AI generations</div>
               <div style={{ marginTop: "auto", paddingTop: 20 }}>
