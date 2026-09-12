@@ -175,6 +175,26 @@ export class FalError extends Error {
     this.name = "FalError";
   }
   /**
+   * The account cannot pay for the request.
+   *
+   * fal does not always use 402 for this. It also answers 403 with
+   * "User is locked. Reason: Exhausted balance." — which has to be recognised
+   * from the body, because nothing about the status code says billing.
+   *
+   * Checked before rateLimited on purpose: "Exhausted balance" contains
+   * "exhaust", so a rate-limit pattern matching that word classified a locked
+   * account as a throttle, retried it three times, and let a Gemini fallback
+   * swallow the one message that actually said what was wrong.
+   */
+  get billingBlocked(): boolean {
+    const text = `${this.detail} ${this.message}`;
+    return (
+      this.status === 402 ||
+      /exhausted balance|user is locked|insufficient (funds|balance|credit)|top ?up your balance|out of credit/i.test(text)
+    );
+  }
+
+  /**
    * Throttled rather than refused.
    *
    * fal signals this as 429, but also as 403 with a rate-limit reason in the
@@ -184,6 +204,7 @@ export class FalError extends Error {
    * again, not to conclude the key is wrong or switch provider.
    */
   get rateLimited(): boolean {
+    if (this.billingBlocked) return false;
     const text = `${this.detail} ${this.message}`;
     return (
       this.status === 429 ||
@@ -193,6 +214,7 @@ export class FalError extends Error {
 
   /** Worth trying again: rate limiting, capacity, or a server-side blip. */
   get transient(): boolean {
+    if (this.billingBlocked) return false;
     return this.status === 408 || this.status >= 500 || this.rateLimited;
   }
 
@@ -204,7 +226,8 @@ export class FalError extends Error {
    * run on it wastes the whole queue over something that resolves in seconds.
    */
   get fatal(): boolean {
-    return !this.rateLimited && (this.status === 401 || this.status === 402 || this.status === 403);
+    if (this.billingBlocked) return true;
+    return !this.rateLimited && (this.status === 401 || this.status === 403);
   }
 
   /**
@@ -235,24 +258,30 @@ function falError(status: number, body: unknown): string {
     : "";
 
   /*
-    401 and 403 are not the same problem and must not share a message.
+    When fal says why, that is the message. Nothing is appended.
 
-    401 is the key itself: absent, wrong, or revoked. 403 is a key fal
-    accepts, refused for this particular request — an endpoint the account
-    cannot reach, or a rate limit after a burst. Telling someone to "check
-    the FAL_KEY configuration" when the key is fine and the account is
-    throttled sends them to fix something that is not broken, which is
-    exactly what happened after a run put 95 generations through in three
-    minutes. fal's own text is appended because it usually says which.
+    A guess bolted onto fal's own text made the real cause unreadable: fal
+    answered 403 "User is locked. Reason: Exhausted balance. Top up your
+    balance at fal.ai/dashboard/billing", and the sentence that followed it
+    said "the key is being accepted, so this is usually a rate limit or an
+    endpoint the account cannot reach" — contradicting the only authoritative
+    part of the message. Speculation is only useful when fal is silent.
   */
+  const billing = /exhausted balance|user is locked|insufficient (funds|balance|credit)|top ?up/i.test(detail);
+  if (status === 402 || billing) {
+    return detail
+      ? `The image service is out of credit: ${detail}`
+      : "The image service is out of credit. Please top up the fal.ai balance.";
+  }
   if (status === 401) {
-    return `The image service rejected our key${detail ? `: ${detail}` : "."} It may have been revoked or replaced — a new key from fal.ai → Dashboard → Keys will fix it.`;
+    return detail
+      ? `The image service rejected our key: ${detail}`
+      : "The image service rejected our key. A new one from fal.ai → Dashboard → Keys will fix it.";
   }
   if (status === 403) {
-    return `The image service refused this request${detail ? `: ${detail}` : "."} The key is being accepted, so this is usually a rate limit or an endpoint the account cannot reach.`;
-  }
-  if (status === 402) {
-    return "The image service is out of credit. Please top up the fal.ai balance.";
+    return detail
+      ? `The image service refused this request: ${detail}`
+      : "The image service refused this request. The key is accepted, so this is usually a rate limit or an endpoint the account cannot reach.";
   }
   if (status === 429) {
     return "The image service is busy right now. Please try again in a moment.";

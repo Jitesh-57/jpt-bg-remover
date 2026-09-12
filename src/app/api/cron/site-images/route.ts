@@ -31,8 +31,16 @@ const TOKEN = process.env.ADMIN_IMAGE_TOKEN || "jptblog2026";
 const BUDGET_MS = 230_000;
 /** Hard ceiling per invocation, so a misconfiguration cannot run away. */
 const MAX_PER_RUN = 90;
-/** Hard ceiling on chained invocations, for the same reason. */
-const MAX_HOPS = 30;
+/**
+ * Hard ceiling on chained invocations.
+ *
+ * Was 30, which at MAX_PER_RUN meant a single trigger could authorise up to
+ * 2,700 generations — real money, and no one watching. That ceiling is what
+ * let one accidental run keep going for twenty minutes and drain the fal
+ * balance before it could be stopped. Six hops is enough to walk the whole
+ * slot list in one pass and bounds the worst case to a few hundred images.
+ */
+const MAX_HOPS = 6;
 /** Attempts per image, including the first. */
 const RETRIES = 3;
 /** Base backoff between attempts; multiplied by the attempt number. */
@@ -359,6 +367,9 @@ export async function GET(req: NextRequest) {
         // Only a rejected key or an empty balance fails every remaining job
         // identically. Stopping the whole run is handled by the caller via
         // fatal, so the other workers wind down too.
+        // fal.fatal now covers an exhausted balance reported as 403, which
+        // previously read as a rate limit and kept the run going against an
+        // account that could no longer pay for it.
         if (fal?.fatal) {
           fatalRef.current = { status: fal.status, detail: fal.detail };
           results[key] = `FAILED: ${lastError}`;

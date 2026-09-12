@@ -74,6 +74,9 @@ async function viaFal(
     } catch (e) {
       last = e;
       const fal = e instanceof FalError ? e : null;
+      // An exhausted balance will not resolve by asking again, and it is the
+      // one failure the account owner has to see verbatim.
+      if (fal?.billingBlocked) throw e;
       if (!fal?.transient || attempt === FAL_ATTEMPTS - 1) break;
       const wait = 1200 * (attempt + 1);
       console.warn(`[ai-image] fal ${label} throttled (${fal.status}); retrying in ${wait}ms`);
@@ -85,7 +88,17 @@ async function viaFal(
   const msg = e instanceof Error ? e.message : String(e);
   const status = e instanceof FalError ? e.status : 0;
 
-  if (status === 402 || /out of credit/i.test(msg)) throw e;
+  /*
+    Out of credit is surfaced, never absorbed.
+
+    This used to test only for 402 and the words "out of credit", so fal's
+    403 "User is locked. Reason: Exhausted balance." slipped past, got three
+    retries, then had its message replaced by Gemini's "temporarily
+    unavailable due to high demand" — which describes a different provider's
+    rate limit and gives the owner no way to work out that their fal balance
+    had run out. FalError.billingBlocked recognises both shapes now.
+  */
+  if ((e instanceof FalError && e.billingBlocked) || /out of credit/i.test(msg)) throw e;
 
   if (status === 401 || status === 403 || /rejected our key|refused this request/i.test(msg)) {
     console.error(
@@ -210,7 +223,8 @@ export function removeBackground(src: string, model?: string): Promise<string> {
         // between Gemini and surfacing them. A 403 is different: the key
         // works and it is this endpoint the account cannot reach, so the
         // edit model is worth trying.
-        if (status === 401 || status === 402 || /out of credit/i.test(msg)) throw e;
+        const fal = e instanceof FalError ? e : null;
+        if (status === 401 || fal?.billingBlocked || /out of credit/i.test(msg)) throw e;
         console.warn("[ai-image] background-removal model failed, trying the edit model:", msg);
         return falEditImage(src, "Remove the background from this image completely. Make it transparent. Keep the subject with clean edges. Return only the resulting PNG image.", m);
       }
