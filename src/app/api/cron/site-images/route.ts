@@ -158,6 +158,9 @@ export async function GET(req: NextRequest) {
               strict: true, raw: true, budgetMs: 120_000,
             })
           : await generateFromText(job.prompt, {
+              // job.aspect, not the default: dropping this sent every generate
+              // job at 16:9 whatever slot it was for.
+              aspect_ratio: job.aspect,
               // No Gemini fallback here: a masked fal error reports the wrong
               // provider and hides whether a retry is worth attempting.
               strict: true,
@@ -178,6 +181,14 @@ export async function GET(req: NextRequest) {
         const fal = e instanceof FalError ? e : null;
         lastError = fal ? `fal ${fal.status}: ${fal.detail || fal.message}` : (e as Error).message;
 
+        // A content-policy rejection is about this prompt and no other, so
+        // skip the job and carry on; stopping would let one unlucky wording
+        // block the remaining hundreds.
+        if (fal && /content_policy|content checker/i.test(fal.detail || fal.message)) {
+          results[key] = `SKIPPED: rejected by fal's content checker`;
+          break;
+        }
+
         // A rejected key, an empty balance or a malformed request will fail
         // every remaining job identically. Stop rather than spend the budget
         // discovering that 300 more times.
@@ -192,7 +203,10 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    if (lastError) { results[key] = `FAILED: ${lastError}`; failed += 1; }
+    if (lastError && !results[key]?.startsWith("SKIPPED")) {
+      results[key] = `FAILED: ${lastError}`;
+      failed += 1;
+    }
     // A short gap between jobs, which is what stops the rate limiting rather
     // than just recovering from it.
     if (Date.now() - started < BUDGET_MS) await sleep(GAP_MS);
