@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { trackBeginCheckout, trackPurchase, trackBuyButtonClicked, trackPaymentFailed } from "@/lib/analytics";
 import { persistAuthContext } from "@/lib/pending-image";
-import { PACKS, CREDIT_COST, type Pack } from "@/lib/plans";
+import { PACKS, CREDIT_COST, USD_TO_INR, usdPerCredit, type Pack } from "@/lib/plans";
+import { landingImg } from "@/lib/landing-images";
 
 // Buy-credits modal. Shown when someone hits the credit wall on an AI tool.
 // Kept at this filename/default export so existing callers don't change.
@@ -30,6 +31,9 @@ export default function UnlimitedModal({ onClose, loggedIn, reason, prefillUser,
   const [loadingPack, setLoadingPack] = useState<string | null>(null);
   const [statusMsg, setStatusMsg] = useState<{ text: string; ok: boolean } | null>(null);
   const [selected, setSelected] = useState<Pack>(PACKS.find((p) => p.popular) || PACKS[0]);
+  // The left panel's image. Hidden on error, leaving the brand gradient, so a
+  // missing creative costs nothing.
+  const heroUrl = landingImg("pricing-hero.png");
 
   async function signInWithGoogle() {
     const next = typeof window !== "undefined" ? window.location.pathname + window.location.search : "/editor";
@@ -121,7 +125,7 @@ export default function UnlimitedModal({ onClose, loggedIn, reason, prefillUser,
     <div
       onClick={onClose}
       style={{
-        position: "fixed", inset: 0, background: "rgba(11,26,20,0.58)", backdropFilter: "blur(5px)",
+        position: "fixed", inset: 0, background: "rgba(6,6,9,0.72)", backdropFilter: "blur(6px)",
         display: "flex", alignItems: "center", justifyContent: "center", padding: 18, zIndex: 1000,
       }}
     >
@@ -130,134 +134,164 @@ export default function UnlimitedModal({ onClose, loggedIn, reason, prefillUser,
         role="dialog"
         aria-modal="true"
         aria-label="Buy credits"
+        className="jpt-pricing-modal"
         style={{
-          background: "var(--surface)", borderRadius: 22, width: "100%", maxWidth: 620,
-          maxHeight: "92vh", overflowY: "auto", overflowX: "hidden",
-          boxShadow: "0 36px 90px rgba(11,26,20,0.34)", border: "1px solid var(--border)",
+          background: "var(--surface)", borderRadius: 22, width: "100%", maxWidth: 940,
+          maxHeight: "94vh", overflowY: "auto", overflowX: "hidden",
+          boxShadow: "0 36px 90px rgba(0,0,0,0.55)", border: "1px solid var(--border-strong)",
+          position: "relative",
         }}
       >
-        {/* Gradient header */}
-        <div style={{ position: "relative", background: "var(--grad-strong)", padding: "30px 28px 26px", textAlign: "center" }}>
-          <button
-            onClick={onClose}
-            aria-label="Close"
-            style={{
-              position: "absolute", top: 14, right: 14, width: 30, height: 30, borderRadius: "50%",
-              background: "rgba(255,255,255,0.2)", border: "none", color: "#fff", fontSize: 17,
-              lineHeight: 1, cursor: "pointer", fontFamily: "inherit",
-            }}
-          >
-            ×
-          </button>
-          <div style={{ fontSize: 30, marginBottom: 8 }}>✨</div>
-          <h2 style={{ margin: 0, fontSize: 23, fontWeight: 900, color: "#fff", letterSpacing: "-0.02em" }}>
-            {reason ? `Credits needed for ${reason}` : "Get AI credits"}
-          </h2>
-          <p style={{ margin: "8px 0 0", fontSize: 14.5, color: "rgba(255,255,255,0.92)", lineHeight: 1.55 }}>
-            {CREDIT_COST} credits per generation · one-time payment · never expire
-          </p>
-        </div>
+        <button
+          onClick={onClose}
+          aria-label="Close"
+          style={{
+            position: "absolute", top: 14, right: 14, zIndex: 3, width: 32, height: 32,
+            borderRadius: "50%", background: "rgba(11,11,14,0.55)", border: "1px solid var(--border)",
+            color: "var(--text)", fontSize: 18, lineHeight: 1, cursor: "pointer", fontFamily: "inherit",
+            backdropFilter: "blur(6px)",
+          }}
+        >
+          ×
+        </button>
 
-        <div style={{ padding: "24px 26px 26px" }}>
+        {/* ── Left: what the money buys ──────────────────────────────────── */}
+        <aside className="jpt-pricing-aside" style={{ position: "relative", minHeight: 420, overflow: "hidden", background: "var(--grad-strong)" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={heroUrl}
+            alt=""
+            onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.55 }}
+          />
+          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(11,11,14,0.25) 0%, rgba(11,11,14,0.88) 62%)" }} />
+          <div style={{ position: "relative", height: "100%", display: "flex", flexDirection: "column", justifyContent: "flex-end", padding: "26px 24px 24px", gap: 14 }}>
+            <div>
+              <div style={{ fontSize: 19, fontWeight: 900, color: "#fff", letterSpacing: "-0.02em", lineHeight: 1.25 }}>
+                Pay for what you use. No subscription.
+              </div>
+              <div style={{ fontSize: 13, color: "rgba(255,255,255,0.78)", marginTop: 6, lineHeight: 1.6 }}>
+                Credits never expire, and nothing renews on its own.
+              </div>
+            </div>
+            <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 9 }}>
+              {[
+                `${selected.generations} AI generations with this pack`,
+                "Nano Banana and GPT Image, both included",
+                "Full resolution, no watermark, yours to use commercially",
+                "Every free tool stays unlimited and free — no account needed",
+                "Runs in the browser — nothing to install",
+              ].map((line) => (
+                <li key={line} style={{ display: "flex", gap: 9, alignItems: "flex-start", fontSize: 13.5, color: "rgba(255,255,255,0.94)", lineHeight: 1.5 }}>
+                  <span aria-hidden style={{ color: "var(--accent)", fontWeight: 900, flexShrink: 0 }}>✓</span>
+                  <span>{line}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </aside>
+
+        {/* ── Right: the packs ───────────────────────────────────────────── */}
+        <div style={{ padding: "30px 28px 26px", minWidth: 0 }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "var(--accent-soft)", border: "1px solid var(--accent-border)", borderRadius: 999, padding: "6px 13px", marginBottom: 18 }}>
+            <span style={{ fontSize: 11.5, fontWeight: 800, color: "var(--accent)", letterSpacing: "0.06em", textTransform: "uppercase" }}>One-time</span>
+            <span style={{ fontSize: 11.5, color: "var(--text-muted)", fontWeight: 600 }}>no subscription</span>
+          </div>
+
+          <h2 style={{ margin: "0 0 4px", fontSize: 21, fontWeight: 900, color: "var(--text)", letterSpacing: "-0.02em" }}>
+            {reason ? `Credits needed for ${reason}` : "Choose a credit pack"}
+          </h2>
+          <p style={{ margin: "0 0 18px", fontSize: 13.5, color: "var(--text-muted)", lineHeight: 1.6 }}>
+            {CREDIT_COST} credits per AI generation. The free tools are unlimited either way.
+          </p>
+
           {statusMsg && (
             <div
               style={{
-                marginBottom: 16, padding: "11px 15px", borderRadius: 10,
+                marginBottom: 14, padding: "11px 14px", borderRadius: 10,
                 background: statusMsg.ok ? "var(--success-soft)" : "var(--danger-soft)",
-                color: statusMsg.ok ? "var(--accent-strong)" : "var(--danger)",
-                fontSize: 14, fontWeight: 600,
+                color: statusMsg.ok ? "var(--success)" : "var(--danger)",
+                fontSize: 13.5, fontWeight: 600,
               }}
             >
               {statusMsg.text}
             </div>
           )}
 
-          {/* All three packs, side by side on desktop and stacked on phones */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(min(160px, 100%), 1fr))",
-              gap: 11, marginBottom: 20,
-            }}
-          >
+          <div role="radiogroup" aria-label="Credit packs" style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 16 }}>
             {PACKS.map((p) => {
               const on = selected.id === p.id;
               return (
                 <button
                   key={p.id}
+                  role="radio"
+                  aria-checked={on}
                   onClick={() => setSelected(p)}
-                  aria-pressed={on}
                   style={{
-                    position: "relative", display: "flex", flexDirection: "column", alignItems: "center",
-                    gap: 3, padding: "20px 12px 16px", borderRadius: 15, cursor: "pointer",
-                    fontFamily: "inherit", textAlign: "center", minWidth: 0,
+                    display: "flex", alignItems: "center", gap: 13, width: "100%",
+                    padding: "15px 16px", borderRadius: 14, cursor: "pointer", textAlign: "left",
+                    fontFamily: "inherit", minWidth: 0,
                     background: on ? "var(--accent-soft)" : "var(--surface-2)",
-                    border: `2px solid ${on ? "var(--accent)" : "var(--border)"}`,
-                    boxShadow: on ? "0 10px 28px var(--accent-soft)" : "none",
+                    border: `1.5px solid ${on ? "var(--accent)" : "var(--border)"}`,
+                    boxShadow: on ? "0 10px 26px var(--accent-soft)" : "none",
                     transition: "border-color .15s var(--ease), background .15s var(--ease)",
                   }}
                 >
-                  {p.popular && (
-                    <span
-                      style={{
-                        position: "absolute", top: -10, left: "50%", transform: "translateX(-50%)",
-                        background: "var(--grad-strong)", color: "#fff", fontSize: 9.5, fontWeight: 800,
-                        borderRadius: 20, padding: "3px 9px", letterSpacing: "0.06em",
-                        textTransform: "uppercase", whiteSpace: "nowrap",
-                      }}
-                    >
-                      Popular
+                  <span
+                    aria-hidden
+                    style={{
+                      width: 19, height: 19, borderRadius: "50%", flexShrink: 0,
+                      border: `2px solid ${on ? "var(--accent)" : "var(--border-strong)"}`,
+                      background: on ? "var(--accent)" : "transparent",
+                      boxShadow: on ? "inset 0 0 0 3.5px var(--surface)" : "none",
+                    }}
+                  />
+                  <span style={{ minWidth: 0, flex: 1 }}>
+                    <span style={{ display: "flex", alignItems: "baseline", gap: 8, flexWrap: "wrap" }}>
+                      <span style={{ fontSize: 19, fontWeight: 900, color: "var(--text)" }}>${p.usd}</span>
+                      <span style={{ fontSize: 12, color: "var(--text-faint)" }}>₹{Math.round(p.usd * USD_TO_INR)}</span>
+                      {p.popular && (
+                        <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: "0.07em", color: "#fff", background: "var(--accent-fill)", borderRadius: 999, padding: "3px 8px" }}>
+                          POPULAR
+                        </span>
+                      )}
                     </span>
-                  )}
-                  <span style={{ fontSize: 11.5, fontWeight: 800, color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.09em" }}>
-                    {p.label}
+                    <span style={{ display: "block", fontSize: 12.5, color: "var(--text-muted)", marginTop: 3 }}>{p.blurb}</span>
                   </span>
-                  <span style={{ fontSize: 30, fontWeight: 900, color: "var(--text)", letterSpacing: "-0.03em", lineHeight: 1.1 }}>
-                    ${p.usd}
+                  <span style={{ textAlign: "right", flexShrink: 0 }}>
+                    <span style={{ display: "block", fontSize: 15.5, fontWeight: 800, color: on ? "var(--accent)" : "var(--text)" }}>
+                      {p.credits} credits
+                    </span>
+                    <span style={{ display: "block", fontSize: 11.5, color: "var(--text-faint)", marginTop: 2 }}>
+                      {p.generations} generations · ${usdPerCredit(p).toFixed(2)}/credit
+                    </span>
                   </span>
-                  <span style={{ fontSize: 14.5, fontWeight: 800, color: "var(--text)" }}>{p.credits} credits</span>
-                  <span style={{ fontSize: 12.5, color: "var(--text-muted)" }}>{p.generations} generations</span>
                 </button>
               );
             })}
           </div>
 
-          {loggedIn ? (
-            <button
-              onClick={() => handleBuy(selected)}
-              disabled={loadingPack !== null}
-              style={{
-                width: "100%", padding: "15px", border: "none", borderRadius: 13,
-                background: loadingPack ? "var(--text-faint)" : "var(--grad-strong)",
-                color: "#fff", fontWeight: 800, fontSize: 16.5, fontFamily: "inherit",
-                cursor: loadingPack ? "not-allowed" : "pointer",
-                boxShadow: loadingPack ? "none" : "0 10px 26px rgba(255,106,26,0.40)",
-              }}
-            >
-              {loadingPack ? "Processing…" : `Get ${selected.credits} credits — $${selected.usd} →`}
-            </button>
-          ) : (
-            <>
-              <button
-                onClick={signInWithGoogle}
-                style={{
-                  width: "100%", padding: "14px", borderRadius: 13, background: "var(--surface)",
-                  color: "var(--text-muted)", border: "1.5px solid var(--border)", fontWeight: 800,
-                  fontSize: 15, fontFamily: "inherit", cursor: "pointer",
-                  display: "flex", alignItems: "center", justifyContent: "center", gap: 9,
-                }}
-              >
-                <svg width="17" height="17" viewBox="0 0 24 24" aria-hidden><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.27-4.74 3.27-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.84 14.1a6.6 6.6 0 0 1 0-4.2V7.06H2.18a11 11 0 0 0 0 9.88l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1A11 11 0 0 0 2.18 7.06l3.66 2.84C6.71 7.3 9.14 5.38 12 5.38z"/></svg>
-                Sign in to buy credits
-              </button>
-              <p style={{ fontSize: 12.5, color: "var(--text-faint)", textAlign: "center", margin: "11px 0 0" }}>
-                Your uploaded image is kept while you sign in.
-              </p>
-            </>
-          )}
+          <button
+            onClick={() => (loggedIn ? handleBuy(selected) : signInWithGoogle())}
+            disabled={loadingPack !== null}
+            style={{
+              width: "100%", padding: "15px", borderRadius: 13, border: "none",
+              background: loadingPack ? "var(--surface-3)" : "var(--grad-strong)",
+              color: loadingPack ? "var(--text-faint)" : "#fff",
+              fontWeight: 800, fontSize: 16, fontFamily: "inherit",
+              cursor: loadingPack ? "wait" : "pointer",
+              boxShadow: loadingPack ? "none" : "var(--glow)",
+            }}
+          >
+            {loadingPack
+              ? "Opening checkout…"
+              : loggedIn
+                ? `Get ${selected.credits} credits — $${selected.usd}`
+                : "Sign in to continue"}
+          </button>
 
-          <p style={{ fontSize: 12.5, color: "var(--text-faint)", textAlign: "center", margin: "15px 0 0", lineHeight: 1.6 }}>
-            No subscription · no auto-renew · the free browser tools stay free
+          <p style={{ margin: "12px 0 0", fontSize: 11.5, color: "var(--text-faint)", textAlign: "center", lineHeight: 1.6 }}>
+            Charged once in INR via Razorpay. No stored card, no renewal.
           </p>
         </div>
       </div>

@@ -8,6 +8,7 @@ import {
 } from "@/lib/app-presets";
 import { CREDIT_COST } from "@/lib/plans";
 import { SHOW_PRESET_TABS, SHOW_STYLE_PICKER } from "@/lib/workspace-config";
+import { openPricing, needsCredits } from "@/lib/pricing-modal";
 import { trackEvent } from "@/lib/analytics";
 import { persistAuthContext, savePendingContext } from "@/lib/pending-image";
 
@@ -93,6 +94,12 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
       setErr("Describe the look you want, or pick a style.");
       return;
     }
+    // Short of credits: open the packs instead of spending a round-trip to be
+    // told the same thing. The server still enforces it.
+    if (credits !== null && needsCredits({ credits }, CREDIT_COST)) {
+      openPricing(app.h1);
+      return;
+    }
     setBusy(true);
     setErr(null);
     trackEvent("app_generate", { app: app.slug, tab, preset: preset?.id, model, ratio });
@@ -115,6 +122,12 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
 
       if (res.status === 401) {
         await signIn();
+        return;
+      }
+      // Out of credits: show the packs rather than an error the user cannot
+      // act on from here.
+      if (res.status === 402 || res.status === 403 || data.upgradeRequired) {
+        openPricing(app.h1);
         return;
       }
       if (!res.ok || !data.dataUrl) {
