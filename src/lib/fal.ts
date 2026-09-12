@@ -15,7 +15,44 @@
  * gateway timeout mid-generation.
  */
 
-const KEY = () => process.env.FAL_KEY || "";
+/**
+ * The fal credential, normalised.
+ *
+ * trim() is not cosmetic: a key pasted into a dashboard field very often
+ * arrives with a trailing newline or a stray space, and fal then answers 401
+ * — which surfaces as "The image service rejected our credentials" even
+ * though the key itself is correct. Quotes around the value and an
+ * accidentally-included "Key " prefix are stripped for the same reason.
+ */
+const KEY = () =>
+  (process.env.FAL_KEY || "")
+    .trim()
+    .replace(/^["']|["']$/g, "")
+    .replace(/^Key\s+/i, "")
+    .trim();
+
+/** Non-secret shape of the configured key, for diagnosing a 401. */
+export function falKeyShape(): { configured: boolean; length: number; hasColon: boolean } {
+  const k = KEY();
+  return { configured: !!k, length: k.length, hasColon: k.includes(":") };
+}
+
+/**
+ * Asks fal about a request id that cannot exist, using the exact header every
+ * other call here uses.
+ *
+ * A wrong key answers 401; a working key answers 404, because the id is
+ * unknown. Nothing is generated, so it costs nothing and can be run as often
+ * as needed. Lives here rather than in the route so the diagnostic can never
+ * drift from what the app actually sends.
+ */
+export async function falProbe(): Promise<{ status: number; body: string }> {
+  const res = await fetch(
+    "https://queue.fal.run/fal-ai/nano-banana/requests/00000000-0000-0000-0000-000000000000/status",
+    { headers: authHeaders() }
+  );
+  return { status: res.status, body: (await res.text()).slice(0, 200) };
+}
 
 export type FalModel = "nano-banana" | "gpt-image";
 
@@ -31,6 +68,16 @@ const ENDPOINTS: Record<FalModel, { edit: string; generate: string }> = {
 };
 
 export const DEFAULT_MODEL: FalModel = "nano-banana";
+
+/**
+ * The background-removal model, as asked for.
+ *
+ * A purpose-built segmentation model beats instructing a general image model
+ * to "remove the background": it returns a real alpha channel with clean hair
+ * and edge detail, costs less, and cannot reinterpret the subject — which a
+ * prompt-driven edit sometimes does.
+ */
+const BG_REMOVAL_MODEL = "pixelcut/background-removal";
 
 export function falConfigured(): boolean {
   return !!KEY();
@@ -267,6 +314,18 @@ export async function falEditImages(
       : { prompt, image_urls: imageUrls, num_images: 1, image_size: "auto", quality: "high" };
 
   const result = await runQueued(endpoint, input);
+  return urlToDataUrl(firstImageUrl(result));
+}
+
+/**
+ * Removes the background, returning a PNG with transparency.
+ *
+ * Falls back to nothing here on purpose — the caller decides, because a
+ * segmentation failure and a credentials failure want different handling.
+ */
+export async function falRemoveBackground(src: string, budgetMs?: number): Promise<string> {
+  const imageUrl = await toFalImageUrl(src);
+  const result = await runQueued(BG_REMOVAL_MODEL, { image_url: imageUrl }, budgetMs);
   return urlToDataUrl(firstImageUrl(result));
 }
 

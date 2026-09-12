@@ -9,7 +9,7 @@
  * the provider can be switched in one place.
  */
 
-import { falConfigured, falEditImage, falGenerateImage, type FalModel } from "@/lib/fal";
+import { falConfigured, falEditImage, falGenerateImage, falRemoveBackground, type FalModel } from "@/lib/fal";
 import {
   geminiEditImage,
   geminiGenerateBg,
@@ -84,7 +84,29 @@ export function generateBackground(src: string, prompt: string, model?: string):
 export function removeBackground(src: string, model?: string): Promise<string> {
   const m = resolveModel(model);
   return viaFal(
-    () => falEditImage(src, "Remove the background from this image completely. Make it transparent. Keep the subject with clean edges. Return only the resulting PNG image.", m),
+    /*
+      A dedicated segmentation model, not a prompt.
+
+      Asking a general image model to "remove the background" re-renders the
+      picture: edges soften, hair gets approximated, and the subject itself is
+      occasionally reinterpreted. pixelcut/background-removal returns the
+      original pixels with a real alpha channel instead — and it is cheaper.
+
+      The prompt-driven edit stays as the second rung: if the segmentation
+      model is unavailable the tool still works rather than failing outright.
+    */
+    async () => {
+      try {
+        return await falRemoveBackground(src);
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : String(e);
+        // A credentials or billing failure is not the model's fault and must
+        // not be retried against a different endpoint.
+        if (/credentials|out of credit/i.test(msg)) throw e;
+        console.warn("[ai-image] background-removal model failed, trying the edit model:", msg);
+        return falEditImage(src, "Remove the background from this image completely. Make it transparent. Keep the subject with clean edges. Return only the resulting PNG image.", m);
+      }
+    },
     () => geminiRemoveBg(src),
     "remove-bg"
   );

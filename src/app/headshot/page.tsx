@@ -2,6 +2,7 @@
 
 import "./headshot.css";
 import { useRef, useState, useCallback, useEffect } from "react";
+import { prepareForUpload, parseJsonResponse } from "@/lib/upload-prep";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import PricingModal from "@/app/_components/PricingModal";
 import { WOMEN_STYLES, MEN_STYLES } from "@/lib/headshot-prompts";
@@ -28,6 +29,14 @@ interface LightboxItem { url: string; name: string; tag: string; onEdit?: () => 
 interface PendingColor { color: string; label: string; }
 
 type Step = "upload" | "styles" | "gallery" | "edit";
+/** What the headshot routes return; also covers their error payloads. */
+type HeadshotApiBody = {
+  url?: string;
+  images?: GeneratedImage[];
+  error?: string;
+  errors?: string[];
+};
+
 type Gender = "women" | "men";
 
 const GENERATION_CREDITS = 2;
@@ -225,10 +234,14 @@ export default function HeadshotPage() {
     setSourcePreview(URL.createObjectURL(file));
     setUploading(true);
     try {
+      // Shrunk in the browser first: a phone photo is routinely bigger than
+      // the serverless body limit, and the platform rejects it with plain
+      // text before the route runs. See lib/upload-prep.ts.
+      const prepared = await prepareForUpload(file);
       const fd = new FormData();
-      fd.append("file", file);
+      fd.append("file", prepared);
       const res = await fetch("/api/headshot/upload", { method: "POST", body: fd });
-      const data = await res.json();
+      const data = await parseJsonResponse<HeadshotApiBody>(res);
       if (!res.ok || !data.url) throw new Error(data.error || `Upload failed (${res.status})`);
       setSourceUrl(data.url);
       setStep("styles");
@@ -266,7 +279,7 @@ export default function HeadshotPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ imageUrl: sourceUrl, styleIds: selectedStyleIds, gender }),
       });
-      const data = await res.json();
+      const data = await parseJsonResponse<HeadshotApiBody>(res);
       if (!res.ok) {
         if (res.status === 402 || res.status === 403) { setShowPricingModal(true); return; }
         throw new Error(data.error || "Generation failed");
@@ -328,11 +341,14 @@ export default function HeadshotPage() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ imageUrl: selectedImage.url, bgType: "color", bgColor: color, bgLabel: label }),
         });
-        const data = await res.json();
+        const data = await parseJsonResponse<HeadshotApiBody>(res);
         if (!res.ok) {
           if (res.status === 402 || res.status === 403) { setShowPricingModal(true); return; }
           throw new Error(data.error || "Edit failed");
         }
+        // A 200 with no image is still a failure; it used to set the
+        // preview to undefined and blank the panel silently.
+        if (!data.url) throw new Error("The edit did not return an image. Please try again.");
         setEditedUrl(data.url);
         persistEdit(data.url, `${selectedImage.name} · ${label}`, "Color Edit");
       } catch (e) { setError((e as Error).message); }
@@ -342,20 +358,23 @@ export default function HeadshotPage() {
       setPendingBgFileName("");
       try {
         const fd = new FormData();
-        fd.append("file", file);
+        fd.append("file", await prepareForUpload(file));
         const upRes = await fetch("/api/headshot/upload", { method: "POST", body: fd });
-        const upData = await upRes.json();
+        const upData = await parseJsonResponse<HeadshotApiBody>(upRes);
         if (!upRes.ok || !upData.url) throw new Error(upData.error || "Background upload failed");
         const res = await fetch("/api/headshot/edit-bg", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ imageUrl: selectedImage.url, bgType: "image", bgImageUrl: upData.url }),
         });
-        const data = await res.json();
+        const data = await parseJsonResponse<HeadshotApiBody>(res);
         if (!res.ok) {
           if (res.status === 402 || res.status === 403) { setShowPricingModal(true); return; }
           throw new Error(data.error || "Edit failed");
         }
+        // A 200 with no image is still a failure; it used to set the
+        // preview to undefined and blank the panel silently.
+        if (!data.url) throw new Error("The edit did not return an image. Please try again.");
         setEditedUrl(data.url);
         persistEdit(data.url, `${selectedImage.name} · Custom BG`, "Image Edit");
       } catch (e) { setError((e as Error).message); }
@@ -376,11 +395,14 @@ export default function HeadshotPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ imageUrl: selectedImage.url, bgType: "prompt", customPrompt: promptInput.trim() }),
       });
-      const data = await res.json();
+      const data = await parseJsonResponse<HeadshotApiBody>(res);
       if (!res.ok) {
         if (res.status === 402 || res.status === 403) { setShowPricingModal(true); return; }
         throw new Error(data.error || "Edit failed");
       }
+      // A 200 with no image is still a failure; it used to set the
+      // preview to undefined and blank the panel silently.
+      if (!data.url) throw new Error("The edit did not return an image. Please try again.");
       setEditedUrl(data.url);
       persistEdit(data.url, `${selectedImage.name} · AI Edit`, "Prompt Edit");
     } catch (e) { setError((e as Error).message); }
