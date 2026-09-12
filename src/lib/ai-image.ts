@@ -9,7 +9,7 @@
  * the provider can be switched in one place.
  */
 
-import { falConfigured, falEditImage, falGenerateImage, falRemoveBackground, type FalModel } from "@/lib/fal";
+import { falConfigured, falEditImage, falGenerateImage, falRemoveBackground, FalError, type FalModel } from "@/lib/fal";
 import {
   geminiEditImage,
   geminiGenerateBg,
@@ -25,7 +25,25 @@ export function resolveModel(requested?: string): FalModel {
   return requested === "gpt-image" ? "gpt-image" : "nano-banana";
 }
 
-/** Runs the fal path, falling back to Gemini if fal is unavailable. */
+/**
+ * Runs the fal path, falling back to Gemini when fal cannot serve the request.
+ *
+ * Only the interactive routes come through here — the bulk generator passes
+ * `strict` and bypasses it, so it still stops dead on a bad key rather than
+ * quietly spending a different provider's quota.
+ *
+ * A credentials failure used to be rethrown, on the reasoning that a real
+ * misconfiguration deserves to be visible rather than papered over. That is
+ * right for a batch job and wrong here: it left every AI tool showing
+ * "The image service rejected our credentials" and doing nothing, when the
+ * other provider was sitting there able to serve the request. The visibility
+ * argument is satisfied by logging it loudly — which reaches the operator,
+ * where it belongs — instead of by breaking the product for the visitor.
+ *
+ * An empty balance is the exception: Gemini cannot fix that, the account
+ * owner has to, and quietly moving the cost to another provider hides the one
+ * thing they need to know.
+ */
 async function viaFal(
   run: () => Promise<string>,
   fallback: () => Promise<string>,
@@ -36,11 +54,34 @@ async function viaFal(
     return await run();
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
-    // A credentials or billing problem is a real misconfiguration worth
-    // surfacing, not something to paper over with a silent provider switch.
-    if (/credentials|out of credit/i.test(msg)) throw e;
-    console.warn(`[ai-image] fal ${label} failed, falling back to Gemini:`, msg);
-    return fallback();
+    const status = e instanceof FalError ? e.status : 0;
+
+    if (status === 402 || /out of credit/i.test(msg)) throw e;
+
+    if (status === 401 || status === 403 || /rejected our key|refused this request/i.test(msg)) {
+      console.error(
+        `[ai-image] fal ${label} refused the request (${status}). ` +
+        `Serving from Gemini instead. fal said: ${msg}`
+      );
+    } else {
+      console.warn(`[ai-image] fal ${label} failed, falling back to Gemini:`, msg);
+    }
+
+    try {
+      return await fallback();
+    } catch (g) {
+      /*
+        Both providers are down. Report that, rather than only the second
+        one's message — "temporarily unavailable due to high demand" names
+        Gemini's rate limit and hides the fact that fal refused first, which
+        sends anyone reading it to the wrong service entirely.
+      */
+      const gmsg = g instanceof Error ? g.message : String(g);
+      console.error(`[ai-image] ${label}: both providers failed. fal: ${msg} | gemini: ${gmsg}`);
+      throw new Error(
+        `${msg} The backup provider also failed (${gmsg}), so this tool is unavailable until one of them is working.`
+      );
+    }
   }
 }
 
@@ -100,9 +141,13 @@ export function removeBackground(src: string, model?: string): Promise<string> {
         return await falRemoveBackground(src);
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
-        // A credentials or billing failure is not the model's fault and must
-        // not be retried against a different endpoint.
-        if (/credentials|out of credit/i.test(msg)) throw e;
+        const status = e instanceof FalError ? e.status : 0;
+        // A rejected key or an empty balance will fail the edit model in the
+        // same breath, so hand those straight up to viaFal, which decides
+        // between Gemini and surfacing them. A 403 is different: the key
+        // works and it is this endpoint the account cannot reach, so the
+        // edit model is worth trying.
+        if (status === 401 || status === 402 || /out of credit/i.test(msg)) throw e;
         console.warn("[ai-image] background-removal model failed, trying the edit model:", msg);
         return falEditImage(src, "Remove the background from this image completely. Make it transparent. Keep the subject with clean edges. Return only the resulting PNG image.", m);
       }

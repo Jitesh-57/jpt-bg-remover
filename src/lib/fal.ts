@@ -214,8 +214,22 @@ function falError(status: number, body: unknown): string {
     : typeof b?.message === "string" ? b.message
     : "";
 
-  if (status === 401 || status === 403) {
-    return "The image service rejected our credentials. Please check the FAL_KEY configuration.";
+  /*
+    401 and 403 are not the same problem and must not share a message.
+
+    401 is the key itself: absent, wrong, or revoked. 403 is a key fal
+    accepts, refused for this particular request — an endpoint the account
+    cannot reach, or a rate limit after a burst. Telling someone to "check
+    the FAL_KEY configuration" when the key is fine and the account is
+    throttled sends them to fix something that is not broken, which is
+    exactly what happened after a run put 95 generations through in three
+    minutes. fal's own text is appended because it usually says which.
+  */
+  if (status === 401) {
+    return `The image service rejected our key${detail ? `: ${detail}` : "."} It may have been revoked or replaced — a new key from fal.ai → Dashboard → Keys will fix it.`;
+  }
+  if (status === 403) {
+    return `The image service refused this request${detail ? `: ${detail}` : "."} The key is being accepted, so this is usually a rate limit or an endpoint the account cannot reach.`;
   }
   if (status === 402) {
     return "The image service is out of credit. Please top up the fal.ai balance.";
