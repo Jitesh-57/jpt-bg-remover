@@ -22,20 +22,21 @@ jobs:
   generate:
     runs-on: ubuntu-latest
     steps:
-      - name: Wait for the production deploy to serve the route
+      - name: Wait for this commit to be live in production
         id: wait
         run: |
-          # An unauthenticated request is free and tells us what we need: 401
-          # means the route is deployed, 404 means this build is not live yet.
-          for i in $(seq 1 30); do
-            code=$(curl -s -o /dev/null -m 20 -w '%{http_code}' \
-              "https://www.sjpt.io/api/cron/site-images" || echo 000)
-            echo "attempt $i: HTTP $code"
-            if [ "$code" = "401" ]; then echo "live=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+          # Matching the SHA is the point. An earlier version of this step just
+          # checked that the route answered, which it already did from the
+          # previous build — so the job ran against the code it was replacing.
+          for i in $(seq 1 40); do
+            sha=$(curl -s -m 20 "https://www.sjpt.io/api/version" \
+              | python3 -c "import json,sys; print(json.load(sys.stdin).get('sha',''))" 2>/dev/null || echo "")
+            echo "attempt $i: live sha=${sha:-none} (want ${GITHUB_SHA})"
+            if [ "$sha" = "$GITHUB_SHA" ]; then echo "live=true" >> "$GITHUB_OUTPUT"; exit 0; fi
             sleep 30
           done
           echo "live=false" >> "$GITHUB_OUTPUT"
-          echo "::warning::Route never became available; the nightly cron will pick this up."
+          echo "::warning::This commit never became live; the nightly cron will pick the work up."
 
       - name: Generate the missing images
         if: steps.wait.outputs.live == 'true'
