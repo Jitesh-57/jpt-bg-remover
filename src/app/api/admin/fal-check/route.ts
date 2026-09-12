@@ -50,7 +50,15 @@ export async function GET(req: NextRequest) {
 
   // 404 is the good answer: authenticated, and the request id is unknown.
   if (status === 404 || status === 400) {
-    return NextResponse.json({ ok: true, key: shape, status, verdict: "FAL_KEY is valid and accepted." });
+    return NextResponse.json({
+      ok: true, key: shape, status,
+      verdict: "FAL_KEY is valid and accepted.",
+      // Said plainly, because this check reported "valid and accepted" while
+      // every generation was failing: a status lookup authenticates without
+      // touching billing, so an account locked for an empty balance passes it.
+      // The lock only shows up on a request that would actually cost money.
+      covers: "Authentication only. Billing state is not visible here — an account locked for an exhausted balance still passes this check. If generations fail with \"User is locked\", check fal.ai/dashboard/billing.",
+    });
   }
   if (status === 401 || status === 403) {
     return NextResponse.json({
