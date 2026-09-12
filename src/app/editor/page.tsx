@@ -9,6 +9,7 @@ import {
   trackBeginCheckout, trackPurchase, trackPaymentFailed,
 } from "@/lib/analytics";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
+import { CREDIT_COST } from "@/lib/plans";
 import { applyWatermark, renderMeme, type WatermarkPosition } from "@/lib/tools-canvas";
 import ToolIcon from "./ToolIcon";
 import UnlimitedModal from "@/app/_components/UnlimitedModal";
@@ -34,7 +35,7 @@ interface User { userId?: string; email: string; name: string; picture?: string;
 
 const FREE_CREDITS = 10;
 const FREE_TRIAL_LIMIT = 5;
-const CREDIT_COST = 2;
+// CREDIT_COST now comes from @/lib/plans so the price of a generation is defined once.
 const BASIC_UPSCALE_COST = 1;
 const SUPPORTED_IMAGE_FORMATS = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 const MAX_UPSCALE_OUTPUT_PX = 20000;
@@ -948,12 +949,14 @@ export default function ImageEditorPage() {
     if (!src || processing) return;
 
     const isPro = upscaleMode === "pro";
-    const isUnlimited = user?.plan === "unlimited";
-    // Pro (AI) upscale is gated by sign-in + trial/credits.
+    // Normal 4× is the paid tier of the free upscaler: it needs a credit
+    // balance. (It used to check for an "unlimited" plan that no longer exists,
+    // which made the unlock unreachable.)
+    const canRun4x = (user?.credits ?? 0) >= CREDIT_COST;
+    // Pro (AI) upscale is gated by sign-in + credits.
     // Normal 2× upscale is a free basic tool (5 trials for guests, then sign in).
-    // Normal 4× upscale is a Pro feature — unlocked by the one-time Unlimited plan.
     if (isPro && requireSignIn()) return;
-    if (!isPro && upscaleScale === "4x" && !isUnlimited) {
+    if (!isPro && upscaleScale === "4x" && !canRun4x) {
       openUnlimited("4× upscaling");
       return;
     }
@@ -2052,8 +2055,8 @@ export default function ImageEditorPage() {
                     ? `⚠️ Resolution Limit Reached`
                     : upscaleMode === "pro"
                     ? `✨ Pro Upscale ${upscaleScale}`
-                    : upscaleScale === "4x" && user?.plan !== "unlimited"
-                    ? `🔒 Unlock 4× — Go Unlimited`
+                    : upscaleScale === "4x" && (user?.credits ?? 0) < CREDIT_COST
+                    ? `🔒 Unlock 4× — Buy credits`
                     : `🔍 Upscale ${upscaleScale}`}
                 </button>
                 {resultBlock()}

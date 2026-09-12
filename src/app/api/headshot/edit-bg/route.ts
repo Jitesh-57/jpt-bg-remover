@@ -1,5 +1,6 @@
-import { NextResponse } from "next/server";
-import { geminiEditImage } from "@/lib/gemini";
+import { NextRequest, NextResponse } from "next/server";
+import { checkAuth, checkEntitlement, withCredits } from "@/lib/auth";
+import { editImage } from "@/lib/ai-image";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
@@ -19,7 +20,12 @@ const COLOR_NAMES: Record<string, string> = {
   "#0a0a0a": "black",
 };
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  // This endpoint was previously unauthenticated and uncharged — an open AI
+  // endpoint anyone could call. It now gates and bills like every other.
+  const { session, error } = await checkAuth(req);
+  if (error) return error;
+
   const { imageUrl, bgType, bgColor, bgLabel, bgImageUrl, customPrompt } = await req.json();
   if (!imageUrl) return NextResponse.json({ error: "imageUrl required" }, { status: 400 });
 
@@ -41,9 +47,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "bgType must be 'color', 'image', or 'prompt'" }, { status: 400 });
     }
 
-    const resultDataUrl = await geminiEditImage(imageUrl, prompt);
+    const blocked = await checkEntitlement(session!, "ai", "headshot-edit-bg");
+    if (blocked) return blocked;
 
-    return NextResponse.json({ url: resultDataUrl });
+    const resultDataUrl = await editImage(imageUrl, prompt);
+
+    return withCredits({ url: resultDataUrl }, session!, "ai", req, "headshot-edit-bg");
   } catch (e) {
     console.error("[headshot/edit-bg]", e);
     return NextResponse.json({ error: e instanceof Error ? e.message : "Couldn't process the image right now. Please try again." }, { status: 500 });

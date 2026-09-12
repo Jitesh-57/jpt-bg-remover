@@ -1,15 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { checkAuth, createAdminSupabase } from "@/lib/auth";
+import { PACKS, inrPaise } from "@/lib/plans";
 
 export const runtime = "nodejs";
 
-const PLAN_CREDITS: Record<string, { credits: number; amountPaise: number }> = {
-  starter:   { credits: 50,     amountPaise: 49900  },
-  creator:   { credits: 100,    amountPaise: 99900  },
-  pro:       { credits: 300,    amountPaise: 249900 },
-  unlimited: { credits: 999999, amountPaise: 24900  },
-};
+const PLAN_CREDITS: Record<string, { credits: number; amountPaise: number }> =
+  Object.fromEntries(PACKS.map((p) => [p.id, { credits: p.credits, amountPaise: inrPaise(p) }]));
 
 export async function POST(req: NextRequest) {
   const { session, error } = await checkAuth(req);
@@ -59,22 +56,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Failed to update credits" }, { status: 500 });
   }
 
-  // The "Unlimited" purchase is a one-time, 30-day pass (no subscription). Store
-  // the expiry in Supabase Auth user_metadata so it needs no DB schema change;
-  // the auth layer downgrades to "free" once it passes.
-  let expiresAt: string | undefined;
-  if (plan === "unlimited") {
-    expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
-    try {
-      const { data } = await admin.auth.admin.getUserById(session!.userId);
-      const md = data?.user?.user_metadata || {};
-      await admin.auth.admin.updateUserById(session!.userId, {
-        user_metadata: { ...md, unlimited_expires_at: expiresAt },
-      });
-    } catch (e) {
-      console.error("[verify-payment] could not set unlimited expiry:", (e as Error).message);
-    }
-  }
+  // Credits never expire, so nothing time-based is written here.
 
   // Record the purchase for audit
   void admin.from("purchases").insert({
@@ -86,5 +68,5 @@ export async function POST(req: NextRequest) {
     amount_paise: PLAN_CREDITS[plan].amountPaise,
   }); // non-blocking, table may not exist yet
 
-  return NextResponse.json({ success: true, plan, credits: newCredits, expiresAt });
+  return NextResponse.json({ success: true, plan, credits: newCredits });
 }

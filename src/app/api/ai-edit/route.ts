@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkAuth, checkEntitlement, withCredits } from "@/lib/auth";
-import { geminiEditImage } from "@/lib/gemini";
+import { editImage } from "@/lib/ai-image";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
   if (blocked) return blocked;
 
   try {
-    const resultDataUrl = await geminiEditImage(src, prompt);
+    const resultDataUrl = await editImage(src, prompt);
     return withCredits({ dataUrl: resultDataUrl }, session!, "ai", req, "ai-edit");
   } catch (e) {
     console.error("[ai-edit]", e);

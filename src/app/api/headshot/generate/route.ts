@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkAuth, checkEntitlement, withCredits } from "@/lib/auth";
-import { geminiEditImage } from "@/lib/gemini";
+import { editImage } from "@/lib/ai-image";
 import { WOMEN_STYLES, MEN_STYLES } from "@/lib/headshot-prompts";
 
 export const runtime = "nodejs";
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
         `Preserve the exact facial features, hair, skin tone, and identity of the person in the reference photo. ` +
         `High quality, photorealistic, portrait orientation.`;
 
-      const dataUrl = await geminiEditImage(imageUrl, prompt);
+      const dataUrl = await editImage(imageUrl, prompt);
       console.log(`Style ${style.id} (${style.name}): OK`);
       return { id: style.id, name: style.name, tag: style.tag, url: dataUrl };
     })

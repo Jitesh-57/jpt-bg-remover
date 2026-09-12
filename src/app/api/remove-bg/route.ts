@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkAuth, checkEntitlement, withCredits } from "@/lib/auth";
-import { geminiRemoveBg } from "@/lib/gemini";
+import { removeBackground } from "@/lib/ai-image";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
   if (blocked) return blocked;
 
   try {
-    const resultDataUrl = await geminiRemoveBg(src);
+    const resultDataUrl = await removeBackground(src);
     return withCredits({ dataUrl: resultDataUrl }, session!, "ai", req, "remove-bg");
   } catch (e) {
     console.error("[remove-bg]", e);

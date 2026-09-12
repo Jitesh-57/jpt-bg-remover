@@ -278,13 +278,13 @@ export default function NavBar() {
 
           <div style={{ flex: 1 }} />
 
-          {/* Go Unlimited — single $3 / 30-day plan. Shows active status once owned. */}
+          {/* Credits CTA — shows the live balance once the user has one. */}
           <a href="/pricing"
-            style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 15px", color: "#fff", fontSize: 14, fontWeight: 800, textDecoration: "none", borderRadius: 999, background: user?.plan === "unlimited" ? "linear-gradient(120deg,var(--success),var(--accent-2))" : "linear-gradient(120deg,var(--accent),var(--accent-2))", border: "1px solid rgba(255,255,255,0.15)", boxShadow: "0 4px 14px rgba(15,157,107,0.4)" }}
+            style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 15px", color: "#fff", fontSize: 14, fontWeight: 800, textDecoration: "none", borderRadius: 999, background: (user?.credits ?? 0) > 0 ? "linear-gradient(120deg,var(--success),var(--accent-2))" : "linear-gradient(120deg,var(--accent),var(--accent-2))", border: "1px solid rgba(255,255,255,0.15)", boxShadow: "0 4px 14px rgba(15,157,107,0.4)" }}
             onMouseEnter={e => (e.currentTarget.style.opacity = "0.9")}
             onMouseLeave={e => (e.currentTarget.style.opacity = "1")}>
             <span style={{ fontSize: 13 }}>✨</span>
-            {user?.plan === "unlimited" ? "Unlimited" : "Go Unlimited"}
+            {(user?.credits ?? 0) > 0 ? `${user!.credits} credits` : "Buy credits"}
           </a>
 
           {/* Auth */}

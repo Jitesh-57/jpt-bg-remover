@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkAuth, checkEntitlement, withCredits } from "@/lib/auth";
-import { geminiGenerateBg } from "@/lib/gemini";
+import { generateBackground } from "@/lib/ai-image";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
   if (blocked) return blocked;
 
   try {
-    const resultDataUrl = await geminiGenerateBg(src, prompt.trim());
+    const resultDataUrl = await generateBackground(src, prompt.trim());
     return withCredits({ dataUrl: resultDataUrl }, session!, "ai", req, "generate-bg");
   } catch (e) {
     console.error("[generate-bg]", e);
