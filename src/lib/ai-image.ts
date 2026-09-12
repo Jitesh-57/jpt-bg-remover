@@ -25,6 +25,29 @@ export function resolveModel(requested?: string): FalModel {
   return requested === "gpt-image" ? "gpt-image" : "nano-banana";
 }
 
+/**
+ * Something on our side of the wire is not working — our provider's key, our
+ * provider's balance, our provider's capacity.
+ *
+ * None of that is the visitor's business and none of it is their fault, so
+ * they get one sentence they can act on. "The image service is out of credit:
+ * User is locked. Reason: TOP_UP." was our supplier's billing state rendered
+ * into a customer's browser: a paying user holding 24 credits reads that as
+ * their own balance being gone.
+ *
+ * The real reason is not lost — it goes to the server log where the operator
+ * can read it, and /api/admin/fal-check answers it on demand.
+ */
+export class ProviderUnavailableError extends Error {
+  constructor(readonly operatorDetail: string) {
+    super(
+      "AI generation is temporarily unavailable while we restore capacity. " +
+      "No credits were used for this attempt, and every free tool still works."
+    );
+    this.name = "ProviderUnavailableError";
+  }
+}
+
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 /** Attempts against fal before considering the other provider. */
@@ -98,7 +121,10 @@ async function viaFal(
     rate limit and gives the owner no way to work out that their fal balance
     had run out. FalError.billingBlocked recognises both shapes now.
   */
-  if ((e instanceof FalError && e.billingBlocked) || /out of credit/i.test(msg)) throw e;
+  if ((e instanceof FalError && e.billingBlocked) || /out of credit/i.test(msg)) {
+    console.error(`[ai-image] ${label}: fal will not serve this account — ${msg}`);
+    throw new ProviderUnavailableError(msg);
+  }
 
   if (status === 401 || status === 403 || /rejected our key|refused this request/i.test(msg)) {
     console.error(
@@ -120,9 +146,7 @@ async function viaFal(
     */
     const gmsg = g instanceof Error ? g.message : String(g);
     console.error(`[ai-image] ${label}: both providers failed. fal: ${msg} | gemini: ${gmsg}`);
-    throw new Error(
-      `${msg} The backup provider also failed (${gmsg}), so this tool is unavailable until one of them is working.`
-    );
+    throw new ProviderUnavailableError(`fal: ${msg} | gemini: ${gmsg}`);
   }
   }
 
