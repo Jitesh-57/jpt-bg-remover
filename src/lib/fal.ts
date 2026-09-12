@@ -48,6 +48,26 @@ function authHeaders(): Record<string, string> {
   return { Authorization: `Key ${KEY()}`, "Content-Type": "application/json" };
 }
 
+/**
+ * The aspect ratios fal actually accepts.
+ *
+ * Discovered the hard way: "16:10" is not among them, and a run that used it
+ * lost every job to a 422 while the Gemini fallback reported a rate limit
+ * instead. Anything not on this list is rejected before a request is sent, so
+ * the same mistake cannot reach the API again.
+ */
+export const FAL_ASPECT_RATIOS = [
+  "21:9", "16:9", "3:2", "4:3", "5:4", "1:1", "4:5", "3:4", "2:3", "9:16",
+] as const;
+
+export function assertAspectRatio(ratio: string | undefined): void {
+  if (ratio && !(FAL_ASPECT_RATIOS as readonly string[]).includes(ratio)) {
+    throw new Error(
+      `Unsupported aspect ratio "${ratio}". fal accepts: ${FAL_ASPECT_RATIOS.join(", ")}.`
+    );
+  }
+}
+
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 /** fal accepts a public URL or a base64 data URI for image inputs. */
@@ -186,9 +206,11 @@ export async function falEditImage(
   src: string,
   prompt: string,
   model: FalModel = DEFAULT_MODEL,
-  aspectRatio?: string
+  aspectRatio?: string,
+  budgetMs?: number
 ): Promise<string> {
   const imageUrl = await toFalImageUrl(src);
+  assertAspectRatio(aspectRatio);
   const endpoint = ENDPOINTS[model].edit;
 
   // The two families name this differently: nano-banana takes aspect_ratio,
@@ -200,7 +222,7 @@ export async function falEditImage(
       : { prompt, image_urls: [imageUrl], num_images: 1, quality: "high",
           image_size: gptImageSize(aspectRatio) };
 
-  const result = await runQueued(endpoint, input);
+  const result = await runQueued(endpoint, input, budgetMs);
   return urlToDataUrl(firstImageUrl(result));
 }
 
@@ -230,6 +252,7 @@ export async function falGenerateImage(
   aspectRatio?: string,
   budgetMs?: number
 ): Promise<string> {
+  assertAspectRatio(aspectRatio);
   const endpoint = ENDPOINTS[model].generate;
 
   const input =

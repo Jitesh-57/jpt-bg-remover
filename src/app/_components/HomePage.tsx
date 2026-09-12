@@ -175,7 +175,7 @@ export default function HomePage({ config }: { config: PageSEO }) {
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(280px, 100%), 1fr))", gap: 20 }}>
               {STEPS.map((st) => (
                 <div key={st.n} style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 18, overflow: "hidden" }}>
-                  <div style={{ aspectRatio: "16 / 10" }}>
+                  <div style={{ aspectRatio: "16 / 9" }}>
                     <SmartImage src={st.img} alt={st.t} fallback="linear-gradient(135deg, var(--surface-3), var(--surface-2))" />
                   </div>
                   <div style={{ padding: "18px 20px 20px" }}>

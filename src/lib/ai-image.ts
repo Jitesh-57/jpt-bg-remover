@@ -44,8 +44,27 @@ async function viaFal(
   }
 }
 
-export function editImage(src: string, prompt: string, model?: string, aspectRatio?: string): Promise<string> {
+export function editImage(
+  src: string,
+  prompt: string,
+  model?: string,
+  aspectRatio?: string,
+  opts?: { strict?: boolean; budgetMs?: number; raw?: boolean }
+): Promise<string> {
   const m = resolveModel(model);
+  if (opts?.strict) {
+    if (!falConfigured()) throw new Error("FAL_KEY is not configured.");
+    // raw: send the caller's prompt as written. The editor prefix below is
+    // right for a user typing "make the sky bluer" and wrong for an app's
+    // own tuned prompt, which is already a complete instruction.
+    return falEditImage(
+      src,
+      opts.raw ? prompt : `You are a professional photo editor. Edit this image: ${prompt}. Return only the edited image.`,
+      m,
+      aspectRatio,
+      opts.budgetMs
+    );
+  }
   return viaFal(
     () => falEditImage(src, `You are a professional photo editor. Edit this image: ${prompt}. Return only the edited image.`, m, aspectRatio),
     () => geminiEditImage(src, prompt),

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminSupabase } from "@/lib/auth";
-import { generateFromText } from "@/lib/ai-image";
+import { editImage, generateFromText } from "@/lib/ai-image";
 import { falConfigured, FalError } from "@/lib/fal";
 import { IMAGE_JOBS, type ImageJob } from "@/lib/image-jobs";
 
@@ -42,6 +42,16 @@ const GAP_MS = 1_500;
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 const keyOf = (bucket: string, path: string) => `${bucket}|${path}`;
+
+/** Public URL for a file in a public bucket, for handing to fal as an input. */
+function publicUrl(bucket: string, path: string): string {
+  const base = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+  return `${base}/storage/v1/object/public/${encodeURIComponent(bucket)}/${path
+    .split("/")
+    .map(encodeURIComponent)
+    .join("/")}`;
+}
+
 
 async function missingJobs(
   supabase: ReturnType<typeof createAdminSupabase>
@@ -116,9 +126,21 @@ export async function GET(req: NextRequest) {
   let made = 0;
   let failed = 0;
 
+  const present = new Set(
+    IMAGE_JOBS.filter((j) => !todo.includes(j)).map((j) => keyOf(j.bucket, j.path))
+  );
+
   for (const job of todo) {
     if (made >= MAX_PER_RUN || Date.now() - started > BUDGET_MS) break;
     const key = `${job.bucket}/${job.path}`;
+
+    // Sources are generated first and the list is ordered to match, but a
+    // partial run can still reach an app before its source exists. Skipping is
+    // right: the next hop picks it up once the source has landed.
+    if (job.editOf && !present.has(keyOf(job.bucket, job.editOf))) {
+      results[key] = `waiting for ${job.editOf}`;
+      continue;
+    }
 
     // fal rate-limits, and the first production run lost 14 of 17 images to a
     // single 429 each. One retry with a pause recovers almost all of those.
@@ -126,13 +148,21 @@ export async function GET(req: NextRequest) {
     for (let attempt = 0; attempt < RETRIES; attempt++) {
       if (Date.now() - started > BUDGET_MS) break;
       try {
-        const dataUrl = await generateFromText(job.prompt, {
-          aspect_ratio: job.aspect,
-          // No Gemini fallback here: a masked fal error reports the wrong
-          // provider and hides whether a retry is worth attempting.
-          strict: true,
-          budgetMs: 120_000,
-        });
+        // An edit job runs the app's own prompt over a stored source photo, so
+        // the result is what the tool actually produces. A generate job makes
+        // an image from the prompt alone.
+        const dataUrl = job.editOf
+          ? await editImage(publicUrl(job.bucket, job.editOf), job.prompt, undefined, job.aspect, {
+              // raw: the app's prompt is already a complete instruction and
+              // must not be wrapped in the interactive editor's preamble.
+              strict: true, raw: true, budgetMs: 120_000,
+            })
+          : await generateFromText(job.prompt, {
+              // No Gemini fallback here: a masked fal error reports the wrong
+              // provider and hides whether a retry is worth attempting.
+              strict: true,
+              budgetMs: 120_000,
+            });
         const b64 = dataUrl.includes(",") ? dataUrl.split(",")[1] : dataUrl;
         const bytes = Buffer.from(b64, "base64");
         const contentType = job.path.endsWith(".jpg") ? "image/jpeg" : "image/png";

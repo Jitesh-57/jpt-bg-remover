@@ -6,6 +6,7 @@ import { presetsFor } from "@/lib/app-presets";
 import { presetImagesFor, sampleImages } from "@/lib/preset-images.server";
 import { CREATIVE_APPS, getCreativeApp, getCreativeContent, CREATIVE_BASE, previewUrl } from "@/lib/creative-apps";
 import { longContentFor } from "@/lib/app-content";
+import { sourceFor, sourceImageUrl } from "@/lib/image-jobs";
 
 export const revalidate = 300;
 
@@ -153,22 +154,35 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
         <section style={{ padding: "72px 24px", background: "var(--surface)" }}>
           <div style={{ maxWidth: 820, margin: "0 auto", textAlign: "center" }}>
             <h2 style={{ fontSize: "clamp(1.5rem,3vw,2rem)", fontWeight: 900, color: "var(--text)", margin: "0 0 28px", letterSpacing: "-0.02em" }}>See it in action — real before &amp; after</h2>
+            {/*
+              Two real images, laid out here rather than generated as one
+              collage. The left panel is the exact photo the right panel was
+              produced from — the app's own prompt run over it — so the pair is
+              a genuine before and after rather than a model's impression of
+              one. Doing the layout and the labels in HTML also means crisp
+              type instead of the mangled lettering image models produce.
+            */}
             <figure style={{ margin: 0 }}>
-              {/*
-                The labels are drawn here rather than generated into the image.
-                Lettering is the least reliable thing an image model produces,
-                and a misspelled badge baked into the file could only be fixed
-                by regenerating it — in HTML they are crisp and cost nothing.
-                The creative is a top/bottom split at 4:5, so before sits at the
-                top and after at the bottom.
-              */}
-              <div style={{ position: "relative", borderRadius: 18, overflow: "hidden", boxShadow: "0 20px 60px rgba(0,0,0,0.16)", border: "1px solid var(--border)" }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={previewUrl(a.slug)} alt={`${a.h1}: before and after example`} style={{ width: "100%", display: "block" }} />
-                <span style={{ position: "absolute", top: 12, left: 12, background: "rgba(11,11,14,0.82)", color: "#fff", backdropFilter: "blur(6px)", fontSize: 11, fontWeight: 800, letterSpacing: "0.09em", borderRadius: 999, padding: "5px 11px" }}>BEFORE</span>
-                <span style={{ position: "absolute", bottom: 12, right: 12, background: "var(--accent-fill)", color: "#fff", fontSize: 11, fontWeight: 800, letterSpacing: "0.09em", borderRadius: 999, padding: "5px 11px" }}>AFTER</span>
+              <div className="jpt-compare" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(240px, 100%), 1fr))", gap: 12 }}>
+                {[
+                  { label: "Before", src: sourceImageUrl(sourceFor(a)), alt: `The photo uploaded to ${a.h1}`, accent: false },
+                  { label: "After", src: previewUrl(a.slug), alt: `The result from ${a.h1}`, accent: true },
+                ].map((pane) => (
+                  <div key={pane.label} style={{ position: "relative", borderRadius: 16, overflow: "hidden", border: "1px solid var(--border)", background: "var(--surface-2)", aspectRatio: "4 / 5" }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={pane.src} alt={pane.alt} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                    <span style={{
+                      position: "absolute", top: 10, left: 10, fontSize: 10.5, fontWeight: 800, letterSpacing: "0.09em",
+                      borderRadius: 999, padding: "4px 10px", color: "#fff",
+                      background: pane.accent ? "var(--accent-fill)" : "rgba(11,11,14,0.82)",
+                      backdropFilter: pane.accent ? undefined : "blur(6px)",
+                    }}>{pane.label.toUpperCase()}</span>
+                  </div>
+                ))}
               </div>
-              <figcaption style={{ fontSize: 12.5, color: "var(--text-faint)", marginTop: 10 }}>Real AI example — actual output from this Creative App</figcaption>
+              <figcaption style={{ fontSize: 12.5, color: "var(--text-faint)", marginTop: 12 }}>
+                The right-hand image is this app&apos;s own prompt run over the photo on the left — the same thing your upload goes through.
+              </figcaption>
             </figure>
           </div>
         </section>
