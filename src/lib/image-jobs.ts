@@ -89,18 +89,18 @@ Both halves must clearly show the same subject from the same angle, so the diffe
  * professionally shot makes the after look like it did nothing.
  */
 const SOURCE_SUBJECTS: Record<string, string> = {
-  "person-plain": "A plain, honest smartphone selfie of a smiling adult in a simple t-shirt against a blank magnolia wall. Flat, uneven indoor ceiling light. Whole face clearly visible and front-facing. It must look like a real everyday phone photo: slightly soft, unstyled, no retouching.",
-  "person-clean": "A clear front-facing smartphone portrait of an adult against a plain pale wall in even daylight. No glasses, no hat, no jewellery, neutral expression, hair simple and tidy. An ordinary photo, well lit but completely unstyled.",
-  "person-body": "An ordinary smartphone photograph of an adult standing square to camera in a plain fitted t-shirt and jeans, in an undecorated room with a bare wall behind. Flat indoor light, full body in frame.",
-  "person-dim": "An ordinary smartphone snapshot of an adult standing in a dim hallway in everyday clothes. Underexposed, slight motion softness, a warm yellow cast from a ceiling bulb. Clearly an unedited phone photo.",
-  "couple": "An ordinary smartphone snapshot of two adults standing side by side in everyday clothes against a plain wall, flat indoor light, both faces clearly visible, slightly awkward framing.",
+  "person-plain": "A plain, honest smartphone selfie of a smiling man in his thirties in a simple t-shirt against a blank magnolia wall. Flat, uneven indoor ceiling light. Whole face clearly visible and front-facing. It must look like a real everyday phone photo: slightly soft, unstyled, no retouching.",
+  "person-clean": "A clear front-facing smartphone portrait of a woman in her twenties against a plain pale wall in even daylight. No glasses, no hat, no jewellery, neutral expression, hair simple and tidy. An ordinary photo, well lit but completely unstyled.",
+  "person-body": "An ordinary smartphone photograph of a man in his thirties standing square to camera in a plain fitted t-shirt and jeans, in an undecorated room with a bare wall behind. Flat indoor light, full body in frame.",
+  "person-dim": "An ordinary smartphone snapshot of a woman in her thirties standing in a dim hallway in everyday clothes. Underexposed, slight motion softness, a warm yellow cast from a ceiling bulb. Clearly an unedited phone photo.",
+  "couple": "An ordinary smartphone snapshot of a couple in their thirties standing side by side in everyday clothes against a plain wall, flat indoor light, both faces clearly visible, slightly awkward framing.",
   "pet": "An ordinary snapshot of a friendly dog sitting on a living-room floor, photographed from standing height in flat indoor light. Cluttered domestic background, nothing styled.",
   "product": "A single consumer product — a pair of over-ear headphones — photographed on a cluttered domestic kitchen worktop under yellow overhead lighting. Crumbs and household objects visible behind it. An honest, unstyled phone photo.",
   "car": "A used hatchback car photographed in a residential driveway on a dull overcast day. Wheelie bins and a fence visible behind it, puddles on the tarmac, flat grey light.",
   "jewellery": "A gold ring photographed on a kitchen worktop under warm yellow domestic lighting, slightly out of focus, dust visible on the metal, cluttered surface.",
   "room": "A living room photographed on a phone in dull daylight: uneven exposure, a cluttered coffee table, a crooked horizon and a washed-out window.",
   "old-print": "A photograph of an old damaged printed family photo lying on a table: colours faded towards magenta, a crease across one corner, surface scratches, dust and worn edges. Shot flat from above.",
-  "lowres-face": "A deliberately low-resolution, soft and slightly pixelated photograph of an adult's face, head and shoulders against a plain background. It must clearly read as a small image that has been enlarged far past its real size.",
+  "lowres-face": "A deliberately low-resolution, soft and slightly pixelated photograph of a man's face, head and shoulders against a plain background. It must clearly read as a small image that has been enlarged far past its real size.",
 };
 
 /**
@@ -173,7 +173,7 @@ const HOME: ImageJob[] = [
   {
     set: "home", bucket: LANDING, path: "home-hero.png", aspect: "21:9",
     prompt: beforeAfter(
-      "a plain smartphone selfie of a smiling adult in casual clothes against a blank beige wall, flat indoor lighting",
+      "a plain smartphone selfie of a smiling person in casual clothes against a blank beige wall, flat indoor lighting",
       "the same person as a polished studio portrait: tailored clothing, soft key light with a gentle fill, a clean dark neutral backdrop, confident relaxed expression",
       "21:9"
     ),
@@ -212,14 +212,14 @@ const TOOLS: ImageJob[] = [
 
   { set: "tools", bucket: LANDING, path: "page-ai-headshot.png", aspect: "16:9",
     prompt: beforeAfter(
-      "a casual selfie of an adult in a t-shirt taken at arm's length against a bedroom wall",
+      "a casual selfie of a person in a t-shirt taken at arm's length against a bedroom wall",
       "the same person as a corporate headshot: charcoal suit, white shirt, neutral grey studio backdrop, even professional lighting") },
 
   // The upscale page shows two separate frames rather than one split image.
   { set: "tools", bucket: LANDING, path: "upscale-before.jpg", aspect: "16:9",
-    prompt: `A deliberately low-resolution, soft, slightly pixelated photograph of a young adult's face, framed head and shoulders against a plain background — it must read as a small image that has been enlarged too far. ${STYLE}` },
+    prompt: `A deliberately low-resolution, soft, slightly pixelated photograph of a person's face, framed head and shoulders against a plain background — it must read as a small image that has been enlarged too far. ${STYLE}` },
   { set: "tools", bucket: LANDING, path: "upscale-after.jpg", aspect: "16:9",
-    prompt: `A very sharp, high-resolution photograph of a young adult's face, framed head and shoulders against a plain background, with crisp skin texture, visible individual eyelashes and clearly resolved hair strands. Same framing and composition as a standard head-and-shoulders portrait. ${STYLE}` },
+    prompt: `A very sharp, high-resolution photograph of a person's face, framed head and shoulders against a plain background, with crisp skin texture, visible individual eyelashes and clearly resolved hair strands. Same framing and composition as a standard head-and-shoulders portrait. ${STYLE}` },
 
   { set: "tools", bucket: LANDING, path: "image-compressor-before-after.png", aspect: "16:9",
     prompt: beforeAfter(
@@ -307,17 +307,17 @@ WATERMARK_CASES.forEach((c, i) => {
  * specific to its app.
  */
 const BEFORE_BY_CAT: Record<string, string> = {
-  headshot: "a casual arm's-length selfie of an adult in a plain t-shirt against a bedroom wall, flat uneven indoor light",
-  portrait: "an ordinary smartphone snapshot of an adult standing in a dim hallway in everyday clothes",
-  style: "a plain, unremarkable smartphone portrait of an adult against a blank wall in even flat light",
-  retouch: "a smartphone portrait of an adult with visible forehead shine, a green colour cast from overhead office lighting and one small blemish on the cheek",
+  headshot: "a casual arm's-length selfie of a person in a plain t-shirt against a bedroom wall, flat uneven indoor light",
+  portrait: "an ordinary smartphone snapshot of a woman in her thirties standing in a dim hallway in everyday clothes",
+  style: "a plain, unremarkable smartphone portrait of a person against a blank wall in even flat light",
+  retouch: "a smartphone portrait of a person with visible forehead shine, a green colour cast from overhead office lighting and one small blemish on the cheek",
   restore: "an old damaged photographic print: faded to magenta, a crease across one corner, surface scratches and dust, edges worn",
-  background: "a photograph of an adult standing in a cluttered kitchen, dishes and cupboards distracting behind them",
+  background: "a photograph of a person standing in a cluttered kitchen, dishes and cupboards distracting behind them",
   remove: "a holiday photograph of a landmark with three unrelated strangers walking through the frame and a litter bin at the edge",
   enhance: "a small, soft, visibly low-resolution and slightly noisy photograph of a face, clearly enlarged too far",
   product: "a product photographed on a cluttered domestic worktop under yellow kitchen lighting, crumbs and objects behind it",
-  social: "an off-centre snapshot of an adult in a wide frame with the subject too small and a lot of dead space",
-  fun: "a plain, ordinary smartphone selfie of an adult in colourful casual clothes against a blank wall",
+  social: "an off-centre snapshot of a person in a wide frame with the subject too small and a lot of dead space",
+  fun: "a plain, ordinary smartphone selfie of a person in colourful casual clothes against a blank wall",
 };
 
 /**
@@ -330,26 +330,26 @@ const BEFORE_BY_CAT: Record<string, string> = {
  */
 const SUBJECT_RULES: [RegExp, string][] = [
   [/piercing|beard|glasses|braces|tattoo|hairstyle|hair-color|bangs|curly|blonde|bald|buzz-cut|long-hair|eyebrow|eye-color|smile|expression/,
-    "a clear front-facing smartphone portrait of an adult in plain even light against a blank wall, no accessories and nothing unusual about the face"],
+    "a clear front-facing smartphone portrait of a person in plain even light against a blank wall, no accessories and nothing unusual about the face"],
   [/unpixelate|unblur|upscal|enlarge|sharpen|denoise|hd-photo|4k|image-enlarger/,
     "a small, soft, visibly low-resolution and slightly pixelated photograph of a face, clearly enlarged far past its real size"],
   [/muscle|\babs\b|six-pack|body-editor|fitness|gym|skinny|slim/,
-    "an ordinary smartphone photograph of an adult standing in a plain t-shirt in an undecorated room, flat indoor light"],
+    "an ordinary smartphone photograph of a person standing in a plain t-shirt in an undecorated room, flat indoor light"],
   [/\bpet|dog|cat\b/, "an ordinary snapshot of a dog sitting on a living-room floor, taken from standing height in flat indoor light"],
   [/baby|toddler|kid/, "an ordinary snapshot of a baby sitting on a plain rug, flat indoor light, slightly awkward framing"],
-  [/couple|wedding|anniversary|engagement/, "an ordinary snapshot of two adults standing side by side in everyday clothes against a plain wall"],
-  [/family|group/, "an ordinary snapshot of three adults standing in a row in everyday clothes in a plain room"],
+  [/couple|wedding|anniversary|engagement/, "an ordinary snapshot of a couple in their thirties standing side by side in everyday clothes against a plain wall"],
+  [/family|group/, "an ordinary snapshot of three people standing in a row in everyday clothes in a plain room"],
   [/\bcar\b|automotive|dealer|vehicle/, "a used car photographed in a residential driveway on an overcast day, bins and a fence visible behind it"],
   [/bike|motorcycle|truck/, "a motorcycle photographed in a plain concrete car park on a dull day, clutter in the background"],
   [/jewel|ring|necklace/, "a gold ring photographed on a kitchen worktop under yellow domestic lighting, dust visible on the metal"],
   [/food|restaurant|menu|dish/, "a plated meal photographed on a restaurant table under dim yellow light, cutlery and a glass crowding the frame"],
   [/real-estate|house|property|interior|room|home-decor|hotel|architect/, "a living room photographed on a phone in dull daylight: uneven exposure, a cluttered coffee table and a crooked horizon"],
-  [/saree|dress|outfit|fashion|clothing|apparel/, "an ordinary snapshot of an adult in plain everyday clothes standing against a blank wall in flat light"],
+  [/saree|dress|outfit|fashion|clothing|apparel/, "an ordinary snapshot of a person in plain everyday clothes standing against a blank wall in flat light"],
   [/shoe|sneaker|watch|headphone|bottle|electronic|gadget|amazon|ecommerce|shopify|product|beauty/, "a single consumer product photographed on a cluttered domestic worktop under yellow kitchen lighting"],
   [/logo|icon|signature|png-maker/, "a hand-drawn mark on white paper photographed on a desk, the paper edges and shadows visible"],
-  [/thumbnail|youtube|banner|cover|poster|album/, "an ordinary off-centre snapshot of an adult with a lot of dead space around them and nowhere obvious for a title"],
+  [/thumbnail|youtube|banner|cover|poster|album/, "an ordinary off-centre snapshot of a person with a lot of dead space around them and nowhere obvious for a title"],
   [/old-photo|restoration|colorize|colourise|black-and-white|yearbook/, "an old damaged photographic print: faded towards magenta, a crease across one corner, surface scratches and dust"],
-  [/passport|visa|\bid\b/, "a casual arm's-length selfie of an adult against a patterned wall, head tilted, uneven shadow across the face"],
+  [/passport|visa|\bid\b/, "a casual arm's-length selfie of a person against a patterned wall, head tilted, uneven shadow across the face"],
 ];
 
 /** The "before" half for an app: a keyword rule if one matches, else its category. */
@@ -395,7 +395,7 @@ const PRESETS: ImageJob[] = (() => {
       : cat === "restore" ? "an old family photograph"
       : cat === "remove" ? "a photograph with unwanted objects removed"
       : cat === "enhance" ? "a sharp, detailed photograph"
-      : "an adult person";
+      : "a person";
     for (const p of presetsFor(app, "solo")) {
       out.push({
         set: "presets", bucket: PRESET_IMAGE_BUCKET, path: `${cat}__${p.id}.png`, aspect: "3:4",
@@ -412,7 +412,7 @@ const PRESETS: ImageJob[] = (() => {
     for (const p of presetsFor(generic, "solo")) {
       out.push({
         set: "presets", bucket: PRESET_IMAGE_BUCKET, path: `preset__${p.id}.png`, aspect: "3:4",
-        prompt: `A small thumbnail example of an adult person photographed in this exact treatment: ${p.modifier} It must read instantly as an example of "${p.label}". Single subject, tightly framed, no borders. ${STYLE}`,
+        prompt: `A small thumbnail example of a person photographed in this exact treatment: ${p.modifier} It must read instantly as an example of "${p.label}". Single subject, tightly framed, no borders. ${STYLE}`,
       });
     }
   }
@@ -422,7 +422,7 @@ const PRESETS: ImageJob[] = (() => {
     for (const p of presetsFor(app, "solo")) {
       out.push({
         set: "presets", bucket: PRESET_IMAGE_BUCKET, path: `${slug}__${p.id}.png`, aspect: "3:4",
-        prompt: `A small thumbnail example of an adult person photographed in this exact treatment: ${p.modifier} It must read instantly as an example of "${p.label}". Single subject, tightly framed, no borders. ${STYLE}`,
+        prompt: `A small thumbnail example of a person photographed in this exact treatment: ${p.modifier} It must read instantly as an example of "${p.label}". Single subject, tightly framed, no borders. ${STYLE}`,
       });
     }
   }
@@ -433,9 +433,9 @@ const PRESETS: ImageJob[] = (() => {
 
 const SAMPLES: ImageJob[] = [
   { set: "samples", bucket: PRESET_IMAGE_BUCKET, path: "sample1.png", aspect: "3:4",
-    prompt: `An ordinary, honest smartphone portrait of a smiling adult woman in a plain top against a blank light wall, even flat indoor light, whole face clearly visible and front-facing. It should look like a real everyday selfie, not a professional photo. ${STYLE}` },
+    prompt: `An ordinary, honest smartphone portrait of a smiling woman in a plain top against a blank light wall, even flat indoor light, whole face clearly visible and front-facing. It should look like a real everyday selfie, not a professional photo. ${STYLE}` },
   { set: "samples", bucket: PRESET_IMAGE_BUCKET, path: "sample2.png", aspect: "3:4",
-    prompt: `An ordinary, honest smartphone portrait of a smiling adult man in a plain shirt against a blank light wall, even flat indoor light, whole face clearly visible and front-facing. It should look like a real everyday selfie, not a professional photo. ${STYLE}` },
+    prompt: `An ordinary, honest smartphone portrait of a smiling man in a plain shirt against a blank light wall, even flat indoor light, whole face clearly visible and front-facing. It should look like a real everyday selfie, not a professional photo. ${STYLE}` },
   { set: "samples", bucket: PRESET_IMAGE_BUCKET, path: "sample3.png", aspect: "3:4",
     prompt: `An ordinary smartphone photograph of a single consumer product — a pair of headphones — on a plain pale table under ordinary room lighting, whole product in frame, slightly dull and unstyled. ${STYLE}` },
 ];
@@ -463,7 +463,7 @@ const PROGRAMMATIC: ImageJob[] = [
   ...CROPS.map((c) => ({
     set: "programmatic" as const, bucket: BLOGS, path: `${c.slug}.png`, aspect: "16:9",
     prompt: beforeAfter(
-      "a wide photograph of an adult standing off-centre with a great deal of empty space around them",
+      "a wide photograph of a person standing off-centre with a great deal of empty space around them",
       `the same photograph cropped to the framing described by "${c.h1.replace(/ \(.*\)$/, "")}", the subject correctly placed and filling the frame`
     ),
   })),
@@ -474,7 +474,7 @@ const PROGRAMMATIC: ImageJob[] = [
 const SOCIAL: ImageJob[] = [
   { set: "social", bucket: LANDING, path: "og-default.png", aspect: "16:9",
     prompt: beforeAfter(
-      "a plain smartphone selfie of an adult against a blank wall",
+      "a plain smartphone selfie of a person against a blank wall",
       "the same person as a polished studio portrait with warm deep-orange accent lighting and a clean near-black backdrop"
     ) },
 ];
