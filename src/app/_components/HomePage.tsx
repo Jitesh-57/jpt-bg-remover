@@ -48,10 +48,54 @@ const STEPS = [
   { n: "03", t: "Download in full res",  d: "Every export is full resolution with no watermark — free tools and AI results alike.",                    img: landingImg("home-step-3.png") },
 ];
 
-export default function HomePage({ config }: { config: PageSEO }) {
-  const apps = FEATURED_APPS
-    .map((slug) => CREATIVE_APPS.find((a) => a.slug === slug))
-    .filter((a): a is NonNullable<typeof a> => !!a);
+export default function HomePage({
+  config,
+  withExamples = new Set<string>(),
+}: {
+  config: PageSEO;
+  /** Slugs whose example image exists. Empty means "unknown" — see below. */
+  withExamples?: Set<string>;
+}) {
+  /*
+    Front apps that have a picture.
+
+    The eight below are the deliberate picks, but the creatives are generated
+    in batches, so featuring a slug whose file does not exist yet put a flat
+    gradient tile on the homepage. Now the picks are filtered to the ones that
+    have an image and the row is topped back up to eight from whatever else
+    does — order still favours the deliberate list.
+
+    An empty `withExamples` means the bucket could not be listed rather than
+    "nothing exists", so the original picks are kept in that case.
+  */
+  const bySlug = (slug: string) => CREATIVE_APPS.find((a) => a.slug === slug);
+  const featured = FEATURED_APPS.map(bySlug).filter((a): a is NonNullable<typeof a> => !!a);
+
+  const apps = withExamples.size === 0
+    ? featured
+    : [
+        ...featured.filter((a) => withExamples.has(a.slug)),
+        ...CREATIVE_APPS.filter(
+          (a) => withExamples.has(a.slug) && !FEATURED_APPS.includes(a.slug)
+        ),
+      ].slice(0, 8);
+
+  /*
+    The showcase under the hero.
+
+    It was a single 21:9 frame holding home-hero.png. That file was never
+    generated, so the frame rendered its gradient fallback: a large empty dark
+    box across the top of the homepage.
+
+    Three app panels replace it. Each is a real creative where one exists, and
+    the app's own gradient plus its name where it does not — so the block is
+    populated and self-explanatory either way, which the single empty frame
+    could not manage. Three 4:5 panels come to roughly the same 21:9.
+  */
+  const showcase = [
+    ...apps.filter((a) => withExamples.has(a.slug)),
+    ...apps,
+  ].filter((a, i, all) => all.findIndex((x) => x.slug === a.slug) === i).slice(0, 3);
 
   const faqLd = {
     "@context": "https://schema.org", "@type": "FAQPage",
@@ -97,13 +141,25 @@ export default function HomePage({ config }: { config: PageSEO }) {
 
         {/* ── SHOWCASE ─────────────────────────────────────────────────────── */}
         <section style={{ padding: "0 24px 72px" }}>
-          <div style={{ maxWidth: 1180, margin: "0 auto", borderRadius: 24, overflow: "hidden", border: "1px solid var(--border)", aspectRatio: "21 / 9", maxHeight: 520, boxShadow: "var(--shadow-lg)" }}>
-            <SmartImage
-              src={landingImg("home-hero.png")}
-              alt="A photo transformed with Pixel Shine — original beside the AI result"
-              fallback="linear-gradient(135deg, var(--surface-3), var(--surface-2) 45%, var(--accent-soft))"
-              eager
-            />
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 0, borderRadius: 24, overflow: "hidden", border: "1px solid var(--border)", boxShadow: "var(--shadow-lg)" }}>
+              {showcase.map((a) => (
+                <Link key={a.slug} href={`${CREATIVE_BASE}/${a.slug}`} style={{ position: "relative", aspectRatio: "4 / 5", display: "block", textDecoration: "none", minWidth: 0 }}>
+                  <SmartImage
+                    src={previewUrl(a.slug)}
+                    alt={`A photo turned into ${a.h1}`}
+                    fallback={`linear-gradient(135deg, ${a.gradient[0]}, ${a.gradient[1]})`}
+                    eager
+                  />
+                  <span style={{ position: "absolute", left: 12, bottom: 12, right: 12, background: "rgba(11,11,14,0.78)", backdropFilter: "blur(6px)", color: "#fff", fontSize: 12.5, fontWeight: 800, borderRadius: 10, padding: "8px 11px", lineHeight: 1.35 }}>
+                    {a.emoji} {a.h1}
+                  </span>
+                </Link>
+              ))}
+            </div>
+            <p style={{ textAlign: "center", fontSize: 12.5, color: "var(--text-faint)", marginTop: 12 }}>
+              Real results — each one is an ordinary photo run through that app&apos;s own prompt.
+            </p>
           </div>
         </section>
 

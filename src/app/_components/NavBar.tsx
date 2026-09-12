@@ -13,9 +13,17 @@ import { openPricing } from "@/lib/pricing-modal";
 
 const PricingModal = lazy(() => import("./PricingModal"));
 
-interface User { userId: string; email: string; name: string; picture?: string; credits: number; plan: string; trialToolsUsed: string[]; trialsRemaining: number; }
+interface User { userId: string; email: string; name: string; picture?: string; credits: number; plan: string; }
 
-const FREE_TRIAL_LIMIT = 5;
+/**
+ * Has this account actually bought a pack?
+ *
+ * verify-payment is the only place `plan` moves off "free", so it is the one
+ * trustworthy signal. A raw credit balance is not: signups used to be granted
+ * 10, which made the header advertise credits to people the paywall was about
+ * to turn away.
+ */
+const hasPurchased = (u: { plan: string } | null): boolean => !!u && u.plan !== "free";
 
 const ALL_TOOLS = [
   {
@@ -123,7 +131,7 @@ export default function NavBar() {
       .then((d: { authenticated: boolean; userId?: string; email?: string; name?: string; picture?: string; credits?: number; plan?: string; trialToolsUsed?: string[]; trialsRemaining?: number }) => {
         if (d.authenticated && d.email) {
           const plan = d.plan ?? "free";
-          setUser({ userId: d.userId!, email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? 0, plan, trialToolsUsed: d.trialToolsUsed ?? [], trialsRemaining: d.trialsRemaining ?? 0 });
+          setUser({ userId: d.userId!, email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? 0, plan });
           setAnalyticsUser({ id: d.userId!, plan });
         }
       }).catch(() => null);
@@ -165,6 +173,8 @@ export default function NavBar() {
     } catch { trackSignInFailed("email", "network_error"); setAuthError("Network error. Please try again."); }
     finally { setAuthLoading(false); }
   };
+
+  const purchased = hasPurchased(user);
 
   if (pathname?.startsWith("/lp/")) return null;
 
@@ -346,7 +356,15 @@ export default function NavBar() {
                   ? <img src={user.picture} alt="" style={{ width: 28, height: 28, borderRadius: "50%", flexShrink: 0 }} />
                   : <div style={{ width: 28, height: 28, borderRadius: "50%", background: "var(--accent-fill)", color: "#fff", fontSize: 13, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>{user.name[0]}</div>}
                 <span style={{ fontSize: 13, fontWeight: 600, color: "var(--text-muted)" }}>{user.name.split(" ")[0]}</span>
-                {PAID_FEATURES_ENABLED && (
+                {/*
+                  Shown only once a pack has actually been bought. A balance is
+                  meaningless to someone who has never paid — and "⚡ 0" reads
+                  as a broken account rather than an invitation, while "⚡ 10"
+                  on a never-paid profile (older signups were granted 10) makes
+                  the header contradict the paywall. plan leaves "free" only in
+                  verify-payment, so it is the honest signal for "has bought".
+                */}
+                {PAID_FEATURES_ENABLED && purchased && user.credits > 0 && (
                   <span style={{ fontSize: 11, background: "var(--accent-fill)", color: "#fff", padding: "2px 8px", borderRadius: 12, fontWeight: 700 }}>
                     {`⚡ ${user.credits}`}
                   </span>
@@ -358,24 +376,16 @@ export default function NavBar() {
                     <div style={{ fontWeight: 700, fontSize: 14, color: "var(--text)" }}>{user.name}</div>
                     <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 2 }}>{user.email}</div>
                   </div>
-                  {PAID_FEATURES_ENABLED && user.plan === "free" && user.trialsRemaining === 0 && (
-                    <div style={{ margin: "10px 12px 4px", background: "linear-gradient(135deg,var(--accent-soft),var(--surface-2))", border: "1px solid var(--accent-border)", borderRadius: 12, padding: "12px 14px" }}>
-                      <div style={{ fontSize: 11, fontWeight: 700, color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>🎁 Free trials used up</div>
-                      <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 5 }}>You&apos;ve used all {FREE_TRIAL_LIMIT} free trials, one per tool.</div>
-                      <div style={{ fontSize: 11, color: "var(--accent)", fontWeight: 600, marginTop: 4 }}>Unlock all AI features with a paid plan</div>
-                      <button onClick={() => { trackPaymentPopupTriggered("trial_exhausted"); setShowPricing(true); setShowMenu(false); }}
-                        style={{ marginTop: 8, width: "100%", padding: "7px 12px", background: "var(--accent-fill)", color: "#fff", border: "none", borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
-                        Buy Paid Plan
-                      </button>
-                    </div>
-                  )}
-                  {PAID_FEATURES_ENABLED && user.plan === "free" && user.trialsRemaining > 0 && (
-                    <div style={{ margin: "10px 12px 4px", background: "var(--success-soft)", border: "1px solid var(--success-soft)", borderRadius: 10, padding: "8px 12px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                      <div>
-                        <div style={{ fontSize: 11, fontWeight: 700, color: "var(--success)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Free trials</div>
-                        <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 2 }}>{user.trialsRemaining} of {FREE_TRIAL_LIMIT} left · one per tool</div>
+                  {PAID_FEATURES_ENABLED && !purchased && (
+                    <div style={{ margin: "10px 12px 4px", background: "var(--success-soft)", border: "1px solid var(--success-soft)", borderRadius: 10, padding: "10px 12px" }}>
+                      <div style={{ fontSize: 11, fontWeight: 700, color: "var(--success)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Free tools</div>
+                      <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 3, lineHeight: 1.5 }}>
+                        Unlimited, no credits — they run in your browser. AI apps use credits.
                       </div>
-                      <div style={{ fontSize: 20, fontWeight: 900, color: "var(--success)" }}>{user.trialsRemaining}</div>
+                      <button onClick={() => { trackPaymentPopupTriggered("account_menu"); openPricing("the AI apps"); setShowMenu(false); }}
+                        style={{ marginTop: 8, width: "100%", padding: "7px 12px", background: "var(--accent-fill)", color: "#fff", border: "none", borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
+                        Get AI credits
+                      </button>
                     </div>
                   )}
                   <div style={{ padding: "6px 0" }}>
@@ -416,23 +426,16 @@ export default function NavBar() {
                   <div style={{ fontWeight: 700, fontSize: 15, color: "var(--text)" }}>{user.name}</div>
                   <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 2 }}>{user.email}</div>
                 </div>
-                {PAID_FEATURES_ENABLED && user.plan === "free" && user.trialsRemaining === 0 && (
-                  <div style={{ margin: "12px 16px 4px", background: "linear-gradient(135deg,var(--accent-soft),var(--surface-2))", border: "1px solid var(--accent-border)", borderRadius: 12, padding: "12px 14px" }}>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>🎁 Free trials used up</div>
-                    <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 5 }}>You&apos;ve used all {FREE_TRIAL_LIMIT} free trials, one per tool.</div>
-                    <button onClick={() => { trackPaymentPopupTriggered("trial_exhausted"); setShowPricing(true); setShowMenu(false); }}
-                      style={{ marginTop: 8, width: "100%", padding: "10px 12px", background: "var(--accent-fill)", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
-                      Buy Paid Plan
-                    </button>
-                  </div>
-                )}
-                {PAID_FEATURES_ENABLED && user.plan === "free" && user.trialsRemaining > 0 && (
-                  <div style={{ margin: "12px 16px 4px", background: "var(--success-soft)", border: "1px solid var(--success-soft)", borderRadius: 10, padding: "10px 12px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    <div>
-                      <div style={{ fontSize: 11, fontWeight: 700, color: "var(--success)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Free trials</div>
-                      <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 2 }}>{user.trialsRemaining} of {FREE_TRIAL_LIMIT} left · one per tool</div>
+                {PAID_FEATURES_ENABLED && !purchased && (
+                  <div style={{ margin: "12px 16px 4px", background: "var(--success-soft)", border: "1px solid var(--success-soft)", borderRadius: 10, padding: "10px 12px" }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: "var(--success)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Free tools</div>
+                    <div style={{ fontSize: 12.5, color: "var(--text-muted)", marginTop: 3, lineHeight: 1.5 }}>
+                      Unlimited, no credits — they run in your browser. AI apps use credits.
                     </div>
-                    <div style={{ fontSize: 20, fontWeight: 900, color: "var(--success)" }}>{user.trialsRemaining}</div>
+                    <button onClick={() => { trackPaymentPopupTriggered("account_menu"); openPricing("the AI apps"); setShowMenu(false); }}
+                      style={{ marginTop: 8, width: "100%", padding: "10px 12px", background: "var(--accent-fill)", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+                      Get AI credits
+                    </button>
                   </div>
                 )}
                 <div style={{ padding: "8px 0" }}>

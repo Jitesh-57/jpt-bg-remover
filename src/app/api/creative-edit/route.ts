@@ -3,7 +3,16 @@ import { checkAuth, checkEntitlement, withCredits } from "@/lib/auth";
 import { editImage } from "@/lib/ai-image";
 
 export const runtime = "nodejs";
-export const maxDuration = 60;
+/**
+ * 300s, not 60.
+ *
+ * A nano-banana edit often takes longer than a minute, and the queue poll was
+ * budgeted at 55s inside a 60s function. Past that the platform returned a
+ * gateway error whose body is not JSON, so the client's `res.json()` threw and
+ * the user was told "Network error. Please try again." for a generation that
+ * was simply still running.
+ */
+export const maxDuration = 300;
 
 /**
  * AI app generation endpoint.
@@ -35,7 +44,7 @@ export async function POST(req: NextRequest) {
   if (blocked) return blocked;
 
   try {
-    const result = await editImage(src, prompt, model, aspectRatio);
+    const result = await editImage(src, prompt, model, aspectRatio, { budgetMs: 240_000 });
     return withCredits({ dataUrl: result }, session!, "ai", req, `creative:${slug}`);
   } catch (e) {
     console.error("[creative-edit]", e);

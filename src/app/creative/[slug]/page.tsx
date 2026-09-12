@@ -5,6 +5,7 @@ import AppWorkspace from "./AppWorkspace";
 import { presetsFor } from "@/lib/app-presets";
 import { presetImagesFor, sampleImages } from "@/lib/preset-images.server";
 import { CREATIVE_APPS, getCreativeApp, getCreativeContent, CREATIVE_BASE, previewUrl } from "@/lib/creative-apps";
+import ExampleImage from "@/app/_components/ExampleImage";
 import { longContentFor } from "@/lib/app-content";
 import { sourceFor, sourceImageUrl } from "@/lib/image-jobs";
 import { SHOW_PRESET_TABS } from "@/lib/workspace-config";
@@ -178,12 +179,17 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
                 }}
               >
                 {[
-                  { label: "Before", src: sourceImageUrl(sourceFor(a)), alt: `The photo uploaded to ${a.h1}`, side: "left" as const },
-                  { label: "After", src: previewUrl(a.slug), alt: `The result from ${a.h1}`, side: "right" as const },
+                  { label: "Before", src: sourceImageUrl(sourceFor(a)), alt: `The photo uploaded to ${a.h1}`, side: "left" as const, note: "Sample photo coming soon" },
+                  { label: "After", src: previewUrl(a.slug), alt: `The result from ${a.h1}`, side: "right" as const, note: "Example coming soon" },
                 ].map((pane) => (
                   <div key={pane.label} style={{ position: "relative", aspectRatio: "4 / 5", minWidth: 0 }}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={pane.src} alt={pane.alt} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                    <ExampleImage
+                      src={pane.src}
+                      alt={pane.alt}
+                      emoji={a.emoji}
+                      gradient={[a.gradient[0], a.gradient[1]]}
+                      note={pane.note}
+                    />
                     <span style={{
                       position: "absolute", top: 12,
                       ...(pane.side === "left" ? { left: 12 } : { right: 12 }),
@@ -290,9 +296,9 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 14 }}>
               {related.map((r) => (
                 <a key={r.slug} href={`${CREATIVE_BASE}/${r.slug}`} style={{ textDecoration: "none" }}>
-                  <div style={{ aspectRatio: "16 / 10", borderRadius: 14, overflow: "hidden", marginBottom: 8, background: `linear-gradient(135deg, ${r.gradient[0]}, ${r.gradient[1]})` }}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={previewUrl(r.slug)} alt={`${r.h1} example`} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                  {/* position: relative — ExampleImage fills its container. */}
+                  <div style={{ position: "relative", aspectRatio: "16 / 10", borderRadius: 14, overflow: "hidden", marginBottom: 8, background: `linear-gradient(135deg, ${r.gradient[0]}, ${r.gradient[1]})` }}>
+                    <ExampleImage src={previewUrl(r.slug)} alt={`${r.h1} example`} emoji={r.emoji} gradient={[r.gradient[0], r.gradient[1]]} />
                   </div>
                   <div style={{ fontSize: 13, fontWeight: 700, color: "var(--text)", textAlign: "center", lineHeight: 1.3 }}>{r.h1}</div>
                 </a>
