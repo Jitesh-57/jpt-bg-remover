@@ -53,7 +53,11 @@ export async function GET(request: NextRequest) {
         email: user.email,
         name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split("@")[0],
         picture: user.user_metadata?.avatar_url,
-        credits: 10,
+        // No free AI credits on signup. The pricing is explicit that AI has no
+        // free tier, and the gate is balance-based, so granting 10 here handed
+        // every new account five free generations billed to the fal balance.
+        // The free on-device tools need no credits and are unaffected.
+        credits: 0,
       });
     } else {
       await supabase.from("profiles").update({

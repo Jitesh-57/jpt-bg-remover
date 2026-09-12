@@ -289,3 +289,16 @@ a { color: inherit; }
 @keyframes jptSpin { to { transform: rotate(360deg); } }
 .jpt-spin { animation: jptSpin 1s linear infinite; }
 @media (prefers-reduced-motion: reduce) { .jpt-spin { animation: none; } }
+
+/* ── Pricing modal ─────────────────────────────────────────────────────────
+   Two panels side by side, the image column first. Below 760px it stacks and
+   the image panel shortens, so the plan list stays above the fold on a phone. */
+.jpt-pricing-modal {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1fr);
+}
+.jpt-pricing-aside { min-height: 460px; }
+@media (max-width: 760px) {
+  .jpt-pricing-modal { grid-template-columns: 1fr; }
+  .jpt-pricing-aside { min-height: 210px; }
+}

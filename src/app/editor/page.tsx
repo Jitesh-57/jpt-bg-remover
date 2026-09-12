@@ -1612,8 +1612,14 @@ export default function ImageEditorPage() {
         {/* ── Left Sidebar (desktop only) ──────────────────────────────────── */}
         {!isMobile && <div style={s.sidebar}>
           {([["Free", TOOLS.filter((t) => t.free)], ["Pro", TOOLS.filter((t) => !t.free)]] as const).map(([group, list]) => list.length > 0 && (
-            <div key={group} style={{ display: "flex", flexDirection: "column", gap: 4, marginBottom: 10 }}>
-              <div style={s.railGroup}>{group}</div>
+            <div key={group} style={group === "Pro" ? s.railPanelPro : s.railPanel}>
+              <div style={s.railHead}>
+                <span style={s.railGroup}>{group === "Pro" ? "Pro tools" : "Free tools"}</span>
+                <span style={group === "Pro" ? s.railBadgePro : s.railBadge}>
+                  {group === "Pro" ? `${CREDIT_COST} credits` : "unlimited"}
+                </span>
+              </div>
+              <div style={s.railGrid}>
               {list.map((t) => (
                 <button
                   key={t.id}
@@ -1635,10 +1641,17 @@ export default function ImageEditorPage() {
                   title={`${t.label}${t.free ? " (Free)" : ` (${CREDIT_COST} credits)`}`}
                   style={{ ...s.toolBtn, ...(activeTool === t.id ? s.toolBtnActive : {}), ...(!hasImage ? { opacity: 0.35, cursor: "not-allowed" } : {}) }}
                 >
-                  <ToolIcon id={t.id ?? "default"} active={activeTool === t.id} size={38} />
+                  <ToolIcon id={t.id ?? "default"} active={activeTool === t.id} size={34} />
                   <span style={s.toolLabel}>{t.label}</span>
+                  {/* A padlock only when this tool is actually out of reach —
+                      not on every Pro tool, which would read as a paywall on
+                      tools the user has already paid for. */}
+                  {!t.free && user && (user.credits ?? 0) < CREDIT_COST && (
+                    <span style={s.toolLock} aria-hidden>🔒</span>
+                  )}
                 </button>
               ))}
+              </div>
             </div>
           ))}
         </div>}
@@ -1711,7 +1724,7 @@ export default function ImageEditorPage() {
               </div>
               {!user && (
                 <div style={s.signInHint}>
-                  <button onClick={() => setShowSignInModal(true)} style={{ color: "var(--accent)", fontWeight: 600, textDecoration: "none", background: "none", border: "none", cursor: "pointer", padding: 0 }}>Sign up free</button> to transform unlimited images — no limits on any tool
+                  <button onClick={() => setShowSignInModal(true)} style={{ color: "var(--accent)", fontWeight: 600, textDecoration: "none", background: "none", border: "none", cursor: "pointer", padding: 0 }}>Sign up free</button> to save your edits. The free tools are unlimited either way; AI tools run on credits.
                 </div>
               )}
               {error && <div style={s.errBox}>{error}</div>}
@@ -2667,7 +2680,7 @@ export default function ImageEditorPage() {
               </>
             ) : (
               <div style={{ fontSize: 13, color: "var(--success)", textAlign: "center" as const, fontWeight: 700, margin: "4px 0 8px", background: "var(--success-soft)", border: "1px solid var(--success-soft)", borderRadius: 10, padding: "10px 12px" }}>
-                ♾️ Unlimited · 100% Free — no limits on any tool
+                ♾️ Free tools unlimited — AI tools run on credits
               </div>
             )}
             <button style={{ ...s.ghostBtn, width: "100%", justifyContent: "center", marginTop: 8 }}
@@ -2845,16 +2858,25 @@ const s: Record<string, React.CSSProperties> = {
   googleBtn: { display: "flex", alignItems: "center", gap: 8, background: "var(--surface)", border: "1px solid #DDD", borderRadius: 8, padding: "6px 14px", fontSize: 13, fontWeight: 600, color: "var(--text-muted)", textDecoration: "none", whiteSpace: "nowrap" as const },
 
   layout: { display: "flex", flex: 1, minHeight: 0, overflow: "hidden" },
-  sidebar: { width: 72, flexShrink: 0, background: "var(--surface)", borderRight: "1px solid var(--border)", display: "flex", flexDirection: "column" as const, padding: "12px 6px", gap: 4, overflowY: "auto" as const },
-  railGroup: { fontSize: 9.5, fontWeight: 800, color: "var(--text-faint)", textTransform: "uppercase" as const, letterSpacing: "0.12em", textAlign: "center" as const, padding: "4px 0 2px" },
+  sidebar: { width: 208, flexShrink: 0, background: "var(--bg)", borderRight: "1px solid var(--border)", display: "flex", flexDirection: "column" as const, padding: "14px 12px", gap: 12, overflowY: "auto" as const },
+  // Each group is its own card, so Free and Pro read as two panels rather than
+  // one undifferentiated strip of icons.
+  railPanel: { background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 14, padding: "11px 10px 10px" },
+  railPanelPro: { background: "var(--surface)", border: "1px solid var(--accent-border)", borderRadius: 14, padding: "11px 10px 10px" },
+  railHead: { display: "flex", alignItems: "center", justifyContent: "space-between", gap: 6, padding: "0 2px 9px" },
+  railGroup: { fontSize: 10, fontWeight: 800, color: "var(--text-muted)", textTransform: "uppercase" as const, letterSpacing: "0.11em" },
+  railBadge: { fontSize: 9.5, fontWeight: 800, letterSpacing: "0.05em", borderRadius: 999, padding: "3px 7px", background: "var(--surface-3)", color: "var(--text-muted)" },
+  railBadgePro: { fontSize: 9.5, fontWeight: 800, letterSpacing: "0.05em", borderRadius: 999, padding: "3px 7px", background: "var(--accent-soft)", color: "var(--accent)", border: "1px solid var(--accent-border)" },
+  railGrid: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 },
   dockBar: { order: 99, marginTop: "auto", display: "flex", alignItems: "center", gap: 10, background: "var(--surface)", border: "1px solid var(--border-strong)", borderRadius: 999, padding: "8px 8px 8px 16px", boxShadow: "var(--shadow-lg)", maxWidth: 760, width: "100%", alignSelf: "center", position: "sticky" as const, bottom: 12, zIndex: 5 },
   dockBarIcon: { fontSize: 16, flexShrink: 0 },
   dockBarInput: { flex: 1, minWidth: 0, border: "none", outline: "none", background: "transparent", color: "var(--text)", fontSize: 14.5, fontFamily: "inherit" },
   dockBarMeta: { fontSize: 11.5, fontWeight: 700, color: "var(--text-faint)", whiteSpace: "nowrap" as const, flexShrink: 0 },
   dockBarGo: { width: 38, height: 38, borderRadius: "50%", border: "none", background: "var(--grad-strong)", color: "#fff", fontWeight: 900, fontSize: 17, cursor: "pointer", flexShrink: 0, fontFamily: "inherit", boxShadow: "var(--glow)" },
-  toolBtn: { width: "100%", display: "flex", flexDirection: "column" as const, alignItems: "center", gap: 4, padding: "10px 4px", borderRadius: 10, border: "none", background: "none", cursor: "pointer", color: "var(--text-muted)" },
-  toolBtnActive: { background: "var(--surface-2)", color: "var(--accent)" },
-  toolLabel: { fontSize: 9, fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: 0.5, lineHeight: 1 },
+  toolBtn: { position: "relative" as const, width: "100%", display: "flex", flexDirection: "column" as const, alignItems: "center", gap: 5, padding: "11px 4px 9px", borderRadius: 11, border: "1px solid transparent", background: "var(--surface-2)", cursor: "pointer", color: "var(--text-muted)", fontFamily: "inherit" },
+  toolBtnActive: { background: "var(--accent-soft)", borderColor: "var(--accent)", color: "var(--accent)" },
+  toolLabel: { fontSize: 9.5, fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: 0.4, lineHeight: 1.2, textAlign: "center" as const },
+  toolLock: { position: "absolute" as const, top: 5, right: 5, fontSize: 9, lineHeight: 1, opacity: 0.85 },
 
   canvasArea: { flex: 1, minWidth: 0, display: "flex", flexDirection: "column" as const, padding: "20px", gap: 16, overflowY: "auto" as const },
   canvasInner: { display: "flex", flexDirection: "column" as const, gap: 12, alignItems: "center", width: "100%" },

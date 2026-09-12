@@ -3,6 +3,7 @@ import Script from "next/script";
 import "./globals.css";
 import NavBar from "./_components/NavBar";
 import Footer from "./_components/Footer";
+import PricingModalHost from "./_components/PricingModalHost";
 import Analytics from "./_components/Analytics";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 
@@ -132,6 +133,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           <NavBar />
           {children}
           <Footer />
+          {/* Mounted once so any 402, anywhere, can raise the packs. */}
+          <PricingModalHost />
         </LanguageProvider>
       </body>
     </html>

@@ -50,7 +50,7 @@ const faqLd = {
 };
 
 const RELATED = [
-  { icon: "🔍", title: "Image Upscaler", href: "/" },
+  { icon: "🔍", title: "Image Upscaler", href: "/upscale" },
   { icon: "🗜️", title: "Compress Image", href: "/compress-image" },
   { icon: "↔️", title: "Resize Image", href: "/resize-image" },
   { icon: "📄", title: "Image to PDF", href: "/image-to-pdf" },
