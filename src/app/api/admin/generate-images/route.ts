@@ -110,7 +110,15 @@ export async function GET(req: NextRequest) {
   for (const job of batch) {
     const key = `${job.bucket}/${job.path}`;
     try {
-      const dataUrl = await generateFromText(job.prompt, { aspect_ratio: job.aspect, model });
+      // strict: report fal's own error rather than Gemini's rate-limit message,
+      // which is what the fallback substitutes and which names the wrong
+      // provider, the wrong cause and the wrong remedy.
+      const dataUrl = await generateFromText(job.prompt, {
+        aspect_ratio: job.aspect,
+        model,
+        strict: q.get("allowFallback") !== "1",
+        budgetMs: 120_000,
+      });
       const b64 = dataUrl.includes(",") ? dataUrl.split(",")[1] : dataUrl;
       const bytes = Buffer.from(b64, "base64");
       const contentType = job.path.endsWith(".jpg") ? "image/jpeg" : "image/png";

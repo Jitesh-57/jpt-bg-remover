@@ -74,7 +74,7 @@ async function runQueued(model: string, input: object, budgetMs = 55_000): Promi
 
   const submitBody = (await submit.json().catch(() => ({}))) as QueueSubmit;
   if (!submit.ok) {
-    throw new Error(falError(submit.status, submitBody));
+    throw new FalError(falError(submit.status, submitBody), submit.status, JSON.stringify(submitBody).slice(0, 400));
   }
 
   const statusUrl = submitBody.status_url;
@@ -88,17 +88,29 @@ async function runQueued(model: string, input: object, budgetMs = 55_000): Promi
 
     const st = await fetch(statusUrl, { headers: authHeaders() });
     const stBody = (await st.json().catch(() => ({}))) as { status?: string };
-    if (!st.ok) throw new Error(falError(st.status, stBody));
+    if (!st.ok) throw new FalError(falError(st.status, stBody), st.status, JSON.stringify(stBody).slice(0, 400));
 
     if (stBody.status === "COMPLETED") {
       const res = await fetch(responseUrl, { headers: authHeaders() });
       const body = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(falError(res.status, body));
+      if (!res.ok) throw new FalError(falError(res.status, body), res.status, JSON.stringify(body).slice(0, 400));
       return body;
     }
     // IN_QUEUE / IN_PROGRESS → keep waiting.
   }
-  throw new Error("The image took too long to generate. Please try again.");
+  throw new FalError("The image took too long to generate. Please try again.", 408, `timed out after ${budgetMs}ms`);
+}
+
+/** A fal failure that still carries its HTTP status, for retry decisions. */
+export class FalError extends Error {
+  constructor(message: string, readonly status: number, readonly detail: string) {
+    super(message);
+    this.name = "FalError";
+  }
+  /** Worth trying again: rate limiting, capacity, or a server-side blip. */
+  get transient(): boolean {
+    return this.status === 429 || this.status === 408 || this.status >= 500;
+  }
 }
 
 /** Turns a fal error body into something worth showing a user. */
@@ -215,7 +227,8 @@ export async function falEditImages(
 export async function falGenerateImage(
   prompt: string,
   model: FalModel = DEFAULT_MODEL,
-  aspectRatio?: string
+  aspectRatio?: string,
+  budgetMs?: number
 ): Promise<string> {
   const endpoint = ENDPOINTS[model].generate;
 
@@ -225,6 +238,6 @@ export async function falGenerateImage(
           ...(aspectRatio ? { aspect_ratio: aspectRatio } : {}) }
       : { prompt, num_images: 1, image_size: aspectRatio ? gptImageSize(aspectRatio) : "1024x1024", quality: "high" };
 
-  const result = await runQueued(endpoint, input);
+  const result = await runQueued(endpoint, input, budgetMs);
   return urlToDataUrl(firstImageUrl(result));
 }

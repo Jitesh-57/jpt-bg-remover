@@ -82,13 +82,35 @@ export function upscaleImage(src: string, scale: "2x" | "4x", model?: string): P
 
 export function generateFromText(
   prompt: string,
-  opts?: { aspect_ratio?: string; model?: string }
+  opts?: {
+    aspect_ratio?: string;
+    model?: string;
+    /**
+     * Skip the Gemini fallback and let fal's own error through.
+     *
+     * The fallback is right for a user-facing route — a visitor would rather
+     * have an image from the other provider than an error. It is wrong for the
+     * bulk generator: masking a fal 429 behind Gemini's rate-limit message
+     * reports the wrong provider, the wrong cause and the wrong remedy, and
+     * hides the one thing needed to decide whether to retry.
+     */
+    strict?: boolean;
+    /** Queue poll budget. The default suits a 60s route, not a 300s job. */
+    budgetMs?: number;
+  }
 ): Promise<string> {
   const m = resolveModel(opts?.model);
   const aspect = opts?.aspect_ratio || "16:9";
-  return viaFal(
-    () => falGenerateImage(`High-quality, photorealistic image (${aspect} aspect ratio): ${prompt}`, m, aspect),
-    () => geminiGenerateFromText(prompt, opts),
-    "text-to-image"
-  );
+  const run = () =>
+    falGenerateImage(
+      `High-quality, photorealistic image (${aspect} aspect ratio): ${prompt}`,
+      m,
+      aspect,
+      opts?.budgetMs
+    );
+  if (opts?.strict) {
+    if (!falConfigured()) throw new Error("FAL_KEY is not configured.");
+    return run();
+  }
+  return viaFal(run, () => geminiGenerateFromText(prompt, opts), "text-to-image");
 }

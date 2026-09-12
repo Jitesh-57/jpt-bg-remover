@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminSupabase } from "@/lib/auth";
 import { generateFromText } from "@/lib/ai-image";
-import { falConfigured } from "@/lib/fal";
+import { falConfigured, FalError } from "@/lib/fal";
 import { IMAGE_JOBS, type ImageJob } from "@/lib/image-jobs";
 
 export const runtime = "nodejs";
@@ -31,7 +31,15 @@ const BUDGET_MS = 230_000;
 /** Hard ceiling per invocation, so a misconfiguration cannot run away. */
 const MAX_PER_RUN = 18;
 /** Hard ceiling on chained invocations, for the same reason. */
-const MAX_HOPS = 40;
+const MAX_HOPS = 90;
+/** Attempts per image, including the first. */
+const RETRIES = 3;
+/** Base backoff between attempts; multiplied by the attempt number. */
+const BACKOFF_MS = 4_000;
+/** Pause between images, to stay under fal's rate limit rather than hit it. */
+const GAP_MS = 1_500;
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 const keyOf = (bucket: string, path: string) => `${bucket}|${path}`;
 
@@ -106,30 +114,58 @@ export async function GET(req: NextRequest) {
 
   const results: Record<string, string> = {};
   let made = 0;
+  let failed = 0;
 
   for (const job of todo) {
     if (made >= MAX_PER_RUN || Date.now() - started > BUDGET_MS) break;
     const key = `${job.bucket}/${job.path}`;
-    try {
-      const dataUrl = await generateFromText(job.prompt, { aspect_ratio: job.aspect });
-      const b64 = dataUrl.includes(",") ? dataUrl.split(",")[1] : dataUrl;
-      const bytes = Buffer.from(b64, "base64");
-      const contentType = job.path.endsWith(".jpg") ? "image/jpeg" : "image/png";
-      const { error } = await supabase.storage
-        .from(job.bucket)
-        .upload(job.path, bytes, { contentType, upsert: true });
-      if (error) throw new Error(error.message);
-      results[key] = `ok (${Math.round(bytes.length / 1024)} KB)`;
-      made += 1;
-    } catch (e) {
-      const msg = (e as Error).message;
-      results[key] = `FAILED: ${msg}`;
-      // A credentials or billing failure will fail every remaining job in the
-      // same way, so stop rather than burning the rest of the budget on it.
-      if (/credential|unauthor|out of credit|payment|quota/i.test(msg)) {
-        return NextResponse.json({ stopped: "fal rejected the request", hop, results }, { status: 502 });
+
+    // fal rate-limits, and the first production run lost 14 of 17 images to a
+    // single 429 each. One retry with a pause recovers almost all of those.
+    let lastError = "";
+    for (let attempt = 0; attempt < RETRIES; attempt++) {
+      if (Date.now() - started > BUDGET_MS) break;
+      try {
+        const dataUrl = await generateFromText(job.prompt, {
+          aspect_ratio: job.aspect,
+          // No Gemini fallback here: a masked fal error reports the wrong
+          // provider and hides whether a retry is worth attempting.
+          strict: true,
+          budgetMs: 120_000,
+        });
+        const b64 = dataUrl.includes(",") ? dataUrl.split(",")[1] : dataUrl;
+        const bytes = Buffer.from(b64, "base64");
+        const contentType = job.path.endsWith(".jpg") ? "image/jpeg" : "image/png";
+        const { error } = await supabase.storage
+          .from(job.bucket)
+          .upload(job.path, bytes, { contentType, upsert: true });
+        if (error) throw new Error(`upload failed: ${error.message}`);
+        results[key] = `ok (${Math.round(bytes.length / 1024)} KB)`;
+        made += 1;
+        lastError = "";
+        break;
+      } catch (e) {
+        const fal = e instanceof FalError ? e : null;
+        lastError = fal ? `fal ${fal.status}: ${fal.detail || fal.message}` : (e as Error).message;
+
+        // A rejected key, an empty balance or a malformed request will fail
+        // every remaining job identically. Stop rather than spend the budget
+        // discovering that 300 more times.
+        if (fal && !fal.transient) {
+          results[key] = `FAILED: ${lastError}`;
+          return NextResponse.json(
+            { stopped: "fal rejected the request and will keep rejecting it", hop, falStatus: fal.status, detail: fal.detail, results },
+            { status: 502 }
+          );
+        }
+        if (attempt < RETRIES - 1) await sleep(BACKOFF_MS * (attempt + 1));
       }
     }
+
+    if (lastError) { results[key] = `FAILED: ${lastError}`; failed += 1; }
+    // A short gap between jobs, which is what stops the rate limiting rather
+    // than just recovering from it.
+    if (Date.now() - started < BUDGET_MS) await sleep(GAP_MS);
   }
 
   const remaining = Math.max(todo.length - made, 0);
@@ -138,6 +174,7 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({
     hop,
     generatedThisRun: made,
+    failedThisRun: failed,
     remaining,
     done: remaining === 0,
     chained,
