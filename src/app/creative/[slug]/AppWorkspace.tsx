@@ -11,6 +11,7 @@ import { SHOW_PRESET_TABS, SHOW_STYLE_PICKER } from "@/lib/workspace-config";
 import { openPricing, needsCredits } from "@/lib/pricing-modal";
 import { trackEvent } from "@/lib/analytics";
 import { persistAuthContext, savePendingContext } from "@/lib/pending-image";
+import { prepareDataUrl, parseJsonResponse } from "@/lib/upload-prep";
 
 const MAX_MB = 10;
 const ACCEPT = "image/jpeg,image/jpg,image/png,image/webp";
@@ -78,7 +79,11 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
       setErr(`That image is ${(file.size / 1048576).toFixed(1)}MB — the limit is ${MAX_MB}MB.`);
       return;
     }
-    const url = await readFile(file);
+    // Downscaled here, not at send time: the page holds this data URL, shows
+    // it in the Original pane and stashes it for the sign-in round trip, and
+    // a 12MP photo as base64 is past the request body limit in every one of
+    // those places. 2048px is more than any of these models use.
+    const url = await prepareDataUrl(await readFile(file));
     setOriginal(url);
     setResult(null);
     // Keep it if they end up signing in from here.
@@ -108,32 +113,47 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
     trackEvent("app_generate", { app: app.slug, tab, preset: preset?.id, model, ratio });
 
     try {
+      /*
+        Send a URL when we can get one.
+
+        The route takes either, and a base64 body is what produced the 413:
+        even after downscaling, a JSON body carrying an image is the largest
+        thing this app sends. Uploading to storage first keeps the request
+        small; if the upload fails the data URL still goes, which is why this
+        is a try and not a requirement.
+      */
+      let payload: { dataUrl?: string; imageUrl?: string } = { dataUrl: original };
+      if (!original.startsWith("http")) {
+        try {
+          const { uploadDataUrlToSupabase } = await import("@/lib/supabase-upload");
+          payload = { imageUrl: await uploadDataUrlToSupabase(original) };
+        } catch {
+          // Keep the data URL.
+        }
+      } else {
+        payload = { imageUrl: original };
+      }
+
       const res = await fetch("/api/creative-edit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          dataUrl: original,
+          ...payload,
           prompt: buildPrompt(app, tab, preset, custom),
           slug: app.slug,
           model,
           aspectRatio: ratio,
         }),
       });
-      // Read the body defensively. A gateway timeout or a platform error page
-      // is not JSON, and calling res.json() on it threw — which landed in the
-      // catch below and told the user "Network error" for a request that had
-      // actually reached the server and been working on their image.
+      // A gateway timeout or a size rejection is not JSON, and res.json() on
+      // it threw — which landed in the catch below and reported a network
+      // fault for a request that had reached the server. See lib/upload-prep.
       type Body = { dataUrl?: string; error?: string; credits?: number; upgradeRequired?: boolean };
-      const raw = await res.text();
       let data: Body = {};
       try {
-        data = raw ? (JSON.parse(raw) as Body) : {};
-      } catch {
-        data = {
-          error: res.status === 504 || res.status === 408
-            ? "That took longer than the server allows. Try a smaller image, or the other model."
-            : `The server returned an unexpected response (${res.status}). Please try again.`,
-        };
+        data = await parseJsonResponse<Body>(res);
+      } catch (e) {
+        data = { error: (e as Error).message };
       }
 
       if (typeof data.credits === "number") setCredits(data.credits);

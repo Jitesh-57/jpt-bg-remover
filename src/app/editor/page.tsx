@@ -10,6 +10,7 @@ import {
 } from "@/lib/analytics";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
 import { CREDIT_COST, PACKS, inrPerCredit } from "@/lib/plans";
+import { parseJsonResponse } from "@/lib/upload-prep";
 import { savePendingContext, loadPendingContext, clearPendingContext } from "@/lib/pending-image";
 import { applyWatermark, renderMeme, type WatermarkPosition } from "@/lib/tools-canvas";
 import ToolIcon from "./ToolIcon";
@@ -811,7 +812,10 @@ export default function ImageEditorPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(compressedBody),
     });
-    const data = await res.json() as T & { error?: string; credits?: number };
+    // Not res.json(): a 413 or a gateway timeout answers with plain text, and
+    // parsing that threw a "not valid JSON" error at the user instead of
+    // saying what happened. See lib/upload-prep.ts.
+    const data = await parseJsonResponse<T & { error?: string; credits?: number }>(res);
 
     if (res.status === 401) { onBlocked?.(); setShowSignInModal(true); return null; }
     if (res.status === 402) {
