@@ -6,6 +6,7 @@ import { landingImg } from "@/lib/landing-images";
 import { savePendingContext } from "@/lib/pending-image";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
+import BrandLogo from "@/app/_components/BrandLogo";
 
 // AI-generated landing images served from Supabase Storage (public "landing" bucket).
 const thumb = (file: string) => landingImg(file);
@@ -688,8 +689,7 @@ export default function LandingPageClient() {
       <footer style={s.footer}>
         <div style={s.footerInner}>
           <div style={s.footerBrand}>
-            <span>✦</span>
-            <span style={{ fontWeight: 800 }}>Pixel Shine</span>
+            <BrandLogo height={30} variant="wordmark" />
           </div>
           <div style={s.footerLinks}>
             <a href="/editor" style={s.footerLink}>AI Editor</a>

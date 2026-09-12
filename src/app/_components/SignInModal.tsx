@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { persistAuthContext } from "@/lib/pending-image";
+import BrandLogo from "./BrandLogo";
 
 interface Props {
   onClose: () => void;
@@ -68,8 +69,8 @@ export default function SignInModal({ onClose, reason = "default", onBeforeAuth,
       <div onClick={(e) => e.stopPropagation()} style={{ position: "relative", width: "100%", maxWidth: 400, background: "var(--surface)", borderRadius: 20, boxShadow: "0 24px 70px rgba(0,0,0,0.35)", padding: "30px 28px 24px" }}>
         <button onClick={onClose} aria-label="Close" style={{ position: "absolute", top: 14, right: 14, width: 30, height: 30, borderRadius: "50%", border: "none", background: "var(--surface-2)", color: "var(--text-muted)", cursor: "pointer", fontSize: 17, lineHeight: 1 }}>×</button>
 
-        <div style={{ width: 46, height: 46, borderRadius: 13, background: GRAD, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16, boxShadow: "0 8px 20px rgba(255,106,26,0.40)" }}>
-          <span style={{ color: "#fff", fontSize: 22, fontWeight: 900 }}>✦</span>
+        <div style={{ display: "flex", alignItems: "center", marginBottom: 16 }}>
+          <BrandLogo height={34} variant="wordmark" />
         </div>
 
         <h2 style={{ fontSize: 21, fontWeight: 900, color: "var(--text)", letterSpacing: "-0.02em", margin: "0 0 8px" }}>{title}</h2>

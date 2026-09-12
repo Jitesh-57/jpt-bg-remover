@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { LANGUAGES } from "@/lib/i18n/translations";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
+import BrandLogo from "./BrandLogo";
 
 const AI_TOOLS = [
   { labelKey: "AI Upscale",         href: "/" },
@@ -66,8 +67,7 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <a href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none", marginBottom: 16 }}>
-              <span style={{ fontSize: 20, fontWeight: 900, color: "var(--accent)" }}>✦</span>
-              <span style={{ fontSize: 19, fontWeight: 900, letterSpacing: "-0.03em", whiteSpace: "nowrap" }}><span style={{ color: "var(--text)" }}>Pixel</span>{" "}<span className="jpt-grad-text">Shine</span></span>
+              <BrandLogo height={34} variant="wordmark" />
             </a>
             <p style={{ fontSize: 14, lineHeight: 1.7, color: "var(--text-muted)", margin: "0 0 20px", maxWidth: 260 }}>
               {t.footerTagline}

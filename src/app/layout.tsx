@@ -11,6 +11,9 @@ const BASE = "https://www.sjpt.io";
 // LCP hero image starts downloading sooner.
 const SUPA_ORIGIN = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://lwworujvfttxkrjfrgav.supabase.co";
 const LOGO_URL = `${SUPA_ORIGIN}/storage/v1/object/public/landing/logo.png`;
+// The favicon needs the square mark, not the wide lockup — a 3:1 image shrunk
+// into a 32px box is an unreadable sliver.
+const MARK_URL = `${SUPA_ORIGIN}/storage/v1/object/public/landing/logo-mark.png`;
 
 export const metadata: Metadata = {
   title: {
@@ -20,7 +23,7 @@ export const metadata: Metadata = {
   description: "Free AI image editor online. Remove backgrounds in one click, upscale photos to 4K, generate AI backgrounds, and edit images with text prompts. No watermark, no software needed.",
   keywords: ["ai image editor free", "remove background free", "image upscaler free", "ai photo editor online", "background remover free"],
   metadataBase: new URL(BASE),
-  icons: { icon: LOGO_URL, shortcut: LOGO_URL, apple: LOGO_URL },
+  icons: { icon: MARK_URL, shortcut: MARK_URL, apple: MARK_URL },
   // No canonical here — each page sets its own. A layout-level canonical
   // would incorrectly point every subpage at the homepage.
   openGraph: {

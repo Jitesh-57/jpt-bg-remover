@@ -8,6 +8,7 @@ import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
 import { persistAuthContext } from "@/lib/pending-image";
 import ToolIcon, { iconKeyForHref } from "@/app/editor/ToolIcon";
+import BrandLogo from "./BrandLogo";
 
 const PricingModal = lazy(() => import("./PricingModal"));
 
@@ -173,8 +174,7 @@ export default function NavBar() {
 
           {/* Brand — never wraps, never shrinks (the larger base font used to break this on phones) */}
           <a href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none", marginRight: 8, flexShrink: 0, whiteSpace: "nowrap" }}>
-            <span style={{ fontSize: 18, fontWeight: 900, color: "var(--accent)" }}>✦</span>
-            <span style={{ fontSize: 17, fontWeight: 900, letterSpacing: "-0.03em", whiteSpace: "nowrap" }}><span style={{ color: "var(--text)" }}>Pixel</span>{" "}<span className="jpt-grad-text">Shine</span></span>
+            <BrandLogo height={34} variant="wordmark" />
           </a>
 
           {/* AI Tools Dropdown */}

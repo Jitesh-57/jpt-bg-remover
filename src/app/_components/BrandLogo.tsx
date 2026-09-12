@@ -1,39 +1,69 @@
 "use client";
 
 import { useState } from "react";
-
-const LOGO_URL = `${process.env.NEXT_PUBLIC_SUPABASE_URL || ""}/storage/v1/object/public/landing/logo.png`;
+import { landingImg } from "@/lib/landing-images";
 
 /**
- * Pixel Shine brand logo. Renders the hosted logo (Supabase landing/logo.png) and
- * falls back to the text lockup if the image isn't available yet.
+ * Pixel Shine brand logo.
+ *
+ * Three exports live in the Supabase `landing` bucket:
+ *   logo-wordmark.png  mark + "Pixel Shine", no tagline  → nav bars, tight spots
+ *   logo.png           the full lockup incl. the tagline → footer, standalone LPs
+ *   logo-mark.png      the square mark on its own        → phones, avatars
+ *
+ * Each variant falls back to `logo.png`, and `logo.png` falls back to the text
+ * lockup, so uploading just the one file already lights up every placement and
+ * nothing ever renders a broken image.
  */
-export default function BrandLogo({ height = 30, dark = false }: { height?: number; dark?: boolean }) {
-  const [failed, setFailed] = useState(false);
+type Variant = "wordmark" | "full" | "mark";
 
-  if (failed || !process.env.NEXT_PUBLIC_SUPABASE_URL) {
+const CANDIDATES: Record<Variant, string[]> = {
+  wordmark: ["logo-wordmark.png", "logo.png"],
+  full: ["logo.png", "logo-wordmark.png"],
+  mark: ["logo-mark.png", "logo.png"],
+};
+
+export default function BrandLogo({
+  height = 30,
+  variant = "wordmark",
+  dark = false,
+}: {
+  height?: number;
+  /** Which export to prefer. See CANDIDATES. */
+  variant?: Variant;
+  /** True when the logo sits on a light surface (the mark is built for dark). */
+  dark?: boolean;
+}) {
+  // Index into CANDIDATES: bumped on each load error, so a missing variant
+  // silently steps down to the next export rather than showing nothing.
+  const [step, setStep] = useState(0);
+  const files = CANDIDATES[variant];
+  const src = step < files.length ? landingImg(files[step]) : "";
+
+  if (!src) {
+    const gap = Math.round(height * 0.22);
     return (
-      <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-        <span style={{ fontSize: Math.round(height * 0.6), fontWeight: 900, color: "var(--accent)" }}>✦</span>
-        <span style={{ fontSize: Math.round(height * 0.5), fontWeight: 900, letterSpacing: "-0.03em", whiteSpace: "nowrap" }}><span style={{ color: dark ? "#fff" : "var(--text)" }}>Pixel</span>{" "}<span className="jpt-grad-text">Shine</span></span>
+      <span style={{ display: "inline-flex", alignItems: "center", gap }}>
+        <span style={{ fontSize: Math.round(height * 0.62), fontWeight: 900, color: "var(--accent)" }}>✦</span>
+        {variant !== "mark" && (
+          <span style={{ fontSize: Math.round(height * 0.54), fontWeight: 900, letterSpacing: "-0.03em", whiteSpace: "nowrap" }}>
+            <span style={{ color: dark ? "#0B0B0E" : "var(--text)" }}>Pixel</span>{" "}
+            <span className="jpt-grad-text">Shine</span>
+          </span>
+        )}
       </span>
     );
   }
 
-  // On dark surfaces, sit the logo on a light chip so a dark/blue mark stays visible.
-  const wrap: React.CSSProperties = dark
-    ? { background: "var(--surface)", borderRadius: 10, padding: "5px 10px", display: "inline-flex", alignItems: "center", lineHeight: 0 }
-    : { display: "inline-flex", alignItems: "center", lineHeight: 0 };
-
   return (
-    <span style={wrap}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={LOGO_URL}
-        alt="Pixel Shine"
-        style={{ height, width: "auto", display: "block", objectFit: "contain" }}
-        onError={() => setFailed(true)}
-      />
-    </span>
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={src}
+      alt="Pixel Shine"
+      width={variant === "mark" ? height : undefined}
+      height={height}
+      style={{ height, width: "auto", display: "block", objectFit: "contain", flexShrink: 0 }}
+      onError={() => setStep((s) => s + 1)}
+    />
   );
 }
