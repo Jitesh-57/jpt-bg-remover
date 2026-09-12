@@ -6,6 +6,7 @@ import { createSupabaseClient } from "@/lib/supabase";
 import { trackSignUp, setAnalyticsUser, trackSignInClicked, trackSignInFailed, trackPaymentPopupTriggered } from "@/lib/analytics";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
+import { persistAuthContext } from "@/lib/pending-image";
 import ToolIcon, { iconKeyForHref } from "@/app/editor/ToolIcon";
 
 const PricingModal = lazy(() => import("./PricingModal"));
@@ -129,12 +130,10 @@ export default function NavBar() {
   const closeModal = () => { setShowModal(false); setAuthError(""); };
   // Let the current page (e.g. the editor) persist its in-memory context
   // (uploaded image + active tool) so it survives the sign-in round-trip.
-  const persistPageContext = () => {
-    try { (window as unknown as { __jptPersistContext?: () => void }).__jptPersistContext?.(); } catch {}
-  };
-  const handleGoogleSignIn = () => {
+  const handleGoogleSignIn = async () => {
     trackSignUp("google");
-    persistPageContext();
+    // Awaited: the stash may go to IndexedDB, and we navigate immediately after.
+    await persistAuthContext();
     const current = window.location.pathname + window.location.search;
     // On the homepage there's nothing to return to — send to the editor.
     const next = current === "/" || current === "" ? "/editor" : current;
@@ -158,7 +157,8 @@ export default function NavBar() {
       if (!res.ok) { trackSignInFailed("email", data.error || "unknown"); setAuthError(data.error || "Authentication failed"); return; }
       if (data.needsConfirmation) { setAuthError("✅ Check your email and click the confirmation link, then sign in."); return; }
       trackSignUp(mode === "signup" ? "email_signup" : "email_login");
-      persistPageContext();
+      // Email sign-in reloads the page too, so the upload needs the same stash.
+      await persistAuthContext();
       const current = window.location.pathname + window.location.search;
       window.location.href = current === "/" || current === "" ? "/editor" : current;
     } catch { trackSignInFailed("email", "network_error"); setAuthError("Network error. Please try again."); }

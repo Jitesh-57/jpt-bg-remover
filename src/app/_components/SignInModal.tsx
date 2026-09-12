@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { persistAuthContext } from "@/lib/pending-image";
 
 interface Props {
   onClose: () => void;
@@ -28,9 +29,11 @@ export default function SignInModal({ onClose, reason = "default", onBeforeAuth,
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const google = () => {
+  const google = async () => {
     onBeforeAuth?.();
     const next = nextPath || (typeof window !== "undefined" ? window.location.pathname + window.location.search : "/");
+    // Keep any in-progress upload across the OAuth round-trip.
+    await persistAuthContext();
     window.location.href = `/api/auth/google?next=${encodeURIComponent(next)}`;
   };
 

@@ -3,6 +3,7 @@
 import { useRef, useState, useEffect } from "react";
 import FAQAccordion from "@/app/_components/FAQAccordion";
 import { landingImg } from "@/lib/landing-images";
+import { savePendingContext } from "@/lib/pending-image";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
 
@@ -293,17 +294,22 @@ export default function LandingPageClient() {
     setShowSignIn(true);
   };
 
-  const savePending = () => {
+  const savePending = async () => {
     try {
-      if (pendingType === "upload" && uploadImage) sessionStorage.setItem("jpt_pending_image", uploadImage.url);
+      // Via the shared store: a full-resolution data URL overflows sessionStorage.
+      if (pendingType === "upload" && uploadImage) await savePendingContext({ image: uploadImage.url });
       else if (pendingType === "prompt") {
         if (prompt.trim()) sessionStorage.setItem("jpt_pending_prompt", prompt.trim());
-        if (refImage) sessionStorage.setItem("jpt_pending_image", refImage.url);
+        // Via the shared store: a full-resolution data URL overflows sessionStorage.
+        if (refImage) await savePendingContext({ image: refImage.url });
       }
     } catch {}
   };
 
-  const handleOAuthRedirect = () => { savePending(); window.location.href = "/api/auth/google?next=/editor"; };
+  const handleOAuthRedirect = async () => {
+    await savePending();
+    window.location.href = "/api/auth/google?next=/editor";
+  };
 
   const handleEmailAuth = async () => {
     if (!authEmail.trim() || !authPassword.trim()) { setAuthError("Email and password required"); return; }
@@ -317,7 +323,7 @@ export default function LandingPageClient() {
       const data = await res.json() as { ok?: boolean; error?: string; needsConfirmation?: boolean };
       if (!res.ok) { setAuthError(data.error || "Authentication failed"); return; }
       if (data.needsConfirmation) { setAuthError("✅ Check your email for a confirmation link, then sign in."); return; }
-      savePending();
+      await savePending();
       window.location.href = "/editor";
     } catch { setAuthError("Network error. Please try again."); }
     finally { setAuthLoading(false); }
@@ -669,10 +675,10 @@ export default function LandingPageClient() {
         <div style={s.ctaInner}>
           <h2 style={s.ctaH2}>{t.ctaH2}</h2>
           <p style={s.ctaSub}>{t.ctaPara}</p>
-          <a href="/api/auth/google?next=/editor" style={s.ctaBtn}>
+          <button onClick={handleOAuthRedirect} style={{ ...s.ctaBtn, border: "none", cursor: "pointer", fontFamily: "inherit" }}>
             <GoogleIcon />
             {t.getStarted}
-          </a>
+          </button>
         </div>
       </section>
 

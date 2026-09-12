@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect, lazy, Suspense } from "react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { persistAuthContext } from "@/lib/pending-image";
 import {
   trackEvent, trackToolUse, trackImageUploaded, trackImageUploadFailed,
   trackGenerateButtonClicked, trackImageGenerated, trackImageGenerationFailed,
@@ -180,12 +181,14 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient, appNam
     }
   };
 
-  const goSignIn = () => {
+  const goSignIn = async () => {
     try {
       if (original) sessionStorage.setItem(PENDING_KEY, JSON.stringify({ slug, img: original }));
     } catch { /* ignore */ }
     trackEvent("creative_signin_prompt", { tool: slug });
     const next = window.location.pathname;
+    // Keep any in-progress upload across the OAuth round-trip.
+    await persistAuthContext();
     window.location.href = `/api/auth/google?next=${encodeURIComponent(next)}`;
   };
 

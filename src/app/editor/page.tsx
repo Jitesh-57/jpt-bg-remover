@@ -10,6 +10,7 @@ import {
 } from "@/lib/analytics";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
 import { CREDIT_COST } from "@/lib/plans";
+import { savePendingContext, loadPendingContext, clearPendingContext } from "@/lib/pending-image";
 import { applyWatermark, renderMeme, type WatermarkPosition } from "@/lib/tools-canvas";
 import ToolIcon from "./ToolIcon";
 import UnlimitedModal from "@/app/_components/UnlimitedModal";
@@ -687,29 +688,10 @@ export default function ImageEditorPage() {
       if (/^\d+:\d+$/.test(ratio) || ratio === "circle") setCropRatio(ratio);
     }
 
-    // 2. Pending image/prompt from sessionStorage (from My Library "Open in Editor")
+    // 2. A prompt handed over from My Library "Open in Editor" (still sync).
     try {
       const pp = sessionStorage.getItem("jpt_pending_prompt");
-      const pi = sessionStorage.getItem("jpt_pending_image");
-      const pt = sessionStorage.getItem("jpt_pending_tool") as Tool | null;
       if (pp) { setPrompt(pp); setActiveTool("ai-edit"); sessionStorage.removeItem("jpt_pending_prompt"); }
-      if (pi) {
-        const img = new Image();
-        img.onload = () => {
-          setOriginal({ dataUrl: pi, w: img.naturalWidth, h: img.naturalHeight, name: "uploaded" });
-          setResizeW(img.naturalWidth); setResizeH(img.naturalHeight);
-          if (pt && TOOLS.some(t => t.id === pt)) setActiveTool(pt);
-          try {
-            localStorage.setItem(SESSION_KEY, JSON.stringify({ dataUrl: pi, name: "uploaded", w: img.naturalWidth, h: img.naturalHeight, ts: Date.now() }));
-          } catch {}
-          sessionStorage.removeItem("jpt_pending_image");
-          sessionStorage.removeItem("jpt_pending_tool");
-        };
-        img.src = pi;
-        // Don't delete sessionStorage items here — do it in onload above so
-        // persistContextForAuth can still read them if sign-in is clicked quickly.
-        return () => clearTimeout(authTimeout); // skip localStorage restore, auth already started
-      }
     } catch {}
 
     // 3. Auto-restore saved session (24h) from localStorage — no prompt needed
@@ -1004,14 +986,41 @@ export default function ImageEditorPage() {
     finally { setProcessing(false); setProcessingLabel(""); }
   };
 
+  // Restore an image stashed before a sign-in redirect (or handed over from My
+  // Library). Async because it may come from IndexedDB, which is the only store
+  // big enough for a full-resolution data URL.
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      const ctx = await loadPendingContext();
+      if (!alive || !ctx?.image) return;
+      const pi = ctx.image;
+      const img = new Image();
+      img.onload = () => {
+        if (!alive) return;
+        setOriginal({ dataUrl: pi, w: img.naturalWidth, h: img.naturalHeight, name: "uploaded" });
+        setResizeW(img.naturalWidth); setResizeH(img.naturalHeight);
+        const pt = ctx.tool as Tool | undefined;
+        if (pt && TOOLS.some((t) => t.id === pt)) setActiveTool(pt);
+        try {
+          localStorage.setItem(SESSION_KEY, JSON.stringify({ dataUrl: pi, name: "uploaded", w: img.naturalWidth, h: img.naturalHeight, ts: Date.now() }));
+        } catch {}
+        void clearPendingContext();
+      };
+      img.onerror = () => { void clearPendingContext(); };
+      img.src = pi;
+    })();
+    return () => { alive = false; };
+  }, []);
+
   // Persist the current image + active tool so they survive the sign-in
   // round-trip (OAuth redirect or reload) and the editor reopens with context.
-  const persistContextForAuth = () => {
-    try {
-      const cur = working || original?.dataUrl;
-      if (cur) sessionStorage.setItem("jpt_pending_image", cur);
-      if (activeTool) sessionStorage.setItem("jpt_pending_tool", activeTool);
-    } catch {}
+  const persistContextForAuth = async () => {
+    const cur = working || original?.dataUrl;
+    if (!cur && !activeTool) return;
+    // Awaited: the caller navigates straight after, and a full-resolution data
+    // URL is too big for sessionStorage, so this has to reach IndexedDB first.
+    await savePendingContext({ image: cur || undefined, tool: activeTool || undefined });
   };
 
   // Expose the persist fn so the global NavBar's sign-in can preserve editor
