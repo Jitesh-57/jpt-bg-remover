@@ -188,7 +188,9 @@ export type AspectRatio = (typeof ASPECT_RATIOS)[number];
 
 export const MODELS = [
   { id: "nano-banana", label: "Nano Banana", hint: "Fast, best at keeping your face" },
-  { id: "gpt-image",   label: "GPT Image",   hint: "Slower, better at text in the image" },
+  // BYOK on fal: needs an OpenAI key on the fal account. Without one the
+  // request is served by Nano Banana instead of failing — see withModelFallback.
+  { id: "gpt-image",   label: "GPT Image",   hint: "Better at text in the image; needs an OpenAI key on the fal account" },
 ] as const;
 
 /** Supabase bucket holding preset thumbnails, matched by name at runtime. */
