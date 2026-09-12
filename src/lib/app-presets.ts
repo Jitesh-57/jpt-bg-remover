@@ -39,6 +39,42 @@ const BASE_PRESETS: Preset[] = [
   { id: "editorial", label: "Editorial",       modifier: "Styled like a magazine editorial: deliberate posing, strong styling, generous negative space, crisp commercial finish." },
 ];
 
+/** Presets by catalogue category — the generic framing set rarely suits these. */
+const CATEGORY_PRESETS: Partial<Record<string, Preset[]>> = {
+  headshot: [
+    { id: "corporate", label: "Corporate",  modifier: "Business suit, neutral grey or office background, even professional lighting, confident neutral expression." },
+    { id: "linkedin",  label: "LinkedIn",   modifier: "Smart-casual dress, softly blurred office or outdoor background, approachable natural expression." },
+    { id: "exec",      label: "Executive",  modifier: "Dark tailored suit, dark low-key background, sculpted dramatic lighting, authoritative posture." },
+    { id: "creative",  label: "Creative",   modifier: "Relaxed styling, textured or coloured backdrop, characterful directional light." },
+    { id: "outdoor",   label: "Outdoor",    modifier: "Natural daylight, softly blurred greenery behind, warm approachable tone." },
+    { id: "plain",     label: "Plain white", modifier: "Plain white background, flat even lighting with no shadow on the face, neutral expression — ID and application safe." },
+  ],
+  product: [
+    { id: "white",     label: "White sweep", modifier: "Pure white seamless background with a soft natural contact shadow, product centred with even margins." },
+    { id: "studio",    label: "Studio",      modifier: "Dark gradient studio backdrop, controlled softbox lighting, a crisp specular highlight describing the material." },
+    { id: "lifestyle", label: "Lifestyle",   modifier: "A styled real-world surface with props kept well out of focus behind, warm natural window light." },
+    { id: "marble",    label: "Marble",      modifier: "Polished stone surface, bright diffuse light, a clean reflection beneath the product." },
+    { id: "outdoor",   label: "Natural",     modifier: "Outdoor natural light on a wood or stone surface, soft dappled shade, believable ambient bounce." },
+    { id: "gradient",  label: "Gradient",    modifier: "A bold single-colour gradient background, punchy commercial lighting, strong product separation." },
+  ],
+  background: [
+    { id: "transparent", label: "Cut out",   modifier: "Fully transparent background with a precise edge through hair and fine detail." },
+    { id: "studio",      label: "Studio",    modifier: "A clean seamless studio backdrop with a soft gradient falloff behind the subject." },
+    { id: "office",      label: "Office",    modifier: "A modern office interior, softly out of focus, lit to match the subject." },
+    { id: "outdoor",     label: "Outdoor",   modifier: "An outdoor setting in natural daylight with believable depth behind the subject." },
+    { id: "gradient",    label: "Gradient",  modifier: "A smooth two-tone colour gradient sized to the subject." },
+    { id: "bokeh",       label: "Bokeh",     modifier: "Warm out-of-focus light orbs at a believable distance behind the subject." },
+  ],
+  social: [
+    { id: "square",   label: "Square 1:1",  modifier: "Composed for a square crop with the subject centred and safe margins." },
+    { id: "portrait", label: "Portrait 4:5", modifier: "Composed for a tall 4:5 feed crop with headroom above the subject." },
+    { id: "wide",     label: "Wide 16:9",   modifier: "Composed for a wide crop with the subject offset and space reserved for text." },
+    { id: "circle",   label: "Circle-safe", modifier: "Composed so nothing important is lost to a tight circular crop." },
+    { id: "bold",     label: "High contrast", modifier: "Punchy saturated colour and strong subject separation for small-size legibility." },
+    { id: "minimal",  label: "Minimal",     modifier: "A restrained palette with generous negative space and one clear focal point." },
+  ],
+};
+
 /** Apps whose presets should differ from the generic set. */
 const PRESET_OVERRIDES: Record<string, Preset[]> = {
   "passport-photo": [
@@ -58,7 +94,8 @@ const PRESET_OVERRIDES: Record<string, Preset[]> = {
 
 export function presetsFor(app: CreativeApp, tab: PresetTab): Preset[] {
   if (tab === "custom") return [];
-  return PRESET_OVERRIDES[app.slug] ?? BASE_PRESETS;
+  // Slug override wins, then the app's catalogue category, then the generic set.
+  return PRESET_OVERRIDES[app.slug] ?? (app.cat ? CATEGORY_PRESETS[app.cat] : undefined) ?? BASE_PRESETS;
 }
 
 /** The full prompt sent to the model for a given selection. */

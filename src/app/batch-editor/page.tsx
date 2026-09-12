@@ -532,7 +532,7 @@ export default function BatchEditorPage() {
       {/* Header */}
       <div style={{ background: "var(--surface)", borderBottom: "1px solid var(--border)", padding: "14px 28px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <a href="/" style={{ color: "var(--accent)", fontWeight: 900, fontSize: 17, textDecoration: "none" }}>✦ JPT AI</a>
+          <a href="/" style={{ color: "var(--accent)", fontWeight: 900, fontSize: 17, textDecoration: "none" }}>✦ Pixel Shine</a>
           <span style={{ color: "var(--text-muted)" }}>|</span>
           <span style={{ fontWeight: 800, fontSize: 15, color: "var(--text)" }}>⚡ Batch Editor</span>
           <span style={{ background: "var(--accent-soft)", color: "var(--accent)", fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 20 }}>Up to 100 images</span>

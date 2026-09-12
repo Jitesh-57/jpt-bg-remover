@@ -100,7 +100,7 @@ export default function HomePage({ config }: { config: PageSEO }) {
           <div style={{ maxWidth: 1180, margin: "0 auto", borderRadius: 24, overflow: "hidden", border: "1px solid var(--border)", aspectRatio: "21 / 9", maxHeight: 520, boxShadow: "var(--shadow-lg)" }}>
             <SmartImage
               src={landingImg("home-hero.png")}
-              alt="A photo transformed with JPT AI — original beside the AI result"
+              alt="A photo transformed with Pixel Shine — original beside the AI result"
               fallback="linear-gradient(135deg, var(--surface-3), var(--surface-2) 45%, var(--accent-soft))"
               eager
             />

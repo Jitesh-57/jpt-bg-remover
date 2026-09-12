@@ -1,4 +1,4 @@
-# JPT AI — Your Own GPU Image Generation & Editing Server
+# Pixel Shine — Your Own GPU Image Generation & Editing Server
 
 A self-hosted image **generation** and **editing** service that runs on *your*
 RTX 3050 — no Gemini, no Google billing, no per-image cost, no quotas. It uses

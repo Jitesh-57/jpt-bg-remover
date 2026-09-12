@@ -14,8 +14,8 @@ const LOGO_URL = `${SUPA_ORIGIN}/storage/v1/object/public/landing/logo.png`;
 
 export const metadata: Metadata = {
   title: {
-    default: "JPT AI — Free AI Image Editor | Remove Background, Upscale & Edit Photos Online",
-    template: "%s | JPT AI",
+    default: "Pixel Shine — Free AI Image Editor | Remove Background, Upscale & Edit Photos Online",
+    template: "%s | Pixel Shine",
   },
   description: "Free AI image editor online. Remove backgrounds in one click, upscale photos to 4K, generate AI backgrounds, and edit images with text prompts. No watermark, no software needed.",
   keywords: ["ai image editor free", "remove background free", "image upscaler free", "ai photo editor online", "background remover free"],
@@ -25,15 +25,15 @@ export const metadata: Metadata = {
   // would incorrectly point every subpage at the homepage.
   openGraph: {
     type: "website",
-    siteName: "JPT AI",
-    title: "JPT AI — Free AI Image Editor Online",
+    siteName: "Pixel Shine",
+    title: "Pixel Shine — Free AI Image Editor Online",
     description: "Remove backgrounds, upscale photos to 4K, and edit images with AI. Free to start — no credit card required.",
     url: BASE,
     images: [{ url: LOGO_URL }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "JPT AI — Free AI Image Editor Online",
+    title: "Pixel Shine — Free AI Image Editor Online",
     description: "Remove backgrounds, upscale photos, and edit images with AI. Free to start — no credit card required.",
     images: [LOGO_URL],
   },
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "JPT AI",
+  name: "Pixel Shine",
   url: BASE,
   logo: LOGO_URL,
   sameAs: ["https://twitter.com/jptai"],
@@ -54,7 +54,7 @@ const organizationSchema = {
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  name: "JPT AI",
+  name: "Pixel Shine",
   url: BASE,
   potentialAction: {
     "@type": "SearchAction",
@@ -66,7 +66,7 @@ const websiteSchema = {
 const softwareSchema = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  name: "JPT AI — Free AI Image Editor",
+  name: "Pixel Shine — Free AI Image Editor",
   applicationCategory: "MultimediaApplication",
   operatingSystem: "Web",
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: "Free plan with 5 free trials plus unlimited free basic upscale" },
@@ -119,7 +119,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </noscript>
         {/* End Google Tag Manager (noscript) */}
         <Analytics />
-        {/* SJPT support chatbot widget — loaded lazily so it doesn't block render. */}
+        {/* Pixel Shine support chatbot widget — loaded lazily so it doesn't block render. */}
         <Script
           src="https://sjpt-chat.vercel.app/widget.js"
           data-sjpt-key="site_fb7ccac3b50d44d0b6b4a063fae347b2"

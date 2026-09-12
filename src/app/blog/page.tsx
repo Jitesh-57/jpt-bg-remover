@@ -3,9 +3,9 @@ import Link from "next/link";
 import { POSTS } from "./_data/posts";
 
 export const metadata: Metadata = {
-  title: { absolute: "Image Upscaling Blog — Tips, Tutorials & Guides | JPT AI" },
+  title: { absolute: "Image Upscaling Blog — Tips, Tutorials & Guides | Pixel Shine" },
   description:
-    "Learn how to upscale images, enhance photo quality, fix blurry pictures, and get print-ready resolution. Free upscaling tutorials and guides from JPT AI.",
+    "Learn how to upscale images, enhance photo quality, fix blurry pictures, and get print-ready resolution. Free upscaling tutorials and guides from Pixel Shine.",
   keywords: [
     "image upscaling tips",
     "upscale image tutorial",
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: "https://www.sjpt.io/blog" },
   openGraph: {
-    title: "Image Upscaling Blog | JPT AI",
+    title: "Image Upscaling Blog | Pixel Shine",
     description: "Tutorials, guides and tips for upscaling and enhancing images for free.",
     type: "website",
   },

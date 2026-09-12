@@ -21,7 +21,7 @@ export const SEO_POSTS_9: BlogPost[] = [
   P(
     "free-remove-bg-alternatives",
     "7 Best Free Remove.bg Alternatives in 2026 (No Watermark)",
-    "7 Best Free Remove.bg Alternatives (2026) | JPT AI",
+    "7 Best Free Remove.bg Alternatives (2026) | Pixel Shine",
     "The best free Remove.bg alternatives in 2026 — remove image backgrounds with no watermark, no credits and no sign-up. Full comparison inside.",
     "Remove.bg caps free downloads and charges for HD. Here are the best free alternatives that don't — no watermark, no credits.",
     "2026-08-11", "Comparison",
@@ -49,7 +49,7 @@ export const SEO_POSTS_9: BlogPost[] = [
   P(
     "best-free-tinypng-alternatives",
     "6 Best Free TinyPNG Alternatives to Compress Images (2026)",
-    "6 Best Free TinyPNG Alternatives (2026) | JPT AI",
+    "6 Best Free TinyPNG Alternatives (2026) | Pixel Shine",
     "The best free TinyPNG alternatives in 2026 — compress JPG, PNG and WebP with no file limits, no sign-up and no watermark. Full comparison.",
     "TinyPNG caps file count and size on its free tool. Here are free alternatives that compress without the limits.",
     "2026-08-11", "Comparison",
@@ -77,7 +77,7 @@ export const SEO_POSTS_9: BlogPost[] = [
   P(
     "free-canva-background-remover-alternatives",
     "Free Canva Background Remover Alternatives (No Pro Needed)",
-    "Free Canva Background Remover Alternatives | JPT AI",
+    "Free Canva Background Remover Alternatives | Pixel Shine",
     "Canva's Background Remover is a Pro feature. Here are free alternatives that remove backgrounds with no Canva Pro, no watermark and no sign-up.",
     "Canva locks its Background Remover behind Pro. These free alternatives do the same job without the subscription.",
     "2026-08-11", "Comparison",
@@ -104,7 +104,7 @@ export const SEO_POSTS_9: BlogPost[] = [
   P(
     "free-photoshop-alternatives-online",
     "5 Free Photoshop Alternatives You Can Use Online (2026)",
-    "5 Free Photoshop Alternatives Online (2026) | JPT AI",
+    "5 Free Photoshop Alternatives Online (2026) | Pixel Shine",
     "The best free Photoshop alternatives you can use online in 2026 — edit photos in your browser with no subscription, no install and no watermark.",
     "Photoshop means a subscription and a heavy install. These free online alternatives cover what most people actually need.",
     "2026-08-11", "Comparison",
@@ -131,7 +131,7 @@ export const SEO_POSTS_9: BlogPost[] = [
   P(
     "free-photoroom-alternatives",
     "Free PhotoRoom Alternatives for Product Photos (2026)",
-    "Free PhotoRoom Alternatives (2026) | JPT AI",
+    "Free PhotoRoom Alternatives (2026) | Pixel Shine",
     "The best free PhotoRoom alternatives in 2026 — remove backgrounds and prep product photos with no Pro subscription, no watermark and no sign-up.",
     "PhotoRoom's best features are Pro. These free alternatives handle product-photo backgrounds without the subscription.",
     "2026-08-11", "Comparison",
@@ -158,7 +158,7 @@ export const SEO_POSTS_9: BlogPost[] = [
   P(
     "how-to-remove-background-without-photoshop",
     "How to Remove a Background Without Photoshop (Free, 2026)",
-    "How to Remove a Background Without Photoshop — Free | JPT AI",
+    "How to Remove a Background Without Photoshop — Free | Pixel Shine",
     "Remove an image background without Photoshop — free, online, no install. AI does the cutout in seconds with no watermark or sign-up.",
     "No Photoshop, no problem. Here's how to remove a background free in your browser in about 30 seconds.",
     "2026-08-11", "Guide",

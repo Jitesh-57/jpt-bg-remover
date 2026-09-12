@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       description: post.metaDescription,
       type: "article",
       publishedTime: post.date,
-      siteName: "JPT AI",
+      siteName: "Pixel Shine",
     },
     twitter: {
       card: "summary_large_image",
@@ -84,10 +84,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     datePublished: post.date,
     dateModified: post.date,
     image: post.image ? [post.image] : undefined,
-    author: { "@type": "Organization", name: "JPT AI", url: "https://www.sjpt.io" },
+    author: { "@type": "Organization", name: "Pixel Shine", url: "https://www.sjpt.io" },
     publisher: {
       "@type": "Organization",
-      name: "JPT AI",
+      name: "Pixel Shine",
       url: "https://www.sjpt.io",
       logo: { "@type": "ImageObject", url: "https://www.sjpt.io/logo.png" },
     },
@@ -182,7 +182,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               {post.title}
             </h1>
             <div style={{ display: "flex", gap: 16, fontSize: 13, color: "var(--text-faint)", marginBottom: 36, flexWrap: "wrap" as const }}>
-              <span>By JPT AI Team</span>
+              <span>By Pixel Shine Team</span>
               <span>·</span>
               <span>{new Date(post.date).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}</span>
               <span>·</span>

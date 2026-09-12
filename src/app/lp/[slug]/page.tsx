@@ -45,7 +45,7 @@ export default function AdLandingPage({ params }: { params: { slug: string } }) 
       <div style={{ maxWidth: 720 }}>
         <a href="/" style={{ display: "inline-flex", alignItems: "center", gap: 8, textDecoration: "none", marginBottom: 32 }}>
           <span style={{ fontSize: 20, fontWeight: 900, color: "var(--accent)" }}>✦</span>
-          <span style={{ fontSize: 18, fontWeight: 900, color: "#fff" }}>JPT AI</span>
+          <span style={{ fontSize: 18, fontWeight: 900, color: "#fff" }}>Pixel Shine</span>
         </a>
 
         <div style={{ display: "inline-block", padding: "6px 14px", background: "var(--accent-soft)", border: "1px solid rgba(255,106,26,0.40)", borderRadius: 999, fontSize: 13, fontWeight: 700, color: "var(--accent)", marginBottom: 24 }}>

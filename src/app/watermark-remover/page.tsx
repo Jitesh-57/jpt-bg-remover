@@ -10,22 +10,22 @@ const URL = `${BASE}/watermark-remover`;
 const GRAD = "linear-gradient(120deg,var(--accent),var(--accent-2))";
 
 export const metadata: Metadata = {
-  title: { absolute: "Best Free Watermark Remover — Remove Watermark From Photos Online | JPT AI" },
+  title: { absolute: "Best Free Watermark Remover — Remove Watermark From Photos Online | Pixel Shine" },
   description:
     "Remove watermarks from images online with the best free AI watermark remover. Erase logos, text, timestamps and stock watermarks from photos in seconds — no software, no sign-up.",
   keywords:
     "watermark remover, remove watermark, watermark remover online, remove watermark from image, photo watermark remover, free watermark remover, remove watermark from photo, ai watermark remover, image watermark remover",
   alternates: { canonical: URL },
   openGraph: {
-    title: "Best Free Watermark Remover — Remove Watermark From Photos | JPT AI",
+    title: "Best Free Watermark Remover — Remove Watermark From Photos | Pixel Shine",
     description: "Erase logos, text and stock watermarks from images with the best free AI watermark remover — fast, online, no sign-up.",
     url: URL,
     type: "website",
-    siteName: "JPT AI",
+    siteName: "Pixel Shine",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Best Free Watermark Remover | JPT AI",
+    title: "Best Free Watermark Remover | Pixel Shine",
     description: "Remove watermarks from photos online free with AI — logos, text, timestamps and more.",
   },
 };

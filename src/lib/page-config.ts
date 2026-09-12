@@ -33,10 +33,10 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
   // door — and made /upscale a duplicate that had to be redirected away.
   home: {
     page_id: 'home',
-    title: 'JPT AI — Free AI Photo Editor, Upscaler & 40+ AI Photo Apps',
+    title: 'Pixel Shine — Free AI Photo Editor, Upscaler & 40+ AI Photo Apps',
     meta_description:
       'Free AI photo editor online. Upscale to 4K, remove backgrounds, generate AI headshots and run 40+ one-tap AI photo apps. Browser tools are free and unlimited — no sign-up, no watermark.',
-    og_title: 'JPT AI — Free AI Photo Editor & 40+ AI Photo Apps',
+    og_title: 'Pixel Shine — Free AI Photo Editor & 40+ AI Photo Apps',
     og_description:
       'Upscale, compress, crop, convert and restyle photos free in your browser. Plus 40+ AI photo apps — saree portraits, 3D figurines, Ghibli, headshots and more.',
     og_image: '',
@@ -52,10 +52,10 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
       { icon: '💎', title: 'No subscription', desc: 'AI generations run on credits you buy once from $2. They never expire and nothing auto-renews.' },
     ],
     faq: [
-      { q: 'Is JPT AI free?', a: 'The browser-based tools — compress, convert, crop, resize, rotate, blur, watermark, meme text, image to PDF, QR codes and normal upscaling — are free and unlimited with no account. The AI features run on a server and use credits, bought once from $2.' },
+      { q: 'Is Pixel Shine free?', a: 'The browser-based tools — compress, convert, crop, resize, rotate, blur, watermark, meme text, image to PDF, QR codes and normal upscaling — are free and unlimited with no account. The AI features run on a server and use credits, bought once from $2.' },
       { q: 'What are the AI photo apps?', a: 'Over 40 one-tap transformations: saree and couple portraits, 3D figurines, Ghibli and Pixar styles, retro Bollywood, professional headshots, passport photos, pet portraits, age progression and more. You upload a photo and the app applies a tuned prompt — you do not write one.' },
       { q: 'Do I need to sign up?', a: 'Not for the browser tools. You only need an account to buy credits and use the AI features, so your credits and generations are saved to you.' },
-      { q: 'Do you watermark my images?', a: 'No. Nothing exported from JPT AI carries a watermark, free or paid, at full resolution.' },
+      { q: 'Do you watermark my images?', a: 'No. Nothing exported from Pixel Shine carries a watermark, free or paid, at full resolution.' },
       { q: 'Do credits expire?', a: 'No. Credits are a one-time purchase with no expiry date and no monthly reset. There is no subscription.' },
       { q: 'Are my uploads private?', a: 'The browser tools process images entirely on your own device — nothing is uploaded. The AI features do send the image to a server to generate the result, and it is not shared with third parties.' },
     ],
@@ -63,10 +63,10 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
 
   upscale: {
     page_id: 'upscale',
-    title: 'Free AI Image Upscaler — Upscale Photos to 4K | JPT AI',
+    title: 'Free AI Image Upscaler — Upscale Photos to 4K | Pixel Shine',
     meta_description:
       'Free AI image upscaler online. Upscale photos to 4K without losing quality. Enhance resolution 2× or 4× instantly — no watermark, no software needed.',
-    og_title: 'Free AI Image Upscaler — 4K Photo Enhancement | JPT AI',
+    og_title: 'Free AI Image Upscaler — 4K Photo Enhancement | Pixel Shine',
     og_description: 'Upscale images to 4K for free. No watermark, no software. Powered by AI super-resolution.',
     og_image: '',
     keywords: 'free ai image upscaler, upscale image free, photo upscale online free, 4k image upscaler free, image resolution enhancer free',
@@ -96,15 +96,15 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
       { q: 'Does AI upscaling work on old blurry photos?', a: 'Yes — AI upscaling is especially effective on old or low-resolution photos. The model recovers detail, reduces noise, and sharpens edges that were lost in the original.' },
       { q: 'What formats are supported?', a: 'Upload JPG, PNG, or WEBP. Download your upscaled image as high-quality JPEG or PNG.' },
       { q: 'Can I use the results commercially?', a: 'Yes. All upscaled images are yours to use for personal, professional, or commercial purposes — no attribution required.' },
-      { q: 'Do I need to install anything?', a: 'No. JPT AI runs entirely online. No downloads, no plugins, no setup required.' },
+      { q: 'Do I need to install anything?', a: 'No. Pixel Shine runs entirely online. No downloads, no plugins, no setup required.' },
     ],
   },
   'remove-bg': {
     page_id: 'remove-bg',
-    title: 'Free Background Remover Online — Remove Image Background Instantly | JPT AI',
+    title: 'Free Background Remover Online — Remove Image Background Instantly | Pixel Shine',
     meta_description:
       'Remove image backgrounds free online using AI. Get a transparent PNG in one click — no watermark, no software. Perfect for product photos, portraits, and e-commerce.',
-    og_title: 'Free AI Background Remover — Transparent PNG Instantly | JPT AI',
+    og_title: 'Free AI Background Remover — Transparent PNG Instantly | Pixel Shine',
     og_description: 'Remove image backgrounds free online. Transparent PNG in one click, no watermark.',
     og_image: '',
     keywords: 'remove background free, background remover free online, transparent background free, remove image background free, png background removal free',
@@ -131,22 +131,22 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
       { icon: '📤', title: 'PNG Export', desc: 'Download as transparent PNG ready for any use' },
     ],
     faq: [
-      { q: 'Can it remove complex backgrounds?', a: 'Yes — JPT AI handles complex backgrounds including nature scenes, crowds, gradients, and busy environments with pixel-level precision.' },
+      { q: 'Can it remove complex backgrounds?', a: 'Yes — Pixel Shine handles complex backgrounds including nature scenes, crowds, gradients, and busy environments with pixel-level precision.' },
       { q: 'Does it work on hair and fine edges?', a: 'Yes. The AI model is specifically trained to handle fine hair strands, fur, and complex edges that trip up most background removers.' },
       { q: 'Will the output have a watermark?', a: 'No watermarks, ever. Your transparent PNG downloads clean and full-resolution on both free and paid plans.' },
       { q: 'What format does it output?', a: 'Always outputs as a transparent PNG, ready to place on any background or use in any design tool.' },
       { q: 'Is it free to remove backgrounds online?', a: 'Yes. Sign in with Google to get a free trial on this tool — no credit card required. You get 5 free trials total across any of our tools.' },
-      { q: 'Can I use it for e-commerce product photos?', a: 'Absolutely. JPT AI is ideal for creating clean white-background product photos for Amazon, Shopify, Flipkart, and any marketplace. Process multiple images quickly.' },
+      { q: 'Can I use it for e-commerce product photos?', a: 'Absolutely. Pixel Shine is ideal for creating clean white-background product photos for Amazon, Shopify, Flipkart, and any marketplace. Process multiple images quickly.' },
       { q: 'Can I use the result commercially?', a: 'Yes. All outputs are yours to use for personal, professional, or commercial purposes — no attribution required.' },
       { q: 'Do I need to install anything?', a: 'No. The background remover works entirely online — no downloads, no Photoshop, no plugins.' },
     ],
   },
   headshot: {
     page_id: 'headshot',
-    title: 'Free AI Headshot Generator — Professional Photos Online | JPT AI',
+    title: 'Free AI Headshot Generator — Professional Photos Online | Pixel Shine',
     meta_description:
       'Generate professional AI headshots free from any photo. Perfect for LinkedIn, resumes, and corporate profiles. No photographer needed, no watermark.',
-    og_title: 'Free AI Headshot Generator — LinkedIn Ready | JPT AI',
+    og_title: 'Free AI Headshot Generator — LinkedIn Ready | Pixel Shine',
     og_description:
       'Generate professional AI headshots free online. LinkedIn-ready, no watermark.',
     og_image: '',
@@ -172,8 +172,8 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
     faq: [
       { q: 'What photo should I upload for best results?', a: 'Upload a clear, well-lit photo of your face looking roughly straight at the camera. Good lighting matters most — indoor or natural light both work well.' },
       { q: 'How long does it take to generate a headshot?', a: 'AI headshots are typically ready in 10–30 seconds. You can generate multiple styles and choose your favourite.' },
-      { q: 'Will my AI headshot look natural?', a: 'Yes. JPT AI uses realistic AI enhancement rather than obvious filters. Results are designed to look like professional photography, not AI-generated images.' },
-      { q: 'Can I use these on LinkedIn and professional profiles?', a: 'Absolutely. AI headshots from JPT AI are LinkedIn-ready — profiles with professional headshots get 21× more views and 9× more connection requests.' },
+      { q: 'Will my AI headshot look natural?', a: 'Yes. Pixel Shine uses realistic AI enhancement rather than obvious filters. Results are designed to look like professional photography, not AI-generated images.' },
+      { q: 'Can I use these on LinkedIn and professional profiles?', a: 'Absolutely. AI headshots from Pixel Shine are LinkedIn-ready — profiles with professional headshots get 21× more views and 9× more connection requests.' },
       { q: 'Can I use the result commercially?', a: 'Yes. All generated headshots are yours to use for personal, professional, and commercial purposes.' },
       { q: 'Is there a watermark?', a: 'No watermarks on any downloaded headshot — free or paid.' },
       { q: 'Do I need to install anything?', a: 'No. Everything runs online. No app, no software, no setup.' },
@@ -181,10 +181,10 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
   },
   'ai-editor': {
     page_id: 'ai-editor',
-    title: 'Free AI Photo Editor Online — Edit Images with Text Prompts | JPT AI',
+    title: 'Free AI Photo Editor Online — Edit Images with Text Prompts | Pixel Shine',
     meta_description:
       'Free AI photo editor online. Edit photos with simple text prompts — change backgrounds, add effects, relight scenes. No Photoshop skills needed, no watermark.',
-    og_title: 'Free AI Photo Editor Online — Edit with Text Prompts | JPT AI',
+    og_title: 'Free AI Photo Editor Online — Edit with Text Prompts | Pixel Shine',
     og_description: 'Edit photos free with text prompts. No Photoshop, no watermark. Powered by AI.',
     og_image: '',
     keywords: 'free ai photo editor online, ai photo editor free, edit photos free online, ai image editor free, text prompt photo editor free',
@@ -212,20 +212,20 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
     ],
     faq: [
       { q: 'What kinds of edits can I make with text prompts?', a: 'You can change backgrounds, apply cinematic or artistic styles, adjust lighting, remove objects, replace colours, and more. Just describe the edit in plain English — no Photoshop skills needed.' },
-      { q: 'Do I need design skills to use JPT AI?', a: 'No. Just type what you want changed and the AI handles the technical work. If you can describe it, JPT AI can do it.' },
+      { q: 'Do I need design skills to use Pixel Shine?', a: 'No. Just type what you want changed and the AI handles the technical work. If you can describe it, Pixel Shine can do it.' },
       { q: 'Is there a watermark on the edited image?', a: 'No watermarks, ever. Your edited image downloads clean and ready to use on both free and paid plans.' },
-      { q: 'Is JPT AI free to use for photo editing?', a: 'Yes. Sign in with Google to get a free trial on this tool — no credit card required to start. You get 5 free trials total across any of our tools.' },
+      { q: 'Is Pixel Shine free to use for photo editing?', a: 'Yes. Sign in with Google to get a free trial on this tool — no credit card required to start. You get 5 free trials total across any of our tools.' },
       { q: 'Can I use edited images commercially?', a: 'Yes. All outputs are yours to use for personal, professional, or commercial purposes with no attribution required.' },
       { q: 'How fast are the AI edits?', a: 'Most edits complete in 5–15 seconds. Background generation and style transfers typically take 10–20 seconds.' },
-      { q: 'Do I need to install anything?', a: 'No. JPT AI runs entirely online — no downloads, no plugins, no desktop software required.' },
+      { q: 'Do I need to install anything?', a: 'No. Pixel Shine runs entirely online — no downloads, no plugins, no desktop software required.' },
     ],
   },
   'compress-image': {
     page_id: 'compress-image',
-    title: 'Free Image Compressor — Reduce Photo Size to KB | JPT AI',
+    title: 'Free Image Compressor — Reduce Photo Size to KB | Pixel Shine',
     meta_description:
       'Compress JPG, PNG & WEBP images online for free. Reduce photo file size to KB for web, email, and uploads — no quality loss, no watermark, no sign-up.',
-    og_title: 'Free Image Compressor — Reduce Photo Size Online | JPT AI',
+    og_title: 'Free Image Compressor — Reduce Photo Size Online | Pixel Shine',
     og_description: 'Compress images free online. Shrink JPG/PNG file size without losing quality. No watermark, no sign-up.',
     og_image: '',
     keywords: 'compress image free, image compressor online free, reduce image size free, compress jpg free, compress photo to kb free, reduce photo size online free',
@@ -246,15 +246,15 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
       { q: 'Is my photo uploaded to a server?', a: 'No. Compression runs entirely online, so your image never leaves your device — private and instant.' },
       { q: 'What formats can I compress?', a: 'JPG, JPEG, PNG, and WEBP. The compressed file downloads as an optimised JPG for the smallest possible size.' },
       { q: 'Is there a watermark or limit?', a: 'No watermark and no limits — compress as many images as you like, completely free.' },
-      { q: 'Do I need to install any software?', a: 'No. JPT AI runs online — no app, no plugin, no Photoshop needed.' },
+      { q: 'Do I need to install any software?', a: 'No. Pixel Shine runs online — no app, no plugin, no Photoshop needed.' },
     ],
   },
   'convert-image': {
     page_id: 'convert-image',
-    title: 'Free Image Converter — JPG to PNG, PNG to JPG | JPT AI',
+    title: 'Free Image Converter — JPG to PNG, PNG to JPG | Pixel Shine',
     meta_description:
       'Convert images between JPG, PNG, and WEBP online for free. Fast, online image format converter — no watermark, no sign-up, no upload to a server.',
-    og_title: 'Free Image Converter — JPG · PNG · WEBP Online | JPT AI',
+    og_title: 'Free Image Converter — JPG · PNG · WEBP Online | Pixel Shine',
     og_description: 'Convert JPG to PNG, PNG to JPG, or WEBP free online. No watermark, no sign-up.',
     og_image: '',
     keywords: 'convert image free, jpg to png free, png to jpg free, webp to png free, image converter online free, change image format free',
@@ -280,10 +280,10 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
   },
   'crop-image': {
     page_id: 'crop-image',
-    title: 'Free Image Cropper — Crop for Instagram & YouTube | JPT AI',
+    title: 'Free Image Cropper — Crop for Instagram & YouTube | Pixel Shine',
     meta_description:
       'Crop images online for free. Ready-made sizes for Instagram, Stories, YouTube, and profile pictures — plus a circle crop. No watermark, no sign-up.',
-    og_title: 'Free Image Cropper — Crop for Social Media Online | JPT AI',
+    og_title: 'Free Image Cropper — Crop for Social Media Online | Pixel Shine',
     og_description: 'Crop photos free online to Instagram, Story, YouTube, and circle sizes. No watermark.',
     og_image: '',
     keywords: 'crop image free, crop photo online free, image cropper free, crop picture for instagram free, circle crop free, crop image online free',
@@ -309,10 +309,10 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
   },
   'rotate-image': {
     page_id: 'rotate-image',
-    title: 'Rotate & Flip Image Free — Straighten or Mirror | JPT AI',
+    title: 'Rotate & Flip Image Free — Straighten or Mirror | Pixel Shine',
     meta_description:
       'Rotate and flip images online for free. Turn photos 90°, 180°, or mirror them horizontally and vertically — no watermark, no sign-up, instant download.',
-    og_title: 'Free Rotate & Flip Image Tool Online | JPT AI',
+    og_title: 'Free Rotate & Flip Image Tool Online | Pixel Shine',
     og_description: 'Rotate or flip photos free online. 90°, 180°, mirror horizontal/vertical. No watermark.',
     og_image: '',
     keywords: 'rotate image free, flip image free, rotate photo online free, mirror image free, turn image free, rotate picture online free',
@@ -338,10 +338,10 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
   },
   'image-to-pdf': {
     page_id: 'image-to-pdf',
-    title: 'Free Image to PDF — JPG & PNG to PDF Online | JPT AI',
+    title: 'Free Image to PDF — JPG & PNG to PDF Online | Pixel Shine',
     meta_description:
       'Convert images to PDF online for free. Turn JPG, PNG, or WEBP photos into a PDF in one click — no watermark, no sign-up, private online conversion.',
-    og_title: 'Free Image to PDF Converter Online | JPT AI',
+    og_title: 'Free Image to PDF Converter Online | Pixel Shine',
     og_description: 'Convert JPG & PNG to PDF free online. One click, no watermark, no sign-up.',
     og_image: '',
     keywords: 'image to pdf free, jpg to pdf free, png to pdf free, photo to pdf online free, convert image to pdf free, picture to pdf free',
@@ -367,10 +367,10 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
   },
   'watermark-image': {
     page_id: 'watermark-image',
-    title: 'Free Watermark Maker — Add Text to Photos | JPT AI',
+    title: 'Free Watermark Maker — Add Text to Photos | Pixel Shine',
     meta_description:
       'Add a text watermark to your images online for free. Protect photos with your name or brand — choose position, size, color, and opacity. No sign-up, no watermark on the tool.',
-    og_title: 'Free Watermark Maker — Add Text to Photos Online | JPT AI',
+    og_title: 'Free Watermark Maker — Add Text to Photos Online | Pixel Shine',
     og_description: 'Add a text watermark to images free online. Position, size, color, opacity. No sign-up.',
     og_image: '',
     keywords: 'add watermark free, watermark maker free, watermark photo online free, add text to image free, image watermark free, batch watermark free',
@@ -388,7 +388,7 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
       { q: 'How do I add a watermark to a photo for free?', a: 'Upload your image, type your watermark text, pick a position, size, color, and opacity, then apply and download. It is free, needs no sign-up, and the tool adds no watermark of its own.' },
       { q: 'Can I watermark many photos at once?', a: 'Yes. Use the Batch Editor to apply the same text watermark to up to 100 images in one go — perfect for photographers and stores.' },
       { q: 'Can I control how the watermark looks?', a: 'Yes. Choose the text, a position (corners, center, or a tiled repeat), the size, the color, and the opacity so it is as bold or subtle as you want.' },
-      { q: 'Does the tool add its own watermark?', a: 'No. Only your text appears on the image. There is no JPT AI branding on your download.' },
+      { q: 'Does the tool add its own watermark?', a: 'No. Only your text appears on the image. There is no Pixel Shine branding on your download.' },
       { q: 'Is my photo uploaded to a server?', a: 'No. Watermarking runs entirely online, so your image stays private on your device.' },
       { q: 'Is it really free?', a: 'Yes — completely free with no limits and no account required.' },
       { q: 'Do I need to install anything?', a: 'No. It works online — no app or software needed.' },
@@ -396,10 +396,10 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
   },
   'meme-generator': {
     page_id: 'meme-generator',
-    title: 'Free Meme Generator — Add Top & Bottom Text | JPT AI',
+    title: 'Free Meme Generator — Add Top & Bottom Text | Pixel Shine',
     meta_description:
       'Make memes online for free. Add classic top and bottom text to any image with the bold Impact style — no sign-up, no watermark, instant download.',
-    og_title: 'Free Meme Generator — Add Text to Images Online | JPT AI',
+    og_title: 'Free Meme Generator — Add Text to Images Online | Pixel Shine',
     og_description: 'Make memes free online. Classic top/bottom Impact text, no watermark, no sign-up.',
     og_image: '',
     keywords: 'meme generator free, make a meme free, meme maker online free, add text to image meme free, caption image free, impact text meme free',
@@ -425,10 +425,10 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
   },
   'resize-image': {
     page_id: 'resize-image',
-    title: 'Free Image Resizer — Resize Photos to Any Pixel Size | JPT AI',
+    title: 'Free Image Resizer — Resize Photos to Any Pixel Size | Pixel Shine',
     meta_description:
       'Resize images online for free. Change photo dimensions to exact pixels or a percentage — keep the aspect ratio locked. No watermark, no sign-up, private in-browser.',
-    og_title: 'Free Image Resizer — Resize Photos Online to Any Size | JPT AI',
+    og_title: 'Free Image Resizer — Resize Photos Online to Any Size | Pixel Shine',
     og_description: 'Resize any image to exact pixels free online. Lock the aspect ratio, no watermark, no sign-up.',
     og_image: '',
     keywords: 'resize image free, image resizer online free, resize photo to pixels free, change image dimensions free, resize picture online free, resize image without losing quality',

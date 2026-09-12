@@ -183,10 +183,10 @@ const PAGE_TESTIMONIALS: Record<string, { name: string; role: string; avatar: st
   'remove-bg': [
     { name: 'Priya Sharma', role: 'E-commerce Owner', avatar: 'PS', quote: 'I was spending 30 minutes per product photo in Photoshop. Now I process 40 images before morning coffee. My store looks completely professional.', stars: 5 },
     { name: 'Rahul Mehta', role: 'Freelance Photographer', avatar: 'RM', quote: 'Background removal on hair and fine details is flawless. My clients can\'t tell the difference from a manual Photoshop cutout.', stars: 5 },
-    { name: 'Sneha Patel', role: 'Social Media Manager', avatar: 'SP', quote: 'Switched from remove.bg — same quality, but JPT AI has all the other tools too. No watermarks, instant results. Perfect.', stars: 5 },
+    { name: 'Sneha Patel', role: 'Social Media Manager', avatar: 'SP', quote: 'Switched from remove.bg — same quality, but Pixel Shine has all the other tools too. No watermarks, instant results. Perfect.', stars: 5 },
   ],
   headshot: [
-    { name: 'Aditya Kumar', role: 'Software Engineer', avatar: 'AK', quote: 'Updated my LinkedIn with a JPT AI headshot. Got 3 recruiter messages in the same week. The photo looks completely professional.', stars: 5 },
+    { name: 'Aditya Kumar', role: 'Software Engineer', avatar: 'AK', quote: 'Updated my LinkedIn with a Pixel Shine headshot. Got 3 recruiter messages in the same week. The photo looks completely professional.', stars: 5 },
     { name: 'Nisha Gupta', role: 'Marketing Manager', avatar: 'NG', quote: 'Used it for our entire team\'s company page. Saved us a ₹30,000 studio session. Everyone looks consistent and polished.', stars: 5 },
     { name: 'Vivek Joshi', role: 'Freelance Consultant', avatar: 'VJ', quote: 'I needed a quick headshot for a conference speaker profile. Done in 2 minutes, looked better than my old studio photo.', stars: 5 },
   ],
@@ -234,47 +234,47 @@ const PAGE_COMPARISON: Record<string, { feature: string; jpt: boolean; alt1: boo
 
 const PAGE_SEO_CONTENT: Record<string, { heading: string; body: string }[]> = {
   upscale: [
-    { heading: 'What is AI image upscaling?', body: 'AI image upscaling uses deep learning super-resolution to intelligently add detail when enlarging images — unlike traditional upscaling which just stretches pixels and creates blurry results. JPT AI\'s upscaler analyses textures, edges, and patterns to reconstruct sharp, high-resolution output up to 4× the original size.' },
-    { heading: 'Upscale images to 4K online for free', body: 'JPT AI lets you upscale any photo to 2× or 4× resolution directly online — no software to install, no credit card required. Basic upscale is free and unlimited for everyone. Upgrade for unlimited 4K Pro AI upscaling with priority processing.' },
-    { heading: 'Best for e-commerce, photography & print', body: 'Whether you\'re a seller needing high-resolution product photos, a photographer restoring old images, or a designer upscaling AI art for print — JPT AI delivers professional results in seconds. Works on portraits, products, landscapes, screenshots, and AI-generated images.' },
+    { heading: 'What is AI image upscaling?', body: 'AI image upscaling uses deep learning super-resolution to intelligently add detail when enlarging images — unlike traditional upscaling which just stretches pixels and creates blurry results. Pixel Shine\'s upscaler analyses textures, edges, and patterns to reconstruct sharp, high-resolution output up to 4× the original size.' },
+    { heading: 'Upscale images to 4K online for free', body: 'Pixel Shine lets you upscale any photo to 2× or 4× resolution directly online — no software to install, no credit card required. Basic upscale is free and unlimited for everyone. Upgrade for unlimited 4K Pro AI upscaling with priority processing.' },
+    { heading: 'Best for e-commerce, photography & print', body: 'Whether you\'re a seller needing high-resolution product photos, a photographer restoring old images, or a designer upscaling AI art for print — Pixel Shine delivers professional results in seconds. Works on portraits, products, landscapes, screenshots, and AI-generated images.' },
   ],
   'remove-bg': [
-    { heading: 'What is AI background removal?', body: 'AI background removal uses deep learning image segmentation to detect and separate the subject from the background automatically — no manual selection, no magic wand tool, no green screen required. JPT AI handles people, products, objects, animals, and complex edges like hair with pixel-level precision.' },
-    { heading: 'Remove background online free — no watermark', body: 'JPT AI removes backgrounds instantly online. The output is a full-resolution transparent PNG — no watermarks, no quality degradation, free to use. Perfect for e-commerce product photos, LinkedIn headshots, YouTube thumbnails, and marketing materials.' },
-    { heading: 'The best remove.bg alternative for India', body: 'Unlike remove.bg, JPT AI gives you an all-in-one toolkit: remove backgrounds AND upscale, edit with AI prompts, generate new backgrounds, and resize — all in one place, with pricing in INR and no foreign card required.' },
+    { heading: 'What is AI background removal?', body: 'AI background removal uses deep learning image segmentation to detect and separate the subject from the background automatically — no manual selection, no magic wand tool, no green screen required. Pixel Shine handles people, products, objects, animals, and complex edges like hair with pixel-level precision.' },
+    { heading: 'Remove background online free — no watermark', body: 'Pixel Shine removes backgrounds instantly online. The output is a full-resolution transparent PNG — no watermarks, no quality degradation, free to use. Perfect for e-commerce product photos, LinkedIn headshots, YouTube thumbnails, and marketing materials.' },
+    { heading: 'The best remove.bg alternative for India', body: 'Unlike remove.bg, Pixel Shine gives you an all-in-one toolkit: remove backgrounds AND upscale, edit with AI prompts, generate new backgrounds, and resize — all in one place, with pricing in INR and no foreign card required.' },
   ],
   headshot: [
-    { heading: 'What is an AI headshot generator?', body: 'An AI headshot generator uses artificial intelligence to transform casual photos into professional-looking headshots. JPT AI analyses your photo and applies professional lighting, background removal, and image enhancement to produce corporate-quality portraits without a studio session.' },
-    { heading: 'Professional AI headshots for LinkedIn — free to try', body: 'LinkedIn profiles with professional headshots get 21× more profile views and 9× more connection requests. JPT AI generates LinkedIn-ready headshots in seconds — no photographer, no studio, no expensive session. Free credits included when you sign up.' },
-    { heading: 'AI headshots for companies and teams', body: 'Get consistent, professional headshots for your entire team without booking a studio. JPT AI delivers uniform lighting and style across all photos — ideal for company websites, directories, and corporate materials. Process multiple team members quickly with batch uploads.' },
+    { heading: 'What is an AI headshot generator?', body: 'An AI headshot generator uses artificial intelligence to transform casual photos into professional-looking headshots. Pixel Shine analyses your photo and applies professional lighting, background removal, and image enhancement to produce corporate-quality portraits without a studio session.' },
+    { heading: 'Professional AI headshots for LinkedIn — free to try', body: 'LinkedIn profiles with professional headshots get 21× more profile views and 9× more connection requests. Pixel Shine generates LinkedIn-ready headshots in seconds — no photographer, no studio, no expensive session. Free credits included when you sign up.' },
+    { heading: 'AI headshots for companies and teams', body: 'Get consistent, professional headshots for your entire team without booking a studio. Pixel Shine delivers uniform lighting and style across all photos — ideal for company websites, directories, and corporate materials. Process multiple team members quickly with batch uploads.' },
   ],
   'ai-editor': [
-    { heading: 'Edit photos with text prompts — no Photoshop needed', body: 'JPT AI lets you describe any edit in plain English and applies it instantly. "Change the background to a sunset", "add soft studio lighting", "make it look cinematic" — no design skills, no complex tools, no learning curve. Just type and transform.' },
-    { heading: 'The best AI photo editor online free', body: 'Unlike Photoshop or Adobe Firefly, JPT AI is free to start with no credit card required. Edit images online — remove backgrounds, generate new backgrounds, apply styles, and upscale quality all in one tool. No watermarks on free tier.' },
+    { heading: 'Edit photos with text prompts — no Photoshop needed', body: 'Pixel Shine lets you describe any edit in plain English and applies it instantly. "Change the background to a sunset", "add soft studio lighting", "make it look cinematic" — no design skills, no complex tools, no learning curve. Just type and transform.' },
+    { heading: 'The best AI photo editor online free', body: 'Unlike Photoshop or Adobe Firefly, Pixel Shine is free to start with no credit card required. Edit images online — remove backgrounds, generate new backgrounds, apply styles, and upscale quality all in one tool. No watermarks on free tier.' },
     { heading: 'AI image editing for e-commerce and marketing', body: 'Create professional product photos, ad creatives, and social media visuals in minutes. Change backgrounds, adjust lighting, apply brand styles, and generate consistent imagery at scale — without a designer or agency. Perfect for Shopify, Amazon, Instagram, and paid ads.' },
   ],
   'compress-image': [
-    { heading: 'How to compress an image for free', body: 'JPT AI shrinks your image file size online — no upload, no sign-up, no watermark. Just drag the quality slider until the estimated size is where you want it, then download. Most photos drop to a fraction of their original size with quality loss that is almost impossible to see.' },
+    { heading: 'How to compress an image for free', body: 'Pixel Shine shrinks your image file size online — no upload, no sign-up, no watermark. Just drag the quality slider until the estimated size is where you want it, then download. Most photos drop to a fraction of their original size with quality loss that is almost impossible to see.' },
     { heading: 'Reduce photo size to KB without losing quality', body: 'Need a photo under 100 KB or 200 KB for a form, website, or email? Lower the quality slider and the live size read-out shows you exactly where you land. Because compression happens on your device, it is instant and completely private.' },
-    { heading: 'Why compress images?', body: 'Smaller images load faster, improving your website speed and Google ranking, slip under email and upload limits, and save storage on your phone or drive. JPT AI makes it a one-slider, one-click job — free and unlimited.' },
+    { heading: 'Why compress images?', body: 'Smaller images load faster, improving your website speed and Google ranking, slip under email and upload limits, and save storage on your phone or drive. Pixel Shine makes it a one-slider, one-click job — free and unlimited.' },
   ],
   'convert-image': [
-    { heading: 'How to convert an image format for free', body: 'Upload your image, pick JPG, PNG, or WEBP, and click convert — JPT AI does it instantly online with no watermark and no sign-up. Your file never leaves your device, so conversion is private and fast.' },
+    { heading: 'How to convert an image format for free', body: 'Upload your image, pick JPG, PNG, or WEBP, and click convert — Pixel Shine does it instantly online with no watermark and no sign-up. Your file never leaves your device, so conversion is private and fast.' },
     { heading: 'JPG to PNG, PNG to JPG, and WEBP explained', body: 'Choose PNG when you need transparency or the sharpest edges for logos and graphics. Choose JPG for the smallest photo files that every app accepts. Choose WEBP for the best of both — small size with transparency support — ideal for modern, fast-loading websites.' },
-    { heading: 'A free image converter that respects your privacy', body: 'Unlike many online converters, JPT AI processes everything privately on your device. No queue, no upload limits, no account — convert as many images as you like between JPG, PNG, and WEBP, completely free.' },
+    { heading: 'A free image converter that respects your privacy', body: 'Unlike many online converters, Pixel Shine processes everything privately on your device. No queue, no upload limits, no account — convert as many images as you like between JPG, PNG, and WEBP, completely free.' },
   ],
   'crop-image': [
-    { heading: 'How to crop an image online for free', body: 'Upload your photo, choose a ready-made ratio — Square, Portrait, Story, Wide, Classic, or Circle — and JPT AI crops it instantly online. No watermark, no sign-up, and your image stays private on your device.' },
+    { heading: 'How to crop an image online for free', body: 'Upload your photo, choose a ready-made ratio — Square, Portrait, Story, Wide, Classic, or Circle — and Pixel Shine crops it instantly online. No watermark, no sign-up, and your image stays private on your device.' },
     { heading: 'Crop photos for Instagram, YouTube, and profiles', body: 'Get the exact aspect ratios each platform wants: 1:1 for Instagram feed, 4:5 for tall posts, 9:16 for Stories and Reels, and 16:9 for YouTube thumbnails. The circle crop turns any photo into a clean round profile picture with a transparent background.' },
     { heading: 'Free, unlimited, and private', body: 'Cropping only trims edges, so your image keeps full quality. Because everything runs online, there are no upload limits and no waiting — crop as many photos as you like for free.' },
   ],
   'rotate-image': [
-    { heading: 'How to rotate an image online for free', body: 'Upload your photo and tap Rotate Left, Rotate Right, or 180° — JPT AI turns it instantly online. Rotation is lossless, so your image keeps its full quality. No watermark, no sign-up.' },
+    { heading: 'How to rotate an image online for free', body: 'Upload your photo and tap Rotate Left, Rotate Right, or 180° — Pixel Shine turns it instantly online. Rotation is lossless, so your image keeps its full quality. No watermark, no sign-up.' },
     { heading: 'Flip and mirror images in one click', body: 'Use Flip Horizontal to mirror a photo left-to-right (great for selfies) or Flip Vertical to mirror top-to-bottom. Perfect for fixing orientation, correcting mirrored text, or creating reflection effects.' },
     { heading: 'Fix sideways and upside-down photos', body: 'Phone photos and scanned documents often upload rotated. A quick 90° or 180° turn straightens them right away. Everything runs on your device, so it is fast, private, and free with no limits.' },
   ],
   'image-to-pdf': [
-    { heading: 'How to convert an image to PDF for free', body: 'Upload a JPG, PNG, or WEBP and click Download as PDF — JPT AI builds the PDF online with no watermark and no sign-up. The page is sized to your image so it looks clean and professional.' },
+    { heading: 'How to convert an image to PDF for free', body: 'Upload a JPG, PNG, or WEBP and click Download as PDF — Pixel Shine builds the PDF online with no watermark and no sign-up. The page is sized to your image so it looks clean and professional.' },
     { heading: 'JPG to PDF and PNG to PDF, instantly', body: 'Turning photos into PDFs makes them easy to share, print, and archive. Forms, IDs, receipts, and notes all become tidy, universal PDF files that any device and office can open.' },
     { heading: 'Private, unlimited, and watermark-free', body: 'Because the PDF is generated privately on your device, your image never leaves your device. Convert as many images to PDF as you like — completely free, with no watermark and no account required.' },
   ],
@@ -285,7 +285,7 @@ const PAGE_SEO_CONTENT: Record<string, { heading: string; body: string }[]> = {
   ],
   'meme-generator': [
     { heading: 'How to make a meme for free', body: 'Upload any image, type your top and bottom captions, and click Create Meme. Your text renders in the classic bold Impact style with a black outline, then downloads instantly — free, no sign-up, no watermark.' },
-    { heading: 'The classic meme look, done right', body: 'JPT AI uses uppercase Impact with a heavy outline — the format everyone recognises. Long captions wrap automatically to fit the image, so your meme always looks clean on any picture.' },
+    { heading: 'The classic meme look, done right', body: 'Pixel Shine uses uppercase Impact with a heavy outline — the format everyone recognises. Long captions wrap automatically to fit the image, so your meme always looks clean on any picture.' },
     { heading: 'Private and unlimited', body: 'Memes are generated entirely online, so your images never leave your device. Make as many as you like for Instagram, WhatsApp, X, Reddit, and group chats — completely free with no limits.' },
   ],
 }
@@ -430,14 +430,14 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
         '@type': 'ImageObject',
         contentUrl: heroLdImage.startsWith('http') ? heroLdImage : `${SITE_BASE}${heroLdImage}`,
         caption: `${config.h1} — example result`,
-        creator: { '@type': 'Organization', name: 'JPT AI' },
+        creator: { '@type': 'Organization', name: 'Pixel Shine' },
       }
     : null
 
   // A single self-contained sentence defining the tool, used in the About
   // block. Built from real page data rather than boilerplate so it stays
   // accurate for every tool this component renders.
-  const aeoDefinition = `${config.h1} is a free online tool from JPT AI. ${config.subtitle}`
+  const aeoDefinition = `${config.h1} is a free online tool from Pixel Shine. ${config.subtitle}`
   const fileRef = useRef<HTMLInputElement>(null)
   const [isDragging, setIsDragging] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
@@ -549,7 +549,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
         <div style={{ position: 'relative', maxWidth: 780, margin: '0 auto' }}>
           {/* Badge */}
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'var(--accent-soft)', color: 'var(--accent)', fontWeight: 700, fontSize: 12, borderRadius: 20, padding: '6px 14px', marginBottom: 28, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-            ☁️ JPT AI
+            ☁️ Pixel Shine
           </div>
 
           <h1 style={{ fontSize: 'clamp(2.2rem, 5vw, 3.6rem)', fontWeight: 900, color: 'var(--text)', lineHeight: 1.1, letterSpacing: '-0.03em', margin: '0 0 20px' }}>
@@ -898,7 +898,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
             <div style={{ maxWidth: 860, margin: '0 auto' }}>
               <div style={{ textAlign: 'center', marginBottom: 48 }}>
                 <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>Comparison</div>
-                <h2 style={{ fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', fontWeight: 900, color: 'var(--text)', margin: '0 0 12px', letterSpacing: '-0.02em' }}>JPT AI vs the alternatives</h2>
+                <h2 style={{ fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', fontWeight: 900, color: 'var(--text)', margin: '0 0 12px', letterSpacing: '-0.02em' }}>Pixel Shine vs the alternatives</h2>
                 <p style={{ fontSize: 16, color: 'var(--text-muted)', margin: 0 }}>One tool. Everything included. No hidden paywalls.</p>
               </div>
               <div style={{ overflowX: 'auto' }}>
@@ -906,7 +906,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
                   <thead>
                     <tr style={{ borderBottom: '2px solid var(--border)' }}>
                       <th style={{ textAlign: 'left', padding: '12px 16px', color: 'var(--text-muted)', fontWeight: 700, fontSize: 13 }}>Feature</th>
-                      <th style={{ textAlign: 'center', padding: '12px 16px', color: 'var(--accent)', fontWeight: 900, fontSize: 13, background: 'var(--accent-soft)' }}>✦ JPT AI</th>
+                      <th style={{ textAlign: 'center', padding: '12px 16px', color: 'var(--accent)', fontWeight: 900, fontSize: 13, background: 'var(--accent-soft)' }}>✦ Pixel Shine</th>
                       <th style={{ textAlign: 'center', padding: '12px 16px', color: 'var(--text-muted)', fontWeight: 700, fontSize: 13 }}>{alt1}</th>
                       <th style={{ textAlign: 'center', padding: '12px 16px', color: 'var(--text-muted)', fontWeight: 700, fontSize: 13 }}>{alt2}</th>
                     </tr>
@@ -993,7 +993,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
             Nothing is uploaded for the browser-based tools — the work happens on your own device, which is
             why they are free and have no per-image limit. The AI features do run on a server, and those are
             the ones that use credits: {CREDIT_COST} credits a generation, bought once, never expiring. There
-            is no subscription on JPT AI and no watermark on anything you export.
+            is no subscription on Pixel Shine and no watermark on anything you export.
           </p>
         </div>
       </section>

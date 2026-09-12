@@ -16,7 +16,7 @@ export const SEO_POSTS_5: BlogPost[] = [
   P(
     "how-to-upscale-an-image-for-printing",
     "How to Upscale an Image for Printing (Sharp Prints, Free)",
-    "How to Upscale an Image for Printing — Free | JPT AI",
+    "How to Upscale an Image for Printing — Free | Pixel Shine",
     "Learn how to upscale an image for printing free with AI — hit the resolution a sharp print needs without the blur. No software, no sign-up.",
     "Prints need far more resolution than screens. Here's how to upscale an image so it prints sharp instead of pixelated — free.",
     "2026-07-22", "Guide",
@@ -30,7 +30,7 @@ export const SEO_POSTS_5: BlogPost[] = [
       { heading: "Tips for the best print", body: `Start from the **highest-quality original** you have. Match the upscale factor to the print size using the DPI math above. And where possible, export a lossless or high-quality file for the printer, so compression doesn't undo the detail you just added.` },
       { heading: "Frequently asked questions", body: FAQ([
         ["What resolution do I need to print?", "About 300 DPI — divide each pixel dimension by 300 to get the sharp print size in inches."],
-        ["How do I upscale a photo for printing free?", "Upload it to JPT AI's upscaler, pick 2× or 4× to reach ~300 DPI at your size, and download."],
+        ["How do I upscale a photo for printing free?", "Upload it to Pixel Shine's upscaler, pick 2× or 4× to reach ~300 DPI at your size, and download."],
         ["Why does my photo print blurry?", "The image likely has too few pixels for the print size. Upscaling adds resolution so it prints sharp."],
         ["Does AI upscaling help prints?", "Yes — it reconstructs realistic detail as it enlarges, so the print looks sharp rather than stretched."],
       ]) },
@@ -40,7 +40,7 @@ export const SEO_POSTS_5: BlogPost[] = [
   P(
     "how-to-upscale-anime-and-cartoon-images",
     "How to Upscale Anime & Cartoon Images (Crisp Lines, Free)",
-    "How to Upscale Anime & Cartoon Images — Free | JPT AI",
+    "How to Upscale Anime & Cartoon Images — Free | Pixel Shine",
     "Learn how to upscale anime, cartoon and illustration images free with AI — keep lines crisp and colours flat, no blur. No software, no sign-up.",
     "Anime and cartoon art upscales differently from photos. Here's how to enlarge it while keeping clean lines and flat colour — free.",
     "2026-07-22", "Guide",
@@ -53,7 +53,7 @@ export const SEO_POSTS_5: BlogPost[] = [
       { heading: "Great uses", body: `**Wallpapers** — enlarge a small piece of art to fill a 4K screen. **Avatars & profile pics** — upscale then crop square. **Prints & posters** — reach the resolution a sharp print needs. **Restoring old scans** — clean up a low-res image you've kept for years.` },
       { heading: "Getting the cleanest result", body: `Start from the **cleanest source** — heavy JPEG artefacts around lines are the hardest thing to fix. For very small images, a 4× pass reaches usable sizes; for mid-size art, 2× is plenty. Upscale before adding text or effects so those stay crisp too.` },
       { heading: "Frequently asked questions", body: FAQ([
-        ["How do I upscale an anime image for free?", "Upload it to JPT AI's upscaler, choose 2× or 4×, and download. Free, no sign-up."],
+        ["How do I upscale an anime image for free?", "Upload it to Pixel Shine's upscaler, choose 2× or 4×, and download. Free, no sign-up."],
         ["Will it keep the lines sharp?", "Yes — AI upscaling reconstructs clean edges and flat colour, which is what line art needs."],
         ["Can I make an anime wallpaper?", "Yes — upscale a small piece of art to 4K-class dimensions, then crop to your screen ratio."],
         ["What's the best source image?", "The cleanest one — JPEG artefacts around lines are the hardest to remove, so start high-quality."],
@@ -64,7 +64,7 @@ export const SEO_POSTS_5: BlogPost[] = [
   P(
     "how-to-fix-a-blurry-photo",
     "How to Fix a Blurry Photo (Make It Sharp Again, Free)",
-    "How to Fix a Blurry Photo — Free Online | JPT AI",
+    "How to Fix a Blurry Photo — Free Online | Pixel Shine",
     "Learn how to fix a blurry photo free with AI — sharpen soft, low-resolution images and recover detail. No software, no sign-up.",
     "A blurry photo isn't always a lost cause. Here's what causes blur and how AI can sharpen and rebuild detail — free.",
     "2026-07-23", "Guide",
@@ -77,7 +77,7 @@ export const SEO_POSTS_5: BlogPost[] = [
       { heading: "Why AI beats a sharpen slider", body: `A traditional "sharpen" filter just boosts edge contrast — push it and you get halos and noise, not real detail. **AI super-resolution predicts the detail that should be there**, so it genuinely reconstructs edges and texture rather than faking crispness. That's why a low-res, soft photo comes out looking naturally sharper.` },
       { heading: "Set realistic expectations", body: `AI enhances what's there; it can't invent a face that was never captured. A slightly soft or small photo can look dramatically better; a heavily smeared one will improve but not become pristine. Always start from the **best copy** you have — not a screenshot or a re-compressed version.` },
       { heading: "Frequently asked questions", body: FAQ([
-        ["How do I fix a blurry photo for free?", "Upload it to JPT AI, upscale 2× or 4×, and download. The AI rebuilds detail to sharpen it. Free, no sign-up."],
+        ["How do I fix a blurry photo for free?", "Upload it to Pixel Shine, upscale 2× or 4×, and download. The AI rebuilds detail to sharpen it. Free, no sign-up."],
         ["Can you unblur any photo?", "Soft-focus and low-res photos improve a lot; severe motion blur recovers only partly. Start from the best copy."],
         ["Is AI better than a sharpen filter?", "Yes — a filter just boosts edge contrast, while AI reconstructs real detail for a naturally sharper result."],
         ["Does it work on phone photos?", "Yes — it runs in the browser on any device, no app needed."],
@@ -88,7 +88,7 @@ export const SEO_POSTS_5: BlogPost[] = [
   P(
     "how-to-upscale-a-product-photo",
     "How to Upscale a Product Photo (Crisp Listings, Free)",
-    "How to Upscale a Product Photo — Free Online | JPT AI",
+    "How to Upscale a Product Photo — Free Online | Pixel Shine",
     "Learn how to upscale a product photo free with AI — meet marketplace resolution rules and get crisp zoom. No software, no sign-up.",
     "Marketplaces reward high-res product photos with zoom and better ranking. Here's how to upscale yours to spec — free.",
     "2026-07-23", "Guide",
@@ -102,7 +102,7 @@ export const SEO_POSTS_5: BlogPost[] = [
       { heading: "Tips for clean listings", body: `Shoot or start from the **cleanest source**, upscale to the target, then compress lightly so pages still load fast. Keep the product centred with room to crop to square. Consistent sizing across a listing looks more professional and ranks better.` },
       { heading: "Frequently asked questions", body: FAQ([
         ["What resolution do product photos need?", "Often 1000–2048px on the long side depending on the platform — enough to enable zoom. Upscale to exceed the minimum."],
-        ["How do I upscale a product photo free?", "Upload to JPT AI's upscaler, pick 2× or 4×, and download. Free, no sign-up."],
+        ["How do I upscale a product photo free?", "Upload to Pixel Shine's upscaler, pick 2× or 4×, and download. Free, no sign-up."],
         ["Will upscaling enable zoom on Amazon?", "It helps you clear the pixel threshold that unlocks zoom (around 1000px+ on the long side)."],
         ["Should I compress after upscaling?", "Yes — a light compression keeps the page fast without visible quality loss."],
       ]) },
@@ -112,7 +112,7 @@ export const SEO_POSTS_5: BlogPost[] = [
   P(
     "how-to-increase-image-resolution",
     "How to Increase Image Resolution (Without Losing Quality)",
-    "How to Increase Image Resolution — Free Online | JPT AI",
+    "How to Increase Image Resolution — Free Online | Pixel Shine",
     "Learn how to increase image resolution free with AI — add real pixels and detail instead of stretching. No software, no sign-up.",
     "Increasing resolution isn't just stretching — done right, it adds real detail. Here's how to do it free with AI.",
     "2026-07-24", "Guide",
@@ -125,7 +125,7 @@ export const SEO_POSTS_5: BlogPost[] = [
       { heading: "How much can you increase it?", body: `2× quadruples the pixel count; 4× multiplies it 16×. A clean 1000×1000 image becomes 4000×4000 at 4× — enough for large prints or 4K screens. The cleaner the source, the more convincingly the AI can add detail, so always start from the best original.` },
       { heading: "When you don't need to", body: `If the image is already large enough for its use (e.g. a 3000px photo for a web page), increasing resolution just makes a heavier file with no benefit. Match the resolution to the job: screens need far less than prints. Upscale when the image is genuinely too small.` },
       { heading: "Frequently asked questions", body: FAQ([
-        ["How do I increase image resolution for free?", "Upload it to JPT AI's upscaler, choose 2× or 4×, and download the higher-resolution version. Free, no sign-up."],
+        ["How do I increase image resolution for free?", "Upload it to Pixel Shine's upscaler, choose 2× or 4×, and download the higher-resolution version. Free, no sign-up."],
         ["Does increasing resolution add detail?", "With AI, yes — it reconstructs realistic detail rather than just stretching pixels."],
         ["How much can I increase it?", "Up to 4× per pass (16× the pixels). A clean 1000px image reaches 4000px at 4×."],
         ["Is bigger always better?", "No — match resolution to the use. Screens need far fewer pixels than prints."],
@@ -138,7 +138,7 @@ export const SEO_POSTS_5: BlogPost[] = [
   P(
     "how-to-compress-an-image-to-50kb",
     "How to Compress an Image to 50KB (Exactly, Free)",
-    "How to Compress an Image to 50KB — Free | JPT AI",
+    "How to Compress an Image to 50KB — Free | Pixel Shine",
     "Learn how to compress an image to 50KB online free — hit a tight upload limit while keeping it usable. No watermark, no sign-up.",
     "Some forms cap uploads at 50KB. Here's how to compress an image to exactly 50KB without it turning to mush.",
     "2026-07-24", "Guide",
@@ -150,7 +150,7 @@ export const SEO_POSTS_5: BlogPost[] = [
       { heading: "How to compress to 50KB (free)", body: `**Step 1 — Open the compressor** at sjpt.io.\n\n**Step 2 — Upload your image.**\n\n**Step 3 — Set the target to 50KB.** The tool lowers quality (and dimensions if needed) to land under it.\n\n**Step 4 — Download** the result — 50KB or less.\n\nNo watermark, no sign-up.` },
       { heading: "Keep it usable at 50KB", body: `**Resize first** to the display size — smaller dimensions mean each pixel keeps more quality. **Crop out background** so the budget goes to the subject. **Start from the original**, not an already-compressed copy. For ID photos, crop to the required shape before compressing.` },
       { heading: "Frequently asked questions", body: FAQ([
-        ["How do I compress an image to exactly 50KB?", "Upload it to JPT AI's compressor, set the target to 50KB, and download. It adjusts quality and dimensions to fit."],
+        ["How do I compress an image to exactly 50KB?", "Upload it to Pixel Shine's compressor, set the target to 50KB, and download. It adjusts quality and dimensions to fit."],
         ["Why does my 50KB image look bad?", "50KB is tight — resize and crop first so the pixels that remain keep more quality."],
         ["Is it free?", "Yes — free, no watermark, no sign-up, done in your browser."],
         ["What's it used for?", "Strict upload forms — government portals, exams and older systems that cap files near 50KB."],
@@ -161,7 +161,7 @@ export const SEO_POSTS_5: BlogPost[] = [
   P(
     "how-to-compress-an-image-to-500kb",
     "How to Compress an Image to 500KB (Free, No Quality Loss)",
-    "How to Compress an Image to 500KB — Free | JPT AI",
+    "How to Compress an Image to 500KB — Free | Pixel Shine",
     "Learn how to compress an image to 500KB online free — meet upload limits while keeping photos sharp. No watermark, no sign-up.",
     "500KB is a generous limit that keeps photos sharp. Here's how to compress an image to under 500KB, free.",
     "2026-07-25", "Guide",
@@ -174,7 +174,7 @@ export const SEO_POSTS_5: BlogPost[] = [
       { heading: "Keeping quality high", body: `Start from the **original** for the cleanest result. For web use, a sensible width (1600–2000px) plus a 500KB target gives crisp, fast images. Use JPEG for photos; it's built for this trade-off.` },
       { heading: "Common uses", body: `**Website & blog images** — sharp and fast. **Job and visa applications** — many cap around 500KB–1MB. **Email** — light enough to send several. **Portals & forms** — comfortably within most limits.` },
       { heading: "Frequently asked questions", body: FAQ([
-        ["How do I compress an image to 500KB?", "Upload it to JPT AI's compressor, set the target to 500KB, and download. Free, no watermark."],
+        ["How do I compress an image to 500KB?", "Upload it to Pixel Shine's compressor, set the target to 500KB, and download. Free, no watermark."],
         ["Will 500KB reduce quality?", "Barely — at 500KB the compression is essentially invisible for most photos."],
         ["Should I resize too?", "Only if the image is very large; 500KB is roomy enough that quality usually stays high without resizing."],
         ["Is it free?", "Yes — free, no watermark, no sign-up."],
@@ -185,7 +185,7 @@ export const SEO_POSTS_5: BlogPost[] = [
   P(
     "how-to-compress-a-png-file",
     "How to Compress a PNG File (Smaller Without Losing Quality)",
-    "How to Compress a PNG File — Free Online | JPT AI",
+    "How to Compress a PNG File — Free Online | Pixel Shine",
     "Learn how to compress a PNG file free — shrink heavy PNGs while keeping transparency and sharp edges. No watermark, no sign-up.",
     "PNGs are lossless and often huge. Here's how to compress a PNG while keeping transparency and crisp edges — free.",
     "2026-07-25", "Guide",
@@ -198,7 +198,7 @@ export const SEO_POSTS_5: BlogPost[] = [
       { heading: "PNG, or switch formats?", body: `**Keep PNG** for transparency, logos and sharp text. **Switch to JPG** if it's a photo with no transparency — you'll save far more. **Switch to WebP** for the web — same quality and transparency at a fraction of the size. Match the format to the content for the smallest file.` },
       { heading: "Keep it crisp", body: `Compress the **original**, not a re-saved copy. If you don't need transparency, converting a photographic PNG to JPG or WebP usually beats compressing the PNG. For icons and line art, PNG compression keeps everything sharp.` },
       { heading: "Frequently asked questions", body: FAQ([
-        ["How do I compress a PNG file for free?", "Upload it to JPT AI's compressor and download the smaller PNG. Transparency and edges are kept. Free, no watermark."],
+        ["How do I compress a PNG file for free?", "Upload it to Pixel Shine's compressor and download the smaller PNG. Transparency and edges are kept. Free, no watermark."],
         ["Why is my PNG so large?", "PNG is lossless, so photos don't compress well. For photographic PNGs, convert to JPG or WebP instead."],
         ["Does compressing keep transparency?", "Yes — PNG compression preserves the alpha channel."],
         ["PNG or WebP for the web?", "WebP is usually much smaller at the same quality and keeps transparency — great for websites."],
@@ -209,7 +209,7 @@ export const SEO_POSTS_5: BlogPost[] = [
   P(
     "how-to-compress-images-for-a-website",
     "How to Compress Images for a Website (Faster Pages, Free)",
-    "How to Compress Images for a Website — Free | JPT AI",
+    "How to Compress Images for a Website — Free | Pixel Shine",
     "Learn how to compress images for a website free — cut load time and boost Core Web Vitals without visible quality loss. No sign-up.",
     "Images are the #1 cause of slow websites. Here's how to compress them for fast pages and better SEO — free.",
     "2026-07-26", "Guide",
@@ -222,7 +222,7 @@ export const SEO_POSTS_5: BlogPost[] = [
       { heading: "How to compress for web (free)", body: `**Step 1 — Open the compressor** at sjpt.io.\n\n**Step 2 — Upload your image.**\n\n**Step 3 — Resize to the display width, then compress** (or set a target size).\n\n**Step 4 — Download** and upload to your site.\n\nNo watermark, no sign-up.` },
       { heading: "Format tips", body: `Use **WebP** where you can — smaller than JPG/PNG at the same quality, with transparency. **JPG** for photos, **PNG** only for graphics needing transparency. Lazy-load below-the-fold images so they don't block the first paint.` },
       { heading: "Frequently asked questions", body: FAQ([
-        ["How do I compress images for my website?", "Resize to the display width, then compress (or set a target size) with JPT AI, and upload the result. Free."],
+        ["How do I compress images for my website?", "Resize to the display width, then compress (or set a target size) with Pixel Shine, and upload the result. Free."],
         ["Does compressing images help SEO?", "Yes — smaller images speed up pages, which improves Core Web Vitals and rankings."],
         ["What format is best for the web?", "WebP where supported (smallest), JPG for photos, PNG only for graphics needing transparency."],
         ["Will quality drop?", "Not visibly — resize plus sensible compression cuts size dramatically with no noticeable change."],
@@ -233,7 +233,7 @@ export const SEO_POSTS_5: BlogPost[] = [
   P(
     "how-to-reduce-jpeg-file-size",
     "How to Reduce JPEG File Size (Free, Keep It Sharp)",
-    "How to Reduce JPEG File Size — Free Online | JPT AI",
+    "How to Reduce JPEG File Size — Free Online | Pixel Shine",
     "Learn how to reduce JPEG file size free — shrink big .jpg photos for uploads, email and the web without visible quality loss. No sign-up.",
     "Big JPEGs slow uploads and hit limits. Here's how to reduce JPEG file size while keeping photos sharp — free.",
     "2026-07-26", "Guide",
@@ -246,7 +246,7 @@ export const SEO_POSTS_5: BlogPost[] = [
       { heading: "Keep it sharp", body: `Compress from the **original**, not a copy that's already been squeezed — each pass loses more. Match dimensions to the use (web, email, print). At sensible quality, the size drops a lot with no visible change.` },
       { heading: "Common targets", body: `**Web images:** ~1600px wide, a few hundred KB. **Email:** under ~1MB so several send easily. **Upload forms:** often 200KB–1MB. **Marketplaces:** meet the platform cap. Set the target that fits and download.` },
       { heading: "Frequently asked questions", body: FAQ([
-        ["How do I reduce JPEG file size for free?", "Upload it to JPT AI's compressor, compress or set a target size, and download. Free, no watermark."],
+        ["How do I reduce JPEG file size for free?", "Upload it to Pixel Shine's compressor, compress or set a target size, and download. Free, no watermark."],
         ["Will reducing size blur the photo?", "Not at sensible quality — the change is invisible for most photos at normal viewing sizes."],
         ["Should I resize too?", "If the JPEG is much larger than needed, resizing first gives the biggest saving."],
         ["Is it free?", "Yes — free, no watermark, no sign-up."],
@@ -259,7 +259,7 @@ export const SEO_POSTS_5: BlogPost[] = [
   P(
     "jpeg-vs-jpg-difference",
     "JPEG vs JPG: What's the Difference? (Nothing — Here's Why)",
-    "JPEG vs JPG — What's the Difference? | JPT AI",
+    "JPEG vs JPG — What's the Difference? | Pixel Shine",
     "JPEG vs JPG explained: they're the same format. Here's why there are two names, and how to convert between them free if you need to.",
     "JPEG and JPG are the exact same format. Here's the history behind the two names — and how to convert if a system is fussy.",
     "2026-07-27", "Guide",
@@ -275,7 +275,7 @@ export const SEO_POSTS_5: BlogPost[] = [
         ["Is there a difference between JPEG and JPG?", "No — they're the same format. The two names are a leftover from old three-letter file extensions."],
         ["Is JPG or JPEG better quality?", "Neither — they're identical. Quality depends on the compression level, not the extension."],
         ["Can I just rename .jpeg to .jpg?", "Yes — the file is unchanged. Both open in the same apps."],
-        ["How do I convert to JPG free?", "Upload to JPT AI's converter, choose JPG, and download. Free, no watermark."],
+        ["How do I convert to JPG free?", "Upload to Pixel Shine's converter, choose JPG, and download. Free, no watermark."],
       ]) },
       { heading: "Key takeaways", body: `JPEG and JPG are the same format — two names from old extension limits, zero quality difference. Convert other formats to JPG free at sjpt.io. Convert Image Free →` },
     ],
@@ -283,7 +283,7 @@ export const SEO_POSTS_5: BlogPost[] = [
   P(
     "how-to-convert-webp-to-jpg",
     "How to Convert WebP to JPG (Free, Opens Everywhere)",
-    "How to Convert WebP to JPG — Free Online | JPT AI",
+    "How to Convert WebP to JPG — Free Online | Pixel Shine",
     "Learn how to convert WebP to JPG online free so images open and share anywhere. No software, no watermark, no sign-up.",
     "Saved a WebP that won't open or upload? Convert WebP to JPG for a universally-supported photo — free.",
     "2026-07-27", "Guide",
@@ -296,7 +296,7 @@ export const SEO_POSTS_5: BlogPost[] = [
       { heading: "JPG or PNG?", body: `Convert to **JPG** for a small, shareable photo. If the WebP has **transparency** you want to keep, choose **PNG** instead — JPG fills transparency with a solid background. For most saved-from-web photos, JPG is the right, lighter choice.` },
       { heading: "Where WebP comes from", body: `Many sites serve WebP for speed, so right-click-saving an image often yields a .webp. Screenshots and exports can be WebP too. When something rejects the file, WebP is the usual culprit — convert to JPG and it behaves normally.` },
       { heading: "Frequently asked questions", body: FAQ([
-        ["How do I convert WebP to JPG for free?", "Upload the WebP to JPT AI's converter, choose JPG, and download. Free, no watermark, no sign-up."],
+        ["How do I convert WebP to JPG for free?", "Upload the WebP to Pixel Shine's converter, choose JPG, and download. Free, no watermark, no sign-up."],
         ["Why won't my WebP open?", "Some apps and forms don't support WebP. Converting to JPG makes it open everywhere."],
         ["Does it lose quality?", "JPG is lossy, but at normal quality the difference is invisible."],
         ["JPG or PNG for a WebP?", "JPG for a small photo; PNG if you need to keep transparency."],
@@ -307,7 +307,7 @@ export const SEO_POSTS_5: BlogPost[] = [
   P(
     "how-to-convert-bmp-to-jpg",
     "How to Convert BMP to JPG (Shrink Huge Bitmaps, Free)",
-    "How to Convert BMP to JPG — Free Online | JPT AI",
+    "How to Convert BMP to JPG — Free Online | Pixel Shine",
     "Learn how to convert BMP to JPG online free — turn huge uncompressed bitmaps into small, shareable photos. No software, no sign-up.",
     "BMP files are uncompressed and massive. Convert BMP to JPG to shrink them dramatically with no visible loss — free.",
     "2026-07-28", "Guide",
@@ -320,7 +320,7 @@ export const SEO_POSTS_5: BlogPost[] = [
       { heading: "Will it lose quality?", body: `JPG is lossy, but at normal quality the difference from the BMP is invisible — while the file shrinks enormously. For photographic content that's an easy trade. If you need lossless (rare), PNG is a smaller-than-BMP lossless option.` },
       { heading: "When to keep BMP", body: `Almost never for sharing. Keep BMP only if a specific legacy program requires it. For everything else — email, web, storage — JPG (or PNG for graphics) is smaller and universally supported.` },
       { heading: "Frequently asked questions", body: FAQ([
-        ["How do I convert BMP to JPG for free?", "Upload the BMP to JPT AI's converter, choose JPG, and download. Free, no watermark, no sign-up."],
+        ["How do I convert BMP to JPG for free?", "Upload the BMP to Pixel Shine's converter, choose JPG, and download. Free, no watermark, no sign-up."],
         ["Why is my BMP so big?", "BMP is uncompressed — every pixel is stored raw. JPG compresses photos to a fraction of the size."],
         ["Does converting lose quality?", "Not visibly at normal quality, while the file shrinks dramatically."],
         ["Need lossless instead?", "Convert to PNG — it's lossless and far smaller than BMP."],
@@ -331,7 +331,7 @@ export const SEO_POSTS_5: BlogPost[] = [
   P(
     "how-to-convert-gif-to-png",
     "How to Convert GIF to PNG (Sharper Stills, Free)",
-    "How to Convert GIF to PNG — Free Online | JPT AI",
+    "How to Convert GIF to PNG — Free Online | Pixel Shine",
     "Learn how to convert GIF to PNG online free — get a sharper still with more colours and clean transparency. No software, no sign-up.",
     "GIF is limited to 256 colours. Convert a GIF frame to PNG for a sharper still with full colour and clean transparency — free.",
     "2026-07-28", "Guide",
@@ -344,7 +344,7 @@ export const SEO_POSTS_5: BlogPost[] = [
       { heading: "About animation", body: `PNG is a **still** format — converting an animated GIF gives you a single frame (usually the first). If you need motion, keep the GIF or use a video format. For a logo, sticker or icon that happens to be a GIF, PNG is the better still.` },
       { heading: "When to use PNG", body: `Choose PNG when you want **sharp edges, full colour and transparency** for a static image — logos, icons, graphics. If it's a photograph with no transparency, JPG will be smaller. Match the format to the content.` },
       { heading: "Frequently asked questions", body: FAQ([
-        ["How do I convert GIF to PNG for free?", "Upload the GIF to JPT AI's converter, choose PNG, and download. Free, no watermark, no sign-up."],
+        ["How do I convert GIF to PNG for free?", "Upload the GIF to Pixel Shine's converter, choose PNG, and download. Free, no watermark, no sign-up."],
         ["Does PNG keep transparency?", "Yes — and it's smoother than GIF's hard-edged transparency."],
         ["What happens to the animation?", "PNG is a still, so you get a single frame. Keep the GIF for motion."],
         ["PNG or JPG for a GIF still?", "PNG for graphics with transparency or sharp edges; JPG for a photographic still with no transparency."],
@@ -355,7 +355,7 @@ export const SEO_POSTS_5: BlogPost[] = [
   P(
     "how-to-convert-tiff-to-jpg",
     "How to Convert TIFF to JPG (Small & Shareable, Free)",
-    "How to Convert TIFF to JPG — Free Online | JPT AI",
+    "How to Convert TIFF to JPG — Free Online | Pixel Shine",
     "Learn how to convert TIFF to JPG online free — turn large print/scan files into small, shareable photos. No software, no sign-up.",
     "TIFF files are large and not web-friendly. Convert TIFF to JPG for a small photo that opens and uploads anywhere — free.",
     "2026-07-29", "Guide",
@@ -368,7 +368,7 @@ export const SEO_POSTS_5: BlogPost[] = [
       { heading: "Keep the TIFF for archiving", body: `Convert to JPG for **sharing and web use**, but keep the original TIFF if you need a lossless master for printing or archiving. Best of both: archive the TIFF, distribute JPGs. That way you never lose the high-quality source.` },
       { heading: "Quality note", body: `JPG is lossy, but at high quality the converted image looks virtually identical for sharing and screen use. For a document scan you'll reprint at high fidelity, keep the TIFF; for emailing or posting, the JPG is the practical choice.` },
       { heading: "Frequently asked questions", body: FAQ([
-        ["How do I convert TIFF to JPG for free?", "Upload the TIFF to JPT AI's converter, choose JPG, and download. Free, no watermark, no sign-up."],
+        ["How do I convert TIFF to JPG for free?", "Upload the TIFF to Pixel Shine's converter, choose JPG, and download. Free, no watermark, no sign-up."],
         ["Why can't I open a TIFF online?", "Most browsers and social platforms don't display TIFF. Converting to JPG makes it viewable everywhere."],
         ["Will I lose quality?", "At high quality the JPG looks virtually identical for sharing; keep the TIFF as a lossless master if needed."],
         ["Is TIF the same as TIFF?", "Yes — .tif and .tiff are the same format, just different extensions."],

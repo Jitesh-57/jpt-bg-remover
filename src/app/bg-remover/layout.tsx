@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 // tool, so it is kept accessible but excluded from search indexing to avoid a
 // "duplicate without user-selected canonical" flag in Search Console.
 export const metadata: Metadata = {
-  title: "Background Remover — JPT AI",
+  title: "Background Remover — Pixel Shine",
   robots: { index: false, follow: false },
 };
 

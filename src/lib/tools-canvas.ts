@@ -106,7 +106,7 @@ export async function applyWatermark(dataUrl: string, opts: WatermarkOptions): P
   const ctx = canvas.getContext("2d")!;
   ctx.drawImage(img, 0, 0);
 
-  const text = opts.text || "© JPT AI";
+  const text = opts.text || "© Pixel Shine";
   const fontPx = Math.max(10, Math.round((Math.min(W, H) * opts.fontScale) / 100));
   ctx.font = `700 ${fontPx}px system-ui, -apple-system, sans-serif`;
   ctx.textBaseline = "middle";

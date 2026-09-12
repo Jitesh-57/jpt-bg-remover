@@ -1,7 +1,8 @@
 import { PageFAQ } from "@/lib/page-config";
+import { CATALOG_ROWS, expand } from "@/lib/app-catalog";
 
 /**
- * creative-apps.ts — JPT AI Creative Apps.
+ * creative-apps.ts — Pixel Shine Creative Apps.
  *
  * Each Creative App is an indexed SEO landing page with an ON-PAGE generator:
  * the user uploads a reference photo and gets the result right there (no redirect
@@ -24,16 +25,19 @@ export interface CreativeApp {
   prompt: string;             // preset transformation prompt sent to the AI
   badge: string;              // short result label shown on the "after" image
   faq: PageFAQ[];
+  /** Catalogue category, when the app came from app-catalog. Drives presets. */
+  cat?: string;
 }
 
 export const CREATIVE_BASE = "/creative";
 
-export const CREATIVE_APPS: CreativeApp[] = [
+/** The original hand-written apps. These win on a slug clash with the catalogue. */
+export const CURATED_APPS: CreativeApp[] = [
   {
     slug: "saree-photoshoot",
     emoji: "🥻",
     gradient: ["var(--accent-2)", "#DB2777"],
-    title: "AI Saree Photoshoot — Vintage Saree Portrait Maker Free | JPT AI",
+    title: "AI Saree Photoshoot — Vintage Saree Portrait Maker Free | Pixel Shine",
     metaDescription:
       "Create a viral vintage saree photoshoot online. Upload a selfie and AI turns it into a cinematic saree portrait on the page — no app, no watermark.",
     keywords: "ai saree photoshoot, vintage saree portrait ai, saree photo editor free, cinematic saree photoshoot online, ai saree photo maker",
@@ -52,7 +56,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "3d-figurine",
     emoji: "🧍",
     gradient: ["#2563EB", "#06B6D4"],
-    title: "3D Figurine Maker — Turn Your Photo Into a Figure Free | JPT AI",
+    title: "3D Figurine Maker — Turn Your Photo Into a Figure Free | Pixel Shine",
     metaDescription:
       "Turn your photo into a collectible 3D figurine online. Upload a photo and AI renders an action-figure version on the page — no app, no watermark.",
     keywords: "3d figurine maker, photo to 3d figure ai, ai action figure maker free, collectible figurine ai, turn photo into figurine",
@@ -71,7 +75,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "retro-bollywood",
     emoji: "🎬",
     gradient: ["#B45309", "var(--danger)"],
-    title: "Retro 90s Bollywood Photo Editor — Free Cinematic AI | JPT AI",
+    title: "Retro 90s Bollywood Photo Editor — Free Cinematic AI | Pixel Shine",
     metaDescription:
       "Make viral retro 90s Bollywood photos online. Upload a selfie and AI applies a cinematic vintage film look on the page — no app, no watermark.",
     keywords: "retro bollywood photo editor, 90s bollywood photo ai, vintage cinematic ai photo, retro film photo maker free, bollywood ai photoshoot",
@@ -90,7 +94,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "polaroid-photo",
     emoji: "📸",
     gradient: ["#0F766E", "#65A30D"],
-    title: "AI Polaroid Photo Maker — Retro Polaroid Selfie Free | JPT AI",
+    title: "AI Polaroid Photo Maker — Retro Polaroid Selfie Free | Pixel Shine",
     metaDescription:
       "Create the viral retro polaroid selfie online. Upload your photo and AI makes a realistic polaroid-style shot on the page — no app, no watermark.",
     keywords: "ai polaroid photo maker, retro polaroid selfie ai, polaroid photo editor free, vintage polaroid maker online, ai polaroid generator",
@@ -109,7 +113,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "restore-old-photos",
     emoji: "🖼️",
     gradient: ["var(--text-muted)", "var(--accent-2)"],
-    title: "Restore Old Photos Free — AI Photo Restoration Online | JPT AI",
+    title: "Restore Old Photos Free — AI Photo Restoration Online | Pixel Shine",
     metaDescription:
       "Restore old, blurry and damaged photos online. Upload a vintage photo and AI recovers detail and clarity on the page — no app, no watermark.",
     keywords: "restore old photos free, ai photo restoration online, fix old blurry photo ai, repair damaged photo free, enhance vintage photo ai",
@@ -128,7 +132,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "couple-photoshoot",
     emoji: "💑",
     gradient: ["#BE123C", "#9333EA"],
-    title: "AI Couple Photoshoot — Cinematic Pre-Wedding Portraits Free | JPT AI",
+    title: "AI Couple Photoshoot — Cinematic Pre-Wedding Portraits Free | Pixel Shine",
     metaDescription:
       "Create cinematic couple photoshoots online. Upload your photo and AI makes a pre-wedding or traditional couple portrait on the page — no watermark.",
     keywords: "ai couple photoshoot, pre wedding photo ai free, cinematic couple portrait ai, couple photo editor online, ai couple photo maker",
@@ -147,7 +151,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "professional-headshot",
     emoji: "💼",
     gradient: ["#1E40AF", "#0891B2"],
-    title: "AI Professional Headshot — LinkedIn Photo From Selfie Free | JPT AI",
+    title: "AI Professional Headshot — LinkedIn Photo From Selfie Free | Pixel Shine",
     metaDescription:
       "Create a professional headshot online. Upload a selfie and AI makes a LinkedIn-ready corporate portrait on the page — no photographer, no watermark.",
     keywords: "ai professional headshot, linkedin headshot from selfie free, corporate portrait ai, ai headshot generator online, professional photo ai free",
@@ -166,7 +170,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "festival-photoshoot",
     emoji: "🪔",
     gradient: ["#C2410C", "#CA8A04"],
-    title: "AI Festival Photoshoot — Diwali & Navratri Portraits Free | JPT AI",
+    title: "AI Festival Photoshoot — Diwali & Navratri Portraits Free | Pixel Shine",
     metaDescription:
       "Create festive Diwali, Navratri and Eid photoshoots online. Upload a selfie and AI makes a festive portrait on the page — no app, no watermark.",
     keywords: "ai festival photoshoot, diwali photo editor ai, navratri photoshoot ai free, festive portrait ai, ai diwali photo maker",
@@ -185,7 +189,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "pet-portrait",
     emoji: "🐶",
     gradient: ["#7C2D12", "var(--success)"],
-    title: "AI Pet Portrait Maker — Royal & Cartoon Pet Photos Free | JPT AI",
+    title: "AI Pet Portrait Maker — Royal & Cartoon Pet Photos Free | Pixel Shine",
     metaDescription:
       "Create fun AI pet portraits online. Upload your pet's photo and AI makes royal or cartoon art on the page — no app needed, no watermark.",
     keywords: "ai pet portrait maker, royal pet portrait ai, cartoon pet photo ai free, pet photo editor online, ai dog cat portrait",
@@ -204,7 +208,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "anime-style",
     emoji: "🎨",
     gradient: ["var(--accent-2)", "#2563EB"],
-    title: "AI Anime Style Photo Converter — Turn Photo Into Anime Free | JPT AI",
+    title: "AI Anime Style Photo Converter — Turn Photo Into Anime Free | Pixel Shine",
     metaDescription:
       "Turn photos into anime-style art online. Upload a selfie and AI converts it to hand-drawn animation style on the page — no app, no watermark.",
     keywords: "ai anime style converter, photo to anime ai free, anime photo maker online, turn photo into anime, ai cartoon avatar maker",
@@ -223,7 +227,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "passport-photo",
     emoji: "🛂",
     gradient: ["#0369A1", "var(--text-muted)"],
-    title: "AI Passport Photo Maker — White Background ID Photo Free | JPT AI",
+    title: "AI Passport Photo Maker — White Background ID Photo Free | Pixel Shine",
     metaDescription:
       "Make a passport / ID photo online. Upload a selfie and AI creates a clean white-background headshot on the page — no app, no watermark.",
     keywords: "ai passport photo maker, white background id photo ai, passport size photo online free, visa photo maker ai, id photo generator free",
@@ -242,7 +246,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "background-changer",
     emoji: "🌅",
     gradient: ["#0891B2", "var(--accent-2)"],
-    title: "AI Background Changer — Replace Photo Background Free | JPT AI",
+    title: "AI Background Changer — Replace Photo Background Free | Pixel Shine",
     metaDescription:
       "Change any photo background online. Upload your photo and AI replaces the background with a studio scene on the page — no app, no watermark.",
     keywords: "ai background changer, replace photo background ai free, change background online, ai background generator, photo background editor free",
@@ -261,7 +265,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "linkedin-banner",
     emoji: "🖥️",
     gradient: ["#0A66C2", "#1E3A8A"],
-    title: "AI LinkedIn Banner Maker — Free Profile Cover Photo Generator | JPT AI",
+    title: "AI LinkedIn Banner Maker — Free Profile Cover Photo Generator | Pixel Shine",
     metaDescription:
       "Create a professional LinkedIn banner online. Upload a photo and AI generates a branded cover image on the page — no design skills, no watermark.",
     keywords: "ai linkedin banner maker, linkedin cover photo generator free, linkedin background image ai, professional linkedin banner free, linkedin header image maker",
@@ -280,7 +284,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "christmas-photo",
     emoji: "🎄",
     gradient: ["#B91C1C", "#15803D"],
-    title: "AI Christmas Photo Maker — Festive Holiday Portrait Free | JPT AI",
+    title: "AI Christmas Photo Maker — Festive Holiday Portrait Free | Pixel Shine",
     metaDescription:
       "Create a festive AI Christmas photo online. Upload a selfie and AI adds a cozy holiday scene on the page — no app, no watermark.",
     keywords: "ai christmas photo maker, holiday photo editor ai free, christmas portrait generator, festive ai photo free, ai xmas photo maker",
@@ -299,7 +303,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "baby-photoshoot",
     emoji: "👶",
     gradient: ["#F472B6", "#FDE68A"],
-    title: "AI Baby Photoshoot — Cute Studio Baby Portrait Free | JPT AI",
+    title: "AI Baby Photoshoot — Cute Studio Baby Portrait Free | Pixel Shine",
     metaDescription:
       "Create an adorable AI baby photoshoot online. Upload a photo and AI makes a soft studio-style baby portrait on the page — no watermark.",
     keywords: "ai baby photoshoot, baby photo editor ai free, newborn portrait ai, cute baby photo maker online, ai baby portrait generator",
@@ -318,7 +322,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "graduation-photo",
     emoji: "🎓",
     gradient: ["#1E3A8A", "#CA8A04"],
-    title: "AI Graduation Photo Maker — Cap & Gown Portrait Free | JPT AI",
+    title: "AI Graduation Photo Maker — Cap & Gown Portrait Free | Pixel Shine",
     metaDescription:
       "Create a proud AI graduation photo online. Upload a selfie and AI adds a cap, gown and ceremony backdrop on the page — no watermark.",
     keywords: "ai graduation photo maker, cap and gown photo ai free, graduation portrait generator, ai convocation photo, graduation photoshoot online free",
@@ -337,7 +341,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "gym-transformation",
     emoji: "💪",
     gradient: ["var(--text)", "var(--danger)"],
-    title: "AI Gym Transformation Photo — Fitness Physique Preview Free | JPT AI",
+    title: "AI Gym Transformation Photo — Fitness Physique Preview Free | Pixel Shine",
     metaDescription:
       "Visualize a fitter you with an AI gym transformation photo online. Upload a photo and AI shows a toned physique preview — no watermark.",
     keywords: "ai gym transformation photo, fitness physique ai free, ai muscle photo generator, body transformation photo ai, ai fitness motivation photo",
@@ -356,7 +360,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "ghibli-style",
     emoji: "🌿",
     gradient: ["var(--success)", "var(--accent-2)"],
-    title: "AI Ghibli Style Photo Converter — Studio Anime Art Free | JPT AI",
+    title: "AI Ghibli Style Photo Converter — Studio Anime Art Free | Pixel Shine",
     metaDescription:
       "Turn photos into dreamy Ghibli-style anime art online. Upload a selfie and AI redraws it in a hand-painted studio anime style — no watermark.",
     keywords: "ai ghibli style converter, studio ghibli ai filter free, ghibli anime art generator, photo to ghibli style ai, ghibli style photo maker free",
@@ -375,7 +379,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "y2k-aesthetic",
     emoji: "💿",
     gradient: ["#DB2777", "var(--accent-2)"],
-    title: "AI Y2K Aesthetic Photo Filter — 2000s Style Photo Free | JPT AI",
+    title: "AI Y2K Aesthetic Photo Filter — 2000s Style Photo Free | Pixel Shine",
     metaDescription:
       "Create a viral Y2K aesthetic photo online. Upload a selfie and AI applies a 2000s-style filter on the page — no app, no watermark.",
     keywords: "ai y2k aesthetic filter, y2k photo editor free, 2000s style photo ai, y2k aesthetic generator online, ai y2k filter free",
@@ -394,7 +398,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "wedding-invite-photo",
     emoji: "💌",
     gradient: ["#BE185D", "var(--warn)"],
-    title: "AI Wedding Invitation Photo Maker — Elegant Couple Portrait Free | JPT AI",
+    title: "AI Wedding Invitation Photo Maker — Elegant Couple Portrait Free | Pixel Shine",
     metaDescription:
       "Create an elegant AI wedding invitation photo online. Upload a couple photo and AI makes a refined portrait for your invite — no watermark.",
     keywords: "ai wedding invitation photo maker, wedding invite photo ai free, elegant couple portrait generator, save the date photo ai, wedding card photo maker free",
@@ -413,7 +417,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "corporate-avatar",
     emoji: "🧑‍💼",
     gradient: ["#0E7490", "#1E40AF"],
-    title: "AI Corporate Avatar Maker — Professional Profile Icon Free | JPT AI",
+    title: "AI Corporate Avatar Maker — Professional Profile Icon Free | Pixel Shine",
     metaDescription:
       "Create a clean AI corporate avatar online. Upload a selfie and AI makes a polished profile icon for Slack, Teams and email — no watermark.",
     keywords: "ai corporate avatar maker, professional profile picture ai free, ai work avatar generator, slack avatar maker ai, teams profile photo ai free",
@@ -432,7 +436,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "old-money-aesthetic",
     emoji: "🎻",
     gradient: ["#3F3F46", "#A16207"],
-    title: "AI Old Money Aesthetic Photo — Quiet Luxury Portrait Free | JPT AI",
+    title: "AI Old Money Aesthetic Photo — Quiet Luxury Portrait Free | Pixel Shine",
     metaDescription:
       "Create a viral old money aesthetic photo online. Upload a photo and AI gives it a quiet-luxury, timeless styled look — no watermark.",
     keywords: "ai old money aesthetic photo, quiet luxury photo filter ai, old money style generator, ai old money outfit photo, timeless luxury photo ai free",
@@ -451,7 +455,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "barbie-box",
     emoji: "📦",
     gradient: ["#EC4899", "#A21CAF"],
-    title: "AI Barbie Box Photo Maker — Doll Box Trend Free | JPT AI",
+    title: "AI Barbie Box Photo Maker — Doll Box Trend Free | Pixel Shine",
     metaDescription:
       "Create the viral AI Barbie box photo online. Upload a selfie and AI puts you in a collectible doll box on the page — no app, no watermark.",
     keywords: "ai barbie box photo, barbie box trend ai free, doll box photo maker, ai barbie doll photo generator, barbie box meme maker free",
@@ -470,7 +474,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "ai-baby-predictor",
     emoji: "👶",
     gradient: ["#FB7185", "#60A5FA"],
-    title: "AI Baby Predictor — Future Baby Face Generator Free | JPT AI",
+    title: "AI Baby Predictor — Future Baby Face Generator Free | Pixel Shine",
     metaDescription:
       "See what your future baby might look like with the AI baby predictor online. Upload both parents' photos and AI blends a baby face — no watermark.",
     keywords: "ai baby predictor, future baby face generator free, ai baby maker couple, what will my baby look like ai, ai baby face generator free",
@@ -489,7 +493,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "lego-minifigure",
     emoji: "🧱",
     gradient: ["var(--danger)", "#FACC15"],
-    title: "AI Lego Minifigure Maker — Turn Photo Into a Lego Figure Free | JPT AI",
+    title: "AI Lego Minifigure Maker — Turn Photo Into a Lego Figure Free | Pixel Shine",
     metaDescription:
       "Turn your photo into a Lego minifigure online. Upload a photo and AI renders a collectible brick-style figure on the page — no watermark.",
     keywords: "ai lego minifigure maker, photo to lego figure ai, lego avatar generator free, ai lego character maker, turn photo into lego free",
@@ -508,7 +512,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "pixar-avatar",
     emoji: "🎬",
     gradient: ["var(--accent-2)", "#F97316"],
-    title: "AI Pixar Avatar Maker — 3D Cartoon Character Photo Free | JPT AI",
+    title: "AI Pixar Avatar Maker — 3D Cartoon Character Photo Free | Pixel Shine",
     metaDescription:
       "Turn your photo into a Pixar-style 3D cartoon avatar online. Upload a selfie and AI renders an animated-movie character on the page — no watermark.",
     keywords: "ai pixar avatar maker, photo to pixar character ai, 3d cartoon avatar generator free, ai animated movie character maker, pixar style photo free",
@@ -527,7 +531,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "renaissance-portrait",
     emoji: "🖼️",
     gradient: ["#7C2D12", "#CA8A04"],
-    title: "AI Renaissance Portrait Maker — Classic Oil Painting Photo Free | JPT AI",
+    title: "AI Renaissance Portrait Maker — Classic Oil Painting Photo Free | Pixel Shine",
     metaDescription:
       "Turn your photo into a classic Renaissance oil painting online. Upload a selfie and AI creates a museum-style portrait on the page — no watermark.",
     keywords: "ai renaissance portrait maker, photo to oil painting ai free, classic painting photo generator, ai museum portrait maker, renaissance art photo free",
@@ -546,7 +550,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "age-progression",
     emoji: "⏳",
     gradient: ["var(--text-muted)", "var(--text-faint)"],
-    title: "AI Age Progression Photo — See Yourself Older or Younger Free | JPT AI",
+    title: "AI Age Progression Photo — See Yourself Older or Younger Free | Pixel Shine",
     metaDescription:
       "See yourself older or younger with the AI age progression photo tool online. Upload a selfie and AI ages the photo on the page — no watermark.",
     keywords: "ai age progression photo, ai aging filter free, see myself older ai, ai younger photo generator, age my photo ai free",
@@ -565,7 +569,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "superhero-costume",
     emoji: "🦸",
     gradient: ["#1D4ED8", "var(--danger)"],
-    title: "AI Superhero Costume Maker — Turn Photo Into a Hero Free | JPT AI",
+    title: "AI Superhero Costume Maker — Turn Photo Into a Hero Free | Pixel Shine",
     metaDescription:
       "Turn your photo into a superhero online. Upload a selfie and AI dresses you in a heroic costume on the page — no app, no watermark.",
     keywords: "ai superhero costume maker, photo to superhero ai free, superhero avatar generator, ai hero costume photo, turn photo into superhero free",
@@ -584,7 +588,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "tarot-card-portrait",
     emoji: "🔮",
     gradient: ["#581C87", "#B45309"],
-    title: "AI Tarot Card Portrait Maker — Mystical Card Photo Free | JPT AI",
+    title: "AI Tarot Card Portrait Maker — Mystical Card Photo Free | Pixel Shine",
     metaDescription:
       "Turn your photo into a mystical tarot card online. Upload a selfie and AI designs a custom tarot-style portrait on the page — no watermark.",
     keywords: "ai tarot card portrait maker, photo to tarot card ai free, mystical card photo generator, ai tarot avatar maker, tarot style photo free",
@@ -603,7 +607,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "90s-yearbook-photo",
     emoji: "📒",
     gradient: ["#0D9488", "var(--warn)"],
-    title: "AI 90s Yearbook Photo Maker — Retro School Portrait Free | JPT AI",
+    title: "AI 90s Yearbook Photo Maker — Retro School Portrait Free | Pixel Shine",
     metaDescription:
       "Create a viral 90s yearbook photo online. Upload a selfie and AI applies a retro school-portrait look on the page — no app, no watermark.",
     keywords: "ai 90s yearbook photo maker, retro yearbook photo ai free, school portrait generator ai, 90s photo filter free, ai yearbook style photo",
@@ -622,7 +626,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "cyberpunk-avatar",
     emoji: "🤖",
     gradient: ["#06B6D4", "#D946EF"],
-    title: "AI Cyberpunk Avatar Maker — Neon Futuristic Photo Free | JPT AI",
+    title: "AI Cyberpunk Avatar Maker — Neon Futuristic Photo Free | Pixel Shine",
     metaDescription:
       "Turn your photo into a cyberpunk avatar online. Upload a selfie and AI adds neon futuristic styling on the page — no app, no watermark.",
     keywords: "ai cyberpunk avatar maker, neon futuristic photo ai free, cyberpunk photo filter, ai sci-fi avatar generator, cyberpunk style photo free",
@@ -641,7 +645,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "funko-pop-figure",
     emoji: "🧸",
     gradient: ["#F97316", "#FACC15"],
-    title: "Funko Pop Yourself AI — Custom Vinyl Figure Photo Free | JPT AI",
+    title: "Funko Pop Yourself AI — Custom Vinyl Figure Photo Free | Pixel Shine",
     metaDescription:
       "Turn your photo into a Funko Pop-style vinyl figure online. Upload a photo and AI renders a boxed collectible figure on the page — no app, no watermark.",
     keywords: "funko pop yourself ai, ai funko pop maker free, photo to funko pop figure, custom vinyl figure ai, funko pop generator online",
@@ -660,7 +664,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "claymation-portrait",
     emoji: "🎨",
     gradient: ["#EA580C", "#65A30D"],
-    title: "AI Claymation Photo Maker — Stop-Motion Clay Portrait Free | JPT AI",
+    title: "AI Claymation Photo Maker — Stop-Motion Clay Portrait Free | Pixel Shine",
     metaDescription:
       "Turn your photo into a claymation-style portrait online. Upload a selfie and AI gives it a stop-motion clay look on the page — no app, no watermark.",
     keywords: "ai claymation photo maker, claymation filter free, stop motion clay portrait ai, clay animation photo effect, claymation avatar generator",
@@ -679,7 +683,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "comic-book-cover",
     emoji: "💥",
     gradient: ["var(--danger)", "#FACC15"],
-    title: "AI Comic Book Cover Maker — Superhero Comic Portrait Free | JPT AI",
+    title: "AI Comic Book Cover Maker — Superhero Comic Portrait Free | Pixel Shine",
     metaDescription:
       "Turn your photo into a comic book cover online. Upload a photo and AI illustrates you as a comic-style superhero cover on the page — no app, no watermark.",
     keywords: "ai comic book cover maker, turn photo into comic ai, superhero comic portrait free, comic style ai photo, comic book avatar generator",
@@ -698,7 +702,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "coastal-cowgirl",
     emoji: "🤠",
     gradient: ["var(--warn)", "var(--accent-2)"],
-    title: "Coastal Cowgirl Aesthetic AI Photoshoot — Free Photo Filter | JPT AI",
+    title: "Coastal Cowgirl Aesthetic AI Photoshoot — Free Photo Filter | Pixel Shine",
     metaDescription:
       "Get the viral coastal cowgirl aesthetic online. Upload a selfie and AI styles a breezy denim-and-boots beach look on the page — no app, no watermark.",
     keywords: "coastal cowgirl aesthetic ai, coastal cowgirl photoshoot free, ai western beach aesthetic, cowgirl aesthetic photo filter, trendy aesthetic ai photoshoot",
@@ -717,7 +721,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "old-hollywood-glamour",
     emoji: "🎞️",
     gradient: ["#1F2937", "#CA8A04"],
-    title: "Old Hollywood Glamour AI Portrait — Classic Red Carpet Free | JPT AI",
+    title: "Old Hollywood Glamour AI Portrait — Classic Red Carpet Free | Pixel Shine",
     metaDescription:
       "Create an old Hollywood glamour portrait online. Upload a selfie and AI gives it a classic red-carpet studio look on the page — no app, no watermark.",
     keywords: "old hollywood glamour ai, classic hollywood portrait ai free, vintage red carpet photo ai, glamour shot generator online, ai 1950s portrait maker",
@@ -736,7 +740,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "prom-photoshoot",
     emoji: "💃",
     gradient: ["#9333EA", "#EC4899"],
-    title: "AI Prom Photo Maker — Glam Prom Portrait Generator Free | JPT AI",
+    title: "AI Prom Photo Maker — Glam Prom Portrait Generator Free | Pixel Shine",
     metaDescription:
       "Create a glam prom photoshoot online. Upload a selfie and AI styles a formal prom-night portrait on the page — no app, no watermark.",
     keywords: "ai prom photo maker, prom photoshoot generator free, ai formal portrait prom, prom dress photo ai, ai prom night picture maker",
@@ -755,7 +759,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "thanksgiving-photoshoot",
     emoji: "🍁",
     gradient: ["#B45309", "#7C2D12"],
-    title: "AI Thanksgiving Photo Maker — Cozy Fall Family Portrait Free | JPT AI",
+    title: "AI Thanksgiving Photo Maker — Cozy Fall Family Portrait Free | Pixel Shine",
     metaDescription:
       "Create a cozy Thanksgiving photo online. Upload a selfie and AI styles a warm fall family-portrait look on the page — no app, no watermark.",
     keywords: "ai thanksgiving photo maker, thanksgiving family portrait ai, fall aesthetic photo ai free, friendsgiving photo generator, autumn photoshoot ai",
@@ -774,7 +778,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "glow-up-filter",
     emoji: "🌟",
     gradient: ["#F472B6", "#FB923C"],
-    title: "AI Glow Up Filter — Instant Glow Up Photo Editor Free | JPT AI",
+    title: "AI Glow Up Filter — Instant Glow Up Photo Editor Free | Pixel Shine",
     metaDescription:
       "Get the viral AI glow up online. Upload a selfie and AI enhances your skin, lighting and styling on the page — no app, no watermark.",
     keywords: "ai glow up filter, glow up photo editor free, ai glow up generator, instant glow up online, ai photo enhancer glow up",
@@ -793,7 +797,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "astronaut-photoshoot",
     emoji: "🚀",
     gradient: ["#1E1B4B", "var(--accent-2)"],
-    title: "AI Astronaut Photo Maker — Space Suit Portrait Free | JPT AI",
+    title: "AI Astronaut Photo Maker — Space Suit Portrait Free | Pixel Shine",
     metaDescription:
       "Turn your photo into an astronaut portrait online. Upload a selfie and AI puts you in a space suit among the stars on the page — no app, no watermark.",
     keywords: "ai astronaut photo maker, space suit photo ai free, astronaut portrait generator, ai space photoshoot online, photo to astronaut ai",
@@ -812,7 +816,7 @@ export const CREATIVE_APPS: CreativeApp[] = [
     slug: "pixel-art-avatar",
     emoji: "👾",
     gradient: ["#22C55E", "var(--accent)"],
-    title: "AI Pixel Art Avatar Maker — 8-Bit Photo Generator Free | JPT AI",
+    title: "AI Pixel Art Avatar Maker — 8-Bit Photo Generator Free | Pixel Shine",
     metaDescription:
       "Turn your photo into 8-bit pixel art online. Upload a selfie and AI creates a retro pixel-art avatar on the page — no app, no watermark.",
     keywords: "ai pixel art avatar maker, 8 bit photo generator free, pixel art profile picture ai, retro game avatar ai, photo to pixel art online",
@@ -828,6 +832,35 @@ export const CREATIVE_APPS: CreativeApp[] = [
     ],
   },
 ];
+
+/**
+ * Deterministic shuffle. The hub should not read as one long alphabetical or
+ * category-ordered list, but the order must be stable: these pages are
+ * statically generated and people bookmark positions, so a fresh random order
+ * on every build would be worse than no shuffle at all. Hashing the slug gives
+ * a mixed order that never changes.
+ */
+function slugHash(slug: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < slug.length; i++) {
+    h ^= slug.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
+/** Curated apps first on a slug clash, then everything from the catalogue. */
+function mergeApps(): CreativeApp[] {
+  const bySlug = new Map<string, CreativeApp>();
+  for (const a of CURATED_APPS) bySlug.set(a.slug, a);
+  for (const row of CATALOG_ROWS) {
+    const a = expand(row);
+    if (!bySlug.has(a.slug)) bySlug.set(a.slug, a);
+  }
+  return Array.from(bySlug.values()).sort((x, y) => slugHash(x.slug) - slugHash(y.slug));
+}
+
+export const CREATIVE_APPS: CreativeApp[] = mergeApps();
 
 export const getCreativeApp = (slug: string) => CREATIVE_APPS.find((a) => a.slug === slug);
 

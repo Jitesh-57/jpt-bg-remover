@@ -23,8 +23,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     description: ct.metaDescription,
     keywords: ct.keywords,
     alternates: { canonical: url },
-    openGraph: { title: ct.title, description: ct.metaDescription, url, type: "website", siteName: "JPT AI" },
-    twitter: { card: "summary_large_image", title: `${ct.h1} | JPT AI`, description: ct.metaDescription },
+    openGraph: { title: ct.title, description: ct.metaDescription, url, type: "website", siteName: "Pixel Shine" },
+    twitter: { card: "summary_large_image", title: `${ct.h1} | Pixel Shine`, description: ct.metaDescription },
   };
 }
 

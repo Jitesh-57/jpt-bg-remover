@@ -74,7 +74,7 @@ export default function UnlimitedModal({ onClose, loggedIn, reason, prefillUser,
         order_id: orderData.order_id,
         amount: orderData.amount,
         currency: orderData.currency || "INR",
-        name: "JPT AI",
+        name: "Pixel Shine",
         description: `${p.credits} credits — ${p.label} pack`,
         theme: { color: "var(--accent)" },
         modal: {

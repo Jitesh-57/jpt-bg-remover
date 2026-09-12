@@ -15,7 +15,7 @@ export const SEO_POSTS_2: BlogPost[] = [
   P(
     "how-to-convert-jpg-to-png",
     "How to Convert JPG to PNG (and Why You'd Want To)",
-    "How to Convert JPG to PNG — Free Online | JPT AI",
+    "How to Convert JPG to PNG — Free Online | Pixel Shine",
     "Learn how to convert JPG to PNG online free. Get a lossless copy, add a transparent-ready format, and keep text crisp — no watermark, no sign-up.",
     "Converting JPG to PNG gives you a lossless copy that won't degrade when edited — and a format that supports transparency. Here's when and how to do it.",
     "2026-06-20", "Guide",
@@ -28,7 +28,7 @@ export const SEO_POSTS_2: BlogPost[] = [
       { heading: "How to convert JPG to PNG (free)", body: `**Step 1 — Open the converter** at sjpt.io.\n\n**Step 2 — Upload your JPG.** It's processed privately in your browser.\n\n**Step 3 — Choose PNG** as the output format.\n\n**Step 4 — Download** your lossless PNG.\n\nNo watermark, no sign-up, no software — and your original stays on your device.` },
       { heading: "Does converting add transparency?", body: `A common misconception: converting JPG → PNG does **not** create a transparent background by itself. The JPG had a solid background, so the PNG will too. What conversion *does* give you is a format that **supports** transparency — so if you then use a background remover, the result can be saved with real transparency (which a JPG could never hold).` },
       { heading: "Frequently asked questions", body: FAQ([
-        ["How do I convert JPG to PNG for free?", "Upload your JPG to JPT AI's converter, choose PNG, and download. Free, no watermark, no sign-up."],
+        ["How do I convert JPG to PNG for free?", "Upload your JPG to Pixel Shine's converter, choose PNG, and download. Free, no watermark, no sign-up."],
         ["Does JPG to PNG improve quality?", "It won't add detail that isn't there, but PNG is lossless, so the converted copy won't degrade further when re-saved."],
         ["Will the background become transparent?", "No — conversion keeps the existing background. PNG only supports transparency; it doesn't create it."],
         ["Which is smaller, JPG or PNG?", "For photos, JPG is much smaller. Convert to PNG only when you need lossless editing or transparency support."],
@@ -40,7 +40,7 @@ export const SEO_POSTS_2: BlogPost[] = [
   P(
     "how-to-compress-jpeg-to-200kb",
     "How to Compress a JPEG to 200KB (Without It Looking Bad)",
-    "How to Compress a JPEG to 200KB — Free | JPT AI",
+    "How to Compress a JPEG to 200KB — Free | Pixel Shine",
     "Learn how to compress a JPEG to 200KB online free. Hit an exact file size for web and uploads while keeping your photo sharp — no watermark, no sign-up.",
     "200KB is the sweet spot for fast web images and most upload forms. Here's how to compress a JPEG to exactly 200KB while keeping it sharp.",
     "2026-06-21", "Guide",
@@ -53,7 +53,7 @@ export const SEO_POSTS_2: BlogPost[] = [
       { heading: "Keeping quality high at 200KB", body: `**Start from the original**, not an already-compressed copy — each re-compression loses a little more.\n\n**Right-size the dimensions.** A 6000-pixel-wide photo squeezed to 200KB looks worse than the same photo resized to a sensible web width (say 1600px) first. If your image is enormous, reducing dimensions lets each pixel keep more quality within the 200KB budget.\n\n**Use JPEG for photos.** It's the format designed for exactly this trade-off.` },
       { heading: "Common uses for 200KB images", body: `**Website and blog images** — fast loading without visible quality loss.\n\n**Email attachments** — light enough to send several at once.\n\n**Marketplace and listing photos** — many platforms want images under a size cap.\n\n**Forms and portals** — plenty of upload forms sit around the 200KB–1MB range.` },
       { heading: "Frequently asked questions", body: FAQ([
-        ["How do I compress a JPEG to exactly 200KB?", "Upload it to JPT AI's compressor, set the target to 200KB, and download. It automatically adjusts quality (and dimensions if needed) to fit under 200KB."],
+        ["How do I compress a JPEG to exactly 200KB?", "Upload it to Pixel Shine's compressor, set the target to 200KB, and download. It automatically adjusts quality (and dimensions if needed) to fit under 200KB."],
         ["Will 200KB look blurry?", "No — at 200KB the compression is essentially invisible for most photos at normal viewing sizes."],
         ["Is it free?", "Yes — free, no watermark, no sign-up, no limits."],
         ["Should I resize before compressing?", "If the image is very large (e.g. 5000px+), resizing to a sensible web width first helps it stay sharper within the 200KB budget."],
@@ -65,7 +65,7 @@ export const SEO_POSTS_2: BlogPost[] = [
   P(
     "how-to-rotate-or-flip-an-image",
     "How to Rotate or Flip an Image Online (Free, Lossless)",
-    "How to Rotate or Flip an Image — Free Online | JPT AI",
+    "How to Rotate or Flip an Image — Free Online | Pixel Shine",
     "Learn how to rotate or flip an image online free. Fix sideways photos, straighten scans, or mirror an image in one click — lossless, no watermark, no sign-up.",
     "A photo imported sideways? A scan that's upside down? Rotating and flipping images is a one-click fix — and done right, it's completely lossless.",
     "2026-06-22", "Guide",
@@ -78,7 +78,7 @@ export const SEO_POSTS_2: BlogPost[] = [
       { heading: "Why 90° rotation is lossless", body: `A clean 90° or 180° rotation simply **rearranges** the existing pixels — none are recalculated or thrown away — so there's **no quality loss** at all. (Free-angle rotations like 7° do resample pixels and soften slightly, but for fixing orientation you almost always want a clean 90°/180° turn, which is perfectly lossless.)\n\nThis is why rotating a photo the right way is always better than, say, screenshotting a tilted view.` },
       { heading: "Common uses", body: `**Fixing sideways phone photos** that imported in the wrong orientation.\n\n**Straightening scans** of documents and IDs before saving or converting to PDF.\n\n**Mirroring selfies** so any text in frame reads the right way.\n\n**Design work** — flipping a subject to face into a layout instead of out of it.` },
       { heading: "Frequently asked questions", body: FAQ([
-        ["How do I rotate an image for free?", "Open JPT AI's Rotate & Flip tool, upload your image, choose the rotation, and download. Free, no watermark, no sign-up."],
+        ["How do I rotate an image for free?", "Open Pixel Shine's Rotate & Flip tool, upload your image, choose the rotation, and download. Free, no watermark, no sign-up."],
         ["Does rotating reduce quality?", "A clean 90° or 180° rotation is lossless — pixels are rearranged, not recalculated, so quality is preserved."],
         ["What's the difference between rotate and flip?", "Rotate turns the image; flip mirrors it. Both are available in the tool."],
         ["Does it work on phone?", "Yes, in any modern mobile or desktop browser. Nothing to install."],
@@ -90,7 +90,7 @@ export const SEO_POSTS_2: BlogPost[] = [
   P(
     "svg-to-png-convert-vector-to-raster",
     "SVG to PNG: How (and Why) to Convert Vector to Raster",
-    "SVG to PNG — Convert Vector to Raster Free | JPT AI",
+    "SVG to PNG — Convert Vector to Raster Free | Pixel Shine",
     "Learn how to convert SVG to PNG online free. Turn a scalable vector logo or icon into a raster PNG with transparency for apps that don't support SVG.",
     "SVGs are perfect for logos — until an app won't accept them. Converting SVG to PNG gives you a universally-supported raster image with transparency.",
     "2026-06-23", "Guide",
@@ -103,7 +103,7 @@ export const SEO_POSTS_2: BlogPost[] = [
       { heading: "How to convert SVG to PNG (free)", body: `**Step 1 — Open the converter** at sjpt.io.\n\n**Step 2 — Upload your SVG.**\n\n**Step 3 — Choose PNG** as the output.\n\n**Step 4 — Download** the raster PNG, with transparency preserved.\n\nNo watermark, no sign-up. Because the conversion rasterises the vector, the PNG is fixed-resolution — so start from a good size if you'll need it large.` },
       { heading: "Tips for a crisp PNG from SVG", body: `**Export large, downscale later.** A PNG can't scale up cleanly, so render it at the biggest size you'll need. You can always shrink a big PNG; you can't sharpen a small one.\n\n**Keep the SVG master.** Whenever you need a different size, re-export from the vector rather than resizing an existing PNG.\n\n**Mind the background.** If your SVG has transparency, the PNG keeps it — great for logos over any background.` },
       { heading: "Frequently asked questions", body: FAQ([
-        ["How do I convert SVG to PNG for free?", "Upload your SVG to JPT AI's converter, choose PNG, and download. Free, no watermark, transparency preserved."],
+        ["How do I convert SVG to PNG for free?", "Upload your SVG to Pixel Shine's converter, choose PNG, and download. Free, no watermark, transparency preserved."],
         ["Will the PNG be transparent?", "Yes — if your SVG has transparency, the PNG keeps it."],
         ["Why convert a vector to a pixel image?", "Because many apps and sites don't support SVG. PNG is supported everywhere."],
         ["Will the PNG look sharp?", "Yes, if you export at a large enough size. PNG is fixed-resolution, so render big and downscale as needed."],
@@ -115,7 +115,7 @@ export const SEO_POSTS_2: BlogPost[] = [
   P(
     "passport-photo-size-guide",
     "Passport Photo Size Guide (and How to Crop One at Home)",
-    "Passport Photo Size Guide + How to Crop | JPT AI",
+    "Passport Photo Size Guide + How to Crop | Pixel Shine",
     "A simple passport photo size guide — common dimensions, the rules that matter, and how to crop your photo to the right shape at home for free.",
     "Passport and ID photos follow strict size and framing rules. Here's a clear guide to the common sizes and how to crop your own photo to the right shape.",
     "2026-06-24", "Guide",
@@ -129,7 +129,7 @@ export const SEO_POSTS_2: BlogPost[] = [
       { heading: "Tips for a photo that passes", body: `**Shoot against a plain wall** in even daylight — no shadows behind you.\n\n**Face the camera straight on**, neutral expression, both ears roughly visible.\n\n**Leave headroom** so you can crop to the required framing without cutting the top of your head.\n\n**Use a high-resolution photo** so the cropped result stays sharp when printed.\n\n**Double-check the official rules** for your specific document — sizes and head-proportion rules differ by country.` },
       { heading: "Frequently asked questions", body: FAQ([
         ["What is the standard passport photo size?", "It varies: 35×45 mm is common in the UK/EU/Australia/India; 2×2 inches (square) in the US. Always check your country's official spec."],
-        ["How do I crop a photo to passport shape for free?", "Use JPT AI's crop tool — pick 1:1 for square (2×2 inch) styles or a portrait crop for 35×45 mm — with your face centred, then download."],
+        ["How do I crop a photo to passport shape for free?", "Use Pixel Shine's crop tool — pick 1:1 for square (2×2 inch) styles or a portrait crop for 35×45 mm — with your face centred, then download."],
         ["Can I take a passport photo at home?", "You can prepare one: shoot against a plain wall in even light, face forward, then crop to the right shape. Confirm exact requirements before submitting."],
         ["What background should it have?", "A plain, light background — usually white or light grey — with even lighting and no shadows."],
       ]) },
@@ -140,7 +140,7 @@ export const SEO_POSTS_2: BlogPost[] = [
   P(
     "how-to-optimize-images-for-website",
     "How to Optimize Images for Your Website (Faster Loading, Better SEO)",
-    "How to Optimize Images for a Website — Free Guide | JPT AI",
+    "How to Optimize Images for a Website — Free Guide | Pixel Shine",
     "Learn how to optimize images for your website: resize, compress, and pick the right format so pages load fast and rank better. Free tools, no watermark.",
     "Big images are the #1 cause of slow websites. Here's how to optimize your images — size, format and compression — so pages load fast and rank better.",
     "2026-06-25", "Guide",
@@ -156,7 +156,7 @@ export const SEO_POSTS_2: BlogPost[] = [
         ["What size should website images be?", "Match the display size (e.g. ~1600px for full-width) and compress to roughly 100–300KB. Don't serve giant originals into small slots."],
         ["Which format is best for the web?", "WebP for photos (small + modern), JPG as a universal fallback, PNG/SVG for graphics, logos and transparency."],
         ["How much can optimization speed up my site?", "Often 50–80% less page weight from images alone, which noticeably improves load time and Core Web Vitals."],
-        ["Is it free to optimize images?", "Yes — JPT AI's compress and convert tools are free with no watermark or sign-up."],
+        ["Is it free to optimize images?", "Yes — Pixel Shine's compress and convert tools are free with no watermark or sign-up."],
       ]) },
       { heading: "Key takeaways", body: `Optimise images in three steps: right-size the dimensions, pick an efficient format (WebP for photos), then compress to a sensible target. It's the biggest, easiest speed and SEO win for most sites — and it's free at sjpt.io. Compress Image Free →` },
     ],
@@ -165,7 +165,7 @@ export const SEO_POSTS_2: BlogPost[] = [
   P(
     "image-file-formats-explained",
     "Image File Formats Explained: JPG, PNG, WebP, GIF, SVG & AVIF",
-    "Image File Formats Explained — JPG, PNG, WebP & More | JPT AI",
+    "Image File Formats Explained — JPG, PNG, WebP & More | Pixel Shine",
     "A beginner-friendly guide to image file formats: JPG, PNG, WebP, GIF, SVG and AVIF — what each is for, and how to convert between them free.",
     "JPG, PNG, WebP, GIF, SVG, AVIF — what's the difference and when do you use each? Here's a plain-English guide, plus how to convert between them free.",
     "2026-06-26", "Guide",
@@ -177,11 +177,11 @@ export const SEO_POSTS_2: BlogPost[] = [
       { heading: "PNG — for graphics & transparency", body: `**PNG** is *lossless* and supports **transparency**. It keeps every pixel exact, so lines, text, and edges stay crisp.\n\n**Use it for:** logos, icons, screenshots, graphics, and anything needing a transparent background.\n\n**Weakness:** large files for photographs — much bigger than JPG for the same photo.` },
       { heading: "WebP & AVIF — the modern web formats", body: `**WebP** (Google) and **AVIF** (newer, even more efficient) are modern formats built for the web. Both compress smaller than JPG at the same quality and support transparency; AVIF is typically the smallest of all.\n\n**Use them for:** website images, to speed up loading.\n\n**Weakness:** compatibility — some older apps and platforms don't accept them, which is why people convert WebP/AVIF back to JPG or PNG.` },
       { heading: "GIF & SVG — animation and vectors", body: `**GIF** is an old format limited to 256 colours, used mainly for **simple animations** (memes, reaction loops). It's poor for photos.\n\n**SVG** is a **vector** format — it scales to any size without blurring, perfect for **logos and icons**. But it's not a pixel image, so many apps can't display or accept it.\n\n**Convert GIF → PNG** to grab a still frame; **SVG → PNG** when an app needs a raster image.` },
-      { heading: "How to convert between formats (free)", body: `Whenever you have the wrong format, converting is instant: open JPT AI's converter at sjpt.io, upload your image, choose the output (JPG, PNG or WebP), and download. No watermark, no sign-up, private in your browser. Popular one-click routes: PNG → JPG, WebP → JPG, JPG → WebP, SVG → PNG, GIF → PNG, and more.` },
+      { heading: "How to convert between formats (free)", body: `Whenever you have the wrong format, converting is instant: open Pixel Shine's converter at sjpt.io, upload your image, choose the output (JPG, PNG or WebP), and download. No watermark, no sign-up, private in your browser. Popular one-click routes: PNG → JPG, WebP → JPG, JPG → WebP, SVG → PNG, GIF → PNG, and more.` },
       { heading: "Frequently asked questions", body: FAQ([
         ["Which image format should I use?", "Photos → JPG (or WebP for web). Graphics/logos/transparency → PNG. Web speed → WebP/AVIF. Animation → GIF. Scalable logos → SVG."],
         ["What's the smallest image format?", "AVIF is usually the smallest, then WebP, then JPG — but AVIF/WebP have less universal compatibility."],
-        ["Can I convert between all these formats?", "You can convert to JPG, PNG or WebP from common inputs (including SVG, GIF, AVIF, BMP) free at JPT AI."],
+        ["Can I convert between all these formats?", "You can convert to JPG, PNG or WebP from common inputs (including SVG, GIF, AVIF, BMP) free at Pixel Shine."],
         ["Why won't my WebP/AVIF file open?", "Some older software doesn't support them. Convert to JPG or PNG and it'll open anywhere."],
       ]) },
       { heading: "Key takeaways", body: `Each format has a job: JPG for photos, PNG for graphics/transparency, WebP/AVIF for fast web images, GIF for simple animation, SVG for scalable logos. When you have the wrong one, convert free in seconds at sjpt.io. Convert Image Free →` },
@@ -191,7 +191,7 @@ export const SEO_POSTS_2: BlogPost[] = [
   P(
     "how-to-make-a-profile-picture",
     "How to Make a Perfect Profile Picture (Right Size & Crop)",
-    "How to Make a Profile Picture — Perfect Size & Crop | JPT AI",
+    "How to Make a Profile Picture — Perfect Size & Crop | Pixel Shine",
     "Learn how to make a great profile picture: the right crop, size and shape for any platform. Crop to a square or circle free — no watermark, no sign-up.",
     "A good profile picture is well-cropped, well-sized, and centred on your face. Here's how to make one that looks sharp on every platform, free.",
     "2026-06-27", "Guide",
@@ -205,7 +205,7 @@ export const SEO_POSTS_2: BlogPost[] = [
       { heading: "Pro tips", body: `**Crop tighter than feels natural.** At profile-picture size, closer is clearer.\n\n**Centre the eyes** roughly in the upper-middle — it reads as friendly and balanced.\n\n**Start high-res.** A sharp source beats an upscaled blurry one; if it's small, upscale it first.\n\n**Keep a consistent look** across platforms so people recognise you at a glance.` },
       { heading: "Frequently asked questions", body: FAQ([
         ["What size should a profile picture be?", "Square (1:1), ideally 400×400 pixels or larger. Platforms display it as a square or circle and downscale as needed."],
-        ["How do I crop a profile picture for free?", "Use JPT AI's crop tool — pick 1:1 for square or circle for a round image — with your face centred, then download."],
+        ["How do I crop a profile picture for free?", "Use Pixel Shine's crop tool — pick 1:1 for square or circle for a round image — with your face centred, then download."],
         ["Why does my profile picture look cut off?", "Most platforms crop to a circle. Keep your face centred so nothing important sits in the corners."],
         ["My photo is blurry — can I fix it?", "Run it through the free upscaler to sharpen and enlarge before cropping."],
       ]) },
@@ -216,7 +216,7 @@ export const SEO_POSTS_2: BlogPost[] = [
   P(
     "how-to-compress-png-without-losing-quality",
     "How to Compress a PNG Without Losing Quality",
-    "How to Compress a PNG Without Losing Quality — Free | JPT AI",
+    "How to Compress a PNG Without Losing Quality — Free | Pixel Shine",
     "Learn how to compress a PNG online free. Shrink large PNG files for the web and email while keeping graphics crisp and transparency intact — no watermark.",
     "PNGs are lossless but can be huge. Here's how to compress a PNG so it loads fast — while keeping graphics crisp and transparency intact.",
     "2026-06-28", "Guide",
@@ -229,7 +229,7 @@ export const SEO_POSTS_2: BlogPost[] = [
       { heading: "How to compress a PNG (free)", body: `**Step 1 — Open the compressor** at sjpt.io.\n\n**Step 2 — Upload your PNG.**\n\n**Step 3 — Set a target size**, and the tool shrinks it to fit.\n\n**Step 4 — Download.**\n\nIf the image is a photo and doesn't need transparency, also try the **converter** to export it as JPG or WebP for an even smaller file. Both tools are free, with no watermark.` },
       { heading: "Keeping transparency intact", body: `If your PNG has a **transparent background** (a logo, a cut-out), keep it as a PNG or convert to **WebP** — both preserve transparency. **Do not convert it to JPG**, which fills transparent areas with white and defeats the purpose. When transparency matters, PNG or WebP are your only options.` },
       { heading: "Frequently asked questions", body: FAQ([
-        ["How do I compress a PNG without losing quality?", "Compress it to a target size with JPT AI's compressor. For photo-content PNGs that don't need transparency, converting to JPG or WebP shrinks them far more with no visible loss."],
+        ["How do I compress a PNG without losing quality?", "Compress it to a target size with Pixel Shine's compressor. For photo-content PNGs that don't need transparency, converting to JPG or WebP shrinks them far more with no visible loss."],
         ["Why is my PNG so large?", "PNG is lossless and stores every pixel — great for graphics, but huge for photographic content. Such images are usually better as JPG or WebP."],
         ["Will compressing remove transparency?", "No — keep it as PNG or convert to WebP to preserve transparency. Don't convert to JPG if you need transparent areas."],
         ["Is it free?", "Yes — compress and convert are both free, no watermark, no sign-up."],
@@ -241,7 +241,7 @@ export const SEO_POSTS_2: BlogPost[] = [
   P(
     "youtube-thumbnail-size-guide",
     "YouTube Thumbnail Size and How to Crop the Perfect One",
-    "YouTube Thumbnail Size (2026) + How to Crop | JPT AI",
+    "YouTube Thumbnail Size (2026) + How to Crop | Pixel Shine",
     "The correct YouTube thumbnail size, aspect ratio and tips — plus how to crop any image to a perfect 16:9 thumbnail for free, no watermark.",
     "The right thumbnail can double your clicks. Here's the correct YouTube thumbnail size and how to crop any image to a perfect 16:9 for free.",
     "2026-06-29", "Guide",
@@ -255,7 +255,7 @@ export const SEO_POSTS_2: BlogPost[] = [
       { heading: "Common thumbnail mistakes", body: `**Wrong ratio.** Anything but 16:9 gets cropped or bar-boxed.\n\n**Tiny, distant subjects** that vanish at small sizes.\n\n**Text too small** to read on a phone.\n\n**Low resolution** that looks blurry when YouTube upscales it — start from at least 1280px wide.\n\n**Cluttered composition** with no clear focal point.` },
       { heading: "Frequently asked questions", body: FAQ([
         ["What size is a YouTube thumbnail?", "16:9 aspect ratio, recommended 1280×720 pixels (up to 1920×1080), under 2 MB."],
-        ["How do I crop an image to 16:9 for free?", "Use JPT AI's crop tool, choose the 16:9 ratio, centre your subject, and download. No watermark."],
+        ["How do I crop an image to 16:9 for free?", "Use Pixel Shine's crop tool, choose the 16:9 ratio, centre your subject, and download. No watermark."],
         ["My thumbnail looks blurry — how do I fix it?", "Start from at least 1280px wide, and run it through the free upscaler to sharpen it before uploading."],
         ["Why does YouTube crop my thumbnail?", "Because it wasn't 16:9. Crop to 16:9 first and nothing important gets cut."],
       ]) },

@@ -22,7 +22,7 @@ export const AD_LANDINGS: AdLanding[] = [
   {
     slug: "remove-background-free",
     toolHref: "/remove-bg",
-    title: "Remove Image Background Free — Instant Transparent PNG | JPT AI",
+    title: "Remove Image Background Free — Instant Transparent PNG | Pixel Shine",
     metaDescription:
       "Remove backgrounds from images free with AI. One click, transparent PNG, no watermark. Try it free — no sign-up required to start.",
     badge: "✨ 100% Free · No Watermark",
@@ -36,7 +36,7 @@ export const AD_LANDINGS: AdLanding[] = [
   {
     slug: "ai-image-upscaler",
     toolHref: "/upscale",
-    title: "Free AI Image Upscaler — Enhance Photos to 4K | JPT AI",
+    title: "Free AI Image Upscaler — Enhance Photos to 4K | Pixel Shine",
     metaDescription:
       "Upscale images to 4K free with AI. Sharpen blurry photos 2× or 4× with no quality loss and no watermark. Try it free online.",
     badge: "✨ Free · Up to 4× Resolution",
@@ -50,7 +50,7 @@ export const AD_LANDINGS: AdLanding[] = [
   {
     slug: "ai-headshot-generator",
     toolHref: "/ai-headshot",
-    title: "Free AI Headshot Generator — LinkedIn-Ready Photos | JPT AI",
+    title: "Free AI Headshot Generator — LinkedIn-Ready Photos | Pixel Shine",
     metaDescription:
       "Generate professional AI headshots free from any selfie. LinkedIn-ready, corporate quality, no photographer needed. Try it free.",
     badge: "✨ Professional · LinkedIn-Ready",
@@ -64,7 +64,7 @@ export const AD_LANDINGS: AdLanding[] = [
   {
     slug: "ai-photo-editor",
     toolHref: "/ai-editor",
-    title: "Free AI Photo Editor — Edit with Text Prompts | JPT AI",
+    title: "Free AI Photo Editor — Edit with Text Prompts | Pixel Shine",
     metaDescription:
       "Edit photos free with simple text prompts. Change backgrounds, relight scenes, add effects — no Photoshop skills. Try the AI editor free.",
     badge: "✨ Free · No Photoshop Needed",

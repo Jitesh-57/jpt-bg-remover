@@ -67,7 +67,7 @@ export default function Footer() {
           <div>
             <a href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none", marginBottom: 16 }}>
               <span style={{ fontSize: 20, fontWeight: 900, color: "var(--accent)" }}>✦</span>
-              <span style={{ fontSize: 18, fontWeight: 900, color: "var(--text)", letterSpacing: "-0.02em" }}>JPT AI</span>
+              <span style={{ fontSize: 19, fontWeight: 900, letterSpacing: "-0.03em", whiteSpace: "nowrap" }}><span style={{ color: "var(--text)" }}>Pixel</span>{" "}<span className="jpt-grad-text">Shine</span></span>
             </a>
             <p style={{ fontSize: 14, lineHeight: 1.7, color: "var(--text-muted)", margin: "0 0 20px", maxWidth: 260 }}>
               {t.footerTagline}
@@ -168,7 +168,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 20, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
           <div style={{ fontSize: 13, color: "var(--text-muted)" }}>
-            © {new Date().getFullYear()} JPT AI. {t.footerRights}
+            © {new Date().getFullYear()} Pixel Shine. {t.footerRights}
           </div>
           <div style={{ display: "flex", gap: 24 }}>
             {[{ label: "Privacy Policy", href: "/privacy" }, { label: "Terms of Service", href: "/terms" }].map(l => (

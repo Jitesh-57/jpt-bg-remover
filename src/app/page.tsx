@@ -15,7 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description: config.og_description || config.meta_description,
       images: config.og_image ? [config.og_image] : [],
       type: "website",
-      siteName: "JPT AI",
+      siteName: "Pixel Shine",
       url: BASE,
     },
     twitter: {

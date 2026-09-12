@@ -5,12 +5,12 @@ const BASE = "https://www.sjpt.io";
 const URL = `${BASE}${CREATIVE_BASE}`;
 
 export const metadata: Metadata = {
-  title: { absolute: "JPT AI Creative Apps — Free AI Photo Generators Online | JPT AI" },
+  title: { absolute: "Pixel Shine Creative Apps — Free AI Photo Generators Online | Pixel Shine" },
   description:
-    "Free JPT AI Creative apps — saree photoshoot, 3D figurine, retro Bollywood, pet portrait, anime and more. Upload a photo and get the result right on the page. No app, no watermark.",
+    "Free Pixel Shine Creative apps — saree photoshoot, 3D figurine, retro Bollywood, pet portrait, anime and more. Upload a photo and get the result right on the page. No app, no watermark.",
   keywords: "ai creative apps, ai photo generator free, ai photoshoot online, ai photo trends, free ai photo editor apps",
   alternates: { canonical: URL },
-  openGraph: { title: "JPT AI Creative Apps — Free AI Photo Generators", description: "Upload a photo and get viral AI results right on the page. Free, no watermark.", url: URL },
+  openGraph: { title: "Pixel Shine Creative Apps — Free AI Photo Generators", description: "Upload a photo and get viral AI results right on the page. Free, no watermark.", url: URL },
 };
 
 const itemListLd = {
@@ -27,7 +27,7 @@ export default function CreativeHub() {
         <section style={{ background: "linear-gradient(160deg,var(--surface-2) 0%,var(--surface) 55%,var(--success-soft) 100%)", padding: "80px 24px 48px", textAlign: "center" }}>
           <div style={{ maxWidth: 800, margin: "0 auto" }}>
             <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "var(--accent-soft)", color: "var(--accent)", fontWeight: 700, fontSize: 12, borderRadius: 20, padding: "6px 14px", marginBottom: 24, letterSpacing: "0.06em", textTransform: "uppercase" }}>
-              ✦ JPT AI Creative Apps
+              ✦ Pixel Shine Creative Apps
             </div>
             <h1 style={{ fontSize: "clamp(2.2rem,5vw,3.4rem)", fontWeight: 900, color: "var(--text)", lineHeight: 1.1, letterSpacing: "-0.03em", margin: "0 0 18px" }}>
               Viral AI Photo Apps — One Tap, No Prompt

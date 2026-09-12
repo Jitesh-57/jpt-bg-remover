@@ -16,7 +16,7 @@ export const SEO_POSTS_8: BlogPost[] = [
   P(
     "how-to-remove-a-watermark-from-a-picture-online",
     "How to Remove a Watermark From a Picture Online (Free)",
-    "Remove a Watermark From a Picture Online — Free | JPT AI",
+    "Remove a Watermark From a Picture Online — Free | Pixel Shine",
     "Learn how to remove a watermark from a picture online free with AI — no software, no download. Erase logos, text and stamps.",
     "No software needed — remove a watermark from a picture right in your browser with AI. Here's how, free.",
     "2026-07-22", "Guide",
@@ -40,7 +40,7 @@ export const SEO_POSTS_8: BlogPost[] = [
   P(
     "how-to-remove-a-date-stamp-from-a-photo",
     "How to Remove a Date Stamp From a Photo (Free)",
-    "How to Remove a Date Stamp From a Photo — Free | JPT AI",
+    "How to Remove a Date Stamp From a Photo — Free | Pixel Shine",
     "Learn how to remove a date/time stamp from a photo free with AI — erase the burned-in date cleanly. No software, no sign-up.",
     "That orange date stamp in the corner? AI can rebuild the photo behind it. Here's how to remove a date stamp, free.",
     "2026-07-22", "Guide",
@@ -64,7 +64,7 @@ export const SEO_POSTS_8: BlogPost[] = [
   P(
     "how-to-remove-an-object-from-a-photo",
     "How to Remove an Object From a Photo (Free, AI)",
-    "How to Remove an Object From a Photo — Free | JPT AI",
+    "How to Remove an Object From a Photo — Free | Pixel Shine",
     "Learn how to remove an unwanted object from a photo free with AI — erase photobombers, clutter and distractions. No software, no sign-up.",
     "A photobomber or bit of clutter can ruin a great shot. Here's how AI removes an unwanted object cleanly, free.",
     "2026-07-23", "Guide",
@@ -88,7 +88,7 @@ export const SEO_POSTS_8: BlogPost[] = [
   P(
     "how-to-remove-a-watermark-from-a-screenshot",
     "How to Remove a Watermark From a Screenshot (Free)",
-    "Remove a Watermark From a Screenshot — Free | JPT AI",
+    "Remove a Watermark From a Screenshot — Free | Pixel Shine",
     "Learn how to remove a watermark from a screenshot free with AI — clear app overlays, banners and stamps. No software, no sign-up.",
     "Screenshots often carry an app watermark or banner. Here's how to clean one up with AI, free.",
     "2026-07-23", "Guide",
@@ -112,7 +112,7 @@ export const SEO_POSTS_8: BlogPost[] = [
   P(
     "how-to-remove-a-watermark-from-ai-generated-images",
     "How to Remove a Watermark From AI-Generated Images (Free)",
-    "Remove Watermark From AI Images — Free Online | JPT AI",
+    "Remove Watermark From AI Images — Free Online | Pixel Shine",
     "Learn how to remove a watermark from your AI-generated images free — clear the small corner logo some tools add. No software, no sign-up.",
     "Some AI image tools stamp a small logo on outputs. Here's how to clean your own generations, free.",
     "2026-07-24", "Guide",
@@ -138,7 +138,7 @@ export const SEO_POSTS_8: BlogPost[] = [
   P(
     "how-to-resize-multiple-images-at-once",
     "How to Resize Multiple Images at Once (Free, Bulk)",
-    "How to Resize Multiple Images at Once — Free | JPT AI",
+    "How to Resize Multiple Images at Once — Free | Pixel Shine",
     "Learn how to resize multiple images at once free — bulk-resize a whole folder to the same dimensions in your browser. No sign-up.",
     "Resizing photos one by one is a chore. Here's how to bulk-resize many images at once, free.",
     "2026-07-24", "Guide",
@@ -151,7 +151,7 @@ export const SEO_POSTS_8: BlogPost[] = [
       { heading: "Pick the right size", body: `**Web galleries:** 1200–1600px wide. **Thumbnails:** 400–600px. **Profile sets:** 400×400 square. Keep proportions locked so nothing stretches. Resize once, apply to all.` },
       { heading: "Resize then compress", body: `For the lightest, fastest set, **resize and compress together** — the batch editor can do both in one pass, so your whole folder comes out right-sized and web-ready.` },
       { heading: "Frequently asked questions", body: FAQ([
-        ["How do I resize multiple images at once for free?", "Open JPT AI's batch editor, add your images, choose Resize with target dimensions, and run. Free."],
+        ["How do I resize multiple images at once for free?", "Open Pixel Shine's batch editor, add your images, choose Resize with target dimensions, and run. Free."],
         ["Will it keep proportions?", "Yes — lock the aspect ratio so images scale without stretching."],
         ["Can I resize and compress together?", "Yes — apply both in one pass for the lightest, web-ready set."],
         ["Is it private?", "Yes — processed in your browser."],
@@ -162,7 +162,7 @@ export const SEO_POSTS_8: BlogPost[] = [
   P(
     "how-to-compress-multiple-images-at-once",
     "How to Compress Multiple Images at Once (Free, Bulk)",
-    "How to Compress Multiple Images at Once — Free | JPT AI",
+    "How to Compress Multiple Images at Once — Free | Pixel Shine",
     "Learn how to compress multiple images at once free — shrink a whole folder for faster uploads and lighter pages. No sign-up.",
     "Compressing photos one by one wastes time. Here's how to bulk-compress many images at once, free.",
     "2026-07-25", "Guide",
@@ -175,7 +175,7 @@ export const SEO_POSTS_8: BlogPost[] = [
       { heading: "Resize first for the biggest win", body: `If the images are much larger than needed, **resize the set first**, then compress. Fewer pixels plus compression gives the smallest files — often 80–90% lighter with no visible change.` },
       { heading: "Common uses", body: `**Website galleries** — fast-loading, SEO-friendly. **Email batches** — send many without hitting limits. **Marketplace listings** — meet size caps across a set. **Cloud storage** — fit more in less space.` },
       { heading: "Frequently asked questions", body: FAQ([
-        ["How do I compress multiple images at once for free?", "Open JPT AI's batch editor, add your images, choose Compress, and run. Free, in your browser."],
+        ["How do I compress multiple images at once for free?", "Open Pixel Shine's batch editor, add your images, choose Compress, and run. Free, in your browser."],
         ["Will quality drop?", "Not visibly at sensible settings — the change is invisible while files shrink a lot."],
         ["Should I resize too?", "Yes — resizing oversized images first gives the smallest files."],
         ["Is there a limit?", "It's free and handles large batches in the browser."],
@@ -186,7 +186,7 @@ export const SEO_POSTS_8: BlogPost[] = [
   P(
     "how-to-convert-multiple-images-at-once",
     "How to Convert Multiple Images at Once (Free, Bulk)",
-    "How to Convert Multiple Images at Once — Free | JPT AI",
+    "How to Convert Multiple Images at Once — Free | Pixel Shine",
     "Learn how to convert multiple images at once free — batch-convert a folder to JPG, PNG or WebP in your browser. No sign-up.",
     "Converting images one by one is slow. Here's how to bulk-convert a whole folder to JPG, PNG or WebP, free.",
     "2026-07-25", "Guide",
@@ -199,7 +199,7 @@ export const SEO_POSTS_8: BlogPost[] = [
       { heading: "Pick the right format", body: `**JPG** for photos (small, universal). **WebP** for the web (smallest, keeps transparency). **PNG** for graphics needing transparency or sharp edges. Convert the whole set to whichever the job needs.` },
       { heading: "Convert then compress", body: `Converting to WebP already shrinks files; add a **compress** step in the same pass for the lightest web-ready set. One run, right format, right size.` },
       { heading: "Frequently asked questions", body: FAQ([
-        ["How do I convert multiple images at once for free?", "Open JPT AI's batch editor, add your images, choose Convert and a format, and run. Free."],
+        ["How do I convert multiple images at once for free?", "Open Pixel Shine's batch editor, add your images, choose Convert and a format, and run. Free."],
         ["Which formats can I convert to?", "JPG, PNG and WebP — pick per the job."],
         ["Can I convert and compress together?", "Yes — apply both in one pass for a light, consistent set."],
         ["Is it private?", "Yes — processed in your browser."],
@@ -210,7 +210,7 @@ export const SEO_POSTS_8: BlogPost[] = [
   P(
     "how-to-watermark-multiple-photos-at-once",
     "How to Watermark Multiple Photos at Once (Free, Bulk)",
-    "How to Watermark Multiple Photos at Once — Free | JPT AI",
+    "How to Watermark Multiple Photos at Once — Free | Pixel Shine",
     "Learn how to watermark multiple photos at once free — brand a whole shoot or set with the same mark in one pass. No sign-up.",
     "Watermarking photos one by one is painful. Here's how to watermark a whole set at once, free.",
     "2026-07-26", "Guide",
@@ -223,7 +223,7 @@ export const SEO_POSTS_8: BlogPost[] = [
       { heading: "Keep it subtle and consistent", body: `Use a **semi-transparent** mark in a **consistent corner** so it brands without distracting. Set it once; it applies identically to every image. A tasteful, uniform watermark makes a set look like a proper portfolio.` },
       { heading: "Combine with resize/compress", body: `Preparing a web gallery? **Resize, compress and watermark** the whole set in one pass — every image comes out branded, right-sized and web-ready together.` },
       { heading: "Frequently asked questions", body: FAQ([
-        ["How do I watermark multiple photos at once for free?", "Open JPT AI's batch editor, add your photos, choose Watermark, set the text and position, and run. Free."],
+        ["How do I watermark multiple photos at once for free?", "Open Pixel Shine's batch editor, add your photos, choose Watermark, set the text and position, and run. Free."],
         ["Will the watermark be consistent?", "Yes — the same mark and placement apply to every image."],
         ["Can I resize and watermark together?", "Yes — combine resize, compress and watermark in one pass."],
         ["Is it private?", "Yes — processed in your browser."],
@@ -234,7 +234,7 @@ export const SEO_POSTS_8: BlogPost[] = [
   P(
     "how-to-bulk-edit-photos",
     "How to Bulk Edit Photos (Resize, Compress, Convert & More)",
-    "How to Bulk Edit Photos — Free Online | JPT AI",
+    "How to Bulk Edit Photos — Free Online | Pixel Shine",
     "Learn how to bulk edit photos free — apply resize, compress, convert, crop, rotate and watermark to a whole folder at once. No sign-up.",
     "Editing photos one by one doesn't scale. Here's how to bulk edit a whole folder in one pass, free.",
     "2026-07-26", "Guide",
@@ -247,7 +247,7 @@ export const SEO_POSTS_8: BlogPost[] = [
       { heading: "A typical web-ready recipe", body: `For a website gallery: **crop to a consistent ratio → resize to display width → compress → convert to WebP**. Run once, and the whole folder comes out uniform, light and fast-loading — a job that would take ages one by one.` },
       { heading: "Why it's private and free", body: `Everything runs **in your browser**, so your photos never leave your device — quick, private and free, with no per-image limits to slow you down. Great for photographers, sellers and anyone with a lot of images.` },
       { heading: "Frequently asked questions", body: FAQ([
-        ["How do I bulk edit photos for free?", "Open JPT AI's batch editor, add your photos, pick the steps (resize, compress, convert, crop, rotate, watermark), and run. Free."],
+        ["How do I bulk edit photos for free?", "Open Pixel Shine's batch editor, add your photos, pick the steps (resize, compress, convert, crop, rotate, watermark), and run. Free."],
         ["Can I apply several edits at once?", "Yes — stack steps and they all apply to every image in one pass."],
         ["Is a whole folder supported?", "Yes — add many images and process them together."],
         ["Is it private?", "Yes — everything runs in your browser; photos don't leave your device."],

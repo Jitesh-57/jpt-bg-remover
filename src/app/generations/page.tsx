@@ -579,7 +579,7 @@ export default function GenerationsPage() {
         <h2 style={{ fontSize: 22, fontWeight: 800, color: "var(--text)", margin: 0, textAlign: "center" }}>Sign in to view your generations</h2>
         <p style={{ color: "var(--text-muted)", fontSize: 14, margin: 0, textAlign: "center", maxWidth: 320 }}>All your AI transformations are saved here automatically.</p>
         <a href="/api/auth/google?next=/generations" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", background: "var(--accent-fill)", color: "#fff", borderRadius: 8, textDecoration: "none", fontWeight: 700, fontSize: 14 }}>
-          Sign In to JPT AI
+          Sign In to Pixel Shine
         </a>
       </div>
     );
@@ -611,7 +611,7 @@ export default function GenerationsPage() {
           <div>
             <h1 style={{ margin: 0, fontSize: 28, fontWeight: 900, color: "var(--text)", letterSpacing: "-0.5px" }}>✦ {t.generationsTitle}</h1>
             <p style={{ margin: "4px 0 0", fontSize: 14, color: "var(--text-muted)" }}>
-              {items.length} image{items.length !== 1 ? "s" : ""} · click any card to preview · JPT AI
+              {items.length} image{items.length !== 1 ? "s" : ""} · click any card to preview · Pixel Shine
             </p>
           </div>
           <div style={{ display: "flex", gap: 10 }}>

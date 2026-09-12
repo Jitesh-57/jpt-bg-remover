@@ -88,7 +88,7 @@ export function buildContent(c: Conversion): ConversionContent {
     toLabel: tl,
     toParam: TO_PARAM[c.to],
     h1,
-    title: `${fl} to ${tl} Converter — Convert ${fl} to ${tl} Online Free | JPT AI`,
+    title: `${fl} to ${tl} Converter — Convert ${fl} to ${tl} Online Free | Pixel Shine`,
     metaDescription: `Convert ${fl} to ${tl} online free. Upload a ${fl} image and download a ${tl} file in seconds — no watermark, no sign-up, no software. Fast, private, unlimited.`,
     keywords: `${c.from} to ${c.to}, convert ${c.from} to ${c.to}, ${c.from} to ${c.to} converter, ${c.from} to ${c.to} online, change ${c.from} to ${c.to}, ${c.from} to ${c.to} free`,
     intro: `Need to convert ${fl} to ${tl}? This free online ${fl}-to-${tl} converter does it in seconds — right in your browser, with no watermark, no sign-up, and no software to install. ${fl} is ${f.blurb}; ${tl} is ${t.blurb}. ${sizeAngle}`,
@@ -101,7 +101,7 @@ export function buildContent(c: Conversion): ConversionContent {
     ],
     transparencyNote,
     faqs: [
-      { q: `How do I convert ${fl} to ${tl} for free?`, a: `Upload your ${fl} image to JPT AI's free converter, choose ${tl} as the output, and download the result. It's completely free with no sign-up and no watermark.` },
+      { q: `How do I convert ${fl} to ${tl} for free?`, a: `Upload your ${fl} image to Pixel Shine's free converter, choose ${tl} as the output, and download the result. It's completely free with no sign-up and no watermark.` },
       { q: `Will converting ${fl} to ${tl} reduce quality?`, a: t.lossy
           ? `${tl} uses compression, so there's a tiny quality trade-off in exchange for a much smaller file — in practice it's not visible for photos. For maximum quality, choose PNG instead.`
           : `${tl} is lossless, so no quality is lost in the conversion itself — your image stays crisp.` },

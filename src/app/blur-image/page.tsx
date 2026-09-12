@@ -8,21 +8,21 @@ const URL = `${BASE}/blur-image`;
 const GRAD = "linear-gradient(120deg,var(--accent),var(--accent-2))";
 
 export const metadata: Metadata = {
-  title: { absolute: "Free Blur Image Tool — Blur or Pixelate Part of a Photo | JPT AI" },
+  title: { absolute: "Free Blur Image Tool — Blur or Pixelate Part of a Photo | Pixel Shine" },
   description:
     "Blur or pixelate part of an image free online. Hide faces, licence plates, addresses and sensitive info — drag a box to censor it. No watermark, no sign-up, private in your browser.",
   keywords:
     "blur image, blur part of image, blur face, pixelate image, censor image, blur image online free, hide sensitive information image, blur license plate",
   openGraph: {
-    title: "Free Blur Image Tool — Blur or Pixelate Part of a Photo | JPT AI",
+    title: "Free Blur Image Tool — Blur or Pixelate Part of a Photo | Pixel Shine",
     description: "Blur or pixelate faces and sensitive info in a photo, free. Drag a box to censor — no watermark, no sign-up.",
     url: URL,
     type: "website",
-    siteName: "JPT AI",
+    siteName: "Pixel Shine",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Free Blur Image Tool | JPT AI",
+    title: "Free Blur Image Tool | Pixel Shine",
     description: "Blur or pixelate part of a photo free — hide faces and sensitive info. No sign-up.",
   },
   alternates: { canonical: URL },

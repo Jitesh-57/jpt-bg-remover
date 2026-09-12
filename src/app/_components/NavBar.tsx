@@ -174,7 +174,7 @@ export default function NavBar() {
           {/* Brand — never wraps, never shrinks (the larger base font used to break this on phones) */}
           <a href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none", marginRight: 8, flexShrink: 0, whiteSpace: "nowrap" }}>
             <span style={{ fontSize: 18, fontWeight: 900, color: "var(--accent)" }}>✦</span>
-            <span style={{ fontSize: 16, fontWeight: 900, color: "var(--text)", letterSpacing: "-0.02em", whiteSpace: "nowrap" }}>JPT AI</span>
+            <span style={{ fontSize: 17, fontWeight: 900, letterSpacing: "-0.03em", whiteSpace: "nowrap" }}><span style={{ color: "var(--text)" }}>Pixel</span>{" "}<span className="jpt-grad-text">Shine</span></span>
           </a>
 
           {/* AI Tools Dropdown */}
@@ -438,7 +438,7 @@ export default function NavBar() {
           <div onClick={e => e.stopPropagation()} style={{ background: "var(--surface)", borderRadius: 20, padding: 32, maxWidth: 440, width: "100%", boxShadow: "0 24px 80px rgba(0,0,0,0.3)" }}>
             <div style={{ textAlign: "center", marginBottom: 24 }}>
               <div style={{ fontSize: 44, marginBottom: 8 }}>✨</div>
-              <div style={{ fontWeight: 900, fontSize: 22, color: "var(--text)", marginBottom: 6 }}>Sign in to JPT AI</div>
+              <div style={{ fontWeight: 900, fontSize: 22, color: "var(--text)", marginBottom: 6 }}>Sign in to Pixel Shine</div>
               <p style={{ fontSize: 14, color: "var(--text-muted)", margin: 0 }}>Get <strong>10 free AI credits</strong> to start editing</p>
             </div>
             <div style={{ display: "flex", background: "var(--surface-2)", borderRadius: 10, padding: 3, marginBottom: 22 }}>

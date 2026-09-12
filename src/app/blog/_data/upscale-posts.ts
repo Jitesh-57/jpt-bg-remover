@@ -13,7 +13,7 @@ export const UPSCALE_POSTS: BlogPost[] = [
     image: IMG(1181671),
     slug: "upscale-image-for-youtube-thumbnail",
     title: "How to Upscale Images for YouTube Thumbnails (Sharp at Any Size)",
-    metaTitle: "Upscale Images for YouTube Thumbnails Free | JPT AI",
+    metaTitle: "Upscale Images for YouTube Thumbnails Free | Pixel Shine",
     metaDescription:
       "Make crisp, high-resolution YouTube thumbnails from low-res photos. Upscale to 1280×720 and beyond for free — no blur, no watermark.",
     excerpt:
@@ -46,7 +46,7 @@ export const UPSCALE_POSTS: BlogPost[] = [
       },
       {
         heading: "Free, unlimited, no watermark",
-        body: `You should never pay a subscription just to sharpen a thumbnail. JPT AI's basic upscaler is free and unlimited, runs online, and exports clean images with no watermark. Upscale as many thumbnails as you publish — daily uploads, A/B test variants, back-catalogue refreshes — without hitting a paywall.
+        body: `You should never pay a subscription just to sharpen a thumbnail. Pixel Shine's basic upscaler is free and unlimited, runs online, and exports clean images with no watermark. Upscale as many thumbnails as you publish — daily uploads, A/B test variants, back-catalogue refreshes — without hitting a paywall.
 
 Ready to lift your click-through rate? Head to sjpt.io, upload your thumbnail image, and download a razor-sharp result in seconds.`,
       },
@@ -56,7 +56,7 @@ Ready to lift your click-through rate? Head to sjpt.io, upload your thumbnail im
     image: IMG(1174746),
     slug: "upscale-gaming-screenshots-4k",
     title: "How to Upscale Gaming Screenshots to 4K (Wallpapers & Posts)",
-    metaTitle: "Upscale Gaming Screenshots to 4K Free | JPT AI",
+    metaTitle: "Upscale Gaming Screenshots to 4K Free | Pixel Shine",
     metaDescription:
       "Turn low-res game screenshots into crisp 4K images for wallpapers, thumbnails and social posts. Free AI upscaling, no watermark.",
     excerpt:
@@ -89,7 +89,7 @@ Ready to lift your click-through rate? Head to sjpt.io, upload your thumbnail im
       },
       {
         heading: "Free and unlimited for gamers",
-        body: `JPT AI's upscaler is free, unlimited, and watermark-free — perfect for building a whole wallpaper collection or a thumbnail library for your channel. It runs online, so there's nothing to install.
+        body: `Pixel Shine's upscaler is free, unlimited, and watermark-free — perfect for building a whole wallpaper collection or a thumbnail library for your channel. It runs online, so there's nothing to install.
 
 Level up your captures at sjpt.io — upload a screenshot and download a crisp 4K version in seconds.`,
       },
@@ -99,7 +99,7 @@ Level up your captures at sjpt.io — upload a screenshot and download a crisp 4
     image: IMG(1181675),
     slug: "enhance-scanned-photos-free",
     title: "How to Enhance Scanned Photos & Prints for Free",
-    metaTitle: "Enhance Scanned Photos Free Online | JPT AI",
+    metaTitle: "Enhance Scanned Photos Free Online | Pixel Shine",
     metaDescription:
       "Scanned an old print and it looks soft or grainy? Learn how to enhance and upscale scanned photos to sharp, high-resolution digital files for free.",
     excerpt:
@@ -132,7 +132,7 @@ Level up your captures at sjpt.io — upload a screenshot and download a crisp 4
       },
       {
         heading: "Preserve memories for free",
-        body: `JPT AI's enhancer is completely free, unlimited, and watermark-free, so you can digitise an entire shoebox of prints without paying per photo. Everything runs online.
+        body: `Pixel Shine's enhancer is completely free, unlimited, and watermark-free, so you can digitise an entire shoebox of prints without paying per photo. Everything runs online.
 
 Bring your old prints back to life at sjpt.io — upload a scan and download a sharp, enhanced version in seconds.`,
       },
@@ -142,7 +142,7 @@ Bring your old prints back to life at sjpt.io — upload a scan and download a s
     image: IMG(1108099),
     slug: "upscale-enhance-pet-photos",
     title: "How to Upscale & Enhance Pet Photos for Free",
-    metaTitle: "Enhance Pet Photos Free Online | JPT AI Upscaler",
+    metaTitle: "Enhance Pet Photos Free Online | Pixel Shine Upscaler",
     metaDescription:
       "Make your dog or cat photos crisp and print-ready. Upscale and enhance blurry pet photos for free — recover fur detail with no watermark.",
     excerpt:
@@ -175,7 +175,7 @@ Bring your old prints back to life at sjpt.io — upload a scan and download a s
       },
       {
         heading: "Free for every pet parent",
-        body: `JPT AI is free, unlimited, and watermark-free, so you can enhance your whole camera roll of pet photos without paying a cent. It works entirely online.
+        body: `Pixel Shine is free, unlimited, and watermark-free, so you can enhance your whole camera roll of pet photos without paying a cent. It works entirely online.
 
 Give your furry friend the crisp photos they deserve — head to sjpt.io and upload one now.`,
       },
@@ -185,7 +185,7 @@ Give your furry friend the crisp photos they deserve — head to sjpt.io and upl
     image: IMG(1640777),
     slug: "upscale-food-photos-menu-delivery",
     title: "How to Upscale Food Photos for Menus & Delivery Apps",
-    metaTitle: "Enhance Food Photos for Menus & Delivery Apps | JPT AI",
+    metaTitle: "Enhance Food Photos for Menus & Delivery Apps | Pixel Shine",
     metaDescription:
       "Make your restaurant's food photos crisp and appetising for Zomato, Swiggy, and menus. Upscale low-res food photos free — no watermark.",
     excerpt:
@@ -218,7 +218,7 @@ Give your furry friend the crisp photos they deserve — head to sjpt.io and upl
       },
       {
         heading: "Free for restaurants and home kitchens",
-        body: `JPT AI's upscaler is free, unlimited, and watermark-free — ideal for cafés, cloud kitchens, and home-based food businesses working on a tight budget. No app, no subscription.
+        body: `Pixel Shine's upscaler is free, unlimited, and watermark-free — ideal for cafés, cloud kitchens, and home-based food businesses working on a tight budget. No app, no subscription.
 
 Make your menu irresistible at sjpt.io — upload a dish photo and download a crisp version in seconds.`,
       },
@@ -228,7 +228,7 @@ Make your menu irresistible at sjpt.io — upload a dish photo and download a cr
     image: IMG(1029604),
     slug: "upscale-drone-aerial-photos",
     title: "How to Upscale Drone & Aerial Photos for Free",
-    metaTitle: "Upscale Drone & Aerial Photos Free | JPT AI",
+    metaTitle: "Upscale Drone & Aerial Photos Free | Pixel Shine",
     metaDescription:
       "Enhance and upscale drone and aerial photos to crisp high resolution for prints and listings. Free AI upscaling, no watermark.",
     excerpt:
@@ -261,7 +261,7 @@ Make your menu irresistible at sjpt.io — upload a dish photo and download a cr
       },
       {
         heading: "Free and unlimited",
-        body: `JPT AI's upscaler is free, unlimited, and watermark-free — great for hobbyist pilots and property marketers alike. Everything runs online.
+        body: `Pixel Shine's upscaler is free, unlimited, and watermark-free — great for hobbyist pilots and property marketers alike. Everything runs online.
 
 Give your aerials the resolution they deserve — upload one at sjpt.io and download a crisp version in seconds.`,
       },
@@ -271,7 +271,7 @@ Give your aerials the resolution they deserve — upload one at sjpt.io and down
     image: IMG(1687675),
     slug: "enhance-black-and-white-photos-free",
     title: "How to Enhance Old Black & White Photos for Free",
-    metaTitle: "Enhance Black & White Photos Free Online | JPT AI",
+    metaTitle: "Enhance Black & White Photos Free Online | Pixel Shine",
     metaDescription:
       "Sharpen and upscale old black-and-white photos to crisp high resolution. Free AI enhancement for vintage family portraits — no watermark.",
     excerpt:
@@ -304,7 +304,7 @@ Give your aerials the resolution they deserve — upload one at sjpt.io and down
       },
       {
         heading: "Preserve your heritage for free",
-        body: `JPT AI is free, unlimited, and watermark-free, so you can enhance an entire family archive at no cost. It all runs online — nothing to install.
+        body: `Pixel Shine is free, unlimited, and watermark-free, so you can enhance an entire family archive at no cost. It all runs online — nothing to install.
 
 Honour your family history at sjpt.io — upload an old photo and download a crisp, enhanced version in seconds.`,
       },
@@ -314,7 +314,7 @@ Honour your family history at sjpt.io — upload an old photo and download a cri
     image: IMG(1092644),
     slug: "make-blurry-screenshot-clear",
     title: "How to Make a Blurry Screenshot Clear & Readable (Free)",
-    metaTitle: "Make Blurry Screenshot Clear Free Online | JPT AI",
+    metaTitle: "Make Blurry Screenshot Clear Free Online | Pixel Shine",
     metaDescription:
       "Fix blurry, pixelated screenshots so text and details are readable again. Free AI upscaling to sharpen any screenshot — no watermark.",
     excerpt:
@@ -347,7 +347,7 @@ Honour your family history at sjpt.io — upload an old photo and download a cri
       },
       {
         heading: "Free and instant",
-        body: `JPT AI's upscaler is free, unlimited, and watermark-free, and runs entirely online — no upload limits, no sign-up.
+        body: `Pixel Shine's upscaler is free, unlimited, and watermark-free, and runs entirely online — no upload limits, no sign-up.
 
 Make that blurry screenshot readable again at sjpt.io in just a few seconds.`,
       },
@@ -357,7 +357,7 @@ Make that blurry screenshot readable again at sjpt.io in just a few seconds.`,
     image: IMG(1391498),
     slug: "upscale-photos-instagram-story-reels",
     title: "How to Upscale Photos for Instagram Stories & Reels",
-    metaTitle: "Upscale Photos for Instagram Stories & Reels | JPT AI",
+    metaTitle: "Upscale Photos for Instagram Stories & Reels | Pixel Shine",
     metaDescription:
       "Stop Instagram from making your photos blurry. Upscale images to crisp full-screen resolution for Stories and Reels — free, no watermark.",
     excerpt:
@@ -390,7 +390,7 @@ Make that blurry screenshot readable again at sjpt.io in just a few seconds.`,
       },
       {
         heading: "Free for every creator",
-        body: `JPT AI's upscaler is free, unlimited, and watermark-free — ideal for creators posting daily. It runs online with nothing to install.
+        body: `Pixel Shine's upscaler is free, unlimited, and watermark-free — ideal for creators posting daily. It runs online with nothing to install.
 
 Keep your Stories and Reels crisp — upload a photo at sjpt.io and download a sharp version in seconds.`,
       },
@@ -400,7 +400,7 @@ Keep your Stories and Reels crisp — upload a photo at sjpt.io and download a s
     image: IMG(2422290),
     slug: "enhance-passport-visa-photo-quality",
     title: "How to Enhance Passport & Visa Photo Quality (Free)",
-    metaTitle: "Enhance Passport & Visa Photo Quality Free | JPT AI",
+    metaTitle: "Enhance Passport & Visa Photo Quality Free | Pixel Shine",
     metaDescription:
       "Make your passport or visa photo sharp and clear enough to meet requirements. Upscale and enhance ID photos for free — no watermark.",
     excerpt:
@@ -433,7 +433,7 @@ Keep your Stories and Reels crisp — upload a photo at sjpt.io and download a s
       },
       {
         heading: "Free and private",
-        body: `JPT AI's upscaler is free, unlimited, and watermark-free, and processing happens online. There's no cost and no software to install.
+        body: `Pixel Shine's upscaler is free, unlimited, and watermark-free, and processing happens online. There's no cost and no software to install.
 
 Sharpen your passport or visa photo at sjpt.io before you submit — it takes just seconds.`,
       },
@@ -443,7 +443,7 @@ Sharpen your passport or visa photo at sjpt.io before you submit — it takes ju
     image: IMG(1509534),
     slug: "upscale-digital-art-for-print",
     title: "How to Upscale Digital Art & Paintings for Print",
-    metaTitle: "Upscale Digital Art for Print Free | JPT AI",
+    metaTitle: "Upscale Digital Art for Print Free | Pixel Shine",
     metaDescription:
       "Turn digital art and AI paintings into print-ready high-resolution files. Upscale artwork 4× for posters and canvas — free, no watermark.",
     excerpt:
@@ -476,7 +476,7 @@ Sharpen your passport or visa photo at sjpt.io before you submit — it takes ju
       },
       {
         heading: "Free for artists",
-        body: `JPT AI's upscaler is free, unlimited, and watermark-free — perfect for building a print shop or Etsy store without upfront costs. It runs online.
+        body: `Pixel Shine's upscaler is free, unlimited, and watermark-free — perfect for building a print shop or Etsy store without upfront costs. It runs online.
 
 Get your art print-ready at sjpt.io — upload your piece and download a high-resolution version in seconds.`,
       },
@@ -486,7 +486,7 @@ Get your art print-ready at sjpt.io — upload your piece and download a high-re
     image: IMG(1149137),
     slug: "upscale-car-photos-for-listings",
     title: "How to Upscale Car Photos for Listings (OLX, Cars24 & More)",
-    metaTitle: "Upscale Car Photos for Listings Free | JPT AI",
+    metaTitle: "Upscale Car Photos for Listings Free | Pixel Shine",
     metaDescription:
       "Sell your car faster with sharp, high-resolution photos. Upscale blurry car photos for OLX, Cars24 and marketplaces — free, no watermark.",
     excerpt:
@@ -519,7 +519,7 @@ Get your art print-ready at sjpt.io — upload your piece and download a high-re
       },
       {
         heading: "Free for every seller",
-        body: `JPT AI's upscaler is free, unlimited, and watermark-free — no subscription, no app. It runs entirely online.
+        body: `Pixel Shine's upscaler is free, unlimited, and watermark-free — no subscription, no app. It runs entirely online.
 
 Sell your car faster with sharp photos — upload one at sjpt.io and download a crisp version in seconds.`,
       },
@@ -529,7 +529,7 @@ Sell your car faster with sharp photos — upload one at sjpt.io and download a 
     image: IMG(1926769),
     slug: "enhance-fashion-lookbook-photos",
     title: "How to Enhance Fashion & Lookbook Photos for Free",
-    metaTitle: "Enhance Fashion & Lookbook Photos Free | JPT AI",
+    metaTitle: "Enhance Fashion & Lookbook Photos Free | Pixel Shine",
     metaDescription:
       "Make your fashion and lookbook photos crisp and catalogue-ready. Upscale outfit and apparel photos for free — recover fabric detail, no watermark.",
     excerpt:
@@ -562,7 +562,7 @@ Sell your car faster with sharp photos — upload one at sjpt.io and download a 
       },
       {
         heading: "Free for fashion brands",
-        body: `JPT AI's upscaler is free, unlimited, and watermark-free — ideal for boutique labels and resellers on a budget. It runs online.
+        body: `Pixel Shine's upscaler is free, unlimited, and watermark-free — ideal for boutique labels and resellers on a budget. It runs online.
 
 Make your lookbook look premium at sjpt.io — upload a photo and download a crisp version in seconds.`,
       },
@@ -572,7 +572,7 @@ Make your lookbook look premium at sjpt.io — upload a photo and download a cri
     image: IMG(1770809),
     slug: "upscale-landscape-nature-photos",
     title: "How to Upscale Landscape & Nature Photos for Free",
-    metaTitle: "Upscale Landscape & Nature Photos Free | JPT AI",
+    metaTitle: "Upscale Landscape & Nature Photos Free | Pixel Shine",
     metaDescription:
       "Enhance and upscale landscape and nature photos to crisp 4K for prints and wallpapers. Free AI upscaling — recover fine detail, no watermark.",
     excerpt:
@@ -605,7 +605,7 @@ Make your lookbook look premium at sjpt.io — upload a photo and download a cri
       },
       {
         heading: "Free and unlimited",
-        body: `JPT AI's upscaler is free, unlimited, and watermark-free — perfect for hobbyist photographers building a print or wallpaper collection. It runs online.
+        body: `Pixel Shine's upscaler is free, unlimited, and watermark-free — perfect for hobbyist photographers building a print or wallpaper collection. It runs online.
 
 Bring your landscapes to life at sjpt.io — upload a photo and download a crisp 4K version in seconds.`,
       },
@@ -615,7 +615,7 @@ Bring your landscapes to life at sjpt.io — upload a photo and download a crisp
     image: IMG(1105666),
     slug: "fix-low-light-concert-photos",
     title: "How to Fix & Upscale Low-Light Concert Photos (Free)",
-    metaTitle: "Fix Low-Light Concert Photos Free | JPT AI",
+    metaTitle: "Fix Low-Light Concert Photos Free | Pixel Shine",
     metaDescription:
       "Rescue dark, grainy concert and event photos. Upscale and enhance low-light shots to sharper, cleaner images for free — no watermark.",
     excerpt:
@@ -648,7 +648,7 @@ Bring your landscapes to life at sjpt.io — upload a photo and download a crisp
       },
       {
         heading: "Free for every fan",
-        body: `JPT AI's enhancer is free, unlimited, and watermark-free, and runs online. Rescue your whole event album at no cost.
+        body: `Pixel Shine's enhancer is free, unlimited, and watermark-free, and runs online. Rescue your whole event album at no cost.
 
 Relive the show in sharper detail — upload a concert photo at sjpt.io and enhance it in seconds.`,
       },
@@ -658,7 +658,7 @@ Relive the show in sharper detail — upload a concert photo at sjpt.io and enha
     image: IMG(1648377),
     slug: "enhance-baby-newborn-photos",
     title: "How to Enhance Baby & Newborn Photos for Free",
-    metaTitle: "Enhance Baby & Newborn Photos Free | JPT AI",
+    metaTitle: "Enhance Baby & Newborn Photos Free | Pixel Shine",
     metaDescription:
       "Make precious baby and newborn photos crisp and print-ready. Upscale and enhance soft baby photos for free — no watermark.",
     excerpt:
@@ -691,7 +691,7 @@ Relive the show in sharper detail — upload a concert photo at sjpt.io and enha
       },
       {
         heading: "Free for new parents",
-        body: `JPT AI is free, unlimited, and watermark-free, and runs online — no cost, no software, no limits during those busy newborn days.
+        body: `Pixel Shine is free, unlimited, and watermark-free, and runs online — no cost, no software, no limits during those busy newborn days.
 
 Treasure every moment in crisp detail — upload a baby photo at sjpt.io and enhance it in seconds.`,
       },
@@ -701,7 +701,7 @@ Treasure every moment in crisp detail — upload a baby photo at sjpt.io and enh
     image: IMG(1183992),
     slug: "upscale-tattoo-design-reference",
     title: "How to Upscale Tattoo Design References for Free",
-    metaTitle: "Upscale Tattoo Design References Free | JPT AI",
+    metaTitle: "Upscale Tattoo Design References Free | Pixel Shine",
     metaDescription:
       "Bring tattoo reference images to crisp, detailed resolution for stencils and consultations. Upscale tattoo designs free — no watermark.",
     excerpt:
@@ -734,7 +734,7 @@ Treasure every moment in crisp detail — upload a baby photo at sjpt.io and enh
       },
       {
         heading: "Free for artists and clients",
-        body: `JPT AI's upscaler is free, unlimited, and watermark-free, and runs online. Prep as many references as a full appointment book needs.
+        body: `Pixel Shine's upscaler is free, unlimited, and watermark-free, and runs online. Prep as many references as a full appointment book needs.
 
 Get a crystal-clear reference at sjpt.io — upload a design and download a sharp version in seconds.`,
       },
@@ -744,7 +744,7 @@ Get a crystal-clear reference at sjpt.io — upload a design and download a shar
     image: IMG(1926988),
     slug: "upscale-images-book-cover-kindle",
     title: "How to Upscale Images for Book Covers & Kindle",
-    metaTitle: "Upscale Images for Book Covers & Kindle Free | JPT AI",
+    metaTitle: "Upscale Images for Book Covers & Kindle Free | Pixel Shine",
     metaDescription:
       "Meet KDP resolution requirements with crisp cover images. Upscale photos and art for book covers and Kindle — free, no watermark.",
     excerpt:
@@ -777,7 +777,7 @@ Get a crystal-clear reference at sjpt.io — upload a design and download a shar
       },
       {
         heading: "Free for indie authors",
-        body: `JPT AI's upscaler is free, unlimited, and watermark-free — ideal for self-publishers watching every rupee. It runs online.
+        body: `Pixel Shine's upscaler is free, unlimited, and watermark-free — ideal for self-publishers watching every rupee. It runs online.
 
 Give your book a pro cover at sjpt.io — upload your image and download a high-resolution version in seconds.`,
       },
@@ -787,7 +787,7 @@ Give your book a pro cover at sjpt.io — upload your image and download a high-
     image: IMG(4050315),
     slug: "enhance-blurry-video-call-screenshot",
     title: "How to Enhance Blurry Video Call Screenshots (Free)",
-    metaTitle: "Enhance Blurry Video Call Screenshots Free | JPT AI",
+    metaTitle: "Enhance Blurry Video Call Screenshots Free | Pixel Shine",
     metaDescription:
       "Sharpen grainy screenshots from Zoom, Meet and video calls. Upscale and enhance low-res call captures for free — no watermark.",
     excerpt:
@@ -820,7 +820,7 @@ Give your book a pro cover at sjpt.io — upload your image and download a high-
       },
       {
         heading: "Free and instant",
-        body: `JPT AI's upscaler is free, unlimited, and watermark-free, running entirely online. There are no limits and nothing to install.
+        body: `Pixel Shine's upscaler is free, unlimited, and watermark-free, running entirely online. There are no limits and nothing to install.
 
 Rescue that call screenshot at sjpt.io — upload it and download a sharper version in seconds.`,
       },
@@ -830,7 +830,7 @@ Rescue that call screenshot at sjpt.io — upload it and download a sharper vers
     image: IMG(1092671),
     slug: "fix-whatsapp-blurry-photos",
     title: "How to Fix WhatsApp-Compressed Blurry Photos (Free)",
-    metaTitle: "Fix WhatsApp Blurry Photos Free Online | JPT AI",
+    metaTitle: "Fix WhatsApp Blurry Photos Free Online | Pixel Shine",
     metaDescription:
       "WhatsApp compresses photos into a blurry mess. Learn how to upscale and restore WhatsApp photos to sharp quality for free — no watermark.",
     excerpt:
@@ -863,7 +863,7 @@ Rescue that call screenshot at sjpt.io — upload it and download a sharper vers
       },
       {
         heading: "Free and unlimited",
-        body: `JPT AI's upscaler is free, unlimited, and watermark-free, and runs online — perfect for fixing the endless stream of compressed photos WhatsApp produces.
+        body: `Pixel Shine's upscaler is free, unlimited, and watermark-free, and runs online — perfect for fixing the endless stream of compressed photos WhatsApp produces.
 
 Restore your WhatsApp photos at sjpt.io — upload one and download a sharp version in seconds.`,
       },

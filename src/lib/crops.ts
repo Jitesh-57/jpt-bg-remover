@@ -85,7 +85,7 @@ export function buildCropContent(c: CropPreset): CropContent {
     slug: c.slug,
     ratio: c.ratio,
     h1: c.h1,
-    title: `${c.h1} — Free Online Crop Tool | JPT AI`,
+    title: `${c.h1} — Free Online Crop Tool | Pixel Shine`,
     metaDescription: `${c.h1} free online. Upload a photo and crop it to a ${shape} in one click — no watermark, no sign-up. Perfect for ${c.context}.`,
     keywords: `${c.keyword}, ${c.keyword} online, ${c.keyword} free, crop image ${shape}, crop photo ${c.ratio === "circle" ? "circle" : c.ratio}`,
     intro: `Need to ${c.keyword}? This free online crop tool trims your photo to a perfect ${shape} in one click — right in your browser, with no watermark and no sign-up. It center-crops your image so the important part stays in frame, ideal for ${c.context}.`,
@@ -95,7 +95,7 @@ export function buildCropContent(c: CropPreset): CropContent {
       { t: "Download", d: "Save your cropped image instantly. No watermark, no limits, completely free." },
     ],
     faqs: [
-      { q: `How do I ${c.keyword} for free?`, a: `Upload your photo to JPT AI's free crop tool, and it's preset to a ${shape} — click Crop and download. No sign-up, no watermark.` },
+      { q: `How do I ${c.keyword} for free?`, a: `Upload your photo to Pixel Shine's free crop tool, and it's preset to a ${shape} — click Crop and download. No sign-up, no watermark.` },
       { q: c.ratio === "circle" ? "Will the corners be transparent?" : "Does it lose quality?", a: c.ratio === "circle"
           ? "Yes — a circle crop produces a PNG with transparent corners, so it drops cleanly onto any background as a round image."
           : "No. Cropping only trims the edges; the remaining area keeps its original quality." },

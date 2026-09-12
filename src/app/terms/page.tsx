@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: { absolute: "Terms of Service | JPT AI" },
-  description: "Terms of Service for JPT AI — rules and conditions for using our AI image editing tools.",
+  title: { absolute: "Terms of Service | Pixel Shine" },
+  description: "Terms of Service for Pixel Shine — rules and conditions for using our AI image editing tools.",
   alternates: { canonical: "https://www.sjpt.io/terms" },
   robots: { index: true, follow: true },
 };
@@ -15,16 +15,16 @@ export default function TermsPage() {
         <p style={{ color: "var(--text-muted)", fontSize: 14, marginBottom: 48 }}>Last updated: June 23, 2025</p>
 
         <Section title="1. Acceptance of Terms">
-          By accessing or using JPT AI (&quot;the Service&quot;) at{" "}
+          By accessing or using Pixel Shine (&quot;the Service&quot;) at{" "}
           <a href="https://www.sjpt.io" style={{ color: "var(--accent)" }}>www.sjpt.io</a>, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Service.
         </Section>
 
         <Section title="2. Description of Service">
-          JPT AI provides AI-powered image editing tools including background removal, image upscaling, AI editing, headshot generation, and batch processing. The Service is provided on a credit-based system with both free and paid tiers.
+          Pixel Shine provides AI-powered image editing tools including background removal, image upscaling, AI editing, headshot generation, and batch processing. The Service is provided on a credit-based system with both free and paid tiers.
         </Section>
 
         <Section title="3. Account Registration">
-          You may sign in using your Google account. By signing in, you authorize JPT AI to access your basic Google profile information (name, email, profile picture). You are responsible for maintaining the security of your account and for all activities that occur under it.
+          You may sign in using your Google account. By signing in, you authorize Pixel Shine to access your basic Google profile information (name, email, profile picture). You are responsible for maintaining the security of your account and for all activities that occur under it.
         </Section>
 
         <Section title="4. Credits and Payments">
@@ -36,7 +36,7 @@ export default function TermsPage() {
         </Section>
 
         <Section title="5. Acceptable Use">
-          You agree not to use JPT AI to:
+          You agree not to use Pixel Shine to:
           <ul style={{ paddingLeft: 20, lineHeight: 2 }}>
             <li>Process images that contain illegal content, including child sexual abuse material</li>
             <li>Generate or edit content that violates any applicable laws or regulations</li>
@@ -50,7 +50,7 @@ export default function TermsPage() {
         <Section title="6. Intellectual Property">
           <b>Your images:</b> You retain full ownership of images you upload and the results you download. By uploading an image, you confirm you have the right to process it.
           <br /><br />
-          <b>Our service:</b> JPT AI, its logo, software, and AI models are owned by us and protected by intellectual property laws. You may not copy, reproduce, or distribute any part of our Service without written permission.
+          <b>Our service:</b> Pixel Shine, its logo, software, and AI models are owned by us and protected by intellectual property laws. You may not copy, reproduce, or distribute any part of our Service without written permission.
         </Section>
 
         <Section title="7. Privacy">
@@ -63,7 +63,7 @@ export default function TermsPage() {
         </Section>
 
         <Section title="9. Limitation of Liability">
-          To the fullest extent permitted by law, JPT AI shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of data or profits, arising out of or in connection with your use of the Service.
+          To the fullest extent permitted by law, Pixel Shine shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of data or profits, arising out of or in connection with your use of the Service.
         </Section>
 
         <Section title="10. Service Availability">
@@ -81,7 +81,7 @@ export default function TermsPage() {
         <Section title="13. Contact Us">
           If you have questions about these Terms of Service, please contact us at:
           <br /><br />
-          <b>JPT AI</b><br />
+          <b>Pixel Shine</b><br />
           Email: <a href="mailto:support@sjpt.io" style={{ color: "var(--accent)" }}>support@sjpt.io</a><br />
           Website: <a href="https://www.sjpt.io" style={{ color: "var(--accent)" }}>www.sjpt.io</a>
         </Section>

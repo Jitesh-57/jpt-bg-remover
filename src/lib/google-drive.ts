@@ -41,7 +41,7 @@ export function deductCredits<T>(s: T): T { return s; }
 
 // ─── Google Drive helpers (kept for history / optional save-to-drive) ─────────
 
-const FOLDER_NAME = "JPT AI";
+const FOLDER_NAME = "Pixel Shine";
 
 export async function getToken(req: NextRequest): Promise<string | null> {
   // Google Drive access tokens are no longer stored in sessions.

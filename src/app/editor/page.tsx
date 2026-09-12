@@ -592,7 +592,7 @@ export default function ImageEditorPage() {
         order_id: orderData.order_id,
         amount: orderData.amount,
         currency: orderData.currency || "INR",
-        name: "JPT AI",
+        name: "Pixel Shine",
         description: `${planKey.charAt(0).toUpperCase() + planKey.slice(1)} Plan — ${orderData.credits} credits`,
         theme: { color: "var(--accent)" },
         modal: { ondismiss() { trackPaymentFailed(planKey, "cancelled_by_user"); setBuyingPlan(null); } },
@@ -1168,7 +1168,7 @@ export default function ImageEditorPage() {
       const result = await applyWatermark(src, { text: wmText, position: wmPosition, fontScale: wmFontScale, color: wmColor, opacity: wmOpacity / 100 });
       setEditHistory(prev => working ? [...prev, working] : prev);
       setWorking(result);
-      setToolResult({ title: "Watermark added", detail: `"${wmText || "© JPT AI"}" · ${wmPosition.replace("-", " ")}` });
+      setToolResult({ title: "Watermark added", detail: `"${wmText || "© Pixel Shine"}" · ${wmPosition.replace("-", " ")}` });
       recordAnonTransform();
       autoSaveToDrive(result, "watermark", wmText);
     }
@@ -1290,7 +1290,7 @@ export default function ImageEditorPage() {
     const src = working || original?.dataUrl;
     if (!src || !prompt.trim() || processing) return;
     trackTransformButtonClicked("ai-edit");
-    setProcessing(true); setProcessingLabel("Editing with JPT AI…"); setError(null);
+    setProcessing(true); setProcessingLabel("Editing with Pixel Shine…"); setError(null);
     const prevCreditsAI = user?.credits ?? 0;
     setUser(u => u ? { ...u, credits: Math.max(0, u.credits - CREDIT_COST) } : u);
     try {
@@ -1546,7 +1546,7 @@ export default function ImageEditorPage() {
         <div style={s.pageHeaderInner}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <span style={s.pageIcon}>🖼</span>
-            <span style={s.pageTitle}>JPT AI Editor</span>
+            <span style={s.pageTitle}>Pixel Shine Editor</span>
           </div>
 
           {/* Low credits warning */}
@@ -1953,7 +1953,7 @@ export default function ImageEditorPage() {
             {activeTool === "ai-edit" && (
               <div style={s.panelContent}>
                 <div style={s.panelTitle}>✨ AI Edit</div>
-                <p style={s.panelSub}>Describe any change — JPT AI enhances your prompt and edits the image</p>
+                <p style={s.panelSub}>Describe any change — Pixel Shine enhances your prompt and edits the image</p>
                 <div style={s.creditNote}>
                   {user?.plan === "free"
                     ? user.trialToolsUsed?.includes("ai-edit") ? `Free trial used · ${CREDIT_COST} credits after upgrading` : (user.trialsRemaining ?? 0) > 0 ? "1 free trial available" : "No free trials left · upgrade to use"

@@ -70,7 +70,7 @@ export default function VideoWatermarkRemover() {
       <section style={{ background: "linear-gradient(160deg,var(--surface-2) 0%,var(--surface) 50%,var(--success-soft) 100%)", padding: "72px 24px 60px", textAlign: "center" }}>
         <div style={{ maxWidth: 720, margin: "0 auto" }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "var(--accent-soft)", color: "var(--accent)", fontWeight: 700, fontSize: 12, borderRadius: 20, padding: "6px 14px", marginBottom: 24, letterSpacing: "0.06em", textTransform: "uppercase" }}>
-            ☁️ JPT AI · 100% FREE
+            ☁️ Pixel Shine · 100% FREE
           </div>
           <h1 style={{ fontSize: "clamp(2.1rem,5vw,3.4rem)", fontWeight: 900, lineHeight: 1.1, letterSpacing: "-0.03em", color: "var(--text)", margin: "0 0 16px" }}>
             Free TikTok <span style={{ background: GRAD, WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", color: "transparent" }}>Watermark Remover</span>
@@ -203,7 +203,7 @@ export default function VideoWatermarkRemover() {
         <div style={{ maxWidth: 1080, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 12 }}>
             <h2 style={{ fontSize: "clamp(1.7rem,3vw,2.2rem)", fontWeight: 900, color: "#fff", margin: 0, letterSpacing: "-0.02em", lineHeight: 1.2 }}>
-              Why <span style={{ color: "var(--accent)" }}>JPT AI</span> is the best free TikTok watermark remover
+              Why <span style={{ color: "var(--accent)" }}>Pixel Shine</span> is the best free TikTok watermark remover
             </h2>
             <p style={{ fontSize: 14, color: "rgba(255,255,255,0.72)", margin: "12px 0 0" }}>The simplest way to save clean, watermark-free TikTok videos in HD.</p>
           </div>
@@ -228,7 +228,7 @@ export default function VideoWatermarkRemover() {
         <div style={{ maxWidth: 900, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 12 }}>
             <h2 style={{ fontSize: "clamp(1.7rem,3vw,2.2rem)", fontWeight: 900, color: "#fff", margin: 0, letterSpacing: "-0.02em", lineHeight: 1.2 }}>
-              Why choose <span style={{ color: "var(--accent)" }}>JPT AI</span> for TikTok downloads
+              Why choose <span style={{ color: "var(--accent)" }}>Pixel Shine</span> for TikTok downloads
             </h2>
             <p style={{ fontSize: 14, color: "rgba(255,255,255,0.72)", margin: "12px 0 0", maxWidth: 640, marginLeft: "auto", marginRight: "auto" }}>
               Save high-quality TikTok videos without the watermark and without the hassle. Just paste, and download.

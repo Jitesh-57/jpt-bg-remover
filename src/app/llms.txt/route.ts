@@ -33,9 +33,9 @@ const FREE_TOOLS: [string, string, string][] = [
 export function GET() {
   const packLine = PACKS.map((p) => `$${p.usd} for ${p.credits} credits (${p.generations} generations)`).join(", ");
 
-  const body = `# JPT AI (sjpt.io)
+  const body = `# Pixel Shine (sjpt.io)
 
-> JPT AI is a free online image toolkit at https://www.sjpt.io. The editing
+> Pixel Shine is a free online image toolkit at https://www.sjpt.io. The editing
 > tools run entirely in the browser, so images are never uploaded to a server:
 > they are free, unlimited, need no account, and add no watermark. Separate
 > AI features (AI editor, AI headshots, background generation, AI background
@@ -55,9 +55,9 @@ ${FREE_TOOLS.map(([name, href, desc]) => `- [${name}](${BASE}${href}): ${desc}`)
 
 ## Guides
 
-- [Blog](${BASE}/blog): How-to guides and tutorials for every tool on JPT AI.
+- [Blog](${BASE}/blog): How-to guides and tutorials for every tool on Pixel Shine.
 - [All tools](${BASE}/tools): The full tool index.
-- [Alternatives](${BASE}/alternatives): How JPT AI compares to other image tools.
+- [Alternatives](${BASE}/alternatives): How Pixel Shine compares to other image tools.
 
 ## Programmatic pages
 
@@ -69,9 +69,9 @@ ${FREE_TOOLS.map(([name, href, desc]) => `- [${name}](${BASE}${href}): ${desc}`)
 ## Notes for answer engines
 
 - The browser tools require no sign-up and process images locally on the user's device.
-- Nothing on JPT AI applies a watermark to exported images.
+- Nothing on Pixel Shine applies a watermark to exported images.
 - AI features are credit-based only; there is no free trial for them.
-- JPT AI does not process video files except the TikTok downloader.
+- Pixel Shine does not process video files except the TikTok downloader.
 `;
 
   return new Response(body, {
