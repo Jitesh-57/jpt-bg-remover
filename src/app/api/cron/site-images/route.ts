@@ -181,18 +181,22 @@ export async function GET(req: NextRequest) {
         const fal = e instanceof FalError ? e : null;
         lastError = fal ? `fal ${fal.status}: ${fal.detail || fal.message}` : (e as Error).message;
 
-        // A content-policy rejection is about this prompt and no other, so
-        // skip the job and carry on; stopping would let one unlucky wording
-        // block the remaining hundreds.
-        if (fal && /content_policy|content checker/i.test(fal.detail || fal.message)) {
-          results[key] = `SKIPPED: rejected by fal's content checker`;
+        // A content-policy rejection is about this prompt and no other, so it
+        // must never stop the run. It is also evidently probabilistic: in
+        // production, watermark-before-3 passed the checker on one run while
+        // its three near-identical siblings were rejected on the next. So it
+        // is retried like any transient failure and only skipped once the
+        // attempts are spent.
+        const policyRejected = !!fal && /content_policy|content checker/i.test(fal.detail || fal.message);
+        if (policyRejected && attempt === RETRIES - 1) {
+          results[key] = `SKIPPED: rejected by fal's content checker on all ${RETRIES} attempts`;
           break;
         }
 
         // A rejected key, an empty balance or a malformed request will fail
         // every remaining job identically. Stop rather than spend the budget
         // discovering that 300 more times.
-        if (fal && !fal.transient) {
+        if (fal && !fal.transient && !policyRejected) {
           results[key] = `FAILED: ${lastError}`;
           return NextResponse.json(
             { stopped: "fal rejected the request and will keep rejecting it", hop, falStatus: fal.status, detail: fal.detail, results },
