@@ -154,9 +154,19 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
           <div style={{ maxWidth: 820, margin: "0 auto", textAlign: "center" }}>
             <h2 style={{ fontSize: "clamp(1.5rem,3vw,2rem)", fontWeight: 900, color: "var(--text)", margin: "0 0 28px", letterSpacing: "-0.02em" }}>See it in action — real before &amp; after</h2>
             <figure style={{ margin: 0 }}>
-              <div style={{ borderRadius: 18, overflow: "hidden", boxShadow: "0 20px 60px rgba(0,0,0,0.16)", border: "1px solid var(--border)" }}>
+              {/*
+                The labels are drawn here rather than generated into the image.
+                Lettering is the least reliable thing an image model produces,
+                and a misspelled badge baked into the file could only be fixed
+                by regenerating it — in HTML they are crisp and cost nothing.
+                The creative is a top/bottom split at 4:5, so before sits at the
+                top and after at the bottom.
+              */}
+              <div style={{ position: "relative", borderRadius: 18, overflow: "hidden", boxShadow: "0 20px 60px rgba(0,0,0,0.16)", border: "1px solid var(--border)" }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={previewUrl(a.slug)} alt={`${a.h1}: real before and after AI example`} style={{ width: "100%", display: "block" }} />
+                <img src={previewUrl(a.slug)} alt={`${a.h1}: before and after example`} style={{ width: "100%", display: "block" }} />
+                <span style={{ position: "absolute", top: 12, left: 12, background: "rgba(11,11,14,0.82)", color: "#fff", backdropFilter: "blur(6px)", fontSize: 11, fontWeight: 800, letterSpacing: "0.09em", borderRadius: 999, padding: "5px 11px" }}>BEFORE</span>
+                <span style={{ position: "absolute", bottom: 12, right: 12, background: "var(--accent-fill)", color: "#fff", fontSize: 11, fontWeight: 800, letterSpacing: "0.09em", borderRadius: 999, padding: "5px 11px" }}>AFTER</span>
               </div>
               <figcaption style={{ fontSize: 12.5, color: "var(--text-faint)", marginTop: 10 }}>Real AI example — actual output from this Creative App</figcaption>
             </figure>

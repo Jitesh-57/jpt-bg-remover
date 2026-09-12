@@ -9,7 +9,7 @@
  * from the same modules the pages use rather than retyped.
  */
 
-import { CREATIVE_APPS } from "@/lib/creative-apps";
+import { CREATIVE_APPS, type CreativeApp } from "@/lib/creative-apps";
 import { CAT_META, type AppCat } from "@/lib/app-catalog";
 import { presetsFor, PRESET_IMAGE_BUCKET } from "@/lib/app-presets";
 import { categoryOf } from "@/lib/app-content";
@@ -38,12 +38,32 @@ const BLOGS = "Blogs";
 const STYLE =
   "Photorealistic, clean, modern, soft even lighting, uncluttered composition, no text, no words, no lettering, no watermark, no logos, no UI chrome.";
 
-/** A labelled two-panel comparison — the shape every before/after slot wants. */
-function beforeAfter(before: string, after: string): string {
-  return `A single wide before-and-after comparison image split into two equal vertical halves with a thin clean white divider down the middle.
-Left half: ${before} — deliberately ordinary and unpolished, like an unedited phone photo.
-Right half: the SAME subject after the change — ${after}
-Put a small rounded label badge in the top-left of the left half reading exactly "BEFORE" and a matching badge in the top-right of the right half reading exactly "AFTER", white text on a dark semi-transparent pill. Both halves must clearly show the same subject. ${STYLE}`;
+/**
+ * A two-panel comparison — the shape every before/after slot wants.
+ *
+ * Two deliberate choices here:
+ *
+ * The panels are never asked to carry "BEFORE" / "AFTER" text. Generated
+ * lettering is the least reliable thing these models do, and a misspelled
+ * badge burned into 200 images cannot be fixed without regenerating all of
+ * them. The labels are drawn over the image in HTML instead, where they are
+ * crisp, translatable and free.
+ *
+ * The split follows the slot's shape. A left/right split inside a 4:5 card
+ * gives two panels about 125px wide on the homepage grid, which is too narrow
+ * to read either half — so tall slots stack top and bottom instead.
+ */
+function beforeAfter(before: string, after: string, aspect = "16:10"): string {
+  const tall = aspect === "4:5" || aspect === "3:4" || aspect === "9:16";
+  const geometry = tall
+    ? `A single image divided into two equal halves stacked vertically, separated by a thin clean light divider line across the middle.
+Top half: ${before}
+Bottom half: the SAME subject after the change — ${after}`
+    : `A single image divided into two equal halves side by side, separated by a thin clean light divider line down the middle.
+Left half: ${before}
+Right half: the SAME subject after the change — ${after}`;
+  return `${geometry}
+Both halves must clearly show the same subject from the same angle, so the difference reads as one change rather than two unrelated photos. Absolutely no text, letters, numbers, badges, labels or captions anywhere in the image. ${STYLE}`;
 }
 
 /* ── 1. homepage ────────────────────────────────────────────────────────── */
@@ -53,7 +73,8 @@ const HOME: ImageJob[] = [
     set: "home", bucket: LANDING, path: "home-hero.png", aspect: "21:9",
     prompt: beforeAfter(
       "a plain smartphone selfie of a smiling adult in casual clothes against a blank beige wall, flat indoor lighting",
-      "the same person as a polished studio portrait: tailored clothing, soft key light with a gentle fill, a clean dark neutral backdrop, confident relaxed expression"
+      "the same person as a polished studio portrait: tailored clothing, soft key light with a gentle fill, a clean dark neutral backdrop, confident relaxed expression",
+      "21:9"
     ),
   },
   {
@@ -168,9 +189,9 @@ const WATERMARK_CASES: { before: string; after: string }[] = [
 WATERMARK_CASES.forEach((c, i) => {
   TOOLS.push(
     { set: "tools", bucket: BLOGS, path: `watermark-before-${i + 1}.png`, aspect: "4:3",
-      prompt: `${c.before}. Photographic, clean composition. ${STYLE}` },
+      prompt: `${c.before}. Photographic, clean composition. No text anywhere in the image. ${STYLE}` },
     { set: "tools", bucket: BLOGS, path: `watermark-after-${i + 1}.png`, aspect: "4:3",
-      prompt: `${c.after}. Photographic, clean composition, identical framing to the version that still had the mark. ${STYLE}` },
+      prompt: `${c.after}. Photographic, clean composition, identical framing to the version that still had the mark. No text anywhere in the image. ${STYLE}` },
   );
 });
 
@@ -198,14 +219,82 @@ const BEFORE_BY_CAT: Record<string, string> = {
   fun: "a plain, ordinary smartphone selfie of an adult in colourful casual clothes against a blank wall",
 };
 
+/**
+ * Subject overrides, matched on words in the app's slug or name.
+ *
+ * The category alone is not enough: a "Car Photo Editor" and a "Jewellery
+ * Photo Editor" are both `product`, and showing a person — or the wrong
+ * object — in the "before" half makes the card read as unrelated to the tool.
+ * First match wins, so the more specific keywords are listed first.
+ */
+const SUBJECT_RULES: [RegExp, string][] = [
+  [/piercing|beard|glasses|braces|tattoo|hairstyle|hair-color|bangs|curly|blonde|bald|buzz-cut|long-hair|eyebrow|eye-color|smile|expression/,
+    "a clear front-facing smartphone portrait of an adult in plain even light against a blank wall, no accessories and nothing unusual about the face"],
+  [/unpixelate|unblur|upscal|enlarge|sharpen|denoise|hd-photo|4k|image-enlarger/,
+    "a small, soft, visibly low-resolution and slightly pixelated photograph of a face, clearly enlarged far past its real size"],
+  [/muscle|\babs\b|six-pack|body-editor|fitness|gym|skinny|slim/,
+    "an ordinary smartphone photograph of an adult standing in a plain t-shirt in an undecorated room, flat indoor light"],
+  [/\bpet|dog|cat\b/, "an ordinary snapshot of a dog sitting on a living-room floor, taken from standing height in flat indoor light"],
+  [/baby|toddler|kid/, "an ordinary snapshot of a baby sitting on a plain rug, flat indoor light, slightly awkward framing"],
+  [/couple|wedding|anniversary|engagement/, "an ordinary snapshot of two adults standing side by side in everyday clothes against a plain wall"],
+  [/family|group/, "an ordinary snapshot of three adults standing in a row in everyday clothes in a plain room"],
+  [/\bcar\b|automotive|dealer|vehicle/, "a used car photographed in a residential driveway on an overcast day, bins and a fence visible behind it"],
+  [/bike|motorcycle|truck/, "a motorcycle photographed in a plain concrete car park on a dull day, clutter in the background"],
+  [/jewel|ring|necklace/, "a gold ring photographed on a kitchen worktop under yellow domestic lighting, dust visible on the metal"],
+  [/food|restaurant|menu|dish/, "a plated meal photographed on a restaurant table under dim yellow light, cutlery and a glass crowding the frame"],
+  [/real-estate|house|property|interior|room|home-decor|hotel|architect/, "a living room photographed on a phone in dull daylight: uneven exposure, a cluttered coffee table and a crooked horizon"],
+  [/saree|dress|outfit|fashion|clothing|apparel/, "an ordinary snapshot of an adult in plain everyday clothes standing against a blank wall in flat light"],
+  [/shoe|sneaker|watch|headphone|bottle|electronic|gadget|amazon|ecommerce|shopify|product|beauty/, "a single consumer product photographed on a cluttered domestic worktop under yellow kitchen lighting"],
+  [/logo|icon|signature|png-maker/, "a hand-drawn mark on white paper photographed on a desk, the paper edges and shadows visible"],
+  [/thumbnail|youtube|banner|cover|poster|album/, "an ordinary off-centre snapshot of an adult with a lot of dead space around them and nowhere obvious for a title"],
+  [/old-photo|restoration|colorize|colourise|black-and-white|yearbook/, "an old damaged photographic print: faded towards magenta, a crease across one corner, surface scratches and dust"],
+  [/passport|visa|\bid\b/, "a casual arm's-length selfie of an adult against a patterned wall, head tilted, uneven shadow across the face"],
+];
+
+/** The "before" half for an app: a keyword rule if one matches, else its category. */
+function beforeSubjectFor(app: CreativeApp): string {
+  const hay = `${app.slug} ${app.h1}`.toLowerCase();
+  for (const [re, subject] of SUBJECT_RULES) if (re.test(hay)) return subject;
+  return BEFORE_BY_CAT[categoryOf(app)] || BEFORE_BY_CAT.portrait;
+}
+
+/**
+ * The apps that take no input photo.
+ *
+ * A before/after split would misrepresent these — there is no "before" — so
+ * they get a single example of what the tool produces instead.
+ *
+ * This is an explicit list rather than a pattern, because both patterns I
+ * tried were wrong in both directions. Matching the slug put "comic-book-cover"
+ * in here on account of "book-cover", when it is very much photo-based.
+ * Matching the prompt for a demonstrative missed the removal tools and caught
+ * the profile-picture makers, whose prompts happen not to say "this" even
+ * though a user uploads a photo to every one of them. The list below was read
+ * off the 200 prompts by hand; anything not named here gets a before/after.
+ */
+const NO_INPUT_PHOTO = new Set([
+  "text-to-emoji",
+  "birth-flower-tattoo",
+  "album-cover-generator",
+  "movie-poster-generator",
+  "book-cover-generator",
+  "logo-maker",
+  "gaming-logo-maker",
+  "icon-generator",
+  "ai-character-generator",
+  "linkedin-banner-maker",
+]);
+
 const APPS: ImageJob[] = CREATIVE_APPS.map((a) => ({
   set: "apps" as const,
   bucket: LANDING,
   path: `creative/${a.slug}.png`,
   // 4:5 portrait: these files are the app's card on the homepage and the hub
-  // as well as the showcase on its own page.
+  // as well as the showcase on its own page, so the split runs top to bottom.
   aspect: "4:5",
-  prompt: beforeAfter(BEFORE_BY_CAT[categoryOf(a)] || BEFORE_BY_CAT.portrait, a.prompt),
+  prompt: NO_INPUT_PHOTO.has(a.slug)
+    ? `A single finished example of exactly what this tool produces: ${a.prompt} Presented cleanly and centred, filling the frame, as a portfolio example. Absolutely no text, letters, numbers, badges or captions anywhere in the image. ${STYLE}`
+    : beforeAfter(beforeSubjectFor(a), a.prompt, "4:5"),
 }));
 
 /* ── 4. preset thumbnails, one set per category ─────────────────────────── */

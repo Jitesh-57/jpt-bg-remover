@@ -88,6 +88,11 @@ export async function GET(req: NextRequest) {
       alreadyPresent: jobs.length - todo.length,
       missing: todo.length,
       missingPaths: todo.slice(0, 40).map((j) => `${j.bucket}/${j.path}`),
+      // show=1 prints the prompts too, so what is about to be made can be read
+      // before any of it is paid for.
+      ...(q.get("show") === "1"
+        ? { prompts: todo.slice(0, Number(q.get("showLimit") || limit)).map((j) => ({ path: `${j.bucket}/${j.path}`, aspect: j.aspect, prompt: j.prompt })) }
+        : {}),
       runNext: `${baseUrl(req)}?token=${TOKEN}&set=${set || "all"}&run=1&limit=${limit}`,
     });
   }
