@@ -174,17 +174,37 @@ export class FalError extends Error {
     super(message);
     this.name = "FalError";
   }
+  /**
+   * Throttled rather than refused.
+   *
+   * fal signals this as 429, but also as 403 with a rate-limit reason in the
+   * body — and a 403 read as "bad credentials" is how a burst of generations
+   * came to look like a misconfigured key. The distinction matters because
+   * this one clears on its own: the right response is to wait and try fal
+   * again, not to conclude the key is wrong or switch provider.
+   */
+  get rateLimited(): boolean {
+    const text = `${this.detail} ${this.message}`;
+    return (
+      this.status === 429 ||
+      (this.status === 403 && /rate.?limit|too many|quota|exhaust|concurren/i.test(text))
+    );
+  }
+
   /** Worth trying again: rate limiting, capacity, or a server-side blip. */
   get transient(): boolean {
-    return this.status === 429 || this.status === 408 || this.status >= 500;
+    return this.status === 408 || this.status >= 500 || this.rateLimited;
   }
 
   /**
    * A credentials or billing problem: every other request will fail the same
    * way, so a bulk job should stop rather than burn through its queue.
+   *
+   * A throttled 403 is explicitly not this — it is transient, and stopping a
+   * run on it wastes the whole queue over something that resolves in seconds.
    */
   get fatal(): boolean {
-    return this.status === 401 || this.status === 402 || this.status === 403;
+    return !this.rateLimited && (this.status === 401 || this.status === 402 || this.status === 403);
   }
 
   /**
