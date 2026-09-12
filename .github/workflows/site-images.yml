@@ -46,7 +46,7 @@ jobs:
           # The endpoint chains its own follow-up invocations server-side, so
           # one call walks the whole set. A long timeout is expected: the first
           # batch generates images before it responds.
-          code=$(curl -sS -m 600 -o response.json -w '%{http_code}' \
+          code=$(curl -sS -m 900 -o response.json -w '%{http_code}' \
             "https://www.sjpt.io/api/cron/site-images?token=${TOKEN}" || echo 000)
           echo "HTTP $code"
           cat response.json || true
