@@ -1277,6 +1277,15 @@ export default function ImageEditorPage() {
     finally { setProcessing(false); }
   };
 
+  // The bottom prompt bar routes through the same AI Edit path as the tool panel.
+  const submitPromptBar = () => {
+    if (!prompt.trim() || processing) return;
+    if (requireSignIn()) return;
+    if ((user?.credits ?? 0) < CREDIT_COST) { openUnlimited("AI Edit"); return; }
+    setActiveTool("ai-edit");
+    void handleAiEdit();
+  };
+
   const handleAiEdit = async () => {
     const src = working || original?.dataUrl;
     if (!src || !prompt.trim() || processing) return;
@@ -1602,37 +1611,63 @@ export default function ImageEditorPage() {
 
         {/* ── Left Sidebar (desktop only) ──────────────────────────────────── */}
         {!isMobile && <div style={s.sidebar}>
-          {TOOLS.map((t) => (
-            <button
-              key={t.id}
-              disabled={!hasImage}
-              onClick={() => {
-                // Free tools: always usable immediately (no auth needed to select panel).
-                if (t.free) { setActiveTool(activeTool === t.id ? null : t.id); return; }
-                // For paid tools, wait until auth is resolved before gating.
-                if (!authChecked) { setActiveTool(activeTool === t.id ? null : t.id); return; }
-                if (!user) { requireSignIn(); return; }
-                const isPaidUser = !!(user.plan && user.plan !== "free");
-                const trialUsedForTool = !!(t.id && user.trialToolsUsed?.includes(t.id));
-                const trialAvailable = !trialUsedForTool && (user.trialsRemaining ?? 0) > 0;
-                if (t.paid && !isPaidUser && !trialAvailable) {
-                  setBlockedTool(t);
-                  openUnlimited();
-                  return;
-                }
-                setActiveTool(activeTool === t.id ? null : t.id);
-              }}
-              title={`${t.label}${t.free || ["resize", "adjust"].includes(t.id ?? "") ? " (Free)" : ` (${CREDIT_COST} credits, or a free trial)`}`}
-              style={{ ...s.toolBtn, ...(activeTool === t.id ? s.toolBtnActive : {}), ...(!hasImage ? { opacity: 0.35, cursor: "not-allowed" } : {}) }}
-            >
-              <ToolIcon id={t.id ?? "default"} active={activeTool === t.id} size={38} />
-              <span style={s.toolLabel}>{t.label}</span>
-            </button>
+          {([["Free", TOOLS.filter((t) => t.free)], ["Pro", TOOLS.filter((t) => !t.free)]] as const).map(([group, list]) => list.length > 0 && (
+            <div key={group} style={{ display: "flex", flexDirection: "column", gap: 4, marginBottom: 10 }}>
+              <div style={s.railGroup}>{group}</div>
+              {list.map((t) => (
+                <button
+                  key={t.id}
+                  disabled={!hasImage}
+                  onClick={() => {
+                    // Free tools: always usable immediately (no auth needed to select panel).
+                    if (t.free) { setActiveTool(activeTool === t.id ? null : t.id); return; }
+                    // For Pro tools, wait until auth is resolved before gating.
+                    if (!authChecked) { setActiveTool(activeTool === t.id ? null : t.id); return; }
+                    if (!user) { requireSignIn(); return; }
+                    // Pure credit model: the balance is the only thing that matters.
+                    if (t.paid && (user.credits ?? 0) < CREDIT_COST) {
+                      setBlockedTool(t);
+                      openUnlimited(t.label);
+                      return;
+                    }
+                    setActiveTool(activeTool === t.id ? null : t.id);
+                  }}
+                  title={`${t.label}${t.free ? " (Free)" : ` (${CREDIT_COST} credits)`}`}
+                  style={{ ...s.toolBtn, ...(activeTool === t.id ? s.toolBtnActive : {}), ...(!hasImage ? { opacity: 0.35, cursor: "not-allowed" } : {}) }}
+                >
+                  <ToolIcon id={t.id ?? "default"} active={activeTool === t.id} size={38} />
+                  <span style={s.toolLabel}>{t.label}</span>
+                </button>
+              ))}
+            </div>
           ))}
         </div>}
 
         {/* ── Canvas Area ───────────────────────────────────────────────────── */}
         <div style={{ ...s.canvasArea, ...(isMobile ? { padding: "12px", paddingBottom: 72 } : {}) }}>
+          {hasImage && (
+            <div style={s.dockBar}>
+              <span style={s.dockBarIcon}>✨</span>
+              <input
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); submitPromptBar(); } }}
+                placeholder="Describe an edit — “remove the background”, “make it golden hour”, “turn it into a 1980s portrait”…"
+                aria-label="Describe an edit"
+                disabled={processing}
+                style={s.dockBarInput}
+              />
+              <span style={s.dockBarMeta}>AI Edit · {CREDIT_COST} credits</span>
+              <button
+                onClick={submitPromptBar}
+                disabled={processing || !prompt.trim()}
+                aria-label="Apply edit"
+                style={{ ...s.dockBarGo, ...(processing || !prompt.trim() ? { opacity: 0.45, cursor: "not-allowed" } : {}) }}
+              >
+                {processing ? "…" : "↑"}
+              </button>
+            </div>
+          )}
 
           {/* Saved session banner */}
           {!hasImage && savedSession && (
@@ -2811,6 +2846,12 @@ const s: Record<string, React.CSSProperties> = {
 
   layout: { display: "flex", flex: 1, minHeight: 0, overflow: "hidden" },
   sidebar: { width: 72, flexShrink: 0, background: "var(--surface)", borderRight: "1px solid var(--border)", display: "flex", flexDirection: "column" as const, padding: "12px 6px", gap: 4, overflowY: "auto" as const },
+  railGroup: { fontSize: 9.5, fontWeight: 800, color: "var(--text-faint)", textTransform: "uppercase" as const, letterSpacing: "0.12em", textAlign: "center" as const, padding: "4px 0 2px" },
+  dockBar: { order: 99, marginTop: "auto", display: "flex", alignItems: "center", gap: 10, background: "var(--surface)", border: "1px solid var(--border-strong)", borderRadius: 999, padding: "8px 8px 8px 16px", boxShadow: "var(--shadow-lg)", maxWidth: 760, width: "100%", alignSelf: "center", position: "sticky" as const, bottom: 12, zIndex: 5 },
+  dockBarIcon: { fontSize: 16, flexShrink: 0 },
+  dockBarInput: { flex: 1, minWidth: 0, border: "none", outline: "none", background: "transparent", color: "var(--text)", fontSize: 14.5, fontFamily: "inherit" },
+  dockBarMeta: { fontSize: 11.5, fontWeight: 700, color: "var(--text-faint)", whiteSpace: "nowrap" as const, flexShrink: 0 },
+  dockBarGo: { width: 38, height: 38, borderRadius: "50%", border: "none", background: "var(--grad-strong)", color: "#fff", fontWeight: 900, fontSize: 17, cursor: "pointer", flexShrink: 0, fontFamily: "inherit", boxShadow: "var(--glow)" },
   toolBtn: { width: "100%", display: "flex", flexDirection: "column" as const, alignItems: "center", gap: 4, padding: "10px 4px", borderRadius: 10, border: "none", background: "none", cursor: "pointer", color: "var(--text-muted)" },
   toolBtnActive: { background: "var(--surface-2)", color: "var(--accent)" },
   toolLabel: { fontSize: 9, fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: 0.5, lineHeight: 1 },

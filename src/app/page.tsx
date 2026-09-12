@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getPageConfig } from "@/lib/page-config";
-import LandingPage from "./_components/LandingPage";
+import HomePage from "./_components/HomePage";
 
 const BASE = "https://www.sjpt.io";
 
@@ -31,23 +31,11 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function Page() {
   const config = await getPageConfig("home");
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: "JPT AI",
-    description: config.meta_description,
-    applicationCategory: "MultimediaApplication",
-    operatingSystem: "Web",
-    browserRequirements: "Requires JavaScript",
-    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-    url: BASE,
-  };
 
-  // FAQ structured data is emitted by <LandingPage> to avoid duplication.
+  // FAQ and WebPage structured data are emitted by <HomePage>.
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <LandingPage config={config} toolHref="/editor" pageId="home" isHome />
+      <HomePage config={config} />
     </>
   );
 }
