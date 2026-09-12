@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 import { getPageConfig } from "@/lib/page-config";
 import HomePage from "./_components/HomePage";
+import { appsWithExamples } from "@/lib/creative-examples.server";
 
 const BASE = "https://www.sjpt.io";
 
 export async function generateMetadata(): Promise<Metadata> {
   const config = await getPageConfig("home");
+  // Only feature apps whose example image exists; see the module's comment.
+  const withExamples = await appsWithExamples();
   return {
     title: { absolute: config.title },
     description: config.meta_description,
@@ -30,12 +33,14 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Page() {
   const config = await getPageConfig("home");
+  // Only feature apps whose example image exists; see the module's comment.
+  const withExamples = await appsWithExamples();
 
 
   // FAQ and WebPage structured data are emitted by <HomePage>.
   return (
     <>
-      <HomePage config={config} />
+      <HomePage config={config} withExamples={withExamples} />
     </>
   );
 }

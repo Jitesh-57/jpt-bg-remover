@@ -257,7 +257,7 @@ export async function withCredits(
     return NextResponse.json({
       error: session.credits > 0
         ? `You need ${CREDIT_COST} credits for this. Top up to continue.`
-        : "AI features run on credits. Grab a pack to start — from $2, and they never expire.",
+        : "AI features run on credits. Grab a pack to start — from ₹166, and they never expire.",
       upgradeRequired: true,
       credits: session.credits,
     }, { status: 402 });
@@ -343,7 +343,7 @@ export async function checkEntitlement(
     return NextResponse.json({
       error: session.credits > 0
         ? `You need ${CREDIT_COST} credits for this. Top up to continue.`
-        : "AI features run on credits. Grab a pack to start — from $2, and they never expire.",
+        : "AI features run on credits. Grab a pack to start — from ₹166, and they never expire.",
       upgradeRequired: true,
       credits: session.credits,
     }, { status: 402 });

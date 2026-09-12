@@ -66,7 +66,7 @@ export function editImage(
     );
   }
   return viaFal(
-    () => falEditImage(src, `You are a professional photo editor. Edit this image: ${prompt}. Return only the edited image.`, m, aspectRatio),
+    () => falEditImage(src, `You are a professional photo editor. Edit this image: ${prompt}. Return only the edited image.`, m, aspectRatio, opts?.budgetMs),
     () => geminiEditImage(src, prompt),
     "edit"
   );

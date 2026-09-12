@@ -36,6 +36,8 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
   const [err, setErr] = useState<string | null>(null);
   const [credits, setCredits] = useState<number | null>(null);
   const [loggedIn, setLoggedIn] = useState(false);
+  /** True once a pack has been bought; `plan` only leaves "free" on purchase. */
+  const [purchased, setPurchased] = useState(false);
 
   const fileRef = useRef<HTMLInputElement>(null);
   const presets = useMemo(() => presetsFor(app, tab), [app, tab]);
@@ -43,10 +45,11 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
   useEffect(() => {
     fetch("/api/auth/google/me")
       .then((r) => r.json())
-      .then((d: { authenticated?: boolean; credits?: number }) => {
+      .then((d: { authenticated?: boolean; credits?: number; plan?: string }) => {
         if (d.authenticated) {
           setLoggedIn(true);
           if (typeof d.credits === "number") setCredits(d.credits);
+          setPurchased(!!d.plan && d.plan !== "free");
         }
       })
       .catch(() => {});
@@ -116,7 +119,22 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
           aspectRatio: ratio,
         }),
       });
-      const data = (await res.json()) as { dataUrl?: string; error?: string; credits?: number; upgradeRequired?: boolean };
+      // Read the body defensively. A gateway timeout or a platform error page
+      // is not JSON, and calling res.json() on it threw — which landed in the
+      // catch below and told the user "Network error" for a request that had
+      // actually reached the server and been working on their image.
+      type Body = { dataUrl?: string; error?: string; credits?: number; upgradeRequired?: boolean };
+      const raw = await res.text();
+      let data: Body = {};
+      try {
+        data = raw ? (JSON.parse(raw) as Body) : {};
+      } catch {
+        data = {
+          error: res.status === 504 || res.status === 408
+            ? "That took longer than the server allows. Try a smaller image, or the other model."
+            : `The server returned an unexpected response (${res.status}). Please try again.`,
+        };
+      }
 
       if (typeof data.credits === "number") setCredits(data.credits);
 
@@ -353,7 +371,8 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
 
         <div style={{ fontSize: 12, color: "var(--text-faint)", textAlign: "center", marginTop: 10, lineHeight: 1.6 }}>
           {CREDIT_COST} credits per generation
-          {credits !== null && <> · you have {credits}</>}
+          {/* Only shown once a pack has been bought — see `purchased`. */}
+          {purchased && credits !== null && <> · you have {credits}</>}
         </div>
       </aside>
 
