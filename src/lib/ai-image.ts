@@ -87,7 +87,7 @@ export function generateFromText(
   const m = resolveModel(opts?.model);
   const aspect = opts?.aspect_ratio || "16:9";
   return viaFal(
-    () => falGenerateImage(`High-quality, photorealistic image (${aspect} aspect ratio): ${prompt}`, m),
+    () => falGenerateImage(`High-quality, photorealistic image (${aspect} aspect ratio): ${prompt}`, m, aspect),
     () => geminiGenerateFromText(prompt, opts),
     "text-to-image"
   );

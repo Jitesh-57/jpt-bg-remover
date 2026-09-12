@@ -155,6 +155,8 @@ function gptImageSize(aspectRatio?: string): string {
   switch (aspectRatio) {
     case "16:9":
     case "3:2":
+    case "21:9":
+    case "16:10":
       return "1536x1024";
     case "9:16":
     case "4:5":
@@ -212,14 +214,16 @@ export async function falEditImages(
 /** Generates an image from a prompt alone. */
 export async function falGenerateImage(
   prompt: string,
-  model: FalModel = DEFAULT_MODEL
+  model: FalModel = DEFAULT_MODEL,
+  aspectRatio?: string
 ): Promise<string> {
   const endpoint = ENDPOINTS[model].generate;
 
   const input =
     model === "nano-banana"
-      ? { prompt, num_images: 1, output_format: "png" }
-      : { prompt, num_images: 1, image_size: "1024x1024", quality: "high" };
+      ? { prompt, num_images: 1, output_format: "png",
+          ...(aspectRatio ? { aspect_ratio: aspectRatio } : {}) }
+      : { prompt, num_images: 1, image_size: aspectRatio ? gptImageSize(aspectRatio) : "1024x1024", quality: "high" };
 
   const result = await runQueued(endpoint, input);
   return urlToDataUrl(firstImageUrl(result));
