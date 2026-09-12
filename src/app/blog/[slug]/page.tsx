@@ -174,7 +174,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           {/* Article header */}
           <article>
             <div style={{ marginBottom: 20 }}>
-              <span style={{ background: CATEGORY_COLORS[post.category] || "var(--accent)", color: "#fff", fontSize: 11, fontWeight: 700, padding: "4px 12px", borderRadius: 20, letterSpacing: 0.5 }}>
+              <span style={{ background: CATEGORY_COLORS[post.category] || "var(--accent-fill)", color: "#fff", fontSize: 11, fontWeight: 700, padding: "4px 12px", borderRadius: 20, letterSpacing: 0.5 }}>
                 {post.category}
               </span>
             </div>
@@ -196,7 +196,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             )}
 
             {/* Intro box */}
-            <div style={{ background: "linear-gradient(135deg, var(--accent-soft), var(--surface-2))", border: "1px solid rgba(15,157,107,0.2)", borderRadius: 14, padding: "20px 24px", marginBottom: 40 }}>
+            <div style={{ background: "linear-gradient(135deg, var(--accent-soft), var(--surface-2))", border: "1px solid var(--accent-border)", borderRadius: 14, padding: "20px 24px", marginBottom: 40 }}>
               <p style={{ margin: 0, fontSize: 17, color: "var(--text-muted)", lineHeight: 1.7, fontStyle: "italic" }}>
                 {post.excerpt}
               </p>

@@ -51,14 +51,14 @@ export default function WatermarkRemoverCTA() {
             onChange={(e) => handleFile(e.target.files?.[0])}
             style={{ display: "none" }}
           />
-          <span style={{ width: 54, height: 54, borderRadius: 14, background: GRAD, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 8px 20px rgba(15,157,107,0.3)" }}>
+          <span style={{ width: 54, height: 54, borderRadius: 14, background: GRAD, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 8px 20px rgba(255,106,26,0.40)" }}>
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 16V4M12 4l-4 4M12 4l4 4" /><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" /></svg>
           </span>
           <span style={{ fontSize: 17, fontWeight: 800, color: "var(--text)" }}>Drop an image or click to upload</span>
           <span style={{ fontSize: 13.5, color: "var(--text-muted)" }}>JPG, PNG, WEBP — nothing to install, free to try</span>
         </label>
       ) : (
-        <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 18, padding: 16, boxShadow: "0 18px 50px rgba(15,157,107,0.12)" }}>
+        <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 18, padding: 16, boxShadow: "0 18px 50px var(--accent-soft)" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={preview} alt="Your uploaded image" style={{ width: "100%", maxHeight: 320, objectFit: "contain", borderRadius: 12, display: "block", background: "var(--surface-2)" }} />
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginTop: 12, flexWrap: "wrap" }}>
@@ -79,7 +79,7 @@ export default function WatermarkRemoverCTA() {
         style={{
           marginTop: 18, width: "100%", background: GRAD, color: "#fff", border: "none",
           borderRadius: 14, padding: "16px 28px", fontSize: 17, fontWeight: 800, cursor: "pointer",
-          boxShadow: "0 10px 28px rgba(15,157,107,0.35)",
+          boxShadow: "0 10px 28px rgba(255,106,26,0.40)",
         }}
       >
         Remove Watermark →

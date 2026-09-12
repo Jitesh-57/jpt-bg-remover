@@ -113,7 +113,7 @@ export default function ToolIcon({ id, active, size = 40 }: { id: string; active
         width: size, height: size, borderRadius: size * 0.28,
         display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
         background: active ? "linear-gradient(135deg,var(--accent),var(--accent-2))" : "var(--accent-soft)",
-        boxShadow: active ? "0 6px 16px rgba(15,157,107,0.35)" : "none",
+        boxShadow: active ? "0 6px 16px rgba(255,106,26,0.40)" : "none",
         transition: "background .15s",
       }}
     >

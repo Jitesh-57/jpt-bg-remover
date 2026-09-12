@@ -262,7 +262,9 @@ export default function LandingPageClient() {
   const handleUpload = async (file: File) => {
     if (!file.type.startsWith("image/")) return;
     const url = await readFile(file);
-    try { sessionStorage.setItem("jpt_pending_image", url); } catch {}
+    // Via the shared store: a full-resolution data URL overflows sessionStorage.
+    await savePendingContext({ image: url });
+    // Going to the editor is intentional here — this page has no canvas.
     window.location.href = "/editor";
   };
 
@@ -275,10 +277,8 @@ export default function LandingPageClient() {
     if (!file.type.startsWith("image/")) return;
     const url = await readFile(file);
     const tool = pendingFeatureTool.current;
-    try {
-      sessionStorage.setItem("jpt_pending_image", url);
-      sessionStorage.setItem("jpt_pending_tool", tool);
-    } catch {}
+    // Via the shared store: a full-resolution data URL overflows sessionStorage.
+    await savePendingContext({ image: url, tool });
     window.location.href = `/editor?tool=${tool}`;
   };
 
@@ -308,7 +308,9 @@ export default function LandingPageClient() {
 
   const handleOAuthRedirect = async () => {
     await savePending();
-    window.location.href = "/api/auth/google?next=/editor";
+    // Return to this page, not the editor — the upload is preserved either way.
+    const next = (window.location.pathname + window.location.search) || "/";
+    window.location.href = `/api/auth/google?next=${encodeURIComponent(next)}`;
   };
 
   const handleEmailAuth = async () => {
@@ -324,7 +326,7 @@ export default function LandingPageClient() {
       if (!res.ok) { setAuthError(data.error || "Authentication failed"); return; }
       if (data.needsConfirmation) { setAuthError("✅ Check your email for a confirmation link, then sign in."); return; }
       await savePending();
-      window.location.href = "/editor";
+      window.location.reload();
     } catch { setAuthError("Network error. Please try again."); }
     finally { setAuthLoading(false); }
   };
@@ -415,7 +417,7 @@ export default function LandingPageClient() {
           </div>
 
           {/* Hero showcase — AI before/after with prompt callouts */}
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginTop: 18, background: "var(--accent-soft)", color: "var(--accent)", fontSize: 14, fontWeight: 800, padding: "7px 16px", borderRadius: 100, border: "1px solid rgba(15,157,107,0.2)" }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginTop: 18, background: "var(--accent-soft)", color: "var(--accent)", fontSize: 14, fontWeight: 800, padding: "7px 16px", borderRadius: 100, border: "1px solid var(--accent-border)" }}>
             ✨ See what you can do with prompts
           </div>
           <div style={s.heroShowcase}>
@@ -432,11 +434,11 @@ export default function LandingPageClient() {
               { top: "76%", label: "✨ Style", prompt: "“cinematic warm glow”" },
             ].map((c) => (
               <div key={c.label} style={{ position: "absolute", top: c.top, right: "3%", display: "flex", alignItems: "center", gap: 6, maxWidth: "44%" }}>
-                <div style={{ background: "rgba(12,12,22,0.82)", borderRadius: 10, padding: "6px 10px", boxShadow: "0 4px 14px rgba(0,0,0,0.25)", border: "1px solid rgba(15,157,107,0.3)" }}>
+                <div style={{ background: "rgba(12,12,22,0.82)", borderRadius: 10, padding: "6px 10px", boxShadow: "0 4px 14px rgba(0,0,0,0.25)", border: "1px solid rgba(255,106,26,0.40)" }}>
                   <div style={{ fontSize: 11, fontWeight: 800, color: "var(--accent)", lineHeight: 1.2 }}>{c.label}</div>
                   <div style={{ fontSize: 11, color: "var(--text-muted)", lineHeight: 1.2, whiteSpace: "nowrap" as const }}>{c.prompt}</div>
                 </div>
-                <div style={{ width: 7, height: 7, borderRadius: "50%", background: "var(--accent)", flexShrink: 0, boxShadow: "0 0 0 3px rgba(15,157,107,0.3)" }} />
+                <div style={{ width: 7, height: 7, borderRadius: "50%", background: "var(--accent-fill)", flexShrink: 0, boxShadow: "0 0 0 3px rgba(255,106,26,0.40)" }} />
               </div>
             ))}
           </div>
@@ -478,7 +480,7 @@ export default function LandingPageClient() {
             {FEATURES.map((f) => (
               <div key={f.title} style={{ ...s.featureCard, cursor: "pointer" }}
                 onClick={() => handleFeatureCardClick(f.tool)}
-                onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = "0 8px 32px rgba(15,157,107,0.18)"; (e.currentTarget as HTMLDivElement).style.transform = "translateY(-3px)"; }}
+                onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = "0 8px 32px var(--accent-soft)"; (e.currentTarget as HTMLDivElement).style.transform = "translateY(-3px)"; }}
                 onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = "0 2px 14px rgba(0,0,0,0.05)"; (e.currentTarget as HTMLDivElement).style.transform = "none"; }}>
                 <div style={s.featureImgWrap}>
                   {f.tool === "remove-bg" ? (
@@ -525,7 +527,7 @@ export default function LandingPageClient() {
       </section>
 
       {/* ── How it works ───────────────────────────────────────────────────── */}
-      <section style={{ ...s.section, background: "#F4F5FB" }}>
+      <section style={{ ...s.section, background: "var(--surface-2)" }}>
         <div style={{ ...s.sectionInner, textAlign: "center" }}>
           <div style={s.sectionLabel}>HOW IT WORKS</div>
           <h2 style={s.h2}>{t.stepsH2}</h2>
@@ -567,7 +569,7 @@ export default function LandingPageClient() {
       </section>
 
       {/* ── Testimonials ───────────────────────────────────────────────────── */}
-      <section style={{ ...s.section, background: "#F4F5FB" }}>
+      <section style={{ ...s.section, background: "var(--surface-2)" }}>
         <div style={s.sectionInner}>
           <div style={s.sectionLabel}>TESTIMONIALS</div>
           <h2 style={s.h2}>Loved by creators worldwide</h2>
@@ -632,7 +634,7 @@ export default function LandingPageClient() {
       </section>
 
       {/* ── SEO Rich Content ───────────────────────────────────────────────── */}
-      <section style={{ ...s.section, background: "#F4F5FB" }}>
+      <section style={{ ...s.section, background: "var(--surface-2)" }}>
         <div style={{ maxWidth: 860, margin: "0 auto" }}>
           <div style={s.sectionLabel}>ABOUT JPT AI</div>
           <h2 style={{ ...s.h2, marginBottom: 28 }}>The best free AI image editor online — no watermark, no signup friction</h2>
@@ -771,7 +773,7 @@ const s: Record<string, React.CSSProperties> = {
   // Hero
   hero: { background: "linear-gradient(160deg, var(--accent-soft) 0%, #FAFAFE 60%, var(--surface) 100%)", padding: "72px 24px 80px", textAlign: "center" },
   heroInner: { maxWidth: 760, margin: "0 auto", display: "flex", flexDirection: "column", alignItems: "center", gap: 20 },
-  badge: { display: "inline-block", background: "rgba(15,157,107,0.1)", color: "var(--accent)", border: "1px solid rgba(15,157,107,0.2)", borderRadius: 100, padding: "6px 16px", fontSize: 13, fontWeight: 700 },
+  badge: { display: "inline-block", background: "var(--accent-soft)", color: "var(--accent)", border: "1px solid var(--accent-border)", borderRadius: 100, padding: "6px 16px", fontSize: 13, fontWeight: 700 },
   h1: { margin: 0, fontSize: "clamp(36px, 6vw, 58px)", fontWeight: 900, letterSpacing: "-1.5px", lineHeight: 1.1 },
   h1Accent: { background: "linear-gradient(135deg, var(--accent), var(--accent-2))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" },
   heroPara: { margin: 0, fontSize: 18, color: "var(--text-muted)", lineHeight: 1.7, maxWidth: 580 },
@@ -816,7 +818,7 @@ const s: Record<string, React.CSSProperties> = {
   featureDesc: { margin: 0, fontSize: 14, color: "var(--text-muted)", lineHeight: 1.65 },
 
   // Hero showcase
-  heroShowcase: { position: "relative", width: "100%", maxWidth: 880, marginTop: 16, borderRadius: 20, overflow: "hidden", boxShadow: "0 20px 60px rgba(15,157,107,0.25)", border: "1px solid rgba(15,157,107,0.15)" },
+  heroShowcase: { position: "relative", width: "100%", maxWidth: 880, marginTop: 16, borderRadius: 20, overflow: "hidden", boxShadow: "0 20px 60px var(--accent-border)", border: "1px solid var(--accent-soft)" },
   heroShowcaseImg: { width: "100%", display: "block" },
   heroShowcaseBadge: { position: "absolute", bottom: 14, right: 14, background: "rgba(15,23,42,0.85)", color: "#fff", fontSize: 12, fontWeight: 700, padding: "6px 12px", borderRadius: 100, backdropFilter: "blur(4px)" },
 
@@ -859,7 +861,7 @@ const s: Record<string, React.CSSProperties> = {
   modalBox: { background: "var(--surface)", borderRadius: 20, padding: "32px 28px", maxWidth: 420, width: "100%", textAlign: "center", boxShadow: "0 32px 80px rgba(0,0,0,0.25)" },
   modalTitle: { fontSize: 22, fontWeight: 900, letterSpacing: "-0.4px", marginBottom: 10 },
   modalSub: { margin: "0 0 16px", fontSize: 14, color: "var(--text-muted)", lineHeight: 1.6 },
-  promptPreview: { background: "#F4F5FB", borderRadius: 8, padding: "10px 14px", fontSize: 13, color: "var(--text-muted)", fontStyle: "italic", marginBottom: 16, textAlign: "left" },
+  promptPreview: { background: "var(--surface-2)", borderRadius: 8, padding: "10px 14px", fontSize: 13, color: "var(--text-muted)", fontStyle: "italic", marginBottom: 16, textAlign: "left" },
   modalFeatures: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 20, textAlign: "left" },
   modalFeatureRow: { display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "var(--text-muted)" },
   modalGoogleBtn: { display: "flex", alignItems: "center", justifyContent: "center", gap: 10, background: "var(--surface)", border: "1.5px solid #DDD", borderRadius: 10, padding: "12px 20px", fontSize: 14, fontWeight: 700, color: "var(--text-muted)", cursor: "pointer", width: "100%", boxSizing: "border-box", boxShadow: "0 1px 4px rgba(0,0,0,0.08)" },

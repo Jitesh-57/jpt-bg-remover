@@ -153,7 +153,7 @@ export default function QrGenerator() {
             onClick={downloadPng}
             disabled={!pngUrl}
             className="jpt-hover"
-            style={{ background: GRAD, color: "#fff", border: "none", borderRadius: 11, padding: "12px 18px", fontSize: 15, fontWeight: 800, cursor: pngUrl ? "pointer" : "not-allowed", opacity: pngUrl ? 1 : 0.5, boxShadow: "0 8px 22px rgba(15,157,107,0.28)" }}
+            style={{ background: GRAD, color: "#fff", border: "none", borderRadius: 11, padding: "12px 18px", fontSize: 15, fontWeight: 800, cursor: pngUrl ? "pointer" : "not-allowed", opacity: pngUrl ? 1 : 0.5, boxShadow: "0 8px 22px var(--accent-border)" }}
           >
             Download PNG
           </button>

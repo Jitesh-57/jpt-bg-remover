@@ -66,14 +66,14 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             <p style={{ fontSize: "clamp(1rem,2vw,1.12rem)", color: "var(--text-muted)", lineHeight: 1.7, maxWidth: 580, margin: "0 auto 30px" }}>
               Free online crop tool — no watermark, no sign-up. Crops in one click, right in your browser.
             </p>
-            <Link href={toolHref} className="jpt-hover" style={{ display: "inline-block", background: GRAD, color: "#fff", borderRadius: 12, padding: "15px 34px", fontSize: 16, fontWeight: 800, textDecoration: "none", boxShadow: "0 8px 24px rgba(20,184,166,0.35)" }}>
+            <Link href={toolHref} className="jpt-hover" style={{ display: "inline-block", background: GRAD, color: "#fff", borderRadius: 12, padding: "15px 34px", fontSize: 16, fontWeight: 800, textDecoration: "none", boxShadow: "0 8px 24px var(--accent-soft)" }}>
               Open the crop tool →
             </Link>
             <SafeImage
               src={blogCreative(slug)}
               alt={`${ct.h1} — before and after`}
               wrapperStyle={{ maxWidth: 600, margin: "40px auto 0" }}
-              style={{ width: "100%", height: "auto", display: "block", borderRadius: 16, border: "1px solid #EEE0EA", boxShadow: "0 18px 50px rgba(20,184,166,0.14)" }}
+              style={{ width: "100%", height: "auto", display: "block", borderRadius: 16, border: "1px solid #EEE0EA", boxShadow: "0 18px 50px var(--accent-soft)" }}
             />
           </div>
         </section>
@@ -89,7 +89,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             <h2 style={{ fontSize: "clamp(1.5rem,3vw,2rem)", fontWeight: 800, color: "var(--text)", margin: "0 0 32px", letterSpacing: "-0.02em", textAlign: "center" }}>How it works</h2>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(230px,1fr))", gap: 24 }}>
               {ct.steps.map((s, i) => (
-                <div key={i} style={{ background: "#FAF8FF", border: "1px solid #EEE6FB", borderRadius: 16, padding: "24px 22px" }}>
+                <div key={i} style={{ background: "var(--surface-2)", border: "1px solid #EEE6FB", borderRadius: 16, padding: "24px 22px" }}>
                   <div style={{ width: 40, height: 40, borderRadius: "50%", background: GRAD, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, marginBottom: 14 }}>{i + 1}</div>
                   <h3 style={{ fontSize: 16, fontWeight: 800, color: "var(--text)", margin: "0 0 8px" }}>{s.t}</h3>
                   <p style={{ fontSize: 14, color: "var(--text-muted)", lineHeight: 1.65, margin: 0 }}>{s.d}</p>

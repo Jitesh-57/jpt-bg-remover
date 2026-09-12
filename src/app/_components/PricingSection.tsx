@@ -43,7 +43,7 @@ export default function PricingSection({ toolName }: { toolName?: string }) {
                 display: "flex", flexDirection: "column", background: "var(--surface)",
                 border: `${p.popular ? 2 : 1}px solid ${p.popular ? "var(--accent)" : "var(--border)"}`,
                 borderRadius: 18, padding: "28px 24px 24px", position: "relative",
-                boxShadow: p.popular ? "0 18px 50px rgba(15,157,107,0.16)" : "none",
+                boxShadow: p.popular ? "0 18px 50px var(--accent-soft)" : "none",
               }}
             >
               {p.popular && (

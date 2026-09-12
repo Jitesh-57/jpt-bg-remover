@@ -17,13 +17,13 @@ export default function AdLandingCTA({ href, label, tool }: { href: string; labe
       style={{
         display: "inline-block",
         padding: "16px 40px",
-        background: "var(--accent)",
+        background: "var(--accent-fill)",
         color: "#fff",
         fontSize: 18,
         fontWeight: 800,
         borderRadius: 12,
         textDecoration: "none",
-        boxShadow: "0 8px 30px rgba(15,157,107,0.45)",
+        boxShadow: "0 8px 30px rgba(255,106,26,0.40)",
       }}
     >
       {label}

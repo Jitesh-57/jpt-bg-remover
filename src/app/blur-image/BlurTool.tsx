@@ -42,7 +42,7 @@ export default function BlurTool() {
       ctx.lineWidth = 2;
       ctx.setLineDash([6, 4]);
       ctx.strokeRect(sel.x, sel.y, sel.w, sel.h);
-      ctx.fillStyle = "rgba(15,157,107,0.15)";
+      ctx.fillStyle = "var(--accent-soft)";
       ctx.fillRect(sel.x, sel.y, sel.w, sel.h);
       ctx.restore();
     }
@@ -246,7 +246,7 @@ export default function BlurTool() {
           </div>
 
           <div style={{ display: "flex", flexWrap: "wrap", gap: 12, justifyContent: "center", marginTop: 20 }}>
-            <button onClick={download} className="jpt-hover" style={{ background: GRAD, color: "#fff", border: "none", borderRadius: 11, padding: "13px 28px", fontSize: 15.5, fontWeight: 800, cursor: "pointer", boxShadow: "0 8px 22px rgba(15,157,107,0.28)" }}>
+            <button onClick={download} className="jpt-hover" style={{ background: GRAD, color: "#fff", border: "none", borderRadius: 11, padding: "13px 28px", fontSize: 15.5, fontWeight: 800, cursor: "pointer", boxShadow: "0 8px 22px var(--accent-border)" }}>
               Download Image
             </button>
             <button onClick={() => { setHasImage(false); workRef.current = null; historyRef.current = []; setCanUndo(false); }} style={{ ...btn, padding: "13px 22px" }}>

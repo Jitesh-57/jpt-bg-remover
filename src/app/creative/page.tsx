@@ -30,10 +30,10 @@ export default function CreativeHub() {
               ✦ JPT AI Creative Apps
             </div>
             <h1 style={{ fontSize: "clamp(2.2rem,5vw,3.4rem)", fontWeight: 900, color: "var(--text)", lineHeight: 1.1, letterSpacing: "-0.03em", margin: "0 0 18px" }}>
-              Viral AI Photo Apps — Free &amp; Instant
+              Viral AI Photo Apps — One Tap, No Prompt
             </h1>
             <p style={{ fontSize: "clamp(1rem,2vw,1.2rem)", color: "var(--text-muted)", lineHeight: 1.7, maxWidth: 620, margin: "0 auto" }}>
-              Upload a photo and get the result right on the page — saree photoshoots, 3D figurines, retro portraits, pet art and more. No app to download, no watermark.
+              Upload a photo and get the result right on the page — saree photoshoots, 3D figurines, retro portraits, pet art and more. Each runs on credits, with no app to download and no watermark.
             </p>
           </div>
         </section>
@@ -46,12 +46,12 @@ export default function CreativeHub() {
                   <div style={{ aspectRatio: "16 / 10", background: `linear-gradient(135deg, ${a.gradient[0]}, ${a.gradient[1]})`, position: "relative" }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={previewUrl(a.slug)} alt={`${a.h1} before and after example`} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-                    <span style={{ position: "absolute", bottom: 10, right: 10, padding: "5px 12px", background: "rgba(255,255,255,0.92)", color: "var(--accent)", fontSize: 11, fontWeight: 800, borderRadius: 8 }}>{a.emoji} {a.badge}</span>
+                    <span style={{ position: "absolute", bottom: 10, right: 10, padding: "5px 12px", background: "rgba(11,11,14,0.82)", color: "var(--accent)", border: "1px solid var(--accent-border)", backdropFilter: "blur(6px)", fontSize: 11, fontWeight: 800, borderRadius: 8 }}>{a.emoji} {a.badge}</span>
                   </div>
                   <div style={{ padding: "18px 18px 20px" }}>
                     <div style={{ fontSize: 16, fontWeight: 800, color: "var(--text)", marginBottom: 6, lineHeight: 1.3 }}>{a.h1}</div>
                     <p style={{ margin: 0, fontSize: 13.5, color: "var(--text-muted)", lineHeight: 1.6 }}>{a.intro}</p>
-                    <div style={{ marginTop: 14, fontSize: 13, fontWeight: 800, color: "var(--accent)" }}>Try free →</div>
+                    <div style={{ marginTop: 14, fontSize: 13, fontWeight: 800, color: "var(--accent)" }}>Open app →</div>
                   </div>
                 </a>
               ))}

@@ -5,7 +5,7 @@ import LandingPage from "./_components/LandingPage";
 const BASE = "https://www.sjpt.io";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const config = await getPageConfig("upscale");
+  const config = await getPageConfig("home");
   return {
     title: { absolute: config.title },
     description: config.meta_description,
@@ -29,12 +29,12 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Page() {
-  const config = await getPageConfig("upscale");
+  const config = await getPageConfig("home");
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    name: "JPT AI Image Upscaler",
+    name: "JPT AI",
     description: config.meta_description,
     applicationCategory: "MultimediaApplication",
     operatingSystem: "Web",
@@ -47,7 +47,7 @@ export default async function Page() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <LandingPage config={config} toolHref="/editor?tool=upscale" pageId="upscale" isHome />
+      <LandingPage config={config} toolHref="/editor" pageId="home" isHome />
     </>
   );
 }

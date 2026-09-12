@@ -10,6 +10,12 @@ import { PAID_FEATURES_ENABLED } from "@/lib/features";
 
 const BASE = "https://www.sjpt.io";
 
+/** Keeps the first entry per URL — several groups legitimately overlap. */
+function dedupe(entries: MetadataRoute.Sitemap): MetadataRoute.Sitemap {
+  const seen = new Set<string>();
+  return entries.filter((e) => (seen.has(e.url) ? false : (seen.add(e.url), true)));
+}
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
@@ -17,8 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const freePages: MetadataRoute.Sitemap = [
     { url: BASE,                       lastModified: now, changeFrequency: "weekly",  priority: 1.0 },
     { url: `${BASE}/tools`,            lastModified: now, changeFrequency: "weekly",  priority: 0.9 },
-    // /upscale is 301'd to / (identical content) — the home page is the upscaler.
-    // Not listed here so we don't advertise a redirecting URL to crawlers.
+    { url: `${BASE}/upscale`,          lastModified: now, changeFrequency: "weekly",  priority: 0.95 },
     { url: `${BASE}/compress-image`,   lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/convert-image`,    lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/crop-image`,       lastModified: now, changeFrequency: "monthly", priority: 0.9 },
@@ -74,7 +79,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
   const programmaticPages = [...conversionPages, ...compressPages, ...cropPages, ...alternativePages];
 
-  if (!PAID_FEATURES_ENABLED) return [...freePages, ...freeVariantPages, ...programmaticPages, ...freeBlogPages];
+  if (!PAID_FEATURES_ENABLED) return dedupe([...freePages, ...freeVariantPages, ...programmaticPages, ...freeBlogPages]);
 
   const paidPages: MetadataRoute.Sitemap = [
     { url: `${BASE}/remove-bg`,        lastModified: now, changeFrequency: "monthly", priority: 0.95 },
@@ -106,5 +111,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.85,
   }));
 
-  return [...freePages, ...paidPages, ...variantPages, ...creativePages, ...alternativePages, ...blogPages];
+  return dedupe([...freePages, ...paidPages, ...variantPages, ...creativePages, ...alternativePages, ...blogPages]);
 }

@@ -48,7 +48,7 @@ export default function AdLandingPage({ params }: { params: { slug: string } }) 
           <span style={{ fontSize: 18, fontWeight: 900, color: "#fff" }}>JPT AI</span>
         </a>
 
-        <div style={{ display: "inline-block", padding: "6px 14px", background: "rgba(15,157,107,0.15)", border: "1px solid rgba(15,157,107,0.35)", borderRadius: 999, fontSize: 13, fontWeight: 700, color: "var(--accent)", marginBottom: 24 }}>
+        <div style={{ display: "inline-block", padding: "6px 14px", background: "var(--accent-soft)", border: "1px solid rgba(255,106,26,0.40)", borderRadius: 999, fontSize: 13, fontWeight: 700, color: "var(--accent)", marginBottom: 24 }}>
           {lp.badge}
         </div>
 

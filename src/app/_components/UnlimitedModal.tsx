@@ -76,7 +76,7 @@ export default function UnlimitedModal({ onClose, loggedIn, reason, prefillUser,
         currency: orderData.currency || "INR",
         name: "JPT AI",
         description: `${p.credits} credits — ${p.label} pack`,
-        theme: { color: "#0F9D6B" },
+        theme: { color: "var(--accent)" },
         modal: {
           ondismiss() {
             trackPaymentFailed(p.id, "cancelled_by_user");
@@ -193,7 +193,7 @@ export default function UnlimitedModal({ onClose, loggedIn, reason, prefillUser,
                     fontFamily: "inherit", textAlign: "center", minWidth: 0,
                     background: on ? "var(--accent-soft)" : "var(--surface-2)",
                     border: `2px solid ${on ? "var(--accent)" : "var(--border)"}`,
-                    boxShadow: on ? "0 10px 28px rgba(15,157,107,0.18)" : "none",
+                    boxShadow: on ? "0 10px 28px var(--accent-soft)" : "none",
                     transition: "border-color .15s var(--ease), background .15s var(--ease)",
                   }}
                 >
@@ -231,7 +231,7 @@ export default function UnlimitedModal({ onClose, loggedIn, reason, prefillUser,
                 background: loadingPack ? "var(--text-faint)" : "var(--grad-strong)",
                 color: "#fff", fontWeight: 800, fontSize: 16.5, fontFamily: "inherit",
                 cursor: loadingPack ? "not-allowed" : "pointer",
-                boxShadow: loadingPack ? "none" : "0 10px 26px rgba(15,157,107,0.32)",
+                boxShadow: loadingPack ? "none" : "0 10px 26px rgba(255,106,26,0.40)",
               }}
             >
               {loadingPack ? "Processing…" : `Get ${selected.credits} credits — $${selected.usd} →`}

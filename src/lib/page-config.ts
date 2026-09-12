@@ -28,6 +28,39 @@ export interface PageSEO {
 }
 
 export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
+  // The site's own landing page. It used to render the upscale config, which
+  // made the homepage an upscaler landing page rather than the product's front
+  // door — and made /upscale a duplicate that had to be redirected away.
+  home: {
+    page_id: 'home',
+    title: 'JPT AI — Free AI Photo Editor, Upscaler & 40+ AI Photo Apps',
+    meta_description:
+      'Free AI photo editor online. Upscale to 4K, remove backgrounds, generate AI headshots and run 40+ one-tap AI photo apps. Browser tools are free and unlimited — no sign-up, no watermark.',
+    og_title: 'JPT AI — Free AI Photo Editor & 40+ AI Photo Apps',
+    og_description:
+      'Upscale, compress, crop, convert and restyle photos free in your browser. Plus 40+ AI photo apps — saree portraits, 3D figurines, Ghibli, headshots and more.',
+    og_image: '',
+    keywords: 'ai photo editor, free ai photo editor, ai image editor online, ai photo app, ai headshot generator, ai background remover, image upscaler, free online photo tools',
+    h1: 'The AI Photo Studio',
+    subtitle:
+      'Edit, upscale and restyle any photo in seconds. A dozen browser tools that are free and unlimited, plus 40+ AI apps that turn one photo into a whole new look.',
+    cta_text: 'Start Editing Free',
+    features: [
+      { icon: '🎨', title: '40+ AI photo apps', desc: 'Saree portraits, 3D figurines, Ghibli style, retro Bollywood, pro headshots — one tap each, no prompt writing.' },
+      { icon: '🧰', title: 'A dozen free tools', desc: 'Compress, convert, crop, resize, rotate, blur, watermark and more. They run on your device, so they are free and unlimited.' },
+      { icon: '🔒', title: 'Your photos stay yours', desc: 'The browser tools never upload anything. Nothing you export carries a watermark, on any plan.' },
+      { icon: '💎', title: 'No subscription', desc: 'AI generations run on credits you buy once from $2. They never expire and nothing auto-renews.' },
+    ],
+    faq: [
+      { q: 'Is JPT AI free?', a: 'The browser-based tools — compress, convert, crop, resize, rotate, blur, watermark, meme text, image to PDF, QR codes and normal upscaling — are free and unlimited with no account. The AI features run on a server and use credits, bought once from $2.' },
+      { q: 'What are the AI photo apps?', a: 'Over 40 one-tap transformations: saree and couple portraits, 3D figurines, Ghibli and Pixar styles, retro Bollywood, professional headshots, passport photos, pet portraits, age progression and more. You upload a photo and the app applies a tuned prompt — you do not write one.' },
+      { q: 'Do I need to sign up?', a: 'Not for the browser tools. You only need an account to buy credits and use the AI features, so your credits and generations are saved to you.' },
+      { q: 'Do you watermark my images?', a: 'No. Nothing exported from JPT AI carries a watermark, free or paid, at full resolution.' },
+      { q: 'Do credits expire?', a: 'No. Credits are a one-time purchase with no expiry date and no monthly reset. There is no subscription.' },
+      { q: 'Are my uploads private?', a: 'The browser tools process images entirely on your own device — nothing is uploaded. The AI features do send the image to a server to generate the result, and it is not shared with third parties.' },
+    ],
+  },
+
   upscale: {
     page_id: 'upscale',
     title: 'Free AI Image Upscaler — Upscale Photos to 4K | JPT AI',

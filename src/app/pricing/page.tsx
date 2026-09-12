@@ -90,7 +90,7 @@ export default function PricingPage() {
         currency: orderData.currency || "INR",
         name: "JPT AI",
         description: `${p.credits} credits — ${p.label} pack`,
-        theme: { color: "#0F9D6B" },
+        theme: { color: "var(--accent)" },
         modal: {
           ondismiss() {
             trackPaymentFailed(p.id, "cancelled_by_user");
@@ -180,7 +180,7 @@ export default function PricingPage() {
               background: "var(--surface)",
               border: `${p.popular ? 2 : 1}px solid ${p.popular ? "var(--accent)" : "var(--border)"}`,
               borderRadius: 20, padding: "32px 26px 26px",
-              boxShadow: p.popular ? "0 20px 60px rgba(15,157,107,0.18)" : "var(--shadow-sm)",
+              boxShadow: p.popular ? "0 20px 60px var(--accent-soft)" : "var(--shadow-sm)",
             }}
           >
             {p.popular && (

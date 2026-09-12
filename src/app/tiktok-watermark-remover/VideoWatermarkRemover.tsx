@@ -80,7 +80,7 @@ export default function VideoWatermarkRemover() {
           </p>
 
           {/* Paste box */}
-          <div style={{ maxWidth: 620, margin: "0 auto", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 18, padding: 14, boxShadow: "0 12px 40px rgba(15,157,107,0.12)" }}>
+          <div style={{ maxWidth: 620, margin: "0 auto", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 18, padding: 14, boxShadow: "0 12px 40px var(--accent-soft)" }}>
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
               <div style={{ position: "relative", flex: "1 1 260px" }}>
                 <input
@@ -98,7 +98,7 @@ export default function VideoWatermarkRemover() {
               <button
                 onClick={submit}
                 disabled={loading}
-                style={{ ...btnBase, flex: "0 0 auto", minWidth: 170, background: GRAD, color: "#fff", boxShadow: "0 6px 20px rgba(15,157,107,0.4)", opacity: loading ? 0.7 : 1 }}
+                style={{ ...btnBase, flex: "0 0 auto", minWidth: 170, background: GRAD, color: "#fff", boxShadow: "0 6px 20px rgba(255,106,26,0.40)", opacity: loading ? 0.7 : 1 }}
               >
                 {loading ? <><span style={{ width: 15, height: 15, border: "2px solid rgba(255,255,255,0.4)", borderTop: "2px solid #fff", borderRadius: "50%", display: "inline-block", animation: "jptspin 0.8s linear infinite" }} /> Processing…</> : "✨ Remove Watermark"}
               </button>
@@ -123,7 +123,7 @@ export default function VideoWatermarkRemover() {
                     {result.author && <>@{result.author}</>}{result.duration ? <> · {fmtDur(result.duration)}</> : null}
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                    <a href={dl(result.noWatermark, "video")} style={{ ...btnBase, background: GRAD, color: "#fff", boxShadow: "0 4px 16px rgba(15,157,107,0.35)" }}>⬇ Download (No Watermark)</a>
+                    <a href={dl(result.noWatermark, "video")} style={{ ...btnBase, background: GRAD, color: "#fff", boxShadow: "0 4px 16px rgba(255,106,26,0.40)" }}>⬇ Download (No Watermark)</a>
                     <div style={{ display: "flex", gap: 8 }}>
                       {result.hd && result.hd !== result.noWatermark && (
                         <a href={dl(result.hd, "video")} style={{ ...btnBase, flex: 1, background: "var(--accent-soft)", color: "var(--accent)" }}>⬇ HD</a>
@@ -141,7 +141,7 @@ export default function VideoWatermarkRemover() {
           {/* Creative showcase */}
           {HERO_IMG && !result && (
             <div style={{ maxWidth: 640, margin: "40px auto 0" }}>
-              <div style={{ position: "relative", borderRadius: 22, padding: 8, background: "linear-gradient(135deg,rgba(15,157,107,0.12),rgba(20,184,166,0.10))", boxShadow: "0 24px 60px rgba(15,157,107,0.18)" }}>
+              <div style={{ position: "relative", borderRadius: 22, padding: 8, background: "linear-gradient(135deg,var(--accent-soft),var(--accent-soft))", boxShadow: "0 24px 60px var(--accent-soft)" }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={HERO_IMG}
@@ -168,7 +168,7 @@ export default function VideoWatermarkRemover() {
               { n: "03", t: "Download HD", d: "Download the watermark-free MP4 in HD — or grab just the audio as MP3." },
             ].map((s) => (
               <div key={s.n} style={{ textAlign: "center" }}>
-                <div style={{ width: 66, height: 66, background: "var(--surface)", border: "2px solid var(--accent-soft)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 18px", boxShadow: "0 4px 20px rgba(15,157,107,0.12)", fontSize: 20, fontWeight: 900, color: "var(--accent)" }}>{s.n}</div>
+                <div style={{ width: 66, height: 66, background: "var(--surface)", border: "2px solid var(--accent-soft)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 18px", boxShadow: "0 4px 20px var(--accent-soft)", fontSize: 20, fontWeight: 900, color: "var(--accent)" }}>{s.n}</div>
                 <h3 style={{ fontSize: 16, fontWeight: 800, color: "var(--text)", margin: "0 0 8px" }}>{s.t}</h3>
                 <p style={{ fontSize: 14, color: "var(--text-muted)", lineHeight: 1.6, margin: 0 }}>{s.d}</p>
               </div>
@@ -199,7 +199,7 @@ export default function VideoWatermarkRemover() {
       </section>
 
       {/* WHY BEST */}
-      <section style={{ padding: "72px 24px", background: "linear-gradient(135deg,#0C3A2A,#071F17)" }}>
+      <section style={{ padding: "72px 24px", background: "linear-gradient(135deg,var(--surface-3),var(--bg-elevated))" }}>
         <div style={{ maxWidth: 1080, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 12 }}>
             <h2 style={{ fontSize: "clamp(1.7rem,3vw,2.2rem)", fontWeight: 900, color: "#fff", margin: 0, letterSpacing: "-0.02em", lineHeight: 1.2 }}>
@@ -224,7 +224,7 @@ export default function VideoWatermarkRemover() {
       </section>
 
       {/* WHY CHOOSE */}
-      <section style={{ padding: "72px 24px", background: "linear-gradient(135deg,#0C3A2A,#071F17)" }}>
+      <section style={{ padding: "72px 24px", background: "linear-gradient(135deg,var(--surface-3),var(--bg-elevated))" }}>
         <div style={{ maxWidth: 900, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 12 }}>
             <h2 style={{ fontSize: "clamp(1.7rem,3vw,2.2rem)", fontWeight: 900, color: "#fff", margin: 0, letterSpacing: "-0.02em", lineHeight: 1.2 }}>

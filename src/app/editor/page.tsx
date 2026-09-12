@@ -1520,7 +1520,7 @@ export default function ImageEditorPage() {
   const processingOverlay = (
     <div style={{ position: "absolute", inset: 0, zIndex: 30, borderRadius: 16, overflow: "hidden", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 14, background: "rgba(15,23,42,0.58)", backdropFilter: "blur(2px)" }}>
       {/* sweeping scan line across the image */}
-      <div style={{ position: "absolute", left: 0, right: 0, top: 0, height: "42%", background: "linear-gradient(180deg, transparent, rgba(20,184,166,0.45), rgba(15,157,107,0.18), transparent)", animation: "jptScan 1.5s ease-in-out infinite", pointerEvents: "none" }} />
+      <div style={{ position: "absolute", left: 0, right: 0, top: 0, height: "42%", background: "linear-gradient(180deg, transparent, var(--accent-soft), var(--accent-soft), transparent)", animation: "jptScan 1.5s ease-in-out infinite", pointerEvents: "none" }} />
       <div style={{ position: "relative", width: 52, height: 52, border: "4px solid rgba(255,255,255,0.25)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
       <div style={{ position: "relative", color: "#fff", fontWeight: 800, fontSize: 15, textAlign: "center", padding: "0 18px" }}>Please wait — we&apos;re processing your image…</div>
       <div style={{ position: "relative", color: "rgba(255,255,255,0.82)", fontSize: 12.5 }}>{processingLabel || "This usually takes just a moment"}</div>
@@ -1561,7 +1561,7 @@ export default function ImageEditorPage() {
                   : <span style={s.avatarFallback}>{user.name[0]}</span>}
                 <span style={s.userName}>{user.name.split(" ")[0]}</span>
                 {!PAID_FEATURES_ENABLED ? (
-                  <span style={{ ...s.creditsBadge, background: "#DCFCE7", color: "var(--success)" }}>♾️ Free</span>
+                  <span style={{ ...s.creditsBadge, background: "var(--surface-3)", color: "var(--success)" }}>♾️ Free</span>
                 ) : user.plan === "free" ? (
                   <span style={{ ...s.creditsBadge, ...((user.trialsRemaining ?? 0) === 0 ? s.creditsEmpty : {}) }}>
                     🎁 {user.trialsRemaining ?? 0}
@@ -1586,7 +1586,7 @@ export default function ImageEditorPage() {
                 </button>
               ) : (
                 <button
-                  style={{ padding: "7px 14px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: 20, fontSize: 12, fontWeight: 800, cursor: "pointer", whiteSpace: "nowrap" as const, boxShadow: "0 2px 8px rgba(15,157,107,0.4)" }}
+                  style={{ padding: "7px 14px", background: "var(--accent-fill)", color: "#fff", border: "none", borderRadius: 20, fontSize: 12, fontWeight: 800, cursor: "pointer", whiteSpace: "nowrap" as const, boxShadow: "0 2px 8px rgba(255,106,26,0.40)" }}
                   onClick={() => { setSignInReason("unlimited"); setShowSignInModal(true); }}
                 >
                   Sign up free — unlimited →
@@ -1646,7 +1646,7 @@ export default function ImageEditorPage() {
               <div style={{ display: "flex", gap: 10 }}>
                 <button
                   onClick={() => restoreSession(savedSession)}
-                  style={{ padding: "10px 20px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer" }}
+                  style={{ padding: "10px 20px", background: "var(--accent-fill)", color: "#fff", border: "none", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer" }}
                 >
                   Resume Editing
                 </button>
@@ -1764,7 +1764,7 @@ export default function ImageEditorPage() {
                       <div style={{ fontSize: 11, fontWeight: 700 }}>Original</div>
                       {original && <div style={{ fontSize: 10, opacity: 0.75, marginTop: 1 }}>{original.w} × {original.h}px</div>}
                     </div>
-                    <div style={{ position: "absolute", top: 12, right: 12, zIndex: 4, background: "rgba(15,157,107,0.85)", backdropFilter: "blur(4px)", color: "#fff", padding: "4px 10px", borderRadius: 6, pointerEvents: "none" }}>
+                    <div style={{ position: "absolute", top: 12, right: 12, zIndex: 4, background: "rgba(255,106,26,0.40)", backdropFilter: "blur(4px)", color: "#fff", padding: "4px 10px", borderRadius: 6, pointerEvents: "none" }}>
                       <div style={{ fontSize: 11, fontWeight: 700 }}>✨ Result</div>
                       {workingSize && <div style={{ fontSize: 10, opacity: 0.85, marginTop: 1 }}>{workingSize.w} × {workingSize.h}px</div>}
                     </div>
@@ -2024,7 +2024,7 @@ export default function ImageEditorPage() {
                     if (maxDim > 0 && maxDim * mult > MAX_UPSCALE_OUTPUT_PX) {
                       const tooLargeFor2x = maxDim * 2 > MAX_UPSCALE_OUTPUT_PX;
                       return (
-                        <div style={{ marginTop: 8, background: "#FFF7ED", border: "1px solid #FED7AA", borderRadius: 8, padding: "7px 12px", fontSize: 12, color: "#92400E", display: "flex", alignItems: "flex-start", gap: 6 }}>
+                        <div style={{ marginTop: 8, background: "var(--surface-3)", border: "1px solid #FED7AA", borderRadius: 8, padding: "7px 12px", fontSize: 12, color: "#92400E", display: "flex", alignItems: "flex-start", gap: 6 }}>
                           ⚠️ {tooLargeFor2x
                             ? `Image is already very high-res (${curW}×${curH}px). Upscaling is not needed.`
                             : `Image is too large for 4× upscale (output would be ${curW * 4}×${curH * 4}px). Use 2× instead.`}
@@ -2037,7 +2037,7 @@ export default function ImageEditorPage() {
 
 
                 {appliedUpscale === upscaleScale && (
-                  <div style={{ background: "#FFFBEB", border: "1px solid #FDE68A", borderRadius: 8, padding: "7px 12px", marginBottom: 10, fontSize: 12, color: "#92400E", display: "flex", alignItems: "center", gap: 6 }}>
+                  <div style={{ background: "var(--surface-3)", border: "1px solid var(--surface-3)", borderRadius: 8, padding: "7px 12px", marginBottom: 10, fontSize: 12, color: "#92400E", display: "flex", alignItems: "center", gap: 6 }}>
                     😅 Already upscaled {upscaleScale}
                   </div>
                 )}
@@ -2790,23 +2790,23 @@ export default function ImageEditorPage() {
 // ─── Styles ───────────────────────────────────────────────────────────────────
 
 const s: Record<string, React.CSSProperties> = {
-  root: { minHeight: "100vh", background: "#F6F7FB", fontFamily: "system-ui,-apple-system,sans-serif", color: "var(--text)", display: "flex", flexDirection: "column" },
+  root: { minHeight: "100vh", background: "var(--surface-2)", fontFamily: "system-ui,-apple-system,sans-serif", color: "var(--text)", display: "flex", flexDirection: "column" },
 
-  pageHeader: { background: "rgba(255,255,255,0.92)", borderBottom: "1px solid var(--border)", backdropFilter: "blur(8px)", position: "relative" as const, zIndex: 90, flexShrink: 0 },
+  pageHeader: { background: "var(--bg-elevated)", borderBottom: "1px solid var(--border)", backdropFilter: "blur(8px)", position: "relative" as const, zIndex: 90, flexShrink: 0 },
   pageHeaderInner: { maxWidth: 1400, margin: "0 auto", padding: "8px 20px", display: "flex", alignItems: "center", gap: 12 },
   pageIcon: { fontSize: 18 },
   pageTitle: { fontSize: 14, fontWeight: 700, color: "var(--text)", marginRight: 8 },
   pageHeaderRight: { display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" as const, marginLeft: "auto" },
-  lowCreditsBar: { flex: 1, textAlign: "center" as const, fontSize: 12, fontWeight: 600, color: "#92400E", background: "#FEF3C7", borderRadius: 6, padding: "4px 12px" },
+  lowCreditsBar: { flex: 1, textAlign: "center" as const, fontSize: 12, fontWeight: 600, color: "var(--warn)", background: "var(--surface-3)", borderRadius: 6, padding: "4px 12px" },
   dlBtn: { background: "var(--bg-elevated)", color: "#fff", border: "none", borderRadius: 8, padding: "6px 14px", fontSize: 13, fontWeight: 700, cursor: "pointer" },
   ghostBtn: { background: "none", border: "1px solid var(--border)", borderRadius: 8, padding: "6px 12px", fontSize: 13, cursor: "pointer", color: "var(--text-muted)", display: "flex", alignItems: "center", gap: 6 },
   userChip: { display: "flex", alignItems: "center", gap: 8, background: "none", border: "1px solid var(--border)", borderRadius: 10, padding: "5px 10px", cursor: "pointer" },
   avatar: { width: 26, height: 26, borderRadius: "50%", flexShrink: 0 },
-  avatarFallback: { width: 26, height: 26, borderRadius: "50%", background: "var(--accent)", color: "#fff", fontSize: 12, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" },
+  avatarFallback: { width: 26, height: 26, borderRadius: "50%", background: "var(--accent-fill)", color: "#fff", fontSize: 12, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" },
   userName: { fontSize: 13, fontWeight: 600, color: "var(--text-muted)" },
   creditsBadge: { fontSize: 11, fontWeight: 800, background: "var(--surface-2)", color: "var(--accent)", borderRadius: 6, padding: "2px 7px" },
   creditsEmpty: { background: "var(--danger-soft)", color: "var(--danger)" },
-  creditsLow: { background: "#FEF3C7", color: "var(--warn)" },
+  creditsLow: { background: "var(--surface-3)", color: "var(--warn)" },
   googleBtn: { display: "flex", alignItems: "center", gap: 8, background: "var(--surface)", border: "1px solid #DDD", borderRadius: 8, padding: "6px 14px", fontSize: 13, fontWeight: 600, color: "var(--text-muted)", textDecoration: "none", whiteSpace: "nowrap" as const },
 
   layout: { display: "flex", flex: 1, minHeight: 0, overflow: "hidden" },
@@ -2821,7 +2821,7 @@ const s: Record<string, React.CSSProperties> = {
   uploadTitle: { margin: "0 0 8px", fontSize: 17, fontWeight: 700 },
   uploadHint: { margin: "0 0 24px", fontSize: 14, color: "var(--text-faint)" },
   featureRow: { display: "flex", flexWrap: "wrap" as const, gap: 8, justifyContent: "center", marginBottom: 16 },
-  featureChip: { background: "#F0F0FA", border: "1px solid #E0E0F0", borderRadius: 20, padding: "5px 12px", fontSize: 12, fontWeight: 600, color: "var(--accent)" },
+  featureChip: { background: "var(--surface-2)", border: "1px solid #E0E0F0", borderRadius: 20, padding: "5px 12px", fontSize: 12, fontWeight: 600, color: "var(--accent)" },
   signInHint: { fontSize: 13, color: "var(--text-faint)", marginTop: 8 },
 
   imgWrap: { position: "relative", borderRadius: 16, overflow: "hidden", boxShadow: "0 8px 40px rgba(0,0,0,0.12)", maxWidth: "100%", background: "var(--surface)" },
@@ -2849,8 +2849,8 @@ const s: Record<string, React.CSSProperties> = {
   panelSection: { display: "flex", flexDirection: "column" as const, gap: 10 },
   creditNote: { fontSize: 11, color: "var(--accent)", fontWeight: 700, background: "var(--surface-2)", borderRadius: 6, padding: "4px 8px", display: "inline-block", alignSelf: "flex-start" },
 
-  successNote: { background: "var(--success-soft)", border: "1px solid #A7F3D0", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#047857", fontWeight: 600 },
-  retryNote: { background: "#FFF7ED", border: "1px solid #FED7AA", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#92400E" },
+  successNote: { background: "var(--success-soft)", border: "1px solid var(--surface-3)", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#047857", fontWeight: 600 },
+  retryNote: { background: "var(--surface-3)", border: "1px solid #FED7AA", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#92400E" },
   retryLink: { background: "none", border: "none", color: "var(--accent-strong)", fontWeight: 700, cursor: "pointer", textDecoration: "underline", padding: 0, fontSize: 12 },
   tabBar: { display: "flex", gap: 2, background: "var(--surface-2)", borderRadius: 8, padding: 2 },
   tabBtn: { flex: 1, padding: "5px 2px", borderRadius: 6, border: "none", background: "none", fontSize: 10, fontWeight: 700, cursor: "pointer", color: "var(--text-faint)" },
@@ -2858,7 +2858,7 @@ const s: Record<string, React.CSSProperties> = {
   swatchGrid: { display: "flex", flexWrap: "wrap" as const, gap: 6 },
   swatch: { width: 30, height: 30, borderRadius: 7, cursor: "pointer", flexShrink: 0 },
   colorPicker: { width: 36, height: 36, border: "2px solid var(--border)", borderRadius: 6, cursor: "pointer", padding: 2 },
-  smallBtn: { background: "var(--accent)", color: "#fff", border: "none", borderRadius: 6, padding: "6px 12px", fontSize: 12, fontWeight: 700, cursor: "pointer" },
+  smallBtn: { background: "var(--accent-fill)", color: "#fff", border: "none", borderRadius: 6, padding: "6px 12px", fontSize: 12, fontWeight: 700, cursor: "pointer" },
   pendingRow: { display: "flex", alignItems: "center", gap: 8, background: "var(--accent-soft)", border: "1px solid #C4C4F0", borderRadius: 8, padding: "8px 10px" },
   xBtn: { background: "none", border: "none", color: "var(--text-faint)", cursor: "pointer", fontSize: 13, padding: 2, marginLeft: "auto" },
   gradGrid: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 },
@@ -2895,10 +2895,10 @@ const s: Record<string, React.CSSProperties> = {
   creditBarBg: { height: 8, background: "var(--surface-2)", borderRadius: 100, overflow: "hidden" },
   creditBarFill: { height: "100%", borderRadius: 100, transition: "width 0.4s ease" },
   noCreditsNote: { marginTop: 10, background: "var(--danger-soft)", border: "1px solid var(--danger-soft)", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#B91C1C", textAlign: "left" as const },
-  lowNote: { marginTop: 10, background: "#FEF3C7", border: "1px solid #FDE68A", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#92400E", textAlign: "left" as const },
+  lowNote: { marginTop: 10, background: "var(--surface-3)", border: "1px solid var(--surface-3)", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#92400E", textAlign: "left" as const },
   usageGrid: { display: "flex", flexDirection: "column" as const, gap: 6, marginBottom: 16, textAlign: "left" as const },
   usageItem: { display: "flex", justifyContent: "space-between", fontSize: 13, color: "var(--text-muted)", padding: "4px 0", borderBottom: "1px solid #F0F0F0" },
 
   // No credits modal
-  noCreditsInfo: { background: "#F0FFF4", border: "1px solid #A7F3D0", borderRadius: 10, padding: "14px", marginBottom: 16, fontSize: 13, color: "#047857", lineHeight: 1.8, textAlign: "left" as const },
+  noCreditsInfo: { background: "var(--surface-3)", border: "1px solid var(--surface-3)", borderRadius: 10, padding: "14px", marginBottom: 16, fontSize: 13, color: "#047857", lineHeight: 1.8, textAlign: "left" as const },
 };

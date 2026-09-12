@@ -197,7 +197,7 @@ export default function SharePrompt({
               fontWeight: 800,
               cursor: "pointer",
               marginBottom: 14,
-              boxShadow: "0 8px 22px rgba(15,157,107,0.32)",
+              boxShadow: "0 8px 22px rgba(255,106,26,0.40)",
             }}
           >
             Share ↗

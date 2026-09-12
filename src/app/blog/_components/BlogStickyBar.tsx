@@ -150,7 +150,7 @@ export default function BlogStickyBar({ toolHref, toolLabel }: BlogStickyBarProp
                 fontWeight: 800,
                 fontSize: 14,
                 cursor: loading ? 'default' : 'pointer',
-                boxShadow: '0 4px 18px rgba(15,157,107,0.38)',
+                boxShadow: '0 4px 18px rgba(255,106,26,0.40)',
                 letterSpacing: '-0.01em',
                 whiteSpace: 'nowrap',
                 transition: 'background 0.15s, transform 0.12s',

@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect, lazy, Suspense } from "react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { CREDIT_COST } from "@/lib/plans";
 import { persistAuthContext } from "@/lib/pending-image";
 import {
   trackEvent, trackToolUse, trackImageUploaded, trackImageUploadFailed,
@@ -69,13 +70,10 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient, appNam
   const [trialDone, setTrialDone] = useState(false);
   const [trialsRemaining, setTrialsRemaining] = useState<number | null>(null);
 
-  const TRIAL_NOTICE = "You've used your free trials. Buy credits to keep generating and unlock all AI tools.";
+  const TRIAL_NOTICE = `The AI apps run on credits — ${CREDIT_COST} per generation. Grab a pack from $2 and they never expire.`;
 
-  /** Build the right notice depending on how many of the 5 free trials are left. */
-  function trialNoticeFor(trialsRemaining?: number): string {
-    if (trialsRemaining && trialsRemaining > 0) {
-      return `🎁 You've used your free trial for this app — but you still have ${trialsRemaining} free trial${trialsRemaining === 1 ? "" : "s"} left! Try one of our other AI tools for free, or buy credits to keep using this one.`;
-    }
+  /** The AI apps are credits-only; there is no free-trial state to describe. */
+  function trialNoticeFor(_trialsRemaining?: number): string {
     return TRIAL_NOTICE;
   }
 
@@ -237,7 +235,7 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient, appNam
             <>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={result} alt="AI result" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
-              <span style={{ position: "absolute", bottom: 12, right: 12, padding: "6px 14px", background: "rgba(15,157,107,0.92)", color: "#fff", fontSize: 12, fontWeight: 700, borderRadius: 8 }}>{badge}</span>
+              <span style={{ position: "absolute", bottom: 12, right: 12, padding: "6px 14px", background: "rgba(255,106,26,0.40)", color: "#fff", fontSize: 12, fontWeight: 700, borderRadius: 8 }}>{badge}</span>
             </>
           ) : busy ? (
             <div style={{ color: "#fff" }}>
@@ -258,7 +256,7 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient, appNam
       <div style={{ textAlign: "center", marginTop: 24 }}>
         {!original ? (
           <button onClick={pick}
-            style={{ background: "linear-gradient(135deg,var(--accent),var(--accent-2))", color: "#fff", fontWeight: 800, fontSize: 16, padding: "15px 38px", borderRadius: 14, border: "none", cursor: "pointer", boxShadow: "0 8px 30px rgba(15,157,107,0.4)" }}>
+            style={{ background: "linear-gradient(135deg,var(--accent),var(--accent-2))", color: "#fff", fontWeight: 800, fontSize: 16, padding: "15px 38px", borderRadius: 14, border: "none", cursor: "pointer", boxShadow: "0 8px 30px rgba(255,106,26,0.40)" }}>
             📂 Upload Photo to Start
           </button>
         ) : (
@@ -270,7 +268,7 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient, appNam
               </button>
             )}
             <button onClick={generate} disabled={busy}
-              style={{ background: busy ? "var(--accent)" : "linear-gradient(135deg,var(--accent),var(--accent-2))", color: "#fff", fontWeight: 800, fontSize: 16, padding: "15px 38px", borderRadius: 14, border: "none", cursor: busy ? "default" : "pointer", boxShadow: "0 8px 30px rgba(15,157,107,0.4)" }}>
+              style={{ background: busy ? "var(--accent)" : "linear-gradient(135deg,var(--accent),var(--accent-2))", color: "#fff", fontWeight: 800, fontSize: 16, padding: "15px 38px", borderRadius: 14, border: "none", cursor: busy ? "default" : "pointer", boxShadow: "0 8px 30px rgba(255,106,26,0.40)" }}>
               {busy ? "Working…" : result ? "↻ Generate Again" : `${cta} →`}
             </button>
             {result && (
@@ -282,7 +280,7 @@ export default function CreativeApp({ slug, prompt, cta, badge, gradient, appNam
           </div>
         )}
         <div style={{ marginTop: 12, fontSize: 12.5, color: "var(--text-faint)" }}>
-          🎁 New users get 5 free trials, one per tool — try this app free · 2 credits per generation after that
+          💎 {CREDIT_COST} credits per generation · one-time packs from $2 · credits never expire
         </div>
       </div>
 
