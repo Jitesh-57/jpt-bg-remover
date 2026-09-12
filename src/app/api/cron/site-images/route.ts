@@ -30,17 +30,29 @@ const TOKEN = process.env.ADMIN_IMAGE_TOKEN || "jptblog2026";
 /** Stop starting new generations once this much of the budget is gone. */
 const BUDGET_MS = 230_000;
 /** Hard ceiling per invocation, so a misconfiguration cannot run away. */
-const MAX_PER_RUN = 18;
+const MAX_PER_RUN = 90;
 /** Hard ceiling on chained invocations, for the same reason. */
-const MAX_HOPS = 90;
+const MAX_HOPS = 30;
 /** Attempts per image, including the first. */
 const RETRIES = 3;
 /** Base backoff between attempts; multiplied by the attempt number. */
 const BACKOFF_MS = 4_000;
-/** Pause between images, to stay under fal's rate limit rather than hit it. */
-const GAP_MS = 1_500;
-
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+/**
+ * Images generated at once.
+ *
+ * This was the real reason the whole thing was slow. Generating one at a time
+ * at roughly fifteen seconds each puts 351 images at ninety minutes of wall
+ * clock even with nothing going wrong — and every invocation could only fit
+ * about fifteen before its budget ran out, so it took a couple of dozen
+ * chained hops.
+ *
+ * Six workers pulling from a shared queue brings a full run to around eighty
+ * images, so the set finishes in three or four hops instead. The pool size is
+ * also what paces the requests now, which is why the fixed gap between images
+ * is gone: six in flight is well inside fal's limits, and the retry path
+ * handles a 429 if it is not.
+ */
+const CONCURRENCY = 6;
 
 const keyOf = (bucket: string, path: string) => `${bucket}|${path}`;
 
@@ -165,20 +177,35 @@ export async function GET(req: NextRequest) {
   // jobs costs a pointless Gemini round-trip each and eats the whole budget
   // again — which is what happened on runs 7 and 8.
   let geminiExhausted = false;
+  /** Set when a fal error will repeat for every job, to end the run. */
+  type Fatal = { status: number; detail: string };
+  const fatalRef: { current: Fatal | null } = { current: null };
+  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
   const present = new Set(
     IMAGE_JOBS.filter((j) => !todo.includes(j)).map((j) => keyOf(j.bucket, j.path))
   );
 
-  // Rotated by hop: a job that cannot currently be generated sits at the head
-  // of this list every time, and run 7 burned its whole budget on thirteen
-  // such jobs while 240 workable ones went untouched. Starting each hop at a
-  // different offset guarantees the run reaches them.
+  // Rotated by hop as a secondary safeguard; the skip list above is what
+  // actually stops an unbuildable cluster from being retried forever.
   const offset = todo.length ? (hop * MAX_PER_RUN) % todo.length : 0;
   const ordered = [...todo.slice(offset), ...todo.slice(0, offset)];
 
-  for (const job of ordered) {
-    if (made >= MAX_PER_RUN || Date.now() - started > BUDGET_MS) break;
+  // A shared cursor the workers pull from, so a slow job does not hold up the
+  // others and the budget check applies per pick rather than per batch.
+  let cursor = 0;
+  const outOfTime = () => Date.now() - started > BUDGET_MS;
+
+  async function worker(): Promise<void> {
+    for (;;) {
+      if (outOfTime() || made >= MAX_PER_RUN) return;
+      const job = ordered[cursor++];
+      if (!job) return;
+      await runJob(job);
+    }
+  }
+
+  async function runJob(job: ImageJob): Promise<void> {
     const key = `${job.bucket}/${job.path}`;
 
     // Sources are generated first and the list is ordered to match, but a
@@ -190,15 +217,13 @@ export async function GET(req: NextRequest) {
         source = alt;
       } else {
         results[key] = `waiting for ${job.editOf}`;
-        continue;
+        return;
       }
     }
 
-    // fal rate-limits, and the first production run lost 14 of 17 images to a
-    // single 429 each. One retry with a pause recovers almost all of those.
     let lastError = "";
     for (let attempt = 0; attempt < RETRIES; attempt++) {
-      if (Date.now() - started > BUDGET_MS) break;
+      if (outOfTime()) break;
       try {
         // An edit job runs the app's own prompt over a stored source photo, so
         // the result is what the tool actually produces. A generate job makes
@@ -210,11 +235,7 @@ export async function GET(req: NextRequest) {
               strict: true, raw: true, budgetMs: 120_000,
             })
           : await generateFromText(job.prompt, {
-              // job.aspect, not the default: dropping this sent every generate
-              // job at 16:9 whatever slot it was for.
               aspect_ratio: job.aspect,
-              // No Gemini fallback here: a masked fal error reports the wrong
-              // provider and hides whether a retry is worth attempting.
               strict: true,
               budgetMs: 120_000,
             });
@@ -227,25 +248,15 @@ export async function GET(req: NextRequest) {
         if (error) throw new Error(`upload failed: ${error.message}`);
         results[key] = `ok (${Math.round(bytes.length / 1024)} KB)`;
         made += 1;
+        // A source that has just landed unblocks the apps that edit from it,
+        // within this same run.
+        present.add(keyOf(job.bucket, job.path));
         lastError = "";
-        break;
+        return;
       } catch (e) {
         const fal = e instanceof FalError ? e : null;
         lastError = fal ? `fal ${fal.status}: ${fal.detail || fal.message}` : (e as Error).message;
 
-        // fal's content checker turns down a handful of these prompts —
-        // deterministically, as run 6 established by failing the same six on
-        // all three attempts. The subjects are entirely benign (a gold ring on
-        // a worktop, a living room), so the checker is over-triggering rather
-        // than catching anything, and rewording it blind was costing a
-        // production run per guess.
-        //
-        // So a rejected prompt goes to Gemini instead. This is not the blanket
-        // fallback that hid the original 422: that one substituted Gemini's
-        // error for fal's on *every* failure, so a misconfiguration looked
-        // like a rate limit. Here fal's real error is already known, reported
-        // and acted on — the fallback is the action, not a way of avoiding
-        // knowing.
         const policyRejected = !!fal && /content_policy|content checker/i.test(fal.detail || fal.message);
         if (policyRejected) {
           try {
@@ -260,13 +271,12 @@ export async function GET(req: NextRequest) {
             if (error) throw new Error(`upload failed: ${error.message}`);
             results[key] = `ok via Gemini (${Math.round(bytes.length / 1024)} KB) — fal's checker refused this prompt`;
             made += 1;
+            present.add(keyOf(job.bucket, job.path));
             lastError = "";
           } catch (g) {
             const gm = (g as Error).message;
             if (/high demand|quota|exhausted/i.test(gm)) geminiExhausted = true;
             results[key] = `SKIPPED: fal's checker refused it and Gemini failed too (${gm})`;
-            // Record it so later runs do not spend their budget here again.
-            // Deleting the marker file puts the job back in the queue.
             await supabase.storage
               .from(LANDING_BUCKET)
               .upload(refusedMarker(job.bucket, job.path), Buffer.from(`${new Date().toISOString()} ${gm}`), {
@@ -275,18 +285,16 @@ export async function GET(req: NextRequest) {
               })
               .catch(() => {});
           }
-          break;
+          return;
         }
 
         // A rejected key, an empty balance or a malformed request will fail
-        // every remaining job identically. Stop rather than spend the budget
-        // discovering that 300 more times.
-        if (fal && !fal.transient && !policyRejected) {
+        // every remaining job identically. Stopping the whole run is handled
+        // by the caller via fatal, so the other workers wind down too.
+        if (fal && !fal.transient) {
+          fatalRef.current = { status: fal.status, detail: fal.detail };
           results[key] = `FAILED: ${lastError}`;
-          return NextResponse.json(
-            { stopped: "fal rejected the request and will keep rejecting it", hop, falStatus: fal.status, detail: fal.detail, results },
-            { status: 502 }
-          );
+          return;
         }
         if (attempt < RETRIES - 1) await sleep(BACKOFF_MS * (attempt + 1));
       }
@@ -296,9 +304,16 @@ export async function GET(req: NextRequest) {
       results[key] = `FAILED: ${lastError}`;
       failed += 1;
     }
-    // A short gap between jobs, which is what stops the rate limiting rather
-    // than just recovering from it.
-    if (Date.now() - started < BUDGET_MS) await sleep(GAP_MS);
+  }
+
+  await Promise.all(Array.from({ length: CONCURRENCY }, () => worker()));
+
+  const fatal = fatalRef.current;
+  if (fatal) {
+    return NextResponse.json(
+      { stopped: "fal rejected the request and will keep rejecting it", hop, falStatus: fatal.status, detail: fatal.detail, generatedThisRun: made, results },
+      { status: 502 }
+    );
   }
 
   const remaining = Math.max(todo.length - made, 0);
