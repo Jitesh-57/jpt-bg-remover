@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 // Internal admin area — never indexed.
 export const metadata: Metadata = {
-  title: "Admin — JPT AI",
+  title: "Admin — Pixel Shine",
   robots: { index: false, follow: false },
 };
 

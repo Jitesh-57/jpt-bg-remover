@@ -13,7 +13,7 @@ export const TIKTOK_POSTS: BlogPost[] = [
     image: `${BLOGS}/download-tiktok-videos-without-a-watermark.png`,
     slug: "download-tiktok-videos-without-a-watermark",
     title: "How to Download TikTok Videos Without a Watermark (Free, HD)",
-    metaTitle: "Download TikTok Videos Without a Watermark — Free & HD | JPT AI",
+    metaTitle: "Download TikTok Videos Without a Watermark — Free & HD | Pixel Shine",
     metaDescription:
       "Learn how to download TikTok videos without the watermark in HD — free, no app, no sign-up. Paste a link and save a clean MP4 (or MP3 audio) in seconds.",
     excerpt:
@@ -33,7 +33,7 @@ export const TIKTOK_POSTS: BlogPost[] = [
       {
         body: `If you have ever tried to reuse a TikTok clip, you already know the problem: the bouncing TikTok logo and username overlay follow the video everywhere it goes. Post it to Instagram Reels or YouTube Shorts and the platform quietly deprioritises anything stamped with a rival's watermark. Drop it into a presentation, a compilation, or an ad and it looks unpolished. Learning how to download TikTok videos without a watermark solves all of that in one step — you get a clean, HD MP4 that looks like it was made from scratch.
 
-The good news is that you do not need a paid app, a browser extension, or a sign-up to do it. With JPT AI (sjpt.io), you paste the TikTok link into a box, and the free TikTok watermark remover fetches the original, clean version of the video — no moving logo, no username overlay, no quality loss. This guide walks through exactly how it works, how to get the sharpest HD result, how to pull just the audio as an MP3, and the mistakes that leave people stuck with a watermarked file.`,
+The good news is that you do not need a paid app, a browser extension, or a sign-up to do it. With Pixel Shine (sjpt.io), you paste the TikTok link into a box, and the free TikTok watermark remover fetches the original, clean version of the video — no moving logo, no username overlay, no quality loss. This guide walks through exactly how it works, how to get the sharpest HD result, how to pull just the audio as an MP3, and the mistakes that leave people stuck with a watermarked file.`,
       },
       {
         heading: "Why the TikTok Watermark Is Such a Problem",
@@ -55,11 +55,11 @@ When a TikTok video is uploaded, the platform stores an original source file and
 
 That is why a paste-a-link tool produces a genuinely watermark-free file at full quality: you are not editing the video, you are getting the un-stamped original. It is also why the process takes seconds and never degrades sharpness — there is no re-encoding guesswork involved.
 
-JPT AI's tool does exactly this. You give it the link, it resolves the clean source, and it hands you back an HD MP4 (and, when available, an even higher-bitrate HD option plus the raw audio track).`,
+Pixel Shine's tool does exactly this. You give it the link, it resolves the clean source, and it hands you back an HD MP4 (and, when available, an even higher-bitrate HD option plus the raw audio track).`,
       },
       {
         heading: "Step-by-Step: Download a TikTok With No Watermark",
-        body: `Here is the full process using JPT AI's free tool. Start to finish, it takes under 30 seconds.
+        body: `Here is the full process using Pixel Shine's free tool. Start to finish, it takes under 30 seconds.
 
 **Step 1 — Copy the TikTok link.** In the TikTok app, open the video, tap the **Share** arrow, then tap **Copy Link**. On desktop, just copy the URL from your browser's address bar. Links from tiktok.com, vm.tiktok.com and vt.tiktok.com all work.
 
@@ -75,7 +75,7 @@ JPT AI's tool does exactly this. You give it the link, it resolves the clean sou
         heading: "Getting the Best HD Quality",
         body: `A watermark-free download is only as good as the source, so a few habits will keep your results crisp.
 
-**Use the HD button when it appears.** When TikTok has a higher-bitrate version available, JPT AI surfaces a dedicated **HD** option. It is a slightly larger file but noticeably sharper — worth it for anything you will re-edit or upload elsewhere.
+**Use the HD button when it appears.** When TikTok has a higher-bitrate version available, Pixel Shine surfaces a dedicated **HD** option. It is a slightly larger file but noticeably sharper — worth it for anything you will re-edit or upload elsewhere.
 
 **Start from the original link, not a screen recording.** Screen-recording a TikTok bakes in the watermark and drops quality. Always download from the actual video link so you get the clean source.
 
@@ -98,7 +98,7 @@ JPT AI's tool does exactly this. You give it the link, it resolves the clean sou
       {
         heading: "Frequently Asked Questions",
         body: `**Is it free to download TikToks without the watermark?**
-Yes. JPT AI's TikTok watermark remover is completely free, with no sign-up, no app, and no limit on how many videos you download.
+Yes. Pixel Shine's TikTok watermark remover is completely free, with no sign-up, no app, and no limit on how many videos you download.
 
 **Does it remove the moving logo and the username?**
 Yes. It fetches the clean source version of the video without the drifting TikTok watermark or the @username overlay.
@@ -132,7 +132,7 @@ Ready to save your first clean clip? Head to sjpt.io, open the TikTok Watermark 
     image: `${BLOGS}/Tiktok%20watermark%20remover%20blog%205.png`,
     slug: "tiktok-video-link-downloader",
     title: "TikTok Video Link Downloader: Save Any Clip From a URL (Free)",
-    metaTitle: "TikTok Video Link Downloader — Paste a URL, Get a Clean MP4 | JPT AI",
+    metaTitle: "TikTok Video Link Downloader — Paste a URL, Get a Clean MP4 | Pixel Shine",
     metaDescription:
       "Use a free TikTok video link downloader to save any clip from its URL — no watermark, HD, no app, no sign-up. Just paste the link and download the MP4.",
     excerpt:
@@ -152,7 +152,7 @@ Ready to save your first clean clip? Head to sjpt.io, open the TikTok Watermark 
       {
         body: `A TikTok video link downloader is the simplest possible way to save a clip: you copy the video's URL, paste it into a box, and get a clean, downloadable MP4 back. No app store, no browser extension, no account — the link carries everything the tool needs. It is the same idea behind pasting a YouTube URL to grab a video, applied to TikTok, and it is the method most people should use because it is fast, works on any device, and returns a watermark-free file.
 
-Why does the link matter so much? Because a TikTok URL is a direct reference to a specific video. A good downloader reads that reference, resolves the original clean source behind it, and streams the file straight to your device. With JPT AI (sjpt.io), the whole thing is free and unlimited — paste, download, done. This guide explains how link-based downloading works, how to copy the right URL on every device, and how to get an HD, no-watermark result every time.`,
+Why does the link matter so much? Because a TikTok URL is a direct reference to a specific video. A good downloader reads that reference, resolves the original clean source behind it, and streams the file straight to your device. With Pixel Shine (sjpt.io), the whole thing is free and unlimited — paste, download, done. This guide explains how link-based downloading works, how to copy the right URL on every device, and how to get an HD, no-watermark result every time.`,
       },
       {
         heading: "What a Link Downloader Does (and Why It's Better)",
@@ -166,7 +166,7 @@ Why does the link matter so much? Because a TikTok URL is a direct reference to 
 
 **It is instant and repeatable.** Paste, download, paste the next one. There is no per-video setup, so saving ten clips is as easy as saving one.
 
-JPT AI's TikTok tool is exactly this kind of downloader: one box, one paste, one clean MP4.`,
+Pixel Shine's TikTok tool is exactly this kind of downloader: one box, one paste, one clean MP4.`,
       },
       {
         heading: "How to Copy a TikTok Link on Any Device",
@@ -178,7 +178,7 @@ JPT AI's TikTok tool is exactly this kind of downloader: one box, one paste, one
 
 **From a shared message.** If a friend sent you a TikTok, the link they shared is already a valid URL — copy it directly.
 
-All three forms — tiktok.com, vm.tiktok.com, and vt.tiktok.com — work with JPT AI. The tool resolves short links automatically, so you never have to expand them yourself.`,
+All three forms — tiktok.com, vm.tiktok.com, and vt.tiktok.com — work with Pixel Shine. The tool resolves short links automatically, so you never have to expand them yourself.`,
       },
       {
         heading: "Step-by-Step: Download From a TikTok Link",
@@ -186,7 +186,7 @@ All three forms — tiktok.com, vm.tiktok.com, and vt.tiktok.com — work with J
 
 **Step 1 — Copy the link** using one of the methods above.
 
-**Step 2 — Open JPT AI's TikTok tool** at sjpt.io. No sign-up, nothing to install.
+**Step 2 — Open Pixel Shine's TikTok tool** at sjpt.io. No sign-up, nothing to install.
 
 **Step 3 — Paste the URL** into the box. There is a one-tap **Paste** button if you would rather not long-press. Then hit **Remove Watermark**.
 
@@ -202,7 +202,7 @@ That is the entire flow. Because it is link-based, you can immediately paste the
 
 **Standard no-watermark MP4.** The default clean video, ready for any player or editor.
 
-**HD source.** When TikTok has a higher-bitrate version, JPT AI surfaces an **HD** button. Use it when you plan to re-edit or re-upload the clip and want maximum sharpness.
+**HD source.** When TikTok has a higher-bitrate version, Pixel Shine surfaces an **HD** button. Use it when you plan to re-edit or re-upload the clip and want maximum sharpness.
 
 **Audio as MP3.** Sometimes you only want the trending sound. The **Audio (MP3)** button pulls just the track so you do not have to download the whole video and extract it manually.
 
@@ -223,7 +223,7 @@ Because everything is resolved from the same link, you can grab more than one �
       {
         heading: "Frequently Asked Questions",
         body: `**Is the TikTok link downloader free?**
-Yes. JPT AI's tool is completely free with no sign-up and no limit on downloads.
+Yes. Pixel Shine's tool is completely free with no sign-up and no limit on downloads.
 
 **What link formats work?**
 tiktok.com, vm.tiktok.com, and vt.tiktok.com links all work. Short links are resolved automatically.
@@ -250,7 +250,7 @@ No. It is a web tool — paste a link and download.`,
         heading: "Key Takeaways",
         body: `A TikTok video link downloader is the fastest, cleanest way to save a clip: copy the URL, paste it, and download a watermark-free HD MP4 — no app, no account, no limits. Because the tool reads the link and resolves the original source, the result is full quality and free of the moving logo.
 
-Keep it simple: use **Share → Copy Link** to grab the URL, paste it into JPT AI's box, and pick the download you want — clean MP4, HD, or MP3 audio. If a link won't resolve, make sure it is a public video URL rather than a profile or private post.
+Keep it simple: use **Share → Copy Link** to grab the URL, paste it into Pixel Shine's box, and pick the download you want — clean MP4, HD, or MP3 audio. If a link won't resolve, make sure it is a public video URL rather than a profile or private post.
 
 Ready to try it? Go to sjpt.io, open the TikTok tool, paste a link, and get a clean video in seconds. Remove TikTok Watermark Free →`,
       },
@@ -260,7 +260,7 @@ Ready to try it? Go to sjpt.io, open the TikTok tool, paste a link, and get a cl
     image: `${BLOGS}/Tiktok%20watermark%20remover%20blog%203.png`,
     slug: "tiktok-video-downloader-by-username",
     title: "TikTok Video Downloader by Username: How to Find and Save Clips",
-    metaTitle: "TikTok Video Downloader by Username — Find & Save Clips Free | JPT AI",
+    metaTitle: "TikTok Video Downloader by Username — Find & Save Clips Free | Pixel Shine",
     metaDescription:
       "Want a TikTok video downloader by username? Learn how to find any creator's video, copy its link, and download it watermark-free in HD — free, no app, no sign-up.",
     excerpt:
@@ -280,7 +280,7 @@ Ready to try it? Go to sjpt.io, open the TikTok tool, paste a link, and get a cl
       {
         body: `Searching for a "TikTok video downloader by username" usually means one of two things: you know the creator but not the exact link, or you want to save several videos from the same account. Either way, the username is how you *find* the video — and the video's link is how you actually *download* it, cleanly and in HD. Understanding that two-step relationship is the key to saving any creator's clips reliably, without a sketchy app that promises to "scrape a whole profile."
 
-Here is the honest, dependable workflow: use the @username to locate the exact video you want on TikTok, copy that video's link, and paste it into a free watermark remover to get a clean MP4. JPT AI (sjpt.io) handles the download half of that flow for free — no sign-up, no app, no watermark. This guide shows you how to navigate a creator's profile, copy the right link every time, download watermark-free HD, and save multiple videos from the same account efficiently.`,
+Here is the honest, dependable workflow: use the @username to locate the exact video you want on TikTok, copy that video's link, and paste it into a free watermark remover to get a clean MP4. Pixel Shine (sjpt.io) handles the download half of that flow for free — no sign-up, no app, no watermark. This guide shows you how to navigate a creator's profile, copy the right link every time, download watermark-free HD, and save multiple videos from the same account efficiently.`,
       },
       {
         heading: "Why 'By Username' Really Means 'Find, Then Download'",
@@ -312,7 +312,7 @@ Once the specific video is open, you are ready to grab its link — that is the 
 
 **Copy the link.** In the app, tap **Share → Copy Link**. On desktop, copy the URL from the address bar.
 
-**Open JPT AI's TikTok tool** at sjpt.io — no account, nothing to install.
+**Open Pixel Shine's TikTok tool** at sjpt.io — no account, nothing to install.
 
 **Paste and remove.** Drop the URL in the box (or tap **Paste**) and hit **Remove Watermark**. In a couple of seconds you will see the video's thumbnail, title, and the creator's name — confirming it is the right clip from the right username.
 
@@ -326,9 +326,9 @@ Because you confirmed the creator name in the preview, you know you saved the co
 
 **Open each video, copy each link.** Work through the profile grid one video at a time, copying each link as you go. On desktop you can open several videos in separate tabs and copy their URLs in a batch.
 
-**Paste and download in sequence.** JPT AI has no download limit, so you can paste one link, download, and immediately paste the next. There is no waiting period and no cap.
+**Paste and download in sequence.** Pixel Shine has no download limit, so you can paste one link, download, and immediately paste the next. There is no waiting period and no cap.
 
-**Keep the creator's name in your filenames.** JPT AI automatically bases the download name on the creator, which keeps a multi-video archive tidy and easy to sort.
+**Keep the creator's name in your filenames.** Pixel Shine automatically bases the download name on the creator, which keeps a multi-video archive tidy and easy to sort.
 
 This is faster and far more reliable than any "bulk profile scraper," and it never risks your account or installs anything questionable.`,
       },
@@ -347,7 +347,7 @@ A watermark-free file is a better canvas — but the content still belongs to th
       {
         heading: "Frequently Asked Questions",
         body: `**Can I download a TikTok just by typing a username?**
-The username is how you find the video; the video's link is how you download it. Open the creator's profile, pick the clip, copy its link, and paste it into JPT AI to save it.
+The username is how you find the video; the video's link is how you download it. Open the creator's profile, pick the clip, copy its link, and paste it into Pixel Shine to save it.
 
 **Is it free?**
 Yes — completely free, no sign-up, no app, and no download limit.
@@ -374,7 +374,7 @@ Only with permission, and always with credit. Removing the watermark does not tr
         heading: "Key Takeaways",
         body: `"By username" is really a find-then-download workflow: use the @username to locate the exact video on TikTok, copy that video's link, and paste it into a free watermark remover to get a clean HD MP4. It is more reliable than any bulk profile scraper, works on every device, and never asks you to install an app or hand over account access.
 
-The steps are simple: confirm you are on the right profile, open the specific video, Share → Copy Link, then paste into JPT AI and download. For multiple clips, repeat — there is no limit. And when you reuse a creator's video, get permission and give credit.
+The steps are simple: confirm you are on the right profile, open the specific video, Share → Copy Link, then paste into Pixel Shine and download. For multiple clips, repeat — there is no limit. And when you reuse a creator's video, get permission and give credit.
 
 Ready to save a creator's clip? Head to sjpt.io, open the TikTok tool, paste the link, and download it watermark-free in seconds. Remove TikTok Watermark Free →`,
       },
@@ -384,7 +384,7 @@ Ready to save a creator's clip? Head to sjpt.io, open the TikTok tool, paste the
     image: `${BLOGS}/free-tiktok-video-downloader-apps.png`,
     slug: "free-tiktok-video-downloader-apps",
     title: "Free TikTok Video Downloader Apps vs. a No-Install Web Tool",
-    metaTitle: "Free TikTok Video Downloader Apps — Or Skip the App Entirely | JPT AI",
+    metaTitle: "Free TikTok Video Downloader Apps — Or Skip the App Entirely | Pixel Shine",
     metaDescription:
       "Looking for free TikTok video downloader apps? See what to watch out for — and why a no-install web tool downloads clean, watermark-free HD videos without any app.",
     excerpt:
@@ -404,7 +404,7 @@ Ready to save a creator's clip? Head to sjpt.io, open the TikTok tool, paste the
       {
         body: `Search "free TikTok video downloader apps" and the app stores serve up dozens of options — most plastered with ads, gated behind subscriptions, or quietly stamping their own watermark onto your downloads. The word "free" does a lot of heavy lifting in those listings. Before you install anything, it is worth knowing what a genuinely good downloader should do, what the common traps are, and why, for most people, you do not need an app at all.
 
-The alternative is a no-install web tool: you open a page, paste a TikTok link, and download a clean, watermark-free HD video — no app, no permissions, no account. JPT AI (sjpt.io) works exactly this way and is free with no limits. This guide compares the two approaches honestly, lays out the red flags to watch for in "free" apps, and shows you the fastest path to a clean download on any device.`,
+The alternative is a no-install web tool: you open a page, paste a TikTok link, and download a clean, watermark-free HD video — no app, no permissions, no account. Pixel Shine (sjpt.io) works exactly this way and is free with no limits. This guide compares the two approaches honestly, lays out the red flags to watch for in "free" apps, and shows you the fastest path to a clean download on any device.`,
       },
       {
         heading: "What 'Free' Usually Hides in Downloader Apps",
@@ -434,7 +434,7 @@ None of this means every app is a scam — but it does mean "free app" and "free
 
 **Clean, watermark-free output.** A good web tool returns the original source video with no watermark — not its own logo stamped on top.
 
-JPT AI's TikTok tool is this kind of page: paste a link, get a clean HD MP4 (or MP3 audio), free and unlimited. For the vast majority of people who download the occasional clip, it is simply less hassle than any app.`,
+Pixel Shine's TikTok tool is this kind of page: paste a link, get a clean HD MP4 (or MP3 audio), free and unlimited. For the vast majority of people who download the occasional clip, it is simply less hassle than any app.`,
       },
       {
         heading: "App vs. Web Tool: An Honest Comparison",
@@ -444,7 +444,7 @@ JPT AI's TikTok tool is this kind of page: paste a link, get a clean HD MP4 (or 
 
 **Watermarks.** Many free apps add their own; a good web tool returns the clean source with none. Advantage: web tool.
 
-**Cost.** Apps frequently gate HD/no-watermark behind a subscription. JPT AI's web tool is free with no limits. Advantage: web tool.
+**Cost.** Apps frequently gate HD/no-watermark behind a subscription. Pixel Shine's web tool is free with no limits. Advantage: web tool.
 
 **Privacy.** Apps may request broad permissions; a link tool needs only the URL. Advantage: web tool.
 
@@ -460,7 +460,7 @@ For most users, the web tool is faster, cleaner, and free. Reach for an app only
 
 **Step 1 — Copy the TikTok link.** In the app, tap **Share → Copy Link**; on desktop, copy the URL from the address bar.
 
-**Step 2 — Open JPT AI** at sjpt.io and open the **TikTok Watermark Remover**. Nothing to install.
+**Step 2 — Open Pixel Shine** at sjpt.io and open the **TikTok Watermark Remover**. Nothing to install.
 
 **Step 3 — Paste and remove.** Drop the link in the box (or tap **Paste**) and hit **Remove Watermark**.
 
@@ -480,7 +480,7 @@ That is it — no app, no ads between downloads, no subscription, and no waterma
 
 **Prefer no-install when you can.** Fewer permissions, no storage cost, and nothing to keep updated. A web tool clears most of these hurdles by default.
 
-JPT AI passes all four: clean output, no permissions, genuinely free, and no install.`,
+Pixel Shine passes all four: clean output, no permissions, genuinely free, and no install.`,
       },
       {
         heading: "Frequently Asked Questions",
@@ -488,7 +488,7 @@ JPT AI passes all four: clean output, no permissions, genuinely free, and no ins
 Some are fine, but many add their own watermark, show heavy ads, or request broad permissions. Test the output and check permissions before trusting one.
 
 **Do I need an app to download TikToks?**
-No. A no-install web tool like JPT AI downloads clean, watermark-free HD videos with nothing to install.
+No. A no-install web tool like Pixel Shine downloads clean, watermark-free HD videos with nothing to install.
 
 **Is the web tool really free?**
 Yes — free with no sign-up and no download limit.
@@ -512,7 +512,7 @@ Mainly if you need offline queuing or heavy batch/power features. For everyday d
         heading: "Key Takeaways",
         body: `"Free TikTok video downloader apps" often come with strings attached — ads, permissions, subscriptions, and their own watermark stamped on your video. Before you install anything, know that you probably do not need to: a no-install web tool downloads clean, watermark-free HD videos with nothing but a pasted link.
 
-Use the checklist when choosing any downloader: confirm the output is genuinely clean, read the permissions, watch for hidden paywalls, and prefer no-install when you can. JPT AI's TikTok tool passes all of it — free, no app, no watermark, on every device.
+Use the checklist when choosing any downloader: confirm the output is genuinely clean, read the permissions, watch for hidden paywalls, and prefer no-install when you can. Pixel Shine's TikTok tool passes all of it — free, no app, no watermark, on every device.
 
 Skip the app store and try it now: go to sjpt.io, paste a TikTok link, and download a clean video in seconds. Remove TikTok Watermark Free →`,
       },
@@ -522,7 +522,7 @@ Skip the app store and try it now: go to sjpt.io, paste a TikTok link, and downl
     image: `${BLOGS}/remove-tiktok-watermark-without-signup.png`,
     slug: "remove-tiktok-watermark-without-signup",
     title: "Remove TikTok Watermark Without Signup: No Account, No App, Free",
-    metaTitle: "Remove TikTok Watermark Without Signup — No Account, Free HD | JPT AI",
+    metaTitle: "Remove TikTok Watermark Without Signup — No Account, Free HD | Pixel Shine",
     metaDescription:
       "Remove the TikTok watermark without signup — no account, no app, no email. Paste a link and download a clean HD MP4 (or MP3) instantly, completely free.",
     excerpt:
@@ -542,7 +542,7 @@ Skip the app store and try it now: go to sjpt.io, paste a TikTok link, and downl
       {
         body: `Almost every "free" tool eventually asks the same thing: create an account, verify your email, maybe pick a plan. For something as quick as removing a TikTok watermark, that friction is absurd — you just want a clean video, not a new login to manage and a marketing list to unsubscribe from later. The good news is you can skip all of it. Removing the TikTok watermark without signup is not only possible, it is the way it should work: paste a link, download a clean HD file, done.
 
-JPT AI (sjpt.io) is built exactly this way. There is no account, no email, no app, and no limit — you open the page, paste the TikTok URL, and get back a watermark-free MP4 (or just the MP3 audio). This guide explains why no-signup matters, how a tool can deliver a clean file without knowing anything about you, the step-by-step process, and how to spot tools that only *look* free until the download button appears.`,
+Pixel Shine (sjpt.io) is built exactly this way. There is no account, no email, no app, and no limit — you open the page, paste the TikTok URL, and get back a watermark-free MP4 (or just the MP3 audio). This guide explains why no-signup matters, how a tool can deliver a clean file without knowing anything about you, the step-by-step process, and how to spot tools that only *look* free until the download button appears.`,
       },
       {
         heading: "Why No-Signup Actually Matters",
@@ -564,7 +564,7 @@ For a task this small and this frequent, no-signup is not a nice-to-have — it 
 
 Removing a TikTok watermark is a link-in, file-out operation. You provide a public video URL; the tool resolves the original clean source behind it and streams that file to your browser. Nothing about that process requires an identity, an email, or a stored profile — the link is all the information the tool needs.
 
-That is why no-signup works: the "account" so many tools demand adds nothing to the actual job. It exists to build a marketing list, not to make the download possible. JPT AI simply skips it — you paste, it resolves, you download, and no record of you is required.`,
+That is why no-signup works: the "account" so many tools demand adds nothing to the actual job. It exists to build a marketing list, not to make the download possible. Pixel Shine simply skips it — you paste, it resolves, you download, and no record of you is required.`,
       },
       {
         heading: "Step-by-Step: Remove the Watermark With Zero Signup",
@@ -592,7 +592,7 @@ At no point are you asked to register, verify, or subscribe. That is the whole e
 
 **Beware permission or extension prompts.** A no-signup web tool needs a link, not a browser extension or device permissions.
 
-JPT AI avoids all of these: no email gate, no plan step, no tool watermark, no extension. Paste and download.`,
+Pixel Shine avoids all of these: no email gate, no plan step, no tool watermark, no extension. Paste and download.`,
       },
       {
         heading: "What You Can Do With the Clean File",
@@ -611,7 +611,7 @@ Just remember the content still belongs to its creator — reuse only what you h
       {
         heading: "Frequently Asked Questions",
         body: `**Can I remove the TikTok watermark without signing up?**
-Yes. JPT AI requires no account, no email, and no app — paste a link and download a clean video.
+Yes. Pixel Shine requires no account, no email, and no app — paste a link and download a clean video.
 
 **Is it really free with no hidden wall?**
 Yes. There is no last-step email gate and no subscription. The download button is right there after you paste.
@@ -636,7 +636,7 @@ There is nothing to install and no data to hand over — you only paste a public
       },
       {
         heading: "Key Takeaways",
-        body: `Removing the TikTok watermark should never require an account — and with the right tool, it does not. Because the job is a simple link-in, file-out operation, there is nothing for a signup to add except friction and a marketing list. JPT AI skips all of it: no email, no app, no limit, just a paste and a clean HD download.
+        body: `Removing the TikTok watermark should never require an account — and with the right tool, it does not. Because the job is a simple link-in, file-out operation, there is nothing for a signup to add except friction and a marketing list. Pixel Shine skips all of it: no email, no app, no limit, just a paste and a clean HD download.
 
 Watch out for tools that only look free — the last-step email gate, the disguised subscription step, or their own watermark on the output. A genuinely no-signup tool gives you the download button directly and returns a clean file.
 

@@ -14,7 +14,7 @@ export const UPSCALE_FREE_POSTS_2: BlogPost[] = [
     image: IMG(220453),
     slug: "upscale-png-image-free",
     title: "How to Upscale a PNG Image Without Losing Quality (Free)",
-    metaTitle: "Upscale PNG Image Free — No Quality Loss | JPT AI",
+    metaTitle: "Upscale PNG Image Free — No Quality Loss | Pixel Shine",
     metaDescription:
       "Enlarge a PNG without the blur. Upscale PNG images free online, 2× or 4×, keeping transparency and sharp edges — no watermark, no sign-up.",
     excerpt:
@@ -51,7 +51,7 @@ export const UPSCALE_FREE_POSTS_2: BlogPost[] = [
     image: IMG(270637),
     slug: "convert-photo-to-4k-free",
     title: "How to Convert Any Photo to 4K for Free",
-    metaTitle: "Convert Photo to 4K Free Online | JPT AI",
+    metaTitle: "Convert Photo to 4K Free Online | Pixel Shine",
     metaDescription:
       "Turn a normal photo into 4K resolution free. AI upscaling converts low-res images to sharp 4K for wallpapers, prints and TVs — no watermark.",
     excerpt:
@@ -88,7 +88,7 @@ export const UPSCALE_FREE_POSTS_2: BlogPost[] = [
     image: IMG(1051075),
     slug: "free-webp-image-upscaler",
     title: "How to Upscale a WebP Image for Free",
-    metaTitle: "Free WebP Image Upscaler Online | JPT AI",
+    metaTitle: "Free WebP Image Upscaler Online | Pixel Shine",
     metaDescription:
       "Enlarge WebP images without the blur. Upscale WebP files free online, 2× or 4×, and download sharp results — no watermark, no conversion needed.",
     excerpt:
@@ -125,7 +125,7 @@ export const UPSCALE_FREE_POSTS_2: BlogPost[] = [
     image: IMG(1124062),
     slug: "how-to-fix-pixelated-image-free",
     title: "How to Fix a Pixelated Image (Free)",
-    metaTitle: "Fix a Pixelated Image Free Online | JPT AI",
+    metaTitle: "Fix a Pixelated Image Free Online | Pixel Shine",
     metaDescription:
       "Got a blocky, pixelated image? Here's how to fix pixelation free online with AI — smooth the blocks and recover detail, no watermark, no software.",
     excerpt:
@@ -162,7 +162,7 @@ export const UPSCALE_FREE_POSTS_2: BlogPost[] = [
     image: IMG(1144687),
     slug: "increase-photo-size-kb-mb-free",
     title: "How to Increase Photo Size (KB to MB) for Free",
-    metaTitle: "Increase Photo Size KB to MB Free | JPT AI",
+    metaTitle: "Increase Photo Size KB to MB Free | Pixel Shine",
     metaDescription:
       "Need a bigger photo file for a form or upload? Increase image size and resolution free online — turn a small KB photo into a larger, sharper file.",
     excerpt:
@@ -199,7 +199,7 @@ export const UPSCALE_FREE_POSTS_2: BlogPost[] = [
     image: IMG(1152077),
     slug: "upscale-logo-without-losing-quality-free",
     title: "How to Upscale a Logo Without Losing Quality (Free)",
-    metaTitle: "Upscale Logo Without Losing Quality Free | JPT AI",
+    metaTitle: "Upscale Logo Without Losing Quality Free | Pixel Shine",
     metaDescription:
       "Need a bigger, sharper version of a logo? Upscale a logo free online without the blur — perfect for print, banners and signage. No watermark.",
     excerpt:
@@ -236,7 +236,7 @@ export const UPSCALE_FREE_POSTS_2: BlogPost[] = [
     image: IMG(1181671),
     slug: "increase-photo-dpi-free-300dpi",
     title: "How to Increase Photo DPI for Free (Get to 300 DPI for Print)",
-    metaTitle: "Increase Photo DPI Free — 300 DPI for Print | JPT AI",
+    metaTitle: "Increase Photo DPI Free — 300 DPI for Print | Pixel Shine",
     metaDescription:
       "Printers want 300 DPI. Here's how to increase a photo's effective DPI for free by upscaling its resolution — sharp prints, no watermark.",
     excerpt:
@@ -273,7 +273,7 @@ export const UPSCALE_FREE_POSTS_2: BlogPost[] = [
     image: IMG(1239291),
     slug: "how-to-get-hd-photos-free",
     title: "How to Get HD Photos for Free (From the Ones You Already Have)",
-    metaTitle: "How to Get HD Photos Free | JPT AI Upscaler",
+    metaTitle: "How to Get HD Photos Free | Pixel Shine Upscaler",
     metaDescription:
       "Turn your ordinary photos into HD for free. AI upscaling makes low-res pictures crisp and high-definition — no watermark, no app, no sign-up.",
     excerpt:
@@ -310,7 +310,7 @@ export const UPSCALE_FREE_POSTS_2: BlogPost[] = [
     image: IMG(1261731),
     slug: "upscale-selfie-free",
     title: "How to Upscale a Selfie for Free (Make It Crisp & Clear)",
-    metaTitle: "Upscale a Selfie Free Online | JPT AI",
+    metaTitle: "Upscale a Selfie Free Online | Pixel Shine",
     metaDescription:
       "Blurry or low-res selfie? Upscale it free online to a crisp, clear version — great for profiles and prints. No watermark, no app, no sign-up.",
     excerpt:
@@ -347,7 +347,7 @@ export const UPSCALE_FREE_POSTS_2: BlogPost[] = [
     image: IMG(1264210),
     slug: "make-blurry-text-in-image-clear-free",
     title: "How to Make Blurry Text in an Image Clear (Free)",
-    metaTitle: "Make Blurry Text in Image Clear Free | JPT AI",
+    metaTitle: "Make Blurry Text in Image Clear Free | Pixel Shine",
     metaDescription:
       "Can't read the text in a photo or screenshot? Here's how to make blurry text clear free online by upscaling the image — no watermark, no software.",
     excerpt:
@@ -384,7 +384,7 @@ export const UPSCALE_FREE_POSTS_2: BlogPost[] = [
     image: IMG(1366919),
     slug: "best-free-photo-enhancer-no-app",
     title: "The Best Free Photo Enhancer — No App to Download",
-    metaTitle: "Best Free Photo Enhancer — No App | JPT AI",
+    metaTitle: "Best Free Photo Enhancer — No App | Pixel Shine",
     metaDescription:
       "Enhance photos free with no app to download. An online photo enhancer that sharpens and upscales images — no install, no watermark, no sign-up.",
     excerpt:
@@ -405,7 +405,7 @@ export const UPSCALE_FREE_POSTS_2: BlogPost[] = [
       },
       {
         heading: "What a good free enhancer should do",
-        body: `The essentials: sharpen soft photos and upscale small ones (2× and 4×), keep the download watermark-free, support JPG/PNG/WebP, and not lock you behind a login just to test it. JPT AI's enhancer does exactly that — online, no install, no watermark, unlimited for signed-in users.`,
+        body: `The essentials: sharpen soft photos and upscale small ones (2× and 4×), keep the download watermark-free, support JPG/PNG/WebP, and not lock you behind a login just to test it. Pixel Shine's enhancer does exactly that — online, no install, no watermark, unlimited for signed-in users.`,
       },
       {
         heading: "The five-minute test",
@@ -421,7 +421,7 @@ export const UPSCALE_FREE_POSTS_2: BlogPost[] = [
     image: IMG(1413412),
     slug: "upscale-image-for-tshirt-print-free",
     title: "How to Upscale Images for T-Shirt Printing (Free)",
-    metaTitle: "Upscale Images for T-Shirt Printing Free | JPT AI",
+    metaTitle: "Upscale Images for T-Shirt Printing Free | Pixel Shine",
     metaDescription:
       "Low-res artwork prints blurry on shirts. Here's how to upscale images for T-shirt printing free — get crisp, print-ready resolution, no watermark.",
     excerpt:
@@ -458,7 +458,7 @@ export const UPSCALE_FREE_POSTS_2: BlogPost[] = [
     image: IMG(1431822),
     slug: "free-image-upscaler-vs-paid",
     title: "Free Image Upscaler vs Paid: Do You Actually Need to Pay?",
-    metaTitle: "Free vs Paid Image Upscaler — Do You Need to Pay? | JPT AI",
+    metaTitle: "Free vs Paid Image Upscaler — Do You Need to Pay? | Pixel Shine",
     metaDescription:
       "Free image upscaler vs paid tools — what's the real difference, and do you need to pay? An honest look, plus how to upscale free with no watermark.",
     excerpt:
@@ -495,7 +495,7 @@ export const UPSCALE_FREE_POSTS_2: BlogPost[] = [
     image: IMG(1438081),
     slug: "enhance-photos-free-no-app-download",
     title: "Enhance Your Photos Free — No App Download Needed",
-    metaTitle: "Enhance Photos Free — No Download | JPT AI",
+    metaTitle: "Enhance Photos Free — No Download | Pixel Shine",
     metaDescription:
       "Enhance and sharpen photos free with no download. An online photo enhancer that upscales and clears up images — no app, no watermark, no sign-up.",
     excerpt:
@@ -532,7 +532,7 @@ export const UPSCALE_FREE_POSTS_2: BlogPost[] = [
     image: IMG(1552212),
     slug: "upscale-image-to-1080p-full-hd-free",
     title: "How to Upscale an Image to 1080p (Full HD) for Free",
-    metaTitle: "Upscale Image to 1080p Full HD Free | JPT AI",
+    metaTitle: "Upscale Image to 1080p Full HD Free | Pixel Shine",
     metaDescription:
       "Turn a small photo into 1080p Full HD free. AI upscaling enlarges images to 1920×1080 with sharp detail for screens and video — no watermark.",
     excerpt:

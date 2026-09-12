@@ -1,16 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import Razorpay from "razorpay";
 import { checkAuth } from "@/lib/auth";
+import { PACKS, inrPaise } from "@/lib/plans";
 
 export const runtime = "nodejs";
 
-const PLANS: Record<string, { amountPaise: number; credits: number; planName: string }> = {
-  starter:   { amountPaise: 49900,  credits: 50,     planName: "starter"   },
-  creator:   { amountPaise: 99900,  credits: 100,    planName: "creator"   },
-  pro:       { amountPaise: 249900, credits: 300,    planName: "pro"       },
-  // One-time "Unlimited" unlock (~$3) — unlimited transformations + all tools.
-  unlimited: { amountPaise: 24900,  credits: 999999, planName: "unlimited" },
-};
+// Packs come from lib/plans.ts so price and credits are never defined twice.
+const PLANS: Record<string, { amountPaise: number; credits: number; planName: string }> =
+  Object.fromEntries(
+    PACKS.map((p) => [p.id, { amountPaise: inrPaise(p), credits: p.credits, planName: p.id }])
+  );
 
 export async function POST(req: NextRequest) {
   const { session, error } = await checkAuth(req);

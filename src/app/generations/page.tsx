@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { savePendingContext } from "@/lib/pending-image";
 
 interface GenItem {
   id: string;
@@ -214,7 +215,7 @@ function PreviewModal({
                 color: "#fff", border: "none", borderRadius: 12,
                 fontWeight: 700, fontSize: 13, cursor: "pointer",
                 display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-                boxShadow: "0 4px 14px rgba(15,157,107,0.4)",
+                boxShadow: "0 4px 14px rgba(255,106,26,0.40)",
               }}
             >
               🖼️ Open in AI Editor
@@ -549,7 +550,8 @@ export default function GenerationsPage() {
       }
 
       try {
-        sessionStorage.setItem("jpt_pending_image", imgData);
+        // Via the shared store: sessionStorage rejects a full-resolution image.
+        await savePendingContext({ image: imgData });
         // Pass the tool context so editor opens with the right panel
         const toolMap: Record<string, string> = {
           "upscale": "upscale",
@@ -576,8 +578,8 @@ export default function GenerationsPage() {
         <div style={{ fontSize: 52 }}>🔐</div>
         <h2 style={{ fontSize: 22, fontWeight: 800, color: "var(--text)", margin: 0, textAlign: "center" }}>Sign in to view your generations</h2>
         <p style={{ color: "var(--text-muted)", fontSize: 14, margin: 0, textAlign: "center", maxWidth: 320 }}>All your AI transformations are saved here automatically.</p>
-        <a href="/api/auth/google?next=/generations" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", background: "var(--accent)", color: "#fff", borderRadius: 8, textDecoration: "none", fontWeight: 700, fontSize: 14 }}>
-          Sign In to JPT AI
+        <a href="/api/auth/google?next=/generations" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", background: "var(--accent-fill)", color: "#fff", borderRadius: 8, textDecoration: "none", fontWeight: 700, fontSize: 14 }}>
+          Sign In to Pixel Shine
         </a>
       </div>
     );
@@ -609,14 +611,14 @@ export default function GenerationsPage() {
           <div>
             <h1 style={{ margin: 0, fontSize: 28, fontWeight: 900, color: "var(--text)", letterSpacing: "-0.5px" }}>✦ {t.generationsTitle}</h1>
             <p style={{ margin: "4px 0 0", fontSize: 14, color: "var(--text-muted)" }}>
-              {items.length} image{items.length !== 1 ? "s" : ""} · click any card to preview · JPT AI
+              {items.length} image{items.length !== 1 ? "s" : ""} · click any card to preview · Pixel Shine
             </p>
           </div>
           <div style={{ display: "flex", gap: 10 }}>
-            <a href="/headshot" style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "10px 18px", background: "#FDF2F8", color: "#EC4899", borderRadius: 8, textDecoration: "none", fontWeight: 700, fontSize: 14 }}>
+            <a href="/headshot" style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "10px 18px", background: "var(--surface-3)", color: "#EC4899", borderRadius: 8, textDecoration: "none", fontWeight: 700, fontSize: 14 }}>
               🎯 Headshots
             </a>
-            <a href="/editor" style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "10px 18px", background: "var(--accent)", color: "#fff", borderRadius: 8, textDecoration: "none", fontWeight: 700, fontSize: 14 }}>
+            <a href="/editor" style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "10px 18px", background: "var(--accent-fill)", color: "#fff", borderRadius: 8, textDecoration: "none", fontWeight: 700, fontSize: 14 }}>
               + New Edit
             </a>
           </div>
@@ -647,10 +649,10 @@ export default function GenerationsPage() {
               Every image you generate or edit — from the AI Editor or Headshot tool — appears here automatically.
             </p>
             <div style={{ display: "flex", gap: 12 }}>
-              <a href="/headshot" style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "12px 22px", background: "#FDF2F8", color: "#EC4899", borderRadius: 8, textDecoration: "none", fontWeight: 700, fontSize: 14 }}>
+              <a href="/headshot" style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "12px 22px", background: "var(--surface-3)", color: "#EC4899", borderRadius: 8, textDecoration: "none", fontWeight: 700, fontSize: 14 }}>
                 🎯 Try Headshots
               </a>
-              <a href="/editor" style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "12px 22px", background: "var(--accent)", color: "#fff", borderRadius: 8, textDecoration: "none", fontWeight: 700, fontSize: 14 }}>
+              <a href="/editor" style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "12px 22px", background: "var(--accent-fill)", color: "#fff", borderRadius: 8, textDecoration: "none", fontWeight: 700, fontSize: 14 }}>
                 🖼️ Open Editor
               </a>
             </div>

@@ -23,8 +23,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     description: ct.metaDescription,
     keywords: ct.keywords,
     alternates: { canonical: url },
-    openGraph: { title: ct.title, description: ct.metaDescription, url, type: "website", siteName: "JPT AI" },
-    twitter: { card: "summary_large_image", title: `${ct.fromLabel} to ${ct.toLabel} Converter | JPT AI`, description: ct.metaDescription },
+    openGraph: { title: ct.title, description: ct.metaDescription, url, type: "website", siteName: "Pixel Shine" },
+    twitter: { card: "summary_large_image", title: `${ct.fromLabel} to ${ct.toLabel} Converter | Pixel Shine`, description: ct.metaDescription },
   };
 }
 
@@ -82,14 +82,14 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             <p style={{ fontSize: "clamp(1rem,2vw,1.12rem)", color: "var(--text-muted)", lineHeight: 1.7, maxWidth: 580, margin: "0 auto 30px" }}>
               Free online {ct.fromLabel}-to-{ct.toLabel} converter — no watermark, no sign-up, no software. Convert in seconds, right in your browser.
             </p>
-            <Link href={toolHref} className="jpt-hover" style={{ display: "inline-block", background: GRAD, color: "#fff", borderRadius: 12, padding: "15px 34px", fontSize: 16, fontWeight: 800, textDecoration: "none", boxShadow: "0 8px 24px rgba(15,157,107,0.35)" }}>
+            <Link href={toolHref} className="jpt-hover" style={{ display: "inline-block", background: GRAD, color: "#fff", borderRadius: 12, padding: "15px 34px", fontSize: 16, fontWeight: 800, textDecoration: "none", boxShadow: "0 8px 24px rgba(255,106,26,0.40)" }}>
               Convert {ct.fromLabel} to {ct.toLabel} →
             </Link>
             <SafeImage
               src={blogCreative(`convert-${slug}`)}
               alt={`Convert ${ct.fromLabel} to ${ct.toLabel} — before and after`}
               wrapperStyle={{ maxWidth: 600, margin: "40px auto 0" }}
-              style={{ width: "100%", height: "auto", display: "block", borderRadius: 16, border: "1px solid var(--border)", boxShadow: "0 18px 50px rgba(15,157,107,0.14)" }}
+              style={{ width: "100%", height: "auto", display: "block", borderRadius: 16, border: "1px solid var(--border)", boxShadow: "0 18px 50px var(--accent-soft)" }}
             />
           </div>
         </section>

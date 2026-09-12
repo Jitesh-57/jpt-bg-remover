@@ -36,7 +36,7 @@ const RAW_POSTS: BlogPost[] = [
     image: "https://images.pexels.com/photos/5632397/pexels-photo-5632397.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "remove-background-from-image-online-free",
     title: "How to Remove Background from Image Online — Free & Instant",
-    metaTitle: "How to Remove Background from Image Online Free | JPT AI",
+    metaTitle: "How to Remove Background from Image Online Free | Pixel Shine",
     metaDescription:
       "Learn how to remove image backgrounds instantly using AI — no Photoshop needed. Get a clean transparent PNG in one click, free online.",
     excerpt:
@@ -51,7 +51,7 @@ const RAW_POSTS: BlogPost[] = [
       {
         body: `Learning how to remove background from image online should not require a design degree, expensive software, or a 30-minute YouTube tutorial. With the right free background remover, you can lift a subject cleanly off its backdrop in under 5 seconds and download a crisp transparent background PNG — no Photoshop, no watermark, no credit card. Whether you are prepping product shots for your Shopify store, cutting yourself out for a professional headshot, or making a sticker for a group chat, the ability to remove bg instantly has quietly become one of the most-used photo tricks on the internet.
 
-The problem? Most \"free\" tools slap a watermark across your image, force you to sign up, or downscale your export to a useless 500px thumbnail unless you pay. JPT AI (sjpt.io) takes a different approach — its AI background remover is genuinely free to try, requires no design skill, and delivers clean edges even on tricky subjects like hair, fur, and glass. In this guide, you will learn exactly how it works, how to get flawless results, and the mistakes that quietly ruin most cutouts.`,
+The problem? Most \"free\" tools slap a watermark across your image, force you to sign up, or downscale your export to a useless 500px thumbnail unless you pay. Pixel Shine (sjpt.io) takes a different approach — its AI background remover is genuinely free to try, requires no design skill, and delivers clean edges even on tricky subjects like hair, fur, and glass. In this guide, you will learn exactly how it works, how to get flawless results, and the mistakes that quietly ruin most cutouts.`,
       },
       {
         heading: "Why AI Background Removal Beats the Old Manual Way",
@@ -61,7 +61,7 @@ Modern AI background removers changed the math entirely. Instead of you tracing 
 
 **The accuracy jump is the real story.** Older \"magic wand\" tools relied on color contrast, so they failed whenever the subject and background shared similar tones. AI models look at shape, context, and depth cues, so they can pull a brown-haired person off a beige wall — something the wand tool never handled well.
 
-For everyday users, this means you no longer need any editing knowledge. You upload, the AI does the cutout, and you download a transparent PNG. The skill barrier that kept background removal locked to designers is essentially gone, and free tools like JPT AI put that power in anyone's hands.`,
+For everyday users, this means you no longer need any editing knowledge. You upload, the AI does the cutout, and you download a transparent PNG. The skill barrier that kept background removal locked to designers is essentially gone, and free tools like Pixel Shine put that power in anyone's hands.`,
       },
       {
         heading: "What a Transparent Background PNG Actually Gives You",
@@ -73,15 +73,15 @@ For everyday users, this means you no longer need any editing knowledge. You upl
 
 **Create stickers and cutouts.** Messaging apps, Notion boards, and presentation slides all support transparent PNGs, which is why cutout stickers exploded in popularity.
 
-One important note: transparency only survives in the right format. If you export as JPG, the transparent area collapses to white because JPG has no alpha channel. Always keep your file as PNG (or WebP) to preserve the see-through background. JPT AI exports a proper transparent PNG by default, so you don't have to fiddle with format settings.`,
+One important note: transparency only survives in the right format. If you export as JPG, the transparent area collapses to white because JPG has no alpha channel. Always keep your file as PNG (or WebP) to preserve the see-through background. Pixel Shine exports a proper transparent PNG by default, so you don't have to fiddle with format settings.`,
       },
       {
         heading: "Step-by-Step: How to Remove a Background for Free",
-        body: `Here is the exact process using JPT AI's free background remover. The whole thing takes under a minute.
+        body: `Here is the exact process using Pixel Shine's free background remover. The whole thing takes under a minute.
 
 **Step 1 — Open the tool.** Go to sjpt.io and open the Remove Background tool. You do not need to create an account to try it, which means zero friction to get started.
 
-**Step 2 — Upload your image.** Drag and drop your photo directly onto the upload zone, or click to browse your files. JPT AI accepts common formats like JPG, PNG, and WebP. For best results, use the highest-resolution version of your photo you have.
+**Step 2 — Upload your image.** Drag and drop your photo directly onto the upload zone, or click to browse your files. Pixel Shine accepts common formats like JPG, PNG, and WebP. For best results, use the highest-resolution version of your photo you have.
 
 **Step 3 — Let the AI process.** The moment your image lands, the AI analyzes it and detects the subject automatically. In roughly 3 to 5 seconds, it isolates the foreground and strips the background — no clicking, no tracing, no manual masking required.
 
@@ -89,7 +89,7 @@ One important note: transparency only survives in the right format. If you expor
 
 **Step 5 — Download your transparent PNG.** Click download and save the file. It comes out as a PNG with the background fully removed and no watermark — ready to drop into any design, store listing, or social post.
 
-**Step 6 (optional) — Add a new background.** If you want to replace the background rather than leave it transparent, place your cutout over a new color or image in JPT AI's editor or your favorite design tool. Because your subject is already isolated, this step is instant.`,
+**Step 6 (optional) — Add a new background.** If you want to replace the background rather than leave it transparent, place your cutout over a new color or image in Pixel Shine's editor or your favorite design tool. Because your subject is already isolated, this step is instant.`,
       },
       {
         heading: "Pro Tips for Flawless Cutouts Every Time",
@@ -119,19 +119,19 @@ One important note: transparency only survives in the right format. If you expor
 
 **Choosing a busy background photo.** If the original has the subject camouflaged into a cluttered, same-colored scene, no tool will separate them perfectly. Pick source photos with clear subject-background contrast when you can.
 
-**Paying for what's free.** Many users don't realize watermark-free removal is available at no cost, so they hand over money to tools that lock exports behind a paywall. JPT AI removes backgrounds free with no watermark — check that before you pay.`,
+**Paying for what's free.** Many users don't realize watermark-free removal is available at no cost, so they hand over money to tools that lock exports behind a paywall. Pixel Shine removes backgrounds free with no watermark — check that before you pay.`,
       },
       {
-        heading: "JPT AI vs. Other Background Removers",
-        body: `There are dozens of background removers online, so how does JPT AI stack up? The differences come down to three things most people care about: watermarks, sign-up requirements, and export quality.
+        heading: "Pixel Shine vs. Other Background Removers",
+        body: `There are dozens of background removers online, so how does Pixel Shine stack up? The differences come down to three things most people care about: watermarks, sign-up requirements, and export quality.
 
-**Watermarks.** Many popular free tools let you preview a clean cutout but stamp a watermark or logo across the actual download — you only get the clean file if you subscribe. JPT AI gives you a watermark-free PNG on the free tier, which is the whole point of using the tool.
+**Watermarks.** Many popular free tools let you preview a clean cutout but stamp a watermark or logo across the actual download — you only get the clean file if you subscribe. Pixel Shine gives you a watermark-free PNG on the free tier, which is the whole point of using the tool.
 
-**Sign-up friction.** Some competitors force you to create an account and verify email before you can even upload. JPT AI lets you try background removal without a mandatory account, so you can get a cutout in the time it takes others to fill out a signup form.
+**Sign-up friction.** Some competitors force you to create an account and verify email before you can even upload. Pixel Shine lets you try background removal without a mandatory account, so you can get a cutout in the time it takes others to fill out a signup form.
 
 **Export resolution.** A common paywall trick is delivering only a small, low-resolution version for free and reserving full resolution for paid users. 
 
-**All-in-one platform.** The biggest edge is that JPT AI isn't a single-trick tool. The same platform includes an AI upscaler, headshot generator, text-prompt photo editor, and creative effects. So after you remove a background, you can upscale the result or drop it into a new scene without hopping between five different websites. For most people, that convenience is worth more than any single feature.`,
+**All-in-one platform.** The biggest edge is that Pixel Shine isn't a single-trick tool. The same platform includes an AI upscaler, headshot generator, text-prompt photo editor, and creative effects. So after you remove a background, you can upscale the result or drop it into a new scene without hopping between five different websites. For most people, that convenience is worth more than any single feature.`,
       },
       {
         heading: "Who Uses Background Removal (Real Scenarios)",
@@ -150,13 +150,13 @@ One important note: transparency only survives in the right format. If you expor
       {
         heading: "Frequently Asked Questions",
         body: `**Is it really free to remove a background online?**
-Yes. JPT AI's background remover is free to try with no watermark and no mandatory account for basic use. New users also get free trial credits across the platform's other tools, so you can test upscaling and headshots too.
+Yes. Pixel Shine's background remover is free to try with no watermark and no mandatory account for basic use. New users also get free trial credits across the platform's other tools, so you can test upscaling and headshots too.
 
 **How do I get a transparent background instead of a white one?**
-Make sure you download the result as a PNG, not a JPG. PNG supports transparency (an alpha channel); JPG does not and will fill the empty area with white. JPT AI exports transparent PNGs by default.
+Make sure you download the result as a PNG, not a JPG. PNG supports transparency (an alpha channel); JPG does not and will fill the empty area with white. Pixel Shine exports transparent PNGs by default.
 
 **Does removing the background reduce my image quality?**
-No. The tool only removes the background pixels — the subject keeps its original resolution and detail. If you want the whole image sharper or larger, run it through JPT AI's upscaler afterward.
+No. The tool only removes the background pixels — the subject keeps its original resolution and detail. If you want the whole image sharper or larger, run it through Pixel Shine's upscaler afterward.
 
 **Can it handle hair and fine details?**
 Yes, modern AI handles hair, fur, and thin edges far better than old tools. For the cleanest results, use a high-resolution source photo with good contrast between the subject and background.
@@ -168,14 +168,14 @@ No. It runs entirely online on desktop or mobile. There's nothing to download or
 Yes. You can process images one after another. For product catalogs, batch photos shot under the same lighting for consistent results.
 
 **Is there a watermark on the free download?**
-No. Unlike many free tools, JPT AI does not stamp a watermark on your cutout.
+No. Unlike many free tools, Pixel Shine does not stamp a watermark on your cutout.
 
 **What image formats can I upload?**
 Common web formats like JPG, PNG, and WebP all work. Upload the highest-resolution version you have for the sharpest edges.`,
       },
       {
         heading: "Key Takeaways",
-        body: `Removing a background from an image online is now a 5-second, skill-free task — and it doesn't have to cost anything. With JPT AI's free background remover, you upload a photo, let the AI isolate your subject automatically, and download a clean, watermark-free transparent PNG ready for any design, store listing, or social post.
+        body: `Removing a background from an image online is now a 5-second, skill-free task — and it doesn't have to cost anything. With Pixel Shine's free background remover, you upload a photo, let the AI isolate your subject automatically, and download a clean, watermark-free transparent PNG ready for any design, store listing, or social post.
 
 Remember the essentials: start with a high-resolution, good-contrast source image, always export as PNG to keep the transparency, and do a quick edge check on hair and thin details before you finalize. Avoid the classic mistakes of exporting to JPG or paying for features that are already free.
 
@@ -187,7 +187,7 @@ Ready to cut out your first image? Head to sjpt.io, open the Remove Background t
     image: "https://images.pexels.com/photos/1261731/pexels-photo-1261731.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "ai-image-upscaler-enhance-photo-quality",
     title: "AI Image Upscaler: Enhance Any Photo to 4K Quality",
-    metaTitle: "AI Image Upscaler — Enhance Photo Quality Online | JPT AI",
+    metaTitle: "AI Image Upscaler — Enhance Photo Quality Online | Pixel Shine",
     metaDescription:
       "Upscale images to 2× or 4× resolution without losing quality. AI super-resolution sharpens details, reduces noise, and recovers fine texture from any photo.",
     excerpt:
@@ -202,7 +202,7 @@ Ready to cut out your first image? Head to sjpt.io, open the Remove Background t
       {
         body: `An AI image upscaler is the closest thing photography has to a magic reset button. Feed it a small, soft, or pixelated photo, and it enhances photo quality by intelligently rebuilding detail — sharpening edges, recovering texture, and pushing the resolution up toward crisp 4K clarity. Unlike the old \"stretch and blur\" resizing you get in basic editors, an AI upscaler actually adds believable detail that wasn't visible before, which is why it has become the go-to tool for anyone who needs to upscale an image online without wrecking it.
 
-Maybe you're trying to rescue a great shot that came out too small. Maybe you need to increase image resolution for a print, a product listing, or a website banner. Maybe an old profile picture looks embarrassingly fuzzy on today's high-density screens. Whatever the reason, AI upscaling solves it in seconds. And with JPT AI (sjpt.io), the Normal upscale is completely free and unlimited — no sign-in required — so you can enhance as many photos as you want. This guide covers how it works, how to use it, and how to get the sharpest possible results.`,
+Maybe you're trying to rescue a great shot that came out too small. Maybe you need to increase image resolution for a print, a product listing, or a website banner. Maybe an old profile picture looks embarrassingly fuzzy on today's high-density screens. Whatever the reason, AI upscaling solves it in seconds. And with Pixel Shine (sjpt.io), the Normal upscale is completely free and unlimited — no sign-in required — so you can enhance as many photos as you want. This guide covers how it works, how to use it, and how to get the sharpest possible results.`,
       },
       {
         heading: "How AI Upscaling Actually Works",
@@ -218,9 +218,9 @@ Most AI upscalers offer preset multipliers like 2x or 4x, meaning they double or
       },
       {
         heading: "Free Normal Upscale vs. Pro AI Upscale",
-        body: `JPT AI offers two tiers of upscaling, and knowing when to use each saves you time and credits.
+        body: `Pixel Shine offers two tiers of upscaling, and knowing when to use each saves you time and credits.
 
-**Normal Upscale — free, unlimited, no sign-in.** This is the workhorse for everyday needs. It's completely free with no usage cap and doesn't even require you to create an account. Normal upscale is perfect for enlarging social media photos, cleaning up screenshots, sharpening profile pictures, and enhancing images for web use. For the vast majority of everyday tasks, Normal upscale is all you'll ever need — and the fact that it's free and unlimited makes JPT AI stand out from tools that meter every single export.
+**Normal Upscale — free, unlimited, no sign-in.** This is the workhorse for everyday needs. It's completely free with no usage cap and doesn't even require you to create an account. Normal upscale is perfect for enlarging social media photos, cleaning up screenshots, sharpening profile pictures, and enhancing images for web use. For the vast majority of everyday tasks, Normal upscale is all you'll ever need — and the fact that it's free and unlimited makes Pixel Shine stand out from tools that meter every single export.
 
 **Pro AI Upscale — credit-based, maximum detail.** When you need the absolute best result — think large-format prints, professional product photography, restoring precious old family photos, or squeezing detail out of a very low-quality source — Pro AI upscale uses a more advanced model that reconstructs finer detail and handles difficult images better. It costs credits, but new users get free trial credits to test it out, and credits are inexpensive when you do need them.
 
@@ -228,7 +228,7 @@ Most AI upscalers offer preset multipliers like 2x or 4x, meaning they double or
       },
       {
         heading: "Step-by-Step: How to Upscale an Image",
-        body: `Here's exactly how to enhance and upscale a photo with JPT AI. The free Normal upscale takes seconds and needs no account.
+        body: `Here's exactly how to enhance and upscale a photo with Pixel Shine. The free Normal upscale takes seconds and needs no account.
 
 **Step 1 — Open the upscaler.** Go to sjpt.io and open the AI Upscaler tool. For Normal upscale, you can jump straight in without signing in.
 
@@ -252,7 +252,7 @@ Most AI upscalers offer preset multipliers like 2x or 4x, meaning they double or
 
 **2. Don't over-multiply.** Jumping straight to 4x on an already-large image can look artificial. Match the multiplier to your actual target size — enough to hit the resolution you need, not more.
 
-**3. Remove the background first for products.** If you're upscaling a product shot, remove the background first, then upscale the clean subject. JPT AI has a background remover built in, so it's a one-platform workflow.
+**3. Remove the background first for products.** If you're upscaling a product shot, remove the background first, then upscale the clean subject. Pixel Shine has a background remover built in, so it's a one-platform workflow.
 
 **4. Upscale last in your editing chain.** Do your cropping, color correction, and edits first, then upscale as the final step. Upscaling a finished image preserves the most detail.
 
@@ -272,7 +272,7 @@ Most AI upscalers offer preset multipliers like 2x or 4x, meaning they double or
 
 **Re-uploading an already-upscaled image repeatedly.** Running the same photo through multiple upscale passes stacks artifacts and degrades quality. Upscale once to your target size.
 
-**Paying for basic upscaling.** Many people don't realize free, unlimited upscaling exists. JPT AI's Normal upscale is free with no sign-in, so don't pay a subscription for everyday enlargements you can do at no cost.`,
+**Paying for basic upscaling.** Many people don't realize free, unlimited upscaling exists. Pixel Shine's Normal upscale is free with no sign-in, so don't pay a subscription for everyday enlargements you can do at no cost.`,
       },
       {
         heading: "Common Use Cases for AI Upscaling",
@@ -314,12 +314,12 @@ Most AI upscalers offer preset multipliers like 2x or 4x, meaning they double or
 
 **It recovers texture.** Skin, hair, fabric, foliage, and other detailed surfaces regain believable texture instead of the smeared look you get from basic resizing.
 
-Because JPT AI bundles upscaling with a background remover, headshot generator, and AI photo editor, you can chain these enhancements together. Remove a distracting background, upscale the clean result, and touch it up — all on one platform, without juggling multiple apps or subscriptions.`,
+Because Pixel Shine bundles upscaling with a background remover, headshot generator, and AI photo editor, you can chain these enhancements together. Remove a distracting background, upscale the clean result, and touch it up — all on one platform, without juggling multiple apps or subscriptions.`,
       },
       {
         heading: "Frequently Asked Questions",
         body: `**Is the AI upscaler really free?**
-Yes. JPT AI's Normal upscale is completely free and unlimited, with no sign-in required. Only the advanced Pro AI upscale uses credits, and new users get free trial credits to try it.
+Yes. Pixel Shine's Normal upscale is completely free and unlimited, with no sign-in required. Only the advanced Pro AI upscale uses credits, and new users get free trial credits to try it.
 
 **Can I upscale an image to 4K?**
 Yes. Using multipliers like 2x or 4x, you can push most images up toward 4K resolution. The final size depends on your source dimensions — a 1000px image at 4x becomes 4000px wide.
@@ -334,7 +334,7 @@ Basic resizing averages existing pixels, producing a bigger but blurrier image. 
 Often, yes. AI can recover a lot of detail from soft or aged photos. For heavily degraded images, the Pro AI upscale gives the best results. Very severe blur can't be fully fixed, though.
 
 **Do I need to install software?**
-No. JPT AI runs online on desktop and mobile — nothing to download.
+No. Pixel Shine runs online on desktop and mobile — nothing to download.
 
 **Is there a watermark on the result?**
 No. Your upscaled images download watermark-free.
@@ -348,7 +348,7 @@ Use the highest-quality version you have. A less-compressed PNG or a high-qualit
 
 The smart workflow: start with the best source you have, edit first and upscale last, pick a multiplier that matches your target size, and check the result at 100% zoom. Use the free Normal upscale for everyday needs, and save Pro AI upscale for high-stakes prints and difficult images.
 
-Best of all, you don't have to pay to get started. JPT AI's Normal upscale is free and unlimited with no sign-in required. Head to sjpt.io, upload your photo, and see your image transformed to crisp, high-resolution quality in seconds. Upscale Your Image →`,
+Best of all, you don't have to pay to get started. Pixel Shine's Normal upscale is free and unlimited with no sign-in required. Head to sjpt.io, upload your photo, and see your image transformed to crisp, high-resolution quality in seconds. Upscale Your Image →`,
       },
     ],
   },
@@ -356,7 +356,7 @@ Best of all, you don't have to pay to get started. JPT AI's Normal upscale is fr
     image: "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "ai-headshot-generator-linkedin-professional",
     title: "AI Headshot Generator: Get a Professional LinkedIn Photo in Seconds",
-    metaTitle: "AI Headshot Generator — Professional LinkedIn Photo Online | JPT AI",
+    metaTitle: "AI Headshot Generator — Professional LinkedIn Photo Online | Pixel Shine",
     metaDescription:
       "Generate a professional AI headshot from any photo in seconds. Perfect for LinkedIn, resumes, and corporate profiles. No photographer or studio needed.",
     excerpt:
@@ -371,13 +371,13 @@ Best of all, you don't have to pay to get started. JPT AI's Normal upscale is fr
       {
         body: `An AI headshot generator can turn an ordinary selfie into a polished, studio-quality LinkedIn headshot in seconds — no photographer, no studio booking, and no awkward posing in front of a stranger's camera. Just upload a clear photo of yourself, and AI produces a professional photo online with clean lighting, a neutral background, and a confident, corporate look. For anyone who needs to update their profile fast, it's the most affordable way to get an AI professional photo that actually looks the part.
 
-Here's why this matters: LinkedIn's own data has long shown that profiles with a professional photo get dramatically more views and connection requests than those without. Yet a proper studio headshot can cost $150 to $400 and take days to schedule and receive. An AI headshot generator collapses that into minutes and a fraction of the price. JPT AI (sjpt.io) makes it especially approachable — new users get free trials to generate headshots, and the whole platform runs online with no expensive software. This guide walks through how it works, how to get the best results, and how to look genuinely professional.`,
+Here's why this matters: LinkedIn's own data has long shown that profiles with a professional photo get dramatically more views and connection requests than those without. Yet a proper studio headshot can cost $150 to $400 and take days to schedule and receive. An AI headshot generator collapses that into minutes and a fraction of the price. Pixel Shine (sjpt.io) makes it especially approachable — new users get free trials to generate headshots, and the whole platform runs online with no expensive software. This guide walks through how it works, how to get the best results, and how to look genuinely professional.`,
       },
       {
         heading: "Why AI Headshots Are Replacing the Studio",
         body: `The traditional headshot process is expensive, slow, and inconvenient — and AI fixes all three problems at once.
 
-**Cost.** A professional headshot session typically runs $150 to $400 and up, depending on the photographer and city. For a single profile photo, that's a steep price. AI headshot generation costs a tiny fraction of that, and JPT AI even offers free trials to start.
+**Cost.** A professional headshot session typically runs $150 to $400 and up, depending on the photographer and city. For a single profile photo, that's a steep price. AI headshot generation costs a tiny fraction of that, and Pixel Shine even offers free trials to start.
 
 **Time.** Booking a studio, traveling there, doing the shoot, and waiting for edited files can stretch across a week or more. AI produces your headshot in seconds from a photo you already have. Need it updated tonight? Done tonight.
 
@@ -403,7 +403,7 @@ The result is a professional-looking headshot that rivals studio output for the 
       },
       {
         heading: "Step-by-Step: Generate Your Professional Headshot",
-        body: `Here's how to create a LinkedIn-ready headshot with JPT AI. It takes just a few minutes.
+        body: `Here's how to create a LinkedIn-ready headshot with Pixel Shine. It takes just a few minutes.
 
 **Step 1 — Open the AI Headshot Generator.** Go to sjpt.io and open the AI Headshot tool. New users get free trials, so you can generate without committing anything upfront.
 
@@ -417,7 +417,7 @@ The result is a professional-looking headshot that rivals studio output for the 
 
 **Step 6 — Review and refine.** Look over the result, checking that your face looks natural and true to you. If you want a different look, adjust the style or source photo and regenerate.
 
-**Step 7 — Upscale and download.** For a razor-sharp final image, run it through JPT AI's upscaler, then download. Now it's ready for LinkedIn, your resume, or your email signature.`,
+**Step 7 — Upscale and download.** For a razor-sharp final image, run it through Pixel Shine's upscaler, then download. Now it's ready for LinkedIn, your resume, or your email signature.`,
       },
       {
         heading: "Pro Tips for the Best AI Headshot",
@@ -457,7 +457,7 @@ The result is a professional-looking headshot that rivals studio output for the 
 
 **vs. a DIY smartphone headshot.** Modern phones take great photos, but replicating studio lighting and a clean background at home is genuinely hard. AI adds the professional lighting and backdrop you can't easily create in your living room, so the result looks far more intentional than a raw selfie.
 
-**vs. free but limited AI tools.** Some AI headshot tools lock every decent result behind a subscription or watermark. JPT AI offers free trials to start, no watermark, and — crucially — the same platform includes upscaling, background removal, and photo editing. So you can generate, sharpen, and tweak your headshot in one place instead of paying for and juggling multiple single-purpose apps. For most people, AI is the clear winner on value, speed, and convenience.`,
+**vs. free but limited AI tools.** Some AI headshot tools lock every decent result behind a subscription or watermark. Pixel Shine offers free trials to start, no watermark, and — crucially — the same platform includes upscaling, background removal, and photo editing. So you can generate, sharpen, and tweak your headshot in one place instead of paying for and juggling multiple single-purpose apps. For most people, AI is the clear winner on value, speed, and convenience.`,
       },
       {
         heading: "Who Uses AI Headshots (Real Scenarios)",
@@ -490,7 +490,7 @@ The result is a professional-looking headshot that rivals studio output for the 
       {
         heading: "Frequently Asked Questions",
         body: `**How much does an AI headshot cost?**
-Far less than a studio session. JPT AI offers free trials for new users to generate headshots, and its paid credits are inexpensive — a fraction of the $150 to $400 a professional photographer typically charges.
+Far less than a studio session. Pixel Shine offers free trials for new users to generate headshots, and its paid credits are inexpensive — a fraction of the $150 to $400 a professional photographer typically charges.
 
 **Do AI headshots look real?**
 Yes — good ones look like polished, studio-quality photos of you. The key is starting with a clear, well-lit, front-facing source photo so the result stays natural and recognizable.
@@ -511,7 +511,7 @@ No. Your headshots download watermark-free.
 Seconds. Once you upload your photo and pick a style, the AI generates your headshot almost immediately — no waiting days for a photographer to deliver.
 
 **Can I make the headshot sharper for printing?**
-Yes. Run your final headshot through JPT AI's upscaler to increase resolution and sharpness for print or high-density displays.`,
+Yes. Run your final headshot through Pixel Shine's upscaler to increase resolution and sharpness for print or high-density displays.`,
       },
       {
         heading: "Key Takeaways",
@@ -527,7 +527,7 @@ Ready for a headshot that gets your profile noticed? Head to sjpt.io, open the A
     image: "https://images.pexels.com/photos/4792731/pexels-photo-4792731.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "how-to-edit-photos-with-ai-text-prompts",
     title: "How to Edit Photos with AI Text Prompts (No Photoshop Needed)",
-    metaTitle: "How to Edit Photos with AI Text Prompts — No Photoshop Needed | JPT AI",
+    metaTitle: "How to Edit Photos with AI Text Prompts — No Photoshop Needed | Pixel Shine",
     metaDescription:
       "Learn how to edit photos using simple text prompts. Change backgrounds, adjust lighting, add effects, and more — no design skills or Photoshop required.",
     excerpt:
@@ -542,7 +542,7 @@ Ready for a headshot that gets your profile noticed? Head to sjpt.io, open the A
       {
         body: `Learning how to edit photos with AI text prompts is like gaining a personal photo editor who understands plain English. Instead of hunting through menus, masking layers, and watching Photoshop tutorials, you simply type what you want — \"remove the person in the background,\" \"change the sky to sunset,\" \"make it look like a professional studio shot\" — and the AI photo editor does it. This is text-to-image editing, and it has made sophisticated photo editing online accessible to absolutely everyone, no design experience required.
 
-The shift here is enormous. Traditional editing tools put a wall of technical skill between you and your idea. You had to know which tool did what, how layers and masks worked, and how to blend edits seamlessly. AI image editing online removes that wall entirely — you describe the outcome, and the model handles the how. JPT AI (sjpt.io) puts this power online with a free AI photo editor: new users get free trials, there's no watermark on the basics, and you don't need to install a thing. This guide shows you exactly how prompt-based editing works, how to write prompts that get great results, and what to try first.`,
+The shift here is enormous. Traditional editing tools put a wall of technical skill between you and your idea. You had to know which tool did what, how layers and masks worked, and how to blend edits seamlessly. AI image editing online removes that wall entirely — you describe the outcome, and the model handles the how. Pixel Shine (sjpt.io) puts this power online with a free AI photo editor: new users get free trials, there's no watermark on the basics, and you don't need to install a thing. This guide shows you exactly how prompt-based editing works, how to write prompts that get great results, and what to try first.`,
       },
       {
         heading: "How Text-Prompt Photo Editing Works",
@@ -572,11 +572,11 @@ The shift here is enormous. Traditional editing tools put a wall of technical sk
 
 **Retouching and enhancement.** Smooth skin, remove distractions, and polish portraits with simple requests instead of manual brushwork.
 
-Because JPT AI bundles this text-prompt editor alongside a background remover, upscaler, headshot generator, and creative effects, you can chain edits together — remove a background, restyle the scene, then upscale the result — all in one place without switching tools.`,
+Because Pixel Shine bundles this text-prompt editor alongside a background remover, upscaler, headshot generator, and creative effects, you can chain edits together — remove a background, restyle the scene, then upscale the result — all in one place without switching tools.`,
       },
       {
         heading: "Step-by-Step: Edit a Photo With AI Prompts",
-        body: `Here's how to make your first prompt-based edit with JPT AI. It's genuinely as easy as describing what you want.
+        body: `Here's how to make your first prompt-based edit with Pixel Shine. It's genuinely as easy as describing what you want.
 
 **Step 1 — Open the AI Photo Editor.** Go to sjpt.io and open the AI Editor tool. New users get free trials, so you can start experimenting right away.
 
@@ -590,7 +590,7 @@ Because JPT AI bundles this text-prompt editor alongside a background remover, u
 
 **Step 6 — Stack edits if needed.** Want multiple changes? Apply them one at a time — remove an object, then change the background, then adjust the lighting — refining as you go.
 
-**Step 7 — Upscale and download.** For a crisp final image, run it through JPT AI's upscaler, then download your edited photo watermark-free, ready to share or publish.`,
+**Step 7 — Upscale and download.** For a crisp final image, run it through Pixel Shine's upscaler, then download your edited photo watermark-free, ready to share or publish.`,
       },
       {
         heading: "Pro Tips: Writing Prompts That Work",
@@ -620,7 +620,7 @@ Because JPT AI bundles this text-prompt editor alongside a background remover, u
 
 **Giving up after one try.** The first result is a starting point, not the final word. Refining your prompt is part of the process, not a sign something's broken.
 
-**Expecting impossible edits.** AI is powerful but not omniscient. Wildly unrealistic requests may not land perfectly. Realistic, well-described edits produce the most convincing results — and there's no watermark on your JPT AI exports, so you can iterate freely.`,
+**Expecting impossible edits.** AI is powerful but not omniscient. Wildly unrealistic requests may not land perfectly. Realistic, well-described edits produce the most convincing results — and there's no watermark on your Pixel Shine exports, so you can iterate freely.`,
       },
       {
         heading: "AI Prompt Editing vs. Photoshop",
@@ -630,7 +630,7 @@ Because JPT AI bundles this text-prompt editor alongside a background remover, u
 
 **Speed.** A background swap or object removal that might take 10 to 20 minutes of careful manual work in Photoshop happens in seconds with a prompt. For common edits, AI is dramatically faster.
 
-**Cost.** Professional editing suites carry ongoing subscription fees. JPT AI's editor is free to try with free trial credits and no watermark on basics — no monthly commitment to make everyday edits.
+**Cost.** Professional editing suites carry ongoing subscription fees. Pixel Shine's editor is free to try with free trial credits and no watermark on basics — no monthly commitment to make everyday edits.
 
 **Precision control.** This is where traditional tools still lead. For pixel-perfect, highly technical retouching where a professional needs exact manual control, Photoshop remains the reference tool. But for the 90% of edits most people actually need — removing objects, changing backgrounds, adjusting color and style — AI prompt editing is faster, easier, and cheaper. For most users, the AI approach isn't just a substitute; it's the better everyday choice.`,
       },
@@ -652,7 +652,7 @@ Because JPT AI bundles this text-prompt editor alongside a background remover, u
       },
       {
         heading: "Getting Creative With AI Effects",
-        body: `Beyond practical edits, prompt-based AI opens the door to genuinely fun and creative transformations — and JPT AI leans into this with dedicated creative effects.
+        body: `Beyond practical edits, prompt-based AI opens the door to genuinely fun and creative transformations — and Pixel Shine leans into this with dedicated creative effects.
 
 **Turn yourself into a collectible.** Popular effects like Funko Pop-style figures transform your photo into a stylized character, perfect for playful profile pictures and gifts.
 
@@ -660,12 +660,12 @@ Because JPT AI bundles this text-prompt editor alongside a background remover, u
 
 **Cultural and themed looks.** Effects like saree transformations and other themed styles let you reimagine portraits in creative, shareable ways.
 
-These creative effects live alongside the practical text-prompt editor on the same platform, so you can move fluidly between serious edits and playful ones. Want a professional headshot and a fun anime version of the same photo? Both are a few clicks apart on JPT AI. This blend of practical and creative — all free to try, all watermark-free on the basics — is what makes prompt-based AI editing genuinely enjoyable rather than just useful.`,
+These creative effects live alongside the practical text-prompt editor on the same platform, so you can move fluidly between serious edits and playful ones. Want a professional headshot and a fun anime version of the same photo? Both are a few clicks apart on Pixel Shine. This blend of practical and creative — all free to try, all watermark-free on the basics — is what makes prompt-based AI editing genuinely enjoyable rather than just useful.`,
       },
       {
         heading: "Frequently Asked Questions",
         body: `**Do I need Photoshop or any software to edit photos with AI?**
-No. JPT AI's editor runs entirely online. You just upload a photo and type what you want changed — nothing to install and no design experience needed.
+No. Pixel Shine's editor runs entirely online. You just upload a photo and type what you want changed — nothing to install and no design experience needed.
 
 **Is the AI photo editor free?**
 Yes, it's free to try. New users get free trial credits, and there's no watermark on the basics. More advanced generations use inexpensive credits.
@@ -686,7 +686,7 @@ Generally yes, especially with clear prompts and a good-quality source image. If
 No. Your edits download watermark-free.
 
 **Can I make my edited photo higher resolution?**
-Yes. Run it through JPT AI's built-in upscaler to increase sharpness and resolution before downloading.`,
+Yes. Run it through Pixel Shine's built-in upscaler to increase sharpness and resolution before downloading.`,
       },
       {
         heading: "Key Takeaways",
@@ -694,7 +694,7 @@ Yes. Run it through JPT AI's built-in upscaler to increase sharpness and resolut
 
 To get the best results, write specific prompts that name what and where, describe outcomes rather than techniques, make one change at a time, and iterate freely until it's right. Start from a good-quality source image and upscale the final result for maximum sharpness.
 
-No Photoshop, no subscription, no learning curve. JPT AI's editor is free to try, watermark-free on the basics, and sits alongside upscaling, background removal, headshots, and fun creative effects all in one place. Head to sjpt.io and describe your first edit — you'll be amazed how easy it is. Try the AI Editor Free →`,
+No Photoshop, no subscription, no learning curve. Pixel Shine's editor is free to try, watermark-free on the basics, and sits alongside upscaling, background removal, headshots, and fun creative effects all in one place. Head to sjpt.io and describe your first edit — you'll be amazed how easy it is. Try the AI Editor Free →`,
       },
     ],
   },
@@ -703,7 +703,7 @@ No Photoshop, no subscription, no learning curve. JPT AI's editor is free to try
     image: "https://images.pexels.com/photos/1181675/pexels-photo-1181675.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "how-to-upscale-image-without-losing-quality",
     title: "How to Upscale an Image Without Losing Quality (2025 Guide)",
-    metaTitle: "How to Upscale Images Without Losing Quality | JPT AI",
+    metaTitle: "How to Upscale Images Without Losing Quality | Pixel Shine",
     metaDescription: "Learn how to upscale images to 2× or 4× resolution without blurring or pixelation. AI super-resolution technology explained with step-by-step instructions.",
     excerpt: "Every pixel you stretch the traditional way makes your image blurrier. AI upscaling predicts real detail — here's how to do it right.",
     date: "2025-06-10",
@@ -716,7 +716,7 @@ No Photoshop, no subscription, no learning curve. JPT AI's editor is free to try
       {
         body: `Figuring out how to upscale an image without losing quality used to be genuinely impossible — enlarging a photo always meant trading sharpness for size, ending up with a blurry, blocky mess. In 2025, AI changed that completely. A modern image upscaler online doesn't just stretch pixels; it intelligently reconstructs detail, so you can increase image resolution while the photo actually looks sharper, not softer. This guide explains exactly how to upscale a photo online free without the quality loss that plagued the old methods.
 
-The reason old upscaling failed comes down to math: basic resizing averages existing pixels to fill in new ones, which inevitably blurs the image. AI upscaling flips the approach — instead of averaging, it predicts what the missing high-resolution detail should be, based on training across millions of images. The result is a larger photo with crisp edges, recovered texture, and reduced noise. And you don't need to pay for it: JPT AI (sjpt.io) offers a free, unlimited Normal upscale with no sign-in required, so you can enlarge as many images as you want without quality loss or cost. Here's the complete 2025 playbook.`,
+The reason old upscaling failed comes down to math: basic resizing averages existing pixels to fill in new ones, which inevitably blurs the image. AI upscaling flips the approach — instead of averaging, it predicts what the missing high-resolution detail should be, based on training across millions of images. The result is a larger photo with crisp edges, recovered texture, and reduced noise. And you don't need to pay for it: Pixel Shine (sjpt.io) offers a free, unlimited Normal upscale with no sign-in required, so you can enlarge as many images as you want without quality loss or cost. Here's the complete 2025 playbook.`,
       },
       {
         heading: "Why Traditional Resizing Destroys Quality",
@@ -748,7 +748,7 @@ The practical upshot: with AI, \"upscaling without losing quality\" isn't just p
       },
       {
         heading: "Step-by-Step: Upscale Without Losing Quality",
-        body: `Here's the exact process to enlarge a photo with zero quality loss using JPT AI's free upscaler.
+        body: `Here's the exact process to enlarge a photo with zero quality loss using Pixel Shine's free upscaler.
 
 **Step 1 — Open the upscaler.** Go to sjpt.io and open the AI Upscaler tool. Normal upscale is free, unlimited, and needs no sign-in, so you can start immediately.
 
@@ -792,7 +792,7 @@ The practical upshot: with AI, \"upscaling without losing quality\" isn't just p
 
 **Over-multiplying for no reason.** Jumping to 4x when 2x hits your target can make images look plasticky and over-processed. Use only the multiplier you actually need.
 
-**Judging by the preview alone.** The fit-to-screen view flatters everything. Skipping the 100% zoom check means you might download an image that looks soft at full size. And remember — with JPT AI's free unlimited Normal upscale, there's no cost to re-run with different settings until it's right.`,
+**Judging by the preview alone.** The fit-to-screen view flatters everything. Skipping the 100% zoom check means you might download an image that looks soft at full size. And remember — with Pixel Shine's free unlimited Normal upscale, there's no cost to re-run with different settings until it's right.`,
       },
       {
         heading: "AI Upscaling vs. Other Methods Compared",
@@ -802,7 +802,7 @@ The practical upshot: with AI, \"upscaling without losing quality\" isn't just p
 
 **vs. sharpening filters.** Some people try to \"fix\" a blurry enlargement by cranking sharpening. This only exaggerates existing edges and noise — it can't add detail that isn't there, and often makes images look harsh and crunchy. AI genuinely rebuilds detail rather than faking it.
 
-**vs. expensive desktop upscaling software.** Dedicated paid upscaling apps exist and work well, but they cost money and require installation. JPT AI delivers comparable everyday results online with a free, unlimited Normal tier and no sign-in — plus a Pro tier for demanding work.
+**vs. expensive desktop upscaling software.** Dedicated paid upscaling apps exist and work well, but they cost money and require installation. Pixel Shine delivers comparable everyday results online with a free, unlimited Normal tier and no sign-in — plus a Pro tier for demanding work.
 
 **vs. re-shooting or sourcing a bigger original.** When possible, getting a higher-resolution original is always ideal. But when the small image is all you have — an old photo, a screenshot, a downloaded thumbnail — AI upscaling is the only practical way to reach a usable size without quality loss. For most real situations, free AI upscaling is the fastest, cheapest, highest-quality answer available in 2025.`,
       },
@@ -820,7 +820,7 @@ The practical upshot: with AI, \"upscaling without losing quality\" isn't just p
 
 **Restoring old digital photos.** Early digital cameras and phones produced small, noisy images. AI upscaling sharpens and cleans them for reprinting or sharing.
 
-In each scenario, the shared benefit is clear: the image reaches the size you need while staying sharp — and with JPT AI's free unlimited tier, it costs nothing to do.`,
+In each scenario, the shared benefit is clear: the image reaches the size you need while staying sharp — and with Pixel Shine's free unlimited tier, it costs nothing to do.`,
       },
       {
         heading: "Understanding Resolution and DPI",
@@ -832,15 +832,15 @@ In each scenario, the shared benefit is clear: the image reaches the size you ne
 
 **Screens are more forgiving.** Web and social displays generally need far fewer pixels than print, which is why an image can look fine online yet print poorly.
 
-**The takeaway:** if you're printing, calculate the pixels you need (target inches multiplied by 300) and upscale to hit it. For web use, moderate upscaling is usually plenty. JPT AI's multipliers make reaching either target simple.`,
+**The takeaway:** if you're printing, calculate the pixels you need (target inches multiplied by 300) and upscale to hit it. For web use, moderate upscaling is usually plenty. Pixel Shine's multipliers make reaching either target simple.`,
       },
       {
         heading: "Frequently Asked Questions",
         body: `**Can you really upscale an image without losing quality?**
-Yes, with AI. Unlike basic resizing that blurs images, AI upscaling reconstructs real detail, so the enlarged image stays sharp — and often looks cleaner than the original. JPT AI's Normal upscale does this free and unlimited.
+Yes, with AI. Unlike basic resizing that blurs images, AI upscaling reconstructs real detail, so the enlarged image stays sharp — and often looks cleaner than the original. Pixel Shine's Normal upscale does this free and unlimited.
 
 **Is upscaling a photo online free?**
-Yes. JPT AI's Normal upscale is completely free, unlimited, and requires no sign-in. Only the advanced Pro AI upscale uses credits, and new users get free trials.
+Yes. Pixel Shine's Normal upscale is completely free, unlimited, and requires no sign-in. Only the advanced Pro AI upscale uses credits, and new users get free trials.
 
 **How much can I enlarge an image?**
 Commonly 2x or 4x, which doubles or quadruples width and height. A 4x upscale turns a 1000px image into 4000px. Results are best when the source isn't extremely tiny to begin with.
@@ -852,7 +852,7 @@ Because basic editors use interpolation, which averages pixels and can't create 
 It significantly helps with soft or mildly blurry photos by reconstructing edges and detail. Severe motion blur can't be fully fixed, but many \"almost sharp\" photos come out looking crisp.
 
 **Do I need to download software?**
-No. JPT AI runs online on desktop and mobile — nothing to install.
+No. Pixel Shine runs online on desktop and mobile — nothing to install.
 
 **Is there a watermark?**
 No. Upscaled images download watermark-free.
@@ -866,7 +866,7 @@ Around 300 DPI. Multiply your target print size in inches by 300 to find the pix
 
 The winning workflow: start from the highest-quality source you have, edit first and upscale last, match the multiplier to your real target size, upscale in a single pass, and verify at 100% zoom. Reserve Pro AI upscale for faces, text, and large prints where every detail counts.
 
-And it doesn't have to cost a thing. JPT AI's Normal upscale is free, unlimited, and needs no sign-in. Head to sjpt.io, upload your photo, and enlarge it to crisp high resolution without the quality loss. Upscale Your Image Free →`,
+And it doesn't have to cost a thing. Pixel Shine's Normal upscale is free, unlimited, and needs no sign-in. Head to sjpt.io, upload your photo, and enlarge it to crisp high resolution without the quality loss. Upscale Your Image Free →`,
       },
     ],
   },
@@ -874,7 +874,7 @@ And it doesn't have to cost a thing. JPT AI's Normal upscale is free, unlimited,
     image: "https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "upscale-product-photos-ecommerce",
     title: "How to Upscale Product Photos for E-Commerce (Amazon, Shopify & More)",
-    metaTitle: "Upscale Product Photos for E-Commerce | Amazon & Shopify | JPT AI",
+    metaTitle: "Upscale Product Photos for E-Commerce | Amazon & Shopify | Pixel Shine",
     metaDescription: "Learn how to upscale product images to meet Amazon's 1000px minimum, Shopify's recommended 2048px, and other marketplace requirements — with AI, for free.",
     excerpt: "Amazon requires 1000px minimum. Shopify recommends 2048px. If your product photos fall short, AI upscaling closes the gap without a reshoot.",
     date: "2025-06-12",
@@ -887,7 +887,7 @@ And it doesn't have to cost a thing. JPT AI's Normal upscale is free, unlimited,
       {
         body: `Knowing how to upscale product photos for e-commerce is one of the highest-leverage skills an online seller can have — sharp, high-resolution images directly drive clicks, trust, and sales. Whether you sell on Amazon, Shopify, Etsy, or your own store, every platform rewards crisp, zoomable product images, and an ecommerce image upscaler lets you meet those resolution requirements without a professional photographer or expensive gear. This guide covers exactly how to upscale product photos to the right size for each marketplace, so your listings look professional and convert.
 
-The stakes are real: shoppers can't touch or hold your product, so the photo does all the selling. Studies consistently show that high-quality product images increase conversion rates, and marketplaces like Amazon actively require minimum image dimensions — often 1000px on the longest side just to enable zoom, with larger images strongly recommended. If your photos fall short or look soft when zoomed, you lose sales to competitors whose images look sharper. JPT AI (sjpt.io) fixes this fast: its Normal upscale is free and unlimited with no sign-in, and it includes a background remover for the clean white backdrops marketplaces love. Here's how to get every product photo listing-ready.`,
+The stakes are real: shoppers can't touch or hold your product, so the photo does all the selling. Studies consistently show that high-quality product images increase conversion rates, and marketplaces like Amazon actively require minimum image dimensions — often 1000px on the longest side just to enable zoom, with larger images strongly recommended. If your photos fall short or look soft when zoomed, you lose sales to competitors whose images look sharper. Pixel Shine (sjpt.io) fixes this fast: its Normal upscale is free and unlimited with no sign-in, and it includes a background remover for the clean white backdrops marketplaces love. Here's how to get every product photo listing-ready.`,
       },
       {
         heading: "Marketplace Image Requirements You Need to Know",
@@ -919,11 +919,11 @@ The math is simple: better product photos mean more zoom engagement, more trust,
       },
       {
         heading: "Step-by-Step: Upscale Product Photos for Your Store",
-        body: `Here's the complete workflow to turn a decent product shot into a listing-ready image with JPT AI.
+        body: `Here's the complete workflow to turn a decent product shot into a listing-ready image with Pixel Shine.
 
 **Step 1 — Start with your best original.** Use the sharpest, highest-resolution product photo you have. Good, even lighting in the original makes every later step easier.
 
-**Step 2 — Remove the background (if needed).** For Amazon main images and clean catalog looks, open JPT AI's Background Remover at sjpt.io, upload your photo, and let the AI cut out the product in seconds. Download the transparent PNG.
+**Step 2 — Remove the background (if needed).** For Amazon main images and clean catalog looks, open Pixel Shine's Background Remover at sjpt.io, upload your photo, and let the AI cut out the product in seconds. Download the transparent PNG.
 
 **Step 3 — Place on the required background.** For Amazon, put the cutout on a pure white background. For lifestyle or Shopify shots, use whatever backdrop fits your brand.
 
@@ -965,7 +965,7 @@ The math is simple: better product photos mean more zoom engagement, more trust,
 
 **Inconsistent sizing across the catalog.** A mix of image sizes and styles makes a store look sloppy. Standardize dimensions and treatment across all products.
 
-**Over-compressing on export.** Heavy compression reintroduces artifacts and softness after you worked to sharpen the image. Export at high quality so your upscaled detail survives. With JPT AI's free unlimited Normal upscale, there's no cost to redo any image that doesn't come out right.`,
+**Over-compressing on export.** Heavy compression reintroduces artifacts and softness after you worked to sharpen the image. Export at high quality so your upscaled detail survives. With Pixel Shine's free unlimited Normal upscale, there's no cost to redo any image that doesn't come out right.`,
       },
       {
         heading: "Building a Complete E-Commerce Image Workflow",
@@ -973,7 +973,7 @@ The math is simple: better product photos mean more zoom engagement, more trust,
 
 **Shoot with upscaling in mind.** You don't need pro gear — a phone camera with good, even lighting and a simple setup captures enough detail for AI to enhance. Focus on clean, sharp originals.
 
-**Remove backgrounds in batch.** Run each product through the background remover for consistent, clean cutouts. Because JPT AI handles this on the same platform, you're not juggling separate apps.
+**Remove backgrounds in batch.** Run each product through the background remover for consistent, clean cutouts. Because Pixel Shine handles this on the same platform, you're not juggling separate apps.
 
 **Composite onto brand backgrounds.** Place cutouts on white for main images and on branded or lifestyle backdrops for secondary shots.
 
@@ -981,7 +981,7 @@ The math is simple: better product photos mean more zoom engagement, more trust,
 
 **Reuse the workflow for every new product.** Once this pipeline is set, adding a new product is fast and produces consistent, professional results every time.
 
-The advantage of JPT AI here is that background removal, upscaling, and even AI editing all live in one online platform — no switching between tools, no separate subscriptions, and the core upscaling stays free and unlimited. That's what makes a professional catalog achievable for solo sellers and small teams.`,
+The advantage of Pixel Shine here is that background removal, upscaling, and even AI editing all live in one online platform — no switching between tools, no separate subscriptions, and the core upscaling stays free and unlimited. That's what makes a professional catalog achievable for solo sellers and small teams.`,
       },
       {
         heading: "Who Benefits: Real Seller Scenarios",
@@ -1011,10 +1011,10 @@ Shopify supports large, high-resolution images; square images around 2048x2048px
 Etsy recommends at least 2000px on the shortest side so its zoom works well and buyers can see handmade detail. Upscaling gets smaller photos up to that standard.
 
 **Is upscaling product photos free?**
-Yes. JPT AI's Normal upscale is free, unlimited, and needs no sign-in. For maximum detail on hero images, Pro AI upscale uses inexpensive credits, with free trials for new users.
+Yes. Pixel Shine's Normal upscale is free, unlimited, and needs no sign-in. For maximum detail on hero images, Pro AI upscale uses inexpensive credits, with free trials for new users.
 
 **Can I get a white background for Amazon?**
-Yes. Use JPT AI's background remover to cut out your product, then place it on a pure white background — exactly what Amazon requires for main images.
+Yes. Use Pixel Shine's background remover to cut out your product, then place it on a pure white background — exactly what Amazon requires for main images.
 
 **Will upscaling make my product look distorted?**
 No. AI upscaling reconstructs real detail and keeps the product accurate and sharp. Start with a good original and match the multiplier to your target size.
@@ -1031,7 +1031,7 @@ No. Your images download watermark-free, ready to list.`,
 
 The winning workflow: start with the best original, remove the background and place the product on a clean backdrop, upscale to your platform's target size, verify at full zoom, and export at high quality. Standardize dimensions across your catalog for a premium, consistent look, and reserve Pro AI upscale for your hero and bestseller images.
 
-Best of all, you don't need a studio or a photographer. JPT AI combines free, unlimited upscaling and a built-in background remover in one online platform. Head to sjpt.io and make your product photos listing-ready today. Upscale Product Photos →`,
+Best of all, you don't need a studio or a photographer. Pixel Shine combines free, unlimited upscaling and a built-in background remover in one online platform. Head to sjpt.io and make your product photos listing-ready today. Upscale Product Photos →`,
       },
     ],
   },
@@ -1039,7 +1039,7 @@ Best of all, you don't need a studio or a photographer. JPT AI combines free, un
     image: "https://images.pexels.com/photos/3621344/pexels-photo-3621344.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "restore-old-photos-ai-upscale",
     title: "How to Restore & Upscale Old Photos with AI (Grandma Would Approve)",
-    metaTitle: "Restore & Upscale Old Photos with AI | Free Photo Restoration | JPT AI",
+    metaTitle: "Restore & Upscale Old Photos with AI | Free Photo Restoration | Pixel Shine",
     metaDescription: "Bring faded, low-resolution old family photos back to life. AI upscaling recovers lost detail, sharpens faces, and makes vintage prints frameable again.",
     excerpt: "That blurry photo of your grandparents in the 1960s? AI can upscale and restore it to something you'd frame and hang on the wall.",
     date: "2025-06-14",
@@ -1052,7 +1052,7 @@ Best of all, you don't need a studio or a photographer. JPT AI combines free, un
       {
         body: `Learning how to restore and upscale old photos with AI is like giving your family memories a second life. Faded, scratched, low-resolution photos from decades past — or early digital snapshots that came out small and grainy — can be sharpened, cleaned, and enlarged in seconds using AI. If you've wanted to restore old photos with AI but assumed it required a professional service or hours in Photoshop, the truth is far simpler: modern tools do the heavy lifting automatically, and photo restoration online free is now genuinely within reach.
 
-This matters because old photos are irreplaceable. That scanned wedding portrait, the childhood snapshot, the faded picture of grandparents — these are memories you can't re-shoot. When they're small, soft, noisy, or damaged, AI upscaling and enhancement can recover detail, reduce grain, sharpen faces, and bring them up to a resolution you can reprint and frame. JPT AI (sjpt.io) makes this accessible to everyone: its Normal upscale is free and unlimited with no sign-in, and its Pro AI upscale delivers deeper reconstruction for the most degraded images, with free trials to start. Here's how to bring your old photos back to life.`,
+This matters because old photos are irreplaceable. That scanned wedding portrait, the childhood snapshot, the faded picture of grandparents — these are memories you can't re-shoot. When they're small, soft, noisy, or damaged, AI upscaling and enhancement can recover detail, reduce grain, sharpen faces, and bring them up to a resolution you can reprint and frame. Pixel Shine (sjpt.io) makes this accessible to everyone: its Normal upscale is free and unlimited with no sign-in, and its Pro AI upscale delivers deeper reconstruction for the most degraded images, with free trials to start. Here's how to bring your old photos back to life.`,
       },
       {
         heading: "What AI Can (and Can't) Restore in Old Photos",
@@ -1084,7 +1084,7 @@ Good preparation ensures the AI has the richest possible source to reconstruct f
       },
       {
         heading: "Step-by-Step: Restore and Upscale an Old Photo",
-        body: `Here's the full process to bring an old photo back to life with JPT AI.
+        body: `Here's the full process to bring an old photo back to life with Pixel Shine.
 
 **Step 1 — Digitize your photo.** Scan the physical print at high resolution (600 DPI+), or locate the best existing digital version. Aim for the cleanest, largest source you can.
 
@@ -1114,7 +1114,7 @@ Good preparation ensures the AI has the richest possible source to reconstruct f
 
 **4. Match the multiplier to your reprint size.** If you plan to reprint at 8x10 or larger, upscale enough to reach print-ready resolution (around 300 DPI at your target size).
 
-**5. Restore first, then edit if needed.** Enhance and upscale the photo first. If you want to adjust color or remove a distraction afterward, use JPT AI's photo editor on the improved image.
+**5. Restore first, then edit if needed.** Enhance and upscale the photo first. If you want to adjust color or remove a distraction afterward, use Pixel Shine's photo editor on the improved image.
 
 **6. Batch your family archive.** Digitize and restore a whole box of photos in one session — it's an efficient, rewarding way to preserve an entire family history at once.`,
       },
@@ -1130,13 +1130,13 @@ Good preparation ensures the AI has the richest possible source to reconstruct f
 
 **Skipping the Pro tier for badly-degraded photos.** For your most damaged or lowest-resolution images, the free Normal upscale helps but the Pro AI upscale reconstructs far more — don't leave that quality on the table for irreplaceable memories.
 
-**Over-upscaling tiny sources.** Blowing up a postage-stamp image to poster size stretches the AI beyond what's realistic. Match your target size to what the source can reasonably support, and remember JPT AI's free Normal tier lets you experiment at no cost.`,
+**Over-upscaling tiny sources.** Blowing up a postage-stamp image to poster size stretches the AI beyond what's realistic. Match your target size to what the source can reasonably support, and remember Pixel Shine's free Normal tier lets you experiment at no cost.`,
       },
       {
         heading: "AI Restoration vs. Professional Services",
         body: `How does DIY AI restoration compare to hiring a professional photo restorer? Here's an honest look.
 
-**Cost.** Professional photo restoration services typically charge per photo, and prices climb quickly for a large batch — restoring a whole family archive can run into hundreds of dollars. AI restoration through JPT AI's free Normal upscale costs nothing for most photos, with inexpensive Pro credits for tough cases.
+**Cost.** Professional photo restoration services typically charge per photo, and prices climb quickly for a large batch — restoring a whole family archive can run into hundreds of dollars. AI restoration through Pixel Shine's free Normal upscale costs nothing for most photos, with inexpensive Pro credits for tough cases.
 
 **Speed.** A professional service can take days or weeks, especially for detailed manual work. AI restores each photo in seconds, so you can process an entire box in an afternoon.
 
@@ -1160,18 +1160,18 @@ Good preparation ensures the AI has the richest possible source to reconstruct f
 
 **Genealogy and family history** enthusiasts restore ancestral photos to share in family trees and archives, keeping heritage vivid for the next generation.
 
-In every case, the emotional payoff is the same: memories that were fading into blur become clear and lasting again — and with JPT AI's free tier, preserving them costs nothing to start.`,
+In every case, the emotional payoff is the same: memories that were fading into blur become clear and lasting again — and with Pixel Shine's free tier, preserving them costs nothing to start.`,
       },
       {
         heading: "Frequently Asked Questions",
         body: `**Can AI really restore old photos?**
-Yes. AI upscaling sharpens faces and edges, reduces grain and noise, and increases resolution — dramatically improving faded, small, or soft old photos. JPT AI's Normal upscale does this free, with Pro AI upscale for heavily degraded images.
+Yes. AI upscaling sharpens faces and edges, reduces grain and noise, and increases resolution — dramatically improving faded, small, or soft old photos. Pixel Shine's Normal upscale does this free, with Pro AI upscale for heavily degraded images.
 
 **Is photo restoration online free?**
-JPT AI's Normal upscale is completely free, unlimited, and needs no sign-in — enough for most old photos. The Pro AI upscale, for the toughest cases, uses inexpensive credits with free trials for new users.
+Pixel Shine's Normal upscale is completely free, unlimited, and needs no sign-in — enough for most old photos. The Pro AI upscale, for the toughest cases, uses inexpensive credits with free trials for new users.
 
 **How do I restore a physical printed photo?**
-Scan it at high resolution (600 DPI or more), then upload the scan to JPT AI's upscaler. A clean, high-resolution scan gives the best results — much better than a phone photo of the print.
+Scan it at high resolution (600 DPI or more), then upload the scan to Pixel Shine's upscaler. A clean, high-resolution scan gives the best results — much better than a phone photo of the print.
 
 **Will AI fix scratches and tears?**
 AI upscaling excels at sharpening, denoising, and enlarging. Minor imperfections often improve, but severe physical damage like large tears may need a professional restorer's manual work.
@@ -1194,7 +1194,7 @@ Seconds per photo. You can restore an entire box of family photos in a single si
 
 For the best results, scan physical prints at high resolution rather than photographing them, start from the largest source you have, match the upscale level to your reprint size, and reach for the Pro AI upscale on your most degraded or most cherished images. Set realistic expectations — AI enhances and reconstructs beautifully but can't invent detail that was never there.
 
-And it costs nothing to begin. JPT AI's Normal upscale is free, unlimited, and needs no sign-in. Head to sjpt.io, upload that old photo, and watch a fading memory come back to life. Restore & Upscale Photos →`,
+And it costs nothing to begin. Pixel Shine's Normal upscale is free, unlimited, and needs no sign-in. Head to sjpt.io, upload that old photo, and watch a fading memory come back to life. Restore & Upscale Photos →`,
       },
     ],
   },
@@ -1202,7 +1202,7 @@ And it costs nothing to begin. JPT AI's Normal upscale is free, unlimited, and n
     image: "https://images.pexels.com/photos/1366919/pexels-photo-1366919.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "upscale-image-for-printing-large-format",
     title: "Upscale Images for Large-Format Printing: Posters, Banners & Canvas",
-    metaTitle: "Upscale Images for Large Format Printing | Posters & Canvas | JPT AI",
+    metaTitle: "Upscale Images for Large Format Printing | Posters & Canvas | Pixel Shine",
     metaDescription: "Need a poster, canvas print, or banner from a low-resolution photo? AI upscaling gets you to print-ready resolution without blurring. Full guide inside.",
     excerpt: "Sending a low-resolution image to a print shop is the fastest way to waste money on a blurry poster. Here's how to get print-ready resolution with AI.",
     date: "2025-06-16",
@@ -1215,7 +1215,7 @@ And it costs nothing to begin. JPT AI's Normal upscale is free, unlimited, and n
       {
         body: `Knowing how to upscale an image for printing is the difference between a crisp, professional poster and a blurry, pixelated embarrassment. Large-format printing — posters, banners, canvas prints, and signage — demands far more resolution than screens do, and if your image doesn't have enough pixels, it'll look soft or blocky at size. An AI upscaler lets you increase image resolution for print without the quality loss of basic resizing, so you can take a photo that looks fine on screen and make it genuinely print-ready at large dimensions. This guide covers exactly how to hit the resolution large-format printing requires.
 
-The core issue is that print and screen live by different rules. A monitor might display an image at 72 to 96 pixels per inch and look perfectly sharp, but a quality print typically wants around 300 DPI up close — and large-format pieces viewed from a distance follow their own math. Get the pixel count wrong and your poster prints soft. JPT AI (sjpt.io) solves this with a free, unlimited Normal upscale (no sign-in) plus a Pro AI upscale for maximum detail on demanding prints. Here's how to calculate what you need and get every image ready for the printer.`,
+The core issue is that print and screen live by different rules. A monitor might display an image at 72 to 96 pixels per inch and look perfectly sharp, but a quality print typically wants around 300 DPI up close — and large-format pieces viewed from a distance follow their own math. Get the pixel count wrong and your poster prints soft. Pixel Shine (sjpt.io) solves this with a free, unlimited Normal upscale (no sign-in) plus a Pro AI upscale for maximum detail on demanding prints. Here's how to calculate what you need and get every image ready for the printer.`,
       },
       {
         heading: "Understanding Print Resolution and DPI",
@@ -1247,7 +1247,7 @@ The core issue is that print and screen live by different rules. A monitor might
       },
       {
         heading: "Step-by-Step: Get Your Image Print-Ready",
-        body: `Here's the complete workflow to upscale an image for large-format printing with JPT AI.
+        body: `Here's the complete workflow to upscale an image for large-format printing with Pixel Shine.
 
 **Step 1 — Determine your print size and DPI.** Decide the physical dimensions (e.g., 24x36 inch poster) and the right DPI for the viewing distance (300 for close, 100-150 for banners).
 
@@ -1293,7 +1293,7 @@ The core issue is that print and screen live by different rules. A monitor might
 
 **Getting the aspect ratio wrong.** Uploading an image whose proportions don't match the print size forces the printer to stretch or crop, ruining composition. Crop to the correct ratio first.
 
-**Skipping the print-shop specs.** Ignoring your printer's DPI, bleed, and color-profile requirements leads to surprises. Confirm specs up front. With JPT AI's free Normal upscale, you can re-run to hit exact targets at no cost.`,
+**Skipping the print-shop specs.** Ignoring your printer's DPI, bleed, and color-profile requirements leads to surprises. Confirm specs up front. With Pixel Shine's free Normal upscale, you can re-run to hit exact targets at no cost.`,
       },
       {
         heading: "Large-Format Use Cases and Who Prints Them",
@@ -1309,11 +1309,11 @@ The core issue is that print and screen live by different rules. A monitor might
 
 **Real estate and local businesses.** Yard signs, window graphics, and posters need to read clearly from the street, and upscaling gets images to the right resolution.
 
-**Personal projects and gifts.** From wedding photo canvases to custom posters as gifts, upscaling makes meaningful images print-ready at impressive sizes — all achievable with JPT AI's free upscaler as a starting point.`,
+**Personal projects and gifts.** From wedding photo canvases to custom posters as gifts, upscaling makes meaningful images print-ready at impressive sizes — all achievable with Pixel Shine's free upscaler as a starting point.`,
       },
       {
         heading: "Choosing Between Free and Pro Upscale for Print",
-        body: `For print work, knowing when to use each JPT AI tier saves money without sacrificing quality.
+        body: `For print work, knowing when to use each Pixel Shine tier saves money without sacrificing quality.
 
 **Use free Normal upscale for distant-viewed and forgiving prints.** Banners, large signage, and canvas (with its texture) are viewed from a distance or hide minor imperfections. The free, unlimited Normal upscale is often more than enough to hit their DPI targets — at zero cost and no sign-in.
 
@@ -1321,7 +1321,7 @@ The core issue is that print and screen live by different rules. A monitor might
 
 **A smart hybrid approach:** run your image through the free Normal upscale first and check it at 100% zoom against your target size. If it's crisp enough for your print type and viewing distance, you're done for free. If a close-viewed poster still needs more detail, upgrade that specific image to Pro AI upscale using your free trial credits.
 
-Because JPT AI keeps upscaling, background removal, and editing on one online platform, you can prep a complete print project — crop, clean up, and upscale — without switching tools or paying for a suite of software. That flexibility, plus a genuinely free core tier, makes it practical for both one-off gifts and professional print runs.`,
+Because Pixel Shine keeps upscaling, background removal, and editing on one online platform, you can prep a complete print project — crop, clean up, and upscale — without switching tools or paying for a suite of software. That flexibility, plus a genuinely free core tier, makes it practical for both one-off gifts and professional print runs.`,
       },
       {
         heading: "Frequently Asked Questions",
@@ -1335,7 +1335,7 @@ Banners are viewed from several feet away, so 100 to 150 DPI is usually enough. 
 Yes. Start with the highest-quality version, calculate your target pixels for the canvas size and DPI (canvas is forgiving at 150-200 DPI), and upscale to reach it. Canvas texture helps hide minor imperfections.
 
 **Is upscaling for print free?**
-Yes. JPT AI's Normal upscale is free, unlimited, and needs no sign-in — enough for many print jobs. Pro AI upscale, for close-viewed detail-critical prints, uses inexpensive credits with free trials.
+Yes. Pixel Shine's Normal upscale is free, unlimited, and needs no sign-in — enough for many print jobs. Pro AI upscale, for close-viewed detail-critical prints, uses inexpensive credits with free trials.
 
 **Why does my image look sharp on screen but blurry when printed?**
 Screens display at low DPI (72-96) and look fine, but print needs far more pixels per inch. Without enough resolution, the print looks soft. Upscale to your print's DPI target to fix it.
@@ -1355,7 +1355,7 @@ No. Your upscaled images download watermark-free, ready for the printer.`,
 
 For the best prints, start from your sharpest source, crop to the correct aspect ratio, upscale as the final step, verify at 100% zoom, and confirm your print shop's specs. Use the free Normal upscale for forgiving, distant-viewed pieces, and Pro AI upscale for close-viewed, detail-critical prints like posters and fine art.
 
-You don't need expensive software to get print-ready resolution. JPT AI's Normal upscale is free, unlimited, and needs no sign-in. Head to sjpt.io, upscale your image to the resolution your printer needs, and turn any photo into a crisp large-format print. Get Print-Ready Resolution →`,
+You don't need expensive software to get print-ready resolution. Pixel Shine's Normal upscale is free, unlimited, and needs no sign-in. Head to sjpt.io, upscale your image to the resolution your printer needs, and turn any photo into a crisp large-format print. Get Print-Ready Resolution →`,
       },
     ],
   },
@@ -1363,7 +1363,7 @@ You don't need expensive software to get print-ready resolution. JPT AI's Normal
     image: "https://images.pexels.com/photos/1264210/pexels-photo-1264210.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "best-free-ai-image-upscaler-tools-2025",
     title: "Best Free AI Image Upscaler Tools in 2025 (Compared)",
-    metaTitle: "Best Free AI Image Upscaler Tools 2025 | Comparison & Review | JPT AI",
+    metaTitle: "Best Free AI Image Upscaler Tools 2025 | Comparison & Review | Pixel Shine",
     metaDescription: "Compare the top free AI image upscaling tools in 2025 — quality, speed, free limits, and use cases. Find out which upscaler is right for you.",
     excerpt: "With dozens of AI upscalers available, which ones actually deliver sharp results without hidden costs? We compare the top tools head-to-head.",
     date: "2025-06-18",
@@ -1371,7 +1371,7 @@ You don't need expensive software to get print-ready resolution. JPT AI's Normal
     category: "Comparison",
     keywords: ["best free ai image upscaler", "ai upscaler comparison 2025", "free image upscaler online", "upscale image online free"],
     toolHref: "/upscale",
-    toolLabel: "Try JPT AI Upscaler Free →",
+    toolLabel: "Try Pixel Shine Upscaler Free →",
         sections: [
       {
         body: `Finding the best free AI image upscaler in 2025 shouldn't require signing up for three different accounts, dodging watermarks, or hitting a paywall after your second image. Yet that's exactly what most people run into. The good news? AI upscaling technology has matured dramatically, and a handful of tools now deliver genuinely impressive results without asking for your credit card. Whether you're rescuing a blurry old photo, prepping a product shot for your store, or blowing up a screenshot for print, the right free image upscaler online can turn a 500px thumbnail into a crisp, detail-rich image in seconds.
@@ -1388,13 +1388,13 @@ In this comparison, we'll break down what actually separates a great free upscal
 
 **Real resolution gains, not just resizing.** Many \"free\" tools simply stretch your image (the same thing you could do in Paint) and call it upscaling. True AI upscaling reconstructs detail using machine learning models trained on millions of images.
 
-**Reasonable limits.** Some tools cap you at 2 images per day or limit output to 720p. A genuinely useful free tier gives you room to actually get work done. JPT AI stands out here: its Normal Upscale is completely free, unlimited, and requires no sign-in whatsoever.`,
+**Reasonable limits.** Some tools cap you at 2 images per day or limit output to 720p. A genuinely useful free tier gives you room to actually get work done. Pixel Shine stands out here: its Normal Upscale is completely free, unlimited, and requires no sign-in whatsoever.`,
       },
       {
         heading: "The Top Free AI Upscalers Compared",
         body: `We tested the major players in the AI upscaler comparison 2025 landscape across image quality, speed, limits, and hidden costs. Here's how they stack up.
 
-**JPT AI (sjpt.io)** — The standout for accessibility. Normal Upscale is free, unlimited, and requires zero sign-in. No watermarks. A Pro AI mode using advanced diffusion models is available for credits when you need maximum detail recovery. New users also get 5 free trials across its other tools. Best all-around free option.
+**Pixel Shine (sjpt.io)** — The standout for accessibility. Normal Upscale is free, unlimited, and requires zero sign-in. No watermarks. A Pro AI mode using advanced diffusion models is available for credits when you need maximum detail recovery. New users also get 5 free trials across its other tools. Best all-around free option.
 
 **Upscale.media** — Solid results but caps free users and pushes hard toward paid plans after a few images.
 
@@ -1404,15 +1404,15 @@ In this comparison, we'll break down what actually separates a great free upscal
 
 **BigJPG** — Free tier limited to smaller images and slower processing during peak hours.
 
-**Bottom line:** most competitors gate their best features behind subscriptions or credit walls after 2-3 images. If your priority is upscaling frequently without cost or friction, JPT AI's unlimited free Normal Upscale is hard to beat.`,
+**Bottom line:** most competitors gate their best features behind subscriptions or credit walls after 2-3 images. If your priority is upscaling frequently without cost or friction, Pixel Shine's unlimited free Normal Upscale is hard to beat.`,
       },
       {
         heading: "Step-by-Step: How to Upscale an Image for Free",
-        body: `Using a free image upscaler online should take under a minute. Here's exactly how to do it with JPT AI, no account required.
+        body: `Using a free image upscaler online should take under a minute. Here's exactly how to do it with Pixel Shine, no account required.
 
 **Step 1: Go to the upscaler.** Open sjpt.io and navigate to the Upscale tool at sjpt.io/upscale. You don't need to log in or create an account for the Normal Upscale.
 
-**Step 2: Upload your image.** Drag and drop your photo directly into the upload box, or click to browse your files. JPT AI accepts common formats like JPG, PNG, and WebP. Even a small 400x400px image works fine.
+**Step 2: Upload your image.** Drag and drop your photo directly into the upload box, or click to browse your files. Pixel Shine accepts common formats like JPG, PNG, and WebP. Even a small 400x400px image works fine.
 
 **Step 3: Choose your upscale factor.** Select 2x or 4x depending on how large you need the final image. A 4x upscale turns a 500px image into a 2000px one, which is enough for most print and social uses.
 
@@ -1420,7 +1420,7 @@ In this comparison, we'll break down what actually separates a great free upscal
 
 **Step 5: Process and download.** Click Upscale and wait a few seconds while the AI reconstructs detail. Preview the before/after, then download your full-resolution result. No watermark, no email required.
 
-**Step 6 (optional): Batch or refine.** Need to touch up further? Run the result through JPT AI's background remover or photo editor in the same session. Everything lives on one platform, so you never juggle multiple tools.`,
+**Step 6 (optional): Batch or refine.** Need to touch up further? Run the result through Pixel Shine's background remover or photo editor in the same session. Everything lives on one platform, so you never juggle multiple tools.`,
       },
       {
         heading: "Pro Tips for Getting the Best Upscale Results",
@@ -1434,7 +1434,7 @@ In this comparison, we'll break down what actually separates a great free upscal
 
 **Test on a small batch first.** Before running 50 product images through, upscale two or three to confirm the settings look right. It saves you redoing the whole set.
 
-**Keep a copy of the original.** Always. Upscaling is non-destructive on JPT AI, but good file hygiene means you can re-run with different settings later.`,
+**Keep a copy of the original.** Always. Upscaling is non-destructive on Pixel Shine, but good file hygiene means you can re-run with different settings later.`,
       },
       {
         heading: "Common Mistakes to Avoid",
@@ -1450,13 +1450,13 @@ In this comparison, we'll break down what actually separates a great free upscal
       },
       {
         heading: "Free vs Paid Upscaling: When to Upgrade",
-        body: `For roughly 80% of everyday tasks, a free upscaler is all you'll ever need. Enlarging social media images, cleaning up product photos, prepping web graphics, rescuing old family pictures — the free unlimited Normal Upscale on JPT AI handles all of these cleanly.
+        body: `For roughly 80% of everyday tasks, a free upscaler is all you'll ever need. Enlarging social media images, cleaning up product photos, prepping web graphics, rescuing old family pictures — the free unlimited Normal Upscale on Pixel Shine handles all of these cleanly.
 
 So when does paying make sense? The line usually comes down to how much detail needs to be *invented* versus simply sharpened. Pro AI modes use more advanced diffusion-based models that can reconstruct realistic skin texture, hair strands, and fine patterns that basic upscaling smooths over. That matters for:
 
 **Professional portraits and headshots** where facial detail is scrutinized. **Large-format print** like posters and banners where you're viewing at close range. **Heavily degraded archival photos** that need aggressive restoration. **Commercial product photography** for premium listings.
 
-The smart approach is to try the free tier first. On JPT AI, you can run the free Normal Upscale, see if it meets your standard, and only spend credits on Pro AI when the free result genuinely isn't enough. Because credits start very cheap and there's no subscription lock-in, you pay only for the specific images that need the extra horsepower — not a monthly fee for capacity you won't use.`,
+The smart approach is to try the free tier first. On Pixel Shine, you can run the free Normal Upscale, see if it meets your standard, and only spend credits on Pro AI when the free result genuinely isn't enough. Because credits start very cheap and there's no subscription lock-in, you pay only for the specific images that need the extra horsepower — not a monthly fee for capacity you won't use.`,
       },
       {
         heading: "Who Uses Free AI Upscalers (And Why)",
@@ -1477,16 +1477,16 @@ The common thread: none of these people are professional retouchers, and none wa
       {
         heading: "Frequently Asked Questions",
         body: `**What is the best free AI image upscaler in 2025?**
-JPT AI (sjpt.io) leads for accessibility because its Normal Upscale is completely free, unlimited, and requires no sign-in or watermark. For maximum detail recovery, its Pro AI mode is available cheaply. Other strong options include Upscale.media and Let's Enhance, though both limit free usage more aggressively.
+Pixel Shine (sjpt.io) leads for accessibility because its Normal Upscale is completely free, unlimited, and requires no sign-in or watermark. For maximum detail recovery, its Pro AI mode is available cheaply. Other strong options include Upscale.media and Let's Enhance, though both limit free usage more aggressively.
 
 **Can I upscale an image online for free without signing up?**
-Yes. JPT AI's Normal Upscale requires no account at all — just visit sjpt.io/upscale, upload, and download. Many competitors force registration after one or two images.
+Yes. Pixel Shine's Normal Upscale requires no account at all — just visit sjpt.io/upscale, upload, and download. Many competitors force registration after one or two images.
 
 **How much can I enlarge an image with AI?**
 Most tools offer 2x and 4x. A 4x upscale quadruples both dimensions (a 500px image becomes 2000px). Beyond 4x, results depend heavily on the source quality — AI can enhance detail but can't fully invent what was never captured.
 
 **Do free upscalers add watermarks?**
-Some do. JPT AI does not add watermarks to any output, free or paid. Always check a tool's downloaded result before using it publicly.
+Some do. Pixel Shine does not add watermarks to any output, free or paid. Always check a tool's downloaded result before using it publicly.
 
 **Will AI upscaling fix a blurry photo?**
 It significantly improves blur, compression artifacts, and softness by reconstructing detail. It works best on images with real underlying detail rather than extreme motion blur or total pixelation.
@@ -1495,18 +1495,18 @@ It significantly improves blur, compression artifacts, and softness by reconstru
 Yes. Photoshop's standard resize uses interpolation that stretches existing pixels, producing softness. AI upscalers generate new plausible detail, yielding sharper, more natural results at higher magnifications.
 
 **What image formats can I upscale?**
-JPT AI supports common formats including JPG, PNG, and WebP. Upload whatever you have and download in high resolution.
+Pixel Shine supports common formats including JPG, PNG, and WebP. Upload whatever you have and download in high resolution.
 
 **Is there a limit on how many images I can upscale free?**
-With JPT AI's Normal Upscale, no — it's unlimited and free. New users also get 5 free trials across other JPT AI tools like the headshot generator and Pro upscaler.`,
+With Pixel Shine's Normal Upscale, no — it's unlimited and free. New users also get 5 free trials across other Pixel Shine tools like the headshot generator and Pro upscaler.`,
       },
       {
         heading: "Key Takeaways",
-        body: `The best free AI image upscaler in 2025 is the one that delivers real detail reconstruction without watermarks, sign-up walls, or surprise limits. On those criteria, JPT AI's unlimited free Normal Upscale is the standout choice for everyday use, with an affordable Pro AI mode when you need to squeeze out maximum quality.
+        body: `The best free AI image upscaler in 2025 is the one that delivers real detail reconstruction without watermarks, sign-up walls, or surprise limits. On those criteria, Pixel Shine's unlimited free Normal Upscale is the standout choice for everyday use, with an affordable Pro AI mode when you need to squeeze out maximum quality.
 
 Before you settle for a subscription or tolerate a watermark, try the free option first — you'll likely find it handles the vast majority of your images perfectly. Head to sjpt.io/upscale, drop in an image, and see the difference for yourself in seconds. No account, no cost, no catch.
 
-Try JPT AI Upscaler Free →`,
+Try Pixel Shine Upscaler Free →`,
       },
     ],
   },
@@ -1514,7 +1514,7 @@ Try JPT AI Upscaler Free →`,
     image: "https://images.pexels.com/photos/1092644/pexels-photo-1092644.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "upscale-images-social-media-instagram-linkedin",
     title: "How to Upscale Images for Social Media: Instagram, LinkedIn & Beyond",
-    metaTitle: "Upscale Images for Instagram, LinkedIn & Social Media | JPT AI",
+    metaTitle: "Upscale Images for Instagram, LinkedIn & Social Media | Pixel Shine",
     metaDescription: "Social media platforms compress your images on upload. Learn the optimal resolution for each platform and how AI upscaling ensures your images always look sharp.",
     excerpt: "Instagram, LinkedIn, and Facebook all compress your images on upload. Starting at higher resolution is the only way to counteract this — here's how.",
     date: "2025-06-20",
@@ -1557,7 +1557,7 @@ The key insight: if your source image is smaller than these targets, uploading i
       },
       {
         heading: "Step-by-Step: Upscale a Photo for Social Media",
-        body: `Here's the exact workflow to increase image quality for social media using JPT AI's free upscaler — no account needed.
+        body: `Here's the exact workflow to increase image quality for social media using Pixel Shine's free upscaler — no account needed.
 
 **Step 1: Identify your target size.** Decide where you're posting. For an Instagram portrait post, your target is 1080 x 1350px. Note the number before you start.
 
@@ -1634,7 +1634,7 @@ For square posts, use 1080 x 1080px. For portrait posts (which get more screen s
 Two reasons: your original was below 1080px so Instagram upscaled it poorly, or the platform's compression damaged a low-detail image. Upscaling to 1080px before uploading fixes both.
 
 **How do I increase image quality for social media for free?**
-Upscale your image to the platform's target resolution using a free AI upscaler like JPT AI (sjpt.io/upscale). The Normal Upscale is free, unlimited, and needs no account or sign-in.
+Upscale your image to the platform's target resolution using a free AI upscaler like Pixel Shine (sjpt.io/upscale). The Normal Upscale is free, unlimited, and needs no account or sign-in.
 
 **What size should a LinkedIn post image be?**
 Shared post images work best at 1200 x 627px. Your profile photo should be uploaded at 1080 x 1080px even though the minimum is 400px, and cover banners at 1584 x 396px.
@@ -1655,7 +1655,7 @@ Use high-quality JPG for photographs and PNG for graphics with text or logos, wh
         heading: "Key Takeaways",
         body: `Social media platforms compress every image you upload, and low-resolution originals suffer the most. The fix is simple: upscale your photos to each platform's ideal resolution before posting — 1080px for Instagram, 1200px for LinkedIn link posts — so compression and display scaling have real detail to work with.
 
-You don't need expensive software or a photography degree. JPT AI's free, unlimited Normal Upscale gets you there in under a minute, with no watermark and no sign-in. Try it on your next post and compare it to your old ones — the jump in sharpness sells itself.
+You don't need expensive software or a photography degree. Pixel Shine's free, unlimited Normal Upscale gets you there in under a minute, with no watermark and no sign-in. Try it on your next post and compare it to your old ones — the jump in sharpness sells itself.
 
 Upscale for Social Media →`,
       },
@@ -1665,7 +1665,7 @@ Upscale for Social Media →`,
     image: "https://images.pexels.com/photos/3184454/pexels-photo-3184454.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "ai-upscaling-vs-traditional-upscaling-comparison",
     title: "AI Upscaling vs Traditional Upscaling: What's Actually Different?",
-    metaTitle: "AI Upscaling vs Traditional Upscaling: Full Comparison | JPT AI",
+    metaTitle: "AI Upscaling vs Traditional Upscaling: Full Comparison | Pixel Shine",
     metaDescription: "What's the real difference between AI super-resolution and Photoshop's bicubic resize? We compare quality, speed, and best use cases side by side.",
     excerpt: "Bicubic interpolation averages pixels. AI super-resolution predicts reality. The difference is visible — and it matters for every use case.",
     date: "2025-06-22",
@@ -1706,7 +1706,7 @@ This is the crux of super resolution vs bicubic: bicubic asks \"what's the mathe
 
 **Step 2: Do a traditional resize first.** In any basic editor (Paint, Preview, or Photoshop's Image Size with bicubic), enlarge it 4x. Save it. Notice how soft it looks up close.
 
-**Step 3: Open JPT AI's upscaler.** Go to sjpt.io/upscale. Normal Upscale is free, unlimited, and needs no sign-in.
+**Step 3: Open Pixel Shine's upscaler.** Go to sjpt.io/upscale. Normal Upscale is free, unlimited, and needs no sign-in.
 
 **Step 4: Upload the same original.** Drag your test image into the upload box — use the original, not your traditionally-resized version.
 
@@ -1750,7 +1750,7 @@ This is the crux of super resolution vs bicubic: bicubic asks \"what's the mathe
 
 **Traditional (bicubic) upscaling is fine when:** you're doing a tiny enlargement (1.1x to 1.5x) where the softness is negligible; you need pixel-perfect predictability for technical work; you're working with flat graphics or pixel art where AI might \"invent\" unwanted detail; or you need instant, offline processing with zero tools.
 
-For most people, though, the calculus is simple. AI upscaling now matches traditional methods for speed and beats them decisively on quality, and free tools like JPT AI remove the old cost barrier entirely. The main reason anyone still defaults to bicubic is habit — it's the button built into legacy software. Once you've compared results at 100% zoom, it's hard to go back.`,
+For most people, though, the calculus is simple. AI upscaling now matches traditional methods for speed and beats them decisively on quality, and free tools like Pixel Shine remove the old cost barrier entirely. The main reason anyone still defaults to bicubic is habit — it's the button built into legacy software. Once you've compared results at 100% zoom, it's hard to go back.`,
       },
       {
         heading: "Real-World Results: Where AI Wins",
@@ -1784,13 +1784,13 @@ A neural network is trained on pairs of low- and high-resolution images. It lear
 It does an excellent job reconstructing faces and common objects. For text, it works well on reasonably legible sources but can guess incorrectly on severely degraded characters, since it infers rather than truly recovers.
 
 **Is AI upscaling slow?**
-Modern AI upscalers process most images in seconds — comparable to traditional methods for typical photo sizes. JPT AI's free Normal Upscale is fast enough for everyday use.
+Modern AI upscalers process most images in seconds — comparable to traditional methods for typical photo sizes. Pixel Shine's free Normal Upscale is fast enough for everyday use.
 
 **Does AI upscaling change the original image?**
 It creates a new, higher-resolution version while leaving your original file untouched. The process reconstructs detail but doesn't alter your source.
 
 **Can I try AI upscaling for free?**
-Yes. JPT AI (sjpt.io/upscale) offers free, unlimited Normal Upscale with no sign-in, so you can compare it against traditional methods yourself.`,
+Yes. Pixel Shine (sjpt.io/upscale) offers free, unlimited Normal Upscale with no sign-in, so you can compare it against traditional methods yourself.`,
       },
       {
         heading: "Key Takeaways",
@@ -1806,7 +1806,7 @@ Try AI Upscaling →`,
     image: "https://images.pexels.com/photos/1438081/pexels-photo-1438081.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "upscale-wallpapers-4k-desktop-background",
     title: "How to Upscale Any Image to 4K Wallpaper Quality",
-    metaTitle: "Upscale Images to 4K Wallpaper Quality Free | JPT AI",
+    metaTitle: "Upscale Images to 4K Wallpaper Quality Free | Pixel Shine",
     metaDescription: "Turn any photo into a sharp 4K desktop or phone wallpaper using AI upscaling. Step-by-step guide for 4K (3840×2160), 5K, and ultrawide wallpapers.",
     excerpt: "Found the perfect wallpaper but it's too small for your 4K monitor? AI upscaling can take almost any image to 3840×2160 without visible blurring.",
     date: "2025-06-25",
@@ -1845,7 +1845,7 @@ Always aim to *meet or slightly exceed* your target. A wallpaper that's marginal
       },
       {
         heading: "Step-by-Step: Upscale Any Image to 4K",
-        body: `Here's the complete workflow to turn a low-res image into a crisp 4K wallpaper using JPT AI's free upscaler.
+        body: `Here's the complete workflow to turn a low-res image into a crisp 4K wallpaper using Pixel Shine's free upscaler.
 
 **Step 1: Check your screen resolution.** On Windows, right-click desktop → Display settings → Display resolution. On Mac, System Settings → Displays. Note the number, e.g. 3840 x 2160.
 
@@ -1922,7 +1922,7 @@ What unites them is a mismatch between the images they love and the resolution t
       {
         heading: "Frequently Asked Questions",
         body: `**How do I upscale a wallpaper to 4K?**
-Upload your image to a free AI upscaler like JPT AI (sjpt.io/upscale), choose a 2x or 4x factor so the output reaches at least 3840 x 2160px, then crop to 16:9 and set it as your background. The Normal Upscale is free and unlimited.
+Upload your image to a free AI upscaler like Pixel Shine (sjpt.io/upscale), choose a 2x or 4x factor so the output reaches at least 3840 x 2160px, then crop to 16:9 and set it as your background. The Normal Upscale is free and unlimited.
 
 **What resolution should a 4K wallpaper be?**
 Exactly 3840 x 2160px for a standard 4K (16:9) monitor. For ultrawide 4K, aim for 5120 x 1440px, and for 5K displays, 5120 x 2880px. Meeting or slightly exceeding native resolution keeps it sharp.
@@ -1937,7 +1937,7 @@ Yes. Most modern phone photos are already 3000px+ wide, so they may just need cr
 Absolutely. Upscale to your ultrawide's native width (e.g. 3440px or 5120px) and crop to the 21:9 aspect ratio so it fills the screen without distortion.
 
 **Is upscaling wallpapers to 4K free?**
-Yes. JPT AI's Normal Upscale is completely free, unlimited, and requires no sign-in — ideal for experimenting with multiple wallpapers.
+Yes. Pixel Shine's Normal Upscale is completely free, unlimited, and requires no sign-in — ideal for experimenting with multiple wallpapers.
 
 **What's the best format for a 4K wallpaper?**
 Use PNG for digital art, gradients, and graphics to keep edges clean, and high-quality JPG for photographic wallpapers to balance quality and file size.
@@ -1949,7 +1949,7 @@ Yes, and it's a popular use case. AI art often outputs at 1024px; upscaling to 4
         heading: "Key Takeaways",
         body: `A blurry wallpaper isn't a lost cause — it's just a resolution mismatch. By upscaling any image to your screen's native resolution (3840 x 2160px for 4K) before setting it, you eliminate the stretching that causes fuzziness and get a crisp, edge-to-edge background that looks native to your display.
 
-Match the aspect ratio, aim to meet or slightly exceed your monitor's pixel count, and use AI upscaling to reconstruct real detail rather than relying on your OS's crude stretching. JPT AI's free, unlimited Normal Upscale makes it effortless and cost-free to experiment with as many wallpapers as you like.
+Match the aspect ratio, aim to meet or slightly exceed your monitor's pixel count, and use AI upscaling to reconstruct real detail rather than relying on your OS's crude stretching. Pixel Shine's free, unlimited Normal Upscale makes it effortless and cost-free to experiment with as many wallpapers as you like.
 
 Upscale to 4K →`,
       },
@@ -1959,7 +1959,7 @@ Upscale to 4K →`,
     image: "https://images.pexels.com/photos/3184431/pexels-photo-3184431.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "batch-upscale-images-bulk-photo-processing",
     title: "How to Batch Upscale 100 Images at Once (Save Hours Every Week)",
-    metaTitle: "Batch Upscale Images Online — Upscale 100 Photos at Once | JPT AI",
+    metaTitle: "Batch Upscale Images Online — Upscale 100 Photos at Once | Pixel Shine",
     metaDescription: "Stop processing images one by one. Learn how to batch upscale up to 100 images simultaneously with AI — perfect for e-commerce, photographers, and agencies.",
     excerpt: "If you're upscaling images one at a time, you're wasting hours every week. Here's how to batch process an entire product catalogue or photo collection in minutes.",
     date: "2025-06-28",
@@ -1984,7 +1984,7 @@ The math is stark. Upscaling 100 images individually — upload, wait, download,
 
 **Reduced error and fatigue.** Manual repetition breeds mistakes. By the 60th image, you're tired, clicking on autopilot, and more likely to skip files or misapply settings. Automation eliminates that human error entirely.
 
-The bottom line: if you regularly upscale more than a handful of images, batch processing isn't a nice-to-have — it's the only sensible way to work. JPT AI's batch editor is built precisely for this, letting you upscale multiple images at once without the one-by-one grind.`,
+The bottom line: if you regularly upscale more than a handful of images, batch processing isn't a nice-to-have — it's the only sensible way to work. Pixel Shine's batch editor is built precisely for this, letting you upscale multiple images at once without the one-by-one grind.`,
       },
       {
         heading: "What You Can Batch Upscale (And When It Helps Most)",
@@ -2006,7 +2006,7 @@ The common thread is volume plus shared settings. When every image needs roughly
       },
       {
         heading: "Step-by-Step: Batch Upscale 100 Images",
-        body: `Here's the complete workflow to bulk-process a large set of images using JPT AI's batch editor.
+        body: `Here's the complete workflow to bulk-process a large set of images using Pixel Shine's batch editor.
 
 **Step 1: Organize your source files.** Put all the images you want to upscale into a single folder. Remove any you don't want processed. Consistency starts with a clean input set.
 
@@ -2079,7 +2079,7 @@ For every one of these, the volume makes one-at-a-time processing impractical. A
       {
         heading: "Frequently Asked Questions",
         body: `**How do I batch upscale multiple images at once?**
-Use a dedicated batch tool like JPT AI's batch editor (sjpt.io/batch-editor). Upload all your images together, set one upscale factor and mode for the whole set, process, and download the entire batch at once.
+Use a dedicated batch tool like Pixel Shine's batch editor (sjpt.io/batch-editor). Upload all your images together, set one upscale factor and mode for the whole set, process, and download the entire batch at once.
 
 **How many images can I upscale in one batch?**
 The practical limit depends on the tool and file sizes, but batch editors are designed to handle large sets — dozens to hundreds of images in a single run — far more efficiently than processing individually.
@@ -2093,7 +2093,7 @@ Within one batch, settings apply uniformly. For images needing different treatme
 **How much time does batch upscaling actually save?**
 For 100 images, manual processing can take ~50 minutes of active clicking, while batching cuts hands-on time to a few minutes with the rest running unattended. Over a year of weekly processing, that's roughly 40 hours saved.
 
-**Is batch upscaling free on JPT AI?**
+**Is batch upscaling free on Pixel Shine?**
 The Normal Upscale is free and unlimited, and new users get 5 free trials across tools. Pro AI upscaling uses credits that start very cheap, so you only pay for images that need the advanced model.
 
 **Should I keep my original images after batch processing?**
@@ -2106,7 +2106,7 @@ Group images by content type and source quality before uploading. This lets you 
         heading: "Key Takeaways",
         body: `If you're processing more than a handful of images, batch upscaling is the only workflow that respects your time. By uploading a whole set, applying one consistent setting, and downloading everything at once, you turn nearly an hour of manual clicking into a few minutes of setup — reclaiming dozens of hours a year while keeping quality perfectly uniform across every image.
 
-Organize your inputs, test on a small sample, keep your originals, and let automation handle the volume. JPT AI's batch editor makes it easy to start, with a free Normal Upscale and cheap credits only when you need the Pro AI model.
+Organize your inputs, test on a small sample, keep your originals, and let automation handle the volume. Pixel Shine's batch editor makes it easy to start, with a free Normal Upscale and cheap credits only when you need the Pro AI model.
 
 Try Batch Upscaler →`,
       },
@@ -2116,7 +2116,7 @@ Try Batch Upscaler →`,
     image: "https://images.pexels.com/photos/3621234/pexels-photo-3621234.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "upscale-profile-picture-linkedin-professional",
     title: "How to Upscale Your Profile Picture for LinkedIn & Professional Use",
-    metaTitle: "Upscale Profile Picture for LinkedIn — Professional Headshot Guide | JPT AI",
+    metaTitle: "Upscale Profile Picture for LinkedIn — Professional Headshot Guide | Pixel Shine",
     metaDescription: "A blurry LinkedIn profile picture costs you credibility. Learn how to upscale and enhance your profile photo to professional quality in 60 seconds.",
     excerpt: "Your LinkedIn profile picture makes a first impression before you say a word. A blurry, pixelated headshot signals unprofessionalism — here's how to fix it fast.",
     date: "2025-07-01",
@@ -2157,7 +2157,7 @@ The recurring theme: minimums are low, but you should always upload well above t
       },
       {
         heading: "Step-by-Step: Upscale Your Profile Picture",
-        body: `Here's exactly how to sharpen your headshot for LinkedIn and beyond using JPT AI's free tools.
+        body: `Here's exactly how to sharpen your headshot for LinkedIn and beyond using Pixel Shine's free tools.
 
 **Step 1: Choose your best available photo.** Pick the headshot with the best lighting, composition, and expression — even if it's low resolution. Upscaling improves sharpness, so start with the photo that's *right* in every other way.
 
@@ -2171,7 +2171,7 @@ The recurring theme: minimums are low, but you should always upload well above t
 
 **Step 6: Crop to a square.** Profile photos are 1:1. Crop so your face fills a comfortable portion of the frame — roughly head and shoulders — with a little breathing room.
 
-**Step 7 (optional): Clean up the background.** For a polished, distraction-free look, run it through JPT AI's background remover to replace a messy background with a clean one.
+**Step 7 (optional): Clean up the background.** For a polished, distraction-free look, run it through Pixel Shine's background remover to replace a messy background with a clean one.
 
 **Step 8: Download and upload.** Save the watermark-free result and set it as your profile photo across your platforms.`,
       },
@@ -2209,7 +2209,7 @@ The recurring theme: minimums are low, but you should always upload well above t
 
 **When a photographer makes sense:** You don't have any usable photo to start from. You need consistent branded headshots for an entire team. You're a public-facing professional (executive, realtor, author) whose image is central to your brand and warrants investment. Here, a shoot provides composition, lighting, and styling that no upscaler can create from scratch.
 
-The smart move for most people: start with upscaling. It costs nothing and often solves the actual problem, which is usually resolution and sharpness rather than the photo itself. If, after upscaling and cropping, you still feel your photo doesn't represent you well, *then* consider a shoot. You'll have lost nothing by trying the free route first — and JPT AI's headshot generator offers another middle-ground option to create polished headshots without a studio.`,
+The smart move for most people: start with upscaling. It costs nothing and often solves the actual problem, which is usually resolution and sharpness rather than the photo itself. If, after upscaling and cropping, you still feel your photo doesn't represent you well, *then* consider a shoot. You'll have lost nothing by trying the free route first — and Pixel Shine's headshot generator offers another middle-ground option to create polished headshots without a studio.`,
       },
       {
         heading: "Who Needs a Sharper Profile Photo",
@@ -2230,7 +2230,7 @@ For all of them, the fix is the same: upscale the good photo you have to modern 
       {
         heading: "Frequently Asked Questions",
         body: `**How do I upscale my LinkedIn profile picture?**
-Upload your headshot to JPT AI (sjpt.io/upscale), use Pro AI mode for the most natural face detail, upscale to at least 1080px, crop to a 1:1 square, and set it as your LinkedIn photo. The Normal Upscale is free and unlimited.
+Upload your headshot to Pixel Shine (sjpt.io/upscale), use Pro AI mode for the most natural face detail, upscale to at least 1080px, crop to a 1:1 square, and set it as your LinkedIn photo. The Normal Upscale is free and unlimited.
 
 **What resolution should a LinkedIn profile photo be?**
 The minimum is 400 x 400px, but upload at 1080 x 1080px for crispness across all the sizes LinkedIn displays your photo. A larger, sharper source always looks better on modern screens.
@@ -2245,10 +2245,10 @@ Yes. Upscaling is ideal for old photos that predate high-resolution screens. It 
 If you already have a good photo that's just low-resolution, upscaling is faster, free, and usually sufficient. Hire a photographer only if you lack any usable photo or need branded team headshots.
 
 **How do I remove a distracting background from my profile photo?**
-After upscaling, use JPT AI's background remover (sjpt.io/remove-bg) to replace a cluttered background with a clean, neutral one for a more professional look.
+After upscaling, use Pixel Shine's background remover (sjpt.io/remove-bg) to replace a cluttered background with a clean, neutral one for a more professional look.
 
 **Is upscaling my profile picture free?**
-Yes. JPT AI's Normal Upscale is free and unlimited with no sign-in, and new users get 5 free trials to test Pro AI mode, which is best for faces.
+Yes. Pixel Shine's Normal Upscale is free and unlimited with no sign-in, and new users get 5 free trials to test Pro AI mode, which is best for faces.
 
 **What's the best crop for a professional headshot?**
 A head-and-shoulders framing in a 1:1 square, with your face occupying a comfortable portion of the frame and a little breathing room around it, works best across platforms.`,
@@ -2267,7 +2267,7 @@ Upscale Your Profile Photo →`,
     image: "https://images.pexels.com/photos/3184292/pexels-photo-3184292.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "upscale-real-estate-photos-property-listings",
     title: "How to Upscale Real Estate Photos for Property Listings (Get More Enquiries)",
-    metaTitle: "Upscale Real Estate Photos for Property Listings | JPT AI",
+    metaTitle: "Upscale Real Estate Photos for Property Listings | Pixel Shine",
     metaDescription: "High-resolution property photos generate more enquiries and faster sales. Learn how AI upscaling improves real estate photos for Zillow, Rightmove, and more.",
     excerpt: "Property listings with high-resolution photos generate 2× more enquiries. If your real estate images are small or blurry, AI upscaling is the fastest fix.",
     date: "2025-07-04",
@@ -2308,7 +2308,7 @@ The practical rule: real estate images are viewed large and often printed, so ai
       },
       {
         heading: "Step-by-Step: Upscale a Property Photo",
-        body: `Here's the complete workflow to enhance a listing photo using JPT AI's free upscaler.
+        body: `Here's the complete workflow to enhance a listing photo using Pixel Shine's free upscaler.
 
 **Step 1: Select your best shots.** Choose the photos with the best lighting and composition for each room. Upscaling improves sharpness, so start with well-exposed images.
 
@@ -2387,7 +2387,7 @@ For all of them, professional photography isn't always feasible for every shot, 
       {
         heading: "Frequently Asked Questions",
         body: `**How do I upscale real estate photos for listings?**
-Upload your property photos to JPT AI (sjpt.io/upscale), choose 2x for portals or 4x for print, and use Pro AI mode for hero shots. For full listings, batch process at sjpt.io/batch-editor. The Normal Upscale is free and unlimited.
+Upload your property photos to Pixel Shine (sjpt.io/upscale), choose 2x for portals or 4x for print, and use Pro AI mode for hero shots. For full listings, batch process at sjpt.io/batch-editor. The Normal Upscale is free and unlimited.
 
 **What resolution should real estate listing photos be?**
 Aim for at least 1024px on the long edge for most MLS systems, and up to 2048px for premium portals like Zillow. Print flyers need roughly 2550 x 3300px at 300 DPI, which usually requires upscaling.
@@ -2399,10 +2399,10 @@ Not if used correctly. Keep results natural and accurate — upscaling should sh
 Yes. Phone photos are a common source, and upscaling brings them up to portal and even print resolution. Start with well-lit, well-composed shots for the best results.
 
 **How do I upscale a whole listing's worth of photos at once?**
-Use JPT AI's batch editor (sjpt.io/batch-editor) to upload all 20-30 photos, apply consistent settings, and process them together, ensuring the entire gallery looks uniform.
+Use Pixel Shine's batch editor (sjpt.io/batch-editor) to upload all 20-30 photos, apply consistent settings, and process them together, ensuring the entire gallery looks uniform.
 
 **Is upscaling real estate photos free?**
-Yes. JPT AI's Normal Upscale is free and unlimited with no sign-in. Pro AI mode for hero shots uses cheap credits, and new users get 5 free trials.
+Yes. Pixel Shine's Normal Upscale is free and unlimited with no sign-in. Pro AI mode for hero shots uses cheap credits, and new users get 5 free trials.
 
 **Does photo quality really affect how fast a home sells?**
 Yes. Listings with sharp, high-quality photos consistently attract more views and can sell faster and for more than comparable listings with poor images, since buyers judge listings visually in seconds.
@@ -2414,7 +2414,7 @@ Absolutely. Aerial and distant exterior photos, often captured at lower effectiv
         heading: "Key Takeaways",
         body: `In real estate, sharp photos aren't a luxury — they're what gets buyers to click, tour, and offer. Low-resolution images make even great properties look neglected on the large screens buyers use, while crisp, high-resolution photos signal professionalism and drive engagement.
 
-Upscale your property photos to meet each platform's resolution (up to 2048px for premium portals, 300 DPI for print), process full listings in batches for consistency, and keep results natural and accurate. JPT AI's free, unlimited upscaler and batch editor make it possible to give every listing a professional polish without a photography budget.
+Upscale your property photos to meet each platform's resolution (up to 2048px for premium portals, 300 DPI for print), process full listings in batches for consistency, and keep results natural and accurate. Pixel Shine's free, unlimited upscaler and batch editor make it possible to give every listing a professional polish without a photography budget.
 
 Upscale Real Estate Photos →`,
       },
@@ -2423,9 +2423,9 @@ Upscale Real Estate Photos →`,
   {
     slug: "fix-blurry-photo-online-free",
     title: "How to Fix a Blurry Photo Online for Free — No Software Needed",
-    metaTitle: "Fix Blurry Photo Online Free | JPT AI",
+    metaTitle: "Fix Blurry Photo Online Free | Pixel Shine",
     metaDescription: "Learn how to fix blurry photos online for free using AI. Sharpen, clarify, and restore detail in seconds — no Photoshop, no watermark.",
-    excerpt: "A blurry photo does not have to be a wasted photo. With AI-powered tools like JPT AI, you can fix blurry images online for free in just a few clicks.",
+    excerpt: "A blurry photo does not have to be a wasted photo. With AI-powered tools like Pixel Shine, you can fix blurry images online for free in just a few clicks.",
     date: "2025-06-10",
     readTime: "11 min read",
     category: "Tutorial",
@@ -2437,7 +2437,7 @@ Upscale Real Estate Photos →`,
       {
         body: `Learning how to fix a blurry photo online for free feels like a small miracle the first time it works — that irreplaceable shot you thought was ruined suddenly snaps into focus. Whether it's a candid photo of your kid mid-laugh, an old scanned family portrait, or a product image you need for your online store, blur is one of the most frustrating problems in digital photography. And until recently, the only real fix was expensive desktop software, a steep learning curve, and hours of manual tinkering.
 
-That's no longer the case. Modern AI can now analyze a soft, out-of-focus image, reconstruct fine detail, and sharpen edges with a precision that used to require a professional retoucher. In this guide, you'll learn exactly how to unblur an image online, why photos go blurry in the first place, and how to use JPT AI's free tool to fix blurry photos with no watermark and no mandatory sign-up. By the end, you'll be able to rescue almost any soft image in under a minute — completely free.`,
+That's no longer the case. Modern AI can now analyze a soft, out-of-focus image, reconstruct fine detail, and sharpen edges with a precision that used to require a professional retoucher. In this guide, you'll learn exactly how to unblur an image online, why photos go blurry in the first place, and how to use Pixel Shine's free tool to fix blurry photos with no watermark and no mandatory sign-up. By the end, you'll be able to rescue almost any soft image in under a minute — completely free.`,
       },
       {
         heading: "Why Photos Turn Out Blurry in the First Place",
@@ -2452,12 +2452,12 @@ That's no longer the case. Modern AI can now analyze a soft, out-of-focus image,
 **Compression and resizing** degrade images when they're texted, uploaded to social media, or saved repeatedly, stripping away the fine data that keeps edges crisp. Old scanned prints and screenshots suffer here too. Knowing your blur type helps you set realistic expectations — AI handles focus softness and compression damage exceptionally well, and can meaningfully improve mild motion blur.`,
       },
       {
-        heading: "How JPT AI Fixes Blurry Photos Automatically",
-        body: `JPT AI approaches blur the way a skilled retoucher would, but in seconds rather than hours. Instead of applying a single blunt sharpening filter across the whole image — the trick most old tools used, which just amplifies noise — its AI upscaler analyzes the picture region by region and reconstructs plausible detail based on millions of training examples.
+        heading: "How Pixel Shine Fixes Blurry Photos Automatically",
+        body: `Pixel Shine approaches blur the way a skilled retoucher would, but in seconds rather than hours. Instead of applying a single blunt sharpening filter across the whole image — the trick most old tools used, which just amplifies noise — its AI upscaler analyzes the picture region by region and reconstructs plausible detail based on millions of training examples.
 
 Here's what that means in practice. When you upload a soft image, the AI identifies edges, textures, and structures — an eyelash, the weave of fabric, the lettering on a sign — and rebuilds them at a higher fidelity than the original file contained. It simultaneously increases resolution, so a small, soft 800-pixel photo can become a crisp, print-ready image several times larger. This combination of deblurring and upscaling is why AI results look natural rather than crunchy or over-sharpened.
 
-The **Normal upscale mode is completely free, unlimited, and requires no sign-up**, making it ideal for everyday blur fixes. For heavily damaged or professionally critical images, the **Pro AI mode** uses credits to apply a more aggressive reconstruction model. Crucially, JPT AI never stamps a watermark on your output — the fixed photo is yours to download and use however you like.`,
+The **Normal upscale mode is completely free, unlimited, and requires no sign-up**, making it ideal for everyday blur fixes. For heavily damaged or professionally critical images, the **Pro AI mode** uses credits to apply a more aggressive reconstruction model. Crucially, Pixel Shine never stamps a watermark on your output — the fixed photo is yours to download and use however you like.`,
       },
       {
         heading: "Step-by-Step: How to Fix a Blurry Photo for Free",
@@ -2465,7 +2465,7 @@ The **Normal upscale mode is completely free, unlimited, and requires no sign-up
 
 **1. Open the tool.** Go to sjpt.io and open the AI Upscaler. You don't need to create an account to use the free Normal mode, so you can start immediately.
 
-**2. Upload your blurry photo.** Click the upload area or drag your image directly onto it. JPT AI accepts standard formats including JPG, PNG, and WebP. For best results, upload the highest-quality version of the file you have — never a screenshot of a screenshot.
+**2. Upload your blurry photo.** Click the upload area or drag your image directly onto it. Pixel Shine accepts standard formats including JPG, PNG, and WebP. For best results, upload the highest-quality version of the file you have — never a screenshot of a screenshot.
 
 **3. Choose your enhancement mode.** Select Normal upscale for free, unlimited fixes that work beautifully on most everyday blur. If your image is severely degraded or you need maximum detail recovery for print, switch to Pro AI mode, which uses credits (new users get 5 free trials to test it).
 
@@ -2525,7 +2525,7 @@ The **Normal upscale mode is completely free, unlimited, and requires no sign-up
 
 AI deblurring is fundamentally different. Rather than exaggerating existing edges, it predicts and reconstructs the detail that blur destroyed, informed by patterns learned from millions of sharp images. That's why AI can recover facial features, fabric texture, and text that a sharpening slider could never recover.
 
-Desktop tools like Photoshop offer powerful manual control, but they cost a subscription, require skill, and take time. Free online sharpeners are convenient but often stamp watermarks, cap resolution, or force sign-ups. JPT AI sits in the sweet spot: the reconstruction quality of modern AI, delivered free online, with no watermark and no account needed for the Normal mode. For most people, that's a better trade than either extreme.`,
+Desktop tools like Photoshop offer powerful manual control, but they cost a subscription, require skill, and take time. Free online sharpeners are convenient but often stamp watermarks, cap resolution, or force sign-ups. Pixel Shine sits in the sweet spot: the reconstruction quality of modern AI, delivered free online, with no watermark and no account needed for the Normal mode. For most people, that's a better trade than either extreme.`,
       },
       {
         heading: "Who Uses AI Blur Fixing and Why",
@@ -2534,10 +2534,10 @@ Desktop tools like Photoshop offer powerful manual control, but they cost a subs
       {
         heading: "Frequently Asked Questions",
         body: `**Can you really fix a blurry photo for free?**
-Yes. JPT AI's Normal upscale mode fixes blurry photos completely free, with no usage limits and no sign-up required. You only need credits if you choose the more aggressive Pro AI mode for severely damaged images, and new users get 5 free Pro trials to start.
+Yes. Pixel Shine's Normal upscale mode fixes blurry photos completely free, with no usage limits and no sign-up required. You only need credits if you choose the more aggressive Pro AI mode for severely damaged images, and new users get 5 free Pro trials to start.
 
 **Will there be a watermark on my fixed photo?**
-No. JPT AI never adds a watermark to your output. Whatever image you download is clean and ready to print, post, or sell.
+No. Pixel Shine never adds a watermark to your output. Whatever image you download is clean and ready to print, post, or sell.
 
 **Do I need to create an account?**
 Not for the free Normal upscale mode. You can upload and fix a blurry photo without signing up at all, which makes it ideal for quick, one-off fixes.
@@ -2559,7 +2559,7 @@ Simply re-upload and choose a lower scale factor, like 2x instead of 4x. A gentl
       },
       {
         heading: "Key Takeaways",
-        body: `Fixing a blurry photo online no longer requires expensive software or technical skill. Modern AI can reconstruct lost detail, sharpen soft edges, and enlarge images all at once — turning a shot you thought was ruined into something clear and usable. JPT AI makes this genuinely free with its Normal upscale mode: no watermarks, no forced sign-up, and no usage caps, plus 5 free Pro trials for images that need extra muscle.
+        body: `Fixing a blurry photo online no longer requires expensive software or technical skill. Modern AI can reconstruct lost detail, sharpen soft edges, and enlarge images all at once — turning a shot you thought was ruined into something clear and usable. Pixel Shine makes this genuinely free with its Normal upscale mode: no watermarks, no forced sign-up, and no usage caps, plus 5 free Pro trials for images that need extra muscle.
 
 The best part is how little effort it takes. Upload, choose your mode, and download a sharper result in about a minute. Whether it's a treasured memory or a product photo, your blurry image deserves a second chance. Try it free at sjpt.io and see how much detail AI can bring back.`,
       },
@@ -2568,9 +2568,9 @@ The best part is how little effort it takes. Upload, choose your mode, and downl
   {
     slug: "enhance-image-quality-online-free",
     title: "Enhance Image Quality Online for Free — AI-Powered Results",
-    metaTitle: "Enhance Image Quality Online Free | JPT AI",
-    metaDescription: "Enhance image quality online for free with JPT AI. Boost resolution, sharpness, and color detail in seconds — no account or software needed.",
-    excerpt: "Enhancing image quality no longer requires expensive software or expert skills. JPT AI lets you improve any photo online for free using advanced AI in seconds.",
+    metaTitle: "Enhance Image Quality Online Free | Pixel Shine",
+    metaDescription: "Enhance image quality online for free with Pixel Shine. Boost resolution, sharpness, and color detail in seconds — no account or software needed.",
+    excerpt: "Enhancing image quality no longer requires expensive software or expert skills. Pixel Shine lets you improve any photo online for free using advanced AI in seconds.",
     date: "2025-06-18",
     readTime: "11 min read",
     category: "Guide",
@@ -2582,7 +2582,7 @@ The best part is how little effort it takes. Upload, choose your mode, and downl
       {
         body: `If you want to enhance image quality online free, you no longer need Photoshop skills, an expensive subscription, or hours of manual retouching. AI-powered photo enhancement has made it possible to sharpen blurry shots, remove noise, and boost resolution in seconds — instantly. Whether you're rescuing an old family photo, prepping a product shot for your store, or trying to salvage a screenshot that looks like it survived a printer accident, modern tools can do the heavy lifting for you.
 
-The problem is that most \"free\" photo enhancers slap a watermark across your results, force you to create an account, or cap you at low output resolutions unless you pay. JPT AI takes a different approach: its Normal AI Upscaler is genuinely free, unlimited, and requires no sign-up. In this guide, you'll learn exactly how to improve image quality with AI, what settings matter, common mistakes that ruin results, and how to get crisp, natural-looking photos every time. By the end, you'll be able to enhance any image — portraits, products, landscapes, or graphics — without spending a cent.`,
+The problem is that most \"free\" photo enhancers slap a watermark across your results, force you to create an account, or cap you at low output resolutions unless you pay. Pixel Shine takes a different approach: its Normal AI Upscaler is genuinely free, unlimited, and requires no sign-up. In this guide, you'll learn exactly how to improve image quality with AI, what settings matter, common mistakes that ruin results, and how to get crisp, natural-looking photos every time. By the end, you'll be able to enhance any image — portraits, products, landscapes, or graphics — without spending a cent.`,
       },
       {
         heading: "Why Image Quality Degrades in the First Place",
@@ -2595,22 +2595,22 @@ The problem is that most \"free\" photo enhancers slap a watermark across your r
 Historically, fixing any of this required manual work in editing software: sharpening masks, noise reduction plugins, and careful upscaling that often introduced artifacts. AI changes the game by reconstructing plausible detail based on millions of training images, filling in what compression and low resolution stripped away.`,
       },
       {
-        heading: "How JPT AI Enhances Image Quality Automatically",
-        body: `JPT AI's image enhancer uses deep-learning models trained on vast datasets of high-resolution photos. Instead of simply stretching pixels like traditional bicubic upscaling, the AI **predicts and reconstructs** fine details — the texture of hair, the edges of text, the grain of fabric — producing results that look natural rather than artificially sharpened.
+        heading: "How Pixel Shine Enhances Image Quality Automatically",
+        body: `Pixel Shine's image enhancer uses deep-learning models trained on vast datasets of high-resolution photos. Instead of simply stretching pixels like traditional bicubic upscaling, the AI **predicts and reconstructs** fine details — the texture of hair, the edges of text, the grain of fabric — producing results that look natural rather than artificially sharpened.
 
 The platform offers two tiers. The **Normal Upscaler** is free, unlimited, and requires no account. It intelligently increases resolution and sharpness, making it perfect for everyday enhancement tasks like fixing social media photos or cleaning up screenshots. The **Pro AI Upscaler** uses credits and applies more aggressive detail reconstruction, ideal for professional print work, heavily degraded images, or maximum-resolution output.
 
-What sets JPT AI apart is the combination of **no watermarks** and **no mandatory sign-in** for the Normal tier. Many competitors stamp their logo across your enhanced image or lock full-resolution downloads behind a paywall. New users also get **5 free trials** of the Pro features to test the more powerful engine before deciding.
+What sets Pixel Shine apart is the combination of **no watermarks** and **no mandatory sign-in** for the Normal tier. Many competitors stamp their logo across your enhanced image or lock full-resolution downloads behind a paywall. New users also get **5 free trials** of the Pro features to test the more powerful engine before deciding.
 
 The entire process runs online. You don't install software, and your workflow stays simple: upload, enhance, download. Results typically process in under 10 seconds for standard images, making it fast enough for batch work.`,
       },
       {
         heading: "Step-by-Step: How to Enhance Image Quality for Free",
-        body: `Follow these steps to enhance any image using JPT AI:
+        body: `Follow these steps to enhance any image using Pixel Shine:
 
 **1. Open the tool.** Navigate to sjpt.io and go to the Upscale / Enhance section. No download or installation is needed — it runs entirely online on desktop or mobile.
 
-**2. Upload your image.** Click the upload area or drag and drop your file directly. JPT AI supports common formats like JPG, PNG, and WebP. For the Normal Upscaler, there's no sign-up gate — you can start immediately.
+**2. Upload your image.** Click the upload area or drag and drop your file directly. Pixel Shine supports common formats like JPG, PNG, and WebP. For the Normal Upscaler, there's no sign-up gate — you can start immediately.
 
 **3. Choose your enhancement mode.** Select the Normal Upscaler for free, unlimited enhancement, or switch to Pro AI if you need maximum detail reconstruction (new users get 5 free trials).
 
@@ -2674,7 +2674,7 @@ The entire process runs online. You don't install software, and your workflow st
 
 **AI enhancement** compresses that entire workflow into a single click. The model handles sharpening, noise reduction, and detail reconstruction simultaneously, based on patterns learned from millions of images. The trade-off is less granular control — you can't hand-paint a specific area — but for the vast majority of images, the automated result matches or beats what an intermediate editor could achieve manually.
 
-**Other free AI tools** exist, but many undercut their value with watermarks, forced sign-ups, resolution caps, or daily limits. JPT AI's Normal Upscaler removes those friction points entirely: unlimited use, no account, no watermark. For power users, the Pro tier and 5 free trials offer an upgrade path without forcing a commitment. For most people, the free tier alone replaces the need for paid desktop software.`,
+**Other free AI tools** exist, but many undercut their value with watermarks, forced sign-ups, resolution caps, or daily limits. Pixel Shine's Normal Upscaler removes those friction points entirely: unlimited use, no account, no watermark. For power users, the Pro tier and 5 free trials offer an upgrade path without forcing a commitment. For most people, the free tier alone replaces the need for paid desktop software.`,
       },
       {
         heading: "Who Uses AI Image Enhancement and Why",
@@ -2687,13 +2687,13 @@ The entire process runs online. You don't install software, and your workflow st
       {
         heading: "Frequently Asked Questions",
         body: `**Can I really enhance image quality online for free?**
-Yes. JPT AI's Normal Upscaler is completely free and unlimited, with no sign-up required and no watermark on your results. You only use credits if you opt for the more powerful Pro AI engine, and new users get 5 free trials of that too.
+Yes. Pixel Shine's Normal Upscaler is completely free and unlimited, with no sign-up required and no watermark on your results. You only use credits if you opt for the more powerful Pro AI engine, and new users get 5 free trials of that too.
 
 **Does enhancing an image add real detail or just sharpen it?**
 AI enhancement does more than sharpen. It reconstructs plausible detail based on patterns learned from millions of high-resolution photos, so textures like hair, fabric, and edges look genuinely more defined rather than just artificially sharpened.
 
 **Will there be a watermark on my enhanced image?**
-No. Unlike many free tools, JPT AI does not add watermarks to your enhanced images, even on the free Normal tier. You download at full resolution.
+No. Unlike many free tools, Pixel Shine does not add watermarks to your enhanced images, even on the free Normal tier. You download at full resolution.
 
 **What image formats are supported?**
 Common web formats including JPG, PNG, and WebP are supported. For best results, upload the highest-quality version of your file that you have.
@@ -2712,7 +2712,7 @@ Normal is free, unlimited, and great for everyday tasks. Pro AI applies more agg
       },
       {
         heading: "Key Takeaways",
-        body: `Enhancing image quality online for free is now genuinely possible thanks to AI. JPT AI's Normal Upscaler sharpens, denoises, and upscales your photos in seconds — with no watermark, no forced sign-up, and no cost. For tougher jobs like portraits, fine text, or heavily degraded images, the Pro AI engine delivers even more detail, and new users get 5 free trials to test it.
+        body: `Enhancing image quality online for free is now genuinely possible thanks to AI. Pixel Shine's Normal Upscaler sharpens, denoises, and upscales your photos in seconds — with no watermark, no forced sign-up, and no cost. For tougher jobs like portraits, fine text, or heavily degraded images, the Pro AI engine delivers even more detail, and new users get 5 free trials to test it.
 
 Start with the best source you have, match the scale to your use case, and review the before/after preview to lock in natural-looking results. Whether you're rescuing old memories or prepping product shots, you can go from blurry to crisp in under a minute. Ready to try it? Enhance your first image free at sjpt.io.`,
       },
@@ -2721,9 +2721,9 @@ Start with the best source you have, match the scale to your use case, and revie
   {
     slug: "increase-image-resolution-free",
     title: "How to Increase Image Resolution for Free Using AI",
-    metaTitle: "Increase Image Resolution Free | JPT AI",
-    metaDescription: "Increase image resolution for free with JPT AI. Use AI to upscale photos 2× or 4× without losing quality — perfect for print, web, and social media.",
-    excerpt: "Increasing image resolution used to require expensive software and technical expertise. JPT AI makes it free, fast, and foolproof for everyone.",
+    metaTitle: "Increase Image Resolution Free | Pixel Shine",
+    metaDescription: "Increase image resolution for free with Pixel Shine. Use AI to upscale photos 2× or 4× without losing quality — perfect for print, web, and social media.",
+    excerpt: "Increasing image resolution used to require expensive software and technical expertise. Pixel Shine makes it free, fast, and foolproof for everyone.",
     date: "2025-06-25",
     readTime: "11 min read",
     category: "Guide",
@@ -2737,7 +2737,7 @@ Start with the best source you have, match the scale to your use case, and revie
 
 That's changed dramatically thanks to AI super-resolution. Modern tools can now analyze the actual content of your photo — edges, textures, faces, fabric, hair — and intelligently reconstruct detail that simple stretching could never produce. When you upscale resolution with AI, you're not just enlarging pixels; you're generating new, believable detail.
 
-In this guide, we'll walk through exactly how to increase photo resolution online, why old methods failed, and how JPT AI lets you enlarge images free with unlimited Normal upscaling, no watermarks, and no forced sign-up. By the end, you'll be able to take a tiny, soft image and turn it into something crisp, print-ready, and genuinely usable.`,
+In this guide, we'll walk through exactly how to increase photo resolution online, why old methods failed, and how Pixel Shine lets you enlarge images free with unlimited Normal upscaling, no watermarks, and no forced sign-up. By the end, you'll be able to take a tiny, soft image and turn it into something crisp, print-ready, and genuinely usable.`,
       },
       {
         heading: "Why Low-Resolution Images Are Such a Common Problem",
@@ -2750,22 +2750,22 @@ In this guide, we'll walk through exactly how to increase photo resolution onlin
 Then there's the simple reality that the internet is full of small images. You find the perfect reference photo, meme, or product shot — but it's 300 pixels wide. Traditional resizing tools like the ones built into Windows or basic online resizers just stretch those pixels, producing a blurry, blocky mess. That gap between what you have and what you need is exactly what AI resolution enhancement was built to close.`,
       },
       {
-        heading: "How JPT AI Increases Resolution the Smart Way",
-        body: `JPT AI approaches resolution enhancement completely differently from old-school resizers. Instead of naively stretching pixels and interpolating averages between them, its AI upscaler uses a deep-learning model trained on millions of image pairs — low-resolution inputs matched with their high-resolution originals. This training teaches the model what real detail looks like, so it can predict and reconstruct texture, edges, and fine structure when enlarging your photo.
+        heading: "How Pixel Shine Increases Resolution the Smart Way",
+        body: `Pixel Shine approaches resolution enhancement completely differently from old-school resizers. Instead of naively stretching pixels and interpolating averages between them, its AI upscaler uses a deep-learning model trained on millions of image pairs — low-resolution inputs matched with their high-resolution originals. This training teaches the model what real detail looks like, so it can predict and reconstruct texture, edges, and fine structure when enlarging your photo.
 
-**Two tiers, one goal.** JPT AI offers a Normal upscaler that's completely free, unlimited, and requires no sign-up — perfect for everyday enlarging, cleaning up web images, and boosting resolution for social media. For more demanding jobs, the Pro AI mode uses a more powerful model (running on credits) that excels at heavy restoration, faces, and maximum detail recovery.
+**Two tiers, one goal.** Pixel Shine offers a Normal upscaler that's completely free, unlimited, and requires no sign-up — perfect for everyday enlarging, cleaning up web images, and boosting resolution for social media. For more demanding jobs, the Pro AI mode uses a more powerful model (running on credits) that excels at heavy restoration, faces, and maximum detail recovery.
 
-**No watermarks, ever.** Unlike many free tools that stamp their logo across your result or force you to pay to remove it, JPT AI returns a clean file. That alone makes it usable for real work — client deliverables, print, product listings.
+**No watermarks, ever.** Unlike many free tools that stamp their logo across your result or force you to pay to remove it, Pixel Shine returns a clean file. That alone makes it usable for real work — client deliverables, print, product listings.
 
-The result is that when you increase image resolution free through JPT AI, you get output that looks intentionally photographed at that size, not artificially blown up. Skin stays natural, text stays legible, and edges stay crisp rather than jagged.`,
+The result is that when you increase image resolution free through Pixel Shine, you get output that looks intentionally photographed at that size, not artificially blown up. Skin stays natural, text stays legible, and edges stay crisp rather than jagged.`,
       },
       {
         heading: "Step-by-Step: How to Increase Image Resolution for Free",
-        body: `Here's the complete process to enlarge your image using JPT AI, start to finish.
+        body: `Here's the complete process to enlarge your image using Pixel Shine, start to finish.
 
 **1. Open the upscaler.** Go to sjpt.io and navigate to the Upscale tool. You don't need to create an account or log in to use the Normal upscaler, so you can start immediately.
 
-**2. Upload your image.** Click the upload area or drag and drop your file directly onto it. JPT AI accepts common formats like JPG, PNG, and WEBP. There's no need to convert your file first.
+**2. Upload your image.** Click the upload area or drag and drop your file directly onto it. Pixel Shine accepts common formats like JPG, PNG, and WEBP. There's no need to convert your file first.
 
 **3. Choose your upscale factor.** Select how much larger you want the image — typically 2x or 4x. A 2x upscale doubles both width and height (four times the total pixels), while 4x quadruples the dimensions. For a 500x500 image, 4x gives you a crisp 2000x2000 result.
 
@@ -2773,7 +2773,7 @@ The result is that when you increase image resolution free through JPT AI, you g
 
 **5. Process the image.** Click the upscale button and let the AI work. Processing usually takes just a few seconds, depending on the image size and your chosen factor.
 
-**6. Preview and compare.** JPT AI shows you the enhanced result. Zoom in to check the detail — look at edges, text, and textures to confirm the improvement.
+**6. Preview and compare.** Pixel Shine shows you the enhanced result. Zoom in to check the detail — look at edges, text, and textures to confirm the improvement.
 
 **7. Download your file.** Save the high-resolution image directly to your device. No watermark, no sign-up gate, no hidden step. Your enlarged image is ready to use anywhere.`,
       },
@@ -2831,7 +2831,7 @@ The result is that when you increase image resolution free through JPT AI, you g
 
 **Standalone AI desktop apps.** Tools like Topaz Gigapixel produce excellent results but cost real money upfront and require installing heavy software that needs a capable computer.
 
-**JPT AI's online upscaler.** You get true AI reconstruction — the same category of technology as the paid desktop apps — running online, with the Normal tier free, unlimited, and watermark-free. There's nothing to install and no subscription. For most people, it hits the sweet spot of professional-grade quality with zero cost and zero friction, and the Pro AI tier is there when a job demands the absolute maximum.`,
+**Pixel Shine's online upscaler.** You get true AI reconstruction — the same category of technology as the paid desktop apps — running online, with the Normal tier free, unlimited, and watermark-free. There's nothing to install and no subscription. For most people, it hits the sweet spot of professional-grade quality with zero cost and zero friction, and the Pro AI tier is there when a job demands the absolute maximum.`,
       },
       {
         heading: "Who Uses Free Resolution Increasers and Why",
@@ -2842,7 +2842,7 @@ The result is that when you increase image resolution free through JPT AI, you g
       {
         heading: "Frequently Asked Questions",
         body: `**Can I really increase image resolution for free?**
-Yes. JPT AI's Normal upscaler is completely free, unlimited, and requires no sign-up. You can enlarge as many images as you want without paying or hitting a hidden usage cap.
+Yes. Pixel Shine's Normal upscaler is completely free, unlimited, and requires no sign-up. You can enlarge as many images as you want without paying or hitting a hidden usage cap.
 
 **How much can I enlarge an image?**
 Most tasks use 2x or 4x, which doubles or quadruples the dimensions. A 4x upscale turns a 500x500 image into 2000x2000. You can also run multiple passes for even larger output.
@@ -2851,10 +2851,10 @@ Most tasks use 2x or 4x, which doubles or quadruples the dimensions. A 4x upscal
 No — the opposite. Unlike basic resizing, which blurs images as it enlarges them, AI upscaling reconstructs detail, so results look sharper and clearer than a simple stretch.
 
 **Do I need to install any software?**
-No. JPT AI runs entirely online at sjpt.io. There's nothing to download or install, and it works on any device with an internet connection.
+No. Pixel Shine runs entirely online at sjpt.io. There's nothing to download or install, and it works on any device with an internet connection.
 
 **Are there watermarks on the final image?**
-No. JPT AI never adds watermarks. Your downloaded file is clean and ready to use for personal or commercial projects.
+No. Pixel Shine never adds watermarks. Your downloaded file is clean and ready to use for personal or commercial projects.
 
 **What image formats are supported?**
 Common formats including JPG, PNG, and WEBP are supported. You can upload directly without converting your file first.
@@ -2863,11 +2863,11 @@ Common formats including JPG, PNG, and WEBP are supported. You can upload direct
 Normal mode is free, unlimited, and great for everyday enlarging. Pro AI mode uses a more powerful model (running on credits) for maximum detail recovery, heavy restoration, and demanding portrait work.
 
 **Is my uploaded image kept private?**
-JPT AI processes your image for upscaling and lets you download the result. It's designed for quick, on-demand editing without building a public gallery of your uploads.`,
+Pixel Shine processes your image for upscaling and lets you download the result. It's designed for quick, on-demand editing without building a public gallery of your uploads.`,
       },
       {
         heading: "Key Takeaways",
-        body: `Increasing image resolution for free is no longer a compromise — thanks to AI super-resolution, you can enlarge photos while actually gaining sharpness and detail rather than losing it. The key is using a tool that reconstructs real detail instead of just stretching pixels, and JPT AI delivers exactly that with its free, unlimited Normal upscaler, watermark-free output, and no forced sign-up.
+        body: `Increasing image resolution for free is no longer a compromise — thanks to AI super-resolution, you can enlarge photos while actually gaining sharpness and detail rather than losing it. The key is using a tool that reconstructs real detail instead of just stretching pixels, and Pixel Shine delivers exactly that with its free, unlimited Normal upscaler, watermark-free output, and no forced sign-up.
 
 Whether you're prepping product photos, restoring family memories, or sharpening images for print and social media, the workflow takes seconds and costs nothing. Ready to see the difference for yourself? Head to sjpt.io and upscale your first image free today.`,
       },
@@ -2875,10 +2875,10 @@ Whether you're prepping product photos, restoring family memories, or sharpening
   },
   {
     slug: "ai-photo-enhancer-free-online",
-    title: "Best AI Photo Enhancer Free Online — JPT AI Review & Guide",
-    metaTitle: "AI Photo Enhancer Free Online | JPT AI",
-    metaDescription: "Discover the best free AI photo enhancer online. JPT AI uses deep learning to sharpen, upscale, and enhance photos — no watermark, no sign-up.",
-    excerpt: "JPT AI is one of the best free AI photo enhancers available online — offering professional-grade sharpening and upscaling without a paywall or watermark.",
+    title: "Best AI Photo Enhancer Free Online — Pixel Shine Review & Guide",
+    metaTitle: "AI Photo Enhancer Free Online | Pixel Shine",
+    metaDescription: "Discover the best free AI photo enhancer online. Pixel Shine uses deep learning to sharpen, upscale, and enhance photos — no watermark, no sign-up.",
+    excerpt: "Pixel Shine is one of the best free AI photo enhancers available online — offering professional-grade sharpening and upscaling without a paywall or watermark.",
     date: "2025-07-02",
     readTime: "11 min read",
     category: "Guide",
@@ -2890,7 +2890,7 @@ Whether you're prepping product photos, restoring family memories, or sharpening
       {
         body: `Finding a genuinely good AI photo enhancer free online can feel impossible. Search for one and you'll drown in tools that promise the world, then hit you with watermarks, forced sign-ups, resolution caps, or a paywall the moment you try to download. It's frustrating — especially when all you want is to make a photo look sharper without jumping through hoops.
 
-This review and guide cuts through the noise. We'll look at what actually makes a free photo enhancement tool worth using, how AI-based enhancement really works, and why JPT AI has become a favorite for people who want professional results without the friction. You'll get an honest breakdown of features, a step-by-step walkthrough, expert tips for the best output, and answers to the questions people ask most. Whether you're enhancing portraits, product shots, screenshots, or old scanned photos, this guide will help you understand exactly what a free AI photo enhancer can do — and how to get the crispest, most natural-looking results every single time, without spending a dime or handing over your email.`,
+This review and guide cuts through the noise. We'll look at what actually makes a free photo enhancement tool worth using, how AI-based enhancement really works, and why Pixel Shine has become a favorite for people who want professional results without the friction. You'll get an honest breakdown of features, a step-by-step walkthrough, expert tips for the best output, and answers to the questions people ask most. Whether you're enhancing portraits, product shots, screenshots, or old scanned photos, this guide will help you understand exactly what a free AI photo enhancer can do — and how to get the crispest, most natural-looking results every single time, without spending a dime or handing over your email.`,
       },
       {
         heading: "Why Most Free Photo Enhancers Disappoint",
@@ -2903,18 +2903,18 @@ This review and guide cuts through the noise. We'll look at what actually makes 
 Finally, quality varies wildly. Some free tools use dated algorithms that oversharpen, producing halos and plasticky skin instead of natural detail. The result looks processed, not improved. A truly good free enhancer needs to combine strong AI, no watermark, no forced login, and unlimited use — a rare combination that's exactly why the next section matters.`,
       },
       {
-        heading: "How JPT AI Delivers Genuinely Free Enhancement",
-        body: `JPT AI was built to remove the friction that makes other free enhancers frustrating. At its core is a **deep-learning enhancement engine** trained on millions of high-resolution images. Instead of crudely sharpening, it reconstructs realistic detail — the texture of skin, the crispness of edges, the definition of text — for results that look naturally better rather than artificially filtered.
+        heading: "How Pixel Shine Delivers Genuinely Free Enhancement",
+        body: `Pixel Shine was built to remove the friction that makes other free enhancers frustrating. At its core is a **deep-learning enhancement engine** trained on millions of high-resolution images. Instead of crudely sharpening, it reconstructs realistic detail — the texture of skin, the crispness of edges, the definition of text — for results that look naturally better rather than artificially filtered.
 
 The **Normal Upscaler** is the headline feature: free, unlimited, and available with no sign-up. You can enhance as many images as you want without creating an account, and every download comes **watermark-free at full resolution**. That combination alone puts it ahead of most competitors.
 
 For tougher jobs, the **Pro AI Upscaler** applies more aggressive reconstruction — ideal for faces, fine text, and heavily degraded images. It runs on credits, but new users get **5 free trials** to test the more powerful engine risk-free before deciding whether they need it.
 
-Beyond enhancement, JPT AI is a broader free platform: background remover, AI headshot generator, text-prompt photo editor, and creative AI effects all live in the same place. So once you're there to enhance a photo, you have a full toolkit at your fingertips. Everything runs online on desktop and mobile — no installation, no clutter, just fast results.`,
+Beyond enhancement, Pixel Shine is a broader free platform: background remover, AI headshot generator, text-prompt photo editor, and creative AI effects all live in the same place. So once you're there to enhance a photo, you have a full toolkit at your fingertips. Everything runs online on desktop and mobile — no installation, no clutter, just fast results.`,
       },
       {
         heading: "Step-by-Step: Using the Free AI Photo Enhancer",
-        body: `Here's how to enhance a photo with JPT AI from start to finish:
+        body: `Here's how to enhance a photo with Pixel Shine from start to finish:
 
 **1. Visit sjpt.io.** Open the site on your computer or phone. Navigate to the upscale / enhance tool.
 
@@ -2975,18 +2975,18 @@ Beyond enhancement, JPT AI is a broader free platform: background remover, AI he
 **Families and hobbyists** restore old scanned photographs, reviving faded memories before printing or sharing them. Across all these cases, the appeal is identical: professional-quality enhancement without cost, watermarks, or sign-up friction.`,
       },
       {
-        heading: "JPT AI vs. Other Free Enhancers",
-        body: `How does JPT AI stack up against the crowd of free photo enhancers?
+        heading: "Pixel Shine vs. Other Free Enhancers",
+        body: `How does Pixel Shine stack up against the crowd of free photo enhancers?
 
-**On watermarks**, JPT AI's Normal Upscaler downloads clean at full resolution, while many rivals stamp a logo across free results or reserve high-res downloads for paying users. That's a decisive advantage for anyone who needs a usable final image.
+**On watermarks**, Pixel Shine's Normal Upscaler downloads clean at full resolution, while many rivals stamp a logo across free results or reserve high-res downloads for paying users. That's a decisive advantage for anyone who needs a usable final image.
 
-**On access**, JPT AI requires no sign-up for the Normal tier. Competitors frequently demand account creation and email verification before you can even test the tool, adding friction and unwanted marketing.
+**On access**, Pixel Shine requires no sign-up for the Normal tier. Competitors frequently demand account creation and email verification before you can even test the tool, adding friction and unwanted marketing.
 
 **On limits**, the Normal Upscaler is unlimited. Many free tools cap you at one or two enhancements per day before pushing an upgrade.
 
-**On quality**, JPT AI's deep-learning engine reconstructs natural detail rather than crudely oversharpening, avoiding the halos and plasticky texture that plague older free tools. The Pro tier adds even stronger reconstruction for demanding images, with 5 free trials so you can compare.
+**On quality**, Pixel Shine's deep-learning engine reconstructs natural detail rather than crudely oversharpening, avoiding the halos and plasticky texture that plague older free tools. The Pro tier adds even stronger reconstruction for demanding images, with 5 free trials so you can compare.
 
-**On breadth**, JPT AI bundles a background remover, headshot generator, text-prompt editor, and creative effects alongside enhancement — a full free toolkit rather than a single-purpose gadget. For most users, this combination of no watermark, no login, unlimited use, and strong AI makes it the most practical free option available.`,
+**On breadth**, Pixel Shine bundles a background remover, headshot generator, text-prompt editor, and creative effects alongside enhancement — a full free toolkit rather than a single-purpose gadget. For most users, this combination of no watermark, no login, unlimited use, and strong AI makes it the most practical free option available.`,
       },
       {
         heading: "Who Uses Free AI Photo Enhancers",
@@ -2999,9 +2999,9 @@ Beyond enhancement, JPT AI is a broader free platform: background remover, AI he
       {
         heading: "Frequently Asked Questions",
         body: `**Is there a genuinely free AI photo enhancer online?**
-Yes. JPT AI's Normal Upscaler is free, unlimited, and requires no sign-up, with no watermark on your downloads. It's one of the few tools that's free at the finish line, not just the preview.
+Yes. Pixel Shine's Normal Upscaler is free, unlimited, and requires no sign-up, with no watermark on your downloads. It's one of the few tools that's free at the finish line, not just the preview.
 
-**Does JPT AI put a watermark on enhanced photos?**
+**Does Pixel Shine put a watermark on enhanced photos?**
 No. The Normal Upscaler downloads at full resolution with no watermark. Even the free tier gives you a clean, usable image.
 
 **Do I need to create an account?**
@@ -3017,25 +3017,25 @@ Yes, especially with the Pro engine, which reconstructs fine facial details like
 Normal is free, unlimited, and great for everyday photos. Pro applies stronger reconstruction for faces, fine text, and degraded images, using credits with 5 free trials to start.
 
 **Does it work on mobile?**
-Yes. JPT AI runs on your phone, so you can enhance photos on the go with no app to install.
+Yes. Pixel Shine runs on your phone, so you can enhance photos on the go with no app to install.
 
-**Is JPT AI only for enhancement?**
+**Is Pixel Shine only for enhancement?**
 No. It also includes a free background remover, AI headshot generator, text-prompt photo editor, and creative AI effects, all in one platform.`,
       },
       {
         heading: "Key Takeaways",
-        body: `A great free AI photo enhancer should combine strong AI, no watermark, no forced login, and unlimited use — and JPT AI's Normal Upscaler delivers exactly that. It reconstructs natural detail, sharpens edges, and reduces noise in seconds, then lets you download clean at full resolution. For demanding images like portraits and fine text, the Pro engine goes further, with 5 free trials to test it.
+        body: `A great free AI photo enhancer should combine strong AI, no watermark, no forced login, and unlimited use — and Pixel Shine's Normal Upscaler delivers exactly that. It reconstructs natural detail, sharpens edges, and reduces noise in seconds, then lets you download clean at full resolution. For demanding images like portraits and fine text, the Pro engine goes further, with 5 free trials to test it.
 
-Unlike many rivals that disappoint at the download button, JPT AI stays genuinely free where it counts, and bundles a whole toolkit alongside enhancement. Try the best free AI photo enhancer for yourself at sjpt.io and see the difference on your next photo.`,
+Unlike many rivals that disappoint at the download button, Pixel Shine stays genuinely free where it counts, and bundles a whole toolkit alongside enhancement. Try the best free AI photo enhancer for yourself at sjpt.io and see the difference on your next photo.`,
       },
     ],
   },
   {
     slug: "sharpen-blurry-image-online-free",
     title: "Sharpen a Blurry Image Online for Free — AI Sharpening Guide",
-    metaTitle: "Sharpen Blurry Image Online Free | JPT AI",
-    metaDescription: "Sharpen blurry images online for free with JPT AI. AI-powered sharpening restores edge detail and clarity without artifacts — try it now.",
-    excerpt: "Sharpening a blurry image used to mean fighting with sliders and risking halo artifacts. JPT AI\'s AI sharpening does it automatically, for free, in seconds.",
+    metaTitle: "Sharpen Blurry Image Online Free | Pixel Shine",
+    metaDescription: "Sharpen blurry images online for free with Pixel Shine. AI-powered sharpening restores edge detail and clarity without artifacts — try it now.",
+    excerpt: "Sharpening a blurry image used to mean fighting with sliders and risking halo artifacts. Pixel Shine\'s AI sharpening does it automatically, for free, in seconds.",
     date: "2025-07-10",
     readTime: "11 min read",
     category: "Tutorial",
@@ -3047,7 +3047,7 @@ Unlike many rivals that disappoint at the download button, JPT AI stays genuinel
       {
         body: `If you want to sharpen a blurry image online for free, you're in good company — soft, unclear photos are one of the most common complaints among smartphone shooters, and the good news is that fixing them has never been easier. A decade ago, sharpening a fuzzy image meant wrestling with unsharp masks and high-pass filters in professional software. Today, an AI image sharpener can analyze your photo and restore crisp detail automatically, in seconds, online.
 
-This guide walks you through everything you need to know to sharpen a photo online with confidence. You'll learn why images lose sharpness, how AI-powered sharpening differs from the old contrast-based approach, and exactly how to use JPT AI's free image sharpening tool — which adds no watermark and doesn't require a sign-up for its free mode. Whether you're prepping a product listing, restoring an old photo, or just polishing a shot before you post it, you'll come away knowing how to get the sharpest possible result without spending a cent.`,
+This guide walks you through everything you need to know to sharpen a photo online with confidence. You'll learn why images lose sharpness, how AI-powered sharpening differs from the old contrast-based approach, and exactly how to use Pixel Shine's free image sharpening tool — which adds no watermark and doesn't require a sign-up for its free mode. Whether you're prepping a product listing, restoring an old photo, or just polishing a shot before you post it, you'll come away knowing how to get the sharpest possible result without spending a cent.`,
       },
       {
         heading: "Why Images Lose Their Sharpness",
@@ -3062,12 +3062,12 @@ This guide walks you through everything you need to know to sharpen a photo onli
 **Low resolution and heavy cropping** stretch limited pixels across a larger display, making edges look soft and blocky. Old scans, screenshots, and heavily zoomed shots all suffer here. Because these causes overlap, most soft images have several issues at once — which is exactly why a smart AI sharpener that addresses them together outperforms a single sharpening slider.`,
       },
       {
-        heading: "How JPT AI's Image Sharpener Works",
-        body: `JPT AI's approach to sharpening is fundamentally smarter than the contrast tricks built into older editors. Traditional sharpening just boosts the contrast along edges the software can already see — it makes an image *look* punchier but adds no real detail, and overdoing it produces ugly halos and grain.
+        heading: "How Pixel Shine's Image Sharpener Works",
+        body: `Pixel Shine's approach to sharpening is fundamentally smarter than the contrast tricks built into older editors. Traditional sharpening just boosts the contrast along edges the software can already see — it makes an image *look* punchier but adds no real detail, and overdoing it produces ugly halos and grain.
 
-JPT AI instead uses a trained neural network that recognizes what objects and textures *should* look like when they're sharp. When you upload a soft photo, the AI reconstructs believable fine detail — the strands in someone's hair, the texture of fabric, the crisp edge of text — based on patterns learned from millions of high-quality images. It also upscales the image, adding resolution while it sharpens, so the result is both crisper and larger.
+Pixel Shine instead uses a trained neural network that recognizes what objects and textures *should* look like when they're sharp. When you upload a soft photo, the AI reconstructs believable fine detail — the strands in someone's hair, the texture of fabric, the crisp edge of text — based on patterns learned from millions of high-quality images. It also upscales the image, adding resolution while it sharpens, so the result is both crisper and larger.
 
-The **Normal mode is free, unlimited, and requires no account**, which covers the vast majority of everyday sharpening needs. For images that are badly degraded or destined for large prints, **Pro AI mode** applies a heavier reconstruction model using credits, and new users receive 5 free trials to test it. In every case, JPT AI outputs your sharpened image with no watermark — clean and ready to use immediately.`,
+The **Normal mode is free, unlimited, and requires no account**, which covers the vast majority of everyday sharpening needs. For images that are badly degraded or destined for large prints, **Pro AI mode** applies a heavier reconstruction model using credits, and new users receive 5 free trials to test it. In every case, Pixel Shine outputs your sharpened image with no watermark — clean and ready to use immediately.`,
       },
       {
         heading: "Step-by-Step: Sharpen Your Image for Free",
@@ -3075,7 +3075,7 @@ The **Normal mode is free, unlimited, and requires no account**, which covers th
 
 **1. Open the AI Upscaler.** Head to sjpt.io and launch the upscaler tool. The free Normal mode needs no sign-up, so you can begin right away.
 
-**2. Upload your soft image.** Drag and drop your file or click to browse. JPT AI supports common formats like JPG, PNG, and WebP. Use the best-quality source you have — a direct-from-camera file beats a re-shared copy every time.
+**2. Upload your soft image.** Drag and drop your file or click to browse. Pixel Shine supports common formats like JPG, PNG, and WebP. Use the best-quality source you have — a direct-from-camera file beats a re-shared copy every time.
 
 **3. Pick your sharpening mode.** Choose Normal for free, unlimited sharpening that handles most photos beautifully. For severely soft images or professional print work, select Pro AI mode, which draws on your credits (5 free trials for new users).
 
@@ -3127,7 +3127,7 @@ The **Normal mode is free, unlimited, and requires no account**, which covers th
 
 **Real estate listings.** Interior shots taken in dim rooms often come out soft; sharpening makes rooms look crisp and inviting to prospective buyers.
 
-**Documents and study materials.** A soft photo of a whiteboard, textbook page, or handwritten note becomes legible again after sharpening — invaluable for students and remote workers capturing information on the fly. Across all of these, JPT AI's free Normal mode delivers watermark-free results without any sign-up.`,
+**Documents and study materials.** A soft photo of a whiteboard, textbook page, or handwritten note becomes legible again after sharpening — invaluable for students and remote workers capturing information on the fly. Across all of these, Pixel Shine's free Normal mode delivers watermark-free results without any sign-up.`,
       },
       {
         heading: "AI Sharpening vs. Manual and App-Based Methods",
@@ -3135,7 +3135,7 @@ The **Normal mode is free, unlimited, and requires no account**, which covers th
 
 **Basic app filters** on your phone offer a quick sharpness slider, but they use the old contrast-boosting method — they can't add genuine detail, and pushing them hard produces obvious halos and noise. They're fine for a subtle touch-up, not for rescuing a soft image.
 
-**AI-based sharpening** reconstructs real detail rather than faking it, which is why it recovers texture and legibility the other two methods can't. JPT AI delivers this online for free, with no watermark and no account for the Normal mode, plus optional Pro power via credits. For the vast majority of people, that combination of quality, cost, and convenience beats both the professional-software route and the basic-filter shortcut. The only time you'd reach for Photoshop instead is when you need pixel-level manual control over a specific region.`,
+**AI-based sharpening** reconstructs real detail rather than faking it, which is why it recovers texture and legibility the other two methods can't. Pixel Shine delivers this online for free, with no watermark and no account for the Normal mode, plus optional Pro power via credits. For the vast majority of people, that combination of quality, cost, and convenience beats both the professional-software route and the basic-filter shortcut. The only time you'd reach for Photoshop instead is when you need pixel-level manual control over a specific region.`,
       },
       {
         heading: "Who Relies on AI Image Sharpening",
@@ -3144,10 +3144,10 @@ The **Normal mode is free, unlimited, and requires no account**, which covers th
       {
         heading: "Frequently Asked Questions",
         body: `**Can I sharpen a blurry image online for free?**
-Yes. JPT AI's Normal mode sharpens images completely free, with no limits and no sign-up. Credits are only needed for the heavier Pro AI mode, and new users get 5 free Pro trials.
+Yes. Pixel Shine's Normal mode sharpens images completely free, with no limits and no sign-up. Credits are only needed for the heavier Pro AI mode, and new users get 5 free Pro trials.
 
 **Will my sharpened image have a watermark?**
-No. JPT AI never watermarks your output. Every image you download is clean and ready to use.
+No. Pixel Shine never watermarks your output. Every image you download is clean and ready to use.
 
 **Do I have to create an account to sharpen an image?**
 Not for the free Normal mode. You can upload and sharpen without signing up, which is perfect for quick, one-off jobs.
@@ -3156,7 +3156,7 @@ Not for the free Normal mode. You can upload and sharpen without signing up, whi
 A standard filter just boosts edge contrast, which can create halos and noise. AI sharpening reconstructs genuine detail based on patterns from millions of sharp images, producing a far more natural, higher-quality result.
 
 **What image formats can I upload?**
-JPT AI supports common formats including JPG, PNG, and WebP. For the best outcome, upload the highest-quality source file you have.
+Pixel Shine supports common formats including JPG, PNG, and WebP. For the best outcome, upload the highest-quality source file you have.
 
 **Can I sharpen and enlarge an image at the same time?**
 Yes. The tool sharpens while it upscales, so you can produce a crisper image that's also 2x or 4x larger — great for prints.
@@ -3169,7 +3169,7 @@ Re-run the image at a lower scale, such as 2x instead of 4x. A gentler pass give
       },
       {
         heading: "Key Takeaways",
-        body: `Sharpening a blurry image online is now fast, free, and genuinely effective thanks to AI. Instead of faking crispness by boosting edge contrast, modern tools reconstruct real detail — recovering texture, legibility, and clarity that older sharpening filters never could. JPT AI delivers this online with its free Normal mode: no watermark, no forced sign-up, and no usage caps, plus 5 free Pro trials for tougher images.
+        body: `Sharpening a blurry image online is now fast, free, and genuinely effective thanks to AI. Instead of faking crispness by boosting edge contrast, modern tools reconstruct real detail — recovering texture, legibility, and clarity that older sharpening filters never could. Pixel Shine delivers this online with its free Normal mode: no watermark, no forced sign-up, and no usage caps, plus 5 free Pro trials for tougher images.
 
 The workflow couldn't be simpler — upload, pick your mode and scale, and download a crisp result in under a minute. Whether you're polishing a product shot, restoring an old photo, or salvaging a note, your soft image can look professional again. Try the free AI image sharpener at sjpt.io today.`,
       },
@@ -3178,9 +3178,9 @@ The workflow couldn't be simpler — upload, pick your mode and scale, and downl
   {
     slug: "upscale-image-4k-free-online",
     title: "Upscale Images to 4K Free Online — AI Super-Resolution Guide",
-    metaTitle: "Upscale Image to 4K Free Online | JPT AI",
-    metaDescription: "Upscale any image to 4K resolution free online with JPT AI. AI super-resolution produces sharp, detailed 4K output from any photo — no watermark.",
-    excerpt: "Want your images in stunning 4K? JPT AI\'s free online upscaler uses AI super-resolution to enlarge photos to 4K quality without pixelation or blur.",
+    metaTitle: "Upscale Image to 4K Free Online | Pixel Shine",
+    metaDescription: "Upscale any image to 4K resolution free online with Pixel Shine. AI super-resolution produces sharp, detailed 4K output from any photo — no watermark.",
+    excerpt: "Want your images in stunning 4K? Pixel Shine\'s free online upscaler uses AI super-resolution to enlarge photos to 4K quality without pixelation or blur.",
     date: "2025-07-18",
     readTime: "11 min read",
     category: "Guide",
@@ -3194,7 +3194,7 @@ The workflow couldn't be simpler — upload, pick your mode and scale, and downl
 
 The challenge is that most photos simply weren't captured at 4K. A social media download, an older camera shot, or a cropped image often lands well below that threshold. Stretching it with a basic resizer only produces a bigger, blurrier version. What you actually need is AI super-resolution: technology that intelligently reconstructs detail as it enlarges, so the final image looks genuinely sharp at 4K rather than pixelated.
 
-In this guide, we'll cover exactly how AI 4K upscaling works, how to use JPT AI as a free 4K image upscaler with no watermarks and no mandatory sign-up, and the techniques that separate a crisp result from a mushy one. By the end, you'll be able to take an ordinary image and turn it into a clean, ultra-HD version ready for any 4K screen or large print.`,
+In this guide, we'll cover exactly how AI 4K upscaling works, how to use Pixel Shine as a free 4K image upscaler with no watermarks and no mandatory sign-up, and the techniques that separate a crisp result from a mushy one. By the end, you'll be able to take an ordinary image and turn it into a clean, ultra-HD version ready for any 4K screen or large print.`,
       },
       {
         heading: "Why Images Fall Short of 4K Resolution",
@@ -3209,18 +3209,18 @@ In this guide, we'll cover exactly how AI 4K upscaling works, how to use JPT AI 
 The result is that when you place these images on a 4K display, print them large, or use them as ultra-HD wallpapers, they look disappointing. Traditional resizing can't fix this because it has no way to add real detail — it can only spread existing pixels thinner. Bridging that gap to genuine 4K clarity requires AI that can reconstruct detail, which is exactly what dedicated super-resolution tools provide.`,
       },
       {
-        heading: "How JPT AI Delivers True 4K Upscaling",
-        body: `JPT AI's upscaler is designed to take undersized images and bring them up to 4K-class resolution with real, reconstructed detail. Rather than stretching pixels, its deep-learning model — trained on vast numbers of low-and-high-resolution image pairs — predicts the fine structure that should exist at the larger size, rebuilding edges, textures, and surfaces so the enlarged image looks naturally sharp.
+        heading: "How Pixel Shine Delivers True 4K Upscaling",
+        body: `Pixel Shine's upscaler is designed to take undersized images and bring them up to 4K-class resolution with real, reconstructed detail. Rather than stretching pixels, its deep-learning model — trained on vast numbers of low-and-high-resolution image pairs — predicts the fine structure that should exist at the larger size, rebuilding edges, textures, and surfaces so the enlarged image looks naturally sharp.
 
 **Reaching 4K with upscale factors.** A 4x upscale multiplies each dimension by four, so a 1000x563 image becomes 4000x2252 — comfortably above the 4K threshold. Even a modest 1080p-width source can be lifted to full 4K and beyond with the right factor.
 
 **Free Normal mode** handles most 4K upscaling needs — wallpapers, display images, and general enhancement — completely free, unlimited, and with no sign-up required. For the most demanding work, such as detailed portraits or heavily degraded sources destined for large 4K print, **Pro AI mode** applies a more powerful, credit-based model for maximum detail recovery.
 
-**No watermarks, no gatekeeping.** JPT AI returns a clean 4K-ready file every time, with no logo stamped across it and no forced account for Normal upscaling. That makes the output genuinely usable for wallpapers, client work, and print. New users also receive five free trials to sample the Pro AI quality, so you can find the right tier for your ultra-HD project without commitment.`,
+**No watermarks, no gatekeeping.** Pixel Shine returns a clean 4K-ready file every time, with no logo stamped across it and no forced account for Normal upscaling. That makes the output genuinely usable for wallpapers, client work, and print. New users also receive five free trials to sample the Pro AI quality, so you can find the right tier for your ultra-HD project without commitment.`,
       },
       {
         heading: "Step-by-Step: Upscaling an Image to 4K Free",
-        body: `Here's how to take any image up to 4K resolution using JPT AI online.
+        body: `Here's how to take any image up to 4K resolution using Pixel Shine online.
 
 **1. Go to sjpt.io and open the Upscale tool.** The free Normal upscaler needs no account, so you can start immediately.
 
@@ -3292,7 +3292,7 @@ The result is that when you place these images on a 4K display, print them large
 
 **Standalone AI desktop apps** like Topaz Gigapixel produce excellent 4K results but cost significant money and require installation and processing power.
 
-**JPT AI's online 4K upscaler** offers the same category of AI super-resolution as those premium desktop tools, running free online through the Normal tier with no watermark and no mandatory sign-up. When a 4K job demands the absolute maximum — large prints, critical portraits — the Pro AI mode delivers top-tier reconstruction on credits, with five free trials to test it. For most people wanting genuine 4K clarity without cost or complexity, this is the most practical route available.`,
+**Pixel Shine's online 4K upscaler** offers the same category of AI super-resolution as those premium desktop tools, running free online through the Normal tier with no watermark and no mandatory sign-up. When a 4K job demands the absolute maximum — large prints, critical portraits — the Pro AI mode delivers top-tier reconstruction on credits, with five free trials to test it. For most people wanting genuine 4K clarity without cost or complexity, this is the most practical route available.`,
       },
       {
         heading: "Who Uses 4K Upscaling and Why",
@@ -3303,22 +3303,22 @@ The result is that when you place these images on a 4K display, print them large
       {
         heading: "Frequently Asked Questions",
         body: `**Can I upscale an image to 4K for free online?**
-Yes. JPT AI's Normal upscaler is free, unlimited, and requires no sign-up. Using a 4x factor on a source around 1000 pixels wide takes you comfortably into 4K resolution.
+Yes. Pixel Shine's Normal upscaler is free, unlimited, and requires no sign-up. Using a 4x factor on a source around 1000 pixels wide takes you comfortably into 4K resolution.
 
 **What exactly is 4K resolution?**
 4K refers to roughly 3840x2160 pixels — about 8.3 million total, four times the pixel count of 1080p HD. It's the standard for modern high-end monitors, TVs, and premium print.
 
 **Will my upscaled 4K image look sharp or just bigger?**
-Sharp. Unlike basic resizers that only stretch pixels, JPT AI's AI reconstructs real detail, so the 4K result looks genuinely crisp rather than merely enlarged.
+Sharp. Unlike basic resizers that only stretch pixels, Pixel Shine's AI reconstructs real detail, so the 4K result looks genuinely crisp rather than merely enlarged.
 
 **What source size do I need to reach 4K?**
 A source around 1000 pixels wide reaches 4K at 4x, while a 1920-pixel source hits exactly 3840 (4K width) at 2x. Larger sources give the best results.
 
-**Does JPT AI add watermarks to 4K images?**
+**Does Pixel Shine add watermarks to 4K images?**
 No. Every downloaded file is clean and watermark-free, ready for wallpapers, print, or commercial use.
 
 **Do I need to install software for 4K upscaling?**
-No. JPT AI runs entirely online at sjpt.io, on any device, with nothing to download.
+No. Pixel Shine runs entirely online at sjpt.io, on any device, with nothing to download.
 
 **When should I use Pro AI mode for 4K?**
 Use Pro AI mode for large 4K prints, critical portraits, or heavily degraded sources where you need maximum detail recovery. New users get five free trials to test it.
@@ -3328,7 +3328,7 @@ Yes. With higher factors or additional passes from the source, you can push reso
       },
       {
         heading: "Key Takeaways",
-        body: `Upscaling an image to 4K free online is entirely achievable when you use real AI super-resolution instead of a basic resizer. The difference matters: AI reconstructs genuine detail so your image is sharp at 4K, not just larger and blurrier. JPT AI makes this simple with a free, unlimited Normal upscaler, no watermarks, no mandatory sign-up, and a Pro AI mode for the most demanding ultra-HD jobs.
+        body: `Upscaling an image to 4K free online is entirely achievable when you use real AI super-resolution instead of a basic resizer. The difference matters: AI reconstructs genuine detail so your image is sharp at 4K, not just larger and blurrier. Pixel Shine makes this simple with a free, unlimited Normal upscaler, no watermarks, no mandatory sign-up, and a Pro AI mode for the most demanding ultra-HD jobs.
 
 Whether you're creating 4K wallpapers, prepping large prints, or filling ultra-HD displays, the process takes seconds. Try it now at sjpt.io and upscale your first image to 4K free.`,
       },
@@ -3337,9 +3337,9 @@ Whether you're creating 4K wallpapers, prepping large prints, or filling ultra-H
   {
     slug: "improve-photo-quality-free",
     title: "How to Improve Photo Quality for Free — Complete AI Guide",
-    metaTitle: "Improve Photo Quality Free | JPT AI",
-    metaDescription: "Learn how to improve photo quality for free using AI. Fix resolution, sharpness, noise, and color in one step with JPT AI — no software needed.",
-    excerpt: "Improving photo quality doesn\'t have to cost anything. JPT AI\'s free AI-powered tools fix resolution, sharpness, and color in seconds — no expertise required.",
+    metaTitle: "Improve Photo Quality Free | Pixel Shine",
+    metaDescription: "Learn how to improve photo quality for free using AI. Fix resolution, sharpness, noise, and color in one step with Pixel Shine — no software needed.",
+    excerpt: "Improving photo quality doesn\'t have to cost anything. Pixel Shine\'s free AI-powered tools fix resolution, sharpness, and color in seconds — no expertise required.",
     date: "2025-07-26",
     readTime: "11 min read",
     category: "Guide",
@@ -3351,7 +3351,7 @@ Whether you're creating 4K wallpapers, prepping large prints, or filling ultra-H
       {
         body: `Learning how to improve photo quality free used to mean either mastering complicated editing software or accepting blurry, pixelated results. Not anymore. AI photo enhancement has completely changed what's possible, letting anyone transform low-quality images into sharp, professional-looking photos in a matter of seconds — no experience, no subscription, and no watermark required.
 
-Maybe you snapped a great moment but your phone camera struggled in low light. Maybe you're a seller who needs cleaner product shots, or you found the perfect old photo that's just too soft to print. Whatever the reason, this complete guide walks you through improving photo quality for free using AI. You'll learn why photos lose quality, how AI reconstructs missing detail, a precise step-by-step workflow, and the pro tricks that separate amateur results from professional ones. We'll also cover the mistakes that quietly ruin your images and how to avoid them. By the end, you'll have a reliable, repeatable process for making any photo look noticeably better — using JPT AI's free photo quality enhancer that works online.`,
+Maybe you snapped a great moment but your phone camera struggled in low light. Maybe you're a seller who needs cleaner product shots, or you found the perfect old photo that's just too soft to print. Whatever the reason, this complete guide walks you through improving photo quality for free using AI. You'll learn why photos lose quality, how AI reconstructs missing detail, a precise step-by-step workflow, and the pro tricks that separate amateur results from professional ones. We'll also cover the mistakes that quietly ruin your images and how to avoid them. By the end, you'll have a reliable, repeatable process for making any photo look noticeably better — using Pixel Shine's free photo quality enhancer that works online.`,
       },
       {
         heading: "Why Photos Lose Quality Over Time",
@@ -3364,12 +3364,12 @@ Maybe you snapped a great moment but your phone camera struggled in low light. M
 Finally, **repeated editing and re-saving** in lossy formats like JPG compounds the damage. Each save discards a little more data. For decades, fixing these problems meant painstaking manual work — noise reduction plugins, sharpening masks, and careful upscaling. AI now automates all of it, using learned patterns to rebuild the detail that was lost.`,
       },
       {
-        heading: "How JPT AI Improves Photo Quality",
-        body: `JPT AI tackles low-quality photos with deep-learning models trained on millions of high-resolution images. Rather than crudely stretching pixels, the AI **analyzes and reconstructs** what fine detail should look like — smoothing noise while sharpening genuine edges, so the result looks natural instead of artificially processed.
+        heading: "How Pixel Shine Improves Photo Quality",
+        body: `Pixel Shine tackles low-quality photos with deep-learning models trained on millions of high-resolution images. Rather than crudely stretching pixels, the AI **analyzes and reconstructs** what fine detail should look like — smoothing noise while sharpening genuine edges, so the result looks natural instead of artificially processed.
 
 The platform gives you two options. The **Normal Upscaler** is free, unlimited, and needs no account. It's the everyday workhorse for improving social photos, screenshots, and general images. The **Pro AI Upscaler** uses credits and applies more powerful reconstruction, ideal for faces, fine text, and images that are heavily degraded. New users get **5 free trials** to experience the Pro engine before spending anything.
 
-Two things make JPT AI stand out among free tools. First, **no watermarks** — your improved photo downloads clean, at full resolution. Second, **no mandatory sign-in** for the Normal tier, so there's zero friction between you and a better photo. Many competing tools force registration or stamp a logo across your image.
+Two things make Pixel Shine stand out among free tools. First, **no watermarks** — your improved photo downloads clean, at full resolution. Second, **no mandatory sign-in** for the Normal tier, so there's zero friction between you and a better photo. Many competing tools force registration or stamp a logo across your image.
 
 Everything runs online on desktop or mobile, with no installation. Typical processing takes under 10 seconds, making it practical even when you have a batch of photos to fix.`,
       },
@@ -3377,7 +3377,7 @@ Everything runs online on desktop or mobile, with no installation. Typical proce
         heading: "Step-by-Step: How to Improve Photo Quality Free",
         body: `Here's the exact workflow to make any photo look better:
 
-**1. Go to JPT AI.** Open sjpt.io and head to the photo enhancement / upscale tool. It works on any device — no app to install.
+**1. Go to Pixel Shine.** Open sjpt.io and head to the photo enhancement / upscale tool. It works on any device — no app to install.
 
 **2. Upload your photo.** Drag and drop the image or click to browse your files. JPG, PNG, and WebP are all supported. With the Normal Upscaler, you can begin instantly without creating an account.
 
@@ -3458,16 +3458,16 @@ Everything runs online on desktop or mobile, with no installation. Typical proce
       {
         heading: "Frequently Asked Questions",
         body: `**How can I improve photo quality for free?**
-Use an AI photo enhancer like JPT AI's Normal Upscaler. It's free, unlimited, and requires no sign-up. Upload your photo, choose a scale factor, click enhance, and download the sharper result with no watermark — all in about a minute.
+Use an AI photo enhancer like Pixel Shine's Normal Upscaler. It's free, unlimited, and requires no sign-up. Upload your photo, choose a scale factor, click enhance, and download the sharper result with no watermark — all in about a minute.
 
 **Does AI actually make photos clearer or just bigger?**
 Both. AI enhancement reconstructs fine detail and reduces noise while increasing resolution, so photos genuinely look clearer and sharper, not just enlarged.
 
-**Is JPT AI really free with no watermark?**
+**Is Pixel Shine really free with no watermark?**
 Yes. The Normal Upscaler is free and unlimited with no watermark and no forced login. The Pro AI engine uses credits, but new users receive 5 free trials to try it.
 
 **Can I improve photo quality on my phone?**
-Absolutely. JPT AI runs on your phone, so you can enhance photos directly from your phone without installing an app.
+Absolutely. Pixel Shine runs on your phone, so you can enhance photos directly from your phone without installing an app.
 
 **Will enhancing fix a blurry photo?**
 AI can significantly reduce mild blur and sharpen soft images. Severe motion blur is harder to fully reverse, but the result is almost always noticeably better than the original.
@@ -3483,7 +3483,7 @@ No. The AI handles sharpening, noise reduction, and upscaling automatically. You
       },
       {
         heading: "Key Takeaways",
-        body: `Improving photo quality for free is no longer a compromise. With JPT AI's Normal Upscaler, you can sharpen, denoise, and upscale any photo in seconds — no cost, no watermark, and no forced sign-up. For portraits, fine text, or heavily degraded shots, the Pro AI engine delivers even stronger results, with 5 free trials for new users.
+        body: `Improving photo quality for free is no longer a compromise. With Pixel Shine's Normal Upscaler, you can sharpen, denoise, and upscale any photo in seconds — no cost, no watermark, and no forced sign-up. For portraits, fine text, or heavily degraded shots, the Pro AI engine delivers even stronger results, with 5 free trials for new users.
 
 Remember the essentials: work from the best original, enhance before editing, avoid over-scaling, and always check the before/after preview. Whether you're selling products, posting content, or preserving family memories, a better photo is now just one click away. Try it yourself and improve your first photo free at sjpt.io.`,
       },
@@ -3492,9 +3492,9 @@ Remember the essentials: work from the best original, enhance before editing, av
   {
     slug: "unblur-photo-online-free",
     title: "Unblur a Photo Online for Free — AI Deblur Tool Guide",
-    metaTitle: "Unblur Photo Online Free | JPT AI",
-    metaDescription: "Unblur photos online for free with JPT AI. AI deblurring restores sharpness and clarity to blurry images in seconds — no watermark, no software.",
-    excerpt: "Unblurring a photo is one of the most-requested photo fixes online. JPT AI\'s free AI deblur tool can restore clarity to soft or motion-blurred images in seconds.",
+    metaTitle: "Unblur Photo Online Free | Pixel Shine",
+    metaDescription: "Unblur photos online for free with Pixel Shine. AI deblurring restores sharpness and clarity to blurry images in seconds — no watermark, no software.",
+    excerpt: "Unblurring a photo is one of the most-requested photo fixes online. Pixel Shine\'s free AI deblur tool can restore clarity to soft or motion-blurred images in seconds.",
     date: "2025-08-04",
     readTime: "11 min read",
     category: "Tutorial",
@@ -3506,7 +3506,7 @@ Remember the essentials: work from the best original, enhance before editing, av
       {
         body: `The ability to unblur a photo online for free has quietly become one of the most useful tricks in anyone's digital toolkit. We've all been there: you capture a once-in-a-lifetime moment, glance at the screen, and realize the shot came out soft. In the past, that photo was simply lost. Today, an AI deblur tool can analyze the image, reconstruct the detail that blur destroyed, and hand you back a sharp, usable picture — often in under a minute, and without costing you anything.
 
-This guide is your complete walkthrough for how to remove blur from a photo using AI. You'll learn what causes different kinds of blur, how modern deblurring actually works under the hood, and how to use JPT AI's free photo unblur tool step by step. Best of all, JPT AI adds no watermark and doesn't force a sign-up for its free mode — so you can rescue that soft memory, sharpen a product shot, or clean up a scanned print without jumping through hoops. Let's turn your blurry photos back into keepers.`,
+This guide is your complete walkthrough for how to remove blur from a photo using AI. You'll learn what causes different kinds of blur, how modern deblurring actually works under the hood, and how to use Pixel Shine's free photo unblur tool step by step. Best of all, Pixel Shine adds no watermark and doesn't force a sign-up for its free mode — so you can rescue that soft memory, sharpen a product shot, or clean up a scanned print without jumping through hoops. Let's turn your blurry photos back into keepers.`,
       },
       {
         heading: "What Causes a Photo to Blur",
@@ -3523,12 +3523,12 @@ This guide is your complete walkthrough for how to remove blur from a photo usin
 Most blurry photos combine a couple of these. The encouraging news is that AI deblurring is especially strong on focus softness, low-light grain, and compression damage — the most common causes by far — and can meaningfully improve mild motion blur too.`,
       },
       {
-        heading: "How JPT AI's Deblur Tool Reconstructs Detail",
-        body: `JPT AI's deblur engine doesn't just crank up a sharpening slider — that old approach only exaggerates edges the software can already see, adding halos and noise without recovering true detail. Instead, JPT AI uses an AI model trained on millions of sharp images to *predict and rebuild* the information that blur erased.
+        heading: "How Pixel Shine's Deblur Tool Reconstructs Detail",
+        body: `Pixel Shine's deblur engine doesn't just crank up a sharpening slider — that old approach only exaggerates edges the software can already see, adding halos and noise without recovering true detail. Instead, Pixel Shine uses an AI model trained on millions of sharp images to *predict and rebuild* the information that blur erased.
 
 When you upload a soft photo, the AI examines it region by region, recognizing faces, textures, and structures, then reconstructs plausible fine detail — the catchlight in an eye, the grain of wood, the edge of a letter. Because it's working from learned patterns rather than guesswork, the results look natural rather than artificially crunchy. At the same time, it upscales the image, so you get a picture that's both sharper and larger than the original.
 
-The **Normal mode is free, unlimited, and requires no sign-up**, covering the everyday deblurring most people need. For severely damaged photos or professional-grade output, **Pro AI mode** applies a more powerful model using credits, with 5 free trials for new users to test. And no matter which mode you use, JPT AI never watermarks your result — the deblurred photo is clean and yours to keep.`,
+The **Normal mode is free, unlimited, and requires no sign-up**, covering the everyday deblurring most people need. For severely damaged photos or professional-grade output, **Pro AI mode** applies a more powerful model using credits, with 5 free trials for new users to test. And no matter which mode you use, Pixel Shine never watermarks your result — the deblurred photo is clean and yours to keep.`,
       },
       {
         heading: "Step-by-Step: How to Unblur a Photo Online",
@@ -3536,7 +3536,7 @@ The **Normal mode is free, unlimited, and requires no sign-up**, covering the ev
 
 **1. Launch the deblur tool.** Visit sjpt.io and open the AI Upscaler. Since the free Normal mode requires no account, you can start immediately with no barriers.
 
-**2. Upload your blurry photo.** Drag it into the upload zone or click to browse. JPT AI supports JPG, PNG, WebP, and other common formats. Always upload the best-quality version you have rather than a re-shared or screenshotted copy.
+**2. Upload your blurry photo.** Drag it into the upload zone or click to browse. Pixel Shine supports JPG, PNG, WebP, and other common formats. Always upload the best-quality version you have rather than a re-shared or screenshotted copy.
 
 **3. Select a deblur mode.** Pick Normal for free, unlimited deblurring that handles most soft photos well. For heavily blurred or professionally critical images, choose Pro AI mode, which uses credits (new users get 5 free trials).
 
@@ -3588,7 +3588,7 @@ The **Normal mode is free, unlimited, and requires no sign-up**, covering the ev
 
 **Social media and content creation.** Creators unblur great-but-soft shots before posting to keep their feed looking polished.
 
-**Legibility rescue.** A blurry photo of a receipt, whiteboard, license plate, or handwritten note can become readable again after deblurring — a genuine lifesaver for work and study. In every one of these cases, JPT AI's free Normal mode does the job with no watermark and no sign-up.`,
+**Legibility rescue.** A blurry photo of a receipt, whiteboard, license plate, or handwritten note can become readable again after deblurring — a genuine lifesaver for work and study. In every one of these cases, Pixel Shine's free Normal mode does the job with no watermark and no sign-up.`,
       },
       {
         heading: "AI Deblurring vs. Other Options",
@@ -3596,7 +3596,7 @@ The **Normal mode is free, unlimited, and requires no sign-up**, covering the ev
 
 **Basic phone-app filters** provide a quick sharpen slider, but they rely on the old contrast-boosting method that can't restore real detail and produces halos when pushed. They're fine for a subtle nudge, not for genuinely unblurring a photo.
 
-**Free online deblur tools** are convenient, but many stamp watermarks, cap resolution, or demand sign-ups before letting you download. JPT AI is different: it uses genuine AI reconstruction, runs free online, adds no watermark, and needs no account for the Normal mode — with optional Pro power via credits and 5 free trials. For nearly everyone, that blend of quality, cost, and zero friction outclasses both the pro-software route and the throwaway filter. You'd only reach for Photoshop when you need surgical, region-by-region manual control.`,
+**Free online deblur tools** are convenient, but many stamp watermarks, cap resolution, or demand sign-ups before letting you download. Pixel Shine is different: it uses genuine AI reconstruction, runs free online, adds no watermark, and needs no account for the Normal mode — with optional Pro power via credits and 5 free trials. For nearly everyone, that blend of quality, cost, and zero friction outclasses both the pro-software route and the throwaway filter. You'd only reach for Photoshop when you need surgical, region-by-region manual control.`,
       },
       {
         heading: "Who Uses AI Photo Unblurring",
@@ -3605,10 +3605,10 @@ The **Normal mode is free, unlimited, and requires no sign-up**, covering the ev
       {
         heading: "Frequently Asked Questions",
         body: `**Can I unblur a photo online for free?**
-Yes. JPT AI's Normal mode unblurs photos completely free, with no limits and no sign-up. You only need credits for the heavier Pro AI mode, and new users get 5 free Pro trials.
+Yes. Pixel Shine's Normal mode unblurs photos completely free, with no limits and no sign-up. You only need credits for the heavier Pro AI mode, and new users get 5 free Pro trials.
 
 **Will the unblurred photo have a watermark?**
-No. JPT AI never adds a watermark. Your deblurred photo downloads clean and ready to use.
+No. Pixel Shine never adds a watermark. Your deblurred photo downloads clean and ready to use.
 
 **Do I need an account to remove blur from a photo?**
 Not for the free Normal mode. You can upload and unblur without signing up, which is ideal for quick fixes.
@@ -3630,7 +3630,7 @@ Re-run at a lower scale, like 2x instead of 4x. A gentler pass produces the most
       },
       {
         heading: "Key Takeaways",
-        body: `Unblurring a photo online is now quick, free, and remarkably effective. Rather than faking sharpness by boosting edge contrast, AI reconstructs the real detail that blur destroyed — recovering faces, textures, and legibility that old tools couldn't touch. JPT AI delivers this through its free Normal mode: no watermark, no forced sign-up, and no usage caps, plus 5 free Pro trials for tougher images.
+        body: `Unblurring a photo online is now quick, free, and remarkably effective. Rather than faking sharpness by boosting edge contrast, AI reconstructs the real detail that blur destroyed — recovering faces, textures, and legibility that old tools couldn't touch. Pixel Shine delivers this through its free Normal mode: no watermark, no forced sign-up, and no usage caps, plus 5 free Pro trials for tougher images.
 
 The process is effortless — upload, pick your mode and scale, and download a sharp result in about a minute. That soft photo you thought was ruined may be far more recoverable than you assumed. Give it a try free at sjpt.io and bring your blurry memories back to life.`,
       },
@@ -3639,9 +3639,9 @@ The process is effortless — upload, pick your mode and scale, and download a s
   {
     slug: "ai-image-enhancer-no-watermark",
     title: "AI Image Enhancer with No Watermark — Free Tools That Actually Work",
-    metaTitle: "AI Image Enhancer No Watermark Free | JPT AI",
-    metaDescription: "Find the best AI image enhancer with no watermark. JPT AI offers free AI photo enhancement with clean downloads — no signup, no watermark, no limits.",
-    excerpt: "Tired of AI photo enhancers that slap a watermark on your work? JPT AI delivers professional AI image enhancement completely free, with no watermark on downloads.",
+    metaTitle: "AI Image Enhancer No Watermark Free | Pixel Shine",
+    metaDescription: "Find the best AI image enhancer with no watermark. Pixel Shine offers free AI photo enhancement with clean downloads — no signup, no watermark, no limits.",
+    excerpt: "Tired of AI photo enhancers that slap a watermark on your work? Pixel Shine delivers professional AI image enhancement completely free, with no watermark on downloads.",
     date: "2025-08-12",
     readTime: "11 min read",
     category: "Comparison",
@@ -3653,7 +3653,7 @@ The process is effortless — upload, pick your mode and scale, and download a s
       {
         body: `Finding a genuinely free AI image enhancer with no watermark is harder than it should be — and if you've tried a few, you already know the frustration. You upload your photo, wait for it to process, marvel at the crisp result, and then discover a giant logo stamped across it, a paywall blocking the download, or a demand to create an account before you can save anything. A truly watermark-free photo enhancer that actually works, for free, feels almost mythical.
 
-This guide cuts through the noise. We'll explain why so many free enhancers slap watermarks on your images, what to look for in a tool that genuinely respects your work, and how JPT AI delivers professional-grade enhancement with no watermark, no mandatory sign-up for its free mode, and no usage caps. You'll learn how AI enhancement actually works, how to use it step by step, and how JPT AI compares to the watermark-laden alternatives. If you've been searching for a way to enhance an image free with no watermark, this is the honest breakdown you've been looking for.`,
+This guide cuts through the noise. We'll explain why so many free enhancers slap watermarks on your images, what to look for in a tool that genuinely respects your work, and how Pixel Shine delivers professional-grade enhancement with no watermark, no mandatory sign-up for its free mode, and no usage caps. You'll learn how AI enhancement actually works, how to use it step by step, and how Pixel Shine compares to the watermark-laden alternatives. If you've been searching for a way to enhance an image free with no watermark, this is the honest breakdown you've been looking for.`,
       },
       {
         heading: "Why So Many Free Enhancers Add Watermarks",
@@ -3664,8 +3664,8 @@ The typical playbook works like this: a tool lets you enhance an image and previ
 Others use subtler tricks: a small watermark you don't notice until you zoom in, resolution limits that make the free output useless for print, or a limited number of free enhancements before the paywall drops. The result is a frustrating experience where \"free\" comes with strings attached. A tool that genuinely enhances images with no watermark — and lets you download the full-resolution result without an account — is doing something meaningfully different, and it's worth knowing how to spot it.`,
       },
       {
-        heading: "How JPT AI Enhances Images Without Watermarks",
-        body: `JPT AI takes a deliberately different approach: enhance your image with professional AI quality, add no watermark, and don't force you to sign up for the free mode. When you upload a photo, JPT AI's AI upscaler analyzes it and reconstructs fine detail using a model trained on millions of high-quality images — sharpening edges, recovering texture, and adding real resolution rather than merely stretching pixels. The result is a crisp, enhanced image that's genuinely usable.
+        heading: "How Pixel Shine Enhances Images Without Watermarks",
+        body: `Pixel Shine takes a deliberately different approach: enhance your image with professional AI quality, add no watermark, and don't force you to sign up for the free mode. When you upload a photo, Pixel Shine's AI upscaler analyzes it and reconstructs fine detail using a model trained on millions of high-quality images — sharpening edges, recovering texture, and adding real resolution rather than merely stretching pixels. The result is a crisp, enhanced image that's genuinely usable.
 
 The key differentiator is what happens next. With the **Normal upscale mode**, enhancement is completely free, unlimited, and requires no account — and the image you download is clean, full-resolution, and watermark-free. There's no logo to crop out, no resolution cap, and no paywall standing between you and your result.
 
@@ -3677,7 +3677,7 @@ For images that need heavier reconstruction — badly degraded photos or profess
 
 **1. Open the enhancer.** Go to sjpt.io and launch the AI Upscaler. The free Normal mode needs no sign-up, so there's no account wall to get past.
 
-**2. Upload your image.** Drag it into the upload area or click to browse. JPT AI supports JPG, PNG, WebP, and more. Use the highest-quality source you have for the best result.
+**2. Upload your image.** Drag it into the upload area or click to browse. Pixel Shine supports JPG, PNG, WebP, and more. Use the highest-quality source you have for the best result.
 
 **3. Choose Normal mode.** Select the free Normal upscale for unlimited, watermark-free enhancement. For heavily degraded images, you can opt for Pro AI mode, which uses credits (5 free trials for new users) — and still adds no watermark.
 
@@ -3695,7 +3695,7 @@ For images that need heavier reconstruction — badly degraded photos or profess
 
 **Match scale to your use.** Use 2x for screen and social media, where it looks most natural, and 4x when you need a large, print-ready file. Over-scaling a decent image can look artificial.
 
-**Verify the download is truly clean.** One benefit of a genuinely watermark-free tool is that you can zoom into corners and edges to confirm there's no hidden logo — with JPT AI, there won't be.
+**Verify the download is truly clean.** One benefit of a genuinely watermark-free tool is that you can zoom into corners and edges to confirm there's no hidden logo — with Pixel Shine, there won't be.
 
 **Enhance before editing.** Run the enhancement first so the AI works with clean data, then apply any color or crop adjustments afterward.
 
@@ -3707,11 +3707,11 @@ For images that need heavier reconstruction — badly degraded photos or profess
         heading: "Common Mistakes to Avoid",
         body: `Steer clear of these errors when hunting for a watermark-free enhancer:
 
-**Trusting the preview alone.** Many tools show a clean preview but watermark the actual download. Always confirm the final file is clean — with JPT AI's Normal mode, it always is.
+**Trusting the preview alone.** Many tools show a clean preview but watermark the actual download. Always confirm the final file is clean — with Pixel Shine's Normal mode, it always is.
 
 **Overlooking hidden resolution caps.** Some \"free\" tools remove the watermark but shrink your output to an unusable size. Check that you're getting full resolution.
 
-**Signing up before you have to.** Don't hand over your email to a tool that stamps a watermark anyway. JPT AI's Normal mode needs no account at all.
+**Signing up before you have to.** Don't hand over your email to a tool that stamps a watermark anyway. Pixel Shine's Normal mode needs no account at all.
 
 **Over-enhancing.** Pushing maximum settings on a decent image can introduce halos and an artificial look. Aim for a natural improvement and use the preview to check.
 
@@ -3729,15 +3729,15 @@ For images that need heavier reconstruction — badly degraded photos or profess
 
 **Social media and branding.** Creators maintaining a polished brand can't have a competitor's logo stamped across their content.
 
-**Reselling and marketplaces.** Anyone listing items on marketplaces needs clean, professional images that build buyer confidence. In each case, JPT AI's free Normal mode delivers watermark-free, full-resolution results with no sign-up — exactly what these use cases demand.`,
+**Reselling and marketplaces.** Anyone listing items on marketplaces needs clean, professional images that build buyer confidence. In each case, Pixel Shine's free Normal mode delivers watermark-free, full-resolution results with no sign-up — exactly what these use cases demand.`,
       },
       {
-        heading: "JPT AI vs. Typical Free Enhancers",
-        body: `It's worth laying out how JPT AI stacks up against the typical free enhancer you'll find online. **Most free enhancers** follow the hostage model: a clean preview, then a watermarked download, a resolution cap, or a paywall — often after forcing you to create an account. The \"free\" enhancement is really a teaser designed to push you toward a subscription, and the watermark exists purely as leverage.
+        heading: "Pixel Shine vs. Typical Free Enhancers",
+        body: `It's worth laying out how Pixel Shine stacks up against the typical free enhancer you'll find online. **Most free enhancers** follow the hostage model: a clean preview, then a watermarked download, a resolution cap, or a paywall — often after forcing you to create an account. The \"free\" enhancement is really a teaser designed to push you toward a subscription, and the watermark exists purely as leverage.
 
 **Subscription desktop software** like Photoshop can enhance images without watermarks, but it costs a recurring fee, demands skill, and is overkill for someone who just wants a clean, sharper image.
 
-**JPT AI** occupies the honest middle ground. Its Normal mode is free, unlimited, and requires no account, and it delivers full-resolution, watermark-free results. Pro AI mode exists for heavier reconstruction and uses credits, but even it adds no watermark, and new users get 5 free trials to try it. The difference is philosophical: instead of crippling the free tier to force upgrades, JPT AI makes the free tier genuinely useful and reserves paid credits for the premium reconstruction model. For anyone who's been burned by watermark hostage tactics, that's a refreshing and practical alternative.`,
+**Pixel Shine** occupies the honest middle ground. Its Normal mode is free, unlimited, and requires no account, and it delivers full-resolution, watermark-free results. Pro AI mode exists for heavier reconstruction and uses credits, but even it adds no watermark, and new users get 5 free trials to try it. The difference is philosophical: instead of crippling the free tier to force upgrades, Pixel Shine makes the free tier genuinely useful and reserves paid credits for the premium reconstruction model. For anyone who's been burned by watermark hostage tactics, that's a refreshing and practical alternative.`,
       },
       {
         heading: "Who Needs a Watermark-Free Enhancer",
@@ -3746,7 +3746,7 @@ For images that need heavier reconstruction — badly degraded photos or profess
       {
         heading: "Frequently Asked Questions",
         body: `**Is there really a free AI image enhancer with no watermark?**
-Yes. JPT AI's Normal mode enhances images completely free with no watermark, no usage limits, and no sign-up. The image you download is full-resolution and clean.
+Yes. Pixel Shine's Normal mode enhances images completely free with no watermark, no usage limits, and no sign-up. The image you download is full-resolution and clean.
 
 **Do I have to create an account to get a watermark-free result?**
 Not for the free Normal mode. You can upload, enhance, and download a clean image without signing up at all.
@@ -3755,23 +3755,23 @@ Not for the free Normal mode. You can upload, enhance, and download a clean imag
 No. Even Pro AI mode, which uses credits for heavier reconstruction, adds no watermark. New users get 5 free Pro trials to test it.
 
 **Is the free version resolution-capped?**
-No. Unlike many \"free\" tools that shrink your output, JPT AI's Normal mode delivers full-resolution, watermark-free results.
+No. Unlike many \"free\" tools that shrink your output, Pixel Shine's Normal mode delivers full-resolution, watermark-free results.
 
 **Why do other free enhancers add watermarks?**
-Watermarks are a conversion tactic — they let a tool show you a great result while forcing you to pay or subscribe to get a clean version. JPT AI's free tier doesn't use this tactic.
+Watermarks are a conversion tactic — they let a tool show you a great result while forcing you to pay or subscribe to get a clean version. Pixel Shine's free tier doesn't use this tactic.
 
 **Can I use the enhanced images commercially?**
 Yes. Since there's no watermark and you download the full-resolution file, you can use enhanced images for product listings, client work, and other professional purposes.
 
 **What formats can I upload?**
-JPT AI supports common formats including JPG, PNG, and WebP. Upload the highest-quality source for the best enhancement.
+Pixel Shine supports common formats including JPG, PNG, and WebP. Upload the highest-quality source for the best enhancement.
 
 **Is there a limit on how many images I can enhance free?**
 No. The Normal mode is unlimited, so you can enhance as many images as you need without hitting a paywall or cap.`,
       },
       {
         heading: "Key Takeaways",
-        body: `A genuinely watermark-free AI image enhancer shouldn't be rare — but because most free tools use watermarks as leverage, it is. JPT AI breaks that pattern: its Normal mode enhances images for free, with no watermark, no resolution cap, no forced sign-up, and no usage limits. You download a clean, full-resolution result you fully own, and 5 free Pro trials let you test the heavier reconstruction model when you need it — still watermark-free.
+        body: `A genuinely watermark-free AI image enhancer shouldn't be rare — but because most free tools use watermarks as leverage, it is. Pixel Shine breaks that pattern: its Normal mode enhances images for free, with no watermark, no resolution cap, no forced sign-up, and no usage limits. You download a clean, full-resolution result you fully own, and 5 free Pro trials let you test the heavier reconstruction model when you need it — still watermark-free.
 
 If you've been frustrated by logos stamped across your enhanced photos or paywalls blocking your downloads, this is the honest alternative. Enhance your images the way they should be — clean, professional, and truly yours. Try it free at sjpt.io today.`,
       },
@@ -3780,9 +3780,9 @@ If you've been frustrated by logos stamped across your enhanced photos or paywal
   {
     slug: "enhance-low-resolution-image",
     title: "How to Enhance Low Resolution Images with AI — Step-by-Step",
-    metaTitle: "Enhance Low Resolution Image Free | JPT AI",
-    metaDescription: "Learn how to enhance low resolution images using AI. JPT AI upscales and sharpens pixelated photos for free — perfect for print, web, and social media.",
-    excerpt: "Low-resolution images look pixelated and unprofessional. JPT AI\'s AI enhancement can transform a grainy 240p photo into a crisp, usable high-resolution image.",
+    metaTitle: "Enhance Low Resolution Image Free | Pixel Shine",
+    metaDescription: "Learn how to enhance low resolution images using AI. Pixel Shine upscales and sharpens pixelated photos for free — perfect for print, web, and social media.",
+    excerpt: "Low-resolution images look pixelated and unprofessional. Pixel Shine\'s AI enhancement can transform a grainy 240p photo into a crisp, usable high-resolution image.",
     date: "2025-08-20",
     readTime: "11 min read",
     category: "Tutorial",
@@ -3794,7 +3794,7 @@ If you've been frustrated by logos stamped across your enhanced photos or paywal
       {
         body: `Learning how to enhance low resolution images with AI can feel like magic the first time you see it work. A blurry, pixelated photo that looked hopeless suddenly becomes sharp, detailed, and usable — no manual retouching, no expensive software, just a few seconds of AI processing. If you've ever been stuck with a low-res image that's too small to print, too soft to post, or too blocky to use, this tutorial is exactly what you need.
 
-Low-resolution images are everywhere: old screenshots, digitally zoomed phone shots, tiny thumbnails, compressed social media downloads, and scanned prints. Traditional editing can only stretch these so far before they fall apart into blur and jagged edges. AI upscaling is different — it intelligently reconstructs the missing detail, turning low res into high res convincingly. In this step-by-step tutorial, you'll learn exactly how AI fixes low-resolution images, how to use JPT AI's free upscaler, the settings that matter, and the tricks that produce the cleanest results. Whether it's a pixelated logo, a soft portrait, or a grainy old photo, you'll be able to enhance it for free.`,
+Low-resolution images are everywhere: old screenshots, digitally zoomed phone shots, tiny thumbnails, compressed social media downloads, and scanned prints. Traditional editing can only stretch these so far before they fall apart into blur and jagged edges. AI upscaling is different — it intelligently reconstructs the missing detail, turning low res into high res convincingly. In this step-by-step tutorial, you'll learn exactly how AI fixes low-resolution images, how to use Pixel Shine's free upscaler, the settings that matter, and the tricks that produce the cleanest results. Whether it's a pixelated logo, a soft portrait, or a grainy old photo, you'll be able to enhance it for free.`,
       },
       {
         heading: "Why Low-Resolution Images Look So Bad",
@@ -3805,12 +3805,12 @@ Low-res images come from many sources. **Digital zoom** on phones crops and enla
 The core problem is that traditional enlargement methods, like bicubic interpolation, can only guess at intermediate pixel values by averaging neighbors. They smooth the image but can't add real detail, which is why upscaled low-res photos look soft or blocky. This is precisely where AI changes everything: instead of averaging, it predicts what the missing detail *should* be, based on having studied millions of high-resolution images — reconstructing edges, textures, and features that interpolation simply can't.`,
       },
       {
-        heading: "How JPT AI Fixes Low-Resolution Images",
-        body: `JPT AI's upscaler uses **deep-learning super-resolution** to transform low-res images into high-res ones. Unlike traditional interpolation, which merely blurs the gaps, the AI has learned from vast datasets how real-world detail looks. When it encounters a pixelated edge or a soft texture, it reconstructs a plausible high-resolution version — sharpening lines, defining textures, and reducing the blocky artifacts that make low-res images unusable.
+        heading: "How Pixel Shine Fixes Low-Resolution Images",
+        body: `Pixel Shine's upscaler uses **deep-learning super-resolution** to transform low-res images into high-res ones. Unlike traditional interpolation, which merely blurs the gaps, the AI has learned from vast datasets how real-world detail looks. When it encounters a pixelated edge or a soft texture, it reconstructs a plausible high-resolution version — sharpening lines, defining textures, and reducing the blocky artifacts that make low-res images unusable.
 
 The **Normal Upscaler** handles this for free, with no sign-up and no usage limit. It's ideal for everyday low-res fixes: screenshots, social downloads, and moderately pixelated photos. For severely degraded images or ones needing maximum detail — like a very blurry portrait or a tiny product shot destined for print — the **Pro AI Upscaler** applies stronger reconstruction. It uses credits, and new users get **5 free trials** to test it.
 
-Every result downloads **watermark-free at full resolution**, which is essential when your whole goal is to gain usable resolution. Many free upscalers cap the output size or stamp a logo, defeating the purpose. JPT AI doesn't.
+Every result downloads **watermark-free at full resolution**, which is essential when your whole goal is to gain usable resolution. Many free upscalers cap the output size or stamp a logo, defeating the purpose. Pixel Shine doesn't.
 
 The tool typically supports upscaling factors like 2x and 4x, letting you multiply an image's dimensions while the AI fills in convincing detail. Everything runs online on desktop or mobile, processing most images in under 10 seconds — fast enough to fix a whole folder of low-res files.`,
       },
@@ -3818,7 +3818,7 @@ The tool typically supports upscaling factors like 2x and 4x, letting you multip
         heading: "Step-by-Step: Enhancing a Low-Resolution Image",
         body: `Follow this tutorial to turn low res into high res:
 
-**1. Open JPT AI.** Go to sjpt.io and navigate to the upscale tool. It runs online — no download needed.
+**1. Open Pixel Shine.** Go to sjpt.io and navigate to the upscale tool. It runs online — no download needed.
 
 **2. Upload the low-res image.** Drag and drop your file or click to browse. JPG, PNG, and WebP are supported. The Normal Upscaler needs no account, so you can start right away.
 
@@ -3904,7 +3904,7 @@ The tool typically supports upscaling factors like 2x and 4x, letting you multip
 Yes. AI super-resolution reconstructs missing detail based on patterns learned from millions of high-res images, producing genuinely sharper, more detailed results than traditional enlargement — not just a bigger, blurrier version.
 
 **How do I enhance a low-resolution image for free?**
-Use JPT AI's Normal Upscaler at sjpt.io. It's free, unlimited, and needs no sign-up. Upload your image, choose a scale factor like 2x or 4x, run the upscale, and download the high-res result with no watermark.
+Use Pixel Shine's Normal Upscaler at sjpt.io. It's free, unlimited, and needs no sign-up. Upload your image, choose a scale factor like 2x or 4x, run the upscale, and download the high-res result with no watermark.
 
 **How much can I upscale a low-res image?**
 Typically 2x or 4x. Larger sources handle higher factors well, while very tiny images look more natural at 2x. Over-upscaling minimal data can introduce artifacts.
@@ -3916,7 +3916,7 @@ Yes. AI reconstructs the blocky pixelated areas into smoother, more detailed edg
 No. The Normal Upscaler is unlimited and free. The Pro AI engine uses credits, with 5 free trials for new users.
 
 **Does the enhanced image have a watermark?**
-No. JPT AI downloads at full resolution with no watermark, which matters most when your goal is to gain usable resolution.
+No. Pixel Shine downloads at full resolution with no watermark, which matters most when your goal is to gain usable resolution.
 
 **What's the smallest image I can enhance?**
 There's no hard minimum, but very tiny sources (under ~100px) have limited recovery potential. A few hundred pixels on the short side gives the best results.
@@ -3926,7 +3926,7 @@ Yes. AI upscaling sharpens pixelated text and logos, with the Pro engine handlin
       },
       {
         heading: "Key Takeaways",
-        body: `Enhancing low-resolution images with AI turns pixelated, unusable photos into sharp, high-resolution results in seconds. JPT AI's free Normal Upscaler reconstructs real detail — not just bigger pixels — with no sign-up, no usage limit, and no watermark. For severely degraded images, the Pro engine adds stronger reconstruction, with 5 free trials for new users.
+        body: `Enhancing low-resolution images with AI turns pixelated, unusable photos into sharp, high-resolution results in seconds. Pixel Shine's free Normal Upscaler reconstructs real detail — not just bigger pixels — with no sign-up, no usage limit, and no watermark. For severely degraded images, the Pro engine adds stronger reconstruction, with 5 free trials for new users.
 
 Start from the largest source you have, match the scale factor to the image size, and reserve Pro mode for faces, text, and logos. With staged upscaling and the upscale-then-downsample trick, you can recover images that once seemed hopeless. Fix your first low-resolution image free at sjpt.io.`,
       },
@@ -3935,9 +3935,9 @@ Start from the largest source you have, match the scale factor to the image size
   {
     slug: "photo-resolution-increaser-free",
     title: "Free Photo Resolution Increaser — AI Tool That Actually Works",
-    metaTitle: "Photo Resolution Increaser Free | JPT AI",
-    metaDescription: "Use JPT AI as a free photo resolution increaser. AI super-resolution enlarges your photos 2× or 4× with sharp detail — no watermark, no software needed.",
-    excerpt: "A free photo resolution increaser that works — JPT AI uses AI super-resolution to enlarge images while genuinely improving sharpness and detail.",
+    metaTitle: "Photo Resolution Increaser Free | Pixel Shine",
+    metaDescription: "Use Pixel Shine as a free photo resolution increaser. AI super-resolution enlarges your photos 2× or 4× with sharp detail — no watermark, no software needed.",
+    excerpt: "A free photo resolution increaser that works — Pixel Shine uses AI super-resolution to enlarge images while genuinely improving sharpness and detail.",
     date: "2025-08-28",
     readTime: "11 min read",
     category: "Guide",
@@ -3951,7 +3951,7 @@ Start from the largest source you have, match the scale factor to the image size
 
 The good news is that AI has genuinely transformed what's possible. A modern tool to increase photo resolution with AI doesn't just stretch your image bigger; it analyzes the content and rebuilds fine detail, so a soft, small photo comes out crisp and clear. This is a completely different technology from the resizers built into your phone or operating system.
 
-In this guide, we'll cut through the noise and show you how JPT AI works as a genuine free resolution booster — unlimited Normal upscaling, no watermarks, and no mandatory account. You'll learn exactly how to upscale photo resolution step by step, the tricks that separate great results from mediocre ones, and where this kind of tool fits into real projects. If you've been let down by fake free tools before, this is the practical, honest breakdown you've been looking for.`,
+In this guide, we'll cut through the noise and show you how Pixel Shine works as a genuine free resolution booster — unlimited Normal upscaling, no watermarks, and no mandatory account. You'll learn exactly how to upscale photo resolution step by step, the tricks that separate great results from mediocre ones, and where this kind of tool fits into real projects. If you've been let down by fake free tools before, this is the practical, honest breakdown you've been looking for.`,
       },
       {
         heading: "Why Most Free Resolution Tools Disappoint",
@@ -3961,21 +3961,21 @@ In this guide, we'll cut through the noise and show you how JPT AI works as a ge
 
 Then there's the **quality problem.** Many so-called AI upscalers are just running basic interpolation dressed up with marketing language. They enlarge the image but leave it blurry, because there's no real deep-learning reconstruction happening under the hood.
 
-**Hidden resolution caps** frustrate users too — a tool might refuse to output anything above a certain size unless you upgrade, defeating the entire purpose. And **slow, ad-heavy interfaces** bury the actual tool under pop-ups and redirects. The result of all this is a landscape where genuinely finding a free tool that increases photo resolution with real AI, no watermark, and no gatekeeping is the exception rather than the rule — which is exactly the gap JPT AI was built to fill.`,
+**Hidden resolution caps** frustrate users too — a tool might refuse to output anything above a certain size unless you upgrade, defeating the entire purpose. And **slow, ad-heavy interfaces** bury the actual tool under pop-ups and redirects. The result of all this is a landscape where genuinely finding a free tool that increases photo resolution with real AI, no watermark, and no gatekeeping is the exception rather than the rule — which is exactly the gap Pixel Shine was built to fill.`,
       },
       {
-        heading: "How JPT AI Actually Boosts Photo Resolution",
-        body: `JPT AI's resolution increaser is built on genuine AI super-resolution, not the interpolation tricks that make lesser tools disappointing. When you upload a photo, the deep-learning model examines its structure — edges, textures, patterns, faces — and predicts what the missing high-resolution detail should look like based on training across millions of real image pairs.
+        heading: "How Pixel Shine Actually Boosts Photo Resolution",
+        body: `Pixel Shine's resolution increaser is built on genuine AI super-resolution, not the interpolation tricks that make lesser tools disappointing. When you upload a photo, the deep-learning model examines its structure — edges, textures, patterns, faces — and predicts what the missing high-resolution detail should look like based on training across millions of real image pairs.
 
 **The free Normal mode** handles the vast majority of everyday needs: enlarging web images, sharpening social media photos, boosting product shots, and cleaning up compressed pictures. It's genuinely unlimited and requires no sign-up, so you can process image after image without hitting a wall.
 
 **The Pro AI mode** steps in when you need maximum reconstruction — heavily degraded photos, detailed portraits, or professional print work. It runs on a more powerful model using credits, delivering the kind of detail recovery that rivals expensive desktop software.
 
-Crucially, **JPT AI never watermarks your output.** Whether you use Normal or Pro, the file you download is clean and ready for personal or commercial use. Combined with the no-mandatory-signup policy for Normal upscaling and five free trials for new users exploring the Pro features, JPT AI removes the friction that makes other free tools frustrating. You upload, upscale, and download — that's the entire experience, with real quality at every step.`,
+Crucially, **Pixel Shine never watermarks your output.** Whether you use Normal or Pro, the file you download is clean and ready for personal or commercial use. Combined with the no-mandatory-signup policy for Normal upscaling and five free trials for new users exploring the Pro features, Pixel Shine removes the friction that makes other free tools frustrating. You upload, upscale, and download — that's the entire experience, with real quality at every step.`,
       },
       {
         heading: "Step-by-Step: Increasing Your Photo Resolution",
-        body: `Boosting your photo's resolution with JPT AI takes under a minute. Here's the full walkthrough.
+        body: `Boosting your photo's resolution with Pixel Shine takes under a minute. Here's the full walkthrough.
 
 **1. Visit sjpt.io and open the Upscale tool.** No account is needed for the free Normal upscaler, so you can begin right away without any setup.
 
@@ -3985,7 +3985,7 @@ Crucially, **JPT AI never watermarks your output.** Whether you use Normal or Pr
 
 **4. Choose Normal or Pro AI mode.** For free, unlimited upscaling, select Normal. If your photo is badly degraded or contains important facial detail, switch to Pro AI mode for the strongest reconstruction.
 
-**5. Start the upscale.** Click the button and let JPT AI process. Most images finish in just a few seconds.
+**5. Start the upscale.** Click the button and let Pixel Shine process. Most images finish in just a few seconds.
 
 **6. Review the result.** Zoom into the enhanced image to inspect edges, textures, and any faces. Compare it against the original to confirm the resolution boost.
 
@@ -4036,16 +4036,16 @@ Crucially, **JPT AI never watermarks your output.** Whether you use Normal or Pr
 **Marketing creative.** Turning a small logo or found image into a sharp banner, ad, or thumbnail keeps campaigns looking polished on modern high-DPI screens instead of pixelated and amateurish.`,
       },
       {
-        heading: "JPT AI vs. Other Resolution Increasers",
-        body: `How does JPT AI stack up against the alternatives crowding the market?
+        heading: "Pixel Shine vs. Other Resolution Increasers",
+        body: `How does Pixel Shine stack up against the alternatives crowding the market?
 
-**Against basic online resizers,** there's no contest. Those tools use interpolation that averages pixels and always softens the image. JPT AI reconstructs real detail, producing sharper output rather than a bigger blur.
+**Against basic online resizers,** there's no contest. Those tools use interpolation that averages pixels and always softens the image. Pixel Shine reconstructs real detail, producing sharper output rather than a bigger blur.
 
-**Against watermark-and-signup \"free\" tools,** JPT AI's advantage is that it's actually free and actually usable. No logo across your image, no mandatory account for Normal upscaling, no one-image demo limit — you get clean, downloadable results without gatekeeping.
+**Against watermark-and-signup \"free\" tools,** Pixel Shine's advantage is that it's actually free and actually usable. No logo across your image, no mandatory account for Normal upscaling, no one-image demo limit — you get clean, downloadable results without gatekeeping.
 
-**Against paid desktop software** like Topaz Gigapixel, JPT AI offers comparable AI super-resolution quality without the upfront cost, heavy installation, or need for a powerful computer. Everything runs online.
+**Against paid desktop software** like Topaz Gigapixel, Pixel Shine offers comparable AI super-resolution quality without the upfront cost, heavy installation, or need for a powerful computer. Everything runs online.
 
-**Against subscription-based web upscalers,** JPT AI's free Normal tier covers everyday needs at no cost, while the Pro AI mode gives you a credit-based option for the toughest jobs — plus five free trials so new users can test the premium quality before deciding. The overall value proposition is simple: professional-grade results, no friction, and a genuinely free path for the majority of use cases, with a powerful paid tier available only when you truly need it.`,
+**Against subscription-based web upscalers,** Pixel Shine's free Normal tier covers everyday needs at no cost, while the Pro AI mode gives you a credit-based option for the toughest jobs — plus five free trials so new users can test the premium quality before deciding. The overall value proposition is simple: professional-grade results, no friction, and a genuinely free path for the majority of use cases, with a powerful paid tier available only when you truly need it.`,
       },
       {
         heading: "Who Relies on Free Resolution Boosters",
@@ -4055,11 +4055,11 @@ Crucially, **JPT AI never watermarks your output.** Whether you use Normal or Pr
       },
       {
         heading: "Frequently Asked Questions",
-        body: `**Is JPT AI's photo resolution increaser really free?**
+        body: `**Is Pixel Shine's photo resolution increaser really free?**
 Yes. The Normal upscaler is free, unlimited, and needs no sign-up. You can boost the resolution of as many photos as you like without paying or hitting a hidden cap.
 
 **Does it add a watermark to my photos?**
-No. JPT AI never watermarks your images. Every downloaded file is clean and ready for personal or commercial use.
+No. Pixel Shine never watermarks your images. Every downloaded file is clean and ready for personal or commercial use.
 
 **Do I have to create an account?**
 Not for the free Normal upscaler — you can upload, process, and download without registering. New users also get five free trials to test the premium Pro AI features.
@@ -4068,20 +4068,20 @@ Not for the free Normal upscaler — you can upload, process, and download witho
 You can typically choose 2x or 4x enlargement, quadrupling the pixel dimensions at 4x. For extreme sizes, you can run additional passes from the source.
 
 **Will the enlarged photo look blurry?**
-No. Unlike basic resizers that blur images, JPT AI's AI reconstructs detail, so your enlarged photo comes out sharper and clearer than a simple stretch.
+No. Unlike basic resizers that blur images, Pixel Shine's AI reconstructs detail, so your enlarged photo comes out sharper and clearer than a simple stretch.
 
 **What file formats can I upload?**
 Common formats like JPG, PNG, and WEBP are supported directly, with no need to convert your file beforehand.
 
 **Does it work on phones and tablets?**
-Yes. JPT AI runs on any device, so you can increase photo resolution on desktop, laptop, tablet, or phone.
+Yes. Pixel Shine runs on any device, so you can increase photo resolution on desktop, laptop, tablet, or phone.
 
 **When should I use Pro AI mode instead of Normal?**
 Use Pro AI mode for heavily degraded photos, important portraits, or demanding print work where you need maximum detail recovery. Normal mode handles everyday enlarging perfectly.`,
       },
       {
         heading: "Key Takeaways",
-        body: `A photo resolution increaser is only useful if it's genuinely free, genuinely watermark-free, and genuinely powered by real AI — and that combination is rarer than the marketing suggests. JPT AI delivers on all three, with an unlimited Normal upscaler that needs no sign-up, clean output every time, and a Pro AI tier for the toughest jobs.
+        body: `A photo resolution increaser is only useful if it's genuinely free, genuinely watermark-free, and genuinely powered by real AI — and that combination is rarer than the marketing suggests. Pixel Shine delivers on all three, with an unlimited Normal upscaler that needs no sign-up, clean output every time, and a Pro AI tier for the toughest jobs.
 
 Instead of stretching pixels into a blur, it reconstructs real detail so your photos come out sharp and print-ready in seconds. Stop wrestling with fake free tools and see the difference for yourself — head to sjpt.io and increase your photo's resolution free right now.`,
       },
@@ -4090,9 +4090,9 @@ Instead of stretching pixels into a blur, it reconstructs real detail so your ph
   {
     slug: "make-image-clearer-online-free",
     title: "Make Your Image Clearer Online for Free — AI Clarity Tool",
-    metaTitle: "Make Image Clearer Online Free | JPT AI",
-    metaDescription: "Make any image clearer online for free with JPT AI. AI-powered clarity enhancement sharpens detail and removes blur in seconds — no software, no watermark.",
-    excerpt: "Making an image clearer is about more than just sharpening edges. JPT AI\'s AI clarity tool reconstructs detail, reduces noise, and enhances overall image quality for free.",
+    metaTitle: "Make Image Clearer Online Free | Pixel Shine",
+    metaDescription: "Make any image clearer online for free with Pixel Shine. AI-powered clarity enhancement sharpens detail and removes blur in seconds — no software, no watermark.",
+    excerpt: "Making an image clearer is about more than just sharpening edges. Pixel Shine\'s AI clarity tool reconstructs detail, reduces noise, and enhances overall image quality for free.",
     date: "2025-09-05",
     readTime: "11 min read",
     category: "Tutorial",
@@ -4104,7 +4104,7 @@ Instead of stretching pixels into a blur, it reconstructs real detail so your ph
       {
         body: `If you need to make an image clearer online for free, AI has made it easier than at any point in history. A blurry, soft, or low-resolution image used to mean either living with it or paying for professional editing. Now, an AI clarity tool can analyze your photo, reconstruct fine detail, and deliver a crisp, high-resolution result in seconds — online, with no cost and no complicated software.
 
-This guide covers everything you need to know to increase image clarity with AI. You'll learn why images look unclear, how AI clarity enhancement works differently from old sharpening filters, and exactly how to use JPT AI's free image clarity tool step by step. Crucially, JPT AI adds no watermark and doesn't require a sign-up for its free Normal mode — so you can sharpen an image online, boost its resolution, and download a clean result without any friction. Whether you're prepping product photos, cleaning up screenshots, or reviving old pictures, you'll come away knowing how to make any image noticeably clearer for free.`,
+This guide covers everything you need to know to increase image clarity with AI. You'll learn why images look unclear, how AI clarity enhancement works differently from old sharpening filters, and exactly how to use Pixel Shine's free image clarity tool step by step. Crucially, Pixel Shine adds no watermark and doesn't require a sign-up for its free Normal mode — so you can sharpen an image online, boost its resolution, and download a clean result without any friction. Whether you're prepping product photos, cleaning up screenshots, or reviving old pictures, you'll come away knowing how to make any image noticeably clearer for free.`,
       },
       {
         heading: "Why Images Look Unclear",
@@ -4121,12 +4121,12 @@ This guide covers everything you need to know to increase image clarity with AI.
 Most unclear images actually combine several of these — a low-resolution, compressed screenshot taken in poor light, for instance. That's why a smart AI tool that addresses resolution, detail, and noise together outperforms any single slider. And because AI reconstructs detail rather than merely amplifying what's there, it's especially effective at the low-resolution and compression problems that make everyday images look unclear.`,
       },
       {
-        heading: "How JPT AI Increases Image Clarity",
-        body: `JPT AI makes images clearer through AI reconstruction, which is a genuine leap beyond the clarity sliders in traditional editors. Those old controls simply boost local contrast, making an image look punchier but adding no real detail — and pushing them creates halos and amplifies noise.
+        heading: "How Pixel Shine Increases Image Clarity",
+        body: `Pixel Shine makes images clearer through AI reconstruction, which is a genuine leap beyond the clarity sliders in traditional editors. Those old controls simply boost local contrast, making an image look punchier but adding no real detail — and pushing them creates halos and amplifies noise.
 
-JPT AI instead uses a neural network trained on millions of high-quality images. When you upload an unclear image, the AI recognizes objects, textures, and edges, then reconstructs the fine detail that low resolution and compression stripped away — rebuilding crisp text, hair strands, and surface texture based on what those elements should look like when sharp. It simultaneously upscales the image, adding real resolution rather than just stretching pixels. This dual action of adding detail *and* resolution is why AI clarity enhancement looks natural instead of over-processed.
+Pixel Shine instead uses a neural network trained on millions of high-quality images. When you upload an unclear image, the AI recognizes objects, textures, and edges, then reconstructs the fine detail that low resolution and compression stripped away — rebuilding crisp text, hair strands, and surface texture based on what those elements should look like when sharp. It simultaneously upscales the image, adding real resolution rather than just stretching pixels. This dual action of adding detail *and* resolution is why AI clarity enhancement looks natural instead of over-processed.
 
-The **Normal mode is completely free, unlimited, and requires no sign-up**, covering the clarity needs of most everyday images. For heavily degraded images or professional print work, **Pro AI mode** applies a more powerful reconstruction model using credits, with 5 free trials for new users. And JPT AI never adds a watermark, so your clearer, sharper image is clean and ready to use the moment you download it.`,
+The **Normal mode is completely free, unlimited, and requires no sign-up**, covering the clarity needs of most everyday images. For heavily degraded images or professional print work, **Pro AI mode** applies a more powerful reconstruction model using credits, with 5 free trials for new users. And Pixel Shine never adds a watermark, so your clearer, sharper image is clean and ready to use the moment you download it.`,
       },
       {
         heading: "Step-by-Step: Make Your Image Clearer for Free",
@@ -4134,7 +4134,7 @@ The **Normal mode is completely free, unlimited, and requires no sign-up**, cove
 
 **1. Open the clarity tool.** Go to sjpt.io and launch the AI Upscaler. The free Normal mode needs no sign-up, so you can start right away.
 
-**2. Upload your unclear image.** Drag it into the upload area or click to browse. JPT AI supports JPG, PNG, WebP, and more. Use the highest-quality source you have — the original, not a re-shared or screenshotted copy.
+**2. Upload your unclear image.** Drag it into the upload area or click to browse. Pixel Shine supports JPG, PNG, WebP, and more. Use the highest-quality source you have — the original, not a re-shared or screenshotted copy.
 
 **3. Select your mode.** Choose Normal for free, unlimited clarity enhancement that handles most images well. For severely degraded images or professional output, pick Pro AI mode, which uses credits (5 free trials for new users).
 
@@ -4186,7 +4186,7 @@ The **Normal mode is completely free, unlimited, and requires no sign-up**, cove
 
 **Restoring old photos.** Faded, soft scans of vintage prints regain clarity, perfect for reprints and family albums.
 
-**Real estate listings.** Agents clarify dim, soft interior shots so rooms look crisp and inviting to prospective buyers. In every case, JPT AI's free Normal mode delivers watermark-free, sign-up-free clarity enhancement on the spot.`,
+**Real estate listings.** Agents clarify dim, soft interior shots so rooms look crisp and inviting to prospective buyers. In every case, Pixel Shine's free Normal mode delivers watermark-free, sign-up-free clarity enhancement on the spot.`,
       },
       {
         heading: "AI Clarity Enhancement vs. Other Methods",
@@ -4194,7 +4194,7 @@ The **Normal mode is completely free, unlimited, and requires no sign-up**, cove
 
 **Basic app filters** provide a quick clarity slider, but they use local-contrast boosting that can't add genuine detail — push them and you get halos and amplified noise. They're fine for a subtle touch-up, not for genuinely rebuilding clarity.
 
-**AI clarity enhancement** reconstructs real detail and adds resolution, which is why it produces crisper, more natural results than either alternative. JPT AI delivers this free online, with no watermark and no account for the Normal mode, plus optional Pro power through credits and 5 free trials. For the vast majority of images, that blend of quality, cost, and convenience is the clear winner. You'd only reach for professional software when you need surgical, region-by-region manual control over a specific part of the image.`,
+**AI clarity enhancement** reconstructs real detail and adds resolution, which is why it produces crisper, more natural results than either alternative. Pixel Shine delivers this free online, with no watermark and no account for the Normal mode, plus optional Pro power through credits and 5 free trials. For the vast majority of images, that blend of quality, cost, and convenience is the clear winner. You'd only reach for professional software when you need surgical, region-by-region manual control over a specific part of the image.`,
       },
       {
         heading: "Who Uses AI Clarity Tools",
@@ -4203,10 +4203,10 @@ The **Normal mode is completely free, unlimited, and requires no sign-up**, cove
       {
         heading: "Frequently Asked Questions",
         body: `**Can I make an image clearer online for free?**
-Yes. JPT AI's Normal mode makes images clearer completely free, with no limits and no sign-up. Credits are only needed for the heavier Pro AI mode, and new users get 5 free Pro trials.
+Yes. Pixel Shine's Normal mode makes images clearer completely free, with no limits and no sign-up. Credits are only needed for the heavier Pro AI mode, and new users get 5 free Pro trials.
 
 **Will my clearer image have a watermark?**
-No. JPT AI never watermarks output. Your enhanced image downloads clean and ready to use.
+No. Pixel Shine never watermarks output. Your enhanced image downloads clean and ready to use.
 
 **Do I need to create an account?**
 Not for the free Normal mode. You can upload and clarify an image without signing up, which is perfect for quick jobs.
@@ -4215,7 +4215,7 @@ Not for the free Normal mode. You can upload and clarify an image without signin
 A slider just boosts local contrast, which can create halos and noise. AI reconstructs genuine detail and adds resolution, producing a far more natural, higher-quality result.
 
 **What image formats are supported?**
-JPT AI supports common formats like JPG, PNG, and WebP. For the best result, upload the highest-quality source file you have.
+Pixel Shine supports common formats like JPG, PNG, and WebP. For the best result, upload the highest-quality source file you have.
 
 **Can I make an image clearer and larger at the same time?**
 Yes. The tool enhances clarity while upscaling, so you can produce a crisper image that's also 2x or 4x larger — great for prints.
@@ -4228,7 +4228,7 @@ Re-run at a lower scale, like 2x instead of 4x. A gentler pass gives the most na
       },
       {
         heading: "Key Takeaways",
-        body: `Making an image clearer online is now fast, free, and genuinely effective thanks to AI. Instead of faking clarity by boosting local contrast, modern tools reconstruct real detail and add resolution — recovering crispness and legibility that old sliders never could. JPT AI delivers this through its free Normal mode: no watermark, no forced sign-up, and no usage caps, plus 5 free Pro trials for tougher images.
+        body: `Making an image clearer online is now fast, free, and genuinely effective thanks to AI. Instead of faking clarity by boosting local contrast, modern tools reconstruct real detail and add resolution — recovering crispness and legibility that old sliders never could. Pixel Shine delivers this through its free Normal mode: no watermark, no forced sign-up, and no usage caps, plus 5 free Pro trials for tougher images.
 
 The process is effortless — upload, choose your mode and scale, and download a clearer result in about a minute. Whether it's a product photo, a screenshot, or a cherished old picture, your unclear image can look crisp and professional again. Try the free AI clarity tool at sjpt.io today.`,
       },
@@ -4237,9 +4237,9 @@ The process is effortless — upload, choose your mode and scale, and download a
   {
     slug: "ai-enhance-old-photos-free",
     title: "AI Enhance Old Photos for Free — Restore and Upscale Family Memories",
-    metaTitle: "AI Enhance Old Photos Free | JPT AI",
-    metaDescription: "Enhance old photos with AI for free using JPT AI. Restore sharpness, remove scratches, and upscale faded family photos to modern quality in seconds.",
-    excerpt: "Old family photos deserve better than faded, grainy scans. JPT AI can enhance and restore old photos using AI for free — bringing new life to irreplaceable memories.",
+    metaTitle: "AI Enhance Old Photos Free | Pixel Shine",
+    metaDescription: "Enhance old photos with AI for free using Pixel Shine. Restore sharpness, remove scratches, and upscale faded family photos to modern quality in seconds.",
+    excerpt: "Old family photos deserve better than faded, grainy scans. Pixel Shine can enhance and restore old photos using AI for free — bringing new life to irreplaceable memories.",
     date: "2025-09-13",
     readTime: "11 min read",
     category: "Guide",
@@ -4251,7 +4251,7 @@ The process is effortless — upload, choose your mode and scale, and download a
       {
         body: `Learning to AI enhance old photos for free is one of the most rewarding things you can do with a rainy afternoon and a box of family pictures. If you've ever scanned a decades-old print and felt disappointed by how soft, grainy, and faded it looked on your screen, you're experiencing a universal problem: old photos simply weren't captured or stored to survive on today's high-resolution displays. The good news is that AI can now enhance, restore, and upscale those family memories automatically, and you don't need to pay a cent or install anything.
 
-JPT AI (sjpt.io) offers free AI enhancement that increases resolution, sharpens blurry faces, and cleans up scanning noise, all with no watermark and no mandatory account for its Normal mode. Whether you're working with a vintage portrait, a faded holiday snapshot, or a low-quality scanned photo, this guide walks you through exactly how to enhance old photos with AI, the settings that matter, and how to get results that rival paid restoration services. By the end, you'll be able to turn washed-out originals into crisp, vivid images ready to print, frame, or share with family.`,
+Pixel Shine (sjpt.io) offers free AI enhancement that increases resolution, sharpens blurry faces, and cleans up scanning noise, all with no watermark and no mandatory account for its Normal mode. Whether you're working with a vintage portrait, a faded holiday snapshot, or a low-quality scanned photo, this guide walks you through exactly how to enhance old photos with AI, the settings that matter, and how to get results that rival paid restoration services. By the end, you'll be able to turn washed-out originals into crisp, vivid images ready to print, frame, or share with family.`,
       },
       {
         heading: "Why Old Photos Look So Bad on Modern Screens",
@@ -4268,8 +4268,8 @@ JPT AI (sjpt.io) offers free AI enhancement that increases resolution, sharpens 
 Stack these issues together and you get an image that's low-resolution, noisy, faded, and soft, all at once. This is precisely the combination that AI enhancement is designed to tackle, reconstructing detail and clarity that the original capture and storage never preserved.`,
       },
       {
-        heading: "How JPT AI Enhances Old and Scanned Photos",
-        body: `JPT AI enhances old photos by combining intelligent upscaling with AI-driven detail reconstruction, going far beyond a simple sharpen slider. When you upload a scanned photo, the AI examines the image to understand its content, faces, edges, textures, and background, then rebuilds detail based on patterns learned from a vast library of high-quality images.
+        heading: "How Pixel Shine Enhances Old and Scanned Photos",
+        body: `Pixel Shine enhances old photos by combining intelligent upscaling with AI-driven detail reconstruction, going far beyond a simple sharpen slider. When you upload a scanned photo, the AI examines the image to understand its content, faces, edges, textures, and background, then rebuilds detail based on patterns learned from a vast library of high-quality images.
 
 **Smart resolution boost.** Instead of just enlarging pixels (which makes images blocky), the AI adds believable new detail as it upscales. A soft 2x enlargement suddenly shows crisp edges and defined features.
 
@@ -4277,11 +4277,11 @@ Stack these issues together and you get an image that's low-resolution, noisy, f
 
 **Noise and grain cleanup.** Film grain and scanner noise get intelligently removed without smearing real detail, producing a clean, modern-looking image.
 
-JPT AI provides two modes. The Normal upscale is free, unlimited, and needs no sign-in, perfect for enhancing an entire album of scanned photos. The Pro AI mode applies deeper generative enhancement using credits, ideal for your most damaged or lowest-quality scans. New users receive 5 free trials to experience Pro quality, and no output ever carries a watermark.`,
+Pixel Shine provides two modes. The Normal upscale is free, unlimited, and needs no sign-in, perfect for enhancing an entire album of scanned photos. The Pro AI mode applies deeper generative enhancement using credits, ideal for your most damaged or lowest-quality scans. New users receive 5 free trials to experience Pro quality, and no output ever carries a watermark.`,
       },
       {
         heading: "Step-by-Step: Enhance Your Old Photos for Free",
-        body: `Here's the complete workflow to enhance a vintage or scanned photo using JPT AI.
+        body: `Here's the complete workflow to enhance a vintage or scanned photo using Pixel Shine.
 
 **1. Digitize the original well.** Scan prints at 600 DPI for the sharpest source. No scanner? Photograph the print flat in soft, even daylight, holding your phone directly overhead to avoid glare and keystone distortion.
 
@@ -4368,7 +4368,7 @@ JPT AI provides two modes. The Normal upscale is free, unlimited, and needs no s
       {
         heading: "Frequently Asked Questions",
         body: `**Can I really enhance old photos for free?**
-Yes. JPT AI's Normal upscale mode is free, unlimited, and requires no sign-up. You can enhance an entire album without any watermark. The Pro AI mode uses credits for deeper reconstruction, and new users get 5 free trials.
+Yes. Pixel Shine's Normal upscale mode is free, unlimited, and requires no sign-up. You can enhance an entire album without any watermark. The Pro AI mode uses credits for deeper reconstruction, and new users get 5 free trials.
 
 **Does AI enhancement work on black-and-white photos?**
 Absolutely. The AI boosts resolution, sharpens faces, and reduces grain on black-and-white images just as effectively as on color photos. Enhancing and colorizing are separate processes.
@@ -4383,28 +4383,28 @@ Normal is free, unlimited, and handles most old photos well. Pro AI applies deep
 No. Everything runs online at sjpt.io on desktop or mobile. There's nothing to install.
 
 **Will there be a watermark on my enhanced photos?**
-Never. JPT AI produces clean, watermark-free results ready to print, frame, or share.
+Never. Pixel Shine produces clean, watermark-free results ready to print, frame, or share.
 
 **What DPI should I use when scanning old prints?**
 Scan standard prints at 600 DPI. For very small photos, 1200 DPI captures even more source detail for the AI to enhance.
 
 **Can I enhance photos from my phone?**
-Yes. JPT AI works on mobile, so you can upload, enhance, and download old photos directly from your phone.`,
+Yes. Pixel Shine works on mobile, so you can upload, enhance, and download old photos directly from your phone.`,
       },
       {
         heading: "Key Takeaways",
         body: `Enhancing old photos for free has never been easier or more effective. With AI, you can boost resolution, sharpen faded faces, and clean up decades of grain and noise in seconds, turning washed-out originals into crisp, shareable memories. The recipe for great results is straightforward: start with a clean high-DPI scan, crop to your subject, match the upscale level to the source, and reserve Pro mode for your most precious images.
 
-JPT AI puts all of this within reach for free, with unlimited watermark-free enhancement and no mandatory sign-up. Your family memories deserve to look their best. Head to sjpt.io, upload an old photo, and see the transformation for yourself.`,
+Pixel Shine puts all of this within reach for free, with unlimited watermark-free enhancement and no mandatory sign-up. Your family memories deserve to look their best. Head to sjpt.io, upload an old photo, and see the transformation for yourself.`,
       },
     ],
   },
   {
     slug: "upscale-image-without-losing-quality-free",
     title: "Upscale Images Without Losing Quality for Free — AI Guide",
-    metaTitle: "Upscale Image Without Losing Quality Free | JPT AI",
-    metaDescription: "Learn how to upscale images without losing quality for free. JPT AI uses AI super-resolution to enlarge photos with sharp, natural detail — no watermark.",
-    excerpt: "The biggest challenge in upscaling images is preserving quality. JPT AI solves this with AI super-resolution that actually improves quality while enlarging your images.",
+    metaTitle: "Upscale Image Without Losing Quality Free | Pixel Shine",
+    metaDescription: "Learn how to upscale images without losing quality for free. Pixel Shine uses AI super-resolution to enlarge photos with sharp, natural detail — no watermark.",
+    excerpt: "The biggest challenge in upscaling images is preserving quality. Pixel Shine solves this with AI super-resolution that actually improves quality while enlarging your images.",
     date: "2025-09-22",
     readTime: "11 min read",
     category: "Tutorial",
@@ -4418,7 +4418,7 @@ JPT AI puts all of this within reach for free, with unlimited watermark-free enh
 
 The reason traditional enlargement degrades quality is simple: it spreads existing pixels over a larger area and guesses the in-between values by averaging, which softens edges and detail. A genuinely lossless-feeling upscale requires a completely different approach — AI super-resolution that reconstructs new, believable detail as it enlarges, so the image actually stays crisp or even looks sharper at the larger size.
 
-In this guide, we'll explain exactly why old methods lost quality, how AI upscaling with no quality loss actually works, and how to use JPT AI to upscale photos while preserving quality — free, unlimited, watermark-free, and without a mandatory sign-up. You'll get a step-by-step walkthrough, expert tips for maximum clarity, the mistakes that reintroduce blur, and the real scenarios where preserving quality during enlargement matters most. Let's break the old compromise for good.`,
+In this guide, we'll explain exactly why old methods lost quality, how AI upscaling with no quality loss actually works, and how to use Pixel Shine to upscale photos while preserving quality — free, unlimited, watermark-free, and without a mandatory sign-up. You'll get a step-by-step walkthrough, expert tips for maximum clarity, the mistakes that reintroduce blur, and the real scenarios where preserving quality during enlargement matters most. Let's break the old compromise for good.`,
       },
       {
         heading: "Why Traditional Upscaling Destroys Quality",
@@ -4431,18 +4431,18 @@ In this guide, we'll explain exactly why old methods lost quality, how AI upscal
 **The perception of quality loss.** Because our eyes are drawn to edges and fine detail, the blur from interpolation reads immediately as \"low quality.\" This is why a stretched image looks worse even when it technically contains the same information spread thinner. Breaking this cycle requires a tool that can genuinely add correct detail rather than smear existing pixels — which is precisely the leap that AI super-resolution makes.`,
       },
       {
-        heading: "How JPT AI Upscales Without Quality Loss",
-        body: `JPT AI's upscaler avoids the quality loss of traditional methods by not stretching pixels at all — instead, it reconstructs detail. Its deep-learning model was trained on millions of image pairs, each a low-resolution version matched to its high-resolution original. Through that training, the model learned what real detail looks like: how edges should stay crisp, how textures like skin, fabric, and foliage should appear at higher resolution, and how to add believable structure rather than blur.
+        heading: "How Pixel Shine Upscales Without Quality Loss",
+        body: `Pixel Shine's upscaler avoids the quality loss of traditional methods by not stretching pixels at all — instead, it reconstructs detail. Its deep-learning model was trained on millions of image pairs, each a low-resolution version matched to its high-resolution original. Through that training, the model learned what real detail looks like: how edges should stay crisp, how textures like skin, fabric, and foliage should appear at higher resolution, and how to add believable structure rather than blur.
 
-**Detail is generated, not averaged.** When you upload an image, JPT AI predicts and rebuilds the fine detail that a larger version should have. This is why the result looks sharp — often sharper than the original — rather than softened. It's the opposite of interpolation's smearing.
+**Detail is generated, not averaged.** When you upload an image, Pixel Shine predicts and rebuilds the fine detail that a larger version should have. This is why the result looks sharp — often sharper than the original — rather than softened. It's the opposite of interpolation's smearing.
 
 **Free Normal mode** handles everyday quality-preserving upscaling — web images, product photos, social media — free, unlimited, and with no sign-up. For images where quality matters most — portraits, detailed textures, print work — **Pro AI mode** uses a more powerful, credit-based model that maximizes detail recovery and cleanup.
 
-**Clean output preserves your work.** JPT AI never adds watermarks and requires no account for Normal upscaling, so the quality you gain isn't undermined by a logo or a gate. New users get five free trials of the Pro AI features. The end result is upscaling that feels lossless — your image comes out larger and clean, with detail intact rather than sacrificed.`,
+**Clean output preserves your work.** Pixel Shine never adds watermarks and requires no account for Normal upscaling, so the quality you gain isn't undermined by a logo or a gate. New users get five free trials of the Pro AI features. The end result is upscaling that feels lossless — your image comes out larger and clean, with detail intact rather than sacrificed.`,
       },
       {
         heading: "Step-by-Step: Upscaling With Quality Preserved",
-        body: `Follow these steps to enlarge your image while keeping it sharp using JPT AI.
+        body: `Follow these steps to enlarge your image while keeping it sharp using Pixel Shine.
 
 **1. Open sjpt.io and go to the Upscale tool.** The free Normal upscaler needs no account, so you can begin immediately.
 
@@ -4512,9 +4512,9 @@ In this guide, we'll explain exactly why old methods lost quality, how AI upscal
 
 **Versus Photoshop's enlargement,** Adobe's tools preserve more detail than basic bicubic and include smart options, but they require a paid subscription and manual skill, and still trail dedicated AI super-resolution on difficult images where real reconstruction matters.
 
-**Versus paid AI desktop apps** like Topaz Gigapixel, JPT AI delivers comparable quality-preserving reconstruction without the upfront cost, heavy install, or hardware demands — everything runs online.
+**Versus paid AI desktop apps** like Topaz Gigapixel, Pixel Shine delivers comparable quality-preserving reconstruction without the upfront cost, heavy install, or hardware demands — everything runs online.
 
-**Versus other free online tools,** JPT AI stands out by actually being free and clean: unlimited Normal upscaling, no watermark to undermine your quality gains, and no mandatory sign-up, plus a Pro AI mode for the most quality-critical jobs and five free trials to test it. For anyone who needs enlargement that genuinely preserves quality without spending money or accepting compromises, this combination is exceptionally hard to match.`,
+**Versus other free online tools,** Pixel Shine stands out by actually being free and clean: unlimited Normal upscaling, no watermark to undermine your quality gains, and no mandatory sign-up, plus a Pro AI mode for the most quality-critical jobs and five free trials to test it. For anyone who needs enlargement that genuinely preserves quality without spending money or accepting compromises, this combination is exceptionally hard to match.`,
       },
       {
         heading: "Who Needs Quality-Preserving Upscaling",
@@ -4525,18 +4525,18 @@ In this guide, we'll explain exactly why old methods lost quality, how AI upscal
       {
         heading: "Frequently Asked Questions",
         body: `**Can I really upscale an image without losing quality for free?**
-Yes. JPT AI's free Normal upscaler reconstructs detail rather than stretching pixels, so images stay sharp — often sharper — as they enlarge. It's unlimited and needs no sign-up.
+Yes. Pixel Shine's free Normal upscaler reconstructs detail rather than stretching pixels, so images stay sharp — often sharper — as they enlarge. It's unlimited and needs no sign-up.
 
 **Why do normal resizers make images blurry?**
 Basic resizers use interpolation, averaging neighboring pixels to fill the larger canvas. Averaging smears edges and detail, which is why stretched images always look softer.
 
 **How does AI avoid quality loss?**
-JPT AI's model was trained on millions of image pairs and predicts the real detail a larger image should have, rebuilding edges and textures instead of blurring existing pixels.
+Pixel Shine's model was trained on millions of image pairs and predicts the real detail a larger image should have, rebuilding edges and textures instead of blurring existing pixels.
 
 **Is the result truly lossless?**
 No upscale is mathematically lossless, but AI reconstruction produces results that look clean and sharp rather than degraded — a dramatic improvement over the visible quality loss of traditional enlargement.
 
-**Does JPT AI add watermarks?**
+**Does Pixel Shine add watermarks?**
 No. Every downloaded file is clean and watermark-free, so your quality gains aren't undermined by a logo.
 
 **What formats can I upload?**
@@ -4550,7 +4550,7 @@ Export at high quality or as PNG. Saving your upscaled image at aggressive JPEG 
       },
       {
         heading: "Key Takeaways",
-        body: `The old trade-off between size and quality is over. With AI super-resolution, you can upscale an image without losing quality for free — because the technology reconstructs real detail instead of smearing existing pixels the way traditional resizers do. JPT AI delivers this with a free, unlimited Normal upscaler, watermark-free output, no mandatory sign-up, and a Pro AI mode for the most quality-critical jobs.
+        body: `The old trade-off between size and quality is over. With AI super-resolution, you can upscale an image without losing quality for free — because the technology reconstructs real detail instead of smearing existing pixels the way traditional resizers do. Pixel Shine delivers this with a free, unlimited Normal upscaler, watermark-free output, no mandatory sign-up, and a Pro AI mode for the most quality-critical jobs.
 
 Whether you're preparing portraits, product photos, prints, or precious memories, your images can now get bigger without getting worse. See the difference for yourself — head to sjpt.io and upscale your first image with quality intact, free.`,
       },
@@ -4559,9 +4559,9 @@ Whether you're preparing portraits, product photos, prints, or precious memories
   {
     slug: "best-free-ai-photo-enhancer-2025",
     title: "Best Free AI Photo Enhancer Tools in 2025 — Ranked and Reviewed",
-    metaTitle: "Best Free AI Photo Enhancer 2025 | JPT AI",
-    metaDescription: "Discover the best free AI photo enhancer tools of 2025. We rank and review top options including JPT AI — the top pick for no-watermark free enhancement.",
-    excerpt: "2025 has brought an explosion of AI photo enhancement tools. We rank the best free options — and explain why JPT AI tops the list for watermark-free, high-quality results.",
+    metaTitle: "Best Free AI Photo Enhancer 2025 | Pixel Shine",
+    metaDescription: "Discover the best free AI photo enhancer tools of 2025. We rank and review top options including Pixel Shine — the top pick for no-watermark free enhancement.",
+    excerpt: "2025 has brought an explosion of AI photo enhancement tools. We rank the best free options — and explain why Pixel Shine tops the list for watermark-free, high-quality results.",
     date: "2025-10-01",
     readTime: "11 min read",
     category: "Comparison",
@@ -4573,7 +4573,7 @@ Whether you're preparing portraits, product photos, prints, or precious memories
       {
         body: `Choosing the best free AI photo enhancer in 2025 is harder than it should be. The market is crowded with tools that all claim to be the best, yet most reveal hidden watermarks, sign-up walls, or resolution caps the moment you actually try to use them. If you've wasted time testing enhancers only to hit a paywall at download, you're not alone — and this ranked, reviewed guide is here to fix that.
 
-We've evaluated free AI photo enhancers on the factors that genuinely matter: enhancement quality, watermark policy, sign-up requirements, usage limits, output resolution, and overall value. This isn't a list padded with tools that barely work; it's a practical comparison to help you pick the right enhancer for your needs in 2025. You'll learn what separates a top-tier free enhancer from a bait-and-switch demo, how AI enhancement technology has evolved, and why JPT AI consistently ranks at the top for people who want professional results without cost or friction. Let's break down the best free AI image enhancers of 2025 and how to get the most from them.`,
+We've evaluated free AI photo enhancers on the factors that genuinely matter: enhancement quality, watermark policy, sign-up requirements, usage limits, output resolution, and overall value. This isn't a list padded with tools that barely work; it's a practical comparison to help you pick the right enhancer for your needs in 2025. You'll learn what separates a top-tier free enhancer from a bait-and-switch demo, how AI enhancement technology has evolved, and why Pixel Shine consistently ranks at the top for people who want professional results without cost or friction. Let's break down the best free AI image enhancers of 2025 and how to get the most from them.`,
       },
       {
         heading: "How the AI Photo Enhancer Market Changed by 2025",
@@ -4586,22 +4586,22 @@ But the business model wars intensified alongside the technology. To monetize, m
 That's why, in 2025, the *best* free enhancer isn't just the one with the strongest AI — it's the one that pairs strong AI with genuinely free access. The tools that win are those that let you enhance, download clean, and move on without a credit card or an email signup.`,
       },
       {
-        heading: "Why JPT AI Ranks at the Top",
-        body: `Among 2025's free AI photo enhancers, JPT AI stands out by combining strong reconstruction quality with the least friction. Its **Normal Upscaler** is free, unlimited, and requires no sign-up — and crucially, every download is **watermark-free at full resolution**. That trifecta of free, unlimited, and clean output is rare, and it's the main reason JPT AI tops our ranking.
+        heading: "Why Pixel Shine Ranks at the Top",
+        body: `Among 2025's free AI photo enhancers, Pixel Shine stands out by combining strong reconstruction quality with the least friction. Its **Normal Upscaler** is free, unlimited, and requires no sign-up — and crucially, every download is **watermark-free at full resolution**. That trifecta of free, unlimited, and clean output is rare, and it's the main reason Pixel Shine tops our ranking.
 
 The underlying engine uses deep learning to reconstruct realistic detail rather than crudely oversharpening, so results look naturally improved. For images that need more muscle — portraits, fine text, or heavily degraded photos — the **Pro AI Upscaler** applies aggressive reconstruction using credits, and new users get **5 free trials** to test it before spending.
 
-JPT AI also earns points for **breadth**. It's not a one-trick tool: alongside enhancement, you get a free background remover, an AI headshot generator, a text-prompt photo editor, and creative AI effects — all in one online platform with no installation. That makes it a genuine editing hub rather than a single gadget.
+Pixel Shine also earns points for **breadth**. It's not a one-trick tool: alongside enhancement, you get a free background remover, an AI headshot generator, a text-prompt photo editor, and creative AI effects — all in one online platform with no installation. That makes it a genuine editing hub rather than a single gadget.
 
-When you weigh quality, watermark policy, sign-up requirements, usage limits, output resolution, and overall value together, JPT AI scores at or near the top of every category that matters to real users, which is exactly what earns it the number-one spot.`,
+When you weigh quality, watermark policy, sign-up requirements, usage limits, output resolution, and overall value together, Pixel Shine scores at or near the top of every category that matters to real users, which is exactly what earns it the number-one spot.`,
       },
       {
         heading: "Step-by-Step: Testing a Free AI Enhancer",
-        body: `Here's how to evaluate and use a top free AI enhancer, using JPT AI as the example:
+        body: `Here's how to evaluate and use a top free AI enhancer, using Pixel Shine as the example:
 
 **1. Open the tool.** Go to sjpt.io and find the upscale / enhance feature. Confirm it loads online with no installation.
 
-**2. Check for a sign-up wall.** With JPT AI's Normal Upscaler, you can start immediately — no account required. This is your first quality test; tools that block you here score lower.
+**2. Check for a sign-up wall.** With Pixel Shine's Normal Upscaler, you can start immediately — no account required. This is your first quality test; tools that block you here score lower.
 
 **3. Upload a real image.** Drag and drop a genuine low-quality photo (JPG, PNG, or WebP), not a demo file, so you can judge true performance.
 
@@ -4621,7 +4621,7 @@ When you weigh quality, watermark policy, sign-up requirements, usage limits, ou
 
 **Prioritize natural detail over sharpness.** The best 2025 enhancers reconstruct texture without halos. If an output looks crunchy or plasticky, that tool is using dated processing.
 
-**Match mode to subject.** For portraits and text, use a stronger engine like JPT AI's Pro tier. For landscapes and general scenes, a free Normal mode usually suffices.
+**Match mode to subject.** For portraits and text, use a stronger engine like Pixel Shine's Pro tier. For landscapes and general scenes, a free Normal mode usually suffices.
 
 **Enhance before cropping or editing.** Preserve maximum pixel data by enhancing the full image first, then cropping and adjusting the high-resolution result.
 
@@ -4659,21 +4659,21 @@ When you weigh quality, watermark policy, sign-up requirements, usage limits, ou
       },
       {
         heading: "Comparison: What to Look For in 2025",
-        body: `When ranking free AI photo enhancers, weigh these criteria — and see how JPT AI performs against them.
+        body: `When ranking free AI photo enhancers, weigh these criteria — and see how Pixel Shine performs against them.
 
-**Enhancement quality:** Does it reconstruct natural detail or just oversharpen? JPT AI's deep-learning engine produces natural results, with a Pro tier for demanding images.
+**Enhancement quality:** Does it reconstruct natural detail or just oversharpen? Pixel Shine's deep-learning engine produces natural results, with a Pro tier for demanding images.
 
-**Watermark policy:** Are downloads clean? JPT AI's Normal Upscaler downloads with no watermark, where many rivals stamp a logo.
+**Watermark policy:** Are downloads clean? Pixel Shine's Normal Upscaler downloads with no watermark, where many rivals stamp a logo.
 
-**Sign-up requirement:** Can you start immediately? JPT AI requires no account for the Normal tier; competitors often force registration.
+**Sign-up requirement:** Can you start immediately? Pixel Shine requires no account for the Normal tier; competitors often force registration.
 
 **Usage limits:** Is it unlimited? The Normal Upscaler has no cap, unlike tools that limit you to one or two images daily.
 
-**Output resolution:** Do you get full resolution free? JPT AI delivers full-res downloads, while others reserve high resolution for paying users.
+**Output resolution:** Do you get full resolution free? Pixel Shine delivers full-res downloads, while others reserve high resolution for paying users.
 
-**Value and breadth:** Does it do more than enhance? JPT AI bundles background removal, headshot generation, a text-prompt editor, and creative effects.
+**Value and breadth:** Does it do more than enhance? Pixel Shine bundles background removal, headshot generation, a text-prompt editor, and creative effects.
 
-Against these six benchmarks, JPT AI scores strongly across the board, which is why it earns the top ranking. Other tools may excel in one area but stumble on watermarks, limits, or sign-up friction — the exact points where JPT AI stays free and open.`,
+Against these six benchmarks, Pixel Shine scores strongly across the board, which is why it earns the top ranking. Other tools may excel in one area but stumble on watermarks, limits, or sign-up friction — the exact points where Pixel Shine stays free and open.`,
       },
       {
         heading: "Who Should Use a Free AI Enhancer in 2025",
@@ -4686,43 +4686,43 @@ Against these six benchmarks, JPT AI scores strongly across the board, which is 
       {
         heading: "Frequently Asked Questions",
         body: `**What is the best free AI photo enhancer in 2025?**
-JPT AI ranks at the top for combining strong deep-learning quality with genuinely free access — its Normal Upscaler is unlimited, requires no sign-up, and downloads watermark-free at full resolution.
+Pixel Shine ranks at the top for combining strong deep-learning quality with genuinely free access — its Normal Upscaler is unlimited, requires no sign-up, and downloads watermark-free at full resolution.
 
 **Are free AI photo enhancers actually good in 2025?**
 Yes. Deep-learning models have matured to reconstruct natural detail rather than just oversharpening. The best free tools now rival what used to require paid desktop software.
 
 **Do free enhancers add watermarks?**
-Many do, reserving clean downloads for paid users. JPT AI's Normal Upscaler is a notable exception, downloading with no watermark at full resolution.
+Many do, reserving clean downloads for paid users. Pixel Shine's Normal Upscaler is a notable exception, downloading with no watermark at full resolution.
 
 **Is there a usage limit on free enhancers?**
-Some cap you at one or two images per day. JPT AI's Normal Upscaler is unlimited, making it practical for regular and bulk use.
+Some cap you at one or two images per day. Pixel Shine's Normal Upscaler is unlimited, making it practical for regular and bulk use.
 
-**Do I need to sign up to use JPT AI?**
+**Do I need to sign up to use Pixel Shine?**
 Not for the Normal Upscaler. You can enhance immediately with no account. The Pro AI engine offers 5 free trials for new users.
 
 **What's the difference between free and Pro enhancement?**
 The free Normal tier handles everyday photos well. Pro applies stronger reconstruction for portraits, fine text, and degraded images, using credits with 5 free trials.
 
 **Can I enhance photos on my phone?**
-Yes. JPT AI runs on mobile, so you can enhance on the go without installing an app.
+Yes. Pixel Shine runs on mobile, so you can enhance on the go without installing an app.
 
 **Besides enhancement, what else can these tools do?**
-JPT AI also offers a free background remover, AI headshot generator, text-prompt photo editor, and creative AI effects, making it a full editing platform rather than a single tool.`,
+Pixel Shine also offers a free background remover, AI headshot generator, text-prompt photo editor, and creative AI effects, making it a full editing platform rather than a single tool.`,
       },
       {
         heading: "Key Takeaways",
-        body: `In 2025, the best free AI photo enhancer is the one that pairs modern deep-learning quality with genuinely free, unrestricted access — and by that standard, JPT AI leads. Its Normal Upscaler is unlimited, needs no sign-up, and downloads watermark-free at full resolution, while the Pro engine handles demanding images with 5 free trials for new users.
+        body: `In 2025, the best free AI photo enhancer is the one that pairs modern deep-learning quality with genuinely free, unrestricted access — and by that standard, Pixel Shine leads. Its Normal Upscaler is unlimited, needs no sign-up, and downloads watermark-free at full resolution, while the Pro engine handles demanding images with 5 free trials for new users.
 
-When you evaluate any enhancer, test the final download, not just the preview, and weigh quality, watermarks, limits, resolution, and sign-up friction together. For most users seeking professional results without cost or hassle, JPT AI checks every box. Try the top-ranked free AI enhancer of 2025 at sjpt.io.`,
+When you evaluate any enhancer, test the final download, not just the preview, and weigh quality, watermarks, limits, resolution, and sign-up friction together. For most users seeking professional results without cost or hassle, Pixel Shine checks every box. Try the top-ranked free AI enhancer of 2025 at sjpt.io.`,
       },
     ],
   },
   {
     slug: "enhance-blurry-wedding-photos-free",
     title: "Enhance Blurry Wedding Photos for Free — AI Restoration Guide",
-    metaTitle: "Enhance Blurry Wedding Photos Free | JPT AI",
-    metaDescription: "Fix and enhance blurry wedding photos for free with JPT AI. AI sharpening restores precious memories from soft or low-resolution wedding shots — no watermark.",
-    excerpt: "Your wedding photos are irreplaceable. When they turn out blurry or soft, JPT AI can restore sharpness and detail for free — saving memories that matter most.",
+    metaTitle: "Enhance Blurry Wedding Photos Free | Pixel Shine",
+    metaDescription: "Fix and enhance blurry wedding photos for free with Pixel Shine. AI sharpening restores precious memories from soft or low-resolution wedding shots — no watermark.",
+    excerpt: "Your wedding photos are irreplaceable. When they turn out blurry or soft, Pixel Shine can restore sharpness and detail for free — saving memories that matter most.",
     date: "2025-10-10",
     readTime: "11 min read",
     category: "Guide",
@@ -4734,7 +4734,7 @@ When you evaluate any enhancer, test the final download, not just the preview, a
       {
         body: `Learning how to enhance blurry wedding photos for free can feel deeply personal — because wedding photos aren't just images, they're the only record of one of the most important days of your life. When a treasured shot of your first dance, your grandparents, or that spontaneous laugh at the reception comes out soft or blurry, it stings in a way that a mundane photo never could. The good news is that AI restoration technology can now fix wedding photo blur, sharpen faded details, and rescue moments you thought were lost — for free, online.
 
-In this guide, we'll show you exactly how to restore wedding photos with AI, whether they're recent shots that came out soft in dim reception lighting or decades-old prints from your parents' or grandparents' wedding. You'll learn why wedding photos so often turn out blurry, how AI reconstructs lost detail, and how to use JPT AI's free tool — which adds no watermark and requires no sign-up for its free mode. Let's bring those irreplaceable memories back into focus.`,
+In this guide, we'll show you exactly how to restore wedding photos with AI, whether they're recent shots that came out soft in dim reception lighting or decades-old prints from your parents' or grandparents' wedding. You'll learn why wedding photos so often turn out blurry, how AI reconstructs lost detail, and how to use Pixel Shine's free tool — which adds no watermark and requires no sign-up for its free mode. Let's bring those irreplaceable memories back into focus.`,
       },
       {
         heading: "Why Wedding Photos So Often Come Out Blurry",
@@ -4751,12 +4751,12 @@ In this guide, we'll show you exactly how to restore wedding photos with AI, whe
 Because these images are irreplaceable — you cannot restage a wedding — recovering them matters far more than fixing an ordinary snapshot. And AI is remarkably good at exactly the kinds of blur weddings produce: low-light softness, compression damage, and focus errors.`,
       },
       {
-        heading: "How JPT AI Restores Wedding Photos",
-        body: `JPT AI restores wedding photos using AI reconstruction rather than the crude sharpening filters of the past. Old-style sharpening just boosts edge contrast, which amplifies grain and adds ugly halos — the last thing you want on a delicate portrait. JPT AI instead uses a model trained on millions of high-quality images to rebuild the detail your photo lost.
+        heading: "How Pixel Shine Restores Wedding Photos",
+        body: `Pixel Shine restores wedding photos using AI reconstruction rather than the crude sharpening filters of the past. Old-style sharpening just boosts edge contrast, which amplifies grain and adds ugly halos — the last thing you want on a delicate portrait. Pixel Shine instead uses a model trained on millions of high-quality images to rebuild the detail your photo lost.
 
 When you upload a soft wedding photo, the AI recognizes faces, fabric, flowers, and other structures, then reconstructs believable fine detail — the lace on a dress, the catchlight in someone's eyes, the texture of a bouquet. It handles the low-light grain and compression softness that plague reception photos especially well, and it upscales as it works, so a small, soft image becomes larger and print-ready.
 
-The **Normal mode is completely free, unlimited, and needs no account**, which is perfect for working through a whole gallery of photos. For your most precious or most damaged images — a one-of-a-kind heirloom portrait, say — **Pro AI mode** applies a heavier reconstruction model using credits, with 5 free trials for new users. And JPT AI never adds a watermark, so your restored wedding memories are clean, print-ready, and truly yours.`,
+The **Normal mode is completely free, unlimited, and needs no account**, which is perfect for working through a whole gallery of photos. For your most precious or most damaged images — a one-of-a-kind heirloom portrait, say — **Pro AI mode** applies a heavier reconstruction model using credits, with 5 free trials for new users. And Pixel Shine never adds a watermark, so your restored wedding memories are clean, print-ready, and truly yours.`,
       },
       {
         heading: "Step-by-Step: Enhance Your Wedding Photos for Free",
@@ -4764,7 +4764,7 @@ The **Normal mode is completely free, unlimited, and needs no account**, which i
 
 **1. Open the restoration tool.** Visit sjpt.io and launch the AI Upscaler. The free Normal mode requires no sign-up, so you can start restoring immediately.
 
-**2. Upload your wedding photo.** Drag it in or click to browse. For old prints, scan or photograph them at the highest resolution you can first — 600 DPI or more for scans — then upload that. JPT AI supports JPG, PNG, WebP, and more.
+**2. Upload your wedding photo.** Drag it in or click to browse. For old prints, scan or photograph them at the highest resolution you can first — 600 DPI or more for scans — then upload that. Pixel Shine supports JPG, PNG, WebP, and more.
 
 **3. Choose your mode.** Select Normal for free, unlimited restoration that works beautifully on most reception and portrait shots. For heavily damaged heirloom photos, choose Pro AI mode, which uses credits (5 free trials for new users).
 
@@ -4816,7 +4816,7 @@ The **Normal mode is completely free, unlimited, and needs no account**, which i
 
 **Album and print prep.** Photos destined for a physical wedding album or a framed enlargement get sharpened and upscaled so they stay crisp at large sizes.
 
-**Slideshow and thank-you cards.** Soft shots you want to include in an anniversary slideshow or thank-you card become polished and presentable. Across all of these, JPT AI's free Normal mode handles the work with no watermark and no sign-up.`,
+**Slideshow and thank-you cards.** Soft shots you want to include in an anniversary slideshow or thank-you card become polished and presentable. Across all of these, Pixel Shine's free Normal mode handles the work with no watermark and no sign-up.`,
       },
       {
         heading: "Advanced Techniques for Heirloom Wedding Photos",
@@ -4835,10 +4835,10 @@ The **Normal mode is completely free, unlimited, and needs no account**, which i
       {
         heading: "Frequently Asked Questions",
         body: `**Can I enhance blurry wedding photos for free?**
-Yes. JPT AI's Normal mode restores wedding photos completely free, with no limits and no sign-up. Credits are only needed for the heavier Pro AI mode, and new users get 5 free Pro trials — ideal for your most precious heirloom images.
+Yes. Pixel Shine's Normal mode restores wedding photos completely free, with no limits and no sign-up. Credits are only needed for the heavier Pro AI mode, and new users get 5 free Pro trials — ideal for your most precious heirloom images.
 
 **Will my restored wedding photo have a watermark?**
-No. JPT AI never watermarks output, so your restored photos are clean and ready to print, frame, or share.
+No. Pixel Shine never watermarks output, so your restored photos are clean and ready to print, frame, or share.
 
 **Do I need an account to restore wedding photos?**
 Not for the free Normal mode. You can upload and restore without signing up, which makes it easy to work through a whole gallery.
@@ -4860,7 +4860,7 @@ Yes. Your images are processed to produce your result and aren't repurposed, and
       },
       {
         heading: "Key Takeaways",
-        body: `Wedding photos capture moments you can never recreate, so when they come out blurry, restoring them matters. AI can now reconstruct the detail lost to dim reception lighting, motion, and decades of aging — sharpening faces, cleaning up grain, and enlarging images for print, all for free. JPT AI's Normal mode does this with no watermark, no forced sign-up, and no usage caps, while 5 free Pro trials let you give your most precious heirloom portraits the maximum reconstruction they deserve.
+        body: `Wedding photos capture moments you can never recreate, so when they come out blurry, restoring them matters. AI can now reconstruct the detail lost to dim reception lighting, motion, and decades of aging — sharpening faces, cleaning up grain, and enlarging images for print, all for free. Pixel Shine's Normal mode does this with no watermark, no forced sign-up, and no usage caps, while 5 free Pro trials let you give your most precious heirloom portraits the maximum reconstruction they deserve.
 
 Whether it's a soft first-dance shot or your grandparents' faded wedding portrait, those memories deserve to be seen clearly again. Try the free wedding photo restoration tool at sjpt.io and bring your most treasured moments back into focus.`,
       },
@@ -4869,9 +4869,9 @@ Whether it's a soft first-dance shot or your grandparents' faded wedding portrai
   {
     slug: "enhance-product-images-free",
     title: "Enhance Product Images for Free — AI Tool for E-Commerce",
-    metaTitle: "Enhance Product Images Free | JPT AI",
-    metaDescription: "Enhance product images for free with JPT AI. AI upscaling, sharpening, and background removal improve e-commerce photos and boost conversion rates.",
-    excerpt: "High-quality product images increase online sales. JPT AI makes it free to enhance, upscale, and clean up product photos — no studio or Photoshop required.",
+    metaTitle: "Enhance Product Images Free | Pixel Shine",
+    metaDescription: "Enhance product images for free with Pixel Shine. AI upscaling, sharpening, and background removal improve e-commerce photos and boost conversion rates.",
+    excerpt: "High-quality product images increase online sales. Pixel Shine makes it free to enhance, upscale, and clean up product photos — no studio or Photoshop required.",
     date: "2025-10-20",
     readTime: "11 min read",
     category: "Guide",
@@ -4883,7 +4883,7 @@ Whether it's a soft first-dance shot or your grandparents' faded wedding portrai
       {
         body: `If you sell online, learning to enhance product images for free is one of the highest-return skills you can pick up. Product photos are the single biggest driver of whether a shopper clicks, trusts, and buys — and blurry, low-resolution, or poorly lit images quietly cost sales every day. The good news is that AI now lets you sharpen, upscale, and clean up product images in seconds, at no cost and with no watermark, so even a solo seller can present listings that look professionally shot.
 
-This guide is built for e-commerce. Whether you sell on Amazon, Etsy, Shopify, eBay, or your own store, you'll learn why product image quality matters so much, how AI enhancement fixes common problems, and a precise step-by-step workflow to enhance your catalog. We'll cover pro tips for meeting marketplace resolution requirements, the mistakes that make products look cheap, and real scenarios from different types of sellers. By the end, you'll be able to turn ordinary supplier photos and phone shots into crisp, conversion-ready product images — using JPT AI's free tools, online.`,
+This guide is built for e-commerce. Whether you sell on Amazon, Etsy, Shopify, eBay, or your own store, you'll learn why product image quality matters so much, how AI enhancement fixes common problems, and a precise step-by-step workflow to enhance your catalog. We'll cover pro tips for meeting marketplace resolution requirements, the mistakes that make products look cheap, and real scenarios from different types of sellers. By the end, you'll be able to turn ordinary supplier photos and phone shots into crisp, conversion-ready product images — using Pixel Shine's free tools, online.`,
       },
       {
         heading: "Why Product Image Quality Makes or Breaks Sales",
@@ -4896,20 +4896,20 @@ The problems are predictable. **Supplier images** often arrive small and compres
 Historically, fixing this meant hiring a photographer or a retoucher — expensive and slow, especially for large catalogs. AI enhancement removes that barrier, letting any seller upscale and sharpen product images to meet marketplace standards and look professional, without a studio budget or editing expertise.`,
       },
       {
-        heading: "How JPT AI Enhances Product Images",
-        body: `JPT AI enhances product images using deep-learning models that reconstruct genuine detail — the texture of fabric, the edges of packaging, the sheen of metal — rather than crudely sharpening. This matters for products, where shoppers zoom in to inspect materials and craftsmanship. Natural, detailed enhancement builds trust; artificial oversharpening undermines it.
+        heading: "How Pixel Shine Enhances Product Images",
+        body: `Pixel Shine enhances product images using deep-learning models that reconstruct genuine detail — the texture of fabric, the edges of packaging, the sheen of metal — rather than crudely sharpening. This matters for products, where shoppers zoom in to inspect materials and craftsmanship. Natural, detailed enhancement builds trust; artificial oversharpening undermines it.
 
 The free **Normal Upscaler** is the everyday workhorse for e-commerce. It's unlimited and requires no sign-up, so you can enhance an entire catalog without cost or friction — ideal for the volume that online selling demands. For hero images, close-ups, or heavily degraded supplier photos that need maximum detail, the **Pro AI Upscaler** applies stronger reconstruction using credits, with **5 free trials** for new users to test on their most important shots.
 
-Every result downloads **watermark-free at full resolution**, which is non-negotiable for product listings — a logo across your product would be unusable, and marketplaces need the full-resolution file. This alone sets JPT AI apart from many free tools that watermark or downscale.
+Every result downloads **watermark-free at full resolution**, which is non-negotiable for product listings — a logo across your product would be unusable, and marketplaces need the full-resolution file. This alone sets Pixel Shine apart from many free tools that watermark or downscale.
 
-JPT AI's broader platform adds real e-commerce value too. The **background remover** creates the clean white backgrounds that marketplaces like Amazon require, the **text-prompt photo editor** adjusts images with simple instructions, and **creative effects** help with marketing visuals. So enhancing a product image can be one step in a complete listing-prep workflow, all in one free, online platform.`,
+Pixel Shine's broader platform adds real e-commerce value too. The **background remover** creates the clean white backgrounds that marketplaces like Amazon require, the **text-prompt photo editor** adjusts images with simple instructions, and **creative effects** help with marketing visuals. So enhancing a product image can be one step in a complete listing-prep workflow, all in one free, online platform.`,
       },
       {
         heading: "Step-by-Step: Enhancing Product Images for Free",
         body: `Here's the workflow to prepare conversion-ready product images:
 
-**1. Open JPT AI.** Go to sjpt.io and navigate to the upscale / enhance tool. It runs online — perfect for working through a catalog on desktop.
+**1. Open Pixel Shine.** Go to sjpt.io and navigate to the upscale / enhance tool. It runs online — perfect for working through a catalog on desktop.
 
 **2. Upload your product photo.** Drag and drop or browse to your file (JPG, PNG, or WebP). The Normal Upscaler needs no account, so you can start immediately.
 
@@ -4935,7 +4935,7 @@ JPT AI's broader platform adds real e-commerce value too. The **background remov
 
 **Use Pro for hero and close-up shots.** Your main listing image and detail close-ups do the most selling. Spend your 5 free Pro trials on these for maximum detail, and use Normal mode for secondary angles.
 
-**Pair enhancement with background removal.** A sharp product on a clean white background meets marketplace standards and looks premium. Combine JPT AI's upscaler and background remover for listing-ready images.
+**Pair enhancement with background removal.** A sharp product on a clean white background meets marketplace standards and looks premium. Combine Pixel Shine's upscaler and background remover for listing-ready images.
 
 **Enhance before resizing to platform specs.** Enhance the full image first, then resize to your marketplace's exact pixel dimensions, so you preserve maximum detail in the final file.
 
@@ -4979,7 +4979,7 @@ JPT AI's broader platform adds real e-commerce value too. The **background remov
 
 **Enhance then remove background, not the reverse.** Enhancing first gives the background remover cleaner edges to work with, producing a more precise cutout — especially important for products with fine details like jewelry or fabric.
 
-**Plan for platform-specific sizes.** Different marketplaces have different recommended dimensions. Enhance to a generous resolution once, then export platform-specific versions, so you're not re-enhancing the same product for each channel. Combining JPT AI's enhancer, background remover, and editor into a single online workflow lets even a solo seller produce a professional, consistent catalog for free.`,
+**Plan for platform-specific sizes.** Different marketplaces have different recommended dimensions. Enhance to a generous resolution once, then export platform-specific versions, so you're not re-enhancing the same product for each channel. Combining Pixel Shine's enhancer, background remover, and editor into a single online workflow lets even a solo seller produce a professional, consistent catalog for free.`,
       },
       {
         heading: "Who Uses Product Image Enhancement",
@@ -4992,13 +4992,13 @@ JPT AI's broader platform adds real e-commerce value too. The **background remov
       {
         heading: "Frequently Asked Questions",
         body: `**How can I enhance product images for free?**
-Use JPT AI's Normal Upscaler at sjpt.io. It's free, unlimited, and needs no sign-up. Upload your product photo, choose a scale factor to meet your marketplace's resolution requirement, and download the sharper image with no watermark.
+Use Pixel Shine's Normal Upscaler at sjpt.io. It's free, unlimited, and needs no sign-up. Upload your product photo, choose a scale factor to meet your marketplace's resolution requirement, and download the sharper image with no watermark.
 
 **Will enhanced product images meet Amazon's requirements?**
 Yes. AI upscaling lets you exceed Amazon's recommended 1000px-plus longest side to enable zoom. Pair it with the background remover to create the clean white background Amazon requires for main images.
 
 **Is there a watermark on enhanced product images?**
-No. JPT AI downloads at full resolution with no watermark, which is essential for product listings and marketplace uploads.
+No. Pixel Shine downloads at full resolution with no watermark, which is essential for product listings and marketplace uploads.
 
 **Can I enhance my whole catalog for free?**
 Yes. The Normal Upscaler is unlimited and free, so you can process an entire catalog. The Pro engine offers stronger detail with 5 free trials for your most important images.
@@ -5007,7 +5007,7 @@ Yes. The Normal Upscaler is unlimited and free, so you can process an entire cat
 Not if you keep it realistic. Avoid over-processing that changes materials or color. Accurate enhancement builds trust; misleading images lead to returns.
 
 **Can I create a white background too?**
-Yes. JPT AI includes a free background remover, so you can enhance the product and place it on a clean white background to meet marketplace rules.
+Yes. Pixel Shine includes a free background remover, so you can enhance the product and place it on a clean white background to meet marketplace rules.
 
 **Do supplier images work well with enhancement?**
 Yes. Small, compressed supplier photos are a common use case. AI upscaling brings them up to listing-ready resolution, though very tiny sources have limits.
@@ -5017,7 +5017,7 @@ Yes, and the Pro engine excels here, reconstructing fine detail like fabric weav
       },
       {
         heading: "Key Takeaways",
-        body: `Enhancing product images for free is one of the smartest moves any online seller can make, because image quality directly drives clicks, trust, and sales. JPT AI's free Normal Upscaler lets you sharpen and upscale your entire catalog with no sign-up, no watermark, and no cost, while the Pro engine delivers maximum detail for hero shots, with 5 free trials for new users.
+        body: `Enhancing product images for free is one of the smartest moves any online seller can make, because image quality directly drives clicks, trust, and sales. Pixel Shine's free Normal Upscaler lets you sharpen and upscale your entire catalog with no sign-up, no watermark, and no cost, while the Pro engine delivers maximum detail for hero shots, with 5 free trials for new users.
 
 Enhance above marketplace minimums, keep your catalog consistent, and pair enhancement with the free background remover for clean, listing-ready images. Whether you sell on Amazon, Etsy, or your own store, professional product imagery is now within reach without a studio budget. Enhance your first product image free at sjpt.io.`,
       },
@@ -5026,9 +5026,9 @@ Enhance above marketplace minimums, keep your catalog consistent, and pair enhan
   {
     slug: "ai-photo-restoration-free-online",
     title: "AI Photo Restoration Free Online — Bring Old and Damaged Photos Back",
-    metaTitle: "AI Photo Restoration Free Online | JPT AI",
-    metaDescription: "Restore old and damaged photos online for free with JPT AI. AI removes scratches, grain, and blur from vintage photos — no software, no watermark needed.",
-    excerpt: "Old and damaged photos can be beautifully restored using AI. JPT AI offers free online photo restoration that removes grain, sharpens detail, and revives faded memories.",
+    metaTitle: "AI Photo Restoration Free Online | Pixel Shine",
+    metaDescription: "Restore old and damaged photos online for free with Pixel Shine. AI removes scratches, grain, and blur from vintage photos — no software, no watermark needed.",
+    excerpt: "Old and damaged photos can be beautifully restored using AI. Pixel Shine offers free online photo restoration that removes grain, sharpens detail, and revives faded memories.",
     date: "2025-11-01",
     readTime: "11 min read",
     category: "Tutorial",
@@ -5040,7 +5040,7 @@ Enhance above marketplace minimums, keep your catalog consistent, and pair enhan
       {
         body: `AI photo restoration free online has quietly become one of the most searched-for solutions among people trying to save fading family memories, and for good reason. Millions of printed photographs from the 1950s through the early 2000s are now sitting in shoeboxes, albums, and attics, slowly degrading from humidity, sunlight, and simple handling. When you scan one of these and look at it on a modern screen, the damage jumps out: faded color, deep scratches, torn corners, blurry faces, and that soft, washed-out quality that old prints tend to develop.
 
-Until recently, the only way to fix a badly damaged photo was to pay a professional retoucher $30 to $150 per image, or spend hours learning Photoshop clone-stamp techniques. Today, AI-powered restoration can repair much of that damage in seconds, entirely free and directly online. JPT AI (sjpt.io) offers exactly this kind of tool with no watermark and no mandatory sign-up for its Normal upscale mode. In this guide, you'll learn how to restore damaged photos with AI, what the technology can and cannot fix, and the exact step-by-step workflow to bring your old and damaged photos back to life.`,
+Until recently, the only way to fix a badly damaged photo was to pay a professional retoucher $30 to $150 per image, or spend hours learning Photoshop clone-stamp techniques. Today, AI-powered restoration can repair much of that damage in seconds, entirely free and directly online. Pixel Shine (sjpt.io) offers exactly this kind of tool with no watermark and no mandatory sign-up for its Normal upscale mode. In this guide, you'll learn how to restore damaged photos with AI, what the technology can and cannot fix, and the exact step-by-step workflow to bring your old and damaged photos back to life.`,
       },
       {
         heading: "Why Old Photos Degrade in the First Place",
@@ -5057,8 +5057,8 @@ Until recently, the only way to fix a badly damaged photo was to pay a professio
 The result is that a scanned old photo carries several problems at once: it's low-resolution, faded, noisy, and physically damaged. Traditional editing tackles these one at a time. Modern AI restoration addresses many of them simultaneously, which is exactly why it feels almost magical when you first try it.`,
       },
       {
-        heading: "How JPT AI Restores Damaged Photos",
-        body: `JPT AI approaches restoration through a combination of AI upscaling and detail reconstruction rather than a single filter. When you upload a damaged or low-resolution scan, the AI analyzes the image, identifies faces, edges, textures, and noise patterns, then reconstructs missing detail based on what it has learned from millions of high-quality reference photos.
+        heading: "How Pixel Shine Restores Damaged Photos",
+        body: `Pixel Shine approaches restoration through a combination of AI upscaling and detail reconstruction rather than a single filter. When you upload a damaged or low-resolution scan, the AI analyzes the image, identifies faces, edges, textures, and noise patterns, then reconstructs missing detail based on what it has learned from millions of high-quality reference photos.
 
 **Resolution recovery.** The core engine intelligently increases resolution, so a small, soft 400-pixel-wide scan can be enlarged 2x or 4x while adding believable detail rather than just stretching pixels. This is the single biggest visual improvement for most old photos.
 
@@ -5066,17 +5066,17 @@ The result is that a scanned old photo carries several problems at once: it's lo
 
 **Noise and grain reduction.** Scanning noise and film grain get cleaned up without smearing important detail, giving the photo a crisp, modern look.
 
-JPT AI offers two modes. The Normal upscale is completely free, unlimited, and requires no sign-in, making it ideal for restoring a whole album of family photos in one sitting. The Pro AI mode uses credits and applies deeper generative reconstruction for the most severely damaged images. Crucially, JPT AI never adds a watermark, so your restored photos are ready to print or share immediately.`,
+Pixel Shine offers two modes. The Normal upscale is completely free, unlimited, and requires no sign-in, making it ideal for restoring a whole album of family photos in one sitting. The Pro AI mode uses credits and applies deeper generative reconstruction for the most severely damaged images. Crucially, Pixel Shine never adds a watermark, so your restored photos are ready to print or share immediately.`,
       },
       {
         heading: "Step-by-Step: Restore an Old Photo for Free",
-        body: `Follow these steps to restore your first damaged photo using JPT AI's free tools.
+        body: `Follow these steps to restore your first damaged photo using Pixel Shine's free tools.
 
 **1. Scan or photograph the original.** For best results, scan the print at 600 DPI on a flatbed scanner. If you don't have a scanner, lay the photo flat in bright, even daylight (avoid direct sun and flash glare) and shoot straight down with your phone. A better source scan means a dramatically better restoration.
 
 **2. Go to sjpt.io and open the Upscaler.** Navigate to the upscale tool. You do not need to create an account for the Normal mode, so you can start immediately.
 
-**3. Upload your scanned image.** Drag and drop the file or click to browse. JPT AI accepts common formats like JPG, PNG, and WEBP.
+**3. Upload your scanned image.** Drag and drop the file or click to browse. Pixel Shine accepts common formats like JPG, PNG, and WEBP.
 
 **4. Choose your enhancement mode.** Start with Normal upscale for free, unlimited processing. Select a 2x scale for already-decent scans, or 4x for very small, low-resolution images.
 
@@ -5120,7 +5120,7 @@ JPT AI offers two modes. The Normal upscale is completely free, unlimited, and r
 
 **Genealogy and family history projects.** Amateur genealogists building family trees on sites like Ancestry restore old portraits so they can attach clear, recognizable faces to each ancestor. Restoration turns a barely-visible face into a proper record.
 
-**Reprinting and framing heirlooms.** A common goal is enlarging a small vintage photo to frame for a wall. Because JPT AI upscales resolution and removes watermarks, the restored file prints crisply at larger sizes that the original never could.
+**Reprinting and framing heirlooms.** A common goal is enlarging a small vintage photo to frame for a wall. Because Pixel Shine upscales resolution and removes watermarks, the restored file prints crisply at larger sizes that the original never could.
 
 **Digitizing entire albums.** Families scanning decades of photos use the free, unlimited Normal mode to batch-improve hundreds of images before archiving them to cloud storage, ensuring the digital copies look better than the aging prints.
 
@@ -5132,7 +5132,7 @@ JPT AI offers two modes. The Normal upscale is completely free, unlimited, and r
 
 **Speed.** A professional retoucher might spend one to three hours on a badly damaged photo. AI restoration completes in seconds. For an album of 200 photos, that's the difference between weeks of work and an afternoon.
 
-**Cost.** Professional restoration runs $30 to $150 per image, while freelance clone-stamp work in Photoshop demands both the software subscription and considerable skill. JPT AI's Normal restoration is free with no watermark.
+**Cost.** Professional restoration runs $30 to $150 per image, while freelance clone-stamp work in Photoshop demands both the software subscription and considerable skill. Pixel Shine's Normal restoration is free with no watermark.
 
 **Consistency.** AI applies the same quality reconstruction to every image. Manual retouching quality varies with the artist's skill and fatigue.
 
@@ -5153,16 +5153,16 @@ JPT AI offers two modes. The Normal upscale is completely free, unlimited, and r
       {
         heading: "Frequently Asked Questions",
         body: `**Is AI photo restoration really free online?**
-Yes. JPT AI's Normal upscale and restoration mode is completely free, unlimited, and requires no sign-up. You can restore as many photos as you like without a watermark. The Pro AI mode uses credits for deeper reconstruction, and new users get 5 free trials to test it.
+Yes. Pixel Shine's Normal upscale and restoration mode is completely free, unlimited, and requires no sign-up. You can restore as many photos as you like without a watermark. The Pro AI mode uses credits for deeper reconstruction, and new users get 5 free trials to test it.
 
 **Can AI fix a torn or scratched photo?**
 AI restoration excellently handles scratches, noise, fading, and softness. For small tears and creases, it often reduces their visibility significantly. For large physically missing sections, AI enhances what remains but can't perfectly reconstruct content that no longer exists in the image.
 
 **Do I need to install any software?**
-No. JPT AI runs entirely online at sjpt.io. There's nothing to download or install, and it works on both desktop and mobile.
+No. Pixel Shine runs entirely online at sjpt.io. There's nothing to download or install, and it works on both desktop and mobile.
 
 **Will restoration add a watermark to my photo?**
-No. JPT AI never adds watermarks, so your restored images are immediately ready to print, frame, or share.
+No. Pixel Shine never adds watermarks, so your restored images are immediately ready to print, frame, or share.
 
 **What resolution should I scan old photos at?**
 Scan at 600 DPI for standard prints. This gives the AI enough source detail to work with. If a print is very small, you can even scan at 1200 DPI to maximize the input quality.
@@ -5174,22 +5174,22 @@ Yes. The AI enhances resolution, sharpens faces, and reduces noise on black-and-
 Most restorations complete in just a few seconds. Even large batches of album scans can be processed in a single afternoon using the free unlimited mode.
 
 **Is it safe to upload my private family photos?**
-JPT AI processes your images to deliver the restored result. As with any online tool, only upload photos you're comfortable processing through a cloud service, and always keep your original scans backed up locally.`,
+Pixel Shine processes your images to deliver the restored result. As with any online tool, only upload photos you're comfortable processing through a cloud service, and always keep your original scans backed up locally.`,
       },
       {
         heading: "Key Takeaways",
         body: `Restoring old and damaged photos no longer requires expensive professionals or advanced Photoshop skills. AI photo restoration free online can recover resolution, sharpen faces, reduce noise, and revive faded family memories in seconds. The keys to great results are simple: start from the best possible scan, crop tightly, choose the right upscale level, and reserve Pro mode for your most precious images.
 
-JPT AI makes this accessible to everyone with free, unlimited, watermark-free restoration and no mandatory sign-up. Whether you're digitizing an entire album or rescuing a single irreplaceable portrait, the tools are ready right now. Head to sjpt.io, upload your first damaged photo, and bring your memories back to life for free.`,
+Pixel Shine makes this accessible to everyone with free, unlimited, watermark-free restoration and no mandatory sign-up. Whether you're digitizing an entire album or rescuing a single irreplaceable portrait, the tools are ready right now. Head to sjpt.io, upload your first damaged photo, and bring your memories back to life for free.`,
       },
     ],
   },
   {
     slug: "4k-image-upscaler-free",
     title: "Free 4K Image Upscaler — AI Tool for Ultra-HD Photo Quality",
-    metaTitle: "4K Image Upscaler Free | JPT AI",
-    metaDescription: "Upscale images to 4K resolution free with JPT AI. Our AI 4K upscaler produces ultra-HD quality from any photo — no watermark, no software, no limits.",
-    excerpt: "A free 4K image upscaler that actually delivers: JPT AI uses AI super-resolution to enlarge any photo to near-4K quality with genuine detail improvement.",
+    metaTitle: "4K Image Upscaler Free | Pixel Shine",
+    metaDescription: "Upscale images to 4K resolution free with Pixel Shine. Our AI 4K upscaler produces ultra-HD quality from any photo — no watermark, no software, no limits.",
+    excerpt: "A free 4K image upscaler that actually delivers: Pixel Shine uses AI super-resolution to enlarge any photo to near-4K quality with genuine detail improvement.",
     date: "2025-11-15",
     readTime: "11 min read",
     category: "Guide",
@@ -5203,7 +5203,7 @@ JPT AI makes this accessible to everyone with free, unlimited, watermark-free re
 
 The problem is that raw enlargement doesn't work. Stretching a 1080p image to 4K with a basic tool just spreads the pixels thinner, giving you a bigger but blurrier result. True 4K clarity requires AI super-resolution: technology that reconstructs fine detail as it enlarges, producing an image that's genuinely sharp at ultra-high definition.
 
-In this guide, we'll break down how a free 4K upscaler online should work, why JPT AI stands out with unlimited Normal upscaling, no watermarks, and no forced sign-up, and how to use it to upscale to 4K free. We'll also cover expert tips, common mistakes, and the real-world scenarios where ultra-HD upscaling makes a visible difference. If you want your images to look their best on 4K screens and large prints, this is your complete playbook.`,
+In this guide, we'll break down how a free 4K upscaler online should work, why Pixel Shine stands out with unlimited Normal upscaling, no watermarks, and no forced sign-up, and how to use it to upscale to 4K free. We'll also cover expert tips, common mistakes, and the real-world scenarios where ultra-HD upscaling makes a visible difference. If you want your images to look their best on 4K screens and large prints, this is your complete playbook.`,
       },
       {
         heading: "Why You Need a Dedicated 4K Upscaler",
@@ -5216,18 +5216,18 @@ In this guide, we'll break down how a free 4K upscaler online should work, why J
 **Ordinary upscalers often disappoint too.** Many so-called AI tools are just interpolation with marketing on top, or they gate real quality behind watermarks and subscriptions. A dedicated 4K upscaler built on genuine deep-learning super-resolution is what actually delivers ultra-HD sharpness — reconstructing edges, textures, and surfaces rather than merely spreading pixels. That's the capability that makes the difference between a 4K image that impresses and one that looks stretched.`,
       },
       {
-        heading: "How JPT AI's 4K Upscaler Works",
-        body: `JPT AI's 4K image upscaler is powered by genuine AI super-resolution, engineered to lift undersized images into ultra-HD territory with real reconstructed detail. When you upload an image, the deep-learning model analyzes its content — edges, textures, patterns, faces — and predicts the high-resolution detail that should exist at 4K scale, drawing on training across millions of image pairs.
+        heading: "How Pixel Shine's 4K Upscaler Works",
+        body: `Pixel Shine's 4K image upscaler is powered by genuine AI super-resolution, engineered to lift undersized images into ultra-HD territory with real reconstructed detail. When you upload an image, the deep-learning model analyzes its content — edges, textures, patterns, faces — and predicts the high-resolution detail that should exist at 4K scale, drawing on training across millions of image pairs.
 
 **Hitting 4K through upscale factors.** A 4x enlargement turns a 1000x563 image into 4000x2252, comfortably past 4K width. A 2x pass takes a 1920-pixel source to exactly 3840 — precise 4K width. You choose the factor that lands you at ultra-HD.
 
 **Free Normal mode** covers the bulk of 4K needs: wallpapers, display images, and general enhancement — free, unlimited, and with no sign-up. For the toughest jobs — detailed portraits, degraded originals bound for large 4K print — **Pro AI mode** applies a stronger, credit-based model that maximizes detail recovery.
 
-**Clean output, no gatekeeping.** JPT AI never watermarks results and requires no account for Normal upscaling, so your 4K-ready file is immediately usable for wallpapers, client work, and print. Five free trials let new users experience the Pro AI quality before committing. The result is a free 4K image enhancer that behaves like professional software: real reconstruction, clean files, and none of the friction that makes other free upscalers frustrating.`,
+**Clean output, no gatekeeping.** Pixel Shine never watermarks results and requires no account for Normal upscaling, so your 4K-ready file is immediately usable for wallpapers, client work, and print. Five free trials let new users experience the Pro AI quality before committing. The result is a free 4K image enhancer that behaves like professional software: real reconstruction, clean files, and none of the friction that makes other free upscalers frustrating.`,
       },
       {
         heading: "Step-by-Step: Using the Free 4K Upscaler",
-        body: `Follow these steps to upscale any image to 4K with JPT AI.
+        body: `Follow these steps to upscale any image to 4K with Pixel Shine.
 
 **1. Open sjpt.io and go to the Upscale tool.** The free Normal 4K upscaler requires no account, so you can begin instantly.
 
@@ -5290,16 +5290,16 @@ In this guide, we'll break down how a free 4K upscaler online should work, why J
 **Premium product pages.** High-end e-commerce increasingly uses large, zoomable 4K imagery. Sellers upscale their best shots to meet that standard and give shoppers detailed close-ups that build confidence.`,
       },
       {
-        heading: "JPT AI vs. Other 4K Upscalers",
-        body: `Here's how JPT AI compares to the alternatives when your target is 4K.
+        heading: "Pixel Shine vs. Other 4K Upscalers",
+        body: `Here's how Pixel Shine compares to the alternatives when your target is 4K.
 
-**Versus basic resizers,** JPT AI wins decisively. Those tools reach 4K dimensions through interpolation, but the result is soft — 4K in size only. JPT AI reconstructs genuine detail for true ultra-HD sharpness.
+**Versus basic resizers,** Pixel Shine wins decisively. Those tools reach 4K dimensions through interpolation, but the result is soft — 4K in size only. Pixel Shine reconstructs genuine detail for true ultra-HD sharpness.
 
-**Versus watermark-and-subscription upscalers,** JPT AI's free Normal tier is actually free and actually clean: no logo on your image, no forced account, no one-image demo. That makes the 4K output usable for real projects immediately.
+**Versus watermark-and-subscription upscalers,** Pixel Shine's free Normal tier is actually free and actually clean: no logo on your image, no forced account, no one-image demo. That makes the 4K output usable for real projects immediately.
 
-**Versus paid desktop apps** like Topaz Gigapixel, JPT AI offers the same class of AI super-resolution without the upfront purchase, heavy install, or hardware requirements — everything runs online.
+**Versus paid desktop apps** like Topaz Gigapixel, Pixel Shine offers the same class of AI super-resolution without the upfront purchase, heavy install, or hardware requirements — everything runs online.
 
-**Versus other online AI tools,** JPT AI's combination of unlimited free Normal upscaling, a powerful credit-based Pro AI mode for the hardest 4K jobs, and five free trials for new users gives you both an accessible everyday path and a professional ceiling. For anyone who needs genuine 4K enhancement without cost or complexity, that balance is hard to beat.`,
+**Versus other online AI tools,** Pixel Shine's combination of unlimited free Normal upscaling, a powerful credit-based Pro AI mode for the hardest 4K jobs, and five free trials for new users gives you both an accessible everyday path and a professional ceiling. For anyone who needs genuine 4K enhancement without cost or complexity, that balance is hard to beat.`,
       },
       {
         heading: "Who Uses a Free 4K Upscaler",
@@ -5309,14 +5309,14 @@ In this guide, we'll break down how a free 4K upscaler online should work, why J
       },
       {
         heading: "Frequently Asked Questions",
-        body: `**Is JPT AI's 4K upscaler really free?**
+        body: `**Is Pixel Shine's 4K upscaler really free?**
 Yes. The Normal upscaler is free, unlimited, and needs no sign-up. A 4x factor on a roughly 1000-pixel source reaches 4K resolution at no cost.
 
 **What counts as a 4K image?**
 4K is approximately 3840x2160 pixels — around 8.3 million total, four times the detail of 1080p HD, and the standard for high-end screens and premium print.
 
 **Will the upscaled image be genuinely sharp at 4K?**
-Yes. JPT AI uses AI super-resolution that reconstructs real detail, so your 4K result looks crisp rather than merely enlarged like basic resizers produce.
+Yes. Pixel Shine uses AI super-resolution that reconstructs real detail, so your 4K result looks crisp rather than merely enlarged like basic resizers produce.
 
 **Does it add watermarks?**
 No. Every downloaded 4K file is clean and watermark-free, ready for wallpapers, print, and commercial use.
@@ -5325,7 +5325,7 @@ No. Every downloaded 4K file is clean and watermark-free, ready for wallpapers, 
 A source near 1000 pixels wide hits 4K at 4x; a 1920-pixel source reaches exactly 3840 at 2x. Larger, cleaner sources yield the best ultra-HD results.
 
 **Do I need to download software?**
-No. JPT AI runs entirely online at sjpt.io on any device, with nothing to install.
+No. Pixel Shine runs entirely online at sjpt.io on any device, with nothing to install.
 
 **When is Pro AI mode worth using for 4K?**
 Use it for large 4K prints, critical portraits, or heavily degraded sources needing maximum detail recovery. Five free trials let new users test it first.
@@ -5335,18 +5335,18 @@ Yes. Higher factors or additional passes from the source let you push resolution
       },
       {
         heading: "Key Takeaways",
-        body: `A free 4K image upscaler is only worth using if it delivers real ultra-HD sharpness rather than a bigger, blurrier image — and that requires genuine AI super-resolution. JPT AI provides exactly that with an unlimited free Normal upscaler, clean watermark-free output, no mandatory sign-up, and a Pro AI mode for the most demanding 4K work.
+        body: `A free 4K image upscaler is only worth using if it delivers real ultra-HD sharpness rather than a bigger, blurrier image — and that requires genuine AI super-resolution. Pixel Shine provides exactly that with an unlimited free Normal upscaler, clean watermark-free output, no mandatory sign-up, and a Pro AI mode for the most demanding 4K work.
 
-Whether you're crafting 4K wallpapers, prepping large prints, or filling ultra-HD displays, JPT AI reconstructs true detail so your images shine at full resolution. Experience it now at sjpt.io and upscale your first image to 4K free.`,
+Whether you're crafting 4K wallpapers, prepping large prints, or filling ultra-HD displays, Pixel Shine reconstructs true detail so your images shine at full resolution. Experience it now at sjpt.io and upscale your first image to 4K free.`,
       },
     ],
   },
   {
     slug: "enhance-portrait-photos-ai-free",
     title: "Enhance Portrait Photos with AI for Free — Sharper, More Detailed Results",
-    metaTitle: "Enhance Portrait Photos AI Free | JPT AI",
-    metaDescription: "Enhance portrait photos with AI for free using JPT AI. Sharpen facial detail, reduce noise, and upscale portrait images — no watermark, no software required.",
-    excerpt: "Portrait photos need special treatment — too much sharpening and skin looks unnatural; too little and the subject looks soft. JPT AI\'s AI portrait enhancement gets the balance right, for free.",
+    metaTitle: "Enhance Portrait Photos AI Free | Pixel Shine",
+    metaDescription: "Enhance portrait photos with AI for free using Pixel Shine. Sharpen facial detail, reduce noise, and upscale portrait images — no watermark, no software required.",
+    excerpt: "Portrait photos need special treatment — too much sharpening and skin looks unnatural; too little and the subject looks soft. Pixel Shine\'s AI portrait enhancement gets the balance right, for free.",
     date: "2025-12-01",
     readTime: "11 min read",
     category: "Tutorial",
@@ -5358,7 +5358,7 @@ Whether you're crafting 4K wallpapers, prepping large prints, or filling ultra-H
       {
         body: `If you want to enhance portrait photos with AI for free, you're after one specific thing: sharper, more detailed faces that still look natural — not plasticky, over-smoothed, or obviously edited. Portrait enhancement is uniquely demanding because our eyes are experts at reading faces. We instantly notice when skin looks waxy, when eyes lose their catchlights, or when hair turns into a smeared blob. Getting it right requires AI that reconstructs facial detail convincingly, and that's exactly what this guide is about.
 
-Whether you're polishing a headshot for LinkedIn, sharpening a soft phone selfie, rescuing a blurry candid, or preparing a portrait for print, AI can transform the result in seconds — for free, with no watermark and no sign-up required. In this guide, you'll learn why portraits are tricky to enhance, how JPT AI reconstructs faces naturally, a precise step-by-step workflow, and the pro tips that keep results looking real. We'll also cover the mistakes that make AI portraits look fake and how to avoid them. By the end, you'll be able to produce crisp, professional-looking portraits from ordinary photos, completely free.`,
+Whether you're polishing a headshot for LinkedIn, sharpening a soft phone selfie, rescuing a blurry candid, or preparing a portrait for print, AI can transform the result in seconds — for free, with no watermark and no sign-up required. In this guide, you'll learn why portraits are tricky to enhance, how Pixel Shine reconstructs faces naturally, a precise step-by-step workflow, and the pro tips that keep results looking real. We'll also cover the mistakes that make AI portraits look fake and how to avoid them. By the end, you'll be able to produce crisp, professional-looking portraits from ordinary photos, completely free.`,
       },
       {
         heading: "Why Portrait Photos Are Hard to Enhance",
@@ -5371,20 +5371,20 @@ Traditional enhancement makes portraits especially risky. Aggressive sharpening 
 This is why portrait-specific AI matters. A good model must sharpen genuine detail — eyelashes, hair strands, skin texture — while intelligently reducing noise, all without crossing into artificial territory. That delicate balance is where general-purpose editing tools struggle and where trained AI reconstruction shines.`,
       },
       {
-        heading: "How JPT AI Enhances Portraits Naturally",
-        body: `JPT AI enhances portraits using deep-learning models trained on vast collections of high-resolution facial images. Because the AI has effectively studied how real faces look at high resolution, it reconstructs believable detail — defined eyelashes, natural skin texture, crisp hair strands — rather than crudely sharpening, which is what produces the artificial look on ordinary tools.
+        heading: "How Pixel Shine Enhances Portraits Naturally",
+        body: `Pixel Shine enhances portraits using deep-learning models trained on vast collections of high-resolution facial images. Because the AI has effectively studied how real faces look at high resolution, it reconstructs believable detail — defined eyelashes, natural skin texture, crisp hair strands — rather than crudely sharpening, which is what produces the artificial look on ordinary tools.
 
 For portraits, the **Pro AI Upscaler** is often the best choice, applying stronger reconstruction that handles the fine facial detail our eyes scrutinize most. It uses credits, and new users get **5 free trials** — perfect for testing it on your most important headshots. The free **Normal Upscaler** also improves portraits noticeably and is unlimited with no sign-up, making it ideal for casual shots or when you want a lighter, more natural touch.
 
-Crucially, every result downloads **watermark-free at full resolution**. For portraits — especially professional headshots destined for profiles or print — a logo stamped across the face would be a dealbreaker. JPT AI keeps your output clean.
+Crucially, every result downloads **watermark-free at full resolution**. For portraits — especially professional headshots destined for profiles or print — a logo stamped across the face would be a dealbreaker. Pixel Shine keeps your output clean.
 
-Beyond upscaling, JPT AI's broader platform includes an **AI Headshot Generator** for creating polished professional headshots from casual photos, plus a background remover and text-prompt editor. So enhancing a portrait can be one step in a fuller workflow — sharpen the face, swap the background, and generate a professional look, all free or with trials, in one online platform.`,
+Beyond upscaling, Pixel Shine's broader platform includes an **AI Headshot Generator** for creating polished professional headshots from casual photos, plus a background remover and text-prompt editor. So enhancing a portrait can be one step in a fuller workflow — sharpen the face, swap the background, and generate a professional look, all free or with trials, in one online platform.`,
       },
       {
         heading: "Step-by-Step: Enhancing a Portrait with AI",
         body: `Here's the workflow for sharper, natural-looking portraits:
 
-**1. Open JPT AI.** Go to sjpt.io and navigate to the upscale / enhance tool. It runs online on desktop or mobile.
+**1. Open Pixel Shine.** Go to sjpt.io and navigate to the upscale / enhance tool. It runs online on desktop or mobile.
 
 **2. Upload your portrait.** Drag and drop or browse to your file (JPG, PNG, or WebP). The Normal Upscaler requires no account, so you can begin instantly.
 
@@ -5448,7 +5448,7 @@ Beyond upscaling, JPT AI's broader platform includes an **AI Headshot Generator*
         heading: "Advanced Portrait Techniques",
         body: `Take portrait enhancement further with these advanced approaches.
 
-**Combine enhancement with the headshot generator.** For a truly polished professional look, first enhance a casual portrait to sharpen the face, then use JPT AI's AI Headshot Generator to place it in a professional style and setting. This two-step workflow turns an ordinary selfie into a business-ready headshot.
+**Combine enhancement with the headshot generator.** For a truly polished professional look, first enhance a casual portrait to sharpen the face, then use Pixel Shine's AI Headshot Generator to place it in a professional style and setting. This two-step workflow turns an ordinary selfie into a business-ready headshot.
 
 **Enhance, then swap the background.** Use the background remover to isolate the subject after enhancing the face. A sharp face on a clean or professional background looks far more intentional than a soft portrait on a cluttered one.
 
@@ -5467,32 +5467,32 @@ Beyond upscaling, JPT AI's broader platform includes an **AI Headshot Generator*
       {
         heading: "Frequently Asked Questions",
         body: `**How can I enhance portrait photos with AI for free?**
-Use JPT AI's Normal Upscaler at sjpt.io — it's free, unlimited, and needs no sign-up. Upload your portrait, choose a scale, and download the sharper result with no watermark. For maximum facial detail, try the Pro engine with one of your 5 free trials.
+Use Pixel Shine's Normal Upscaler at sjpt.io — it's free, unlimited, and needs no sign-up. Upload your portrait, choose a scale, and download the sharper result with no watermark. For maximum facial detail, try the Pro engine with one of your 5 free trials.
 
 **Will AI enhancement make my portrait look fake?**
-Not if done right. JPT AI reconstructs natural facial detail rather than crudely smoothing. Avoid over-scaling and stacking filters, and preserve skin texture to keep results looking real.
+Not if done right. Pixel Shine reconstructs natural facial detail rather than crudely smoothing. Avoid over-scaling and stacking filters, and preserve skin texture to keep results looking real.
 
 **Which mode is best for portraits?**
 The Pro AI engine is best for important headshots and heavily degraded faces, thanks to stronger facial reconstruction. The free Normal mode works well for casual portraits and lighter touch-ups.
 
 **Can I enhance a headshot for LinkedIn?**
-Yes. Enhance the photo for sharpness, and optionally use JPT AI's AI Headshot Generator to create a fully professional look. Downloads are watermark-free at full resolution.
+Yes. Enhance the photo for sharpness, and optionally use Pixel Shine's AI Headshot Generator to create a fully professional look. Downloads are watermark-free at full resolution.
 
 **Does enhancement fix blurry faces?**
 AI significantly sharpens mild blur and soft focus. Severe motion blur is harder to fully reverse, but the result is almost always noticeably clearer than the original.
 
 **Will there be a watermark on my portrait?**
-No. JPT AI downloads portraits at full resolution with no watermark, which is essential for professional and profile use.
+No. Pixel Shine downloads portraits at full resolution with no watermark, which is essential for professional and profile use.
 
 **Can I enhance portraits on my phone?**
-Yes. JPT AI runs on mobile, so you can sharpen selfies and portraits directly on your phone with no app to install.
+Yes. Pixel Shine runs on mobile, so you can sharpen selfies and portraits directly on your phone with no app to install.
 
 **How do I keep skin looking natural?**
 Avoid over-scaling and don't add smoothing filters afterward. Preserve visible skin texture — real skin has pores and subtle variation. If skin looks waxy, use Normal mode or a lower scale.`,
       },
       {
         heading: "Key Takeaways",
-        body: `Enhancing portrait photos with AI for free is entirely possible when you use a tool built to reconstruct faces naturally. JPT AI's Normal Upscaler sharpens portraits with no sign-up, no watermark, and no cost, while the Pro engine delivers stronger facial detail for important headshots, with 5 free trials for new users.
+        body: `Enhancing portrait photos with AI for free is entirely possible when you use a tool built to reconstruct faces naturally. Pixel Shine's Normal Upscaler sharpens portraits with no sign-up, no watermark, and no cost, while the Pro engine delivers stronger facial detail for important headshots, with 5 free trials for new users.
 
 The secret to natural results is preserving skin texture, keeping eyes crisp, and avoiding over-processing. Combine enhancement with the AI Headshot Generator and background remover for a fully professional finish. Whether it's a LinkedIn photo, a selfie, or a family portrait, you can make faces sharper and more detailed while keeping them real. Enhance your first portrait free at sjpt.io.`,
       },
@@ -5502,7 +5502,7 @@ The secret to natural results is preserving skin texture, keeping eyes crisp, an
     image: "https://images.pexels.com/photos/3585047/pexels-photo-3585047.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "remove-background-from-product-photo-free",
     title: "How to Remove the Background from a Product Photo (Free)",
-    metaTitle: "Remove Background from Product Photo Free Online | JPT AI",
+    metaTitle: "Remove Background from Product Photo Free Online | Pixel Shine",
     metaDescription: "Get a clean white or transparent background on product photos free. Step-by-step guide for Amazon, Shopify, Flipkart & Etsy listings — no Photoshop.",
     excerpt: "Marketplaces demand clean white backgrounds. Here's how to get catalogue-ready product photos in seconds, for free, without Photoshop.",
     date: "2025-06-10",
@@ -5526,8 +5526,8 @@ The traditional fix was manual editing. Cutting out a product by hand with the p
 Then there's the technical challenge: reflective surfaces, transparent packaging, fuzzy textures, and fine details like jewelry chains or lace confuse most simple tools. A background remover that leaves jagged edges or a faint gray halo around your product looks worse than no editing at all. This is exactly the gap that AI-powered removal was built to close — delivering studio-quality cutouts without the studio budget.`,
       },
       {
-        heading: "How JPT AI Removes Product Backgrounds Instantly",
-        body: `JPT AI's Background Remover uses a trained AI model that detects the product's edges and separates it from the background automatically. Instead of you tracing the outline, the AI analyzes the image, identifies the subject, and generates a clean cutout with a transparent (PNG) background in roughly five seconds. You don't need to sign in, install anything, or watch a tutorial.
+        heading: "How Pixel Shine Removes Product Backgrounds Instantly",
+        body: `Pixel Shine's Background Remover uses a trained AI model that detects the product's edges and separates it from the background automatically. Instead of you tracing the outline, the AI analyzes the image, identifies the subject, and generates a clean cutout with a transparent (PNG) background in roughly five seconds. You don't need to sign in, install anything, or watch a tutorial.
 
 What sets it apart for e-commerce sellers is what happens after the cut. Once your product is isolated on transparency, you can instantly drop in a **pure white background** for Amazon compliance, a soft neutral gray for a premium look, or any brand color you want — all in the same tool. There's no watermark on your download, so the image is ready to upload straight to your listing.
 
@@ -5539,7 +5539,7 @@ The AI is specifically strong on the things that trip up cheaper tools: it handl
 
 **1. Photograph your product well.** Before you even touch the tool, shoot in good, even lighting against a background that contrasts with your product. A dark product on a light surface (or vice versa) gives the AI clean edges to detect.
 
-**2. Open the JPT AI Background Remover.** Go to sjpt.io and select the Remove Background tool. No account or sign-in is required to start.
+**2. Open the Pixel Shine Background Remover.** Go to sjpt.io and select the Remove Background tool. No account or sign-in is required to start.
 
 **3. Upload your product image.** Drag and drop the file or click to browse. JPG, PNG, and WEBP files all work. For best results, upload the highest-resolution version you have.
 
@@ -5603,7 +5603,7 @@ The AI is specifically strong on the things that trip up cheaper tools: it handl
 
 **Clipping-path services** outsource the work to human editors, typically charging $0.50 to $3 per image with a 12 to 24 hour turnaround. For hundreds of products, that's both expensive and slow. Free AI removal is instant and costs nothing, letting you iterate immediately when you reshoot a product.
 
-**Basic phone apps** often remove backgrounds but stamp a watermark on the result or lock the high-res download behind a subscription. JPT AI gives you full-resolution, watermark-free downloads for standard use with no mandatory sign-in.
+**Basic phone apps** often remove backgrounds but stamp a watermark on the result or lock the high-res download behind a subscription. Pixel Shine gives you full-resolution, watermark-free downloads for standard use with no mandatory sign-in.
 
 The honest trade-off: for a single hero image on a highly reflective or hair-covered product, a skilled human editor might still edge out AI on the very finest details. But for 95% of product photography — including reflective and semi-transparent items — modern AI matches professional quality at a fraction of the time and cost. For volume, it's simply no contest.`,
       },
@@ -5620,7 +5620,7 @@ The honest trade-off: for a single hero image on a highly reflective or hair-cov
       {
         heading: "Frequently Asked Questions",
         body: `**Is removing a product photo background really free?**
-Yes. JPT AI's Background Remover is free to use for standard removal, with no watermark on your download and no mandatory sign-in required to get started.
+Yes. Pixel Shine's Background Remover is free to use for standard removal, with no watermark on your download and no mandatory sign-in required to get started.
 
 **Can I get a pure white background for Amazon?**
 Absolutely. After the AI removes the original background, you can drop in a pure white (RGB 255, 255, 255) background that meets Amazon's main image requirements, then download it ready to upload.
@@ -5641,7 +5641,7 @@ Because standard removal is unlimited and free, you can process an entire catalo
 None. The whole process is upload, wait about five seconds, choose your background, and download. There's nothing to install and no learning curve.
 
 **What if my product photo is blurry or low resolution?**
-Run it through the JPT AI Upscaler first to add sharpness and resolution, then remove the background. This keeps the final edges crisp instead of soft.`,
+Run it through the Pixel Shine Upscaler first to add sharpness and resolution, then remove the background. This keeps the final edges crisp instead of soft.`,
       },
       {
         heading: "Key Takeaways",
@@ -5655,7 +5655,7 @@ Ready to make your products look studio-perfect? Head to sjpt.io and try the fre
     image: "https://images.pexels.com/photos/1051075/pexels-photo-1051075.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "upscale-old-photos-free",
     title: "How to Restore and Upscale Old Photos for Free with AI",
-    metaTitle: "Restore & Upscale Old Photos Free with AI | JPT AI",
+    metaTitle: "Restore & Upscale Old Photos Free with AI | Pixel Shine",
     metaDescription: "Bring blurry, faded old family photos back to life free with AI. Recover detail, reduce grain and upscale low-resolution vintage photos online — no watermark.",
     excerpt: "Old family photos are often tiny, blurry, and faded. AI super-resolution can recover detail that was seemingly lost forever — here's how, for free.",
     date: "2025-06-11",
@@ -5670,7 +5670,7 @@ Ready to make your products look studio-perfect? Head to sjpt.io and try the fre
 
 Old photos present a unique double challenge: they're usually both low-resolution and degraded. A scanned print might be only 800 pixels wide, riddled with grain, faded contrast, and the softness of aging film. Simply enlarging it with a basic tool magnifies every flaw. What you need is AI that restores old photos while upscaling them — reconstructing detail, cleaning up noise, and enlarging the image all at once.
 
-In this guide, we'll cover why old photos degrade, how JPT AI can enhance vintage photos for free with unlimited Normal upscaling, no watermarks, and no mandatory sign-up, and exactly how to upscale scanned photos with AI step by step. You'll also get expert tips, mistakes to avoid, and real scenarios for reviving your archive. Let's rescue those memories.`,
+In this guide, we'll cover why old photos degrade, how Pixel Shine can enhance vintage photos for free with unlimited Normal upscaling, no watermarks, and no mandatory sign-up, and exactly how to upscale scanned photos with AI step by step. You'll also get expert tips, mistakes to avoid, and real scenarios for reviving your archive. Let's rescue those memories.`,
       },
       {
         heading: "Why Old Photos Look Small and Degraded",
@@ -5685,18 +5685,18 @@ In this guide, we'll cover why old photos degrade, how JPT AI can enhance vintag
 The result is an image that's simultaneously too small, too soft, too noisy, and often faded. A basic resizer makes all of this worse — enlarging grain, magnifying artifacts, and spreading limited detail even thinner. Genuinely reviving an old photo requires AI that can do several jobs at once: reconstruct real detail, reduce noise and grain, and enlarge the image, all while keeping the result looking natural rather than artificially processed.`,
       },
       {
-        heading: "How JPT AI Restores and Upscales Old Photos",
-        body: `JPT AI is well-suited to old photos because its AI upscaler doesn't just enlarge — it reconstructs. Trained on millions of image pairs, its deep-learning model recognizes what real detail should look like, so when it processes a small, grainy scan, it rebuilds edges and textures while enlarging, producing a cleaner, sharper result rather than a magnified version of the damage.
+        heading: "How Pixel Shine Restores and Upscales Old Photos",
+        body: `Pixel Shine is well-suited to old photos because its AI upscaler doesn't just enlarge — it reconstructs. Trained on millions of image pairs, its deep-learning model recognizes what real detail should look like, so when it processes a small, grainy scan, it rebuilds edges and textures while enlarging, producing a cleaner, sharper result rather than a magnified version of the damage.
 
 **Pro AI mode is the key for old photos.** Because vintage images are typically degraded, the more powerful Pro AI model — running on credits — is ideal here. It excels at heavy restoration: recovering detail from soft scans, handling faces convincingly, and cleaning up the noise and grain that plague old photographs. New users get five free trials, so you can restore several precious images and see the quality before committing.
 
 **Free Normal mode** still helps for old photos that are in better shape or that you simply want to enlarge — it's free, unlimited, and needs no sign-up, making it perfect for batch-improving a whole archive of decent scans.
 
-**Clean, shareable output.** JPT AI never watermarks results, so your restored family photos come out ready to print, frame, or share with relatives — no logo across grandma's portrait. That combination of real reconstruction, a powerful restoration mode, and clean files makes it a practical tool for reviving an entire box of old memories.`,
+**Clean, shareable output.** Pixel Shine never watermarks results, so your restored family photos come out ready to print, frame, or share with relatives — no logo across grandma's portrait. That combination of real reconstruction, a powerful restoration mode, and clean files makes it a practical tool for reviving an entire box of old memories.`,
       },
       {
         heading: "Step-by-Step: Restoring and Upscaling Old Photos",
-        body: `Here's how to revive an old photo with JPT AI from start to finish.
+        body: `Here's how to revive an old photo with Pixel Shine from start to finish.
 
 **1. Scan or photograph the original at the best quality you can.** If working from a print, scan at a high setting or take a sharp, well-lit photo of it. A better capture gives the AI more to work with.
 
@@ -5768,7 +5768,7 @@ The result is an image that's simultaneously too small, too soft, too noisy, and
 
 **Versus paid restoration services,** professional retouchers deliver beautiful results but charge per photo and take days. For most family archives, that's impractical at scale.
 
-**Versus paid AI desktop apps,** JPT AI offers comparable restoration-grade upscaling online, with free unlimited Normal mode, a powerful Pro AI mode for degraded images, no watermarks, and five free trials. For reviving a box of memories affordably and quickly, the online AI approach hits the practical sweet spot — professional-quality results without the per-photo cost or the hours of manual work.`,
+**Versus paid AI desktop apps,** Pixel Shine offers comparable restoration-grade upscaling online, with free unlimited Normal mode, a powerful Pro AI mode for degraded images, no watermarks, and five free trials. For reviving a box of memories affordably and quickly, the online AI approach hits the practical sweet spot — professional-quality results without the per-photo cost or the hours of manual work.`,
       },
       {
         heading: "Who Restores Old Photos and Why",
@@ -5779,13 +5779,13 @@ The result is an image that's simultaneously too small, too soft, too noisy, and
       {
         heading: "Frequently Asked Questions",
         body: `**Can I restore and upscale old photos for free?**
-Yes. JPT AI's free Normal upscaler enlarges and improves photos with no sign-up, and new users get five free trials of the powerful Pro AI mode, which is ideal for restoring degraded old images.
+Yes. Pixel Shine's free Normal upscaler enlarges and improves photos with no sign-up, and new users get five free trials of the powerful Pro AI mode, which is ideal for restoring degraded old images.
 
 **Which mode should I use for old photos?**
 Pro AI mode is best for degraded, grainy, or faded photos because it maximizes detail recovery, noise reduction, and face handling. Use free Normal mode for cleaner scans you simply want enlarged.
 
 **Will AI remove grain and noise from my old photo?**
-Yes. JPT AI's reconstruction reduces the grain and softness typical of old film and scans while enlarging, producing a cleaner, sharper image rather than magnified noise.
+Yes. Pixel Shine's reconstruction reduces the grain and softness typical of old film and scans while enlarging, producing a cleaner, sharper image rather than magnified noise.
 
 **Can it fix scratches and tears?**
 Upscaling reconstructs and cleans detail, improving many flaws, but severe physical damage like large tears may remain partly visible, as heavy structural repair is a separate task.
@@ -5794,7 +5794,7 @@ Upscaling reconstructs and cleans detail, improving many flaws, but severe physi
 Scan at a high resolution setting, or photograph the print in bright, even light without glare. A cleaner, sharper capture gives the AI more to work with and yields a better restoration.
 
 **Will there be a watermark on my restored photo?**
-No. JPT AI never watermarks results, so your revived family photos are clean and ready to print, frame, or share.
+No. Pixel Shine never watermarks results, so your revived family photos are clean and ready to print, frame, or share.
 
 **How large can I enlarge an old photo?**
 For framing, aim for a final long side above 3000 pixels. A 4x upscale takes an 800-pixel scan to 3200 pixels, suitable for 8x10 prints and larger.
@@ -5804,7 +5804,7 @@ JPG, PNG, and WEBP are all supported directly. Saving your restored result as PN
       },
       {
         heading: "Key Takeaways",
-        body: `Restoring and upscaling old photos for free is now within everyone's reach thanks to AI that reconstructs detail, reduces grain, and enlarges images all at once — rather than simply magnifying the flaws the way basic resizers do. JPT AI makes reviving your family archive practical with a free, unlimited Normal upscaler, a powerful Pro AI mode built for degraded images, five free trials, and clean, watermark-free output.
+        body: `Restoring and upscaling old photos for free is now within everyone's reach thanks to AI that reconstructs detail, reduces grain, and enlarges images all at once — rather than simply magnifying the flaws the way basic resizers do. Pixel Shine makes reviving your family archive practical with a free, unlimited Normal upscaler, a powerful Pro AI mode built for degraded images, five free trials, and clean, watermark-free output.
 
 Those small, faded, precious photos can become clear, enlarged, and ready to print, frame, and share across generations. Don't let those memories fade any further — head to sjpt.io and restore your first old photo free today.`,
       },
@@ -5814,7 +5814,7 @@ Those small, faded, precious photos can become clear, enlarged, and ready to pri
     image: "https://images.pexels.com/photos/3760854/pexels-photo-3760854.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "make-signature-transparent-free",
     title: "How to Make Your Signature Transparent (Free, in Seconds)",
-    metaTitle: "Make Signature Transparent Free Online | JPT AI",
+    metaTitle: "Make Signature Transparent Free Online | Pixel Shine",
     metaDescription: "Remove the white background from your signature free online. Get a transparent PNG signature for contracts, PDFs and e-signing in one click.",
     excerpt: "Need a clean, transparent signature for digital documents? Here's how to turn a photo or scan of your signature into a transparent PNG, free.",
     date: "2025-06-12",
@@ -5838,12 +5838,12 @@ The reason this happens is that standard image formats like JPG **cannot store t
 Doing this manually is fiddlier than it sounds. Signatures have thin, wispy strokes, gaps between letters, and varying ink darkness. Trying to erase the white by hand leaves jagged edges or accidentally deletes parts of the ink. Simple 'magic wand' selections often leave a faint gray halo or fringe around each stroke. This is why a purpose-built background remover — one that intelligently separates ink from paper — produces a far cleaner result than manual editing or basic office software.`,
       },
       {
-        heading: "How JPT AI Makes Your Signature Transparent",
-        body: `JPT AI's Background Remover treats your signature like any other subject: it detects the ink strokes and removes everything else, leaving a clean transparent PNG in about five seconds. You upload a photo or scan of your signature, the AI isolates the actual pen strokes from the white paper, and you download a transparent file that drops onto any document without a box.
+        heading: "How Pixel Shine Makes Your Signature Transparent",
+        body: `Pixel Shine's Background Remover treats your signature like any other subject: it detects the ink strokes and removes everything else, leaving a clean transparent PNG in about five seconds. You upload a photo or scan of your signature, the AI isolates the actual pen strokes from the white paper, and you download a transparent file that drops onto any document without a box.
 
 Because the tool is AI-driven rather than a crude color-key eraser, it preserves the **fine detail** that makes a signature look authentic — the thin tails on letters, the pressure variations, and the connected loops. It doesn't chop off wispy strokes or leave a gray fringe around the edges the way a simple threshold tool does.
 
-Several things make it especially handy for signatures. There's **no watermark** on your download, which matters because a watermarked signature is useless. There's **no mandatory sign-in** for standard removal, so you can do it quickly without creating an account. And it's **free and unlimited** for standard use, so you can process multiple signature variations — different pens, different sizes — and keep the cleanest one. If your original scan is faint or low-resolution, you can run it through JPT AI's Upscaler first to darken and sharpen the strokes before removing the background, giving you a crisper final PNG.`,
+Several things make it especially handy for signatures. There's **no watermark** on your download, which matters because a watermarked signature is useless. There's **no mandatory sign-in** for standard removal, so you can do it quickly without creating an account. And it's **free and unlimited** for standard use, so you can process multiple signature variations — different pens, different sizes — and keep the cleanest one. If your original scan is faint or low-resolution, you can run it through Pixel Shine's Upscaler first to darken and sharpen the strokes before removing the background, giving you a crisper final PNG.`,
       },
       {
         heading: "Step-by-Step: Create a Transparent Signature PNG",
@@ -5855,7 +5855,7 @@ Several things make it especially handy for signatures. There's **no watermark**
 
 **3. Crop tightly.** Trim the image so it's mostly signature with a little white margin. This removes distracting page elements and helps the AI focus.
 
-**4. Open the JPT AI Background Remover.** Go to sjpt.io and select the Remove Background tool. No sign-in is needed to begin.
+**4. Open the Pixel Shine Background Remover.** Go to sjpt.io and select the Remove Background tool. No sign-in is needed to begin.
 
 **5. Upload your signature image.** Drag and drop the JPG or PNG file, or click to browse and select it.
 
@@ -5934,7 +5934,7 @@ AI removal sidesteps all of this. It understands the difference between ink and 
       {
         heading: "Frequently Asked Questions",
         body: `**How do I make my signature transparent for free?**
-Photograph or scan your signature on white paper, upload it to JPT AI's free Background Remover at sjpt.io, let the AI remove the white paper in about five seconds, then download it as a transparent PNG.
+Photograph or scan your signature on white paper, upload it to Pixel Shine's free Background Remover at sjpt.io, let the AI remove the white paper in about five seconds, then download it as a transparent PNG.
 
 **Why does my signature have a white box around it?**
 Because it was saved as a JPG or another format that can't store transparency, so the paper behind your ink stays as solid white pixels. Removing that background and saving as PNG eliminates the box.
@@ -5952,10 +5952,10 @@ Yes. The AI preserves thin stroke tails, loops, and pressure variation, so your 
 Yes. Once you have a clean transparent PNG, you can recolor it in most image editors to match a document or brand, since the strokes are isolated from any background.
 
 **My scanned signature is faint — what can I do?**
-Run it through JPT AI's Upscaler first to sharpen and strengthen the strokes, then remove the background. This gives you a darker, crisper transparent signature.
+Run it through Pixel Shine's Upscaler first to sharpen and strengthen the strokes, then remove the background. This gives you a darker, crisper transparent signature.
 
 **Do I need to create an account?**
-No. Standard background removal on JPT AI requires no mandatory sign-in and adds no watermark, so you can make your signature transparent quickly and use it immediately.`,
+No. Standard background removal on Pixel Shine requires no mandatory sign-in and adds no watermark, so you can make your signature transparent quickly and use it immediately.`,
       },
       {
         heading: "Key Takeaways",
@@ -5969,7 +5969,7 @@ Ready to sign documents like a pro? Head to sjpt.io, upload your signature to th
     image: "https://images.pexels.com/photos/270637/pexels-photo-270637.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "make-logo-transparent-free",
     title: "How to Make a Logo Transparent for Free",
-    metaTitle: "Make Logo Transparent Free Online — Transparent PNG | JPT AI",
+    metaTitle: "Make Logo Transparent Free Online — Transparent PNG | Pixel Shine",
     metaDescription: "Remove the background from your logo free online. Get a transparent PNG logo for websites, merch and presentations in one click — no watermark.",
     excerpt: "A transparent logo works on any colour or background. Here's how to remove a logo's background and export a clean transparent PNG, free.",
     date: "2025-06-13",
@@ -5993,12 +5993,12 @@ Even logos saved as PNG aren't automatically transparent. If the PNG was flatten
 Removing that background by hand is trickier for logos than for photos because logos often have **fine text, thin lines, gradients, and tight interior gaps** — think the counters inside letters like 'O' and 'A', or a thin monoline icon. A crude eraser or magic-wand selection leaves jagged edges, a faint halo, or fails to clear the enclosed gaps. That's why a smart AI background remover, which reads the logo shape intelligently, produces a far cleaner transparent result than manual selection tools or office software.`,
       },
       {
-        heading: "How JPT AI Makes Your Logo Transparent",
-        body: `JPT AI's Background Remover detects your logo's shape and strips away the surrounding background, delivering a transparent PNG in about five seconds. You upload the logo file, the AI separates the mark from its white (or colored) background, and you download a clean, ready-to-use transparent version.
+        heading: "How Pixel Shine Makes Your Logo Transparent",
+        body: `Pixel Shine's Background Remover detects your logo's shape and strips away the surrounding background, delivering a transparent PNG in about five seconds. You upload the logo file, the AI separates the mark from its white (or colored) background, and you download a clean, ready-to-use transparent version.
 
 Because it's AI-powered rather than a simple color eraser, it handles the details that make logos hard: it preserves **crisp edges on text**, keeps **thin lines and monoline icons** intact, and clears the **enclosed gaps** inside letters and shapes that trip up basic tools. You get a clean cutout without the gray fringe or jagged outline that manual selection tends to leave.
 
-The practical advantages matter for branding. There's **no watermark** on the download — critical, since a watermarked logo is worthless. There's **no mandatory sign-in** for standard use, so you can get a transparent logo quickly. And it's **free and unlimited** for standard removal, so you can process every variation of your mark — horizontal, stacked, icon-only. If your only copy of the logo is small or low-resolution, run it through JPT AI's Upscaler first to sharpen the edges and boost resolution before removing the background, so the final transparent PNG stays crisp even when scaled up for print.`,
+The practical advantages matter for branding. There's **no watermark** on the download — critical, since a watermarked logo is worthless. There's **no mandatory sign-in** for standard use, so you can get a transparent logo quickly. And it's **free and unlimited** for standard removal, so you can process every variation of your mark — horizontal, stacked, icon-only. If your only copy of the logo is small or low-resolution, run it through Pixel Shine's Upscaler first to sharpen the edges and boost resolution before removing the background, so the final transparent PNG stays crisp even when scaled up for print.`,
       },
       {
         heading: "Step-by-Step: Make a Logo Transparent for Free",
@@ -6006,7 +6006,7 @@ The practical advantages matter for branding. There's **no watermark** on the do
 
 **1. Start with the highest-quality logo you have.** A crisp, high-resolution file gives the cleanest edges. If yours is small or blurry, upscale it first.
 
-**2. Open the JPT AI Background Remover.** Visit sjpt.io and select the Remove Background tool. No account is needed to start.
+**2. Open the Pixel Shine Background Remover.** Visit sjpt.io and select the Remove Background tool. No account is needed to start.
 
 **3. Upload your logo file.** Drag and drop the JPG or PNG, or click to browse. Higher resolution inputs give sharper transparent edges.
 
@@ -6089,7 +6089,7 @@ AI removal handles all of this automatically. It reads the logo's shape, clears 
       {
         heading: "Frequently Asked Questions",
         body: `**How do I make my logo transparent for free?**
-Upload your logo to JPT AI's free Background Remover at sjpt.io, let the AI strip the white background in about five seconds, then download it as a transparent PNG — no sign-in and no watermark for standard use.
+Upload your logo to Pixel Shine's free Background Remover at sjpt.io, let the AI strip the white background in about five seconds, then download it as a transparent PNG — no sign-in and no watermark for standard use.
 
 **Why does my logo have a white background even though it's a PNG?**
 Because the PNG was exported with the logo flattened onto white, so those white pixels are baked in. You need to actually remove the background and re-save with real transparency.
@@ -6104,7 +6104,7 @@ Yes. The AI preserves crisp edges on text and monoline icons and clears the encl
 Place the PNG over a dark or brightly colored background. If no white box or fringe appears, the transparency is clean. White backgrounds hide these problems, so always test on dark.
 
 **My logo file is small and blurry — can I still make it transparent?**
-Yes. Run it through JPT AI's Upscaler first to sharpen and enlarge it, then remove the background. This keeps the final transparent edges crisp, even at print sizes.
+Yes. Run it through Pixel Shine's Upscaler first to sharpen and enlarge it, then remove the background. This keeps the final transparent edges crisp, even at print sizes.
 
 **Can I use the transparent logo on merchandise and print?**
 Absolutely. A transparent, watermark-free PNG is ideal for apparel, packaging, business cards, and print, since only the logo prints without a surrounding box. Use a high-resolution version for print quality.
@@ -6124,7 +6124,7 @@ Ready to put your brand on anything? Visit sjpt.io, upload your logo to the free
     image: "https://images.pexels.com/photos/1933873/pexels-photo-1933873.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "upscale-image-to-4k-free",
     title: "How to Upscale an Image to 4K for Free with AI",
-    metaTitle: "Upscale Image to 4K Free Online with AI | JPT AI",
+    metaTitle: "Upscale Image to 4K Free Online with AI | Pixel Shine",
     metaDescription: "Upscale any photo to 4K resolution free with AI. Enhance images up to 4× without losing quality — sharp, clean results online with no watermark.",
     excerpt: "Need a 4K version of a small image? AI super-resolution can multiply resolution while keeping it sharp — here's how to do it for free.",
     date: "2025-06-14",
@@ -6139,7 +6139,7 @@ Ready to put your brand on anything? Visit sjpt.io, upload your logo to the free
 
 Here's the key thing to understand: you cannot simply stretch an image to 4K and expect it to look good. Traditional enlargement spreads existing pixels thinner, producing a bigger but blurrier picture. Genuine 4K quality requires AI super-resolution, which reconstructs new, believable detail as it enlarges, so the final image is sharp at ultra-high definition.
 
-This guide walks you through the entire process of using JPT AI as a free 4K photo upscaler — unlimited Normal upscaling, no watermarks, no mandatory sign-up. You'll learn the exact steps to increase an image to 4K resolution, the pro tips that ensure crisp results, the mistakes to avoid, and where 4K upscaling makes the biggest difference in real projects. Let's turn your ordinary images into ultra-HD ones.`,
+This guide walks you through the entire process of using Pixel Shine as a free 4K photo upscaler — unlimited Normal upscaling, no watermarks, no mandatory sign-up. You'll learn the exact steps to increase an image to 4K resolution, the pro tips that ensure crisp results, the mistakes to avoid, and where 4K upscaling makes the biggest difference in real projects. Let's turn your ordinary images into ultra-HD ones.`,
       },
       {
         heading: "Why Reaching 4K Is Harder Than It Looks",
@@ -6152,18 +6152,18 @@ This guide walks you through the entire process of using JPT AI as a free 4K pho
 **Even many \"AI\" tools disappoint.** Some are just interpolation rebranded, and others hide real quality behind watermarks or paywalls. To genuinely increase an image to 4K resolution with sharp results, you need true deep-learning super-resolution that rebuilds edges, textures, and surfaces. That reconstruction is the entire reason a proper AI upscaler produces a 4K image that actually looks 4K, rather than one that just fills the pixel dimensions while looking soft.`,
       },
       {
-        heading: "How JPT AI Upscales Images to 4K",
-        body: `JPT AI takes undersized images and lifts them to 4K-class resolution using real AI super-resolution. When you upload a photo, its deep-learning model studies the content — edges, textures, faces, surfaces — and predicts the high-resolution detail that should exist at 4K scale, informed by training across millions of low-and-high-resolution image pairs. The output is reconstructed detail, not stretched pixels.
+        heading: "How Pixel Shine Upscales Images to 4K",
+        body: `Pixel Shine takes undersized images and lifts them to 4K-class resolution using real AI super-resolution. When you upload a photo, its deep-learning model studies the content — edges, textures, faces, surfaces — and predicts the high-resolution detail that should exist at 4K scale, informed by training across millions of low-and-high-resolution image pairs. The output is reconstructed detail, not stretched pixels.
 
 **Reaching 4K with the right factor.** A 4x upscale turns a 1000x563 image into 4000x2252, past 4K width. A 2x pass lifts a 1920-pixel source to exactly 3840 — precise 4K width. You select the factor that lands you at ultra-HD.
 
 **Free Normal mode** covers most 4K needs — wallpapers, display images, general enhancement — completely free, unlimited, and with no sign-up. For the hardest cases — critical portraits or degraded originals bound for large 4K print — **Pro AI mode** applies a more powerful, credit-based model that maximizes detail recovery.
 
-**Clean, unrestricted output.** JPT AI never watermarks results and requires no account for Normal upscaling, so your 4K file is instantly usable for wallpapers, client work, and print. New users also get five free trials to sample Pro AI quality. The upshot is a free 4K photo upscaler that performs like professional software — real reconstruction, clean files, and no friction standing between you and your ultra-HD image.`,
+**Clean, unrestricted output.** Pixel Shine never watermarks results and requires no account for Normal upscaling, so your 4K file is instantly usable for wallpapers, client work, and print. New users also get five free trials to sample Pro AI quality. The upshot is a free 4K photo upscaler that performs like professional software — real reconstruction, clean files, and no friction standing between you and your ultra-HD image.`,
       },
       {
         heading: "Step-by-Step: Upscaling an Image to 4K",
-        body: `Here's the complete process for taking any image to 4K with JPT AI.
+        body: `Here's the complete process for taking any image to 4K with Pixel Shine.
 
 **1. Visit sjpt.io and open the Upscale tool.** The free Normal upscaler needs no account, so you can start right away.
 
@@ -6246,22 +6246,22 @@ This guide walks you through the entire process of using JPT AI as a free 4K pho
       {
         heading: "Frequently Asked Questions",
         body: `**Can I upscale an image to 4K for free?**
-Yes. JPT AI's Normal upscaler is free, unlimited, and requires no sign-up. A 4x factor on a source around 1000 pixels wide reaches 4K resolution at no cost.
+Yes. Pixel Shine's Normal upscaler is free, unlimited, and requires no sign-up. A 4x factor on a source around 1000 pixels wide reaches 4K resolution at no cost.
 
 **What resolution is 4K exactly?**
 4K is roughly 3840x2160 pixels — about 8.3 million total, four times 1080p HD, and the standard for premium screens and large print.
 
 **Will my 4K upscale be sharp or just larger?**
-Sharp. JPT AI uses AI super-resolution that reconstructs real detail, so the 4K result looks crisp rather than merely enlarged like basic resizers produce.
+Sharp. Pixel Shine uses AI super-resolution that reconstructs real detail, so the 4K result looks crisp rather than merely enlarged like basic resizers produce.
 
 **What source size do I need for 4K?**
 A source near 1000 pixels wide reaches 4K at 4x; a 1920-pixel source hits exactly 3840 at 2x. Larger, cleaner sources give the best results.
 
-**Does JPT AI watermark my 4K images?**
+**Does Pixel Shine watermark my 4K images?**
 No. Every downloaded file is clean and watermark-free, ready for wallpapers, print, and commercial use.
 
 **Do I need to install anything?**
-No. JPT AI runs entirely online at sjpt.io on any device, with nothing to download or install.
+No. Pixel Shine runs entirely online at sjpt.io on any device, with nothing to download or install.
 
 **When should I use Pro AI mode?**
 Use it for large 4K prints, critical portraits, or heavily degraded sources needing maximum detail recovery. New users get five free trials to test it.
@@ -6271,7 +6271,7 @@ Yes. With higher factors, staged passes, or additional runs from the source, you
       },
       {
         heading: "Key Takeaways",
-        body: `Upscaling an image to 4K for free is fully achievable when you use real AI super-resolution instead of a basic resizer. The distinction is crucial: AI reconstructs genuine detail so your image is sharp at 4K, not just larger and softer. JPT AI makes it effortless with a free, unlimited Normal upscaler, watermark-free output, no mandatory sign-up, and a Pro AI mode for the most demanding ultra-HD jobs.
+        body: `Upscaling an image to 4K for free is fully achievable when you use real AI super-resolution instead of a basic resizer. The distinction is crucial: AI reconstructs genuine detail so your image is sharp at 4K, not just larger and softer. Pixel Shine makes it effortless with a free, unlimited Normal upscaler, watermark-free output, no mandatory sign-up, and a Pro AI mode for the most demanding ultra-HD jobs.
 
 Whether you're building 4K wallpapers, prepping large prints, or filling ultra-HD displays, the process takes only seconds. Try it now at sjpt.io and upscale your first image to 4K free.`,
       },
@@ -6281,7 +6281,7 @@ Whether you're building 4K wallpapers, prepping large prints, or filling ultra-H
     image: "https://images.pexels.com/photos/1644888/pexels-photo-1644888.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "upscale-anime-image-free",
     title: "How to Upscale Anime Images and AI Art for Free",
-    metaTitle: "Upscale Anime Image Free Online with AI | JPT AI",
+    metaTitle: "Upscale Anime Image Free Online with AI | Pixel Shine",
     metaDescription: "Upscale anime, illustrations and AI art free online. Enhance to HD or 4K while keeping clean lines and vivid colour — no watermark.",
     excerpt: "Anime and illustrations have clean lines and flat colour that need careful upscaling. Here's how to enhance them to HD/4K for free.",
     date: "2025-06-15",
@@ -6296,7 +6296,7 @@ Whether you're building 4K wallpapers, prepping large prints, or filling ultra-H
 
 The core problem is that anime and AI art are frequently created or downloaded at small sizes. A generated image might come out at 512x512 or 1024x1024 pixels, and fan art or screenshots found online are often smaller still. Blow these up with a basic resizer and the crisp lines turn to mush, the flat colors get muddy, and the whole appeal of the style collapses. What you need is AI upscaling that respects and reconstructs those clean edges and stylized details.
 
-In this guide, we'll explain why anime and AI art need special handling, how JPT AI works as a free anime image upscaler with unlimited Normal upscaling, no watermarks, and no mandatory sign-up, and exactly how to enhance anime photos and art step by step. Plus expert tips, mistakes to avoid, and the real use cases creators care about.`,
+In this guide, we'll explain why anime and AI art need special handling, how Pixel Shine works as a free anime image upscaler with unlimited Normal upscaling, no watermarks, and no mandatory sign-up, and exactly how to enhance anime photos and art step by step. Plus expert tips, mistakes to avoid, and the real use cases creators care about.`,
       },
       {
         heading: "Why Anime and AI Art Are Tricky to Upscale",
@@ -6311,18 +6311,18 @@ In this guide, we'll explain why anime and AI art need special handling, how JPT
 The combination means that enlarging anime or AI art with generic tools produces blurry lines, muddy colors, and a loss of the crisp, vibrant look that makes the art appealing. Proper upscaling has to preserve and reconstruct those sharp edges and clean color regions — treating the stylized nature of the art as a feature to protect, not a photograph to smooth over.`,
       },
       {
-        heading: "How JPT AI Upscales Anime Images and AI Art",
-        body: `JPT AI's upscaler reconstructs detail rather than stretching pixels, which is exactly what anime and AI art need to keep their crisp lines and clean colors intact through enlargement. Its deep-learning model, trained on vast image data, rebuilds edges and structure as it enlarges — so instead of smearing the sharp linework that defines anime, it works to keep those lines clean and the flat color regions smooth at the larger size.
+        heading: "How Pixel Shine Upscales Anime Images and AI Art",
+        body: `Pixel Shine's upscaler reconstructs detail rather than stretching pixels, which is exactly what anime and AI art need to keep their crisp lines and clean colors intact through enlargement. Its deep-learning model, trained on vast image data, rebuilds edges and structure as it enlarges — so instead of smearing the sharp linework that defines anime, it works to keep those lines clean and the flat color regions smooth at the larger size.
 
 **Free Normal mode** is perfect for everyday anime and AI art upscaling — turning 512 or 1024-pixel generations and downloads into crisp, larger images for wallpapers and sharing. It's free, unlimited, and requires no sign-up, so you can process an entire folder of art without hitting a wall.
 
 **Pro AI mode** steps in for the most demanding work — highly detailed illustrations, art headed to large print, or images where you want maximum reconstruction. Running on credits with a more powerful model, it squeezes out the finest detail. New users get five free trials to test this premium quality on their favorite pieces.
 
-**No watermarks, ever.** For creators, this is essential — JPT AI returns a clean file with no logo stamped across the artwork, so your upscaled anime images and AI art are ready to post, print, or share as wallpapers immediately. That blend of edge-preserving reconstruction, unlimited free upscaling, and clean output makes it a genuinely practical tool for the anime and AI art community.`,
+**No watermarks, ever.** For creators, this is essential — Pixel Shine returns a clean file with no logo stamped across the artwork, so your upscaled anime images and AI art are ready to post, print, or share as wallpapers immediately. That blend of edge-preserving reconstruction, unlimited free upscaling, and clean output makes it a genuinely practical tool for the anime and AI art community.`,
       },
       {
         heading: "Step-by-Step: Upscaling Anime Images and AI Art",
-        body: `Here's how to enlarge your anime or AI art with JPT AI from start to finish.
+        body: `Here's how to enlarge your anime or AI art with Pixel Shine from start to finish.
 
 **1. Go to sjpt.io and open the Upscale tool.** The free Normal upscaler needs no account, so you can start immediately.
 
@@ -6405,10 +6405,10 @@ The combination means that enlarging anime or AI art with generic tools produces
       {
         heading: "Frequently Asked Questions",
         body: `**Can I upscale anime images and AI art for free?**
-Yes. JPT AI's Normal upscaler is free, unlimited, and needs no sign-up, making it ideal for enlarging anime art and AI generations. New users also get five free trials of the powerful Pro AI mode.
+Yes. Pixel Shine's Normal upscaler is free, unlimited, and needs no sign-up, making it ideal for enlarging anime art and AI generations. New users also get five free trials of the powerful Pro AI mode.
 
 **Will upscaling keep the crisp anime lines sharp?**
-Yes. JPT AI reconstructs detail rather than stretching pixels, working to preserve the clean linework and smooth color regions that define anime and AI art, rather than smearing them like basic resizers do.
+Yes. Pixel Shine reconstructs detail rather than stretching pixels, working to preserve the clean linework and smooth color regions that define anime and AI art, rather than smearing them like basic resizers do.
 
 **What source size should I upscale from?**
 Use the largest original export you have. A 512-pixel generation reaches 2048 at 4x; a 1024-pixel piece hits 2048 at 2x. Larger, cleaner PNG sources give the best results.
@@ -6416,7 +6416,7 @@ Use the largest original export you have. A 512-pixel generation reaches 2048 at
 **Should I use PNG or JPEG for anime art?**
 PNG is best. It preserves the crisp lines losslessly, both as your source and your final export, whereas JPEG compression can add artifacts around the sharp edges.
 
-**Does JPT AI add watermarks to my art?**
+**Does Pixel Shine add watermarks to my art?**
 No. Every downloaded file is clean and watermark-free, so your upscaled anime images and AI art are ready to post, print, or use as wallpapers immediately.
 
 **When should I use Pro AI mode?**
@@ -6430,7 +6430,7 @@ Yes, though results are best from clean sources. Manga panels and screenshots ca
       },
       {
         heading: "Key Takeaways",
-        body: `Upscaling anime images and AI art for free is entirely possible when you use AI that reconstructs detail and preserves crisp lines rather than a basic resizer that smears them into a blur. JPT AI is built for exactly this, with a free, unlimited Normal upscaler, clean watermark-free output, no mandatory sign-up, and a Pro AI mode plus five free trials for the most detailed creative work.
+        body: `Upscaling anime images and AI art for free is entirely possible when you use AI that reconstructs detail and preserves crisp lines rather than a basic resizer that smears them into a blur. Pixel Shine is built for exactly this, with a free, unlimited Normal upscaler, clean watermark-free output, no mandatory sign-up, and a Pro AI mode plus five free trials for the most detailed creative work.
 
 Whether you're making 4K wallpapers, printing posters, preparing merch, or sharpening your portfolio, your anime and AI art can stay crisp and vibrant at any size. Try it now at sjpt.io and upscale your first anime image or AI artwork free.`,
       },
@@ -6440,7 +6440,7 @@ Whether you're making 4K wallpapers, printing posters, preparing merch, or sharp
     image: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "linkedin-headshot-from-selfie-free",
     title: "How to Make a Professional LinkedIn Headshot from a Selfie (Free)",
-    metaTitle: "Free LinkedIn Headshot from Selfie with AI | JPT AI",
+    metaTitle: "Free LinkedIn Headshot from Selfie with AI | Pixel Shine",
     metaDescription: "Turn any selfie into a professional LinkedIn headshot free with AI. Get a polished profile photo that earns 21× more views — no photographer.",
     excerpt: "You don't need a photographer for a great LinkedIn photo. Here's how to turn a selfie into a professional AI headshot, free.",
     date: "2025-06-16",
@@ -6453,7 +6453,7 @@ Whether you're making 4K wallpapers, printing posters, preparing merch, or sharp
       {
         body: `Creating a professional LinkedIn headshot from a selfie for free is now completely realistic, and it can genuinely transform how recruiters, clients, and colleagues perceive you. Your LinkedIn profile photo is the single most-viewed element of your entire profile, and research consistently shows that profiles with professional headshots receive up to 14 times more views and significantly more connection requests than those with casual or missing photos. Yet booking a professional photographer costs $150 to $400 and eats up half a day, which is exactly why so many people settle for a cropped vacation photo or an awkward webcam shot.
 
-AI changes this equation entirely. With JPT AI (sjpt.io), you can turn an ordinary selfie into a polished, studio-quality professional headshot in minutes, with no photographer, no expensive session, and no watermark. In this guide, you'll learn exactly how to convert a selfie into a LinkedIn-ready headshot, which selfies work best as input, the step-by-step process, and the pro tricks that make AI-generated headshots look natural rather than artificial. Whether you're job hunting, building a personal brand, or simply overdue for a profile refresh, this is the fastest, cheapest way to look your professional best.`,
+AI changes this equation entirely. With Pixel Shine (sjpt.io), you can turn an ordinary selfie into a polished, studio-quality professional headshot in minutes, with no photographer, no expensive session, and no watermark. In this guide, you'll learn exactly how to convert a selfie into a LinkedIn-ready headshot, which selfies work best as input, the step-by-step process, and the pro tricks that make AI-generated headshots look natural rather than artificial. Whether you're job hunting, building a personal brand, or simply overdue for a profile refresh, this is the fastest, cheapest way to look your professional best.`,
       },
       {
         heading: "Why Your LinkedIn Photo Matters More Than You Think",
@@ -6470,8 +6470,8 @@ AI changes this equation entirely. With JPT AI (sjpt.io), you can turn an ordina
 The challenge has always been access: not everyone can afford or schedule a professional shoot. That gap is exactly what AI headshot generation closes, giving anyone a credible professional photo from a single selfie.`,
       },
       {
-        heading: "How JPT AI Turns Selfies Into Professional Headshots",
-        body: `JPT AI's AI Headshot Generator transforms an ordinary selfie into a professional portrait by analyzing your facial features and generating a polished version with professional lighting, clean backgrounds, and business-appropriate styling, while keeping your actual likeness intact.
+        heading: "How Pixel Shine Turns Selfies Into Professional Headshots",
+        body: `Pixel Shine's AI Headshot Generator transforms an ordinary selfie into a professional portrait by analyzing your facial features and generating a polished version with professional lighting, clean backgrounds, and business-appropriate styling, while keeping your actual likeness intact.
 
 **Facial likeness preservation.** The AI studies the structure of your face in the uploaded selfie, your features, proportions, and expression, so the generated headshot still looks like you, not a stranger.
 
@@ -6481,11 +6481,11 @@ The challenge has always been access: not everyone can afford or schedule a prof
 
 **Attire and polish.** The output looks put-together and professional, elevating a casual selfie into something suitable for a résumé or company directory.
 
-JPT AI makes this accessible without the traditional cost or complexity. New users get 5 free trials to generate headshots, and the results come without watermarks, so your finished professional photo is ready to upload to LinkedIn immediately. There's no studio booking, no travel, and no waiting days for edited proofs.`,
+Pixel Shine makes this accessible without the traditional cost or complexity. New users get 5 free trials to generate headshots, and the results come without watermarks, so your finished professional photo is ready to upload to LinkedIn immediately. There's no studio booking, no travel, and no waiting days for edited proofs.`,
       },
       {
         heading: "Step-by-Step: Selfie to LinkedIn Headshot",
-        body: `Follow this process to create your professional headshot from a selfie using JPT AI.
+        body: `Follow this process to create your professional headshot from a selfie using Pixel Shine.
 
 **1. Take a good source selfie.** Face a window in soft, natural daylight (not direct sun). Hold the phone at eye level, roughly arm's length away, and keep your head and shoulders in frame. Use a neutral expression or a genuine, relaxed smile. Avoid heavy filters, sunglasses, and hats.
 
@@ -6547,7 +6547,7 @@ JPT AI makes this accessible without the traditional cost or complexity. New use
         heading: "AI Headshots vs. Traditional Photographers",
         body: `Deciding between an AI headshot and a traditional photo shoot comes down to cost, speed, and purpose.
 
-**Cost.** A professional headshot session typically runs $150 to $400, and premium studios charge more. JPT AI generates headshots with 5 free trials for new users and no watermark, making it effectively free to get a usable result.
+**Cost.** A professional headshot session typically runs $150 to $400, and premium studios charge more. Pixel Shine generates headshots with 5 free trials for new users and no watermark, making it effectively free to get a usable result.
 
 **Speed.** A photo shoot requires booking, travel, the session itself, and days of waiting for edited proofs. AI produces a finished headshot in minutes, from your couch.
 
@@ -6570,7 +6570,7 @@ JPT AI makes this accessible without the traditional cost or complexity. New use
       {
         heading: "Frequently Asked Questions",
         body: `**Can I really make a LinkedIn headshot from a selfie for free?**
-Yes. JPT AI's AI Headshot Generator gives new users 5 free trials to create professional headshots from a selfie, and the results come with no watermark, ready to upload to LinkedIn.
+Yes. Pixel Shine's AI Headshot Generator gives new users 5 free trials to create professional headshots from a selfie, and the results come with no watermark, ready to upload to LinkedIn.
 
 **Will the AI headshot still look like me?**
 Yes. The AI preserves your facial features and likeness while adding professional lighting, framing, and background. Start with a clear, front-facing selfie for the most accurate result, and choose the variation that best resembles you.
@@ -6585,7 +6585,7 @@ Yes, as long as it still genuinely represents your appearance so people recogniz
 Just a few minutes from upload to download, far faster than booking and attending a traditional photo shoot.
 
 **Do I need to install any app?**
-No. JPT AI runs online at sjpt.io, so you can create your headshot on desktop or mobile with nothing to install.
+No. Pixel Shine runs online at sjpt.io, so you can create your headshot on desktop or mobile with nothing to install.
 
 **Can I choose the background and style?**
 Yes. You can select professional styles and backgrounds appropriate for your industry, from formal corporate looks to slightly more relaxed creative styles.
@@ -6597,7 +6597,7 @@ Absolutely, and you should. Using one consistent, professional headshot across L
         heading: "Key Takeaways",
         body: `A professional LinkedIn headshot is one of the highest-impact upgrades you can make to your professional presence, and you no longer need a photographer or a big budget to get one. By turning a good selfie into a polished, studio-quality portrait, AI lets you make a strong first impression on recruiters and clients in minutes. The keys are simple: start with a clear, well-lit, front-facing selfie, match the style to your industry, generate a few variations, and choose the one that looks most like you.
 
-JPT AI makes this fast, free, and watermark-free, with 5 free trials for new users. Ready to upgrade your first impression? Head to sjpt.io, upload a selfie, and get your professional LinkedIn headshot today.`,
+Pixel Shine makes this fast, free, and watermark-free, with 5 free trials for new users. Ready to upgrade your first impression? Head to sjpt.io, upload a selfie, and get your professional LinkedIn headshot today.`,
       },
     ],
   },
@@ -6605,7 +6605,7 @@ JPT AI makes this fast, free, and watermark-free, with 5 free trials for new use
     image: "https://images.pexels.com/photos/3992656/pexels-photo-3992656.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "change-photo-background-with-ai-free",
     title: "How to Change a Photo Background with AI (Free)",
-    metaTitle: "Change Photo Background with AI Free Online | JPT AI",
+    metaTitle: "Change Photo Background with AI Free Online | Pixel Shine",
     metaDescription: "Replace any photo background free with AI. Describe a new scene in plain English and AI generates it instantly — studio, beach, office. No watermark.",
     excerpt: "Want to swap a dull background for a studio, beach, or office scene? Just describe it and AI does the rest — here's how, for free.",
     date: "2025-06-17",
@@ -6629,8 +6629,8 @@ Second is **matching the new scene**. Even with a perfect cutout, dropping a sub
 Traditionally, solving both meant expert Photoshop work: careful masking with channel or refine-edge techniques, then hours of manual color grading, shadow painting, and blending to make the composite believable. This required genuine skill and a lot of time — easily 30 minutes to an hour for a convincing result. That barrier put realistic background changes out of reach for most people. AI changes the equation by automating the cutout and, with prompt-based tools, generating or blending backgrounds that are designed to fit the subject naturally.`,
       },
       {
-        heading: "How JPT AI Changes Backgrounds for Free",
-        body: `JPT AI gives you two complementary ways to change a background. For a straightforward swap to a solid color or a clean backdrop, the **Background Remover** isolates your subject in about five seconds, after which you drop in a new color or scene. For more creative or realistic changes, the **AI Photo Editor** lets you describe the background you want in plain text — 'a modern office,' 'a sunset beach,' 'a soft studio gray' — and the AI generates and blends it behind your subject.
+        heading: "How Pixel Shine Changes Backgrounds for Free",
+        body: `Pixel Shine gives you two complementary ways to change a background. For a straightforward swap to a solid color or a clean backdrop, the **Background Remover** isolates your subject in about five seconds, after which you drop in a new color or scene. For more creative or realistic changes, the **AI Photo Editor** lets you describe the background you want in plain text — 'a modern office,' 'a sunset beach,' 'a soft studio gray' — and the AI generates and blends it behind your subject.
 
 The advantage of the prompt-based editor is that it handles the hard part — making the new background actually fit — rather than just pasting a stock image behind a cutout. You describe the scene, and the AI works to place your subject into it. This is far faster and more accessible than manual compositing, and it doesn't require any editing skill.
 
@@ -6644,7 +6644,7 @@ The practical perks make experimenting easy. New users get **5 free trials** to 
 
 **2. Decide your approach.** For a solid color or simple backdrop, use the Background Remover. For a realistic new scene, use the AI Photo Editor with a text prompt.
 
-**3. Open JPT AI.** Go to sjpt.io and choose the tool that fits — Remove Background for simple swaps, or the AI Editor for prompt-based scenes.
+**3. Open Pixel Shine.** Go to sjpt.io and choose the tool that fits — Remove Background for simple swaps, or the AI Editor for prompt-based scenes.
 
 **4. Upload your image.** Drag and drop or browse. Higher resolution means better edges and a more believable result.
 
@@ -6725,7 +6725,7 @@ The honest trade-off: for a high-stakes hero image demanding pixel-perfect contr
       {
         heading: "Frequently Asked Questions",
         body: `**How do I change a photo background with AI for free?**
-Upload your photo to JPT AI at sjpt.io. For a simple swap, use the free Background Remover to isolate your subject and add a new background. For a realistic new scene, use the AI Photo Editor and describe the background you want — new users get 5 free trials.
+Upload your photo to Pixel Shine at sjpt.io. For a simple swap, use the free Background Remover to isolate your subject and add a new background. For a realistic new scene, use the AI Photo Editor and describe the background you want — new users get 5 free trials.
 
 **Is the AI background changer really free?**
 Standard background removal is free and unlimited with no watermark. The prompt-based AI Photo Editor gives new users 5 free trials to test creative background changes before using credits.
@@ -6740,7 +6740,7 @@ Usually because the lighting direction or color temperature of the new backgroun
 Yes. The AI is built to preserve soft edges like hair when isolating your subject, which is what keeps a background swap looking natural instead of pasted-on.
 
 **What if my photo is low resolution?**
-Run it through JPT AI's Upscaler first. More detail gives the AI cleaner edges to work with, resulting in a more believable composite against the new background.
+Run it through Pixel Shine's Upscaler first. More detail gives the AI cleaner edges to work with, resulting in a more believable composite against the new background.
 
 **Can I use this for professional headshots?**
 Absolutely. Swapping a messy home background for a clean studio or office backdrop is one of the most popular uses, turning a casual photo into a polished, LinkedIn-ready headshot.
@@ -6760,7 +6760,7 @@ Ready to reinvent your photos' backgrounds? Head to sjpt.io, upload your image, 
     image: "https://images.pexels.com/photos/2253879/pexels-photo-2253879.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "remove-object-from-photo-free",
     title: "How to Remove an Object or Person from a Photo (Free)",
-    metaTitle: "Remove Object from Photo Free Online with AI | JPT AI",
+    metaTitle: "Remove Object from Photo Free Online with AI | Pixel Shine",
     metaDescription: "Remove unwanted objects, people or text from photos free with AI. Describe what to erase and AI fills the gap naturally — no Photoshop, no watermark.",
     excerpt: "Photobombers, stray objects, unwanted text — AI can erase them and rebuild the background naturally. Here's how, for free.",
     date: "2025-06-18",
@@ -6784,8 +6784,8 @@ The difficulty scales with the background. Removing an object against a **plain,
 Traditionally, this was painstaking manual work. Retouchers used the **clone stamp and healing brush** in Photoshop, sampling nearby pixels and carefully painting over the object, then blending seams by hand. For a complex removal, this could take 20 minutes to an hour and demanded real skill to avoid tell-tale repeating patterns. AI object removal automates this: modern inpainting models predict what belongs in the erased area based on the surrounding context, reconstructing textures and structures far faster than manual cloning — and often more convincingly for everyday photos.`,
       },
       {
-        heading: "How JPT AI Removes Objects and People",
-        body: `JPT AI's Photo Editor lets you remove unwanted objects or people and uses AI inpainting to fill in the background behind them automatically. Rather than leaving a hole, the AI analyzes the surrounding area and reconstructs what should be there — continuing walls, skies, floors, and textures so the removal looks natural. You indicate what you want gone, and the AI handles the reconstruction.
+        heading: "How Pixel Shine Removes Objects and People",
+        body: `Pixel Shine's Photo Editor lets you remove unwanted objects or people and uses AI inpainting to fill in the background behind them automatically. Rather than leaving a hole, the AI analyzes the surrounding area and reconstructs what should be there — continuing walls, skies, floors, and textures so the removal looks natural. You indicate what you want gone, and the AI handles the reconstruction.
 
 Because it's prompt- and selection-driven rather than a manual clone tool, you don't need to sample pixels, feather edges, or blend seams by hand. This makes clean removals accessible to people with zero editing experience, and dramatically faster than the traditional healing-brush approach — seconds instead of the many minutes manual retouching demands.
 
@@ -6799,7 +6799,7 @@ The platform makes it easy to experiment. New users get **5 free trials** on the
 
 **2. Upscale first if the photo is low-res.** More detail gives the AI better context to reconstruct the background. Run soft images through the AI Upscaler before editing.
 
-**3. Open the JPT AI Photo Editor.** Go to sjpt.io and select the AI Editor. New users have 5 free trials to work with.
+**3. Open the Pixel Shine Photo Editor.** Go to sjpt.io and select the AI Editor. New users have 5 free trials to work with.
 
 **4. Upload your image.** Drag and drop or browse to select. Higher resolution yields a more convincing fill.
 
@@ -6880,7 +6880,7 @@ The trade-off: for a mission-critical edit against an extremely intricate backgr
       {
         heading: "Frequently Asked Questions",
         body: `**How do I remove an object or person from a photo for free?**
-Upload your photo to JPT AI's Photo Editor at sjpt.io, select or describe what you want removed, and let the AI erase it and inpaint the background. New users get 5 free trials, and downloads have no watermark.
+Upload your photo to Pixel Shine's Photo Editor at sjpt.io, select or describe what you want removed, and let the AI erase it and inpaint the background. New users get 5 free trials, and downloads have no watermark.
 
 **How does the AI fill in the space behind the removed object?**
 It uses inpainting — analyzing the surrounding area and reconstructing the background that should be there, continuing textures, walls, skies, and patterns so the removal looks natural rather than leaving a hole.
@@ -6915,7 +6915,7 @@ Ready to erase the distractions? Head to sjpt.io, open the AI Photo Editor, and 
     image: "https://images.pexels.com/photos/1591447/pexels-photo-1591447.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "enhance-profile-picture-free",
     title: "How to Enhance and Unblur Your Profile Picture for Free",
-    metaTitle: "Enhance Profile Picture Free Online with AI | JPT AI",
+    metaTitle: "Enhance Profile Picture Free Online with AI | Pixel Shine",
     metaDescription: "Sharpen and upscale your blurry profile picture free with AI. Crisp PFPs for Instagram, LinkedIn, Discord and WhatsApp — no watermark.",
     excerpt: "Compressed, blurry profile pictures look unprofessional. Here's how to sharpen and upscale your PFP for free with AI.",
     date: "2025-06-19",
@@ -6928,7 +6928,7 @@ Ready to erase the distractions? Head to sjpt.io, open the AI Photo Editor, and 
       {
         body: `Learning how to enhance and unblur your profile picture for free can instantly upgrade how you appear across every platform you use. Your profile picture is your digital handshake, it's the first thing people see on LinkedIn, Instagram, dating apps, gaming profiles, work tools like Slack, and countless other services. Yet so many profile photos are let down by the same problems: they're blurry, low-resolution, pixelated after being cropped and re-uploaded, or simply soft because they were captured in poor lighting. A great photo of you can be ruined by the compression and resizing that happens every time an image gets uploaded and shared.
 
-JPT AI (sjpt.io) fixes this in seconds. Using its AI upscaler, you can sharpen, unblur, and enhance the quality of your profile picture for free, with no watermark and no sign-up required for the Normal mode. Whether your photo is blurry from a low-res source, pixelated from over-compression, or just not crisp enough to look professional, AI enhancement can recover detail and clarity that make you look your best. In this tutorial, you'll learn exactly how to enhance a profile picture, the settings that matter, and pro tips to get a sharp, high-quality result that stands out across every platform.`,
+Pixel Shine (sjpt.io) fixes this in seconds. Using its AI upscaler, you can sharpen, unblur, and enhance the quality of your profile picture for free, with no watermark and no sign-up required for the Normal mode. Whether your photo is blurry from a low-res source, pixelated from over-compression, or just not crisp enough to look professional, AI enhancement can recover detail and clarity that make you look your best. In this tutorial, you'll learn exactly how to enhance a profile picture, the settings that matter, and pro tips to get a sharp, high-quality result that stands out across every platform.`,
       },
       {
         heading: "Why Profile Pictures End Up Blurry",
@@ -6947,8 +6947,8 @@ JPT AI (sjpt.io) fixes this in seconds. Using its AI upscaler, you can sharpen, 
 The common thread is a lack of resolution and sharpness. AI upscaling directly targets this by intelligently increasing resolution and reconstructing detail, turning a soft or pixelated photo into a crisp one.`,
       },
       {
-        heading: "How JPT AI Unblurs and Enhances Profile Pictures",
-        body: `JPT AI enhances profile pictures using AI upscaling that increases resolution while reconstructing sharp detail, effectively unblurring soft images and cleaning up pixelation. Rather than a basic sharpen filter that just increases edge contrast (and often adds artifacts), the AI genuinely rebuilds detail based on what it has learned from millions of high-quality images.
+        heading: "How Pixel Shine Unblurs and Enhances Profile Pictures",
+        body: `Pixel Shine enhances profile pictures using AI upscaling that increases resolution while reconstructing sharp detail, effectively unblurring soft images and cleaning up pixelation. Rather than a basic sharpen filter that just increases edge contrast (and often adds artifacts), the AI genuinely rebuilds detail based on what it has learned from millions of high-quality images.
 
 **Resolution enhancement.** The AI enlarges your photo 2x or 4x while adding believable new detail, so a small, soft crop becomes a larger, crisp image suitable for any profile frame.
 
@@ -6956,11 +6956,11 @@ The common thread is a lack of resolution and sharpness. AI upscaling directly t
 
 **Noise and pixelation cleanup.** Compression artifacts, grain from low-light capture, and pixelation from over-cropping get intelligently smoothed away without losing genuine detail.
 
-JPT AI's Normal upscale mode is free, unlimited, and requires no sign-in, making it perfect for quickly enhancing a profile picture. For a particularly low-quality photo, the Pro AI mode applies deeper reconstruction using credits, with 5 free trials for new users. Best of all, there's never a watermark, so your enhanced profile picture is ready to upload immediately, looking noticeably sharper than the original everywhere you use it.`,
+Pixel Shine's Normal upscale mode is free, unlimited, and requires no sign-in, making it perfect for quickly enhancing a profile picture. For a particularly low-quality photo, the Pro AI mode applies deeper reconstruction using credits, with 5 free trials for new users. Best of all, there's never a watermark, so your enhanced profile picture is ready to upload immediately, looking noticeably sharper than the original everywhere you use it.`,
       },
       {
         heading: "Step-by-Step: Enhance Your Profile Picture",
-        body: `Follow these steps to unblur and enhance your profile picture with JPT AI.
+        body: `Follow these steps to unblur and enhance your profile picture with Pixel Shine.
 
 **1. Choose the best available source photo.** Start with the highest-resolution version you have. If you're cropping from a larger image, crop before uploading so the AI enhances the exact area you'll use.
 
@@ -7043,13 +7043,13 @@ JPT AI's Normal upscale mode is free, unlimited, and requires no sign-in, making
       {
         heading: "Frequently Asked Questions",
         body: `**Can I unblur my profile picture for free?**
-Yes. JPT AI's Normal upscale mode sharpens and enhances profile pictures for free, unlimited, with no sign-up and no watermark. For very low-quality photos, the Pro AI mode offers deeper reconstruction with 5 free trials for new users.
+Yes. Pixel Shine's Normal upscale mode sharpens and enhances profile pictures for free, unlimited, with no sign-up and no watermark. For very low-quality photos, the Pro AI mode offers deeper reconstruction with 5 free trials for new users.
 
 **Does AI really unblur a photo, or just sharpen edges?**
 AI upscaling genuinely reconstructs detail as it increases resolution, rather than just boosting edge contrast like a basic sharpen filter. This produces a more natural, truly clearer result, especially on faces.
 
 **Will enhancing add a watermark to my photo?**
-No. JPT AI never adds watermarks, so your enhanced profile picture is ready to upload immediately.
+No. Pixel Shine never adds watermarks, so your enhanced profile picture is ready to upload immediately.
 
 **Should I crop before or after enhancing?**
 Crop first. Crop to your final profile composition, then enhance, so all the added detail goes into the pixels you'll actually display. Enhancing then cropping wastes quality.
@@ -7064,13 +7064,13 @@ Use 2x for slightly soft photos and 4x for small, blurry, or heavily pixelated o
 You can, but screenshots are lower quality than originals. For the best result, use the original high-resolution photo rather than a screenshot so the AI has more detail to work with.
 
 **Does it work on my phone?**
-Yes. JPT AI runs on your phone at sjpt.io, so you can enhance and download your profile picture directly from your phone.`,
+Yes. Pixel Shine runs on your phone at sjpt.io, so you can enhance and download your profile picture directly from your phone.`,
       },
       {
         heading: "Key Takeaways",
         body: `A blurry profile picture can undercut a great photo of you, but fixing it takes just seconds. AI upscaling unblurs soft images, cleans up compression and pixelation, and sharpens your face, so you look crisp and professional everywhere online. The keys are simple: crop to your final composition first, match the upscale level to how soft the photo is, enhance as the last step, and upload at the platform's recommended size so your photo survives compression.
 
-JPT AI makes this free, fast, and watermark-free, with unlimited Normal enhancement and no sign-up required. Ready to upgrade your digital first impression? Head to sjpt.io, upload your profile picture, and get a sharper you in seconds.`,
+Pixel Shine makes this free, fast, and watermark-free, with unlimited Normal enhancement and no sign-up required. Ready to upgrade your digital first impression? Head to sjpt.io, upload your profile picture, and get a sharper you in seconds.`,
       },
     ],
   },
@@ -7078,7 +7078,7 @@ JPT AI makes this free, fast, and watermark-free, with unlimited Normal enhancem
     image: "https://images.pexels.com/photos/45842/clasped-hands-comfort-hands-people-45842.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "passport-photo-white-background-free",
     title: "How to Get a White Background Passport Photo for Free",
-    metaTitle: "Passport Photo White Background Free Online | JPT AI",
+    metaTitle: "Passport Photo White Background Free Online | Pixel Shine",
     metaDescription: "Change your passport or ID photo background to white or blue free with AI. Meet visa and ID requirements in seconds — no studio, no watermark.",
     excerpt: "Passport and visa photos need a plain background. Here's how to change yours to regulation white or blue for free with AI.",
     date: "2025-06-20",
@@ -7102,8 +7102,8 @@ The **U.S. State Department**, for example, requires a plain white or off-white 
 The practical problem is that almost no one has a perfectly plain, evenly-lit white wall at home. Real walls have shadows, texture, outlets, and color casts from indoor lighting. Photographing yourself against them rarely produces the clean, shadow-free white the rules demand. Traditionally that meant paying for a booth or studio. But with AI background replacement, you can shoot against any background and swap in a compliant, perfectly uniform white — solving the single most common reason home passport photos get rejected.`,
       },
       {
-        heading: "How JPT AI Creates a Compliant White Background",
-        body: `JPT AI's Background Remover isolates you from whatever's behind you and lets you drop in a **plain, uniform white background** in about five seconds — exactly what passport and ID rules require. Because the white is a generated solid fill, it's perfectly even with **no shadows and no color cast**, which are two of the most common rejection triggers when photographing against a real wall.
+        heading: "How Pixel Shine Creates a Compliant White Background",
+        body: `Pixel Shine's Background Remover isolates you from whatever's behind you and lets you drop in a **plain, uniform white background** in about five seconds — exactly what passport and ID rules require. Because the white is a generated solid fill, it's perfectly even with **no shadows and no color cast**, which are two of the most common rejection triggers when photographing against a real wall.
 
 The AI handles the parts that matter for a face photo: it cleanly separates your head, including **hair edges**, from the original background, so the outline looks natural against the white rather than jagged or haloed. You don't need studio lighting or a proper backdrop — you just need a clear photo of your face, and the tool provides the compliant background.
 
@@ -7117,7 +7117,7 @@ Several features make it well-suited to official photos. It's **free** for stand
 
 **2. Frame your head correctly.** Position your head and shoulders centered in the frame with a little space above your head, matching passport composition. Shoot at eye level.
 
-**3. Open the JPT AI Background Remover.** Go to sjpt.io and select the Remove Background tool. No sign-in needed to start.
+**3. Open the Pixel Shine Background Remover.** Go to sjpt.io and select the Remove Background tool. No sign-in needed to start.
 
 **4. Upload your photo.** Drag and drop or browse to select. A higher-resolution image gives a cleaner cutout and sharper final result.
 
@@ -7198,7 +7198,7 @@ The free AI approach lets you shoot as many attempts as you like at home, pick y
       {
         heading: "Frequently Asked Questions",
         body: `**How do I get a white background passport photo for free?**
-Take a straight-on photo of your face at home, upload it to JPT AI's free Background Remover at sjpt.io, let the AI remove the background in about five seconds, add a plain white background, then crop to your country's size and download — no watermark or sign-in for standard use.
+Take a straight-on photo of your face at home, upload it to Pixel Shine's free Background Remover at sjpt.io, let the AI remove the background in about five seconds, add a plain white background, then crop to your country's size and download — no watermark or sign-in for standard use.
 
 **Will an AI white background be accepted for a passport?**
 A plain, uniform white background meets the background requirement of most authorities, including the U.S. State Department. You must also meet the pose, expression, sizing, and no-glasses rules — the background is one part of full compliance.
@@ -7210,7 +7210,7 @@ A plain, uniform white background meets the background requirement of most autho
 No. The U.S. State Department no longer allows glasses in passport photos. Remove them before shooting, since editing cannot make a glasses-wearing photo compliant.
 
 **My selfie is a little blurry — can I still use it?**
-Run it through JPT AI's Upscaler first to sharpen your features, then remove the background. Blurry photos get rejected, and pure white makes softness more obvious, so start as sharp as possible.
+Run it through Pixel Shine's Upscaler first to sharpen your features, then remove the background. Blurry photos get rejected, and pure white makes softness more obvious, so start as sharp as possible.
 
 **Does the AI handle my hair against the white background?**
 Yes. The AI cleanly separates hair edges from the original background so your outline looks natural against the plain white, without a halo or jagged cut.
@@ -7233,7 +7233,7 @@ Ready to skip the photo booth? Head to sjpt.io, upload your photo to the free Ba
     image: "https://images.pexels.com/photos/3184292/pexels-photo-3184292.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "corporate-team-headshots-free",
     title: "How to Get Consistent Corporate Team Headshots for Free",
-    metaTitle: "Free Corporate Team Headshots with AI | JPT AI",
+    metaTitle: "Free Corporate Team Headshots with AI | Pixel Shine",
     metaDescription: "Generate consistent corporate headshots for your whole team free with AI. Professional photos for websites and directories without a studio.",
     excerpt: "Matching, professional team headshots make a company look credible. Here's how to generate them for free with AI — no studio day required.",
     date: "2025-06-21",
@@ -7246,7 +7246,7 @@ Ready to skip the photo booth? Head to sjpt.io, upload your photo to the free Ba
       {
         body: `Getting consistent corporate team headshots for free used to be a logistical nightmare, but AI has completely changed the game. If you've ever tried to coordinate professional photos for an entire team, you know the pain: scheduling a photographer, herding remote employees, matching lighting and backgrounds across everyone, and paying $100 to $300 per person. For a 20-person company, that's easily $4,000 and weeks of coordination, and the moment someone new joins, your team page looks mismatched again. This is exactly why so many company About pages feature a jarring collage of selfies, cropped group photos, and headshots taken years apart.
 
-JPT AI (sjpt.io) offers a dramatically simpler path. Using its AI Headshot Generator, every team member can turn a simple selfie into a professional headshot, and by applying consistent style and background settings, you can achieve a unified, polished look across your entire team, with no photographer, no watermark, and no scheduling headaches. In this guide, you'll learn how to create consistent corporate team headshots for free, coordinate a distributed team, maintain visual consistency, and keep your look uniform even as your company grows. It's the modern, budget-friendly way to make your whole team look professional.`,
+Pixel Shine (sjpt.io) offers a dramatically simpler path. Using its AI Headshot Generator, every team member can turn a simple selfie into a professional headshot, and by applying consistent style and background settings, you can achieve a unified, polished look across your entire team, with no photographer, no watermark, and no scheduling headaches. In this guide, you'll learn how to create consistent corporate team headshots for free, coordinate a distributed team, maintain visual consistency, and keep your look uniform even as your company grows. It's the modern, budget-friendly way to make your whole team look professional.`,
       },
       {
         heading: "Why Consistent Team Headshots Are So Hard to Get",
@@ -7265,8 +7265,8 @@ JPT AI (sjpt.io) offers a dramatically simpler path. Using its AI Headshot Gener
 These friction points explain why so many companies simply give up and accept a mismatched grid of employee photos. AI headshot generation removes nearly all of this friction, letting anyone contribute a consistent-looking headshot from wherever they are, whenever they onboard.`,
       },
       {
-        heading: "How JPT AI Creates Consistent Team Headshots",
-        body: `JPT AI enables consistent corporate headshots by letting every team member generate a professional portrait from a selfie using the same style and background settings, producing a unified look without a coordinated photo shoot.
+        heading: "How Pixel Shine Creates Consistent Team Headshots",
+        body: `Pixel Shine enables consistent corporate headshots by letting every team member generate a professional portrait from a selfie using the same style and background settings, producing a unified look without a coordinated photo shoot.
 
 **Standardized styling.** When each person selects the same professional style and background options in the AI Headshot Generator, the resulting headshots share a coherent visual language, similar lighting, framing, and backdrop, so they look like a set rather than a random collection.
 
@@ -7276,7 +7276,7 @@ These friction points explain why so many companies simply give up and accept a 
 
 **Effortless scaling.** Onboarding a new hire six months later? They follow the same simple steps with the same settings and instantly match the existing team gallery.
 
-JPT AI makes this affordable and fast: new users get 5 free trials, and outputs carry no watermark, so headshots are ready to drop straight onto your website or directory. Instead of a multi-thousand-dollar shoot and weeks of coordination, a manager can share a short style guide, and the whole team generates matching professional headshots on their own time.`,
+Pixel Shine makes this affordable and fast: new users get 5 free trials, and outputs carry no watermark, so headshots are ready to drop straight onto your website or directory. Instead of a multi-thousand-dollar shoot and weeks of coordination, a manager can share a short style guide, and the whole team generates matching professional headshots on their own time.`,
       },
       {
         heading: "Step-by-Step: Coordinate Consistent Team Headshots",
@@ -7340,7 +7340,7 @@ JPT AI makes this affordable and fast: new users get 5 free trials, and outputs 
         heading: "AI Team Headshots vs. Hiring a Photographer",
         body: `Choosing between AI headshots and a traditional team shoot depends on your budget, team distribution, and how often your roster changes.
 
-**Cost.** A photographer charging $100 to $300 per person means thousands of dollars for a mid-sized team, plus reshoots for new hires. JPT AI offers 5 free trials per user and watermark-free results, making team headshots essentially free.
+**Cost.** A photographer charging $100 to $300 per person means thousands of dollars for a mid-sized team, plus reshoots for new hires. Pixel Shine offers 5 free trials per user and watermark-free results, making team headshots essentially free.
 
 **Logistics.** Traditional shoots require aligning everyone's schedules and, for remote teams, expensive travel. AI headshots let each person generate theirs independently, from anywhere, on their own time.
 
@@ -7365,7 +7365,7 @@ JPT AI makes this affordable and fast: new users get 5 free trials, and outputs 
       {
         heading: "Frequently Asked Questions",
         body: `**Can I get corporate team headshots for free?**
-Yes. Each team member gets 5 free trials with JPT AI's AI Headshot Generator, and results have no watermark. By having everyone use the same settings, you can create a consistent, professional team gallery at essentially no cost.
+Yes. Each team member gets 5 free trials with Pixel Shine's AI Headshot Generator, and results have no watermark. By having everyone use the same settings, you can create a consistent, professional team gallery at essentially no cost.
 
 **How do I make everyone's headshots look consistent?**
 Define a standard before you start: the same professional style, the same background, and the same selfie conditions (soft window light, front-facing, head and shoulders). Share these settings with the whole team so everyone's output matches.
@@ -7386,13 +7386,13 @@ Since each person generates their own in minutes, an entire team can complete th
 Absolutely. That's a key advantage. Because the tool runs online, remote and distributed team members generate matching headshots from home with no travel required.
 
 **Is a watermark added to the headshots?**
-No. JPT AI produces watermark-free headshots ready to publish directly on your website, directory, and profiles.`,
+No. Pixel Shine produces watermark-free headshots ready to publish directly on your website, directory, and profiles.`,
       },
       {
         heading: "Key Takeaways",
         body: `Consistent corporate team headshots no longer require a photographer, a coordinated shoot day, or a four-figure budget. With AI, every team member can generate a professional headshot from a selfie, and by standardizing style and background settings, you achieve a unified, polished look across your entire team, even a fully remote one. The keys to success are defining a clear standard upfront, giving good selfie instructions, reviewing the full set for consistency, and documenting the process for future hires.
 
-JPT AI makes this free, fast, and watermark-free, with 5 free trials per user. Ready to give your team page a professional upgrade? Head to sjpt.io, share the style guide with your team, and build a consistent, credible team gallery today.`,
+Pixel Shine makes this free, fast, and watermark-free, with 5 free trials per user. Ready to give your team page a professional upgrade? Head to sjpt.io, share the style guide with your team, and build a consistent, credible team gallery today.`,
       },
     ],
   },
@@ -7400,7 +7400,7 @@ JPT AI makes this free, fast, and watermark-free, with 5 free trials per user. R
     image: "https://images.pexels.com/photos/3585074/pexels-photo-3585074.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "unblur-image-online-free",
     title: "How to Unblur an Image Online for Free with AI",
-    metaTitle: "Unblur Image Online Free with AI | JPT AI",
+    metaTitle: "Unblur Image Online Free with AI | Pixel Shine",
     metaDescription: "Unblur and sharpen blurry photos free online with AI. Recover detail from soft, low-resolution images in seconds — no watermark.",
     excerpt: "Blurry photo? AI can recover sharpness from images that are soft due to low resolution or compression — here's how, for free.",
     date: "2025-06-22",
@@ -7413,7 +7413,7 @@ JPT AI makes this free, fast, and watermark-free, with 5 free trials per user. R
       {
         body: `If you've been searching for how to unblur an image online for free with AI, you've landed in the right place. Soft, out-of-focus, and low-resolution images are everywhere — in our camera rolls, our downloads, our old scans — and for years the only fix was pricey software and a lot of patience. Now, AI-powered deblurring can rebuild the detail a blurry image lost and hand you back a crisp result in seconds, online, at no cost.
 
-In this comprehensive guide, you'll learn exactly how to remove image blur online using AI, why images go soft in the first place, and how AI deblurring differs from the old-school sharpening filters that never quite worked. We'll walk through JPT AI's free image sharpener step by step — a tool that adds no watermark and doesn't demand a sign-up for its free mode. Whether you need to clean up a product photo, salvage a screenshot, or restore a cherished memory, you'll finish this guide knowing how to get a clear, professional-looking image without spending a dime.`,
+In this comprehensive guide, you'll learn exactly how to remove image blur online using AI, why images go soft in the first place, and how AI deblurring differs from the old-school sharpening filters that never quite worked. We'll walk through Pixel Shine's free image sharpener step by step — a tool that adds no watermark and doesn't demand a sign-up for its free mode. Whether you need to clean up a product photo, salvage a screenshot, or restore a cherished memory, you'll finish this guide knowing how to get a clear, professional-looking image without spending a dime.`,
       },
       {
         heading: "Why Images End Up Blurry",
@@ -7430,12 +7430,12 @@ In this comprehensive guide, you'll learn exactly how to remove image blur onlin
 Most blurry images actually combine several of these problems at once. The good news is that AI deblurring is particularly effective on focus softness, low-light grain, and compression artifacts — the most frequent culprits — and can noticeably improve mild motion blur as well. Identifying your blur type helps you set realistic expectations for the fix.`,
       },
       {
-        heading: "How JPT AI Removes Image Blur",
-        body: `JPT AI's deblur technology works fundamentally differently from the sharpening sliders in traditional editors. Those old tools simply amplify contrast along edges the software already detects — they make an image look punchier but add zero real detail, and pushing them creates halos and grain.
+        heading: "How Pixel Shine Removes Image Blur",
+        body: `Pixel Shine's deblur technology works fundamentally differently from the sharpening sliders in traditional editors. Those old tools simply amplify contrast along edges the software already detects — they make an image look punchier but add zero real detail, and pushing them creates halos and grain.
 
-JPT AI instead relies on a neural network trained on millions of high-quality images. When you upload a blurry image, the AI analyzes it in detail, recognizes faces, textures, and shapes, and then reconstructs the fine detail that blur destroyed — rebuilding hair strands, fabric weave, and crisp text edges based on what those things should look like when sharp. Because it's drawing on learned patterns rather than merely exaggerating existing pixels, the output looks natural instead of over-processed. It also upscales as it deblurs, so your image comes out both clearer and larger.
+Pixel Shine instead relies on a neural network trained on millions of high-quality images. When you upload a blurry image, the AI analyzes it in detail, recognizes faces, textures, and shapes, and then reconstructs the fine detail that blur destroyed — rebuilding hair strands, fabric weave, and crisp text edges based on what those things should look like when sharp. Because it's drawing on learned patterns rather than merely exaggerating existing pixels, the output looks natural instead of over-processed. It also upscales as it deblurs, so your image comes out both clearer and larger.
 
-The **Normal mode is completely free, unlimited, and needs no account**, handling the everyday deblurring most people require. For badly degraded images or professional print work, **Pro AI mode** applies a heavier reconstruction model using credits, and new users get 5 free trials to test it out. Whichever mode you choose, JPT AI adds no watermark, so your result is clean and immediately usable.`,
+The **Normal mode is completely free, unlimited, and needs no account**, handling the everyday deblurring most people require. For badly degraded images or professional print work, **Pro AI mode** applies a heavier reconstruction model using credits, and new users get 5 free trials to test it out. Whichever mode you choose, Pixel Shine adds no watermark, so your result is clean and immediately usable.`,
       },
       {
         heading: "Step-by-Step: Unblur Your Image for Free",
@@ -7443,7 +7443,7 @@ The **Normal mode is completely free, unlimited, and needs no account**, handlin
 
 **1. Open the tool.** Go to sjpt.io and launch the AI Upscaler. The free Normal mode needs no sign-up, so you can jump straight in.
 
-**2. Upload your blurry image.** Drag it onto the upload area or click to browse. JPT AI accepts JPG, PNG, WebP, and other common formats. Use the best-quality source you have — the original file, not a re-shared copy.
+**2. Upload your blurry image.** Drag it onto the upload area or click to browse. Pixel Shine accepts JPG, PNG, WebP, and other common formats. Use the best-quality source you have — the original file, not a re-shared copy.
 
 **3. Choose a mode.** Select Normal for free, unlimited deblurring that works well on most images. For heavily blurred images or professional output, pick Pro AI mode, which uses credits (5 free trials for new users).
 
@@ -7495,7 +7495,7 @@ The **Normal mode is completely free, unlimited, and needs no account**, handlin
 
 **Social media content.** Creators unblur great-but-soft images before posting to keep their feeds looking polished and cohesive.
 
-**Real estate and rentals.** Agents clean up dim, soft interior photos so listings look crisp and inviting to prospective buyers. In each scenario, JPT AI's free Normal mode delivers watermark-free, sign-up-free results, making it easy to clean up any image on the spot.`,
+**Real estate and rentals.** Agents clean up dim, soft interior photos so listings look crisp and inviting to prospective buyers. In each scenario, Pixel Shine's free Normal mode delivers watermark-free, sign-up-free results, making it easy to clean up any image on the spot.`,
       },
       {
         heading: "AI Deblurring vs. Traditional Sharpening",
@@ -7503,7 +7503,7 @@ The **Normal mode is completely free, unlimited, and needs no account**, handlin
 
 AI deblurring takes the opposite approach. Instead of exaggerating what's already there, it predicts and rebuilds the missing detail using patterns learned from millions of sharp images. That's how AI can restore facial features, texture, and text legibility that a sharpening slider could never touch.
 
-Dedicated desktop software still offers unmatched manual control, but at the cost of a subscription, a learning curve, and time. Many free online tools, meanwhile, undercut their value with watermarks, resolution caps, or forced sign-ups. JPT AI threads the needle — delivering genuine AI reconstruction free online, with no watermark and no account for the Normal mode, plus optional Pro power through credits. For the vast majority of images, that combination beats both extremes, and you'd only reach for pro software when you need surgical, manual control over a specific area.`,
+Dedicated desktop software still offers unmatched manual control, but at the cost of a subscription, a learning curve, and time. Many free online tools, meanwhile, undercut their value with watermarks, resolution caps, or forced sign-ups. Pixel Shine threads the needle — delivering genuine AI reconstruction free online, with no watermark and no account for the Normal mode, plus optional Pro power through credits. For the vast majority of images, that combination beats both extremes, and you'd only reach for pro software when you need surgical, manual control over a specific area.`,
       },
       {
         heading: "Who Uses AI Image Unblurring",
@@ -7512,10 +7512,10 @@ Dedicated desktop software still offers unmatched manual control, but at the cos
       {
         heading: "Frequently Asked Questions",
         body: `**Can I unblur an image online for free with AI?**
-Yes. JPT AI's Normal mode unblurs images completely free, with no limits and no sign-up. Credits are only needed for the heavier Pro AI mode, and new users get 5 free Pro trials.
+Yes. Pixel Shine's Normal mode unblurs images completely free, with no limits and no sign-up. Credits are only needed for the heavier Pro AI mode, and new users get 5 free Pro trials.
 
 **Does the unblurred image have a watermark?**
-No. JPT AI never watermarks output. Your clear image downloads clean and ready to use.
+No. Pixel Shine never watermarks output. Your clear image downloads clean and ready to use.
 
 **Do I need to sign up to remove image blur?**
 Not for the free Normal mode. You can upload and unblur without creating an account, which is perfect for quick fixes.
@@ -7524,7 +7524,7 @@ Not for the free Normal mode. You can upload and unblur without creating an acco
 AI excels at focus softness, low-light grain, and compression damage, and it improves mild motion blur. Severe motion blur is the toughest case for any tool.
 
 **What formats can I upload?**
-JPT AI supports common formats like JPG, PNG, and WebP. For best results, upload the highest-quality source file you have.
+Pixel Shine supports common formats like JPG, PNG, and WebP. For best results, upload the highest-quality source file you have.
 
 **Can I unblur and enlarge an image simultaneously?**
 Yes. The tool deblurs while upscaling, producing a clearer image that's also 2x or 4x larger — ideal for prints.
@@ -7537,7 +7537,7 @@ Re-run at a lower scale, such as 2x instead of 4x. A gentler pass produces the m
       },
       {
         heading: "Key Takeaways",
-        body: `Unblurring an image online with AI is now fast, free, and genuinely effective. Rather than faking sharpness by boosting edge contrast, AI reconstructs the real detail that blur destroyed — recovering faces, textures, and legibility that traditional sharpening never could. JPT AI offers this through its free Normal mode: no watermark, no forced sign-up, and no usage caps, plus 5 free Pro trials for tougher images.
+        body: `Unblurring an image online with AI is now fast, free, and genuinely effective. Rather than faking sharpness by boosting edge contrast, AI reconstructs the real detail that blur destroyed — recovering faces, textures, and legibility that traditional sharpening never could. Pixel Shine offers this through its free Normal mode: no watermark, no forced sign-up, and no usage caps, plus 5 free Pro trials for tougher images.
 
 The workflow is effortless — upload, choose your mode and scale, and download a clear result in about a minute. That blurry image cluttering your camera roll or downloads folder is likely far more recoverable than you think. Try the free AI deblur tool at sjpt.io and see the difference for yourself.`,
       },
@@ -7547,7 +7547,7 @@ The workflow is effortless — upload, choose your mode and scale, and download 
     image: "https://images.pexels.com/photos/3760067/pexels-photo-3760067.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "ai-photo-editor-no-photoshop-free",
     title: "Edit Photos Without Photoshop: A Free AI Alternative",
-    metaTitle: "Free AI Photo Editor — No Photoshop Needed | JPT AI",
+    metaTitle: "Free AI Photo Editor — No Photoshop Needed | Pixel Shine",
     metaDescription: "Edit photos free without Photoshop. Use AI text prompts to change backgrounds, remove objects, relight and retouch — no skills, no watermark.",
     excerpt: "Photoshop is powerful but complex and costly. Here's how to do the most common edits for free using AI text prompts — no skills required.",
     date: "2025-06-23",
@@ -7560,7 +7560,7 @@ The workflow is effortless — upload, choose your mode and scale, and download 
       {
         body: `Learning to edit photos without Photoshop for free has become one of the smartest moves for anyone who works with images — because Photoshop, for all its power, is genuinely overkill for most people. It costs a recurring subscription, takes months to learn, and demands a powerful computer, all to accomplish edits that many users could describe in a single sentence. If you've ever wanted to remove a background, retouch a portrait, or transform a photo without wrestling with layers and masks, there's now a far simpler path.
 
-This guide introduces the free AI photo editor as a genuine Photoshop alternative. Instead of manual tools and technical skill, AI editing lets you describe what you want in plain language and delivers the result automatically. You'll learn how AI photo editing works, how to use JPT AI's free online editor step by step, and where it beats — and where it doesn't beat — traditional software. Best of all, JPT AI adds no watermark and offers 5 free trials for new users, so you can edit images like a pro without ever opening Photoshop or paying a subscription.`,
+This guide introduces the free AI photo editor as a genuine Photoshop alternative. Instead of manual tools and technical skill, AI editing lets you describe what you want in plain language and delivers the result automatically. You'll learn how AI photo editing works, how to use Pixel Shine's free online editor step by step, and where it beats — and where it doesn't beat — traditional software. Best of all, Pixel Shine adds no watermark and offers 5 free trials for new users, so you can edit images like a pro without ever opening Photoshop or paying a subscription.`,
       },
       {
         heading: "Why Photoshop Isn't the Right Tool for Most People",
@@ -7575,20 +7575,20 @@ This guide introduces the free AI photo editor as a genuine Photoshop alternativ
 **Most edits are conceptually simple.** \"Remove the background,\" \"make the sky more dramatic,\" \"clean up my skin\" — these are simple requests buried under complex manual workflows. The gap between what people want and the effort Photoshop requires is exactly the space AI photo editors fill. By letting you describe an edit in plain words, AI collapses a twenty-step manual process into a single instruction, making professional-looking results accessible to everyone.`,
       },
       {
-        heading: "How JPT AI Edits Photos Without Photoshop",
-        body: `JPT AI replaces manual editing with AI that understands what you want and does the work for you. Rather than learning tools, you describe your goal — and the AI handles the technical execution. This text-prompt approach is the core of the AI Photo Editor, and it fundamentally changes who can edit photos well.
+        heading: "How Pixel Shine Edits Photos Without Photoshop",
+        body: `Pixel Shine replaces manual editing with AI that understands what you want and does the work for you. Rather than learning tools, you describe your goal — and the AI handles the technical execution. This text-prompt approach is the core of the AI Photo Editor, and it fundamentally changes who can edit photos well.
 
-Say you want to remove a distracting object, change a background, or restyle a portrait. In Photoshop, that means selections, masking, cloning, and blending — a real project. With JPT AI's editor, you type what you want in plain language, and the AI interprets your instruction and generates the edited result. No layers, no masks, no manual selections.
+Say you want to remove a distracting object, change a background, or restyle a portrait. In Photoshop, that means selections, masking, cloning, and blending — a real project. With Pixel Shine's editor, you type what you want in plain language, and the AI interprets your instruction and generates the edited result. No layers, no masks, no manual selections.
 
-Beyond prompt-based editing, JPT AI bundles a full suite of tools that each replace a common Photoshop task: a **Background Remover** for clean cutouts, an **AI Upscaler** to sharpen and enlarge images (Normal mode free and unlimited), an **AI Headshot Generator** for professional portraits, and **Creative AI Photo Effects** for stylized transformations. Everything runs online — no installation, no powerful computer required. New users get 5 free trials to explore, and JPT AI adds no watermark to your results, so what you create is clean and ready to use.`,
+Beyond prompt-based editing, Pixel Shine bundles a full suite of tools that each replace a common Photoshop task: a **Background Remover** for clean cutouts, an **AI Upscaler** to sharpen and enlarge images (Normal mode free and unlimited), an **AI Headshot Generator** for professional portraits, and **Creative AI Photo Effects** for stylized transformations. Everything runs online — no installation, no powerful computer required. New users get 5 free trials to explore, and Pixel Shine adds no watermark to your results, so what you create is clean and ready to use.`,
       },
       {
         heading: "Step-by-Step: Edit a Photo Without Photoshop",
-        body: `Here's how to edit a photo using JPT AI's free tools instead of Photoshop:
+        body: `Here's how to edit a photo using Pixel Shine's free tools instead of Photoshop:
 
 **1. Open the editor.** Go to sjpt.io and launch the AI Photo Editor. Everything runs online, so there's nothing to install.
 
-**2. Upload your photo.** Drag it into the upload area or click to browse. JPT AI supports JPG, PNG, WebP, and more. Use the best-quality source you have for the cleanest result.
+**2. Upload your photo.** Drag it into the upload area or click to browse. Pixel Shine supports JPG, PNG, WebP, and more. Use the best-quality source you have for the cleanest result.
 
 **3. Describe your edit in plain language.** Instead of hunting for tools, type what you want — for example, \"remove the background,\" \"change the sky to sunset,\" or \"clean up the skin and brighten the photo.\" Be specific about the outcome you're after.
 
@@ -7640,7 +7640,7 @@ Beyond prompt-based editing, JPT AI bundles a full suite of tools that each repl
 
 **Background removal and replacement.** Create clean cutouts for thumbnails, banners, or transparent PNGs, then drop in a new background — a task that's fiddly in Photoshop and instant with AI.
 
-**Quick portrait retouching.** Brighten, clean up, and enhance portraits by describing what you want, ideal for profile pictures and personal photos. Across all of these, JPT AI delivers watermark-free results, and the free tools plus 5 trials cover most needs at no cost.`,
+**Quick portrait retouching.** Brighten, clean up, and enhance portraits by describing what you want, ideal for profile pictures and personal photos. Across all of these, Pixel Shine delivers watermark-free results, and the free tools plus 5 trials cover most needs at no cost.`,
       },
       {
         heading: "AI Editor vs. Photoshop: When to Use Each",
@@ -7648,7 +7648,7 @@ Beyond prompt-based editing, JPT AI bundles a full suite of tools that each repl
 
 **Choose Photoshop** when you need pixel-level manual control over a complex composite — intricate masking of fine hair against a busy background, precise retouching that must match a specific artistic vision, or multi-layer commercial work with exacting requirements. Professionals doing detailed client work still benefit from that control.
 
-For everyone else — sellers, creators, small businesses, and casual users — a free AI editor like JPT AI handles the job without the subscription, the learning curve, or the installation. The smart move is to use AI for the 90% of edits it does brilliantly, and reserve traditional software for the rare 10% that genuinely needs manual precision. Most people find they never need to open Photoshop at all.`,
+For everyone else — sellers, creators, small businesses, and casual users — a free AI editor like Pixel Shine handles the job without the subscription, the learning curve, or the installation. The smart move is to use AI for the 90% of edits it does brilliantly, and reserve traditional software for the rare 10% that genuinely needs manual precision. Most people find they never need to open Photoshop at all.`,
       },
       {
         heading: "Who Uses AI Photo Editors Instead of Photoshop",
@@ -7657,22 +7657,22 @@ For everyone else — sellers, creators, small businesses, and casual users — 
       {
         heading: "Frequently Asked Questions",
         body: `**Can I really edit photos without Photoshop for free?**
-Yes. JPT AI is a free AI photo editor that handles background removal, upscaling, retouching, headshots, and prompt-based edits online. New users get 5 free trials, and the Normal upscale mode is free and unlimited.
+Yes. Pixel Shine is a free AI photo editor that handles background removal, upscaling, retouching, headshots, and prompt-based edits online. New users get 5 free trials, and the Normal upscale mode is free and unlimited.
 
-**Is JPT AI a good Photoshop alternative?**
+**Is Pixel Shine a good Photoshop alternative?**
 For the vast majority of everyday edits — backgrounds, retouching, sky changes, effects, headshots — yes. It's faster and requires no skill. Photoshop only wins for pixel-level manual control on complex composites.
 
 **Do I need to install anything?**
-No. JPT AI runs entirely online, so there's nothing to download or install and no powerful computer required.
+No. Pixel Shine runs entirely online, so there's nothing to download or install and no powerful computer required.
 
 **Will my edited photos have a watermark?**
-No. JPT AI adds no watermark, so your edited images are clean and ready to post, print, or sell.
+No. Pixel Shine adds no watermark, so your edited images are clean and ready to post, print, or sell.
 
 **How does prompt-based editing work?**
 Instead of using manual tools, you describe the edit you want in plain language — like \"remove the background\" or \"brighten and warm the photo\" — and the AI generates the result automatically.
 
 **What can the AI editor actually do?**
-JPT AI offers background removal, AI upscaling, an AI headshot generator, creative photo effects, and text-prompt editing — covering the most common tasks people use Photoshop for.
+Pixel Shine offers background removal, AI upscaling, an AI headshot generator, creative photo effects, and text-prompt editing — covering the most common tasks people use Photoshop for.
 
 **Is it really free, or is there a catch?**
 Many tools are genuinely free — the Normal upscaler is free and unlimited with no sign-up, and new users get 5 free trials. Some advanced AI features use credits, but you can accomplish a great deal at no cost.
@@ -7684,7 +7684,7 @@ No. That's the whole point. Because you describe what you want in plain language
         heading: "Key Takeaways",
         body: `Photoshop is powerful, but for most people it's expensive overkill — a steep learning curve and a recurring subscription to accomplish edits you could describe in one sentence. AI photo editors change the equation entirely: describe what you want in plain language, or use a one-click tool, and get a professional result online with no installation and no skill required.
 
-JPT AI delivers this as a genuine free Photoshop alternative — background removal, upscaling, headshots, effects, and prompt-based editing — with no watermark and 5 free trials for new users. Reserve Photoshop for the rare tasks that truly need manual precision, and let AI handle everything else. Try the free AI photo editor at sjpt.io and see how much you can do without ever opening Photoshop.`,
+Pixel Shine delivers this as a genuine free Photoshop alternative — background removal, upscaling, headshots, effects, and prompt-based editing — with no watermark and 5 free trials for new users. Reserve Photoshop for the rare tasks that truly need manual precision, and let AI handle everything else. Try the free AI photo editor at sjpt.io and see how much you can do without ever opening Photoshop.`,
       },
     ],
   },
@@ -7692,7 +7692,7 @@ JPT AI delivers this as a genuine free Photoshop alternative — background remo
     image: "https://images.pexels.com/photos/3943716/pexels-photo-3943716.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "white-background-photo-free",
     title: "How to Put a White Background on a Photo for Free",
-    metaTitle: "White Background Photo Free Online with AI | JPT AI",
+    metaTitle: "White Background Photo Free Online with AI | Pixel Shine",
     metaDescription: "Add a clean white background to any photo free with AI. Remove the existing background and replace it with white in one click — no watermark.",
     excerpt: "Clean white backgrounds look professional for products, portraits, and IDs. Here's how to add one to any photo for free.",
     date: "2025-06-24",
@@ -7716,8 +7716,8 @@ The second problem is **achieving true, pure white**. Many platforms don't just 
 Third, there's the **edge quality on complex subjects** — hair, fur, transparent packaging, thin straps. A clumsy cutout against white is brutally unforgiving, because pure white reveals every jagged edge and stray pixel. This is why a simple crop-and-paste rarely works. Getting a genuinely clean white background requires precise subject isolation plus an exact white fill — exactly the combination that AI background tools now automate in seconds, replacing what used to demand a lightbox setup or careful manual masking.`,
       },
       {
-        heading: "How JPT AI Adds a Perfect White Background",
-        body: `JPT AI's Background Remover handles both halves of the job automatically. First, the AI detects your subject and removes the original background cleanly in about five seconds — no manual masking. Then you drop in a **solid white background**, and because it's a generated fill rather than a photographed wall, it's perfectly uniform and can be set to true white with no shadows or color cast.
+        heading: "How Pixel Shine Adds a Perfect White Background",
+        body: `Pixel Shine's Background Remover handles both halves of the job automatically. First, the AI detects your subject and removes the original background cleanly in about five seconds — no manual masking. Then you drop in a **solid white background**, and because it's a generated fill rather than a photographed wall, it's perfectly uniform and can be set to true white with no shadows or color cast.
 
 This two-step-in-one approach solves the problems that trip people up. You get **precise edges** because the AI isolates the subject accurately, so there's no leftover fringe showing against the white. You get **true, even white** across the whole background because it's a solid fill, not a real surface with lighting variation. And the tool handles tricky subjects — hair, product edges, transparent parts — far better than a manual crop.
 
@@ -7729,7 +7729,7 @@ The practical benefits make it ideal for volume work. Standard removal is **free
 
 **1. Choose a well-lit photo.** Good lighting and a subject that contrasts with its surroundings give the cleanest cutout. If your image is soft or small, upscale it first.
 
-**2. Open the JPT AI Background Remover.** Go to sjpt.io and select the Remove Background tool. No sign-in is needed to begin.
+**2. Open the Pixel Shine Background Remover.** Go to sjpt.io and select the Remove Background tool. No sign-in is needed to begin.
 
 **3. Upload your image.** Drag and drop or browse to select. JPG, PNG, and WEBP all work; higher resolution gives sharper edges against white.
 
@@ -7812,7 +7812,7 @@ AI removal collapses the whole workflow into seconds. It isolates the subject pr
       {
         heading: "Frequently Asked Questions",
         body: `**How do I put a white background on a photo for free?**
-Upload your photo to JPT AI's free Background Remover at sjpt.io, let the AI remove the original background in about five seconds, then choose the solid white background option and download — no watermark or sign-in for standard use.
+Upload your photo to Pixel Shine's free Background Remover at sjpt.io, let the AI remove the original background in about five seconds, then choose the solid white background option and download — no watermark or sign-in for standard use.
 
 **Can I get pure white (255, 255, 255) for Amazon?**
 Yes. Because the white is a solid generated fill rather than a photographed wall, it can be set to true white that meets Amazon's main image requirement, then downloaded ready to upload.
@@ -7847,7 +7847,7 @@ Ready for clean, professional white-background photos? Visit sjpt.io, upload you
     image: "https://images.pexels.com/photos/669996/pexels-photo-669996.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "increase-image-resolution-free",
     title: "How to Increase Image Resolution Without Losing Quality (Free)",
-    metaTitle: "Increase Image Resolution Free Without Losing Quality | JPT AI",
+    metaTitle: "Increase Image Resolution Free Without Losing Quality | Pixel Shine",
     metaDescription: "Increase image resolution free with AI without losing quality. Upscale photos 2× or 4× with sharp, natural detail online — no watermark.",
     excerpt: "Need a higher-resolution version of an image? AI can increase resolution while keeping it sharp — here's how to do it free.",
     date: "2025-06-24",
@@ -7868,7 +7868,7 @@ Ready for clean, professional white-background photos? Visit sjpt.io, upload you
     image: "https://images.pexels.com/photos/1264210/pexels-photo-1264210.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "remove-background-from-hair-free",
     title: "How to Remove a Background Around Hair (Free, Clean Edges)",
-    metaTitle: "Remove Background from Hair Free — Clean Edges | JPT AI",
+    metaTitle: "Remove Background from Hair Free — Clean Edges | Pixel Shine",
     metaDescription: "Remove backgrounds around hair and fine edges free with AI. Get clean cutouts on portraits without manual masking — no watermark.",
     excerpt: "Hair is the hardest part of any cutout. Here's how AI gets clean edges around hair and fur for free — no manual masking.",
     date: "2025-06-24",
@@ -7892,8 +7892,8 @@ Making it worse, those thin strands are often **semi-transparent** — you can s
 Traditionally, professional retouchers handled hair with **channel masking** — a tedious manual technique using color channels, levels adjustments, and hand-painting to extract strands. It works beautifully but can take 15 to 30 minutes per image and demands real Photoshop expertise. For anyone without that training or time, hair cutouts were effectively out of reach. This is precisely the problem modern AI segmentation was built to solve: it predicts soft, per-strand transparency automatically, delivering results that used to require an expert.`,
       },
       {
-        heading: "How JPT AI Handles Hair Edges Cleanly",
-        body: `JPT AI's Background Remover uses AI trained specifically to handle soft, complex edges like hair. Rather than making a crude keep-or-delete decision at the boundary, the AI predicts a **soft, feathered mask** that preserves individual strands and flyaways while cleanly removing the background behind them. You upload the photo, and in about five seconds you get a cutout where the hair looks natural — not chopped into a helmet.
+        heading: "How Pixel Shine Handles Hair Edges Cleanly",
+        body: `Pixel Shine's Background Remover uses AI trained specifically to handle soft, complex edges like hair. Rather than making a crude keep-or-delete decision at the boundary, the AI predicts a **soft, feathered mask** that preserves individual strands and flyaways while cleanly removing the background behind them. You upload the photo, and in about five seconds you get a cutout where the hair looks natural — not chopped into a helmet.
 
 The key advantage is how it treats those tricky semi-transparent strands. The AI keeps the fine hair detail that makes a portrait look real, while avoiding the **colored halo** — the fringe of leftover background — that plagues simpler tools. The result is a clean transition from hair to transparency that holds up even when you place the subject on a new, contrasting background.
 
@@ -7907,7 +7907,7 @@ Several things make it practical for everyday use. It's **free and unlimited** f
 
 **2. Favor a contrasting background if you can.** Hair separates most cleanly when it stands out from what's behind it — dark hair against a light background, or vice versa.
 
-**3. Open the JPT AI Background Remover.** Go to sjpt.io and select the Remove Background tool. No sign-in required to start.
+**3. Open the Pixel Shine Background Remover.** Go to sjpt.io and select the Remove Background tool. No sign-in required to start.
 
 **4. Upload your portrait.** Drag and drop or browse to select. Higher-resolution images yield cleaner strand detail.
 
@@ -7971,7 +7971,7 @@ Several things make it practical for everyday use. It's **free and unlimited** f
 
 **Basic one-click removers** are fast but usually make binary edge decisions, so they either chop the hair off or leave a colored halo, failing exactly where hair matters most.
 
-JPT AI's approach delivers the soft, per-strand result of expert masking automatically, in about five seconds, with no skill required. For the vast majority of portraits, it matches or beats the semi-automated Photoshop workflow. A master retoucher may still edge it out on an extremely difficult shot, but for everyday use, AI has closed the gap that once separated amateurs from professionals.`,
+Pixel Shine's approach delivers the soft, per-strand result of expert masking automatically, in about five seconds, with no skill required. For the vast majority of portraits, it matches or beats the semi-automated Photoshop workflow. A master retoucher may still edge it out on an extremely difficult shot, but for everyday use, AI has closed the gap that once separated amateurs from professionals.`,
       },
       {
         heading: "Who Uses Clean Hair Removal and Why",
@@ -7988,7 +7988,7 @@ JPT AI's approach delivers the soft, per-strand result of expert masking automat
       {
         heading: "Frequently Asked Questions",
         body: `**How do I remove a background around hair for free?**
-Upload your portrait to JPT AI's free Background Remover at sjpt.io. The AI preserves the soft hair edges and removes the background in about five seconds, and you download a clean cutout with no watermark or sign-in required.
+Upload your portrait to Pixel Shine's free Background Remover at sjpt.io. The AI preserves the soft hair edges and removes the background in about five seconds, and you download a clean cutout with no watermark or sign-in required.
 
 **Why do most tools leave a halo or chop off the hair?**
 Because they make a hard keep-or-delete decision at the edge, which can't represent hair's soft, semi-transparent strands. AI trained on hair predicts a feathered mask instead, keeping strands while removing the background.
@@ -8000,10 +8000,10 @@ A high-resolution, well-lit image where the hair contrasts with the background �
 PNG. The soft, feathered hair edges rely on transparency, which only PNG preserves. JPG would flatten those edges onto a solid background and ruin the effect.
 
 **My photo is a bit blurry — will the hair still cut out cleanly?**
-Run it through JPT AI's Upscaler first to add resolution and detail, then remove the background. Sharper strands give the AI more to detect, producing cleaner edges.
+Run it through Pixel Shine's Upscaler first to add resolution and detail, then remove the background. Sharper strands give the AI more to detect, producing cleaner edges.
 
 **Can I put the person on a completely new background?**
-Yes. After removing the background, keep the transparent PNG or use JPT AI's Photo Editor to place the subject into an entirely new scene, with the hair blending naturally.
+Yes. After removing the background, keep the transparent PNG or use Pixel Shine's Photo Editor to place the subject into an entirely new scene, with the hair blending naturally.
 
 **Why does my cutout show fringe on a white background?**
 Stark white reveals any leftover edge detail. Try placing the subject on a mid-tone background that matches the hair edge, or re-cut from a photo with more contrast between hair and background.
@@ -8023,7 +8023,7 @@ Ready to cut out hair cleanly? Head to sjpt.io, upload your portrait to the free
     image: "https://images.pexels.com/photos/1124062/pexels-photo-1124062.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "enhance-product-photos-free",
     title: "How to Enhance Product Photos for Your Store (Free)",
-    metaTitle: "Enhance Product Photos Free Online with AI | JPT AI",
+    metaTitle: "Enhance Product Photos Free Online with AI | Pixel Shine",
     metaDescription: "Enhance product photos free with AI. Upscale, sharpen and clean up backgrounds for Amazon, Shopify and Etsy listings — no watermark.",
     excerpt: "Sharp, clean product photos convert better. Here's how to enhance, upscale, and clean up your store images for free with AI.",
     date: "2025-06-24",
@@ -8036,7 +8036,7 @@ Ready to cut out hair cleanly? Head to sjpt.io, upload your portrait to the free
       {
         body: `Knowing how to enhance product photos for free can transform an online store's performance without spending a single dollar on photography. Your product photos are what convince a shopper to stop scrolling, trust your brand, and click buy — and when those photos are blurry, dim, or low-resolution, you lose sales you never even see. AI enhancement changes that equation entirely, letting any store owner sharpen, brighten, and upscale product photos in seconds, with no watermark and no sign-up required.
 
-This guide is written for store owners who want practical, actionable results. Whether you run a Shopify store, sell on Etsy or Amazon, or manage listings on a marketplace, you'll learn how to make your product photos look professional using free AI tools. We'll walk through why product photos underperform, how JPT AI fixes the most common problems, a detailed step-by-step process, expert tips for consistency across your catalog, and the mistakes that quietly cost conversions. By the end, you'll have a repeatable system for turning ordinary product photos into store-ready images that build trust and drive more sales — all for free.`,
+This guide is written for store owners who want practical, actionable results. Whether you run a Shopify store, sell on Etsy or Amazon, or manage listings on a marketplace, you'll learn how to make your product photos look professional using free AI tools. We'll walk through why product photos underperform, how Pixel Shine fixes the most common problems, a detailed step-by-step process, expert tips for consistency across your catalog, and the mistakes that quietly cost conversions. By the end, you'll have a repeatable system for turning ordinary product photos into store-ready images that build trust and drive more sales — all for free.`,
       },
       {
         heading: "Why Product Photos Underperform",
@@ -8051,20 +8051,20 @@ Then there's **inconsistency**. A catalog where some photos are crisp and others
 Traditionally, solving these problems meant a photography studio, proper lighting equipment, and editing skills — a serious investment for a small store. AI enhancement collapses that cost to zero, letting sellers fix lighting, sharpness, and resolution automatically.`,
       },
       {
-        heading: "How JPT AI Enhances Product Photos",
-        body: `JPT AI enhances product photos using deep-learning models that reconstruct authentic detail — fabric texture, product edges, surface finish — instead of crudely sharpening. For product photography, this authenticity matters enormously: shoppers zoom in to judge quality, so natural, detailed enhancement builds confidence while artificial oversharpening breaks it.
+        heading: "How Pixel Shine Enhances Product Photos",
+        body: `Pixel Shine enhances product photos using deep-learning models that reconstruct authentic detail — fabric texture, product edges, surface finish — instead of crudely sharpening. For product photography, this authenticity matters enormously: shoppers zoom in to judge quality, so natural, detailed enhancement builds confidence while artificial oversharpening breaks it.
 
 The free **Normal Upscaler** is perfect for the volume of a real store. It's unlimited and requires no sign-up, so you can enhance your whole catalog without cost or friction. For your most important photos — the hero image, detailed close-ups, or a heavily degraded supplier shot — the **Pro AI Upscaler** applies stronger reconstruction using credits, with **5 free trials** so new sellers can test it on the images that matter most.
 
 Every enhanced photo downloads **watermark-free at full resolution**, which is essential for listings. A watermark would make the image unusable, and marketplaces need the full-resolution file to enable zoom and meet their standards.
 
-Crucially, JPT AI is more than an upscaler. The **background remover** creates the clean white backgrounds many marketplaces require, the **text-prompt photo editor** lets you adjust photos with simple written instructions, and **creative effects** help produce eye-catching marketing visuals. That means a single free, online platform can handle your entire product photo workflow — sharpen, clean up the background, and polish — without juggling multiple tools or paying for any of them.`,
+Crucially, Pixel Shine is more than an upscaler. The **background remover** creates the clean white backgrounds many marketplaces require, the **text-prompt photo editor** lets you adjust photos with simple written instructions, and **creative effects** help produce eye-catching marketing visuals. That means a single free, online platform can handle your entire product photo workflow — sharpen, clean up the background, and polish — without juggling multiple tools or paying for any of them.`,
       },
       {
         heading: "Step-by-Step: Enhancing Product Photos for Your Store",
         body: `Here's a repeatable process for store-ready product photos:
 
-**1. Open JPT AI.** Go to sjpt.io and open the upscale / enhance tool online. No installation needed.
+**1. Open Pixel Shine.** Go to sjpt.io and open the upscale / enhance tool online. No installation needed.
 
 **2. Upload a product photo.** Drag and drop or browse to your image (JPG, PNG, or WebP). The Normal Upscaler requires no account, so you can start right away.
 
@@ -8090,7 +8090,7 @@ Crucially, JPT AI is more than an upscaler. The **background remover** creates t
 
 **Reserve Pro for your best-sellers.** Your top products and hero images deserve the Pro engine's stronger detail. Spend your 5 free trials there and use the unlimited free Normal mode for the rest.
 
-**Combine enhancement with a clean background.** A sharp product on a clean white background looks premium and meets marketplace rules. Use JPT AI's enhancer and background remover together.
+**Combine enhancement with a clean background.** A sharp product on a clean white background looks premium and meets marketplace rules. Use Pixel Shine's enhancer and background remover together.
 
 **Enhance first, then resize to specs.** Enhance the full photo before resizing to your platform's exact dimensions, preserving maximum detail in the final listing image.
 
@@ -8134,7 +8134,7 @@ Crucially, JPT AI is more than an upscaler. The **background remover** creates t
 
 **Enhance before background removal.** Enhancing first gives the background remover crisper edges to work with, producing a cleaner cutout — especially valuable for products with intricate outlines like jewelry, plants, or textured goods.
 
-**Create channel-specific versions once.** Enhance each product to a generous resolution a single time, then export the sizes each marketplace requires. This avoids re-enhancing the same product for every sales channel. By combining JPT AI's enhancer, background remover, and editor into one online routine, even a one-person store can produce a polished, professional, consistent catalog entirely for free.`,
+**Create channel-specific versions once.** Enhance each product to a generous resolution a single time, then export the sizes each marketplace requires. This avoids re-enhancing the same product for every sales channel. By combining Pixel Shine's enhancer, background remover, and editor into one online routine, even a one-person store can produce a polished, professional, consistent catalog entirely for free.`,
       },
       {
         heading: "Who Enhances Product Photos and Why",
@@ -8147,19 +8147,19 @@ Crucially, JPT AI is more than an upscaler. The **background remover** creates t
       {
         heading: "Frequently Asked Questions",
         body: `**How can I enhance product photos for free?**
-Use JPT AI's Normal Upscaler at sjpt.io — it's free, unlimited, and needs no sign-up. Upload your product photo, choose a scale factor to meet your marketplace's requirements, and download the sharper image with no watermark.
+Use Pixel Shine's Normal Upscaler at sjpt.io — it's free, unlimited, and needs no sign-up. Upload your product photo, choose a scale factor to meet your marketplace's requirements, and download the sharper image with no watermark.
 
 **Will enhanced photos help my store convert better?**
 Yes. Sharper, higher-resolution product photos build trust and enable zoom, both of which increase buying confidence. Consistent, professional imagery across your catalog also strengthens your brand.
 
 **Is there a watermark on enhanced product photos?**
-No. JPT AI downloads at full resolution with no watermark, which is essential for store listings and marketplace uploads.
+No. Pixel Shine downloads at full resolution with no watermark, which is essential for store listings and marketplace uploads.
 
 **Can I enhance my entire catalog for free?**
 Yes. The Normal Upscaler is unlimited and free, so you can process every product. The Pro engine adds stronger detail with 5 free trials for your most important photos.
 
 **Can I create clean white backgrounds too?**
-Yes. JPT AI includes a free background remover, so you can enhance the product and place it on a clean white background that meets marketplace standards.
+Yes. Pixel Shine includes a free background remover, so you can enhance the product and place it on a clean white background that meets marketplace standards.
 
 **Will AI enhancement misrepresent my products?**
 Not if you keep it realistic. Avoid over-processing that changes color or material. Accurate photos reduce returns; misleading ones increase them.
@@ -8172,7 +8172,7 @@ Most photos process in about 5–10 seconds. A full workflow including backgroun
       },
       {
         heading: "Key Takeaways",
-        body: `Enhancing product photos for free is one of the highest-return improvements any store owner can make, because photo quality directly drives trust and conversions. JPT AI's free Normal Upscaler lets you sharpen and upscale your entire catalog with no sign-up, no watermark, and no cost, while the Pro engine delivers maximum detail for hero shots, with 5 free trials for new users.
+        body: `Enhancing product photos for free is one of the highest-return improvements any store owner can make, because photo quality directly drives trust and conversions. Pixel Shine's free Normal Upscaler lets you sharpen and upscale your entire catalog with no sign-up, no watermark, and no cost, while the Pro engine delivers maximum detail for hero shots, with 5 free trials for new users.
 
 Build a consistent workflow, enhance above marketplace minimums, and pair enhancement with the free background remover for clean, store-ready images. Whether you sell on Shopify, Etsy, or Amazon, professional product photography is now free and within reach. Enhance your first product photo at sjpt.io and watch your listings look their best.`,
       },
@@ -8182,7 +8182,7 @@ Build a consistent workflow, enhance above marketplace minimums, and pair enhanc
     image: "https://images.pexels.com/photos/3756679/pexels-photo-3756679.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "compress-vs-upscale-image-quality-free",
     title: "Image Quality Explained: When to Upscale vs. Compress (Free Tools)",
-    metaTitle: "Upscale vs Compress: Improve Image Quality Free | JPT AI",
+    metaTitle: "Upscale vs Compress: Improve Image Quality Free | Pixel Shine",
     metaDescription: "Understand when to upscale vs compress images and how to improve quality free with AI. Practical guide for web, print and social — no watermark.",
     excerpt: "Bigger isn't always better. Here's when to upscale, when to compress, and how to improve image quality for free.",
     date: "2025-06-24",
@@ -8195,7 +8195,7 @@ Build a consistent workflow, enhance above marketplace minimums, and pair enhanc
       {
         body: `Understanding compress vs. upscale image quality is one of those skills that quietly saves you hours of frustration and makes everything you publish online look and perform better. These two operations sound like opposites, and in a sense they are: compression makes a file smaller (often trading away some quality), while upscaling makes an image larger and sharper (often adding data). Knowing when to use each one is the difference between a website that loads fast and looks crisp, and one that's either slow and bloated or fast but blurry. Yet most people reach for the wrong tool, compressing an already-small blurry image (making it worse) or trying to upscale a huge file that just needed to be shrunk.
 
-This guide clears up the confusion around image quality, compression, and upscaling once and for all. You'll learn exactly what each operation does to your image, when to upscale versus when to compress, and how to use free tools to get the best result for your specific goal. JPT AI (sjpt.io) offers a free, unlimited AI upscaler with no watermark and no sign-up for its Normal mode, so whenever your answer is \"upscale,\" you have a powerful, cost-free option ready. Let's demystify image quality so you always pick the right tool for the job.`,
+This guide clears up the confusion around image quality, compression, and upscaling once and for all. You'll learn exactly what each operation does to your image, when to upscale versus when to compress, and how to use free tools to get the best result for your specific goal. Pixel Shine (sjpt.io) offers a free, unlimited AI upscaler with no watermark and no sign-up for its Normal mode, so whenever your answer is \"upscale,\" you have a powerful, cost-free option ready. Let's demystify image quality so you always pick the right tool for the job.`,
       },
       {
         heading: "Compression and Upscaling: What They Actually Do",
@@ -8210,10 +8210,10 @@ This guide clears up the confusion around image quality, compression, and upscal
 **Quality is the perception of detail and clarity.** Both operations affect perceived quality: over-compression destroys it, while AI upscaling can restore or enhance it. Knowing which lever to pull depends entirely on your goal, size or sharpness.`,
       },
       {
-        heading: "How JPT AI Handles the Upscaling Side",
-        body: `When your answer is \"I need to upscale,\" JPT AI provides an AI upscaler that increases resolution while reconstructing genuine detail, addressing the core weakness of traditional resizing. This matters because the most common quality complaint, \"my image is too small and blurry\", is an upscaling problem, not a compression one.
+        heading: "How Pixel Shine Handles the Upscaling Side",
+        body: `When your answer is \"I need to upscale,\" Pixel Shine provides an AI upscaler that increases resolution while reconstructing genuine detail, addressing the core weakness of traditional resizing. This matters because the most common quality complaint, \"my image is too small and blurry\", is an upscaling problem, not a compression one.
 
-**True detail reconstruction.** Instead of stretching pixels into a blurry mess, JPT AI's engine adds believable detail based on patterns learned from millions of high-quality images. A small, soft photo becomes a larger, crisp one.
+**True detail reconstruction.** Instead of stretching pixels into a blurry mess, Pixel Shine's engine adds believable detail based on patterns learned from millions of high-quality images. A small, soft photo becomes a larger, crisp one.
 
 **Face-aware enhancement.** For images with people, the AI specifically sharpens facial features, which is where quality problems are most noticeable.
 
@@ -8221,7 +8221,7 @@ This guide clears up the confusion around image quality, compression, and upscal
 
 **Flexible scale options.** Choose 2x or 4x depending on how much enlargement you need.
 
-JPT AI's Normal upscale mode is free, unlimited, and requires no sign-in, ideal for the frequent case where you simply need a bigger, sharper image. The Pro AI mode applies deeper reconstruction for the most challenging low-quality images, with 5 free trials for new users. And because there's no watermark, your upscaled images are immediately usable. When compression is what you actually need, you'll use a compressor, but for the very common upscaling side of the equation, JPT AI covers it for free.`,
+Pixel Shine's Normal upscale mode is free, unlimited, and requires no sign-in, ideal for the frequent case where you simply need a bigger, sharper image. The Pro AI mode applies deeper reconstruction for the most challenging low-quality images, with 5 free trials for new users. And because there's no watermark, your upscaled images are immediately usable. When compression is what you actually need, you'll use a compressor, but for the very common upscaling side of the equation, Pixel Shine covers it for free.`,
       },
       {
         heading: "Step-by-Step: Decide and Act on Image Quality",
@@ -8330,14 +8330,14 @@ Use JPEG or WEBP (lossy) for photographs, and PNG (lossless) for graphics, logos
 **Why does my image look worse every time I save it?**
 Lossy formats like JPEG discard detail each time you save. Repeatedly saving degrades the image. Always keep a high-quality master and generate copies from it.
 
-**Is JPT AI's upscaler free?**
+**Is Pixel Shine's upscaler free?**
 Yes. The Normal upscale mode is free, unlimited, requires no sign-up, and adds no watermark. The Pro AI mode offers deeper reconstruction with 5 free trials for new users.`,
       },
       {
         heading: "Key Takeaways",
         body: `The confusion between compressing and upscaling disappears once you ask one question: is my image too big, or too small and blurry? If it's too large, compress it, using lossy formats for photos and lossless for graphics. If it's too small or soft, upscale it with AI to add real detail and sharpness. When you need both, upscale first, then compress. Keep a high-quality master, target your actual display size, and match the format to your content.
 
-Whenever the answer is \"upscale,\" JPT AI has you covered for free, unlimited, watermark-free, and with no sign-up for the Normal mode. Head to sjpt.io, upscale your image, and get the sharp, right-sized result your project needs.`,
+Whenever the answer is \"upscale,\" Pixel Shine has you covered for free, unlimited, watermark-free, and with no sign-up for the Normal mode. Head to sjpt.io, upscale your image, and get the sharp, right-sized result your project needs.`,
       },
     ],
   },
@@ -8345,7 +8345,7 @@ Whenever the answer is \"upscale,\" JPT AI has you covered for free, unlimited, 
     image: "https://images.pexels.com/photos/2746187/pexels-photo-2746187.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "real-estate-photo-enhancement-free",
     title: "How to Enhance Real Estate Photos for Free with AI",
-    metaTitle: "Enhance Real Estate Photos Free with AI | JPT AI",
+    metaTitle: "Enhance Real Estate Photos Free with AI | Pixel Shine",
     metaDescription: "Enhance real estate listing photos free with AI. Upscale, sharpen, brighten and clean up property images for listings — no watermark.",
     excerpt: "Bright, sharp listing photos sell properties faster. Here's how to enhance real estate images for free with AI.",
     date: "2025-06-24",
@@ -8358,7 +8358,7 @@ Whenever the answer is \"upscale,\" JPT AI has you covered for free, unlimited, 
       {
         body: `Knowing how to enhance real estate photos for free with AI is one of the highest-leverage skills an agent, landlord, or property marketer can have today, because listing photos directly drive how many buyers click, tour, and ultimately make offers. The data is striking: listings with high-quality photos sell faster and often for more money, and the very first photo determines whether a buyer scrolling through dozens of listings stops to look or keeps swiping. Yet many listings are still let down by dim, blurry, low-resolution, or dull images, phone snapshots taken in poor light that make even a great property look unappealing.
 
-Professional real estate photography costs $100 to $300 per shoot, which isn't always practical for every listing, rental, or last-minute update. That's where free AI enhancement comes in. With JPT AI (sjpt.io), you can enhance property photos, boosting resolution, sharpness, and clarity, for free, with no watermark and no sign-up required for the Normal mode. In this guide, you'll learn exactly how to enhance real estate photos with AI, the workflow that produces bright, crisp, professional-looking listing images, and the pro tips that help your properties stand out and sell faster. Whether you're a solo agent, a landlord, or a property manager, this is the fastest, most affordable way to upgrade your listing photos.`,
+Professional real estate photography costs $100 to $300 per shoot, which isn't always practical for every listing, rental, or last-minute update. That's where free AI enhancement comes in. With Pixel Shine (sjpt.io), you can enhance property photos, boosting resolution, sharpness, and clarity, for free, with no watermark and no sign-up required for the Normal mode. In this guide, you'll learn exactly how to enhance real estate photos with AI, the workflow that produces bright, crisp, professional-looking listing images, and the pro tips that help your properties stand out and sell faster. Whether you're a solo agent, a landlord, or a property manager, this is the fastest, most affordable way to upgrade your listing photos.`,
       },
       {
         heading: "Why Real Estate Photos Matter So Much",
@@ -8377,8 +8377,8 @@ Professional real estate photography costs $100 to $300 per shoot, which isn't a
 The problem is that not every photo can be a professional shoot, budgets, timing, and quick updates get in the way. AI enhancement bridges that gap, letting anyone dramatically improve the photos they already have.`,
       },
       {
-        heading: "How JPT AI Enhances Real Estate Photos",
-        body: `JPT AI enhances real estate photos by using AI upscaling to increase resolution and reconstruct sharp detail, turning soft, low-quality property images into crisp, professional-looking listing photos. This directly targets the most common problems with amateur real estate photography: softness, low resolution, and lack of clarity.
+        heading: "How Pixel Shine Enhances Real Estate Photos",
+        body: `Pixel Shine enhances real estate photos by using AI upscaling to increase resolution and reconstruct sharp detail, turning soft, low-quality property images into crisp, professional-looking listing photos. This directly targets the most common problems with amateur real estate photography: softness, low resolution, and lack of clarity.
 
 **Resolution and sharpness boost.** The AI enlarges your photos 2x or 4x while adding genuine detail, so a slightly blurry phone shot of a living room becomes sharp and defined, showing off textures, finishes, and space.
 
@@ -8388,11 +8388,11 @@ The problem is that not every photo can be a professional shoot, budgets, timing
 
 **Exterior clarity.** For exterior and curb-appeal shots, upscaling sharpens the property lines, landscaping, and surroundings that make a strong first impression.
 
-JPT AI's Normal upscale mode is free, unlimited, and requires no sign-in, perfect for enhancing an entire set of listing photos in one session. The Pro AI mode offers deeper reconstruction for the toughest images, with 5 free trials for new users. And with no watermark, your enhanced photos are ready to upload directly to listing portals, giving your property the sharp, professional presentation that drives clicks and offers.`,
+Pixel Shine's Normal upscale mode is free, unlimited, and requires no sign-in, perfect for enhancing an entire set of listing photos in one session. The Pro AI mode offers deeper reconstruction for the toughest images, with 5 free trials for new users. And with no watermark, your enhanced photos are ready to upload directly to listing portals, giving your property the sharp, professional presentation that drives clicks and offers.`,
       },
       {
         heading: "Step-by-Step: Enhance Your Listing Photos",
-        body: `Follow this workflow to enhance a set of real estate photos with JPT AI.
+        body: `Follow this workflow to enhance a set of real estate photos with Pixel Shine.
 
 **1. Capture the best photos you can first.** Shoot during the day with curtains open and lights on to maximize brightness. Hold the phone level, shoot from corner angles to show room depth, and keep the camera steady to minimize blur. Better source photos enhance better.
 
@@ -8456,7 +8456,7 @@ JPT AI's Normal upscale mode is free, unlimited, and requires no sign-in, perfec
         heading: "AI Enhancement vs. Professional Photography",
         body: `Deciding between AI enhancement and hiring a photographer depends on your budget, timeline, and the stakes of the listing.
 
-**Cost.** Professional real estate photography runs $100 to $300 per shoot, and drone or twilight shots cost more. JPT AI's Normal enhancement is free and unlimited with no watermark, making it ideal for every listing where a full shoot isn't justified.
+**Cost.** Professional real estate photography runs $100 to $300 per shoot, and drone or twilight shots cost more. Pixel Shine's Normal enhancement is free and unlimited with no watermark, making it ideal for every listing where a full shoot isn't justified.
 
 **Speed.** A professional shoot requires scheduling and turnaround time. AI enhancement takes seconds per photo, so you can improve a whole gallery and publish the same day, crucial for time-sensitive listings.
 
@@ -8481,7 +8481,7 @@ JPT AI's Normal upscale mode is free, unlimited, and requires no sign-in, perfec
       {
         heading: "Frequently Asked Questions",
         body: `**Can I enhance real estate photos for free?**
-Yes. JPT AI's Normal upscale mode enhances property photos for free, unlimited, with no sign-up and no watermark. You can improve an entire listing gallery in one session. The Pro AI mode offers deeper enhancement with 5 free trials for new users.
+Yes. Pixel Shine's Normal upscale mode enhances property photos for free, unlimited, with no sign-up and no watermark. You can improve an entire listing gallery in one session. The Pro AI mode offers deeper enhancement with 5 free trials for new users.
 
 **Will AI enhancement make my dim photos brighter?**
 AI upscaling primarily sharpens detail, increases resolution, and reduces noise, which makes photos look cleaner and clearer. For best results, capture bright, well-lit photos first (open curtains, turn on lights), then enhance them for maximum impact.
@@ -8493,7 +8493,7 @@ Enhancing clarity, sharpness, and resolution to present a property well is stand
 With the free Normal mode, there's no limit, so you can enhance every photo in a listing, and every listing in your portfolio, at no cost.
 
 **Does enhancement add a watermark?**
-No. JPT AI produces watermark-free images ready to upload directly to Zillow, Realtor.com, your MLS, or any listing platform.
+No. Pixel Shine produces watermark-free images ready to upload directly to Zillow, Realtor.com, your MLS, or any listing platform.
 
 **Should I still hire a professional photographer?**
 For luxury and high-value properties, professional photography with proper equipment and staging remains valuable. For standard listings, rentals, and quick updates, AI enhancement delivers professional-looking results for free, and you can even enhance professionally shot photos as a final sharpening step.
@@ -8502,13 +8502,13 @@ For luxury and high-value properties, professional photography with proper equip
 Use 2x for reasonably sharp photos and 4x for smaller or softer images. Match the level to each photo so the whole gallery looks natural and consistent.
 
 **Can I do this from my phone?**
-Yes. JPT AI works on your phone at sjpt.io, so you can shoot, enhance, and upload listing photos directly from your phone on-site.`,
+Yes. Pixel Shine works on your phone at sjpt.io, so you can shoot, enhance, and upload listing photos directly from your phone on-site.`,
       },
       {
         heading: "Key Takeaways",
         body: `In real estate, photo quality directly influences how many buyers click, tour, and make offers, and you no longer need an expensive shoot to make every listing look sharp and professional. AI enhancement boosts resolution, sharpens interior and exterior detail, and cleans up noise in seconds, letting agents, landlords, and property managers upgrade their entire photo galleries for free. The keys are capturing bright, well-lit source photos, enhancing the whole set for consistency, leading with your strongest image, and keeping enhancements honest.
 
-JPT AI makes this free, unlimited, and watermark-free, with no sign-up for the Normal mode. Ready to make your listings stand out and sell faster? Head to sjpt.io, enhance your property photos, and give every listing the professional presentation it deserves.`,
+Pixel Shine makes this free, unlimited, and watermark-free, with no sign-up for the Normal mode. Ready to make your listings stand out and sell faster? Head to sjpt.io, enhance your property photos, and give every listing the professional presentation it deserves.`,
       },
     ],
   },
@@ -8519,7 +8519,7 @@ JPT AI makes this free, unlimited, and watermark-free, with no sign-up for the N
     image: "https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "turn-photo-into-funko-pop-ai",
     title: "Turn Your Photo into a Funko Pop Figure with AI",
-    metaTitle: "Turn Photo into Funko Pop AI — Free Online | JPT AI",
+    metaTitle: "Turn Photo into Funko Pop AI — Free Online | Pixel Shine",
     metaDescription:
       "Turn any selfie into a Funko Pop vinyl figure in seconds using AI. No design skills needed — just upload your photo and get a hyper-detailed Funko Pop portrait instantly.",
     excerpt:
@@ -8532,7 +8532,7 @@ JPT AI makes this free, unlimited, and watermark-free, with no sign-up for the N
     toolLabel: "Turn Photo into Funko Pop →",
         sections: [
       {
-        body: `Ever looked at a Funko Pop on your shelf and thought, \"I'd pay real money for one of me\"? Now you don't have to. When you turn a photo into a Funko Pop with AI, you get that unmistakable big-head, tiny-body vinyl figure look in seconds — no sculpting, no $50 custom-figure commission, no waiting three weeks for shipping. JPT AI's funko pop generator takes a single selfie and reimagines you as a boxed collectible, complete with the glossy plastic shading, oversized eyes, and blocky proportions that make these figures so instantly recognizable.
+        body: `Ever looked at a Funko Pop on your shelf and thought, \"I'd pay real money for one of me\"? Now you don't have to. When you turn a photo into a Funko Pop with AI, you get that unmistakable big-head, tiny-body vinyl figure look in seconds — no sculpting, no $50 custom-figure commission, no waiting three weeks for shipping. Pixel Shine's funko pop generator takes a single selfie and reimagines you as a boxed collectible, complete with the glossy plastic shading, oversized eyes, and blocky proportions that make these figures so instantly recognizable.
 
 The internet is obsessed with this look. Over 1 billion Funko Pop figures have been sold worldwide since 2010, and the \"funko pop yourself AI\" trend has racked up hundreds of millions of views across TikTok and Instagram. The best part? You can create yours right now, completely free, without installing an app or handing over a credit card. This guide walks you through exactly how to make a jaw-dropping custom Funko Pop from any photo, plus the pro tricks that separate a mediocre result from one that looks store-bought.`,
       },
@@ -8548,7 +8548,7 @@ The internet is obsessed with this look. Over 1 billion Funko Pop figures have b
       },
       {
         heading: "How the AI Turns Your Selfie into Vinyl",
-        body: `Behind the scenes, JPT AI uses a diffusion-based image model trained to recognize the geometry of the Funko Pop style — the roughly 3-to-1 head-to-body ratio, the flat black button eyes, the simplified nose-less face, and the soft plastic sheen. When you upload your photo, the model identifies your facial landmarks, hair shape, skin tone, and clothing, then rebuilds them inside that toy template.
+        body: `Behind the scenes, Pixel Shine uses a diffusion-based image model trained to recognize the geometry of the Funko Pop style — the roughly 3-to-1 head-to-body ratio, the flat black button eyes, the simplified nose-less face, and the soft plastic sheen. When you upload your photo, the model identifies your facial landmarks, hair shape, skin tone, and clothing, then rebuilds them inside that toy template.
 
 **It preserves identity cues.** The AI is specifically tuned to hold onto the things that make you look like *you* even after stylization: beard, curly hair, a specific hat, bold lipstick, or a team jersey. These survive the transformation so friends can recognize the figure at a glance.
 
@@ -8558,7 +8558,7 @@ Because it's generative rather than a simple overlay filter, every render is sli
       },
       {
         heading: "Step-by-Step: Turn Your Photo into a Funko Pop",
-        body: `Here's the exact process on JPT AI, start to finish:
+        body: `Here's the exact process on Pixel Shine, start to finish:
 
 **1. Open the tool.** Head to sjpt.io and go to the Creative AI Photo Effects section, then select the Turn Photo into Funko Pop effect. No download or sign-up is required to start.
 
@@ -8570,9 +8570,9 @@ Because it's generative rather than a simple overlay filter, every render is sli
 
 **5. Review your options.** When the figure appears, look at how it captured your hair, glasses, and clothing. If something feels off, regenerate — because the model is generative, a second pass often nails details the first one missed.
 
-**6. Download in full resolution.** Once you're happy, save the image. JPT AI exports without slapping an ugly watermark across your figure, so it's ready to post, print, or gift immediately.
+**6. Download in full resolution.** Once you're happy, save the image. Pixel Shine exports without slapping an ugly watermark across your figure, so it's ready to post, print, or gift immediately.
 
-**7. Sharpen it further (optional).** Want a crisp, print-ready version? Run the result through JPT AI's free Normal Upscaler to boost resolution before printing on a mug, sticker, or poster.`,
+**7. Sharpen it further (optional).** Want a crisp, print-ready version? Run the result through Pixel Shine's free Normal Upscaler to boost resolution before printing on a mug, sticker, or poster.`,
       },
       {
         heading: "Pro Tips for the Best Funko Pop Results",
@@ -8608,7 +8608,7 @@ Because it's generative rather than a simple overlay filter, every render is sli
 
 **Generic phone filters** apply a fixed cartoon overlay. They're fast but crude: they rarely capture the true Funko proportions or the collectible box, and many stamp a watermark on the output or lock the good stuff behind a subscription.
 
-**A dedicated AI funko pop generator like JPT AI** sits in the sweet spot. It produces the authentic boxed-figure look, preserves your real features, renders in under a minute, and costs nothing on the free tier. You can iterate endlessly, download without watermarks, and only ever consider paying if you want to print a physical version. For 99% of people who just want a shareable, giftable, profile-worthy figure, the AI route wins on every axis — speed, price, and flexibility.`,
+**A dedicated AI funko pop generator like Pixel Shine** sits in the sweet spot. It produces the authentic boxed-figure look, preserves your real features, renders in under a minute, and costs nothing on the free tier. You can iterate endlessly, download without watermarks, and only ever consider paying if you want to print a physical version. For 99% of people who just want a shareable, giftable, profile-worthy figure, the AI route wins on every axis — speed, price, and flexibility.`,
       },
       {
         heading: "Who's Using Custom Funko Pop AI Figures",
@@ -8620,18 +8620,18 @@ Because it's generative rather than a simple overlay filter, every render is sli
 
 **Gift-givers** create a boxed figure of a retiring coworker, a new graduate, or a groomsman, then print it as a card or canvas. It reads as far more personal than a generic present.
 
-**Kids and parents** love it too — turning a child's photo into a superhero-styled Funko makes for an instant framed keepsake. Because JPT AI's tool is free to try with no sign-in, families experiment with dozens of versions in an afternoon.`,
+**Kids and parents** love it too — turning a child's photo into a superhero-styled Funko makes for an instant framed keepsake. Because Pixel Shine's tool is free to try with no sign-in, families experiment with dozens of versions in an afternoon.`,
       },
       {
         heading: "Frequently Asked Questions",
         body: `**Can I really turn my photo into a Funko Pop for free?**
-Yes. JPT AI's Creative Effects let you generate a Funko-style figure at no cost, and new users get free trials across tools with no credit card required. The free tier also includes unlimited Normal Upscaling to sharpen your result.
+Yes. Pixel Shine's Creative Effects let you generate a Funko-style figure at no cost, and new users get free trials across tools with no credit card required. The free tier also includes unlimited Normal Upscaling to sharpen your result.
 
 **Do I need to create an account?**
-No account is required to start experimenting on JPT AI. You can jump in, upload a photo, and generate right away.
+No account is required to start experimenting on Pixel Shine. You can jump in, upload a photo, and generate right away.
 
 **Will there be a watermark on my Funko Pop image?**
-No. JPT AI exports clean images without an intrusive watermark stamped across your figure, so it's ready to post or print immediately.
+No. Pixel Shine exports clean images without an intrusive watermark stamped across your figure, so it's ready to post or print immediately.
 
 **What photo works best for a funko pop yourself AI result?**
 A clear, well-lit, front-facing photo from the chest up. Make sure your face, hair, and any signature features like glasses or a beard are visible.
@@ -8650,7 +8650,7 @@ Most figures render in 10 to 30 seconds.`,
       },
       {
         heading: "Key Takeaways",
-        body: `Turning your photo into a Funko Pop used to mean an expensive commission and a long wait. With JPT AI's AI funko pop generator, you get the authentic boxed-figure look in under a minute — free, watermark-free, and with no mandatory sign-up. Use a clear front-facing photo, keep your signature features visible, regenerate a couple of times for options, and upscale before printing.
+        body: `Turning your photo into a Funko Pop used to mean an expensive commission and a long wait. With Pixel Shine's AI funko pop generator, you get the authentic boxed-figure look in under a minute — free, watermark-free, and with no mandatory sign-up. Use a clear front-facing photo, keep your signature features visible, regenerate a couple of times for options, and upscale before printing.
 
 Whether you want a fresh profile picture, a hilarious gift, or a whole shelf of your friend group in vinyl, the tool makes it effortless. Ready to see yourself as a collectible? Head to sjpt.io and turn your photo into a Funko Pop right now — your figure is only a few seconds away.`,
       },
@@ -8661,7 +8661,7 @@ Whether you want a fresh profile picture, a hilarious gift, or a whole shelf of 
     image: "https://images.pexels.com/photos/2613260/pexels-photo-2613260.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "ai-glow-up-filter-photo",
     title: "AI Glow Up Filter: Transform Any Photo with One Click",
-    metaTitle: "AI Glow Up Filter — Transform Your Photo Online Free | JPT AI",
+    metaTitle: "AI Glow Up Filter — Transform Your Photo Online Free | Pixel Shine",
     metaDescription:
       "Apply an AI glow up filter to any photo online for free. Enhance skin, add radiant lighting, and get a stunning before and after transformation in seconds.",
     excerpt:
@@ -8674,9 +8674,9 @@ Whether you want a fresh profile picture, a hilarious gift, or a whole shelf of 
     toolLabel: "Try the AI Glow Up Filter →",
         sections: [
       {
-        body: `An AI glow up filter can take an ordinary, slightly-off selfie and turn it into the kind of photo you actually want to post — brighter skin, balanced lighting, cleaner detail, and that polished \"good day\" energy, all in a single click. If you've ever taken twenty shots and still felt like none of them looked quite right, this is the fix. JPT AI's glow up transformation runs on the same generative technology behind professional retouching, but it does the work automatically instead of making you fiddle with sliders for an hour.
+        body: `An AI glow up filter can take an ordinary, slightly-off selfie and turn it into the kind of photo you actually want to post — brighter skin, balanced lighting, cleaner detail, and that polished \"good day\" energy, all in a single click. If you've ever taken twenty shots and still felt like none of them looked quite right, this is the fix. Pixel Shine's glow up transformation runs on the same generative technology behind professional retouching, but it does the work automatically instead of making you fiddle with sliders for an hour.
 
-The glow up trend isn't just hype. Photos with even, flattering lighting get significantly more engagement on social platforms, and a study of Instagram behavior found brighter, higher-contrast images consistently outperform flat ones. The catch has always been that real editing takes skill and expensive software. An AI beauty filter for photos closes that gap: you upload, the AI analyzes your face and lighting, and it delivers a naturally enhanced version in seconds. Best of all, you can do it free on JPT AI with no app install and no account. Here's how to get the most out of it.`,
+The glow up trend isn't just hype. Photos with even, flattering lighting get significantly more engagement on social platforms, and a study of Instagram behavior found brighter, higher-contrast images consistently outperform flat ones. The catch has always been that real editing takes skill and expensive software. An AI beauty filter for photos closes that gap: you upload, the AI analyzes your face and lighting, and it delivers a naturally enhanced version in seconds. Best of all, you can do it free on Pixel Shine with no app install and no account. Here's how to get the most out of it.`,
       },
       {
         heading: "What an AI Glow Up Filter Actually Does",
@@ -8698,11 +8698,11 @@ The result is a photo that looks like the best version of a real moment — not 
 
 **It's consistent.** Manual editing varies with your mood and energy. The AI delivers the same polished baseline every time, which matters if you're editing a batch of photos for a profile refresh or a dating app.
 
-**It's forgiving.** Don't like the result? Regenerate or try a different source photo. There's no destructive editing, no ruined layers, no hour of work down the drain. And because JPT AI's glow up runs free with no sign-in, experimenting costs you nothing but a few seconds.`,
+**It's forgiving.** Don't like the result? Regenerate or try a different source photo. There's no destructive editing, no ruined layers, no hour of work down the drain. And because Pixel Shine's glow up runs free with no sign-in, experimenting costs you nothing but a few seconds.`,
       },
       {
         heading: "Step-by-Step: Glow Up Any Photo",
-        body: `**1. Go to JPT AI.** Open sjpt.io and navigate to the Creative AI Photo Effects section, then choose the AI Glow Up Filter. There's no download and no account needed to begin.
+        body: `**1. Go to Pixel Shine.** Open sjpt.io and navigate to the Creative AI Photo Effects section, then choose the AI Glow Up Filter. There's no download and no account needed to begin.
 
 **2. Choose your best raw shot.** Pick a photo where your face is clearly visible and reasonably in focus. The AI can fix lighting and tone, but it can't invent detail that isn't there — so avoid extremely dark or heavily blurred images as your starting point.
 
@@ -8712,9 +8712,9 @@ The result is a photo that looks like the best version of a real moment — not 
 
 **5. Compare before and after.** Look at the result next to your original. A good glow up should look like *you* on a great day — brighter, cleaner, more defined — not like a stranger. If it feels too strong or too subtle, regenerate.
 
-**6. Download watermark-free.** Save the enhanced photo. JPT AI exports without stamping a watermark across your image, so it's ready to post right away.
+**6. Download watermark-free.** Save the enhanced photo. Pixel Shine exports without stamping a watermark across your image, so it's ready to post right away.
 
-**7. Upscale for extra crispness.** For profile pictures or prints, run the result through JPT AI's free, unlimited Normal Upscaler to bump up resolution and sharpness before you share it.`,
+**7. Upscale for extra crispness.** For profile pictures or prints, run the result through Pixel Shine's free, unlimited Normal Upscaler to bump up resolution and sharpness before you share it.`,
       },
       {
         heading: "Pro Tips for a Natural-Looking Glow Up",
@@ -8738,7 +8738,7 @@ The result is a photo that looks like the best version of a real moment — not 
 
 **Double-filtering.** Running the AI on top of an already heavily edited photo produces that waxy, over-processed look everyone recognizes as fake. One clean pass beats three stacked ones.
 
-**Ignoring the background.** A great face against a messy background still reads as messy. Consider pairing the glow up with JPT AI's Background Remover for a clean, professional finish.
+**Ignoring the background.** A great face against a messy background still reads as messy. Consider pairing the glow up with Pixel Shine's Background Remover for a clean, professional finish.
 
 **Skipping the upscale step for prints.** A glow-up looks perfect on screen but can appear soft when printed large. Always run the free upscaler before sending anything to print.`,
       },
@@ -8746,7 +8746,7 @@ The result is a photo that looks like the best version of a real moment — not 
         heading: "Best Use Cases for the AI Glow Up Filter",
         body: `**Dating profiles.** First impressions are everything, and a well-lit, naturally enhanced photo can dramatically improve how a profile performs. The glow up gives you that \"caught on a great day\" look without looking catfished.
 
-**Professional headshots on a budget.** Not everyone can drop $200 on a studio session. Pair the glow up filter with JPT AI's AI Headshot Generator and you've got polished, LinkedIn-ready portraits for free.
+**Professional headshots on a budget.** Not everyone can drop $200 on a studio session. Pair the glow up filter with Pixel Shine's AI Headshot Generator and you've got polished, LinkedIn-ready portraits for free.
 
 **Social media content.** Creators use the glow up to keep their feed consistent and bright. A cohesive, well-lit aesthetic reads as more professional and grows engagement.
 
@@ -8754,7 +8754,7 @@ The result is a photo that looks like the best version of a real moment — not 
 
 **Event and travel snaps.** That gorgeous sunset shot that came out a little flat? A glow up restores the vibrancy you actually saw in the moment.
 
-Because every one of these can be done free on JPT AI without an account, there's no reason not to glow up an entire album.`,
+Because every one of these can be done free on Pixel Shine without an account, there's no reason not to glow up an entire album.`,
       },
       {
         heading: "Who Benefits Most from a One-Click Glow Up",
@@ -8766,18 +8766,18 @@ Because every one of these can be done free on JPT AI without an account, there'
 
 **Everyday people** who just want their favorite selfie to finally look the way they remember the moment feeling. That's arguably the biggest group — and the reason the glow up trend went viral in the first place.
 
-Across all of them, the appeal is the same: studio-quality polish, zero skill required, and no price tag. JPT AI removes every barrier — no download, no sign-in, no watermark — so anyone can glow up in seconds.`,
+Across all of them, the appeal is the same: studio-quality polish, zero skill required, and no price tag. Pixel Shine removes every barrier — no download, no sign-in, no watermark — so anyone can glow up in seconds.`,
       },
       {
         heading: "Frequently Asked Questions",
         body: `**Is the AI glow up filter really free?**
-Yes. You can use JPT AI's glow up filter at no cost, and new users get free trials across the platform's tools. No credit card is required to start.
+Yes. You can use Pixel Shine's glow up filter at no cost, and new users get free trials across the platform's tools. No credit card is required to start.
 
 **Do I need to download an app?**
-No. JPT AI runs online at sjpt.io. There's nothing to install and no account required to begin editing.
+No. Pixel Shine runs online at sjpt.io. There's nothing to install and no account required to begin editing.
 
 **Will my glow up photo have a watermark?**
-No. JPT AI exports clean, watermark-free images ready to post or print.
+No. Pixel Shine exports clean, watermark-free images ready to post or print.
 
 **Does the glow up make me look fake or over-filtered?**
 Not when used right. The AI is designed to enhance lighting, tone, and clarity while preserving real skin texture, so it looks like you on a great day rather than a plastic filter.
@@ -8789,7 +8789,7 @@ Yes, within reason. The filter dramatically improves flat or dull photos, but it
 Beauty filters usually blur and smooth aggressively into a mask. The AI glow up focuses on natural lighting correction, tone balancing, and clarity, keeping the result believable.
 
 **Can I use it for professional headshots?**
-Absolutely. Combine it with JPT AI's AI Headshot Generator and Background Remover for polished, LinkedIn-ready portraits for free.
+Absolutely. Combine it with Pixel Shine's AI Headshot Generator and Background Remover for polished, LinkedIn-ready portraits for free.
 
 **How long does it take?**
 Most glow ups process in 10 to 20 seconds.`,
@@ -8798,7 +8798,7 @@ Most glow ups process in 10 to 20 seconds.`,
         heading: "Key Takeaways",
         body: `An AI glow up filter gives you professional-grade polish — better lighting, refined skin, and crisp clarity — in a single click, without the skill or software real retouching demands. The key is starting with a decently lit, in-focus photo, avoiding stacked filters, and letting the AI do what it does best: enhance the real you naturally.
 
-JPT AI makes it genuinely free, with no download, no account, no watermark, and unlimited upscaling to sharpen your final image. Whether it's a dating profile, a LinkedIn headshot, or just your favorite selfie, you're one click away from your best-looking photo yet. Head to sjpt.io and try the AI Glow Up Filter now.`,
+Pixel Shine makes it genuinely free, with no download, no account, no watermark, and unlimited upscaling to sharpen your final image. Whether it's a dating profile, a LinkedIn headshot, or just your favorite selfie, you're one click away from your best-looking photo yet. Head to sjpt.io and try the AI Glow Up Filter now.`,
       },
     ],
   },
@@ -8807,7 +8807,7 @@ JPT AI makes it genuinely free, with no download, no account, no watermark, and 
     image: "https://images.pexels.com/photos/1024960/pexels-photo-1024960.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "turn-photo-into-comic-book-ai",
     title: "Turn Your Photo into a Comic Book Cover with AI",
-    metaTitle: "Turn Photo into Comic Book Cover AI Free Online | JPT AI",
+    metaTitle: "Turn Photo into Comic Book Cover AI Free Online | Pixel Shine",
     metaDescription:
       "Transform any photo into a dramatic AI comic book cover illustration. Bold colours, action lines, speech bubbles — your face as a superhero. Free to try.",
     excerpt:
@@ -8820,9 +8820,9 @@ JPT AI makes it genuinely free, with no download, no account, no watermark, and 
     toolLabel: "Make Your Comic Book Cover →",
         sections: [
       {
-        body: `Want to turn your photo into a comic book cover with AI and see yourself as the hero of your own issue #1? It's now as simple as uploading a selfie. JPT AI's comic book filter transforms an ordinary photo into bold, ink-outlined, halftone-shaded comic art — the kind of dramatic, saturated style you'd see on a vintage newsstand cover or a modern graphic novel. No drawing skills, no Photoshop layers, no $300 commission from a comic artist. Just your photo and a click.
+        body: `Want to turn your photo into a comic book cover with AI and see yourself as the hero of your own issue #1? It's now as simple as uploading a selfie. Pixel Shine's comic book filter transforms an ordinary photo into bold, ink-outlined, halftone-shaded comic art — the kind of dramatic, saturated style you'd see on a vintage newsstand cover or a modern graphic novel. No drawing skills, no Photoshop layers, no $300 commission from a comic artist. Just your photo and a click.
 
-The photo-to-comic-art trend has quietly become one of the most popular creative AI effects online, and it's easy to see why: comic styling flatters almost everyone, it's endlessly shareable, and it turns even a casual snapshot into something that looks intentional and cinematic. Whether you want a heroic profile picture, a birthday card that hits different, or a cover-worthy poster of yourself, this guide covers everything — how the AI comic book filter works, the exact steps to use it, pro tricks for dramatic results, and how to get it all free on JPT AI with no account required.`,
+The photo-to-comic-art trend has quietly become one of the most popular creative AI effects online, and it's easy to see why: comic styling flatters almost everyone, it's endlessly shareable, and it turns even a casual snapshot into something that looks intentional and cinematic. Whether you want a heroic profile picture, a birthday card that hits different, or a cover-worthy poster of yourself, this guide covers everything — how the AI comic book filter works, the exact steps to use it, pro tricks for dramatic results, and how to get it all free on Pixel Shine with no account required.`,
       },
       {
         heading: "What the AI Comic Book Effect Does to Your Photo",
@@ -8850,11 +8850,11 @@ The combined result reads instantly as \"comic book,\" not \"photo with a filter
 
 **Manga-adjacent ink.** Heavier black-and-white linework with dramatic shadows, great for a moody, striking result.
 
-Because JPT AI's effect is generative, you can regenerate to explore different interpretations of the comic style from the same photo — and since the free tier lets you experiment without an account or a watermark, there's no cost to trying several looks before you pick a favorite.`,
+Because Pixel Shine's effect is generative, you can regenerate to explore different interpretations of the comic style from the same photo — and since the free tier lets you experiment without an account or a watermark, there's no cost to trying several looks before you pick a favorite.`,
       },
       {
         heading: "Step-by-Step: Turn Your Photo into a Comic Book Cover",
-        body: `**1. Open JPT AI.** Go to sjpt.io and find the Creative AI Photo Effects section, then select the Comic Book Cover effect. No download, no sign-up needed to start.
+        body: `**1. Open Pixel Shine.** Go to sjpt.io and find the Creative AI Photo Effects section, then select the Comic Book Cover effect. No download, no sign-up needed to start.
 
 **2. Choose a dramatic photo.** Comic styling loves strong expressions and clear subjects. A confident pose, an intense look, or a dynamic angle translates into a far more compelling cover than a flat, neutral snapshot.
 
@@ -8864,9 +8864,9 @@ Because JPT AI's effect is generative, you can regenerate to explore different i
 
 **5. Review the result.** Check how the linework captured your features and how the shading landed. If the drama feels muted or a detail got lost, regenerate — the generative model often nails it on a second pass.
 
-**6. Download watermark-free.** Save your comic cover in full resolution. JPT AI doesn't stamp a watermark across it, so it's post-ready and print-ready immediately.
+**6. Download watermark-free.** Save your comic cover in full resolution. Pixel Shine doesn't stamp a watermark across it, so it's post-ready and print-ready immediately.
 
-**7. Upscale for posters and prints.** Planning to print it large? Run the image through JPT AI's free, unlimited Normal Upscaler first so the bold lines and halftone dots stay razor-sharp at poster size.`,
+**7. Upscale for posters and prints.** Planning to print it large? Run the image through Pixel Shine's free, unlimited Normal Upscaler first so the bold lines and halftone dots stay razor-sharp at poster size.`,
       },
       {
         heading: "Pro Tips for Cover-Worthy Comic Art",
@@ -8876,7 +8876,7 @@ Because JPT AI's effect is generative, you can regenerate to explore different i
 
 **Use dramatic lighting in the source.** Some directional light and shadow gives the AI contrast to translate into cel shading. Perfectly flat lighting produces flatter comic art.
 
-**Keep the background clean or dynamic.** A busy background can clutter the inking. A simple backdrop lets you stand out, or use JPT AI's Background Remover first to place yourself on a custom comic scene.
+**Keep the background clean or dynamic.** A busy background can clutter the inking. A simple backdrop lets you stand out, or use Pixel Shine's Background Remover first to place yourself on a custom comic scene.
 
 **Leave headroom for a title.** If you want the classic cover look with a title and issue number, choose a photo with a bit of empty space above or beside your head so there's room for text.
 
@@ -8902,7 +8902,7 @@ Because JPT AI's effect is generative, you can regenerate to explore different i
 
 **Basic phone filters** overlay a generic cartoon effect. They're instant but shallow: they rarely reproduce true ink linework, halftone shading, or cover framing, and many add watermarks or paywall the good styles.
 
-**A dedicated AI comic book filter like JPT AI** delivers authentic comic styling — real inking, halftone shading, saturated color, and cover framing — in under 30 seconds, free, with no watermark and no account. You can regenerate endlessly to explore styles, something neither a paid artist nor a fixed filter allows affordably. For anyone who wants a shareable, print-worthy comic cover without the price tag or the wait, the AI route is the clear winner — and if you later want a hand-drawn heirloom, you'll at least know exactly what look you're going for.`,
+**A dedicated AI comic book filter like Pixel Shine** delivers authentic comic styling — real inking, halftone shading, saturated color, and cover framing — in under 30 seconds, free, with no watermark and no account. You can regenerate endlessly to explore styles, something neither a paid artist nor a fixed filter allows affordably. For anyone who wants a shareable, print-worthy comic cover without the price tag or the wait, the AI route is the clear winner — and if you later want a hand-drawn heirloom, you'll at least know exactly what look you're going for.`,
       },
       {
         heading: "Who's Turning Their Photos into Comic Covers",
@@ -8916,18 +8916,18 @@ Because JPT AI's effect is generative, you can regenerate to explore different i
 
 **Content creators** use the effect for eye-catching thumbnails and posts that stop the scroll, since bold comic art stands out in a feed of ordinary photos.
 
-Across all of them, the draw is the same: a professional-looking comic cover with zero art skills, zero cost, and zero wait. JPT AI's free, watermark-free, no-sign-in tool makes it effortless to churn out as many covers as you want.`,
+Across all of them, the draw is the same: a professional-looking comic cover with zero art skills, zero cost, and zero wait. Pixel Shine's free, watermark-free, no-sign-in tool makes it effortless to churn out as many covers as you want.`,
       },
       {
         heading: "Frequently Asked Questions",
         body: `**Can I turn my photo into a comic book cover for free?**
-Yes. JPT AI's comic book effect is available at no cost, and new users get free trials across the platform. No credit card is needed to start.
+Yes. Pixel Shine's comic book effect is available at no cost, and new users get free trials across the platform. No credit card is needed to start.
 
 **Do I need an account or an app?**
-No. JPT AI works online at sjpt.io with no download and no mandatory sign-up to begin creating.
+No. Pixel Shine works online at sjpt.io with no download and no mandatory sign-up to begin creating.
 
 **Will my comic cover have a watermark?**
-No. JPT AI exports clean, watermark-free images ready to share or print.
+No. Pixel Shine exports clean, watermark-free images ready to share or print.
 
 **What kind of photo makes the best comic cover?**
 A clear, sharp photo with a strong expression or dynamic pose. Bold outfit colors and a bit of dramatic lighting produce the most striking comic art.
@@ -8936,7 +8936,7 @@ A clear, sharp photo with a strong expression or dynamic pose. Bold outfit color
 The effect produces cover-style art; choose a photo with some empty space near your head so there's room to add text later in any basic editor if you want the full newsstand look.
 
 **Can I print my comic cover as a poster?**
-Yes. Download the full-resolution image and run it through JPT AI's free upscaler first so the linework and halftones stay crisp at large sizes.
+Yes. Download the full-resolution image and run it through Pixel Shine's free upscaler first so the linework and halftones stay crisp at large sizes.
 
 **Does it work on group photos?**
 It works best with a single strong subject. For a clean, iconic cover, focus on one person.
@@ -8948,7 +8948,7 @@ Most comic covers render in 15 to 30 seconds.`,
         heading: "Key Takeaways",
         body: `Turning your photo into a comic book cover with AI puts you on the front of your own issue #1 — complete with bold ink outlines, halftone shading, and saturated cover-worthy color — in under a minute. The secret to a standout result is a sharp photo with a strong expression, bold outfit colors, and a little headroom for a title.
 
-JPT AI makes the whole thing free, with no account, no download, no watermark, and unlimited upscaling for poster-perfect prints. Whether you want a heroic avatar, a personalized invitation, or framed art for the wall, your comic cover is a click away. Head to sjpt.io and turn your photo into a comic book cover now.`,
+Pixel Shine makes the whole thing free, with no account, no download, no watermark, and unlimited upscaling for poster-perfect prints. Whether you want a heroic avatar, a personalized invitation, or framed art for the wall, your comic cover is a click away. Head to sjpt.io and turn your photo into a comic book cover now.`,
       },
     ],
   },
@@ -8957,7 +8957,7 @@ JPT AI makes the whole thing free, with no account, no download, no watermark, a
     image: "https://images.pexels.com/photos/1684779/pexels-photo-1684779.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "coastal-cowgirl-aesthetic-photo-ai",
     title: "Coastal Cowgirl Aesthetic: AI Photo Filter & Style Guide",
-    metaTitle: "Coastal Cowgirl Aesthetic AI Photo Filter Free | JPT AI",
+    metaTitle: "Coastal Cowgirl Aesthetic AI Photo Filter Free | Pixel Shine",
     metaDescription:
       "Get the coastal cowgirl aesthetic look in your photos using AI. Sun-bleached, windswept, beachy Western vibes — applied to any portrait instantly.",
     excerpt:
@@ -8970,9 +8970,9 @@ JPT AI makes the whole thing free, with no account, no download, no watermark, a
     toolLabel: "Try the Coastal Cowgirl Filter →",
         sections: [
       {
-        body: `The coastal cowgirl aesthetic is having a major moment, and now you can apply that sun-bleached, beachy-Western vibe to any photo with an AI filter. Picture the coastal cowgirl look: soft linen and denim, weathered leather boots, a straw cowboy hat, salt-air waves in the hair, and a warm, golden-hour glow that blends ocean-breeze softness with rustic ranch edge. JPT AI's coastal cowgirl filter reads your photo and reimagines it in exactly this dreamy, sunkissed style — no styled photoshoot, no beach trip, no wardrobe budget required.
+        body: `The coastal cowgirl aesthetic is having a major moment, and now you can apply that sun-bleached, beachy-Western vibe to any photo with an AI filter. Picture the coastal cowgirl look: soft linen and denim, weathered leather boots, a straw cowboy hat, salt-air waves in the hair, and a warm, golden-hour glow that blends ocean-breeze softness with rustic ranch edge. Pixel Shine's coastal cowgirl filter reads your photo and reimagines it in exactly this dreamy, sunkissed style — no styled photoshoot, no beach trip, no wardrobe budget required.
 
-This aesthetic exploded across TikTok and Pinterest, racking up hundreds of millions of views as people fell for its effortless mix of relaxed coastal calm and confident cowgirl charm. The problem is that actually *shooting* the look means a beach location, the right outfit, and perfect golden-hour timing. An AI aesthetic photo filter skips all of it. Upload a normal photo, and the AI handles the styling, lighting, and mood. Best of all, you can try the coastal cowgirl filter free online on JPT AI with no account. Here's how to nail the look.`,
+This aesthetic exploded across TikTok and Pinterest, racking up hundreds of millions of views as people fell for its effortless mix of relaxed coastal calm and confident cowgirl charm. The problem is that actually *shooting* the look means a beach location, the right outfit, and perfect golden-hour timing. An AI aesthetic photo filter skips all of it. Upload a normal photo, and the AI handles the styling, lighting, and mood. Best of all, you can try the coastal cowgirl filter free online on Pixel Shine with no account. Here's how to nail the look.`,
       },
       {
         heading: "What Defines the Coastal Cowgirl Aesthetic",
@@ -8992,11 +8992,11 @@ This aesthetic exploded across TikTok and Pinterest, racking up hundreds of mill
 
 **It's instant and repeatable.** A real shoot is a one-shot deal; if the light or outfit is off, you're out of luck. The AI lets you regenerate until the vibe is perfect, and you can apply the aesthetic to dozens of photos in the time a single shoot would take.
 
-**It's free to experiment.** JPT AI's coastal cowgirl filter runs on the free tier with no sign-in, so you can test the look on several photos, compare results, and download the best one without a watermark or a paywall. For an aesthetic that's all about effortlessness, an effortless tool just makes sense.`,
+**It's free to experiment.** Pixel Shine's coastal cowgirl filter runs on the free tier with no sign-in, so you can test the look on several photos, compare results, and download the best one without a watermark or a paywall. For an aesthetic that's all about effortlessness, an effortless tool just makes sense.`,
       },
       {
         heading: "Step-by-Step: Get the Coastal Cowgirl Look",
-        body: `**1. Head to JPT AI.** Open sjpt.io and go to the Creative AI Photo Effects section, then select the Coastal Cowgirl filter. No download or account required to start.
+        body: `**1. Head to Pixel Shine.** Open sjpt.io and go to the Creative AI Photo Effects section, then select the Coastal Cowgirl filter. No download or account required to start.
 
 **2. Pick a flattering source photo.** Choose a clear photo where your face and upper body are visible. A relaxed, natural pose suits the aesthetic best — coastal cowgirl is about effortless confidence, not stiff posing.
 
@@ -9006,9 +9006,9 @@ This aesthetic exploded across TikTok and Pinterest, racking up hundreds of mill
 
 **5. Review the vibe.** Check whether the golden-hour glow, warm palette, and Western touches landed the way you wanted. If it feels off, regenerate — because the effect is generative, each pass interprets the aesthetic slightly differently.
 
-**6. Download watermark-free.** Save your coastal cowgirl photo in full resolution. JPT AI won't stamp a watermark across it, so it's ready to post immediately.
+**6. Download watermark-free.** Save your coastal cowgirl photo in full resolution. Pixel Shine won't stamp a watermark across it, so it's ready to post immediately.
 
-**7. Upscale for a crisp finish.** For Instagram feature-quality or prints, run the result through JPT AI's free, unlimited Normal Upscaler to sharpen and enlarge before sharing.`,
+**7. Upscale for a crisp finish.** For Instagram feature-quality or prints, run the result through Pixel Shine's free, unlimited Normal Upscaler to sharpen and enlarge before sharing.`,
       },
       {
         heading: "Pro Tips for the Dreamiest Coastal Cowgirl Photos",
@@ -9018,7 +9018,7 @@ This aesthetic exploded across TikTok and Pinterest, racking up hundreds of mill
 
 **Neutral or earthy outfits help.** If your source photo already features cream, denim, tan, or white, the AI's palette blends more seamlessly. Bright neon clothing fights the soft aesthetic.
 
-**Simple backgrounds win.** A clean or natural background gives the AI room to apply the coastal atmosphere. A cluttered indoor scene can muddy the vibe — or pair the filter with JPT AI's Background Remover for full control.
+**Simple backgrounds win.** A clean or natural background gives the AI room to apply the coastal atmosphere. A cluttered indoor scene can muddy the vibe — or pair the filter with Pixel Shine's Background Remover for full control.
 
 **Regenerate for the perfect glow.** The golden-hour quality can vary between passes. Generate a few free versions and pick the one where the light feels most magical.
 
@@ -9046,7 +9046,7 @@ This aesthetic exploded across TikTok and Pinterest, racking up hundreds of mill
 
 **Clean girl and soft glam** aesthetics focus on polished, minimal, dewy looks, while bolder trends like anime or claymation transform you entirely.
 
-The advantage of using JPT AI is that all of these live in one place. You can try the coastal cowgirl filter, then experiment with old Hollywood, a glow up, or a claymation portrait without hopping between apps or paying for each one separately. Because the platform is free to start with no account and no watermark, testing multiple aesthetics on the same photo to find your signature look costs nothing but a few minutes. It's the easiest way to discover which viral vibe fits you best.`,
+The advantage of using Pixel Shine is that all of these live in one place. You can try the coastal cowgirl filter, then experiment with old Hollywood, a glow up, or a claymation portrait without hopping between apps or paying for each one separately. Because the platform is free to start with no account and no watermark, testing multiple aesthetics on the same photo to find your signature look costs nothing but a few minutes. It's the easiest way to discover which viral vibe fits you best.`,
       },
       {
         heading: "Who Loves the Coastal Cowgirl Filter",
@@ -9060,18 +9060,18 @@ The advantage of using JPT AI is that all of these live in one place. You can tr
 
 **Everyday users** simply love seeing themselves in a dreamy, sun-kissed style that feels aspirational yet natural.
 
-What unites them is the desire for a specific, trendy aesthetic without the logistics of achieving it in real life. JPT AI delivers it free, watermark-free, and with no sign-in, so anyone can capture the coastal cowgirl moment in seconds.`,
+What unites them is the desire for a specific, trendy aesthetic without the logistics of achieving it in real life. Pixel Shine delivers it free, watermark-free, and with no sign-in, so anyone can capture the coastal cowgirl moment in seconds.`,
       },
       {
         heading: "Frequently Asked Questions",
         body: `**Is the coastal cowgirl filter free online?**
-Yes. JPT AI's coastal cowgirl filter is available at no cost, and new users get free trials across the platform's tools. No credit card is required to start.
+Yes. Pixel Shine's coastal cowgirl filter is available at no cost, and new users get free trials across the platform's tools. No credit card is required to start.
 
 **Do I need to sign up or download anything?**
-No. JPT AI runs online at sjpt.io with no download and no mandatory account to begin.
+No. Pixel Shine runs online at sjpt.io with no download and no mandatory account to begin.
 
 **Will there be a watermark on my photo?**
-No. JPT AI exports clean, watermark-free images ready to post or print.
+No. Pixel Shine exports clean, watermark-free images ready to post or print.
 
 **What is the coastal cowgirl aesthetic exactly?**
 It's a blend of beachy coastal softness — linen, neutrals, golden light — with rustic Western cowgirl elements like straw hats, denim, and leather boots, all wrapped in a warm, sun-kissed mood.
@@ -9083,16 +9083,16 @@ A clear, warmly lit photo with a relaxed pose and neutral or earthy clothing. Si
 Yes. The filter is great for elevating casual travel and beach snaps into a curated, aesthetic look.
 
 **Can I combine it with other effects?**
-Yes. Pair it with JPT AI's Glow Up Filter for perfect lighting or the Background Remover for full control over the scene.
+Yes. Pair it with Pixel Shine's Glow Up Filter for perfect lighting or the Background Remover for full control over the scene.
 
 **How long does it take?**
 Most photos render in 15 to 30 seconds.`,
       },
       {
         heading: "Key Takeaways",
-        body: `The coastal cowgirl aesthetic blends sun-bleached beach softness with rustic Western charm, and JPT AI's filter lets you capture that dreamy, golden-hour vibe on any photo — no shoot, no location, no wardrobe budget. For the best results, start with a warmly lit photo, a relaxed pose, and neutral tones, then regenerate until the glow feels magical.
+        body: `The coastal cowgirl aesthetic blends sun-bleached beach softness with rustic Western charm, and Pixel Shine's filter lets you capture that dreamy, golden-hour vibe on any photo — no shoot, no location, no wardrobe budget. For the best results, start with a warmly lit photo, a relaxed pose, and neutral tones, then regenerate until the glow feels magical.
 
-The whole thing is free on JPT AI, with no account, no download, no watermark, and unlimited upscaling for crisp, share-ready images. Whether you're building a Pinterest board, elevating vacation photos, or just chasing a viral vibe, the coastal cowgirl look is a click away. Head to sjpt.io and try the Coastal Cowgirl filter now.`,
+The whole thing is free on Pixel Shine, with no account, no download, no watermark, and unlimited upscaling for crisp, share-ready images. Whether you're building a Pinterest board, elevating vacation photos, or just chasing a viral vibe, the coastal cowgirl look is a click away. Head to sjpt.io and try the Coastal Cowgirl filter now.`,
       },
     ],
   },
@@ -9101,7 +9101,7 @@ The whole thing is free on JPT AI, with no account, no download, no watermark, a
     image: "https://images.pexels.com/photos/1431822/pexels-photo-1431822.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "ai-astronaut-photo-maker-free",
     title: "AI Astronaut Photo Maker: Put Yourself in Space for Free",
-    metaTitle: "AI Astronaut Photo Maker — Put Yourself in Space Free | JPT AI",
+    metaTitle: "AI Astronaut Photo Maker — Put Yourself in Space Free | Pixel Shine",
     metaDescription:
       "Turn any selfie into a realistic astronaut photo using AI. NASA-quality suit, space backdrop, zero-gravity vibes — free to try online, no skills needed.",
     excerpt:
@@ -9114,9 +9114,9 @@ The whole thing is free on JPT AI, with no account, no download, no watermark, a
     toolLabel: "Put Yourself in Space →",
         sections: [
       {
-        body: `Ever wanted to see yourself floating among the stars in a full spacesuit? An AI astronaut photo maker lets you put yourself in space for free, turning an ordinary selfie into a jaw-dropping cosmic portrait — you in a detailed astronaut suit, helmet visor reflecting distant galaxies, Earth glowing behind you. JPT AI's astronaut photo effect does exactly this: upload a normal photo, and the AI places you in a realistic space scene, complete with the suit, the helmet, and the stunning celestial backdrop. No green screen, no costume, no NASA clearance required.
+        body: `Ever wanted to see yourself floating among the stars in a full spacesuit? An AI astronaut photo maker lets you put yourself in space for free, turning an ordinary selfie into a jaw-dropping cosmic portrait — you in a detailed astronaut suit, helmet visor reflecting distant galaxies, Earth glowing behind you. Pixel Shine's astronaut photo effect does exactly this: upload a normal photo, and the AI places you in a realistic space scene, complete with the suit, the helmet, and the stunning celestial backdrop. No green screen, no costume, no NASA clearance required.
 
-Space imagery is universally captivating — it's aspirational, dramatic, and just plain cool. That's why the \"put yourself in space AI\" trend has taken off across social media, with people transforming into astronauts for profile pictures, posters, kids' room art, and unforgettable gifts. The best part is that JPT AI's space photo effect is genuinely free to try, runs online with no account, and exports without a watermark. This guide covers how the astronaut effect works, the exact steps to create yours, pro tips for a realistic result, and who's using it.`,
+Space imagery is universally captivating — it's aspirational, dramatic, and just plain cool. That's why the \"put yourself in space AI\" trend has taken off across social media, with people transforming into astronauts for profile pictures, posters, kids' room art, and unforgettable gifts. The best part is that Pixel Shine's space photo effect is genuinely free to try, runs online with no account, and exports without a watermark. This guide covers how the astronaut effect works, the exact steps to create yours, pro tips for a realistic result, and who's using it.`,
       },
       {
         heading: "What the AI Astronaut Effect Creates",
@@ -9140,11 +9140,11 @@ Because it's generative, each render produces a slightly different space scene �
 
 **It's instant and free to iterate.** A studio shoot is a one-time, expensive event. The AI lets you regenerate as many space scenes as you like in seconds, so you can pick the perfect Earth angle or star field.
 
-**No skill required.** You don't need to know a single thing about photo editing. Upload, generate, done. And because JPT AI offers this free with no sign-in and no watermark, you can experiment endlessly and only ever consider paying if you want premium upscaling for a large print. For 99% of people, the AI route delivers a better result faster and for free.`,
+**No skill required.** You don't need to know a single thing about photo editing. Upload, generate, done. And because Pixel Shine offers this free with no sign-in and no watermark, you can experiment endlessly and only ever consider paying if you want premium upscaling for a large print. For 99% of people, the AI route delivers a better result faster and for free.`,
       },
       {
         heading: "Step-by-Step: Put Yourself in Space",
-        body: `**1. Open JPT AI.** Go to sjpt.io and navigate to the Creative AI Photo Effects section, then choose the Astronaut Photoshoot effect. No download or account is needed to begin.
+        body: `**1. Open Pixel Shine.** Go to sjpt.io and navigate to the Creative AI Photo Effects section, then choose the Astronaut Photoshoot effect. No download or account is needed to begin.
 
 **2. Select a clear face photo.** Since the helmet frames your face, choose a photo where your face is well-lit and front-facing. A head-and-shoulders shot works best because the AI focuses on placing your face inside the helmet.
 
@@ -9154,9 +9154,9 @@ Because it's generative, each render produces a slightly different space scene �
 
 **5. Review the result.** Check how your face sits inside the helmet and how the space scene looks behind you. If the lighting or background isn't quite right, regenerate — each pass creates a fresh space environment.
 
-**6. Download watermark-free.** Save your astronaut portrait in full resolution. JPT AI doesn't stamp a watermark across it, so it's ready to share or print immediately.
+**6. Download watermark-free.** Save your astronaut portrait in full resolution. Pixel Shine doesn't stamp a watermark across it, so it's ready to share or print immediately.
 
-**7. Upscale for posters.** Space portraits look incredible printed large. Run the image through JPT AI's free, unlimited Normal Upscaler first so the suit details, stars, and Earth stay crisp at poster size.`,
+**7. Upscale for posters.** Space portraits look incredible printed large. Run the image through Pixel Shine's free, unlimited Normal Upscaler first so the suit details, stars, and Earth stay crisp at poster size.`,
       },
       {
         heading: "Pro Tips for a Realistic Astronaut Photo",
@@ -9198,7 +9198,7 @@ Because it's generative, each render produces a slightly different space scene �
 
 **Motivational posters.** \"Reach for the stars\" hits differently when it's literally you among them. Some people print their astronaut portrait as a desk or wall motivator.
 
-Because JPT AI makes it free, watermark-free, and account-free, you can create astronaut versions of your whole family or friend group and print an entire cosmic gallery for the cost of the paper.`,
+Because Pixel Shine makes it free, watermark-free, and account-free, you can create astronaut versions of your whole family or friend group and print an entire cosmic gallery for the cost of the paper.`,
       },
       {
         heading: "Who Uses the AI Astronaut Photo Maker",
@@ -9212,18 +9212,18 @@ Because JPT AI makes it free, watermark-free, and account-free, you can create a
 
 **Gift-givers** surprise the space lover in their life with a custom astronaut portrait printed on a poster, mug, or canvas.
 
-What they all have in common is wanting an epic, aspirational image without the cost or complexity of a studio composite. JPT AI delivers it free, in seconds, with no sign-in and no watermark — so putting yourself, your kid, or your whole class in space is genuinely effortless.`,
+What they all have in common is wanting an epic, aspirational image without the cost or complexity of a studio composite. Pixel Shine delivers it free, in seconds, with no sign-in and no watermark — so putting yourself, your kid, or your whole class in space is genuinely effortless.`,
       },
       {
         heading: "Frequently Asked Questions",
         body: `**Can I put myself in space with AI for free?**
-Yes. JPT AI's astronaut photo maker is available at no cost, and new users get free trials across the platform's tools. No credit card is required to start.
+Yes. Pixel Shine's astronaut photo maker is available at no cost, and new users get free trials across the platform's tools. No credit card is required to start.
 
 **Do I need an account or an app?**
-No. JPT AI runs online at sjpt.io with no download and no mandatory sign-up to begin creating.
+No. Pixel Shine runs online at sjpt.io with no download and no mandatory sign-up to begin creating.
 
 **Will my astronaut photo have a watermark?**
-No. JPT AI exports clean, watermark-free images ready to share or print.
+No. Pixel Shine exports clean, watermark-free images ready to share or print.
 
 **What photo works best for the astronaut effect?**
 A clear, well-lit, front-facing head-and-shoulders photo. Since the helmet frames your face, even lighting and a straight-on angle produce the most convincing result.
@@ -9235,7 +9235,7 @@ The AI generates a realistic-style astronaut suit and helmet, not an exact repli
 Yes, and it's one of the most popular uses. Kids' astronaut portraits make magical wall art, invitations, and keepsakes.
 
 **Can I print my astronaut portrait as a poster?**
-Yes. Download the full-resolution image and run it through JPT AI's free upscaler first so the stars, suit, and Earth stay crisp at large sizes.
+Yes. Download the full-resolution image and run it through Pixel Shine's free upscaler first so the stars, suit, and Earth stay crisp at large sizes.
 
 **How long does it take?**
 Most astronaut photos render in 15 to 30 seconds.`,
@@ -9244,7 +9244,7 @@ Most astronaut photos render in 15 to 30 seconds.`,
         heading: "Key Takeaways",
         body: `An AI astronaut photo maker lets you put yourself — or your kids — in space in seconds, complete with a realistic spacesuit, helmet, and a cinematic cosmic backdrop. No studio, no green screen, no editing skills needed. For the best result, use a clear, front-facing, well-lit photo, regenerate to find the most stunning space scene, and upscale before printing.
 
-JPT AI makes the whole experience free, with no account, no download, no watermark, and unlimited upscaling for poster-perfect prints. Whether it's a bold profile picture, a magical kid's room decoration, or a gift for the space lover in your life, your cosmic portrait is a click away. Head to sjpt.io and put yourself in space now.`,
+Pixel Shine makes the whole experience free, with no account, no download, no watermark, and unlimited upscaling for poster-perfect prints. Whether it's a bold profile picture, a magical kid's room decoration, or a gift for the space lover in your life, your cosmic portrait is a click away. Head to sjpt.io and put yourself in space now.`,
       },
     ],
   },
@@ -9253,7 +9253,7 @@ JPT AI makes the whole experience free, with no account, no download, no waterma
     image: "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "ai-old-hollywood-glamour-portrait",
     title: "Old Hollywood Glamour AI: Turn Any Photo into a Golden Age Portrait",
-    metaTitle: "Old Hollywood Glamour AI Portrait Filter Free Online | JPT AI",
+    metaTitle: "Old Hollywood Glamour AI Portrait Filter Free Online | Pixel Shine",
     metaDescription:
       "Transform any photo into an Old Hollywood glamour portrait with AI. Marilyn Monroe lighting, silver-screen style, vintage film aesthetic — free online.",
     excerpt:
@@ -9266,9 +9266,9 @@ JPT AI makes the whole experience free, with no account, no download, no waterma
     toolLabel: "Get Old Hollywood Glamour →",
         sections: [
       {
-        body: `There's nothing quite like the timeless elegance of an old Hollywood glamour portrait — dramatic lighting, flawless monochrome tones, sculpted shadows, and that unmistakable silver-screen sophistication. Now you can turn any photo into a golden age portrait with AI, capturing the exact aesthetic that made 1950s stars look like living legends. JPT AI's old Hollywood glamour filter reads your photo and reimagines it in classic studio style: the soft-yet-dramatic key lighting, the elegant grayscale (or richly warm vintage) grade, and the poised, cinematic mood of a bygone era. No vintage camera, no professional lighting rig, no studio — just your photo and a click.
+        body: `There's nothing quite like the timeless elegance of an old Hollywood glamour portrait — dramatic lighting, flawless monochrome tones, sculpted shadows, and that unmistakable silver-screen sophistication. Now you can turn any photo into a golden age portrait with AI, capturing the exact aesthetic that made 1950s stars look like living legends. Pixel Shine's old Hollywood glamour filter reads your photo and reimagines it in classic studio style: the soft-yet-dramatic key lighting, the elegant grayscale (or richly warm vintage) grade, and the poised, cinematic mood of a bygone era. No vintage camera, no professional lighting rig, no studio — just your photo and a click.
 
-This aesthetic never goes out of style, which is exactly why the vintage Hollywood portrait AI trend keeps resurfacing across social media and Pinterest. People use it for striking profile pictures, elegant wall art, anniversary gifts, and that one photo that makes them look genuinely iconic. Best of all, JPT AI's 1950s glamour photo filter is free to try, runs online with no account, and exports without a watermark. Here's how to create your own silver-screen portrait.`,
+This aesthetic never goes out of style, which is exactly why the vintage Hollywood portrait AI trend keeps resurfacing across social media and Pinterest. People use it for striking profile pictures, elegant wall art, anniversary gifts, and that one photo that makes them look genuinely iconic. Best of all, Pixel Shine's 1950s glamour photo filter is free to try, runs online with no account, and exports without a watermark. Here's how to create your own silver-screen portrait.`,
       },
       {
         heading: "What Makes Old Hollywood Glamour So Iconic",
@@ -9292,11 +9292,11 @@ The AI filter layers all of these — the lighting, the tonal grade, the soft gl
 
 **It handles the hard parts for you.** The dramatic key lighting that takes real photographers a full setup to achieve? The AI simulates it. The luminous monochrome grade that requires careful post-processing? Automatic. The flattering soft focus? Built in.
 
-**It's free to perfect.** Because the effect is generative, you can regenerate to fine-tune the drama, the glow, or the tonal mood until it's exactly right. A real studio shoot is a costly one-shot; the AI lets you iterate endlessly. And since JPT AI offers this free with no sign-in and no watermark, you can experiment with multiple photos and only ever pay if you want premium upscaling for a large framed print.`,
+**It's free to perfect.** Because the effect is generative, you can regenerate to fine-tune the drama, the glow, or the tonal mood until it's exactly right. A real studio shoot is a costly one-shot; the AI lets you iterate endlessly. And since Pixel Shine offers this free with no sign-in and no watermark, you can experiment with multiple photos and only ever pay if you want premium upscaling for a large framed print.`,
       },
       {
         heading: "Step-by-Step: Create Your Golden Age Portrait",
-        body: `**1. Open JPT AI.** Go to sjpt.io and navigate to the Creative AI Photo Effects section, then select the Old Hollywood Glamour effect. No download or account needed to start.
+        body: `**1. Open Pixel Shine.** Go to sjpt.io and navigate to the Creative AI Photo Effects section, then select the Old Hollywood Glamour effect. No download or account needed to start.
 
 **2. Choose an elegant photo.** Old Hollywood glamour rewards poise. Pick a clear, front-facing or slightly-angled portrait with a composed, confident expression. A head-and-shoulders shot suits the classic portrait framing best.
 
@@ -9306,9 +9306,9 @@ The AI filter layers all of these — the lighting, the tonal grade, the soft gl
 
 **5. Review the drama.** Check how the sculpted lighting and monochrome grade landed on your features. If you want more or less drama, regenerate — each pass interprets the vintage style a little differently.
 
-**6. Download watermark-free.** Save your golden age portrait in full resolution. JPT AI won't stamp a watermark across it, so it's ready to frame or post immediately.
+**6. Download watermark-free.** Save your golden age portrait in full resolution. Pixel Shine won't stamp a watermark across it, so it's ready to frame or post immediately.
 
-**7. Upscale for framing.** These portraits look stunning printed and framed. Run the result through JPT AI's free, unlimited Normal Upscaler so the fine tones and soft glow stay crisp at large sizes.`,
+**7. Upscale for framing.** These portraits look stunning printed and framed. Run the result through Pixel Shine's free, unlimited Normal Upscaler so the fine tones and soft glow stay crisp at large sizes.`,
       },
       {
         heading: "Pro Tips for a Stunning Silver-Screen Portrait",
@@ -9330,7 +9330,7 @@ The AI filter layers all of these — the lighting, the tonal grade, the soft gl
 
 **Starting with harsh, messy lighting.** If your source photo has chaotic shadows or a strong color cast, it can interfere with the AI's clean, dramatic studio lighting. A more neutral, evenly lit photo gives the best base.
 
-**Cluttered or modern backgrounds.** A busy or obviously contemporary background can break the timeless illusion. A simple backdrop works best, or use JPT AI's Background Remover for full control.
+**Cluttered or modern backgrounds.** A busy or obviously contemporary background can break the timeless illusion. A simple backdrop works best, or use Pixel Shine's Background Remover for full control.
 
 **Expecting a perfect era-accurate costume.** The AI applies lighting, tone, and mood — it's not a full wardrobe stylist. Embrace the overall glamour rather than expecting a specific vintage gown.
 
@@ -9342,11 +9342,11 @@ The AI filter layers all of these — the lighting, the tonal grade, the soft gl
 
 **Old Hollywood glamour** is dramatic, timeless, and elegant — sculpted monochrome lighting and vintage sophistication. It's ideal for statement portraits, framed wall art, and anyone who wants to look genuinely iconic.
 
-**Modern AI headshots** aim for clean, professional, contemporary polish — perfect for LinkedIn and corporate profiles, but without the artistic drama. JPT AI's AI Headshot Generator covers this need.
+**Modern AI headshots** aim for clean, professional, contemporary polish — perfect for LinkedIn and corporate profiles, but without the artistic drama. Pixel Shine's AI Headshot Generator covers this need.
 
 **Trendy aesthetics** like coastal cowgirl or a glow up filter deliver of-the-moment, lifestyle-driven looks, while the old Hollywood effect is deliberately nostalgic and formal.
 
-The advantage of JPT AI is that all these styles live under one roof. You can create a dramatic Hollywood portrait, a polished professional headshot, and a trendy aesthetic shot from the same photo without switching apps or paying separately for each. Since the platform is free to start with no account and no watermark, you can explore every style and decide which best captures the mood you're after — whether that's timeless elegance or modern cool.`,
+The advantage of Pixel Shine is that all these styles live under one roof. You can create a dramatic Hollywood portrait, a polished professional headshot, and a trendy aesthetic shot from the same photo without switching apps or paying separately for each. Since the platform is free to start with no account and no watermark, you can explore every style and decide which best captures the mood you're after — whether that's timeless elegance or modern cool.`,
       },
       {
         heading: "Who Uses the Old Hollywood Glamour Filter",
@@ -9360,18 +9360,18 @@ The advantage of JPT AI is that all these styles live under one roof. You can cr
 
 **Everyday users** simply love seeing themselves reimagined as a silver-screen icon — it's a confidence boost and a genuinely beautiful image worth framing.
 
-What unites them is the desire for that timeless, elegant drama without a costly studio session. JPT AI delivers it free, watermark-free, and with no sign-in, so anyone can become a golden age star in seconds.`,
+What unites them is the desire for that timeless, elegant drama without a costly studio session. Pixel Shine delivers it free, watermark-free, and with no sign-in, so anyone can become a golden age star in seconds.`,
       },
       {
         heading: "Frequently Asked Questions",
         body: `**Is the old Hollywood glamour filter free?**
-Yes. JPT AI's old Hollywood glamour effect is available at no cost, and new users get free trials across the platform's tools. No credit card is required to start.
+Yes. Pixel Shine's old Hollywood glamour effect is available at no cost, and new users get free trials across the platform's tools. No credit card is required to start.
 
 **Do I need an account or an app?**
-No. JPT AI runs online at sjpt.io with no download and no mandatory sign-up to begin creating.
+No. Pixel Shine runs online at sjpt.io with no download and no mandatory sign-up to begin creating.
 
 **Will my portrait have a watermark?**
-No. JPT AI exports clean, watermark-free images ready to frame, post, or print.
+No. Pixel Shine exports clean, watermark-free images ready to frame, post, or print.
 
 **What photo works best for a golden age portrait?**
 A clear, front-facing or slightly-angled head-and-shoulders portrait with a composed, confident expression and even lighting produces the most authentic silver-screen result.
@@ -9383,7 +9383,7 @@ The effect captures the classic Hollywood aesthetic, which often features lumino
 Yes, though for standard corporate headshots the AI Headshot Generator may suit better. The Hollywood glamour effect is ideal for artistic, dramatic, statement portraits.
 
 **Can I print and frame my portrait?**
-Absolutely. Download the full-resolution image and run it through JPT AI's free upscaler first so the fine tones and glow stay crisp when enlarged.
+Absolutely. Download the full-resolution image and run it through Pixel Shine's free upscaler first so the fine tones and glow stay crisp when enlarged.
 
 **How long does it take?**
 Most portraits render in 15 to 30 seconds.`,
@@ -9392,7 +9392,7 @@ Most portraits render in 15 to 30 seconds.`,
         heading: "Key Takeaways",
         body: `The old Hollywood glamour filter turns any photo into a timeless golden age portrait — sculpted dramatic lighting, luminous tones, and silver-screen elegance — without a studio, vintage camera, or editing skills. For the most iconic result, start with a composed, well-lit, front-facing photo, regenerate to dial in the drama, and upscale before framing.
 
-JPT AI makes the whole experience free, with no account, no download, no watermark, and unlimited upscaling for gallery-quality prints. Whether you want a striking profile picture, elegant wall art, or a heartfelt vintage gift, your silver-screen portrait is a click away. Head to sjpt.io and get your old Hollywood glamour portrait now.`,
+Pixel Shine makes the whole experience free, with no account, no download, no watermark, and unlimited upscaling for gallery-quality prints. Whether you want a striking profile picture, elegant wall art, or a heartfelt vintage gift, your silver-screen portrait is a click away. Head to sjpt.io and get your old Hollywood glamour portrait now.`,
       },
     ],
   },
@@ -9401,7 +9401,7 @@ JPT AI makes the whole experience free, with no account, no download, no waterma
     image: "https://images.pexels.com/photos/3622608/pexels-photo-3622608.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "ai-prom-photo-maker-free",
     title: "AI Prom Photo Maker: Get Stunning Prom Portraits Without the Studio",
-    metaTitle: "AI Prom Photo Maker Free Online — Stunning Portraits | JPT AI",
+    metaTitle: "AI Prom Photo Maker Free Online — Stunning Portraits | Pixel Shine",
     metaDescription:
       "Create stunning AI prom photos online for free. Upload your photo and get a gorgeous prom portrait — elegant dress, perfect lighting, dreamy background — in seconds.",
     excerpt:
@@ -9414,9 +9414,9 @@ JPT AI makes the whole experience free, with no account, no download, no waterma
     toolLabel: "Create Your Prom Portrait →",
         sections: [
       {
-        body: `Getting stunning prom portraits no longer requires an expensive studio session or a hired photographer — an AI prom photo maker can turn an everyday photo into a polished, dressed-up prom portrait for free. Picture professional lighting, an elegant formal setting, flattering color grading, and that special-occasion glow, all applied to a photo you already have. JPT AI's prom photo generator reads your image and reimagines it as a beautiful prom portrait, giving you keepsake-worthy results without the studio price tag or the scheduling hassle.
+        body: `Getting stunning prom portraits no longer requires an expensive studio session or a hired photographer — an AI prom photo maker can turn an everyday photo into a polished, dressed-up prom portrait for free. Picture professional lighting, an elegant formal setting, flattering color grading, and that special-occasion glow, all applied to a photo you already have. Pixel Shine's prom photo generator reads your image and reimagines it as a beautiful prom portrait, giving you keepsake-worthy results without the studio price tag or the scheduling hassle.
 
-Prom photos are a rite of passage, but professional prom portrait sessions can cost $100 to $300, and not every moment gets captured the way you hoped. An AI prom picture tool fills the gap: maybe you want to redo a shot that came out flat, create a portrait for a friend who missed the photographer, or simply have a gorgeous version to share and print. JPT AI makes it genuinely free to try, runs online with no account, and exports without a watermark. This guide walks through how the prom photo effect works, the exact steps, pro tips, and who benefits most.`,
+Prom photos are a rite of passage, but professional prom portrait sessions can cost $100 to $300, and not every moment gets captured the way you hoped. An AI prom picture tool fills the gap: maybe you want to redo a shot that came out flat, create a portrait for a friend who missed the photographer, or simply have a gorgeous version to share and print. Pixel Shine makes it genuinely free to try, runs online with no account, and exports without a watermark. This guide walks through how the prom photo effect works, the exact steps, pro tips, and who benefits most.`,
       },
       {
         heading: "What the AI Prom Photo Effect Delivers",
@@ -9442,11 +9442,11 @@ Because the effect is generative, each render offers a slightly different take o
 
 **It's inclusive and accessible.** Everyone deserves a beautiful prom keepsake regardless of budget. A free AI tool democratizes access to professional-looking portraits.
 
-**It's fast and repeatable.** Generate portraits for yourself, your date, or your whole friend group in minutes. Because JPT AI offers this free with no sign-in and no watermark, you can create as many versions as you want and only ever consider paying if you need premium upscaling for large framed prints.`,
+**It's fast and repeatable.** Generate portraits for yourself, your date, or your whole friend group in minutes. Because Pixel Shine offers this free with no sign-in and no watermark, you can create as many versions as you want and only ever consider paying if you need premium upscaling for large framed prints.`,
       },
       {
         heading: "Step-by-Step: Create Your Prom Portrait",
-        body: `**1. Open JPT AI.** Go to sjpt.io and navigate to the Creative AI Photo Effects section, then select the Prom Photoshoot effect. No download or account needed to start.
+        body: `**1. Open Pixel Shine.** Go to sjpt.io and navigate to the Creative AI Photo Effects section, then select the Prom Photoshoot effect. No download or account needed to start.
 
 **2. Choose a flattering photo.** Pick a clear image where your face and outfit are visible. If you have a photo in your prom or formal attire, use it — the AI enhances what's there. A head-to-chest or upper-body framing works beautifully.
 
@@ -9456,9 +9456,9 @@ Because the effect is generative, each render offers a slightly different take o
 
 **5. Review the result.** Check how the lighting and mood landed. If you'd like a different atmosphere or a softer glow, regenerate — each pass interprets the prom style a little differently.
 
-**6. Download watermark-free.** Save your prom portrait in full resolution. JPT AI won't stamp a watermark across it, so it's ready to share or print immediately.
+**6. Download watermark-free.** Save your prom portrait in full resolution. Pixel Shine won't stamp a watermark across it, so it's ready to share or print immediately.
 
-**7. Upscale for prints.** Prom portraits are made for framing. Run the result through JPT AI's free, unlimited Normal Upscaler so the details stay crisp when printed or enlarged for keepsakes.`,
+**7. Upscale for prints.** Prom portraits are made for framing. Run the result through Pixel Shine's free, unlimited Normal Upscaler so the details stay crisp when printed or enlarged for keepsakes.`,
       },
       {
         heading: "Pro Tips for Gorgeous Prom Portraits",
@@ -9468,7 +9468,7 @@ Because the effect is generative, each render offers a slightly different take o
 
 **Choose a confident, natural expression.** A genuine smile or a poised, self-assured look captures the celebratory prom vibe far better than a stiff or awkward pose.
 
-**Keep the background simple.** A clean or uncluttered background lets the AI apply its elegant setting more effectively — or pair the effect with JPT AI's Background Remover for full control over the scene.
+**Keep the background simple.** A clean or uncluttered background lets the AI apply its elegant setting more effectively — or pair the effect with Pixel Shine's Background Remover for full control over the scene.
 
 **Regenerate to find your favorite mood.** Some passes are brighter and cheerful, others softer and romantic. Generate a few free versions and pick the one that feels most like your night.
 
@@ -9494,7 +9494,7 @@ Because the effect is generative, each render offers a slightly different take o
 
 **An AI prom photo maker** is the perfect complement — and sometimes the perfect rescue. It costs nothing, requires no booking, and lets you create polished portraits from any photo, as many times as you like. It's ideal for redoing a shot that came out poorly, making portraits for someone who couldn't afford or access a photographer, or generating extra share-worthy versions to post and print.
 
-The smartest approach for many people is to use both: cherish the real photographer's candids of the night, and use JPT AI's free tool to create polished, keepsake-quality portraits without limits. Since JPT AI is free with no account and no watermark, there's zero downside to adding it to your prom memory kit.`,
+The smartest approach for many people is to use both: cherish the real photographer's candids of the night, and use Pixel Shine's free tool to create polished, keepsake-quality portraits without limits. Since Pixel Shine is free with no account and no watermark, there's zero downside to adding it to your prom memory kit.`,
       },
       {
         heading: "Who Uses the AI Prom Photo Maker",
@@ -9508,18 +9508,18 @@ The smartest approach for many people is to use both: cherish the real photograp
 
 **Content creators and teens** sharing prom looks on social media who want a polished, professional-grade image that stands out in the feed.
 
-What they share is the desire for beautiful, special-occasion portraits without the studio cost or hassle. JPT AI delivers it free, watermark-free, and with no sign-in, so a stunning prom keepsake is within everyone's reach.`,
+What they share is the desire for beautiful, special-occasion portraits without the studio cost or hassle. Pixel Shine delivers it free, watermark-free, and with no sign-in, so a stunning prom keepsake is within everyone's reach.`,
       },
       {
         heading: "Frequently Asked Questions",
         body: `**Is the AI prom photo maker really free?**
-Yes. JPT AI's prom photo effect is available at no cost, and new users get free trials across the platform's tools. No credit card is required to start.
+Yes. Pixel Shine's prom photo effect is available at no cost, and new users get free trials across the platform's tools. No credit card is required to start.
 
 **Do I need an account or an app?**
-No. JPT AI runs online at sjpt.io with no download and no mandatory sign-up to begin creating.
+No. Pixel Shine runs online at sjpt.io with no download and no mandatory sign-up to begin creating.
 
 **Will my prom portrait have a watermark?**
-No. JPT AI exports clean, watermark-free images ready to share, print, or frame.
+No. Pixel Shine exports clean, watermark-free images ready to share, print, or frame.
 
 **What photo works best for a prom portrait?**
 A clear, well-lit photo showing your face and, ideally, your formal attire. Soft even lighting, a confident expression, and a simple background produce the most polished result.
@@ -9531,7 +9531,7 @@ The effect focuses on professional lighting, mood, and polish rather than swappi
 Yes. Generate a polished portrait for each person for free — perfect for matching keepsakes.
 
 **Can I print and frame my prom portrait?**
-Absolutely. Download the full-resolution image and run it through JPT AI's free upscaler first so it stays crisp when printed or enlarged.
+Absolutely. Download the full-resolution image and run it through Pixel Shine's free upscaler first so it stays crisp when printed or enlarged.
 
 **How long does it take?**
 Most prom portraits render in 15 to 30 seconds.`,
@@ -9540,7 +9540,7 @@ Most prom portraits render in 15 to 30 seconds.`,
         heading: "Key Takeaways",
         body: `An AI prom photo maker gives you professional-grade prom portraits — flattering lighting, an elegant setting, and a special-occasion glow — without the studio cost or the scheduling hassle. For the best results, start with a clear photo in your formal attire, use soft lighting and a confident expression, regenerate to find your favorite mood, and upscale before printing keepsakes.
 
-JPT AI makes the whole experience free, with no account, no download, no watermark, and unlimited upscaling for frame-worthy prints. Whether you're on a budget, rescuing a flat photo, or creating matching portraits for the whole squad, your stunning prom portrait is a click away. Head to sjpt.io and create your prom portrait now.`,
+Pixel Shine makes the whole experience free, with no account, no download, no watermark, and unlimited upscaling for frame-worthy prints. Whether you're on a budget, rescuing a flat photo, or creating matching portraits for the whole squad, your stunning prom portrait is a click away. Head to sjpt.io and create your prom portrait now.`,
       },
     ],
   },
@@ -9549,7 +9549,7 @@ JPT AI makes the whole experience free, with no account, no download, no waterma
     image: "https://images.pexels.com/photos/5699516/pexels-photo-5699516.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "ai-claymation-photo-effect",
     title: "AI Claymation Effect: Turn Your Photo into a Clay Animation Portrait",
-    metaTitle: "AI Claymation Photo Effect — Turn Photo into Clay Portrait | JPT AI",
+    metaTitle: "AI Claymation Photo Effect — Turn Photo into Clay Portrait | Pixel Shine",
     metaDescription:
       "Transform any photo into a claymation portrait with AI. Wallace and Gromit style clay texture, vibrant colours, handmade aesthetic — free online.",
     excerpt:
@@ -9562,9 +9562,9 @@ JPT AI makes the whole experience free, with no account, no download, no waterma
     toolLabel: "Make Your Claymation Portrait →",
         sections: [
       {
-        body: `Ever wanted to see yourself as a charming, hand-sculpted clay character straight out of a stop-motion movie? An AI claymation photo effect turns your photo into a clay animation portrait — that adorable, tactile, slightly imperfect look you know from beloved stop-motion films, complete with visible fingerprint textures, soft clay shading, and big expressive features. JPT AI's claymation effect reads your photo and reimagines you as a molded clay figure, capturing the handmade warmth that makes this style so irresistibly fun. No sculpting tools, no animation studio, no artistic skill required.
+        body: `Ever wanted to see yourself as a charming, hand-sculpted clay character straight out of a stop-motion movie? An AI claymation photo effect turns your photo into a clay animation portrait — that adorable, tactile, slightly imperfect look you know from beloved stop-motion films, complete with visible fingerprint textures, soft clay shading, and big expressive features. Pixel Shine's claymation effect reads your photo and reimagines you as a molded clay figure, capturing the handmade warmth that makes this style so irresistibly fun. No sculpting tools, no animation studio, no artistic skill required.
 
-Claymation has a special place in pop culture — think of the iconic characters that took months to sculpt and animate frame by frame. That handcrafted charm is exactly why the \"turn photo into clay animation\" trend has become a viral favorite, popping up everywhere from profile pictures to birthday cards to quirky gifts. And with JPT AI, you can create a clay portrait for free, online, with no account and no watermark. This guide covers how the claymation effect works, the exact steps, pro tips for the best results, and the creative ways people are using it.`,
+Claymation has a special place in pop culture — think of the iconic characters that took months to sculpt and animate frame by frame. That handcrafted charm is exactly why the \"turn photo into clay animation\" trend has become a viral favorite, popping up everywhere from profile pictures to birthday cards to quirky gifts. And with Pixel Shine, you can create a clay portrait for free, online, with no account and no watermark. This guide covers how the claymation effect works, the exact steps, pro tips for the best results, and the creative ways people are using it.`,
       },
       {
         heading: "What Makes the Claymation Effect So Charming",
@@ -9582,7 +9582,7 @@ Together these elements produce a portrait that looks like it was plucked from a
       },
       {
         heading: "How the AI Sculpts Your Photo into Clay",
-        body: `Behind the scenes, JPT AI uses a generative model trained to understand the visual signature of clay animation — the texture, the geometry, the lighting, and the material properties of sculpted clay. When you upload your photo, it does far more than apply a texture overlay.
+        body: `Behind the scenes, Pixel Shine uses a generative model trained to understand the visual signature of clay animation — the texture, the geometry, the lighting, and the material properties of sculpted clay. When you upload your photo, it does far more than apply a texture overlay.
 
 **It reads your features and rebuilds them in clay.** The model identifies your facial structure, hair, and expression, then reconstructs them as if molded from clay — rounding forms, exaggerating expressiveness, and adding that signature tactile surface.
 
@@ -9590,11 +9590,11 @@ Together these elements produce a portrait that looks like it was plucked from a
 
 **It simulates real material lighting.** Crucially, the AI renders how light would actually fall on a physical clay object — soft matte highlights, gentle occlusion shadows in the creases — which is what sells the illusion of a real sculpted figure rather than a flat filter.
 
-Because it's generative rather than a fixed overlay, every render is a little unique. Run the same photo twice and you'll get two subtly different clay figures, giving you options to choose from. It's free to regenerate on JPT AI, so experimenting costs nothing but a few seconds.`,
+Because it's generative rather than a fixed overlay, every render is a little unique. Run the same photo twice and you'll get two subtly different clay figures, giving you options to choose from. It's free to regenerate on Pixel Shine, so experimenting costs nothing but a few seconds.`,
       },
       {
         heading: "Step-by-Step: Make Your Claymation Portrait",
-        body: `**1. Open JPT AI.** Go to sjpt.io and navigate to the Creative AI Photo Effects section, then select the Claymation Portrait effect. No download or account needed to start.
+        body: `**1. Open Pixel Shine.** Go to sjpt.io and navigate to the Creative AI Photo Effects section, then select the Claymation Portrait effect. No download or account needed to start.
 
 **2. Choose a clear photo.** Pick a well-lit image where your face is visible and roughly front-facing. A head-and-shoulders shot works best because the AI needs to see your face, hair, and expression to sculpt them into clay.
 
@@ -9604,9 +9604,9 @@ Because it's generative rather than a fixed overlay, every render is a little un
 
 **5. Review the result.** Check how the clay texture, rounded features, and expression landed. If a detail got lost or you want a different interpretation, regenerate — the generative model often nails it on a second pass.
 
-**6. Download watermark-free.** Save your claymation portrait in full resolution. JPT AI won't stamp a watermark across it, so it's ready to share or print immediately.
+**6. Download watermark-free.** Save your claymation portrait in full resolution. Pixel Shine won't stamp a watermark across it, so it's ready to share or print immediately.
 
-**7. Upscale for prints and stickers.** Clay portraits look fantastic printed. Run the result through JPT AI's free, unlimited Normal Upscaler so the fingerprint textures and soft shading stay crisp when enlarged on stickers, cards, or posters.`,
+**7. Upscale for prints and stickers.** Clay portraits look fantastic printed. Run the result through Pixel Shine's free, unlimited Normal Upscaler so the fingerprint textures and soft shading stay crisp when enlarged on stickers, cards, or posters.`,
       },
       {
         heading: "Pro Tips for the Best Claymation Results",
@@ -9636,7 +9636,7 @@ Because it's generative rather than a fixed overlay, every render is a little un
       },
       {
         heading: "Claymation and Other Creative AI Styles",
-        body: `The claymation effect is part of JPT AI's family of creative transformations, and it holds a unique spot among them thanks to its handcrafted, tactile warmth.
+        body: `The claymation effect is part of Pixel Shine's family of creative transformations, and it holds a unique spot among them thanks to its handcrafted, tactile warmth.
 
 **Claymation** delivers that cozy, molded-by-hand stop-motion charm — soft, rounded, textured, and playful. It's perfect for whimsical profile pictures, kids' art, and lighthearted gifts.
 
@@ -9644,7 +9644,7 @@ Because it's generative rather than a fixed overlay, every render is a little un
 
 **Comic book** styling turns you into inked, halftone-shaded cover art, and **claymation** stands apart as the most tactile and physical of the bunch.
 
-The beauty of JPT AI is that all these styles live in one place. You can sculpt a clay portrait, then try a Funko figure, an anime version, or a comic cover from the same photo without switching apps or paying for each separately. Because the platform is free to start with no account and no watermark, you can experiment across every style to discover which transformation delights you most — and clay's huggable charm often wins hearts.`,
+The beauty of Pixel Shine is that all these styles live in one place. You can sculpt a clay portrait, then try a Funko figure, an anime version, or a comic cover from the same photo without switching apps or paying for each separately. Because the platform is free to start with no account and no watermark, you can experiment across every style to discover which transformation delights you most — and clay's huggable charm often wins hearts.`,
       },
       {
         heading: "Who Loves the Claymation Photo Effect",
@@ -9658,18 +9658,18 @@ The beauty of JPT AI is that all these styles live in one place. You can sculpt 
 
 **Party planners** make clay-style characters of guests for themed invitations and decorations, adding a whimsical, handcrafted touch.
 
-What unites them is the love of that cozy, handmade charm without needing any sculpting skill. JPT AI delivers it free, watermark-free, and with no sign-in, so anyone can become an endearing clay character in seconds.`,
+What unites them is the love of that cozy, handmade charm without needing any sculpting skill. Pixel Shine delivers it free, watermark-free, and with no sign-in, so anyone can become an endearing clay character in seconds.`,
       },
       {
         heading: "Frequently Asked Questions",
         body: `**Is the claymation photo effect free?**
-Yes. JPT AI's claymation effect is available at no cost, and new users get free trials across the platform's tools. No credit card is required to start.
+Yes. Pixel Shine's claymation effect is available at no cost, and new users get free trials across the platform's tools. No credit card is required to start.
 
 **Do I need an account or an app?**
-No. JPT AI runs online at sjpt.io with no download and no mandatory sign-up to begin creating.
+No. Pixel Shine runs online at sjpt.io with no download and no mandatory sign-up to begin creating.
 
 **Will my clay portrait have a watermark?**
-No. JPT AI exports clean, watermark-free images ready to share or print.
+No. Pixel Shine exports clean, watermark-free images ready to share or print.
 
 **What photo works best for a claymation portrait?**
 A clear, well-lit, front-facing head-and-shoulders photo with a visible, expressive face. Big expressions and signature features like glasses translate especially well into clay.
@@ -9681,7 +9681,7 @@ The effect captures your key features and charm in a stylized, exaggerated clay 
 Yes for children, and it's a family favorite. For pets, crop to one clear subject; the effect is optimized for a single face.
 
 **Can I print my clay portrait on stickers or cards?**
-Absolutely. Download the full-resolution image and run it through JPT AI's free upscaler first so the clay texture stays crisp when enlarged.
+Absolutely. Download the full-resolution image and run it through Pixel Shine's free upscaler first so the clay texture stays crisp when enlarged.
 
 **How long does it take?**
 Most clay portraits render in 15 to 30 seconds.`,
@@ -9690,7 +9690,7 @@ Most clay portraits render in 15 to 30 seconds.`,
         heading: "Key Takeaways",
         body: `An AI claymation photo effect turns your photo into a charming, hand-sculpted clay animation portrait — complete with fingerprint textures, rounded features, and matte shading — in under a minute, no sculpting skill required. For the best result, use a clear, front-facing photo with a big expression, keep your signature features visible, regenerate for the most charming version, and upscale before printing.
 
-JPT AI makes the whole experience free, with no account, no download, no watermark, and unlimited upscaling for crisp stickers, cards, and prints. Whether you want a whimsical profile picture, kids' room art, or a heartfelt handmade-style gift, your clay portrait is a click away. Head to sjpt.io and make your claymation portrait now.`,
+Pixel Shine makes the whole experience free, with no account, no download, no watermark, and unlimited upscaling for crisp stickers, cards, and prints. Whether you want a whimsical profile picture, kids' room art, or a heartfelt handmade-style gift, your clay portrait is a click away. Head to sjpt.io and make your claymation portrait now.`,
       },
     ],
   },
@@ -9699,7 +9699,7 @@ JPT AI makes the whole experience free, with no account, no download, no waterma
     image: "https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "pixel-art-avatar-maker-ai-free",
     title: "AI Pixel Art Avatar Maker: Turn Your Photo into Pixel Art",
-    metaTitle: "AI Pixel Art Avatar Maker — Turn Photo into Pixel Art Free | JPT AI",
+    metaTitle: "AI Pixel Art Avatar Maker — Turn Photo into Pixel Art Free | Pixel Shine",
     metaDescription:
       "Convert any photo into a detailed pixel art avatar with AI. 8-bit retro game style, vibrant colours, your actual face — free online, no design skill needed.",
     excerpt:
@@ -9712,11 +9712,11 @@ JPT AI makes the whole experience free, with no account, no download, no waterma
     toolLabel: "Create Your Pixel Art Avatar →",
         sections: [
       {
-        body: `A **pixel art avatar maker AI** takes an ordinary photo and rebuilds it as crisp, blocky, retro-styled artwork in seconds — no drawing skills, no design software, no hours hunched over a grid painting one square at a time. If you've ever wanted to turn your photo into pixel art for a gaming profile, a Discord icon, a Twitch overlay, or just a nostalgic throwback to the 8-bit and 16-bit era, JPT AI does it free at sjpt.io.
+        body: `A **pixel art avatar maker AI** takes an ordinary photo and rebuilds it as crisp, blocky, retro-styled artwork in seconds — no drawing skills, no design software, no hours hunched over a grid painting one square at a time. If you've ever wanted to turn your photo into pixel art for a gaming profile, a Discord icon, a Twitch overlay, or just a nostalgic throwback to the 8-bit and 16-bit era, Pixel Shine does it free at sjpt.io.
 
 Here's why this matters: hand-drawing a decent pixel portrait can take a skilled artist 3 to 8 hours, and commissioning one runs anywhere from $15 to $80. An AI pixel art generator from photo collapses that entire process into a single upload. You get a clean, game-ready avatar that actually looks like you — same haircut, same glasses, same vibe — just rendered in that beautiful chunky-pixel aesthetic.
 
-The best part? JPT AI doesn't slap a watermark across your creation or force you to create an account before you can even try it. New users get 5 free trials across the platform's creative tools, so you can experiment with your pixel avatar risk-free before spending a single credit.`,
+The best part? Pixel Shine doesn't slap a watermark across your creation or force you to create an account before you can even try it. New users get 5 free trials across the platform's creative tools, so you can experiment with your pixel avatar risk-free before spending a single credit.`,
       },
       {
         heading: "Why Pixel Art Avatars Are Having a Massive Comeback",
@@ -9730,7 +9730,7 @@ There's also an identity angle. A pixel avatar gives you a distinctive, personal
         heading: "How AI Turns a Real Photo into Clean Pixel Art",
         body: `It's tempting to think an AI pixel art generator just shrinks your image and lowers the resolution. That's what a basic filter does — and it looks terrible. Real pixel art follows rules: a limited color palette, deliberate edges, controlled dithering, and clean shapes that read clearly at low resolution. Naive downscaling produces muddy, noisy blobs that no self-respecting pixel artist would sign.
 
-JPT AI's model does something smarter. It first understands the *content* of your photo — where your face is, where the hair ends, where the shoulders sit — then reconstructs those features as intentional pixel clusters. Instead of averaging nearby pixels into mush, it makes decisions the way a human artist would: which details to preserve, which to simplify, and how to keep your recognizable features intact within a tight palette.
+Pixel Shine's model does something smarter. It first understands the *content* of your photo — where your face is, where the hair ends, where the shoulders sit — then reconstructs those features as intentional pixel clusters. Instead of averaging nearby pixels into mush, it makes decisions the way a human artist would: which details to preserve, which to simplify, and how to keep your recognizable features intact within a tight palette.
 
 The result is an avatar that keeps the essence of you — the shape of your smile, the color of your hoodie, that distinctive fringe — while committing fully to the retro aesthetic. You can generate an 8-bit avatar from a photo for free and get output that looks hand-crafted, not auto-generated. That gap between 'cheap filter' and 'real pixel art' is exactly what separates a keeper from a discard.`,
       },
@@ -9778,13 +9778,13 @@ The result is an avatar that keeps the essence of you — the shape of your smil
       },
       {
         heading: "Pixel Art Avatars vs. Other Avatar Styles",
-        body: `Pixel art isn't the only avatar aesthetic out there, so how does it stack up against the alternatives? Compared to **anime-style avatars**, pixel art reads as more retro and gaming-native, while anime skews softer and character-focused. Both are popular, but pixel art has an unmistakable old-school-cool that anime doesn't. On JPT AI you can actually try both from the same photo and decide.
+        body: `Pixel art isn't the only avatar aesthetic out there, so how does it stack up against the alternatives? Compared to **anime-style avatars**, pixel art reads as more retro and gaming-native, while anime skews softer and character-focused. Both are popular, but pixel art has an unmistakable old-school-cool that anime doesn't. On Pixel Shine you can actually try both from the same photo and decide.
 
 Against **cartoon or vector avatars** (think the flat, corporate-illustration look), pixel art wins on personality and loses on formality. If you want a LinkedIn-appropriate stylized headshot, vector is your lane. If you want to look like a playable character in a beloved SNES game, pixel art is the obvious pick.
 
 Compared to **3D or Funko-pop style avatars**, pixel is lighter, cleaner at small sizes, and more genuinely nostalgic — while 3D styles feel more premium and toy-like. Each has its moment.
 
-The practical advantage of JPT AI is that all these styles live in one place, free to try, no watermark. You're not committing to a single subscription for one look. Upload once, experiment across effects, and pick whichever one feels most like *you* — that flexibility is rare among single-purpose avatar apps.`,
+The practical advantage of Pixel Shine is that all these styles live in one place, free to try, no watermark. You're not committing to a single subscription for one look. Upload once, experiment across effects, and pick whichever one feels most like *you* — that flexibility is rare among single-purpose avatar apps.`,
       },
       {
         heading: "Who's Actually Using Pixel Art Avatars",
@@ -9801,7 +9801,7 @@ The practical advantage of JPT AI is that all these styles live in one place, fr
       {
         heading: "Frequently Asked Questions",
         body: `**Is the pixel art avatar maker really free?**
-Yes. JPT AI lets you try the pixel art tool at no cost, and new users get 5 free trials across the creative tools with no watermark on your downloads. There's no mandatory subscription to test it.
+Yes. Pixel Shine lets you try the pixel art tool at no cost, and new users get 5 free trials across the creative tools with no watermark on your downloads. There's no mandatory subscription to test it.
 
 **Do I need to create an account?**
 You can start experimenting without signing in. Some features and higher-volume use may prompt you to register, but you won't hit a paywall just to try turning your photo into pixel art.
@@ -9826,7 +9826,7 @@ Usually 10 to 30 seconds per generation.`,
       },
       {
         heading: "Key Takeaways",
-        body: `Turning your photo into pixel art used to mean hours of manual grid-painting or paying an artist. Now an AI pixel art avatar maker does it in under a minute — and JPT AI does it free, with no watermark and no mandatory account to start.
+        body: `Turning your photo into pixel art used to mean hours of manual grid-painting or paying an artist. Now an AI pixel art avatar maker does it in under a minute — and Pixel Shine does it free, with no watermark and no mandatory account to start.
 
 The pixel style isn't just nostalgic; it's genuinely practical. It stays sharp at the tiny sizes profile pictures actually display at, it signals your gaming and creator identity instantly, and it gives you a distinctive look without exposing your full face. Whether you're building a Twitch brand, upgrading a Discord icon, or just chasing that retro-game feeling, it's the fastest path to a standout avatar.
 
@@ -9839,7 +9839,7 @@ Ready to see yourself in glorious 8-bit? Upload a clear selfie, hit generate, an
     image: "https://images.pexels.com/photos/5702406/pexels-photo-5702406.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "ai-thanksgiving-photo-maker",
     title: "AI Thanksgiving Photo Maker: Create Festive Holiday Portraits Free",
-    metaTitle: "AI Thanksgiving Photo Maker Free — Festive Holiday Portraits | JPT AI",
+    metaTitle: "AI Thanksgiving Photo Maker Free — Festive Holiday Portraits | Pixel Shine",
     metaDescription:
       "Create stunning AI Thanksgiving portraits online for free. Cosy autumn settings, warm golden light, festive family vibes — no photographer needed.",
     excerpt:
@@ -9852,11 +9852,11 @@ Ready to see yourself in glorious 8-bit? Upload a clear selfie, hit generate, an
     toolLabel: "Create Your Thanksgiving Portrait →",
         sections: [
       {
-        body: `An **AI Thanksgiving photo maker** turns any ordinary picture into a warm, festive holiday portrait — golden autumn light, cozy sweaters, pumpkins, fall foliage, and that unmistakable Thanksgiving glow — without a single reshoot. If you missed the family photoshoot, hate how your holiday selfie turned out, or just want a gorgeous seasonal portrait for your cards and socials, JPT AI creates a Thanksgiving portrait AI-free at sjpt.io.
+        body: `An **AI Thanksgiving photo maker** turns any ordinary picture into a warm, festive holiday portrait — golden autumn light, cozy sweaters, pumpkins, fall foliage, and that unmistakable Thanksgiving glow — without a single reshoot. If you missed the family photoshoot, hate how your holiday selfie turned out, or just want a gorgeous seasonal portrait for your cards and socials, Pixel Shine creates a Thanksgiving portrait AI-free at sjpt.io.
 
 Here's the reality most people run into: professional fall family photoshoots cost $150 to $500 and have to be booked weeks in advance, usually before the leaves even turn. Meanwhile, the phone photos you actually take on Thanksgiving Day are lit by kitchen fluorescents and cluttered with dirty dishes in the background. An AI holiday photo generator fixes both problems — it transforms what you already have into something worthy of a framed print.
 
-And JPT AI keeps it genuinely accessible: no watermark stamped across your family's faces, no forced account signup just to test it, and 5 free trials for new users across the creative tools. You can make a festive Thanksgiving portrait today, for free, and have it ready before the pie comes out of the oven.`,
+And Pixel Shine keeps it genuinely accessible: no watermark stamped across your family's faces, no forced account signup just to test it, and 5 free trials for new users across the creative tools. You can make a festive Thanksgiving portrait today, for free, and have it ready before the pie comes out of the oven.`,
       },
       {
         heading: "What Makes a Thanksgiving Portrait Feel Truly Festive",
@@ -9953,7 +9953,7 @@ One common thread: people who forgot, ran out of time, or couldn't afford a trad
       {
         heading: "Frequently Asked Questions",
         body: `**Is the AI Thanksgiving photo maker free?**
-Yes. You can create Thanksgiving portraits on JPT AI for free, and new users get 5 free trials across the creative tools. Your downloads come without a watermark.
+Yes. You can create Thanksgiving portraits on Pixel Shine for free, and new users get 5 free trials across the creative tools. Your downloads come without a watermark.
 
 **Do I need to sign up before trying it?**
 No mandatory account is required just to test it. You can start creating right away at sjpt.io.
@@ -9978,7 +9978,7 @@ Yes — regenerate to get variations and pick the one you love most. This is the
       },
       {
         heading: "Key Takeaways",
-        body: `You don't need a pricey autumn photoshoot, a booked photographer, or perfect timing to have a gorgeous Thanksgiving portrait this year. An AI Thanksgiving photo maker transforms the photos you already have into warm, festive, holiday-ready images in under a minute — and JPT AI does it free, watermark-free, with no mandatory signup.
+        body: `You don't need a pricey autumn photoshoot, a booked photographer, or perfect timing to have a gorgeous Thanksgiving portrait this year. An AI Thanksgiving photo maker transforms the photos you already have into warm, festive, holiday-ready images in under a minute — and Pixel Shine does it free, watermark-free, with no mandatory signup.
 
 Whether you're making cards, refreshing your seasonal profile picture, surprising the family group chat, or creating coordinated portraits with relatives across the country, the process is the same: upload a clear photo, generate, pick your favorite, and download. New users get 5 free trials to experiment with different looks.
 
@@ -9991,11 +9991,11 @@ This Thanksgiving, skip the stress and the studio fee. Create Your Thanksgiving 
     image: "https://images.pexels.com/photos/3807571/pexels-photo-3807571.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "upscale-image-free-unlimited-no-signup",
     title: "Upscale Images Free and Unlimited — No Sign-in Required",
-    metaTitle: "Upscale Images Free Unlimited — No Sign-in Needed | JPT AI",
+    metaTitle: "Upscale Images Free Unlimited — No Sign-in Needed | Pixel Shine",
     metaDescription:
       "Upscale any image for free with no sign-in, no watermark, and no limits. AI super-resolution makes your photos sharper, larger, and clearer — instantly.",
     excerpt:
-      "Most AI image upscalers either charge you, watermark your images, or require you to create an account first. JPT AI's Normal Upscale is completely free, unlimited, and requires no sign-in at all. Here's what that means for you.",
+      "Most AI image upscalers either charge you, watermark your images, or require you to create an account first. Pixel Shine's Normal Upscale is completely free, unlimited, and requires no sign-in at all. Here's what that means for you.",
     date: "2025-07-21",
     readTime: "11 min read",
     category: "Guide",
@@ -10004,11 +10004,11 @@ This Thanksgiving, skip the stress and the studio fee. Create Your Thanksgiving 
     toolLabel: "Upscale Free — No Sign-in →",
         sections: [
       {
-        body: `If you want to **upscale images free and unlimited with no sign-in required**, you've hit the exact problem most 'free' upscalers pretend to solve and then don't. JPT AI at sjpt.io actually delivers it: its Normal Upscale is completely free, genuinely unlimited, and works without creating an account — no watermark, no daily cap, no email harvesting before you can even try it.
+        body: `If you want to **upscale images free and unlimited with no sign-in required**, you've hit the exact problem most 'free' upscalers pretend to solve and then don't. Pixel Shine at sjpt.io actually delivers it: its Normal Upscale is completely free, genuinely unlimited, and works without creating an account — no watermark, no daily cap, no email harvesting before you can even try it.
 
 Here's why that's rare. Most 'free AI upscaler no watermark' tools give you two or three images, then throw up a paywall. Others let you upscale but stamp a logo across your result unless you subscribe. A lot of them demand your email and a password before you've seen a single output. It's frustrating, and it wastes your time.
 
-JPT AI takes the opposite approach. You land on the page, drop in your image, and upscale it — right now, as many times as you want. The Normal Upscale tier is free forever with no account. If you later want the Pro AI model for extra-heavy detail reconstruction, that uses credits (and new users get 5 free trials to test it). But for everyday upscaling — sharpening, enlarging, cleaning up resolution — you never have to pay or register. That's the whole point.`,
+Pixel Shine takes the opposite approach. You land on the page, drop in your image, and upscale it — right now, as many times as you want. The Normal Upscale tier is free forever with no account. If you later want the Pro AI model for extra-heavy detail reconstruction, that uses credits (and new users get 5 free trials to test it). But for everyday upscaling — sharpening, enlarging, cleaning up resolution — you never have to pay or register. That's the whole point.`,
       },
       {
         heading: "Why 'Free and Unlimited' Almost Never Means Free and Unlimited",
@@ -10018,7 +10018,7 @@ Most upscaling sites operate on a bait-and-switch. The homepage screams 'FREE,' 
 
 Others gate everything behind an account. You can't even see the tool until you hand over an email, which then gets funneled into marketing sequences. And 'unlimited' plans frequently hide a fair-use throttle that quietly slows or blocks you after a certain volume.
 
-The reason for all this is straightforward: AI upscaling costs compute, and compute costs money. So most companies restrict the free tier to a teaser. JPT AI's model is different — the Normal Upscale runs efficiently enough to stay genuinely free and unlimited, while the heavier Pro AI model (which does deeper reconstruction) is where credits come in. That split lets JPT AI give away the everyday use case for real, with no strings, while still sustaining the business on the power-user features.`,
+The reason for all this is straightforward: AI upscaling costs compute, and compute costs money. So most companies restrict the free tier to a teaser. Pixel Shine's model is different — the Normal Upscale runs efficiently enough to stay genuinely free and unlimited, while the heavier Pro AI model (which does deeper reconstruction) is where credits come in. That split lets Pixel Shine give away the everyday use case for real, with no strings, while still sustaining the business on the power-user features.`,
       },
       {
         heading: "What You Can Actually Do with Free Unlimited Upscaling",
@@ -10075,18 +10075,18 @@ And critically, there's no watermark on the output. What you download is clean a
 **Mistake 5 — Overwriting your original file.** Always save as a copy. If you're not happy with a result, you want the untouched source to try again.`,
       },
       {
-        heading: "JPT AI vs. Other 'Free' Upscalers",
-        body: `Put JPT AI's Normal Upscale next to the typical free upscaler and the differences are stark.
+        heading: "Pixel Shine vs. Other 'Free' Upscalers",
+        body: `Put Pixel Shine's Normal Upscale next to the typical free upscaler and the differences are stark.
 
-**On limits:** Most competitors cap you at 3 to 5 free images before demanding payment. JPT AI's Normal tier is genuinely unlimited — process one image or five hundred, the terms don't change.
+**On limits:** Most competitors cap you at 3 to 5 free images before demanding payment. Pixel Shine's Normal tier is genuinely unlimited — process one image or five hundred, the terms don't change.
 
-**On sign-in:** Many tools require an account and email before you can even upload. JPT AI lets you upscale with no sign-in at all for the free tier. You're using it within seconds of landing on the page.
+**On sign-in:** Many tools require an account and email before you can even upload. Pixel Shine lets you upscale with no sign-in at all for the free tier. You're using it within seconds of landing on the page.
 
-**On watermarks:** A huge number of 'free' upscalers stamp a logo on your result to pressure you into upgrading. JPT AI's downloads are clean — no watermark on the free tier.
+**On watermarks:** A huge number of 'free' upscalers stamp a logo on your result to pressure you into upgrading. Pixel Shine's downloads are clean — no watermark on the free tier.
 
-**On honesty:** Where others advertise 'free' and then paywall the download, JPT AI is upfront: Normal Upscale is free and unlimited, Pro AI uses credits for heavier work, and new users get 5 free trials to test the premium model.
+**On honesty:** Where others advertise 'free' and then paywall the download, Pixel Shine is upfront: Normal Upscale is free and unlimited, Pro AI uses credits for heavier work, and new users get 5 free trials to test the premium model.
 
-**On breadth:** Beyond upscaling, JPT AI is an all-in-one platform — background remover, AI headshots, photo editor, and creative effects live in the same place. Most standalone upscalers do exactly one thing. That combination of a real free tier plus a full toolkit is what sets it apart.`,
+**On breadth:** Beyond upscaling, Pixel Shine is an all-in-one platform — background remover, AI headshots, photo editor, and creative effects live in the same place. Most standalone upscalers do exactly one thing. That combination of a real free tier plus a full toolkit is what sets it apart.`,
       },
       {
         heading: "Who Uses Free Unlimited No-Signup Upscaling",
@@ -10104,7 +10104,7 @@ The common denominator is simple: people who need real upscaling without the run
       },
       {
         heading: "Frequently Asked Questions",
-        body: `**Is JPT AI's upscaler really free and unlimited?**
+        body: `**Is Pixel Shine's upscaler really free and unlimited?**
 Yes. The Normal Upscale tier is completely free and unlimited with no sign-in required. You can upscale as many images as you want without a cap or a paywall.
 
 **Do I need to create an account?**
@@ -10130,7 +10130,7 @@ Yes. You simply upload, upscale, and download without handing over personal deta
       },
       {
         heading: "Key Takeaways",
-        body: `Most 'free' upscalers aren't really free — they cap your images, demand your email, or watermark your results until you pay. JPT AI's Normal Upscale breaks that pattern with genuinely free, genuinely unlimited upscaling that requires no sign-in and adds no watermark.
+        body: `Most 'free' upscalers aren't really free — they cap your images, demand your email, or watermark your results until you pay. Pixel Shine's Normal Upscale breaks that pattern with genuinely free, genuinely unlimited upscaling that requires no sign-in and adds no watermark.
 
 For the everyday tasks that make up the vast majority of upscaling needs — enlarging small photos, sharpening soft images, prepping batches — the free tier is all you'll ever need. And when a demanding image calls for maximum detail reconstruction, the Pro AI model is one click away, with 5 free trials for new users.
 
@@ -10145,7 +10145,7 @@ Try it right now — Upscale Free, No Sign-in → at sjpt.io.`,
     image: "https://images.pexels.com/photos/1144687/pexels-photo-1144687.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "before-after-photo-upscale-comparison",
     title: "AI Upscale Before and After: See the Real Difference on Real Photos",
-    metaTitle: "AI Image Upscale Before and After — Real Examples | JPT AI",
+    metaTitle: "AI Image Upscale Before and After — Real Examples | Pixel Shine",
     metaDescription:
       "See real AI upscale before and after comparisons. What does 2× and 4× AI upscaling actually do to a photo? We show you exactly, with real examples.",
     excerpt:
@@ -10158,11 +10158,11 @@ Try it right now — Upscale Free, No Sign-in → at sjpt.io.`,
     toolLabel: "Try AI Upscale Free →",
         sections: [
       {
-        body: `Seeing an **AI upscale before and after** comparison on real photos is the fastest way to understand what modern upscaling actually does — because the difference is genuinely dramatic and, honestly, a little hard to believe until you watch it happen to your own image. In this guide we'll break down exactly what changes between the before and the after, using real-world photo examples, and show you how to run the comparison yourself free at JPT AI (sjpt.io).
+        body: `Seeing an **AI upscale before and after** comparison on real photos is the fastest way to understand what modern upscaling actually does — because the difference is genuinely dramatic and, honestly, a little hard to believe until you watch it happen to your own image. In this guide we'll break down exactly what changes between the before and the after, using real-world photo examples, and show you how to run the comparison yourself free at Pixel Shine (sjpt.io).
 
 Here's the short version of what a good AI upscaler delivers: a blurry 500-pixel photo becomes a crisp 2000-pixel image with sharp edges, recovered texture, and clean detail — not just bigger, but visibly *better*. The before is soft and pixelated. The after looks like it was shot on a better camera.
 
-What makes this especially compelling is that you can verify it yourself at zero cost. JPT AI's Normal Upscale is free and unlimited with no sign-in, so you can run a before-and-after on your own photos in seconds and judge the results with your own eyes. New users also get 5 free trials of the Pro AI model for the toughest images. No watermark, no account required to see the difference for yourself.`,
+What makes this especially compelling is that you can verify it yourself at zero cost. Pixel Shine's Normal Upscale is free and unlimited with no sign-in, so you can run a before-and-after on your own photos in seconds and judge the results with your own eyes. New users also get 5 free trials of the Pro AI model for the toughest images. No watermark, no account required to see the difference for yourself.`,
       },
       {
         heading: "What Actually Changes Between Before and After",
@@ -10242,7 +10242,7 @@ The photos that show the *least* change are already-sharp, high-resolution image
       },
       {
         heading: "Normal vs. Pro AI Upscale: When to Use Which",
-        body: `JPT AI offers two upscaling models, and understanding the difference helps you get the best before-and-after for each situation.
+        body: `Pixel Shine offers two upscaling models, and understanding the difference helps you get the best before-and-after for each situation.
 
 **Normal Upscale** is free, unlimited, and requires no sign-in. It's a strong general-purpose model that handles the vast majority of photos beautifully — enlarging, sharpening, and cleaning up compression on everyday images. For most before-and-after comparisons, Normal alone produces a genuinely impressive result. Because it's unlimited, you can run it on as many test images as you like without ever paying.
 
@@ -10262,7 +10262,7 @@ The smart workflow is to run Normal first on everything. On the small number of 
 
 **Print shops and hobbyists** confirm an image has enough recovered resolution to print at their target size without pixelation.
 
-Across all these groups, the before-and-after isn't just a fun demo — it's the proof step. It's how they decide whether an upscaled image is good enough to use, publish, print, or hand to a client. And with JPT AI's free unlimited Normal tier, running that proof step costs nothing.`,
+Across all these groups, the before-and-after isn't just a fun demo — it's the proof step. It's how they decide whether an upscaled image is good enough to use, publish, print, or hand to a client. And with Pixel Shine's free unlimited Normal tier, running that proof step costs nothing.`,
       },
       {
         heading: "Frequently Asked Questions",
@@ -10270,7 +10270,7 @@ Across all these groups, the before-and-after isn't just a fun demo — it's the
 On a soft or low-resolution source, the difference is dramatic — sharper edges, recovered texture, cleaned-up compression, and multiplied resolution. On already-sharp images the change is subtler because there's less to improve.
 
 **Can I see the before-and-after for free?**
-Yes. JPT AI's Normal Upscale is free and unlimited with no sign-in, so you can run comparisons on your own photos immediately. New users also get 5 free Pro AI trials.
+Yes. Pixel Shine's Normal Upscale is free and unlimited with no sign-in, so you can run comparisons on your own photos immediately. New users also get 5 free Pro AI trials.
 
 **Does AI upscaling actually add detail or just enlarge?**
 Quality AI upscaling adds genuinely new, plausible detail based on what it recognizes in the image — it doesn't merely stretch pixels, which would only add blur.
@@ -10294,7 +10294,7 @@ It improves it significantly, but it can't invent detail that was never captured
         heading: "Key Takeaways",
         body: `The AI upscale before-and-after is genuinely striking: soft becomes sharp, small becomes large, and compressed becomes clean. Real photos — old family scans, low-res social images, soft product shots — show the most dramatic transformation, because the AI adds real, plausible detail rather than just stretching pixels.
 
-The best way to believe it is to see it on your own images. And you can, for free: JPT AI's Normal Upscale is free and unlimited with no sign-in and no watermark, so run before-and-after comparisons on as many photos as you like. For your toughest, most degraded images, spend one of your 5 free Pro AI trials and watch the deeper reconstruction go to work.
+The best way to believe it is to see it on your own images. And you can, for free: Pixel Shine's Normal Upscale is free and unlimited with no sign-in and no watermark, so run before-and-after comparisons on as many photos as you like. For your toughest, most degraded images, spend one of your 5 free Pro AI trials and watch the deeper reconstruction go to work.
 
 Compare at 100% zoom, focus on faces and text, and judge for yourself. Try AI Upscale Free → at sjpt.io.`,
       },
@@ -10305,7 +10305,7 @@ Compare at 100% zoom, focus on faces and text, and judge for yourself. Try AI Up
     image: "https://images.pexels.com/photos/442576/pexels-photo-442576.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "enhance-photo-free-no-download",
     title: "Enhance Any Photo Free Online — No Download, No Account Needed",
-    metaTitle: "Enhance Photo Free Online No Download No Account | JPT AI",
+    metaTitle: "Enhance Photo Free Online No Download No Account | Pixel Shine",
     metaDescription:
       "Enhance any photo free online without downloading software or creating an account. AI sharpening, upscaling, and noise reduction — instant and free.",
     excerpt:
@@ -10318,11 +10318,11 @@ Compare at 100% zoom, focus on faces and text, and judge for yourself. Try AI Up
     toolLabel: "Enhance Photo Free →",
         sections: [
       {
-        body: `You want to **enhance a photo free online with no download and no account needed** — and that specific combination is surprisingly hard to find. JPT AI at sjpt.io delivers all three: it runs entirely online, so there's nothing to install; the core enhancing and upscaling works without signing in; and there's no watermark on your results. Upload, enhance, download the clean image, done.
+        body: `You want to **enhance a photo free online with no download and no account needed** — and that specific combination is surprisingly hard to find. Pixel Shine at sjpt.io delivers all three: it runs entirely online, so there's nothing to install; the core enhancing and upscaling works without signing in; and there's no watermark on your results. Upload, enhance, download the clean image, done.
 
 Why does 'no download, no account' matter so much? Because most people looking to sharpen a photo or improve its quality are doing it on a whim — a picture for a listing, a slightly blurry memory they want to clean up, a low-res image for a post. They don't want to install a 500MB desktop app, create yet another login, or hand over an email just to fix one image. Those hurdles kill the whole point of 'quick.'
 
-JPT AI removes every one of them. It's a free photo enhancer online that works instantly on any device on your phone or computer. The Normal Upscale and enhancement tools are free and unlimited with no sign-in. And for the rare image that needs heavier AI reconstruction, the Pro model is a click away with 5 free trials for new users. No software, no signup, no watermark — just a better photo in seconds.`,
+Pixel Shine removes every one of them. It's a free photo enhancer online that works instantly on any device on your phone or computer. The Normal Upscale and enhancement tools are free and unlimited with no sign-in. And for the rare image that needs heavier AI reconstruction, the Pro model is a click away with 5 free trials for new users. No software, no signup, no watermark — just a better photo in seconds.`,
       },
       {
         heading: "Why Browser-Based Enhancing Beats Downloadable Software",
@@ -10334,7 +10334,7 @@ JPT AI removes every one of them. It's a free photo enhancer online that works i
 
 **Always up to date.** There's no version to update because you're always using the current one. The AI models improve on the server side, and you get the benefit automatically.
 
-**No system strain.** Heavy AI processing happens on JPT AI's servers, not your device. That means even an old phone or a modest laptop can enhance photos that would choke a local application.
+**No system strain.** Heavy AI processing happens on Pixel Shine's servers, not your device. That means even an old phone or a modest laptop can enhance photos that would choke a local application.
 
 **Instant start.** The gap between 'I want to fix this photo' and 'the photo is fixed' shrinks to under a minute. No installation delay, no learning curve. For the quick, one-off enhancement that most people actually need, online is simply the right tool.`,
       },
@@ -10350,7 +10350,7 @@ JPT AI removes every one of them. It's a free photo enhancer online that works i
 
 **Recovering texture** restores surface detail — fabric, skin, hair, foliage — that low quality had flattened into mushy color blobs.
 
-On JPT AI, the free Normal Upscale handles this core enhancement beautifully for the vast majority of photos. When an image is badly degraded and needs deeper reconstruction, the Pro AI model does heavier lifting. Either way, 'enhancing' isn't a single vague filter — it's a set of real improvements that add up to a visibly better photo, delivered without you needing to understand any of the technical machinery.`,
+On Pixel Shine, the free Normal Upscale handles this core enhancement beautifully for the vast majority of photos. When an image is badly degraded and needs deeper reconstruction, the Pro AI model does heavier lifting. Either way, 'enhancing' isn't a single vague filter — it's a set of real improvements that add up to a visibly better photo, delivered without you needing to understand any of the technical machinery.`,
       },
       {
         heading: "Step-by-Step: Enhance a Photo Free with No Account",
@@ -10402,13 +10402,13 @@ On JPT AI, the free Normal Upscale handles this core enhancement beautifully for
         heading: "Enhance Online vs. Apps and Desktop Software",
         body: `How does a free online enhancer stack up against the alternatives people usually reach for?
 
-**Vs. mobile apps:** Photo-enhancer apps clutter your phone with storage-hungry installs, often bury the good features behind subscriptions, and frequently stamp watermarks on free exports. JPT AI needs no install, works right on your phone, and the free tier is watermark-free.
+**Vs. mobile apps:** Photo-enhancer apps clutter your phone with storage-hungry installs, often bury the good features behind subscriptions, and frequently stamp watermarks on free exports. Pixel Shine needs no install, works right on your phone, and the free tier is watermark-free.
 
-**Vs. desktop software:** Professional desktop editors are powerful but expensive, complex, and locked to one computer. For a quick enhancement, they're massive overkill. JPT AI gives you the core improvement instantly with zero learning curve.
+**Vs. desktop software:** Professional desktop editors are powerful but expensive, complex, and locked to one computer. For a quick enhancement, they're massive overkill. Pixel Shine gives you the core improvement instantly with zero learning curve.
 
-**Vs. other online enhancers:** Many web-based competitors gate results behind an account, cap your free uses at a handful, or watermark the download. JPT AI's Normal enhancement is free, unlimited, and no-sign-in, with clean output.
+**Vs. other online enhancers:** Many web-based competitors gate results behind an account, cap your free uses at a handful, or watermark the download. Pixel Shine's Normal enhancement is free, unlimited, and no-sign-in, with clean output.
 
-The standout advantage is that JPT AI isn't a one-trick tool. In the same place, you also get a background remover, AI headshot generator, AI photo editor with text prompts, and creative effects. So the same no-download, no-account convenience extends across an entire toolkit — not just enhancement. For anyone who wants to fix, edit, and create without installing anything or juggling logins, that all-in-one, online approach is genuinely hard to beat.`,
+The standout advantage is that Pixel Shine isn't a one-trick tool. In the same place, you also get a background remover, AI headshot generator, AI photo editor with text prompts, and creative effects. So the same no-download, no-account convenience extends across an entire toolkit — not just enhancement. For anyone who wants to fix, edit, and create without installing anything or juggling logins, that all-in-one, online approach is genuinely hard to beat.`,
       },
       {
         heading: "Who Uses Free Online Photo Enhancement",
@@ -10427,7 +10427,7 @@ The unifying theme is convenience under time pressure. These are people who need
       {
         heading: "Frequently Asked Questions",
         body: `**Can I enhance a photo online without downloading any software?**
-Yes. JPT AI runs entirely online at sjpt.io. There's nothing to install — just upload, enhance, and download.
+Yes. Pixel Shine runs entirely online at sjpt.io. There's nothing to install — just upload, enhance, and download.
 
 **Do I need to create an account?**
 No. The core enhancing and Normal Upscale work without signing in. An account only matters if you choose to use Pro AI credits.
@@ -10452,7 +10452,7 @@ Common formats like JPG and PNG work directly.`,
       },
       {
         heading: "Key Takeaways",
-        body: `Enhancing a photo shouldn't require installing software, creating an account, or accepting a watermark. JPT AI delivers all three freedoms at once: it runs online with no download, the core enhancement works with no sign-in, and your results come out clean.
+        body: `Enhancing a photo shouldn't require installing software, creating an account, or accepting a watermark. Pixel Shine delivers all three freedoms at once: it runs online with no download, the core enhancement works with no sign-in, and your results come out clean.
 
 For the everyday task of sharpening a soft image, cleaning up compression, and improving overall quality, the free and unlimited Normal tier is all you need — on your phone or your computer, as many times as you like. And when a photo is badly degraded, the Pro AI model is one click away with 5 free trials.
 
@@ -10467,7 +10467,7 @@ Try it now — Enhance Photo Free → at sjpt.io.`,
     image: "https://images.pexels.com/photos/1264210/pexels-photo-1264210.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "upscale-photo-for-printing-free",
     title: "How to Upscale a Photo for Printing — Free AI Guide",
-    metaTitle: "Upscale Photo for Printing Free — AI Super-Resolution Guide | JPT AI",
+    metaTitle: "Upscale Photo for Printing Free — AI Super-Resolution Guide | Pixel Shine",
     metaDescription:
       "How to upscale any photo for printing without losing quality. AI super-resolution makes digital photos print-ready at A4, A3, canvas, and poster sizes — free.",
     excerpt:
@@ -10480,11 +10480,11 @@ Try it now — Enhance Photo Free → at sjpt.io.`,
     toolLabel: "Upscale for Print Free →",
         sections: [
       {
-        body: `Learning how to **upscale a photo for printing for free** is the difference between a crisp, frame-worthy print and a blurry, pixelated disappointment taped to the wall. If your image looks great on screen but comes out soft or jagged when printed, the problem is resolution — and AI upscaling is the fix. JPT AI at sjpt.io lets you increase a photo's resolution for printing free, with no watermark and no mandatory account.
+        body: `Learning how to **upscale a photo for printing for free** is the difference between a crisp, frame-worthy print and a blurry, pixelated disappointment taped to the wall. If your image looks great on screen but comes out soft or jagged when printed, the problem is resolution — and AI upscaling is the fix. Pixel Shine at sjpt.io lets you increase a photo's resolution for printing free, with no watermark and no mandatory account.
 
 Here's the core issue: screens and printers have completely different resolution needs. A photo that looks perfect on your phone at 72 pixels per inch (PPI) can look terrible printed, because quality printing generally wants around 300 PPI. That means a 1000x1000 pixel image, which fills your phone screen beautifully, only prints sharply at about 3.3 inches wide. Try to print it at 8x10 and you'll see every pixel.
 
-Upscaling solves this by intelligently multiplying the pixel count and adding plausible detail, so your image has enough resolution to print large and stay sharp. JPT AI's Normal Upscale is free and unlimited with no sign-in — perfect for prepping photos for print — and for demanding, large-format prints, the Pro AI model does deeper reconstruction with 5 free trials for new users.`,
+Upscaling solves this by intelligently multiplying the pixel count and adding plausible detail, so your image has enough resolution to print large and stay sharp. Pixel Shine's Normal Upscale is free and unlimited with no sign-in — perfect for prepping photos for print — and for demanding, large-format prints, the Pro AI model does deeper reconstruction with 5 free trials for new users.`,
       },
       {
         heading: "Understanding Print Resolution: The 300 PPI Rule",
@@ -10586,7 +10586,7 @@ The practical takeaway: pick the smallest scale that meets your target pixel cou
 
 **Event and wedding hosts** enlarge favorite photos for guestbook prints, welcome signs, and framed displays.
 
-What connects them all is a shared moment of realization: the photo they love isn't big enough to print the way they want. AI upscaling turns that dead end into a solved problem — and with JPT AI's free, unlimited Normal tier plus free Pro AI trials, they can prep print-ready images without a software purchase or subscription standing in the way.`,
+What connects them all is a shared moment of realization: the photo they love isn't big enough to print the way they want. AI upscaling turns that dead end into a solved problem — and with Pixel Shine's free, unlimited Normal tier plus free Pro AI trials, they can prep print-ready images without a software purchase or subscription standing in the way.`,
       },
       {
         heading: "Frequently Asked Questions",
@@ -10594,7 +10594,7 @@ What connects them all is a shared moment of realization: the photo they love is
 Aim for 300 PPI. Multiply your print size in inches by 300 to get the pixel count you need — an 8x10 print needs about 2400x3000 pixels.
 
 **Can I upscale a photo for printing for free?**
-Yes. JPT AI's Normal Upscale is free and unlimited with no sign-in and no watermark, which covers most print-prep needs. For large-format prints, Pro AI offers deeper reconstruction with 5 free trials.
+Yes. Pixel Shine's Normal Upscale is free and unlimited with no sign-in and no watermark, which covers most print-prep needs. For large-format prints, Pro AI offers deeper reconstruction with 5 free trials.
 
 **How do I know how much to upscale?**
 Divide your target print pixels (print size × 300) by your image's current pixels. The result tells you whether you need 2x or 4x.
@@ -10618,7 +10618,7 @@ Because screens are ~72 PPI and prints need ~300. The image lacked enough pixels
         heading: "Key Takeaways",
         body: `Printing a photo sharp comes down to one thing: having enough pixels for the size. The rule is 300 PPI, which means multiplying your print dimensions by 300 to find your target resolution — an 8x10 needs about 2400x3000 pixels. When your image falls short, AI upscaling multiplies the pixel count and adds plausible detail to close the gap.
 
-JPT AI makes this free and accessible: the Normal Upscale is free and unlimited with no sign-in and no watermark, handling most print sizes from wallets to 8x10s. For large-format and hero prints, the Pro AI model delivers deeper reconstruction with 5 free trials for new users.
+Pixel Shine makes this free and accessible: the Normal Upscale is free and unlimited with no sign-in and no watermark, handling most print sizes from wallets to 8x10s. For large-format and hero prints, the Pro AI model delivers deeper reconstruction with 5 free trials for new users.
 
 Calculate your target pixels, pick the right scale, inspect at 100% zoom, and print with confidence. Upscale for Print Free → at sjpt.io and turn your favorite low-res photos into frame-worthy prints.`,
       },
@@ -10629,7 +10629,7 @@ Calculate your target pixels, pick the right scale, inspect at 100% zoom, and pr
     image: "https://images.pexels.com/photos/3756165/pexels-photo-3756165.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "ai-saree-photoshoot-filter",
     title: "AI Saree Photoshoot: Transform Any Photo into a Traditional Indian Portrait",
-    metaTitle: "AI Saree Photoshoot Filter Free Online | JPT AI",
+    metaTitle: "AI Saree Photoshoot Filter Free Online | Pixel Shine",
     metaDescription:
       "Transform any photo into a beautiful AI saree photoshoot portrait. Traditional Indian attire, vibrant colours, professional studio lighting — free to try online.",
     excerpt:
@@ -10642,11 +10642,11 @@ Calculate your target pixels, pick the right scale, inspect at 100% zoom, and pr
     toolLabel: "Try AI Saree Photoshoot →",
         sections: [
       {
-        body: `An **AI saree photoshoot** transforms any ordinary photo into a stunning traditional Indian portrait — draped in an elegant saree, complete with graceful styling and a beautiful setting — without owning a single yard of fabric or booking a studio. If you've ever wanted to see yourself in a gorgeous silk saree for a festival, a profile picture, or just for the joy of it, JPT AI's saree filter lets you turn a photo into a saree portrait free at sjpt.io.
+        body: `An **AI saree photoshoot** transforms any ordinary photo into a stunning traditional Indian portrait — draped in an elegant saree, complete with graceful styling and a beautiful setting — without owning a single yard of fabric or booking a studio. If you've ever wanted to see yourself in a gorgeous silk saree for a festival, a profile picture, or just for the joy of it, Pixel Shine's saree filter lets you turn a photo into a saree portrait free at sjpt.io.
 
 Here's what makes this so appealing. A traditional saree photoshoot with a real photographer, wardrobe, and stylist can easily run into hundreds or thousands of rupees (or dollars), plus the time to shop for the outfit, get draped, do the makeup, and travel to a location. Beautiful sarees themselves are an investment. An AI saree photoshoot skips every one of those steps and delivers the finished portrait in under a minute.
 
-And JPT AI keeps it genuinely open: no watermark stamped across your portrait, no mandatory account just to try it, and 5 free trials for new users across the creative tools. Whether it's for Diwali, a wedding season profile update, or simply because you love traditional Indian aesthetics, you can create your saree portrait today, for free.`,
+And Pixel Shine keeps it genuinely open: no watermark stamped across your portrait, no mandatory account just to try it, and 5 free trials for new users across the creative tools. Whether it's for Diwali, a wedding season profile update, or simply because you love traditional Indian aesthetics, you can create your saree portrait today, for free.`,
       },
       {
         heading: "The Timeless Appeal of the Saree",
@@ -10662,7 +10662,7 @@ An AI saree filter lets anyone experience that visual magic instantly. Members o
         heading: "How AI Recreates an Authentic Saree Look",
         body: `Draping a saree convincingly onto a photo is far harder than slapping on a flat overlay — and the difference between a cheap filter and a genuine AI saree photoshoot is dramatic. A real saree has flowing fabric, intricate patterns, natural folds, and a way of falling around the body that follows physics and form.
 
-JPT AI's model does more than paste a garment onto your image. It understands your pose, your body position, and where the fabric should naturally drape, then generates a saree that fits *you* — with realistic pleats, an authentic pallu over the shoulder, and detailed fabric texture that catches light the way real silk does. The patterns, borders, and colors are rendered to look woven, not printed on top.
+Pixel Shine's model does more than paste a garment onto your image. It understands your pose, your body position, and where the fabric should naturally drape, then generates a saree that fits *you* — with realistic pleats, an authentic pallu over the shoulder, and detailed fabric texture that catches light the way real silk does. The patterns, borders, and colors are rendered to look woven, not printed on top.
 
 Crucially, the AI preserves your face and identity while transforming the rest. Your recognizable features stay intact, so the portrait genuinely looks like *you* in a saree — not a stranger's face on a mannequin. The tool can also style the surrounding scene to complement the traditional look, adding an appropriate backdrop and ambiance that make the whole portrait feel like a real photoshoot.
 
@@ -10745,7 +10745,7 @@ What unites them is a shared desire to celebrate the elegance and meaning of the
       {
         heading: "Frequently Asked Questions",
         body: `**Is the AI saree photoshoot free?**
-Yes. You can create saree portraits on JPT AI for free, and new users get 5 free trials across the creative tools, with no watermark on your downloads.
+Yes. You can create saree portraits on Pixel Shine for free, and new users get 5 free trials across the creative tools, with no watermark on your downloads.
 
 **Do I need to sign up to try it?**
 No mandatory account is required to start. You can begin creating right away at sjpt.io.
@@ -10770,7 +10770,7 @@ Usually 15 to 40 seconds per generation, depending on demand.`,
       },
       {
         heading: "Key Takeaways",
-        body: `The saree is one of the most beautiful and meaningful garments in the world, and an AI saree photoshoot lets anyone experience wearing one — no fabric, no draping, no studio, no cost. JPT AI transforms your photo into an elegant traditional Indian portrait in under a minute, preserving your face while rendering a realistic, gracefully draped saree and a complementary setting.
+        body: `The saree is one of the most beautiful and meaningful garments in the world, and an AI saree photoshoot lets anyone experience wearing one — no fabric, no draping, no studio, no cost. Pixel Shine transforms your photo into an elegant traditional Indian portrait in under a minute, preserving your face while rendering a realistic, gracefully draped saree and a complementary setting.
 
 Whether you're celebrating Diwali, updating your profile for wedding season, connecting with cultural roots from abroad, or simply admiring the elegance of traditional Indian wear, the process is the same: upload a clear, front-facing photo, generate, explore a few variations, and download your favorite watermark-free. New users get 5 free trials to experiment with different saree styles and colors.
 
@@ -10783,7 +10783,7 @@ See yourself draped in timeless elegance. Try AI Saree Photoshoot → at sjpt.io
     image: "https://images.pexels.com/photos/5538337/pexels-photo-5538337.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "ai-anime-style-photo-filter-free",
     title: "Turn Any Photo into Anime Art with AI — Free Online",
-    metaTitle: "AI Anime Style Photo Filter Free Online | JPT AI",
+    metaTitle: "AI Anime Style Photo Filter Free Online | Pixel Shine",
     metaDescription:
       "Transform any photo into anime art style with AI. Studio Ghibli-inspired, vibrant anime aesthetics — convert your photo to anime free online, no account needed.",
     excerpt:
@@ -10798,15 +10798,15 @@ See yourself draped in timeless elegance. Try AI Saree Photoshoot → at sjpt.io
       {
         body: `Ever looked at your favorite anime and wished you could step into that world? With an **anime style photo filter AI**, you actually can — and you don't need a single drawing skill or a pricey subscription. In seconds, you can turn any photo into anime art that looks like it was hand-drawn by a studio animator, complete with those big expressive eyes, soft cel-shading, and dreamy backgrounds.
 
-This isn't the clunky cartoon filter you remember from 2015 apps. Modern **AI anime filter online free** tools use deep-learning models trained on hundreds of thousands of anime frames, so they understand hair strands, lighting, and facial structure the way a real artist does. On JPT AI (sjpt.io), the whole thing runs online — upload a selfie, pick a style, and watch your photo become a character worthy of its own opening credits.
+This isn't the clunky cartoon filter you remember from 2015 apps. Modern **AI anime filter online free** tools use deep-learning models trained on hundreds of thousands of anime frames, so they understand hair strands, lighting, and facial structure the way a real artist does. On Pixel Shine (sjpt.io), the whole thing runs online — upload a selfie, pick a style, and watch your photo become a character worthy of its own opening credits.
 
-In this guide, you'll learn exactly how **photo to anime AI free** conversion works, how to get results that actually look good, the mistakes that ruin most attempts, and why JPT AI's free tier makes it one of the easiest places to start.`,
+In this guide, you'll learn exactly how **photo to anime AI free** conversion works, how to get results that actually look good, the mistakes that ruin most attempts, and why Pixel Shine's free tier makes it one of the easiest places to start.`,
       },
       {
         heading: "What Makes an AI Anime Filter Actually Good?",
         body: `Not all anime filters are created equal. The difference between a result that makes you say \"wow\" and one you delete immediately comes down to how well the model preserves your identity while stylizing everything else.
 
-**Face preservation** is the big one. A cheap filter smears your features into a generic anime face — everyone ends up looking like the same character. A good AI keeps your unique bone structure, expression, and proportions, so friends can still recognize you. JPT AI's model maps your facial landmarks first, then applies the anime style on top, which is why results stay true to the original.
+**Face preservation** is the big one. A cheap filter smears your features into a generic anime face — everyone ends up looking like the same character. A good AI keeps your unique bone structure, expression, and proportions, so friends can still recognize you. Pixel Shine's model maps your facial landmarks first, then applies the anime style on top, which is why results stay true to the original.
 
 **Style consistency** matters too. Real anime has a coherent look: line weight, shading, and color palette all work together. Weak filters slap flat colors on and call it a day. Strong ones add proper **cel-shading**, rim lighting, and those signature glossy highlights in the eyes and hair.
 
@@ -10824,21 +10824,21 @@ Finally, there's **background handling**. Great anime art doesn't just stylize t
 
 **Modern digital anime** — the clean, high-gloss style of recent streaming hits — gives you crisp lines and vibrant, saturated color that pops on social feeds.
 
-There's also **chibi**, the adorable super-deformed style with oversized heads and tiny bodies, great for stickers and avatars. On JPT AI, you can experiment across these looks without paying for each attempt, so you can find the aesthetic that fits your face and your vibe before committing.`,
+There's also **chibi**, the adorable super-deformed style with oversized heads and tiny bodies, great for stickers and avatars. On Pixel Shine, you can experiment across these looks without paying for each attempt, so you can find the aesthetic that fits your face and your vibe before committing.`,
       },
       {
         heading: "Step-by-Step: Turn Your Photo into Anime Art",
-        body: `Here's exactly how to create your anime portrait on JPT AI, start to finish:
+        body: `Here's exactly how to create your anime portrait on Pixel Shine, start to finish:
 
 **Step 1 — Go to sjpt.io** and open the Anime Style tool under Creative AI Photo Effects. No download, no software install — it runs online on desktop or phone.
 
-**Step 2 — Upload your photo.** Choose a clear, well-lit image where your face is visible and not blocked by sunglasses, hands, or heavy shadows. A front-facing or slight-angle shot works best. JPT AI accepts JPG, PNG, and most common formats.
+**Step 2 — Upload your photo.** Choose a clear, well-lit image where your face is visible and not blocked by sunglasses, hands, or heavy shadows. A front-facing or slight-angle shot works best. Pixel Shine accepts JPG, PNG, and most common formats.
 
 **Step 3 — Pick your anime style.** Browse the available looks (shonen, shojo, Ghibli-inspired, modern digital, and more) and select the one that matches the mood you want. Tap to preview.
 
 **Step 4 — Generate.** Hit the convert button and let the AI work. Processing usually takes 10 to 30 seconds depending on image size and server load. You'll see the anime version appear.
 
-**Step 5 — Review and regenerate if needed.** If the first result isn't quite right, try a different style or re-upload a sharper photo. New users get 5 free trials across JPT AI's tools, so you have room to experiment.
+**Step 5 — Review and regenerate if needed.** If the first result isn't quite right, try a different style or re-upload a sharper photo. New users get 5 free trials across Pixel Shine's tools, so you have room to experiment.
 
 **Step 6 — Download.** Save your anime art in full resolution with no watermark stamped across it. From there, set it as a profile picture, print it, or share it anywhere.
 
@@ -10868,15 +10868,15 @@ The whole process, from upload to download, typically takes under two minutes.`,
 
 **Picking the wrong style for the subject.** A wedding portrait in aggressive shonen style clashes with the moment. Match the aesthetic to the context.
 
-**Skipping regeneration.** The first output isn't always the best. Many people quit after one try. Since JPT AI gives you free trials and unlimited free tools elsewhere, take advantage and generate a few versions before deciding.`,
+**Skipping regeneration.** The first output isn't always the best. Many people quit after one try. Since Pixel Shine gives you free trials and unlimited free tools elsewhere, take advantage and generate a few versions before deciding.`,
       },
       {
-        heading: "JPT AI vs. Other Anime Filter Apps",
-        body: `The anime filter space is crowded, so how does JPT AI stack up? The biggest differences come down to cost, watermarks, and convenience.
+        heading: "Pixel Shine vs. Other Anime Filter Apps",
+        body: `The anime filter space is crowded, so how does Pixel Shine stack up? The biggest differences come down to cost, watermarks, and convenience.
 
 Many popular anime apps lock every good result behind a subscription — you'll generate a preview, love it, and then hit a paywall to download without a giant watermark slapped across your face. Others force you to create an account and hand over your email before you can even try the tool. Some mobile apps bury the feature under so many ads that the experience feels like navigating a minefield.
 
-JPT AI takes a different approach. It's a genuinely **free AI anime filter online** — the platform's Normal Upscale is completely free and unlimited with no sign-in required, and new users get 5 free trials across the creative tools including anime style. When you download, there's **no watermark** defacing your art. Because JPT AI is an all-in-one platform, you can convert to anime, then upscale the result to print quality, remove the background, or apply another effect — all in the same place. No juggling five different apps, no surprise charges, no email harvesting just to test a filter.`,
+Pixel Shine takes a different approach. It's a genuinely **free AI anime filter online** — the platform's Normal Upscale is completely free and unlimited with no sign-in required, and new users get 5 free trials across the creative tools including anime style. When you download, there's **no watermark** defacing your art. Because Pixel Shine is an all-in-one platform, you can convert to anime, then upscale the result to print quality, remove the background, or apply another effect — all in the same place. No juggling five different apps, no surprise charges, no email harvesting just to test a filter.`,
       },
       {
         heading: "Who Uses AI Anime Filters (And Why)",
@@ -10893,34 +10893,34 @@ JPT AI takes a different approach. It's a genuinely **free AI anime filter onlin
       {
         heading: "Frequently Asked Questions",
         body: `**Is the anime photo filter really free?**
-Yes. JPT AI offers free access with 5 free trials for new users across its creative tools, and the Normal Upscale tool is completely free and unlimited with no sign-in required. You can create anime art without paying upfront or committing to a subscription.
+Yes. Pixel Shine offers free access with 5 free trials for new users across its creative tools, and the Normal Upscale tool is completely free and unlimited with no sign-in required. You can create anime art without paying upfront or committing to a subscription.
 
 **Do I need to create an account to use it?**
-Basic features on JPT AI don't require an account. The free Normal Upscale needs no sign-in at all, and you can start experimenting with the creative tools right away.
+Basic features on Pixel Shine don't require an account. The free Normal Upscale needs no sign-in at all, and you can start experimenting with the creative tools right away.
 
 **Will my face still be recognizable in the anime version?**
-Yes. JPT AI's model maps your facial landmarks before stylizing, so your unique features are preserved. Friends will still recognize you while the art gets a full anime treatment.
+Yes. Pixel Shine's model maps your facial landmarks before stylizing, so your unique features are preserved. Friends will still recognize you while the art gets a full anime treatment.
 
 **What photo works best for anime conversion?**
 A clear, well-lit, front-facing photo with an unobstructed face gives the best results. Higher resolution means sharper lines and cleaner detail.
 
 **Is there a watermark on downloaded images?**
-No. JPT AI lets you download your anime art without a watermark stamped across it, unlike many competing apps.
+No. Pixel Shine lets you download your anime art without a watermark stamped across it, unlike many competing apps.
 
 **Can I make anime art on my phone?**
-Absolutely. JPT AI runs on your phone, so you can convert, review, and download directly from your phone — no app install needed.
+Absolutely. Pixel Shine runs on your phone, so you can convert, review, and download directly from your phone — no app install needed.
 
 **How long does it take to generate?**
 Most conversions finish in 10 to 30 seconds depending on image size and current demand.
 
 **Can I use the anime art commercially?**
-For personal use, avatars, and social posts you're set. For commercial projects, check JPT AI's current terms to confirm usage rights for generated images.`,
+For personal use, avatars, and social posts you're set. For commercial projects, check Pixel Shine's current terms to confirm usage rights for generated images.`,
       },
       {
         heading: "Key Takeaways",
         body: `Turning a photo into anime art used to require drawing talent or expensive commissions. Today, an **AI anime filter online free** does it in under two minutes — no skills, no watermark, no mandatory account. The keys to great results are simple: use a clear, high-res, well-lit photo, match the anime style to your mood, and don't be afraid to regenerate a few times.
 
-JPT AI stands out because it's genuinely free to start, adds no watermarks, and packs anime conversion alongside upscaling, background removal, and more in one platform. Head to sjpt.io, upload your favorite selfie, and see yourself reimagined as an anime character. Your next profile picture — or framed poster — is just a couple of clicks away.`,
+Pixel Shine stands out because it's genuinely free to start, adds no watermarks, and packs anime conversion alongside upscaling, background removal, and more in one platform. Head to sjpt.io, upload your favorite selfie, and see yourself reimagined as an anime character. Your next profile picture — or framed poster — is just a couple of clicks away.`,
       },
     ],
   },
@@ -10929,7 +10929,7 @@ JPT AI stands out because it's genuinely free to start, adds no watermarks, and 
     image: "https://images.pexels.com/photos/3183153/pexels-photo-3183153.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "ai-professional-headshot-from-selfie-free",
     title: "How to Get a Professional Headshot from a Selfie Using AI (Free)",
-    metaTitle: "AI Professional Headshot from Selfie Free Online | JPT AI",
+    metaTitle: "AI Professional Headshot from Selfie Free Online | Pixel Shine",
     metaDescription:
       "Turn any selfie into a professional AI headshot for free. Studio quality, perfect for LinkedIn, resumes, and corporate profiles — no photographer, no account needed.",
     excerpt:
@@ -10942,11 +10942,11 @@ JPT AI stands out because it's genuinely free to start, adds no watermarks, and 
     toolLabel: "Get Your AI Headshot Free →",
         sections: [
       {
-        body: `Getting a **professional headshot from a selfie for free** used to sound too good to be true — but AI has made it genuinely possible. With JPT AI's AI Headshot Generator at sjpt.io, you upload a normal selfie and get back a polished, professional-looking headshot: clean background, flattering light, business-appropriate framing — the kind of photo that costs $150 to $400 at a studio. And you can try it free.
+        body: `Getting a **professional headshot from a selfie for free** used to sound too good to be true — but AI has made it genuinely possible. With Pixel Shine's AI Headshot Generator at sjpt.io, you upload a normal selfie and get back a polished, professional-looking headshot: clean background, flattering light, business-appropriate framing — the kind of photo that costs $150 to $400 at a studio. And you can try it free.
 
 Here's why this matters right now. Your LinkedIn profile photo, your company directory picture, your speaker bio, your email signature — all of these judge you in a fraction of a second. Studies consistently show that professional headshots dramatically increase profile views and perceived competence. Yet booking a photographer is expensive, time-consuming, and awkward for a lot of people.
 
-An AI headshot generator collapses that entire process. Instead of scheduling a shoot, dressing up, and traveling to a studio, you turn a selfie into a professional photo in minutes, from your couch. JPT AI gives new users 5 free trials across its tools, so you can test the AI headshot generator free before spending anything — and there's no watermark on your results and no mandatory studio-style photoshoot required.`,
+An AI headshot generator collapses that entire process. Instead of scheduling a shoot, dressing up, and traveling to a studio, you turn a selfie into a professional photo in minutes, from your couch. Pixel Shine gives new users 5 free trials across its tools, so you can test the AI headshot generator free before spending anything — and there's no watermark on your results and no mandatory studio-style photoshoot required.`,
       },
       {
         heading: "Why AI Headshots Have Become Genuinely Good",
@@ -11026,11 +11026,11 @@ When the AI applies all of these to your selfie simultaneously, the result cross
 
 **Vs. a studio photographer:** A professional shoot costs $150 to $400+, requires scheduling and travel, and takes days to deliver edited images. The upside is a human directing you and unlimited creative control. The downside is cost, time, and the awkwardness many people feel on camera. AI wins decisively on speed, price, and convenience; a studio still edges it for a truly bespoke, art-directed result.
 
-**Vs. paid AI headshot apps:** Many AI headshot services charge $20 to $50, require you to upload 10-20 photos, make you wait hours for a batch, and sometimes watermark or gate the best results. JPT AI lets you generate from a single selfie, get results in minutes, try it with 5 free trials, and download watermark-free.
+**Vs. paid AI headshot apps:** Many AI headshot services charge $20 to $50, require you to upload 10-20 photos, make you wait hours for a batch, and sometimes watermark or gate the best results. Pixel Shine lets you generate from a single selfie, get results in minutes, try it with 5 free trials, and download watermark-free.
 
 **Vs. just using a raw selfie:** No contest — a raw selfie with a cluttered background and phone lighting undercuts your professional image. Even a quick AI headshot is a major upgrade.
 
-The standout advantage of JPT AI is that the headshot generator lives inside an all-in-one free platform. The same account and free trials also cover background removal, upscaling, photo editing, and creative effects — so you're not paying a single-purpose app for one deliverable. For most people who just need a solid professional profile photo, free AI is now the obvious first stop.`,
+The standout advantage of Pixel Shine is that the headshot generator lives inside an all-in-one free platform. The same account and free trials also cover background removal, upscaling, photo editing, and creative effects — so you're not paying a single-purpose app for one deliverable. For most people who just need a solid professional profile photo, free AI is now the obvious first stop.`,
       },
       {
         heading: "Who Uses AI Headshots from Selfies",
@@ -11051,7 +11051,7 @@ The common thread is that a professional headshot used to be a gated privilege �
       {
         heading: "Frequently Asked Questions",
         body: `**Can I really get a professional headshot from a selfie for free?**
-Yes. JPT AI's AI Headshot Generator turns a selfie into a professional-looking headshot, and new users get 5 free trials to test it with no watermark on results.
+Yes. Pixel Shine's AI Headshot Generator turns a selfie into a professional-looking headshot, and new users get 5 free trials to test it with no watermark on results.
 
 **Do I need to upload lots of photos?**
 No. You can generate a headshot from a single clear selfie — no need to submit a large batch like some paid apps require.
@@ -11076,7 +11076,7 @@ AI is far cheaper, faster, and more convenient. A studio offers more bespoke art
       },
       {
         heading: "Key Takeaways",
-        body: `A professional headshot used to mean a studio booking and a $150-to-$400 bill. Now you can turn an ordinary selfie into a polished, professional-looking headshot in minutes — free — with JPT AI's AI Headshot Generator. The AI recreates what makes studio portraits work: clean background, flattering light, proper framing, and sharp focus, all while keeping you recognizably yourself.
+        body: `A professional headshot used to mean a studio booking and a $150-to-$400 bill. Now you can turn an ordinary selfie into a polished, professional-looking headshot in minutes — free — with Pixel Shine's AI Headshot Generator. The AI recreates what makes studio portraits work: clean background, flattering light, proper framing, and sharp focus, all while keeping you recognizably yourself.
 
 The recipe for a great result is simple: start with a clear, well-lit, front-facing selfie, pick a style that matches your industry, generate a few variations, and choose the most natural one. New users get 5 free trials, downloads come watermark-free, and there's no studio session required.
 
@@ -11089,7 +11089,7 @@ Whether you're job hunting, building a personal brand, or just tired of your out
     image: "https://images.pexels.com/photos/2295914/pexels-photo-2295914.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "ai-couple-photoshoot-online-free",
     title: "AI Couple Photoshoot: Create Romantic Portraits from Any Two Photos",
-    metaTitle: "AI Couple Photoshoot Generator Free Online | JPT AI",
+    metaTitle: "AI Couple Photoshoot Generator Free Online | Pixel Shine",
     metaDescription:
       "Create a beautiful AI couple photoshoot from any two photos online for free. Romantic settings, professional lighting, intimate portraits — no photographer needed.",
     excerpt:
@@ -11106,7 +11106,7 @@ Whether you're job hunting, building a personal brand, or just tired of your out
 
 Whether you're in a long-distance relationship and never got that perfect photo together, or you simply want a **romantic couple portrait AI** for your anniversary, this technology has become genuinely impressive. Modern AI can blend two people into a single cohesive scene, match the lighting, and place you in dreamy backdrops from Parisian streets to golden-hour beaches.
 
-On JPT AI (sjpt.io), the **AI couple photo maker** runs online. In this guide, you'll learn how it works, how to get portraits that look natural rather than pasted-together, the mistakes that give away an obvious edit, and why JPT AI's free tier makes it the easiest place to create couple art without spending a cent.`,
+On Pixel Shine (sjpt.io), the **AI couple photo maker** runs online. In this guide, you'll learn how it works, how to get portraits that look natural rather than pasted-together, the mistakes that give away an obvious edit, and why Pixel Shine's free tier makes it the easiest place to create couple art without spending a cent.`,
       },
       {
         heading: "How AI Couple Photoshoots Actually Work",
@@ -11116,7 +11116,7 @@ First, it detects and isolates each face, mapping facial landmarks so it underst
 
 Good AI also handles **pose and interaction**. Instead of two people awkwardly standing side by side, it can place you in natural romantic poses — a gentle embrace, foreheads touching, or holding hands during a walk. The model draws on training data of real couple photography to make the composition feel authentic.
 
-Finally, it harmonizes skin tones, shadows, and edges so there are no telltale seams. On JPT AI, this whole pipeline runs automatically — you provide the faces and the vision, the AI handles the technical blending that would take a Photoshop expert hours.`,
+Finally, it harmonizes skin tones, shadows, and edges so there are no telltale seams. On Pixel Shine, this whole pipeline runs automatically — you provide the faces and the vision, the AI handles the technical blending that would take a Photoshop expert hours.`,
       },
       {
         heading: "Best Settings and Styles for Couple Portraits",
@@ -11132,11 +11132,11 @@ Finally, it harmonizes skin tones, shadows, and edges so there are no telltale s
 
 **Cinematic and moody** styles with dramatic lighting and rich shadows give your portrait a film-still quality.
 
-On JPT AI you can try several settings from the same uploaded photos, so you can compare a sunlit beach against a moody city night and pick the version that captures your relationship best — without paying per attempt.`,
+On Pixel Shine you can try several settings from the same uploaded photos, so you can compare a sunlit beach against a moody city night and pick the version that captures your relationship best — without paying per attempt.`,
       },
       {
         heading: "Step-by-Step: Create Your AI Couple Portrait",
-        body: `Here's the full process on JPT AI, from start to finished portrait:
+        body: `Here's the full process on Pixel Shine, from start to finished portrait:
 
 **Step 1 — Visit sjpt.io** and open the Couple Photoshoot tool in the Creative AI Photo Effects section. It works on desktop or mobile.
 
@@ -11148,7 +11148,7 @@ On JPT AI you can try several settings from the same uploaded photos, so you can
 
 **Step 5 — Review the result.** Check that both faces look natural and the lighting is consistent. If something looks off — a mismatched shadow or an unnatural blend — try re-uploading sharper photos or picking a different setting.
 
-**Step 6 — Regenerate for variety.** New users get 5 free trials across JPT AI's tools, so create a few versions in different settings to compare.
+**Step 6 — Regenerate for variety.** New users get 5 free trials across Pixel Shine's tools, so create a few versions in different settings to compare.
 
 **Step 7 — Download.** Save your favorite portrait in full resolution with no watermark. It's ready to print, share, or set as your shared profile picture.
 
@@ -11184,7 +11184,7 @@ The entire flow typically takes two to three minutes.`,
         heading: "AI Couple Photoshoot vs. Hiring a Photographer",
         body: `A traditional couple photoshoot is wonderful — but it comes with real costs and constraints. A professional session typically runs anywhere from $150 to $500 or more, requires scheduling weeks ahead, depends on good weather, and means both people have to be in the same place at the same time. For long-distance couples, that last point alone can make a real photoshoot impossible for months.
 
-An **AI couple photo maker** removes every one of those barriers. It's free to start on JPT AI, available instantly at any hour, and works even if the two of you have never been photographed together. Long-distance partners can finally have a \"couple photo\" using selfies taken thousands of miles apart. You can experiment with a dozen settings in the time it would take to drive to a studio.
+An **AI couple photo maker** removes every one of those barriers. It's free to start on Pixel Shine, available instantly at any hour, and works even if the two of you have never been photographed together. Long-distance partners can finally have a \"couple photo\" using selfies taken thousands of miles apart. You can experiment with a dozen settings in the time it would take to drive to a studio.
 
 That said, AI isn't a full replacement for a milestone wedding album shot by a pro. Think of them as different tools: a photographer captures a real, once-in-a-lifetime moment, while an AI couple photoshoot gives you fun, romantic, endlessly customizable portraits for social media, gifts, and everyday keepsakes — without the price tag, the scheduling, or the geography problem.`,
       },
@@ -11198,12 +11198,12 @@ That said, AI isn't a full replacement for a milestone wedding album shot by a p
 
 **Newly dating couples** who don't have professional photos yet make a nice shared image for social media without the pressure of a formal shoot.
 
-**Friends and families** use the same tools for group and sibling portraits. One long-distance couple used JPT AI to create a golden-hour beach portrait from selfies taken on two different continents, printed it, and gave it as an engagement gift. The result looked so natural that guests assumed they'd flown out for a real shoot.`,
+**Friends and families** use the same tools for group and sibling portraits. One long-distance couple used Pixel Shine to create a golden-hour beach portrait from selfies taken on two different continents, printed it, and gave it as an engagement gift. The result looked so natural that guests assumed they'd flown out for a real shoot.`,
       },
       {
         heading: "Frequently Asked Questions",
         body: `**Is the AI couple photoshoot free?**
-Yes. JPT AI gives new users 5 free trials across its creative tools, and the Normal Upscale tool is completely free and unlimited with no sign-in required. You can create couple portraits without paying upfront.
+Yes. Pixel Shine gives new users 5 free trials across its creative tools, and the Normal Upscale tool is completely free and unlimited with no sign-in required. You can create couple portraits without paying upfront.
 
 **Can I make a couple photo if we've never been photographed together?**
 Absolutely — that's one of the biggest use cases. Upload two separate photos, one of each person, and the AI blends you into a single shared scene. It's perfect for long-distance couples.
@@ -11212,7 +11212,7 @@ Absolutely — that's one of the biggest use cases. Upload two separate photos, 
 When you use clear, well-lit photos with similar lighting, results can look remarkably natural. The AI matches lighting, shadows, and color so both people appear photographed together.
 
 **Is there a watermark on the final image?**
-No. JPT AI lets you download your couple portrait without a watermark, unlike many competing apps.
+No. Pixel Shine lets you download your couple portrait without a watermark, unlike many competing apps.
 
 **What kind of photos should I upload?**
 Clear, front-facing, well-lit photos of similar quality and resolution work best. Avoid sunglasses, extreme angles, and heavy filters.
@@ -11221,7 +11221,7 @@ Clear, front-facing, well-lit photos of similar quality and resolution work best
 Yes. You can select from settings like golden-hour beach, studio, travel landmarks, and cozy candid scenes, and try several from the same photos.
 
 **Does it work on mobile?**
-Yes. JPT AI runs on your phone, so you can create and download couple portraits directly from your phone.
+Yes. Pixel Shine runs on your phone, so you can create and download couple portraits directly from your phone.
 
 **Do I need to sign in?**
 Basic features don't require an account, and the free Normal Upscale needs no sign-in at all.`,
@@ -11230,7 +11230,7 @@ Basic features don't require an account, and the free Normal Upscale needs no si
         heading: "Key Takeaways",
         body: `An **AI couple photoshoot online** gives you romantic, professional-looking portraits without the cost, scheduling, or geography of a traditional shoot. Whether you're long-distance, celebrating an anniversary, or just want a fun shared photo, uploading two clear, well-lit images and picking the right setting gets you there in minutes.
 
-The keys to natural results: match photo quality and lighting between both people, use front-facing shots, and regenerate a few times to find the best blend. JPT AI makes it genuinely free to start, adds no watermarks, and combines couple portraits with upscaling and background removal in one platform. Head to sjpt.io, upload your two favorite photos, and create a romantic portrait that looks like you both showed up for the shoot — even if you're oceans apart.`,
+The keys to natural results: match photo quality and lighting between both people, use front-facing shots, and regenerate a few times to find the best blend. Pixel Shine makes it genuinely free to start, adds no watermarks, and combines couple portraits with upscaling and background removal in one platform. Head to sjpt.io, upload your two favorite photos, and create a romantic portrait that looks like you both showed up for the shoot — even if you're oceans apart.`,
       },
     ],
   },
@@ -11239,7 +11239,7 @@ The keys to natural results: match photo quality and lighting between both peopl
     image: "https://images.pexels.com/photos/4614223/pexels-photo-4614223.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "ai-retro-bollywood-photo-filter",
     title: "AI Retro Bollywood Photo Filter: Transform Your Photo into a 1970s Film Still",
-    metaTitle: "AI Retro Bollywood Photo Filter Free Online | JPT AI",
+    metaTitle: "AI Retro Bollywood Photo Filter Free Online | Pixel Shine",
     metaDescription:
       "Apply the classic retro Bollywood aesthetic to any photo. 1970s Indian cinema colour grading, film grain, vintage portraits — free AI filter online.",
     excerpt:
@@ -11256,7 +11256,7 @@ The keys to natural results: match photo quality and lighting between both peopl
 
 This **vintage Bollywood photo effect** does more than slap a sepia tone on your picture. Modern AI understands the whole aesthetic: the warm color grading, the soft focus glow, the dramatic shadows, the ornate styling, even that unmistakable film-grain texture. The result feels like a still pulled from a beloved classic.
 
-On JPT AI (sjpt.io), the **Bollywood photo filter online free** tool runs online. In this guide, you'll learn what defines the retro Bollywood look, how to get authentic results, the mistakes that make it look cheap, and why JPT AI's free tier makes it the perfect place to give your photos that golden-era magic.`,
+On Pixel Shine (sjpt.io), the **Bollywood photo filter online free** tool runs online. In this guide, you'll learn what defines the retro Bollywood look, how to get authentic results, the mistakes that make it look cheap, and why Pixel Shine's free tier makes it the perfect place to give your photos that golden-era magic.`,
       },
       {
         heading: "What Defines the Golden-Era Bollywood Look",
@@ -11280,11 +11280,11 @@ The reason AI does it better is that it was trained on the actual look. Rather t
 
 AI also handles your face intelligently. A manual grain-and-color pass treats your whole photo the same way, often making skin look muddy or dull. A trained model applies the cinematic lighting to your features specifically, enhancing them the way a real film cinematographer would light a leading actor.
 
-And it's dramatically faster. What would take a skilled editor 30 to 60 minutes, JPT AI's **Bollywood photo filter online free** does in under a minute — with more consistent, authentic results and zero technical skill required.`,
+And it's dramatically faster. What would take a skilled editor 30 to 60 minutes, Pixel Shine's **Bollywood photo filter online free** does in under a minute — with more consistent, authentic results and zero technical skill required.`,
       },
       {
         heading: "Step-by-Step: Get the Retro Bollywood Look",
-        body: `Here's how to transform your photo on JPT AI:
+        body: `Here's how to transform your photo on Pixel Shine:
 
 **Step 1 — Open sjpt.io** and navigate to the Retro Bollywood tool in the Creative AI Photo Effects section. It runs on desktop or phone — no app needed.
 
@@ -11296,7 +11296,7 @@ And it's dramatically faster. What would take a skilled editor 30 to 60 minutes,
 
 **Step 5 — Review your portrait.** Check that the lighting flatters your face and the vintage effect feels authentic rather than overdone. If it's too heavy or too subtle, adjust settings or re-upload a different source photo.
 
-**Step 6 — Regenerate to compare.** New users get 5 free trials across JPT AI's tools, so create a couple of versions and compare which captures the classic vibe best.
+**Step 6 — Regenerate to compare.** New users get 5 free trials across Pixel Shine's tools, so create a couple of versions and compare which captures the classic vibe best.
 
 **Step 7 — Download.** Save your retro Bollywood portrait in full resolution with no watermark. It's ready to print as a poster, share on social media, or use as a striking profile picture.
 
@@ -11338,7 +11338,7 @@ Start to finish, the process usually takes under two minutes.`,
 
 **Social media profile pictures** benefit from the dramatic, cinematic look that grabs attention and feels distinctive.
 
-**Gifts** are another sweet use — transform a photo of your parents or grandparents into a classic-era poster and print it. There's real emotional weight in seeing a loved one styled like the film stars of their youth. Because JPT AI lets you create these for free and download without a watermark, you can make an entire series for a family album without spending anything.`,
+**Gifts** are another sweet use — transform a photo of your parents or grandparents into a classic-era poster and print it. There's real emotional weight in seeing a loved one styled like the film stars of their youth. Because Pixel Shine lets you create these for free and download without a watermark, you can make an entire series for a family album without spending anything.`,
       },
       {
         heading: "Who Loves the Retro Bollywood Filter",
@@ -11355,13 +11355,13 @@ Start to finish, the process usually takes under two minutes.`,
       {
         heading: "Frequently Asked Questions",
         body: `**Is the retro Bollywood filter free to use?**
-Yes. JPT AI gives new users 5 free trials across its creative tools, and the Normal Upscale tool is completely free and unlimited with no sign-in required. You can create retro Bollywood portraits without paying upfront.
+Yes. Pixel Shine gives new users 5 free trials across its creative tools, and the Normal Upscale tool is completely free and unlimited with no sign-in required. You can create retro Bollywood portraits without paying upfront.
 
 **What makes a photo look authentically Bollywood-retro?**
-The combination of warm color grading, soft-focus glow, dramatic directional lighting, and film grain. JPT AI's AI applies all of these together for an authentic golden-era look rather than a generic old-photo filter.
+The combination of warm color grading, soft-focus glow, dramatic directional lighting, and film grain. Pixel Shine's AI applies all of these together for an authentic golden-era look rather than a generic old-photo filter.
 
 **Will there be a watermark on my download?**
-No. JPT AI lets you download your retro Bollywood portrait without a watermark, unlike many competing tools.
+No. Pixel Shine lets you download your retro Bollywood portrait without a watermark, unlike many competing tools.
 
 **What photo should I use for the best result?**
 A clear, well-lit, portrait-oriented photo works best. Classic or elegant styling and a bit of dramatic lighting in the original enhance the effect.
@@ -11370,19 +11370,19 @@ A clear, well-lit, portrait-oriented photo works best. Classic or elegant stylin
 Yes, as long as they're reasonably clear. Transforming photos of parents or grandparents into vintage posters is one of the most popular uses.
 
 **Does it work on my phone?**
-Yes. JPT AI runs on your phone, so you can create and download retro Bollywood portraits directly from your phone.
+Yes. Pixel Shine runs on your phone, so you can create and download retro Bollywood portraits directly from your phone.
 
 **How long does the transformation take?**
 Most conversions finish in 10 to 30 seconds depending on image size and demand.
 
 **Can I print the result as a poster?**
-Yes. Downloads are full resolution, and you can even use JPT AI's free upscaler to boost the size for large prints.`,
+Yes. Downloads are full resolution, and you can even use Pixel Shine's free upscaler to boost the size for large prints.`,
       },
       {
         heading: "Key Takeaways",
         body: `An **AI retro Bollywood filter** transports your photos to the golden era of Hindi cinema — warm grading, soft glow, dramatic lighting, and authentic film grain — without a costume, a studio, or a photographer. The secret to great results is starting with a clear, portrait-oriented photo, embracing classic styling, and keeping the effect balanced rather than overdone.
 
-JPT AI makes it genuinely free to start, adds no watermarks, and pairs the retro filter with upscaling for poster-quality prints, all in one online platform. Whether you're creating wedding content, festival posts, or a nostalgic gift for family, head to sjpt.io, upload your photo, and step into the timeless magic of classic Bollywood in under two minutes.`,
+Pixel Shine makes it genuinely free to start, adds no watermarks, and pairs the retro filter with upscaling for poster-quality prints, all in one online platform. Whether you're creating wedding content, festival posts, or a nostalgic gift for family, head to sjpt.io, upload your photo, and step into the timeless magic of classic Bollywood in under two minutes.`,
       },
     ],
   },
@@ -11391,7 +11391,7 @@ JPT AI makes it genuinely free to start, adds no watermarks, and pairs the retro
     image: "https://images.pexels.com/photos/3785079/pexels-photo-3785079.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "ai-3d-figurine-from-photo",
     title: "Turn Your Photo into a 3D Figurine with AI",
-    metaTitle: "AI 3D Figurine Generator — Turn Photo into 3D Figure Free | JPT AI",
+    metaTitle: "AI 3D Figurine Generator — Turn Photo into 3D Figure Free | Pixel Shine",
     metaDescription:
       "Transform any photo into a photorealistic 3D figurine portrait with AI. Action figure style, collectible aesthetic, your actual likeness — free online.",
     excerpt:
@@ -11408,7 +11408,7 @@ JPT AI makes it genuinely free to start, adds no watermarks, and pairs the retro
 
 This trend has exploded across social media, and for good reason. To **turn a photo into an action figure AI**-style, the model reimagines your face, outfit, and pose as molded plastic, adds realistic toy packaging with your \"name\" printed on it, and even throws in themed accessories. The result is playful, shareable, and honestly a little addictive to make.
 
-On JPT AI (sjpt.io), the **3D toy from photo AI** tool runs entirely online. In this guide, you'll learn exactly how it works, how to get a figurine that actually looks like you, the mistakes that ruin the effect, and why JPT AI's free tier makes it the best place to create your own collectible.`,
+On Pixel Shine (sjpt.io), the **3D toy from photo AI** tool runs entirely online. In this guide, you'll learn exactly how it works, how to get a figurine that actually looks like you, the mistakes that ruin the effect, and why Pixel Shine's free tier makes it the best place to create your own collectible.`,
       },
       {
         heading: "What the AI Action Figure Effect Actually Does",
@@ -11420,7 +11420,7 @@ Next, it builds the **packaging**. This is what makes the effect pop: a blister 
 
 Then it adds **accessories** — themed props that match your persona, like a laptop for a developer, a camera for a photographer, or a coffee cup, arranged in the packaging the way real figures include extra hands and weapons.
 
-Finally, it renders realistic **studio lighting and shadows** so the whole thing looks professionally photographed. On JPT AI, all of this happens automatically from a single upload.`,
+Finally, it renders realistic **studio lighting and shadows** so the whole thing looks professionally photographed. On Pixel Shine, all of this happens automatically from a single upload.`,
       },
       {
         heading: "Choosing the Right Photo and Theme",
@@ -11430,11 +11430,11 @@ Finally, it renders realistic **studio lighting and shadows** so the whole thing
 
 **Outfit matters more than you'd think.** A distinctive outfit — a uniform, a themed costume, bold colors, or professional attire — makes a far more interesting figure than a plain t-shirt. The more character your clothing has, the more your figurine looks like a genuine themed collectible.
 
-**Think about your theme and accessories.** Are you a \"software developer edition\" with a laptop, a \"chef edition\" with a whisk, or a \"fitness edition\" with dumbbells? Choosing a persona helps the AI pick fitting accessories and packaging text. On JPT AI, experimenting with different source photos and themes is easy since new users get free trials to test what produces the coolest collectible version of themselves.`,
+**Think about your theme and accessories.** Are you a \"software developer edition\" with a laptop, a \"chef edition\" with a whisk, or a \"fitness edition\" with dumbbells? Choosing a persona helps the AI pick fitting accessories and packaging text. On Pixel Shine, experimenting with different source photos and themes is easy since new users get free trials to test what produces the coolest collectible version of themselves.`,
       },
       {
         heading: "Step-by-Step: Create Your 3D Action Figure",
-        body: `Here's the complete process on JPT AI:
+        body: `Here's the complete process on Pixel Shine:
 
 **Step 1 — Go to sjpt.io** and open the 3D Figurine tool in the Creative AI Photo Effects section. It runs on desktop or mobile, with no download required.
 
@@ -11446,7 +11446,7 @@ Finally, it renders realistic **studio lighting and shadows** so the whole thing
 
 **Step 5 — Review your figurine.** Check that your face is recognizable, the packaging looks convincing, and the accessories fit your theme. If the pose or likeness is off, re-upload a clearer full-body photo.
 
-**Step 6 — Regenerate for variety.** New users get 5 free trials across JPT AI's tools, so try a few versions — different photos or themes yield surprisingly different collectibles.
+**Step 6 — Regenerate for variety.** New users get 5 free trials across Pixel Shine's tools, so try a few versions — different photos or themes yield surprisingly different collectibles.
 
 **Step 7 — Download.** Save your action figure image in full resolution with no watermark. Share it on social media, print it, or set it as a fun profile picture.
 
@@ -11464,7 +11464,7 @@ The whole process typically takes under two minutes from upload to download.`,
 
 **Use a clean, uncluttered background** in your source photo. The AI will replace it with packaging, and a busy original background can occasionally bleed into the result.
 
-**Upscale for printing.** If you want to print your figurine as a poster or card, run the result through JPT AI's free Normal Upscale to boost resolution without losing detail — completely free and unlimited.`,
+**Upscale for printing.** If you want to print your figurine as a poster or card, run the result through Pixel Shine's free Normal Upscale to boost resolution without losing detail — completely free and unlimited.`,
       },
       {
         heading: "Common Mistakes to Avoid",
@@ -11476,15 +11476,15 @@ The whole process typically takes under two minutes from upload to download.`,
 
 **Standing in an awkward or cut-off pose.** If your source photo crops your legs or arms oddly, the figure inherits those problems. Choose a photo where your full form is visible and naturally posed.
 
-**Accepting the first result without regenerating.** The packaging text or accessories might not fit on the first try. Since JPT AI offers free trials, generate a few versions and keep the best one.`,
+**Accepting the first result without regenerating.** The packaging text or accessories might not fit on the first try. Since Pixel Shine offers free trials, generate a few versions and keep the best one.`,
       },
       {
         heading: "AI Figurines vs. Custom 3D-Printed Toys",
         body: `If you've ever looked into getting a real custom action figure of yourself, you know it's expensive and slow. Services that 3D-print a physical figurine from photos typically cost anywhere from $50 to $200 or more, take one to three weeks to produce and ship, and give you a single physical object you can't easily change.
 
-An **AI 3D figurine from photo** is a completely different proposition. It's free to start on JPT AI, delivers your figure in under a minute, and lets you create unlimited variations — different themes, outfits, and packaging — without paying per attempt. You get a high-quality digital image perfect for social media, profile pictures, digital gifts, and printing.
+An **AI 3D figurine from photo** is a completely different proposition. It's free to start on Pixel Shine, delivers your figure in under a minute, and lets you create unlimited variations — different themes, outfits, and packaging — without paying per attempt. You get a high-quality digital image perfect for social media, profile pictures, digital gifts, and printing.
 
-Of course, the two serve different needs. If you want a tangible object on your shelf, 3D printing is the way. But if you want the fun, the shareable image, the viral social post, or a digital keepsake — and you want it instantly and for free — the AI version wins easily. Many people even use the AI image as a mockup or gift card before deciding whether to invest in a physical print. On JPT AI, there's no watermark, so your digital collectible looks clean and professional wherever you share it.`,
+Of course, the two serve different needs. If you want a tangible object on your shelf, 3D printing is the way. But if you want the fun, the shareable image, the viral social post, or a digital keepsake — and you want it instantly and for free — the AI version wins easily. Many people even use the AI image as a mockup or gift card before deciding whether to invest in a physical print. On Pixel Shine, there's no watermark, so your digital collectible looks clean and professional wherever you share it.`,
       },
       {
         heading: "Who's Making AI Action Figures",
@@ -11501,7 +11501,7 @@ Of course, the two serve different needs. If you want a tangible object on your 
       {
         heading: "Frequently Asked Questions",
         body: `**Is the AI action figure maker free?**
-Yes. JPT AI gives new users 5 free trials across its creative tools, and the Normal Upscale tool is completely free and unlimited with no sign-in required. You can create your 3D figurine without paying upfront.
+Yes. Pixel Shine gives new users 5 free trials across its creative tools, and the Normal Upscale tool is completely free and unlimited with no sign-in required. You can create your 3D figurine without paying upfront.
 
 **What photo works best for an action figure?**
 A clear, well-lit full-body or three-quarter shot showing your outfit and pose gives the best result. Face-only crops force the AI to invent your body.
@@ -11510,16 +11510,16 @@ A clear, well-lit full-body or three-quarter shot showing your outfit and pose g
 Yes. The AI keeps your recognizable features while reinterpreting you as a molded-plastic toy, so friends will still know it's you.
 
 **Is there a watermark on the download?**
-No. JPT AI lets you download your action figure image without a watermark, unlike many competing apps.
+No. Pixel Shine lets you download your action figure image without a watermark, unlike many competing apps.
 
 **Can I add themed packaging and accessories?**
 Yes. The effect builds realistic toy packaging and adds accessories that fit your persona, often with a name and tagline on the box.
 
 **Does it work on mobile?**
-Absolutely. JPT AI runs on your phone, so you can create and download figurines directly from your phone.
+Absolutely. Pixel Shine runs on your phone, so you can create and download figurines directly from your phone.
 
 **Can I print my figurine image?**
-Yes. Downloads are full resolution, and you can use JPT AI's free upscaler to boost the size for prints, cards, or posters.
+Yes. Downloads are full resolution, and you can use Pixel Shine's free upscaler to boost the size for prints, cards, or posters.
 
 **How long does it take to generate?**
 Most figurines finish in 15 to 40 seconds depending on image size and current demand.`,
@@ -11528,7 +11528,7 @@ Most figurines finish in 15 to 40 seconds depending on image size and current de
         heading: "Key Takeaways",
         body: `An **AI 3D figurine from photo** turns any picture into a collectible action figure — molded plastic, realistic packaging, themed accessories, and studio lighting — in under a minute, with no modeling skills or cost to start. The secret to a great result is using a clear, full-body photo with a distinctive outfit and a defined theme, then regenerating to find the best version.
 
-JPT AI makes it genuinely free to start, adds no watermarks, and pairs the figurine effect with a free unlimited upscaler for print-quality output — all in one online platform. Whether you're chasing the viral trend, making a gift, or building a team \"edition\" set, head to sjpt.io, upload your photo, and see yourself boxed up as the collectible you've always deserved to be.`,
+Pixel Shine makes it genuinely free to start, adds no watermarks, and pairs the figurine effect with a free unlimited upscaler for print-quality output — all in one online platform. Whether you're chasing the viral trend, making a gift, or building a team \"edition\" set, head to sjpt.io, upload your photo, and see yourself boxed up as the collectible you've always deserved to be.`,
       },
     ],
   },
@@ -11537,7 +11537,7 @@ JPT AI makes it genuinely free to start, adds no watermarks, and pairs the figur
     image: "https://images.pexels.com/photos/1413412/pexels-photo-1413412.jpeg?auto=compress&cs=tinysrgb&w=1200",
     slug: "ai-festival-photoshoot-free-online",
     title: "AI Festival Photoshoot: Create Vibrant Festival Portraits for Free",
-    metaTitle: "AI Festival Photoshoot Generator Free Online | JPT AI",
+    metaTitle: "AI Festival Photoshoot Generator Free Online | Pixel Shine",
     metaDescription:
       "Create vibrant AI festival photoshoot portraits for free online. Holi, Diwali, music festival vibes — colourful, energetic portraits without a photographer.",
     excerpt:
@@ -11554,7 +11554,7 @@ JPT AI makes it genuinely free to start, adds no watermarks, and pairs the figur
 
 Whether you want a **Holi photo filter AI** effect drenched in flying colored powder, an **AI Diwali photo maker** portrait glowing with diyas and fairy lights, or an Eid, Christmas, or Navratri scene, modern AI recreates the entire festive atmosphere around you. It doesn't just add a background — it matches lighting, adds authentic festival elements, and styles the whole portrait to feel like a genuine celebration shoot.
 
-On JPT AI (sjpt.io), the **festival portrait AI free** tool runs online. In this guide, you'll learn how it works across different festivals, how to get portraits that look authentic, the mistakes to avoid, and why JPT AI's free tier makes it the easiest way to celebrate in style.`,
+On Pixel Shine (sjpt.io), the **festival portrait AI free** tool runs online. In this guide, you'll learn how it works across different festivals, how to get portraits that look authentic, the mistakes to avoid, and why Pixel Shine's free tier makes it the easiest way to celebrate in style.`,
       },
       {
         heading: "How AI Recreates Festival Atmospheres",
@@ -11564,7 +11564,7 @@ First, the AI detects your face and figure, preserving your features while it re
 
 Crucially, it handles **lighting integration**. A Diwali portrait needs warm, golden diya glow lighting your face from below; a Holi shot needs bright daylight with color splashes. The AI matches the lighting direction and color temperature so you look genuinely present in the scene rather than pasted on.
 
-It also adds **festive styling and elements** — traditional attire enhancements, jewelry, bokeh from string lights, floating particles of color or sparkles. Finally, it applies a cohesive **color grade** that ties everything together into a warm, celebratory mood. On JPT AI, this entire pipeline runs automatically, so a simple selfie becomes a portrait that radiates the spirit of the festival.`,
+It also adds **festive styling and elements** — traditional attire enhancements, jewelry, bokeh from string lights, floating particles of color or sparkles. Finally, it applies a cohesive **color grade** that ties everything together into a warm, celebratory mood. On Pixel Shine, this entire pipeline runs automatically, so a simple selfie becomes a portrait that radiates the spirit of the festival.`,
       },
       {
         heading: "Festivals and Styles You Can Create",
@@ -11580,11 +11580,11 @@ It also adds **festive styling and elements** — traditional attire enhancement
 
 **Christmas portraits** wrap you in twinkling lights, snow, cozy warmth, and festive reds and greens.
 
-**Wedding-season and general celebration** styles add florals, elegant backdrops, and warm glamour for engagements and family functions. On JPT AI, you can try several festivals from the same photo, comparing how a Holi burst versus a Diwali glow suits you — all without paying per attempt, since new users get free trials across the creative tools.`,
+**Wedding-season and general celebration** styles add florals, elegant backdrops, and warm glamour for engagements and family functions. On Pixel Shine, you can try several festivals from the same photo, comparing how a Holi burst versus a Diwali glow suits you — all without paying per attempt, since new users get free trials across the creative tools.`,
       },
       {
         heading: "Step-by-Step: Create Your Festival Portrait",
-        body: `Here's the full process on JPT AI:
+        body: `Here's the full process on Pixel Shine:
 
 **Step 1 — Visit sjpt.io** and open the Festival Photoshoot tool in the Creative AI Photo Effects section. It works on desktop or mobile — no download needed.
 
@@ -11596,7 +11596,7 @@ It also adds **festive styling and elements** — traditional attire enhancement
 
 **Step 5 — Review your portrait.** Check that the lighting feels natural and the festival elements suit you. If the effect looks off, re-upload a sharper photo or try a different festival style.
 
-**Step 6 — Regenerate for options.** New users get 5 free trials across JPT AI's tools, so create a few versions across different festivals and compare.
+**Step 6 — Regenerate for options.** New users get 5 free trials across Pixel Shine's tools, so create a few versions across different festivals and compare.
 
 **Step 7 — Download.** Save your festival portrait in full resolution with no watermark. It's ready to share as a greeting, print, or set as a festive profile picture.
 
@@ -11614,7 +11614,7 @@ Start to finish, the process usually takes under two minutes.`,
 
 **Consider the timing of your post.** Create Diwali portraits ahead of the festival so you have greetings ready to share the moment it arrives — no last-minute scramble.
 
-**Upscale for prints and greetings.** If you want to print festival cards or large portraits, run the result through JPT AI's free Normal Upscale to boost resolution without losing quality — free and unlimited with no sign-in.`,
+**Upscale for prints and greetings.** If you want to print festival cards or large portraits, run the result through Pixel Shine's free Normal Upscale to boost resolution without losing quality — free and unlimited with no sign-in.`,
       },
       {
         heading: "Common Mistakes to Avoid",
@@ -11626,15 +11626,15 @@ Start to finish, the process usually takes under two minutes.`,
 
 **Over-relying on the effect to fix a bad photo.** The AI enhances, but it can't fully rescue a heavily backlit or out-of-focus original. Good input still matters.
 
-**Accepting the first result.** The first generation might place elements awkwardly. Regenerate — since JPT AI offers free trials, you can compare several and keep the most vibrant, natural-looking one.`,
+**Accepting the first result.** The first generation might place elements awkwardly. Regenerate — since Pixel Shine offers free trials, you can compare several and keep the most vibrant, natural-looking one.`,
       },
       {
         heading: "AI Festival Photoshoot vs. Traditional Festival Photography",
         body: `Getting professional festival photos the traditional way is genuinely challenging. Festivals are chaotic — colored powder flies everywhere at Holi, lighting is tricky in the low glow of Diwali diyas, and coordinating a photographer during a busy celebration is stressful and expensive. A professional festival shoot can cost a significant amount and still depend on catching the right unpredictable moment.
 
-An **AI festival photoshoot** removes all of that friction. It's free to start on JPT AI, works from a single ordinary photo, and lets you create perfectly lit, vibrant festival portraits without risking your camera in a cloud of colored powder or fighting dim lighting. You can generate portraits for multiple festivals from the same photo and have greetings ready weeks in advance.
+An **AI festival photoshoot** removes all of that friction. It's free to start on Pixel Shine, works from a single ordinary photo, and lets you create perfectly lit, vibrant festival portraits without risking your camera in a cloud of colored powder or fighting dim lighting. You can generate portraits for multiple festivals from the same photo and have greetings ready weeks in advance.
 
-The two aren't mutually exclusive. Traditional photography captures real, spontaneous festival moments with authentic emotion. But for polished, shareable portraits — festive greetings, social posts, profile pictures, printed cards — the AI version is instant, free, and endlessly customizable. Many people use AI festival portraits for their greetings and social content while saving real photography for the in-person memories. On JPT AI, downloads carry no watermark, so your festive portraits look clean and professional wherever you send them.`,
+The two aren't mutually exclusive. Traditional photography captures real, spontaneous festival moments with authentic emotion. But for polished, shareable portraits — festive greetings, social posts, profile pictures, printed cards — the AI version is instant, free, and endlessly customizable. Many people use AI festival portraits for their greetings and social content while saving real photography for the in-person memories. On Pixel Shine, downloads carry no watermark, so your festive portraits look clean and professional wherever you send them.`,
       },
       {
         heading: "Who Uses AI Festival Photoshoots",
@@ -11651,13 +11651,13 @@ The two aren't mutually exclusive. Traditional photography captures real, sponta
       {
         heading: "Frequently Asked Questions",
         body: `**Is the AI festival photoshoot free?**
-Yes. JPT AI gives new users 5 free trials across its creative tools, and the Normal Upscale tool is completely free and unlimited with no sign-in required. You can create festival portraits without paying upfront.
+Yes. Pixel Shine gives new users 5 free trials across its creative tools, and the Normal Upscale tool is completely free and unlimited with no sign-in required. You can create festival portraits without paying upfront.
 
 **Which festivals can I create portraits for?**
-JPT AI supports a range of celebrations including Holi, Diwali, Eid, Navratri, Christmas, and general festive and wedding-season styles, so you can pick the one that fits your occasion.
+Pixel Shine supports a range of celebrations including Holi, Diwali, Eid, Navratri, Christmas, and general festive and wedding-season styles, so you can pick the one that fits your occasion.
 
 **Will there be a watermark on my portrait?**
-No. JPT AI lets you download your festival portrait without a watermark, unlike many competing apps.
+No. Pixel Shine lets you download your festival portrait without a watermark, unlike many competing apps.
 
 **What photo works best?**
 A clear, well-lit portrait or three-quarter shot with an unobstructed face works best. Festive or traditional attire in the original enhances the result.
@@ -11669,23 +11669,23 @@ When you use a clear, well-lit photo, the AI matches lighting and integrates fes
 Yes — many people generate Diwali, Eid, or Christmas portraits ahead of time so their greetings are ready to share the moment the festival arrives.
 
 **Does it work on mobile?**
-Absolutely. JPT AI runs on your phone, so you can create and download festival portraits directly from your phone.
+Absolutely. Pixel Shine runs on your phone, so you can create and download festival portraits directly from your phone.
 
 **Can I print my festival portrait as a card?**
-Yes. Downloads are full resolution, and you can use JPT AI's free upscaler to boost the size for printed cards and greetings.`,
+Yes. Downloads are full resolution, and you can use Pixel Shine's free upscaler to boost the size for printed cards and greetings.`,
       },
       {
         heading: "Key Takeaways",
         body: `An **AI festival photoshoot** turns any photo into a vibrant celebration portrait — Holi color bursts, Diwali diya glow, Eid lanterns, Christmas lights — with matched lighting and authentic festive elements, in minutes and free to start. The keys to great results are matching your outfit and energy to the festival, using a clear well-lit photo, and regenerating to find the most natural, vibrant version.
 
-JPT AI makes it genuinely free, adds no watermarks, and pairs festival portraits with a free unlimited upscaler for print-ready greetings — all in one online platform. Whether you're sending festive greetings, creating seasonal content, or feeling connected to home from far away, head to sjpt.io, upload your photo, and celebrate in vibrant style in under two minutes.`,
+Pixel Shine makes it genuinely free, adds no watermarks, and pairs festival portraits with a free unlimited upscaler for print-ready greetings — all in one online platform. Whether you're sending festive greetings, creating seasonal content, or feeling connected to home from far away, head to sjpt.io, upload your photo, and celebrate in vibrant style in under two minutes.`,
       },
     ],
   },
   {
     slug: "remove-background-product-photos-amazon",
     title: "Remove Background from Product Photos for Amazon and E-Commerce",
-    metaTitle: "Remove Background from Product Photos for Amazon | JPT AI",
+    metaTitle: "Remove Background from Product Photos for Amazon | Pixel Shine",
     metaDescription: "Remove backgrounds from product photos for Amazon, Shopify, and Etsy listings. Get a clean white or transparent background in seconds, free online.",
     excerpt: "Amazon requires white backgrounds. Shopify listings need clean product cutouts. Here is how to remove backgrounds from product photos free and fast.",
     date: "2025-06-08",
@@ -11720,13 +11720,13 @@ This is why background removal is a core e-commerce skill. You photograph your p
 
 **Consistency at scale.** For a catalog of dozens or hundreds of products, AI applies the same clean treatment to every image. Manual editing introduces variation depending on who's doing it and how tired they are.
 
-**Cost.** Outsourcing background removal runs a per-image fee that adds up fast across a catalog. Free AI tools like JPT AI eliminate that cost for most images.
+**Cost.** Outsourcing background removal runs a per-image fee that adds up fast across a catalog. Free AI tools like Pixel Shine eliminate that cost for most images.
 
 Manual editing still has a niche for extremely complex subjects — wispy hair, transparent glass, intricate jewelry against busy backgrounds — where a human touch-up can help. But for the vast majority of product photos, AI removal is faster, cheaper, and produces results indistinguishable from hours of manual work. It's the obvious default for modern e-commerce.`,
       },
       {
         heading: "Step-by-Step: Remove a Product Background",
-        body: `Here's exactly how to create a white-background product image using JPT AI's free background remover.
+        body: `Here's exactly how to create a white-background product image using Pixel Shine's free background remover.
 
 **Step 1: Photograph your product well.** Good lighting and clear separation between product and background make removal cleaner. Shoot against a plain, contrasting surface if you can, but the AI handles busier backgrounds too.
 
@@ -11805,7 +11805,7 @@ For all of them, background removal is a daily task, and the volume makes free, 
       {
         heading: "Frequently Asked Questions",
         body: `**How do I remove the background from a product photo for Amazon?**
-Upload your photo to JPT AI's background remover (sjpt.io/remove-bg), let the AI isolate the product, set the background to pure white (255, 255, 255), size the product to fill at least 85% of the frame, and download. It's free to start.
+Upload your photo to Pixel Shine's background remover (sjpt.io/remove-bg), let the AI isolate the product, set the background to pure white (255, 255, 255), size the product to fill at least 85% of the frame, and download. It's free to start.
 
 **What background does Amazon require for main product images?**
 Amazon requires a pure white background, technically RGB (255, 255, 255), with the product filling at least 85% of the image and no props, text, or logos in the main image slot.
@@ -11814,7 +11814,7 @@ Amazon requires a pure white background, technically RGB (255, 255, 255), with t
 For most products, yes — AI removal is faster and produces results indistinguishable from manual masking. Manual editing only retains an edge for extremely complex subjects like wispy hair or transparent glass on busy backgrounds.
 
 **Can I remove backgrounds from product photos for free?**
-Yes. JPT AI's background remover lets you start for free with no watermark, and new users get 5 free trials across tools. It's built for exactly this kind of e-commerce task.
+Yes. Pixel Shine's background remover lets you start for free with no watermark, and new users get 5 free trials across tools. It's built for exactly this kind of e-commerce task.
 
 **What resolution should my Amazon product image be?**
 Amazon recommends images at least 1000px on the longest side to enable zoom, which improves conversions. If your cutout is smaller, upscale it at sjpt.io/upscale before uploading.
@@ -11842,7 +11842,7 @@ Remove Product BG Free →`,
   {
     slug: "remove-background-portrait-photo",
     title: "How to Remove Background from Portrait Photos (People and Headshots)",
-    metaTitle: "Remove Background from Portrait Photo Free | JPT AI",
+    metaTitle: "Remove Background from Portrait Photo Free | Pixel Shine",
     metaDescription: "Remove backgrounds from portrait and headshot photos with AI. Get a clean transparent PNG in seconds, perfect for LinkedIn, resumes, and profiles.",
     excerpt: "Removing a background from a portrait of a person is one of the most common photo editing tasks, and AI has made it effortless.",
     date: "2025-06-12",
@@ -11855,7 +11855,7 @@ Remove Product BG Free →`,
       {
         body: `Learning how to remove the background from a portrait photo used to mean hours in Photoshop, painstakingly tracing around every strand of hair with the pen tool. Today, a good background remover for people can cut out a person from a photo in about three seconds — and it does a cleaner job around hair, glasses, and shoulders than most manual selections ever did. Whether you're prepping a LinkedIn headshot, building an e-commerce team page, or just want a clean cutout of yourself for a birthday card, AI has quietly made this one of the easiest edits in photography.
 
-The tricky part with portraits specifically is that people are hard. Hair has thousands of fine edges, skin tones blend into warm backgrounds, and semi-transparent details like earrings or wispy flyaways trip up cheaper tools. In this guide, we'll walk through exactly how to cut out a person from a photo cleanly, what separates a good result from an obviously-faked one, and how to do the whole thing free on JPT AI without installing anything or creating an account.`,
+The tricky part with portraits specifically is that people are hard. Hair has thousands of fine edges, skin tones blend into warm backgrounds, and semi-transparent details like earrings or wispy flyaways trip up cheaper tools. In this guide, we'll walk through exactly how to cut out a person from a photo cleanly, what separates a good result from an obviously-faked one, and how to do the whole thing free on Pixel Shine without installing anything or creating an account.`,
       },
       {
         heading: "Why Portraits Are Harder Than Product Photos",
@@ -11865,7 +11865,7 @@ The tricky part with portraits specifically is that people are hard. Hair has th
 
 **Skin and clothing can blend into the background.** A person in a beige sweater standing against a cream wall gives the AI very little contrast to work with. Good tools use semantic understanding — they know what a \"person\" looks like — rather than relying purely on color contrast.
 
-**Accessories add complexity.** Glasses (with their partial transparency and reflections), dangling earrings, loose scarves, and hats all create edge cases. The best background remover for people treats these as part of the subject rather than accidentally slicing them off. This is exactly the kind of nuance JPT AI's model is tuned for, which is why portrait cutouts come out looking natural rather than stamped.`,
+**Accessories add complexity.** Glasses (with their partial transparency and reflections), dangling earrings, loose scarves, and hats all create edge cases. The best background remover for people treats these as part of the subject rather than accidentally slicing them off. This is exactly the kind of nuance Pixel Shine's model is tuned for, which is why portrait cutouts come out looking natural rather than stamped.`,
       },
       {
         heading: "What a Clean Portrait Cutout Actually Looks Like",
@@ -11879,17 +11879,17 @@ The tricky part with portraits specifically is that people are hard. Hair has th
 
 **Consistent edges under zoom.** Zoom to 200% and the edge should stay clean and consistent, not pixelated or jagged.
 
-When you use JPT AI's Remove Background tool, it outputs a transparent PNG that preserves all of this, so you can drop your subject onto a white background, a brand color, or an entirely new scene without any manual touch-up in most cases.`,
+When you use Pixel Shine's Remove Background tool, it outputs a transparent PNG that preserves all of this, so you can drop your subject onto a white background, a brand color, or an entirely new scene without any manual touch-up in most cases.`,
       },
       {
         heading: "Step-by-Step: Remove the Background from a Portrait",
-        body: `Here's the exact process to cut out a person from a photo using JPT AI, start to finish. The whole thing takes under a minute.
+        body: `Here's the exact process to cut out a person from a photo using Pixel Shine, start to finish. The whole thing takes under a minute.
 
 **Step 1: Choose your source photo.** Pick the highest-resolution version you have. A photo where the person is reasonably separated from the background (even slightly) gives the AI the best shot, though it can handle busy backgrounds too. Avoid heavily compressed screenshots if you can.
 
 **Step 2: Go to sjpt.io and open the Remove Background tool.** No sign-in is required for basic background removal, so you can jump straight in. Navigate to the Remove Background feature from the homepage.
 
-**Step 3: Upload your portrait.** Drag and drop the image directly onto the upload area, or click to browse your files. JPT AI accepts standard formats like JPG, PNG, and WEBP.
+**Step 3: Upload your portrait.** Drag and drop the image directly onto the upload area, or click to browse your files. Pixel Shine accepts standard formats like JPG, PNG, and WEBP.
 
 **Step 4: Let the AI process it.** Within a few seconds, the tool automatically detects the person, separates them from the background, and returns a transparent cutout. You don't need to draw any masks or make any selections.
 
@@ -11911,7 +11911,7 @@ When you use JPT AI's Remove Background tool, it outputs a transparent PNG that 
 
 **Match your new background's lighting.** If you're compositing your subject onto a new scene, pick a background whose light direction matches the portrait. A person lit from the left looks wrong on a background lit from the right.
 
-**For white backgrounds, check for gray halos.** Zoom in after adding white. If you see a faint gray edge, it's usually old-background fringe — JPT AI minimizes this, but it's worth a glance.
+**For white backgrounds, check for gray halos.** Zoom in after adding white. If you see a faint gray edge, it's usually old-background fringe — Pixel Shine minimizes this, but it's worth a glance.
 
 **Batch similar photos together.** If you're doing a whole team or a series, process them in one session so lighting and framing stay consistent across the set.`,
       },
@@ -11933,13 +11933,13 @@ When you use JPT AI's Remove Background tool, it outputs a transparent PNG that 
         heading: "Portrait Cutouts vs. Manual Photoshop Selection",
         body: `It's worth understanding what you're gaining by using AI instead of doing this by hand — and when manual editing still has an edge.
 
-**Speed is the obvious win.** A manual hair selection in Photoshop, even with Select and Mask, takes an experienced editor 10-20 minutes per portrait. JPT AI does it in seconds. For anyone processing more than one or two images, that's the difference between an afternoon and a coffee break.
+**Speed is the obvious win.** A manual hair selection in Photoshop, even with Select and Mask, takes an experienced editor 10-20 minutes per portrait. Pixel Shine does it in seconds. For anyone processing more than one or two images, that's the difference between an afternoon and a coffee break.
 
 **Consistency favors AI.** When you're cutting out a whole team, manual selections vary editor-to-editor and even frame-to-frame. AI applies the same model every time, so your team page looks uniform.
 
 **Manual still wins on truly extreme edge cases.** Frizzy backlit hair against a busy, similarly-colored background is where a skilled retoucher with a graphics tablet can still coax out detail the AI misses. But these cases are rare, and they're getting rarer as models improve.
 
-**Cost is lopsided.** Photoshop is a subscription plus a serious learning curve. JPT AI's background remover is free to use with no software to install. For the 95% of portraits that aren't pathological edge cases, the AI route is faster, cheaper, and just as clean — which is why most professionals now use AI for the first pass and only touch up by hand when needed.`,
+**Cost is lopsided.** Photoshop is a subscription plus a serious learning curve. Pixel Shine's background remover is free to use with no software to install. For the 95% of portraits that aren't pathological edge cases, the AI route is faster, cheaper, and just as clean — which is why most professionals now use AI for the first pass and only touch up by hand when needed.`,
       },
       {
         heading: "Who Uses Portrait Background Removal",
@@ -11949,7 +11949,7 @@ When you use JPT AI's Remove Background tool, it outputs a transparent PNG that 
 
 **E-commerce sellers** who model their own clothing or products cut themselves out for clean catalog shots. **Teachers and event organizers** make yearbook-style grids and speaker lineups. **Social media creators** produce thumbnails and stickers where they're isolated from the background. And plenty of everyday people just want a clean cutout of a loved one for a photo book, invitation, or gift.
 
-The common thread: they all need a person separated from a background quickly, cleanly, and without paying a designer. JPT AI covers all of these for free.`,
+The common thread: they all need a person separated from a background quickly, cleanly, and without paying a designer. Pixel Shine covers all of these for free.`,
       },
       {
         heading: "Frequently Asked Questions",
@@ -11957,13 +11957,13 @@ The common thread: they all need a person separated from a background quickly, c
 Go to sjpt.io, open the Remove Background tool, upload your portrait, and the AI automatically cuts out the person in a few seconds. No account or payment is required for basic background removal, and there's no watermark on the result.
 
 **Does the AI handle hair well?**
-Yes. JPT AI's model uses alpha matting specifically tuned for people, so it preserves soft hair edges and flyaway strands rather than producing a hard, cut-out silhouette. Extremely dark hair against a dark background is the hardest case, but most portraits come out clean.
+Yes. Pixel Shine's model uses alpha matting specifically tuned for people, so it preserves soft hair edges and flyaway strands rather than producing a hard, cut-out silhouette. Extremely dark hair against a dark background is the hardest case, but most portraits come out clean.
 
 **Can I get a transparent background?**
 Absolutely. Export as a PNG and the background is fully transparent, so you can drop your subject onto any color or scene later. This is the recommended master format to keep.
 
 **Will there be a watermark on my cutout?**
-No. JPT AI does not add watermarks to your images, even on the free tier — a common frustration with other free tools.
+No. Pixel Shine does not add watermarks to your images, even on the free tier — a common frustration with other free tools.
 
 **What resolution should my source photo be?**
 As high as you have. More pixels means more edge detail for the AI to work with. If you need a larger final image, remove the background first, then use the upscaler on the result.
@@ -11981,7 +11981,7 @@ No. Everything runs online at sjpt.io. There's nothing to download or install.`,
         heading: "Key Takeaways",
         body: `Removing the background from a portrait is no longer a technical chore reserved for Photoshop experts. With AI trained specifically on people, you can cut out a person from a photo in seconds while keeping natural hair edges, intact accessories, and clean, fringe-free borders. The keys to great results are starting with a high-resolution source, keeping a transparent PNG master copy, and matching lighting when you composite onto a new background.
 
-Best of all, you don't need to pay or sign up to get professional-quality cutouts. JPT AI's Remove Background tool is free, watermark-free, and runs entirely online. Head to sjpt.io, upload your portrait, and see how clean your cutout looks in about three seconds.`,
+Best of all, you don't need to pay or sign up to get professional-quality cutouts. Pixel Shine's Remove Background tool is free, watermark-free, and runs entirely online. Head to sjpt.io, upload your portrait, and see how clean your cutout looks in about three seconds.`,
       },
     ],
   },
@@ -11989,8 +11989,8 @@ Best of all, you don't need to pay or sign up to get professional-quality cutout
   {
     slug: "how-to-change-photo-background-online-free",
     title: "How to Change Photo Background Online for Free",
-    metaTitle: "Change Photo Background Online Free | JPT AI",
-    metaDescription: "Change any photo background online for free with JPT AI. Remove the old background and replace it with a new color, gradient, or custom image in seconds.",
+    metaTitle: "Change Photo Background Online Free | Pixel Shine",
+    metaDescription: "Change any photo background online for free with Pixel Shine. Remove the old background and replace it with a new color, gradient, or custom image in seconds.",
     excerpt: "Changing a photo background used to require Photoshop. Now you can swap any background online for free in under 30 seconds.",
     date: "2025-06-16",
     readTime: "11 min read",
@@ -12002,7 +12002,7 @@ Best of all, you don't need to pay or sign up to get professional-quality cutout
       {
         body: `Knowing how to change a photo background online for free opens up a surprising number of possibilities — turning a snapshot taken in a messy room into a clean professional portrait, dropping yourself in front of a landmark you've never visited, or giving a product photo a crisp studio look. What used to require expensive software and real skill now takes about a minute online, and you don't have to pay a cent to get a clean, natural result.
 
-The process has two parts: removing the existing background, then replacing it with something new — a solid color, a gradient, or an entirely different scene. The magic is in the first step. If the cutout around the subject is clean (especially the hair and edges), the new background will look believable. If it's sloppy, no amount of fancy backdrop will hide it. In this guide, we'll cover how to swap a photo background with AI cleanly, which backgrounds work best for which purposes, and how to do it all free on JPT AI with no watermark and no mandatory account.`,
+The process has two parts: removing the existing background, then replacing it with something new — a solid color, a gradient, or an entirely different scene. The magic is in the first step. If the cutout around the subject is clean (especially the hair and edges), the new background will look believable. If it's sloppy, no amount of fancy backdrop will hide it. In this guide, we'll cover how to swap a photo background with AI cleanly, which backgrounds work best for which purposes, and how to do it all free on Pixel Shine with no watermark and no mandatory account.`,
       },
       {
         heading: "How AI Background Replacement Actually Works",
@@ -12014,7 +12014,7 @@ The process has two parts: removing the existing background, then replacing it w
 
 **Why this beats old \"green screen\" methods:** Chroma keying required you to actually shoot against a green backdrop under even lighting. AI background replacement works on any photo you already have — no special setup, no studio. The tool infers the subject's outline from the image itself.
 
-The quality of your final image comes down almost entirely to how good that first mask is. This is why JPT AI focuses its model on clean edge detection, so when you drop in a new background, the seam between subject and scene is invisible.`,
+The quality of your final image comes down almost entirely to how good that first mask is. This is why Pixel Shine focuses its model on clean edge detection, so when you drop in a new background, the seam between subject and scene is invisible.`,
       },
       {
         heading: "Choosing the Right New Background",
@@ -12028,11 +12028,11 @@ The quality of your final image comes down almost entirely to how good that firs
 
 **Blurred backgrounds** are a forgiving middle ground. A softly blurred office or bokeh backdrop mimics a shallow depth of field, hides the fact that it's a composite, and keeps focus on the subject. This is often the most believable choice for portraits.
 
-With JPT AI, you can try several backgrounds against the same cutout in one session, so it's easy to compare and pick the one that reads as most natural.`,
+With Pixel Shine, you can try several backgrounds against the same cutout in one session, so it's easy to compare and pick the one that reads as most natural.`,
       },
       {
         heading: "Step-by-Step: Change Your Photo Background for Free",
-        body: `Here's the full workflow to replace a background in a photo using JPT AI. From upload to download, it takes about a minute.
+        body: `Here's the full workflow to replace a background in a photo using Pixel Shine. From upload to download, it takes about a minute.
 
 **Step 1: Pick your best source image.** Choose the highest-resolution photo you have where the subject is reasonably clear. Good, even lighting on the subject makes the cutout cleaner.
 
@@ -12092,7 +12092,7 @@ With JPT AI, you can try several backgrounds against the same cutout in one sess
 
 **Real estate and personal branding.** Agents, coaches, and consultants put themselves on flyers and ads. A polished background elevates the whole piece.
 
-**Fun and social.** Place yourself in front of a beach, a city skyline, or a fantasy scene for social posts, invitations, and greeting cards. Because JPT AI is free, you can experiment endlessly without worrying about per-image costs.`,
+**Fun and social.** Place yourself in front of a beach, a city skyline, or a fantasy scene for social posts, invitations, and greeting cards. Because Pixel Shine is free, you can experiment endlessly without worrying about per-image costs.`,
       },
       {
         heading: "Who Uses Free Background Changers",
@@ -12100,7 +12100,7 @@ With JPT AI, you can try several backgrounds against the same cutout in one sess
 
 **Content creators** make thumbnails, stickers, and social graphics where they're isolated on a custom backdrop. **Students and job applicants** produce clean ID-style photos for applications. **Event planners and organizers** create speaker lineups and promotional images. And countless **everyday users** just want to remove a distracting background from a family photo or drop a loved one into a nicer scene for a card or photo book.
 
-What unites them is the need for a quick, clean, free way to replace a background without design skills or software. JPT AI's free tier — no watermark, no mandatory sign-up — makes it accessible to all of them.`,
+What unites them is the need for a quick, clean, free way to replace a background without design skills or software. Pixel Shine's free tier — no watermark, no mandatory sign-up — makes it accessible to all of them.`,
       },
       {
         heading: "Frequently Asked Questions",
@@ -12108,13 +12108,13 @@ What unites them is the need for a quick, clean, free way to replace a backgroun
 Go to sjpt.io, open the Remove Background tool, upload your photo, let the AI remove the existing background, then add a new solid color or scene. It's free, requires no account for basic use, and adds no watermark.
 
 **Can I replace a background without Photoshop?**
-Yes. AI tools like JPT AI handle both the cutout and the replacement automatically online. You don't need Photoshop or any editing skills.
+Yes. AI tools like Pixel Shine handle both the cutout and the replacement automatically online. You don't need Photoshop or any editing skills.
 
 **Will the new background look realistic?**
 It can look completely natural if you match the lighting direction and color temperature between subject and background, and choose a backdrop that isn't overly busy. Blurred backgrounds are the most forgiving and believable.
 
 **Is there a watermark on the free version?**
-No. JPT AI does not add watermarks to your images, even for free background changes.
+No. Pixel Shine does not add watermarks to your images, even for free background changes.
 
 **Can I make the background transparent instead of replacing it?**
 Yes. Export as a PNG for a fully transparent background, which lets you place your subject onto any background later.
@@ -12132,7 +12132,7 @@ Yes. You can process photos one after another in the same session, which is hand
         heading: "Key Takeaways",
         body: `Changing a photo background online is now a one-minute, no-cost task. The process is simple: remove the existing background with AI, then drop in a new one. The secret to a believable result is a clean cutout plus matched lighting — get those two right and even a real-scene swap looks convincing. For safe, professional results, white or blurred backgrounds are hard to beat.
 
-You don't need Photoshop, a subscription, or even an account. JPT AI lets you change photo backgrounds free, with no watermark and no sign-up for basic use. Head to sjpt.io, upload your photo, and try a few backgrounds to see how quickly a snapshot becomes something polished.`,
+You don't need Photoshop, a subscription, or even an account. Pixel Shine lets you change photo backgrounds free, with no watermark and no sign-up for basic use. Head to sjpt.io, upload your photo, and try a few backgrounds to see how quickly a snapshot becomes something polished.`,
       },
     ],
   },
@@ -12140,20 +12140,20 @@ You don't need Photoshop, a subscription, or even an account. JPT AI lets you ch
   {
     slug: "remove-background-free-vs-paid-tools",
     title: "Free vs Paid Background Removers: Which Is Actually Better?",
-    metaTitle: "Free vs Paid Background Remover Comparison | JPT AI",
-    metaDescription: "Comparing free and paid background removers in 2025. See which tools give the best quality, and why JPT AI's free tier beats most paid options.",
+    metaTitle: "Free vs Paid Background Remover Comparison | Pixel Shine",
+    metaDescription: "Comparing free and paid background removers in 2025. See which tools give the best quality, and why Pixel Shine's free tier beats most paid options.",
     excerpt: "Do you actually need to pay for a background remover? We tested the most popular tools to find out where free tools hold up and where they don't.",
     date: "2025-06-20",
     readTime: "11 min read",
     category: "Comparison",
     keywords: ["free background remover vs paid", "remove.bg alternative free", "best background remover free", "background remover comparison"],
     toolHref: "/remove-bg",
-    toolLabel: "Try JPT AI Remove BG Free",
+    toolLabel: "Try Pixel Shine Remove BG Free",
     sections: [
       {
         body: `When you're deciding between a free background remover vs a paid one, the honest answer is that the gap has narrowed dramatically — and for most people, free tools now win. A few years ago, paid services like remove.bg justified their price with noticeably cleaner edges and better hair handling. Today, the best free background removers produce results that are genuinely hard to tell apart, and they do it without watermarks, credit limits, or forced subscriptions.
 
-But \"free\" isn't automatically better, and \"paid\" isn't automatically a rip-off. The right choice depends on your volume, your quality needs, and whether you need extras like batch processing or API access. In this comparison, we'll break down exactly what you're paying for with premium tools, where free options genuinely match them, where they still fall short, and how JPT AI fits in as a free remove.bg alternative that skips the watermark trap most free tools rely on. By the end, you'll know precisely which type of tool fits your workflow — and you'll probably save some money.`,
+But \"free\" isn't automatically better, and \"paid\" isn't automatically a rip-off. The right choice depends on your volume, your quality needs, and whether you need extras like batch processing or API access. In this comparison, we'll break down exactly what you're paying for with premium tools, where free options genuinely match them, where they still fall short, and how Pixel Shine fits in as a free remove.bg alternative that skips the watermark trap most free tools rely on. By the end, you'll know precisely which type of tool fits your workflow — and you'll probably save some money.`,
       },
       {
         heading: "What You're Actually Paying For",
@@ -12179,9 +12179,9 @@ The key insight: most of these premium features matter to high-volume businesses
 
 **Hair and edge handling has improved across the board.** The old \"free tools can't do hair\" complaint is largely outdated. Modern free models handle soft edges, flyaway strands, and semi-transparent details cleanly.
 
-**No-sign-up access is a free-tool advantage.** Many paid tools require an account before you can even test them. The best free options let you upload and see results instantly — JPT AI, for instance, needs no sign-in for basic background removal.
+**No-sign-up access is a free-tool advantage.** Many paid tools require an account before you can even test them. The best free options let you upload and see results instantly — Pixel Shine, for instance, needs no sign-in for basic background removal.
 
-**Where free tools historically fell down was the watermark-and-resolution trap.** This is the real differentiator among free tools themselves. Some free removers give you a clean preview but a watermarked or low-res download. JPT AI breaks from that pattern — it gives you full-resolution, watermark-free downloads for free background removal, which is what makes it a legitimate remove.bg alternative rather than a bait-and-switch.
+**Where free tools historically fell down was the watermark-and-resolution trap.** This is the real differentiator among free tools themselves. Some free removers give you a clean preview but a watermarked or low-res download. Pixel Shine breaks from that pattern — it gives you full-resolution, watermark-free downloads for free background removal, which is what makes it a legitimate remove.bg alternative rather than a bait-and-switch.
 
 For the everyday user removing a background from a headshot, a product photo, or a family picture, a good free tool now delivers essentially everything a paid one would — minus the bill.`,
       },
@@ -12197,7 +12197,7 @@ For the everyday user removing a background from a headshot, a product photo, or
 
 **The most difficult edge cases.** For the hardest 1-2% of images — extremely fine hair against a matching background, complex transparent objects, product photography with reflective surfaces — some premium tools have specialized modes that squeeze out marginally better results.
 
-The honest takeaway: paid tools are worth it when you're running a business that processes images at scale or depends on removal being automated and guaranteed. For everyone else — freelancers, small businesses, students, casual users — the premium features are solving problems you don't have. That's the exact niche where a full-featured free tool like JPT AI makes the most sense.`,
+The honest takeaway: paid tools are worth it when you're running a business that processes images at scale or depends on removal being automated and guaranteed. For everyone else — freelancers, small businesses, students, casual users — the premium features are solving problems you don't have. That's the exact niche where a full-featured free tool like Pixel Shine makes the most sense.`,
       },
       {
         heading: "Head-to-Head Comparison",
@@ -12207,15 +12207,15 @@ The honest takeaway: paid tools are worth it when you're running a business that
 
 **Output quality:** Comparable for typical images. Paid tools have a slim edge on the hardest edge cases. Winner: tie for 98% of photos.
 
-**Watermarks:** The dividing line. Some free tools watermark; paid tools don't. JPT AI is free AND watermark-free. Winner: paid tools and JPT AI.
+**Watermarks:** The dividing line. Some free tools watermark; paid tools don't. Pixel Shine is free AND watermark-free. Winner: paid tools and Pixel Shine.
 
-**Resolution:** Some free tools cap resolution or charge for full-size downloads. JPT AI gives full-res downloads free. Winner: paid tools and JPT AI.
+**Resolution:** Some free tools cap resolution or charge for full-size downloads. Pixel Shine gives full-res downloads free. Winner: paid tools and Pixel Shine.
 
-**Sign-up friction:** Paid tools usually require an account. JPT AI needs no sign-in for basic removal. Winner: free.
+**Sign-up friction:** Paid tools usually require an account. Pixel Shine needs no sign-in for basic removal. Winner: free.
 
 **Batch/API:** Paid tools win decisively for automation at scale. Winner: paid.
 
-**All-in-one features:** Here's where JPT AI stands out — it's not just background removal but also upscaling, AI headshots, and photo effects in one free platform, whereas most paid removers do only one thing. Winner: JPT AI.
+**All-in-one features:** Here's where Pixel Shine stands out — it's not just background removal but also upscaling, AI headshots, and photo effects in one free platform, whereas most paid removers do only one thing. Winner: Pixel Shine.
 
 The pattern is clear: unless you need batch automation, a free tool that avoids the watermark-and-resolution trap gives you paid-tier results for zero cost.`,
       },
@@ -12234,16 +12234,16 @@ The pattern is clear: unless you need batch automation, a free tool that avoids 
 **Forgetting about extra features.** If you also need upscaling or headshots, a single free all-in-one platform beats juggling (and paying for) multiple single-purpose tools.`,
       },
       {
-        heading: "JPT AI as a Free remove.bg Alternative",
-        body: `If you've been using or considering remove.bg, here's why JPT AI is worth trying as a free alternative — and where it genuinely differs.
+        heading: "Pixel Shine as a Free remove.bg Alternative",
+        body: `If you've been using or considering remove.bg, here's why Pixel Shine is worth trying as a free alternative — and where it genuinely differs.
 
 **No watermark, full resolution, free.** The two things people most dislike about free background removers — watermarks and downscaled downloads — aren't present. You get a clean, full-resolution cutout at no cost.
 
 **No mandatory account.** Basic background removal works without sign-in. Upload, remove, download. That's a lower-friction experience than most paid tools, which gate everything behind registration.
 
-**It's more than a background remover.** remove.bg does one job. JPT AI bundles background removal with an AI upscaler (free and unlimited on the Normal setting), an AI headshot generator, an AI photo editor driven by text prompts, and creative photo effects. If your work touches more than just cutouts, having everything in one free place is a real workflow advantage.
+**It's more than a background remover.** remove.bg does one job. Pixel Shine bundles background removal with an AI upscaler (free and unlimited on the Normal setting), an AI headshot generator, an AI photo editor driven by text prompts, and creative photo effects. If your work touches more than just cutouts, having everything in one free place is a real workflow advantage.
 
-**A gentle path to premium only if you need it.** For advanced features like Pro AI upscaling, JPT AI uses inexpensive credits, and new users get free trials across tools. But the core background removal you came for stays free.
+**A gentle path to premium only if you need it.** For advanced features like Pro AI upscaling, Pixel Shine uses inexpensive credits, and new users get free trials across tools. But the core background removal you came for stays free.
 
 For the vast majority of users, that combination — paid-quality output, no watermark, no sign-up, plus bonus tools — makes it a straightforward pick over paying a monthly fee.`,
       },
@@ -12251,7 +12251,7 @@ For the vast majority of users, that combination — paid-quality output, no wat
         heading: "Who Should Pay and Who Shouldn't",
         body: `Let's make this concrete with clear recommendations.
 
-**Stick with free (like JPT AI) if you're:** an individual removing backgrounds occasionally, a job seeker prepping headshots, a small business owner building a team page, a student, a social media creator, a marketplace seller listing a modest number of products, or anyone who bristles at watermarks and subscriptions. This covers the overwhelming majority of people.
+**Stick with free (like Pixel Shine) if you're:** an individual removing backgrounds occasionally, a job seeker prepping headshots, a small business owner building a team page, a student, a social media creator, a marketplace seller listing a modest number of products, or anyone who bristles at watermarks and subscriptions. This covers the overwhelming majority of people.
 
 **Consider paying if you're:** an e-commerce operation processing hundreds of images daily and needing API automation, an agency requiring team accounts and SLAs, or a business where background removal is a guaranteed, mission-critical pipeline step. In those cases, the batch tools and support justify the cost.
 
@@ -12263,19 +12263,19 @@ The simple test: if you can't articulate a specific paid feature you'll actually
 For typical portraits and product photos, yes — the underlying AI models are now comparable. Paid tools retain a slim edge only on the hardest 1-2% of edge cases. For everyday use, a good free tool matches paid quality.
 
 **What's the best free alternative to remove.bg?**
-JPT AI is a strong choice because it offers full-resolution, watermark-free background removal with no mandatory sign-in, plus extra tools like upscaling and AI headshots in the same free platform.
+Pixel Shine is a strong choice because it offers full-resolution, watermark-free background removal with no mandatory sign-in, plus extra tools like upscaling and AI headshots in the same free platform.
 
 **Do free background removers add watermarks?**
-Many do, and then charge to remove them. JPT AI does not add watermarks, even on the free tier — one of its main advantages over other free tools.
+Many do, and then charge to remove them. Pixel Shine does not add watermarks, even on the free tier — one of its main advantages over other free tools.
 
 **Why do paid tools charge for full resolution?**
-It's the standard monetization model: give a free preview, charge for the full-size download. It's effective for the tool but frustrating for users. Some free tools, including JPT AI, give full resolution for free.
+It's the standard monetization model: give a free preview, charge for the full-size download. It's effective for the tool but frustrating for users. Some free tools, including Pixel Shine, give full resolution for free.
 
 **When is it worth paying for background removal?**
 When you need high-volume batch processing, API automation, or guaranteed uptime with support — typically for e-commerce operations or agencies handling hundreds of images.
 
 **Can I remove backgrounds without creating an account?**
-Yes, with tools like JPT AI, basic background removal requires no sign-in. Many paid tools require registration before you can even test them.
+Yes, with tools like Pixel Shine, basic background removal requires no sign-in. Many paid tools require registration before you can even test them.
 
 **Are free tools safe to use?**
 Reputable free tools are safe. Use established platforms, and if you're handling sensitive images, review the site's privacy practices as you would with any online tool.
@@ -12287,7 +12287,7 @@ Most free web tools process one image at a time, which is fine for individuals a
         heading: "Key Takeaways",
         body: `The free vs paid background remover debate has largely been settled in favor of free — for most people. The AI quality gap has closed to the point where typical photos look identical, and the real differentiator among free tools is whether they trap you with watermarks and downscaled downloads. Paid tools still earn their keep for high-volume, automated, business-critical workflows, but that's a specific minority.
 
-If you're an individual, freelancer, or small business, there's little reason to pay. JPT AI gives you full-resolution, watermark-free background removal with no sign-up, plus upscaling, AI headshots, and photo effects in one free platform. Try it at sjpt.io before you ever consider a subscription — chances are, free is all you need.`,
+If you're an individual, freelancer, or small business, there's little reason to pay. Pixel Shine gives you full-resolution, watermark-free background removal with no sign-up, plus upscaling, AI headshots, and photo effects in one free platform. Try it at sjpt.io before you ever consider a subscription — chances are, free is all you need.`,
       },
     ],
   },
@@ -12295,7 +12295,7 @@ If you're an individual, freelancer, or small business, there's little reason to
   {
     slug: "passport-photo-background-remover",
     title: "How to Make a Passport Photo White Background with AI",
-    metaTitle: "Passport Photo White Background Free | JPT AI",
+    metaTitle: "Passport Photo White Background Free | Pixel Shine",
     metaDescription: "Make a passport photo with a white background using AI. Remove your current background and replace with white in seconds, meets official requirements.",
     excerpt: "Getting a passport photo with the right white background no longer requires a studio. AI makes it free and instant from any photo.",
     date: "2025-06-24",
@@ -12308,7 +12308,7 @@ If you're an individual, freelancer, or small business, there's little reason to
       {
         body: `Making a passport photo with a white background used to mean a trip to a pharmacy or photo booth and a $15 fee for two prints. Now you can create a compliant passport photo white background at home in about a minute, using nothing but a phone photo and a free AI background remover. The requirement that trips most people up isn't the framing or expression — it's that clean, plain white (or off-white) background that passport, visa, and ID authorities demand. That's exactly the part AI handles best.
 
-Whether you need it for a passport, a visa application, a national ID, a driver's license, or an employee badge, the core task is the same: isolate your head and shoulders cleanly and place them on a uniform white background with no shadows. In this guide, we'll walk through exactly how to remove the background for a passport photo, the specific rules you need to meet, the mistakes that get photos rejected, and how to do it all free on JPT AI without paying a booth or installing software.`,
+Whether you need it for a passport, a visa application, a national ID, a driver's license, or an employee badge, the core task is the same: isolate your head and shoulders cleanly and place them on a uniform white background with no shadows. In this guide, we'll walk through exactly how to remove the background for a passport photo, the specific rules you need to meet, the mistakes that get photos rejected, and how to do it all free on Pixel Shine without paying a booth or installing software.`,
       },
       {
         heading: "What Passport Photo Rules Actually Require",
@@ -12338,11 +12338,11 @@ The key point: background removal handles the single hardest technical requireme
 
 **It's free.** A photo booth charges per session. AI removal is free, so you can try as many photos as you need until one is right.
 
-The one thing AI doesn't do for you is the capture — you still need a well-lit, front-facing photo with a neutral expression. But once you have that, JPT AI turns it into a clean white-background photo in seconds. Get the shot right, and the hardest technical requirement solves itself.`,
+The one thing AI doesn't do for you is the capture — you still need a well-lit, front-facing photo with a neutral expression. But once you have that, Pixel Shine turns it into a clean white-background photo in seconds. Get the shot right, and the hardest technical requirement solves itself.`,
       },
       {
         heading: "Step-by-Step: Make a White-Background Passport Photo",
-        body: `Here's the complete process, from taking the photo to a compliant white-background result using JPT AI.
+        body: `Here's the complete process, from taking the photo to a compliant white-background result using Pixel Shine.
 
 **Step 1: Set up good, even lighting.** Face a window or a soft light source so your face is evenly lit with no harsh shadows. Avoid overhead light that shadows your eyes.
 
@@ -12404,7 +12404,7 @@ The one thing AI doesn't do for you is the capture — you still need a well-lit
 
 **School and university IDs, professional licenses, and online application photos** round out the list.
 
-Because JPT AI is free and unlimited for background removal, you can produce compliant photos for every family member and every document type without paying per photo. Keep the transparent PNG cutout, and you can quickly re-crop and re-fill for different dimension requirements as they come up.`,
+Because Pixel Shine is free and unlimited for background removal, you can produce compliant photos for every family member and every document type without paying per photo. Keep the transparent PNG cutout, and you can quickly re-crop and re-fill for different dimension requirements as they come up.`,
       },
       {
         heading: "Who Uses AI Passport Photo Makers",
@@ -12412,7 +12412,7 @@ Because JPT AI is free and unlimited for background removal, you can produce com
 
 **Parents** deal with the notoriously hard task of infant and child passport photos, where a booth trip with a squirming toddler is a nightmare — taking the photo at home and cleaning the background is far easier. **HR teams** create consistent employee badge photos for new hires. **Anyone renewing a document** on a deadline can produce a photo in minutes rather than finding an open booth.
 
-The common benefit is control and cost: unlimited retakes until the photo is right, no per-print fee, and no trip out. JPT AI's free background remover makes the hardest part — the clean white background — effortless.`,
+The common benefit is control and cost: unlimited retakes until the photo is right, no per-print fee, and no trip out. Pixel Shine's free background remover makes the hardest part — the clean white background — effortless.`,
       },
       {
         heading: "Frequently Asked Questions",
@@ -12435,7 +12435,7 @@ Yes, by replacing the entire original background with clean digital white, any b
 Yes. The same process works for visa, national ID, driver's license, and badge photos — just adjust the dimensions and background shade to match that document's rules.
 
 **Is there a watermark on the free version?**
-No. JPT AI does not add watermarks, so your passport photo downloads clean at full resolution.
+No. Pixel Shine does not add watermarks, so your passport photo downloads clean at full resolution.
 
 **What should I wear for a passport photo?**
 Wear a mid-tone or darker top that contrasts with the white background so your shoulders stay clearly defined. Avoid white or very pale clothing, which blends into the background.`,
@@ -12444,7 +12444,7 @@ Wear a mid-tone or darker top that contrasts with the white background so your s
         heading: "Key Takeaways",
         body: `Creating a compliant passport photo with a white background at home is genuinely easy now. The hardest technical requirement — a clean, shadow-free white background — is exactly what AI background removal handles best. Your job is simply to capture a well-lit, front-facing photo with a neutral expression, then let the tool cut you out and drop you onto plain white before cropping to the right dimensions.
 
-Do it right and you'll save the booth fee, avoid the trip, and get unlimited retakes until the photo is perfect. JPT AI's Remove Background tool is free, watermark-free, and needs no sign-up for basic use. Head to sjpt.io, upload your photo, and make a passport-ready image in about a minute.`,
+Do it right and you'll save the booth fee, avoid the trip, and get unlimited retakes until the photo is perfect. Pixel Shine's Remove Background tool is free, watermark-free, and needs no sign-up for basic use. Head to sjpt.io, upload your photo, and make a passport-ready image in about a minute.`,
       },
     ],
   },
@@ -12452,7 +12452,7 @@ Do it right and you'll save the booth fee, avoid the trip, and get unlimited ret
   {
     slug: "ai-headshot-generator-comparison-2025",
     title: "Best AI Headshot Generators Compared: Which One Is Worth It?",
-    metaTitle: "Best AI Headshot Generator 2025 Comparison | JPT AI",
+    metaTitle: "Best AI Headshot Generator 2025 Comparison | Pixel Shine",
     metaDescription: "Compare the best AI headshot generators of 2025. See quality, pricing, and features side-by-side to find the right tool for your professional photo.",
     excerpt: "AI headshot generators have exploded in 2025. We compared the top tools head-to-head to find which ones actually deliver professional-quality results.",
     date: "2025-07-05",
@@ -12465,7 +12465,7 @@ Do it right and you'll save the booth fee, avoid the trip, and get unlimited ret
       {
         body: `Choosing the best AI headshot generator in 2025 comes down to a few things that matter more than the marketing hype: how realistic the results look, how much you pay, how many photos you need to upload, and how long you wait. The category has exploded — dozens of tools now promise professional headshots from a handful of selfies — but they vary wildly in price (from free to $60+), turnaround (instant to 24 hours), and quality (genuinely studio-grade to uncanny-valley disappointing).
 
-If you're comparing options like Aragon AI, HeadshotPro, and others, this guide cuts through the noise. We'll lay out the criteria that actually determine whether you'll be happy with your headshots, compare how the major approaches stack up, explain where the money goes, and show where JPT AI fits as a free-to-start alternative that lets you test the waters before spending anything. Whether you need a polished LinkedIn photo, a corporate directory shot, or a personal-brand image, by the end you'll know exactly what to look for and which tool matches your budget and needs.`,
+If you're comparing options like Aragon AI, HeadshotPro, and others, this guide cuts through the noise. We'll lay out the criteria that actually determine whether you'll be happy with your headshots, compare how the major approaches stack up, explain where the money goes, and show where Pixel Shine fits as a free-to-start alternative that lets you test the waters before spending anything. Whether you need a polished LinkedIn photo, a corporate directory shot, or a personal-brand image, by the end you'll know exactly what to look for and which tool matches your budget and needs.`,
       },
       {
         heading: "The Criteria That Actually Matter",
@@ -12491,7 +12491,7 @@ Keep these five in mind as your scorecard. The right tool is the one that scores
 
 **Instant-generation tools.** You upload one or a few photos and get results in seconds to minutes. Pros: fast, cheap or free to start, minimal source photos needed. Cons: sometimes less variety than the heavy train-a-model services. This is the sweet spot for people who want a good headshot quickly without a big commitment.
 
-**All-in-one platforms (like JPT AI).** Headshot generation sits alongside background removal, upscaling, and photo editing. Pros: you're not paying for a single-use tool, and you can polish results with other features in the same place. Free to start, with cheap credits for extras.
+**All-in-one platforms (like Pixel Shine).** Headshot generation sits alongside background removal, upscaling, and photo editing. Pros: you're not paying for a single-use tool, and you can polish results with other features in the same place. Free to start, with cheap credits for extras.
 
 The train-a-model camp wins on sheer volume and variety; the instant camp wins on speed, cost, and convenience. Which is \"best\" depends entirely on whether you value a huge batch of options or a fast, affordable, good-enough result you can get today.`,
       },
@@ -12525,7 +12525,7 @@ This order — free test before paid commitment — is how you avoid buyer's rem
 
 **Prioritize likeness over glamour.** A headshot that makes you look great but unrecognizable defeats the purpose. Pick the results that still clearly look like you.
 
-**Upscale the winner.** Once you've chosen your favorite headshot, run it through an upscaler for crisp, high-resolution output suitable for print and large displays. JPT AI has this built in.
+**Upscale the winner.** Once you've chosen your favorite headshot, run it through an upscaler for crisp, high-resolution output suitable for print and large displays. Pixel Shine has this built in.
 
 **Keep the background flexible.** If you want to place your headshot on a specific brand color or scene, generate it and then use background removal to composite it exactly where you need it.`,
       },
@@ -12551,7 +12551,7 @@ This order — free test before paid commitment — is how you avoid buyer's rem
 
 **But most people need one or two good headshots.** For a LinkedIn photo, a resume, an email signature, or a team page, you don't need 100 variations. You need one solid, professional, recognizable image. Paying premium prices for volume you'll never use is the most common overspend in this category.
 
-**This is exactly where free-to-start tools win.** JPT AI's AI Headshot Generator lets new users try it with free trials, so you can produce a professional headshot without any upfront payment. For advanced or higher-volume needs, credits are cheap and you buy only what you use — no big subscription, no large package fee.
+**This is exactly where free-to-start tools win.** Pixel Shine's AI Headshot Generator lets new users try it with free trials, so you can produce a professional headshot without any upfront payment. For advanced or higher-volume needs, credits are cheap and you buy only what you use — no big subscription, no large package fee.
 
 The honest guidance: if you need a variety pack for a personal brand across many channels, a paid train-a-model tool may suit you. If you need a great headshot or two, start free. Most people are in the second group and never need to pay.`,
       },
@@ -12563,21 +12563,21 @@ The honest guidance: if you need a variety pack for a personal brand across many
 
 **Consultants, coaches, and personal brands** need a range of images for websites, courses, and social channels. And plenty of **everyday professionals** simply want a decent headshot without booking a $200+ photographer session.
 
-What unites them is wanting a professional image without the cost and scheduling of a traditional shoot. Starting free with JPT AI lets any of them see the quality before spending a dollar.`,
+What unites them is wanting a professional image without the cost and scheduling of a traditional shoot. Starting free with Pixel Shine lets any of them see the quality before spending a dollar.`,
       },
       {
         heading: "Frequently Asked Questions",
         body: `**What is the best AI headshot generator in 2025?**
-It depends on your need. Train-a-model tools like Aragon AI and HeadshotPro excel at large variety packs but cost $40-60 and take hours. For a fast, affordable, good-quality headshot, an instant free-to-start tool like JPT AI's AI Headshot Generator is often the better fit — test it free before paying anywhere.
+It depends on your need. Train-a-model tools like Aragon AI and HeadshotPro excel at large variety packs but cost $40-60 and take hours. For a fast, affordable, good-quality headshot, an instant free-to-start tool like Pixel Shine's AI Headshot Generator is often the better fit — test it free before paying anywhere.
 
 **Are AI headshots good enough for LinkedIn?**
 Yes. Modern AI headshots are realistic enough for LinkedIn, resumes, and professional profiles, provided you pick results that clearly look like you and match your industry's style.
 
 **How much do AI headshots cost?**
-Train-a-model services typically run $30-60 per package. Free-to-start tools like JPT AI let you try headshots at no cost, with cheap credits only if you want advanced or higher-volume output.
+Train-a-model services typically run $30-60 per package. Free-to-start tools like Pixel Shine let you try headshots at no cost, with cheap credits only if you want advanced or higher-volume output.
 
 **Is there a free AI headshot generator?**
-Yes. JPT AI offers an AI Headshot Generator where new users get free trials, so you can create a professional headshot without upfront payment.
+Yes. Pixel Shine offers an AI Headshot Generator where new users get free trials, so you can create a professional headshot without upfront payment.
 
 **How many photos do I need to upload?**
 It varies. Train-a-model tools often want 10-20 photos; instant tools work with just a few. More good-quality, varied source photos always improve results.
@@ -12586,7 +12586,7 @@ It varies. Train-a-model tools often want 10-20 photos; instant tools work with 
 The best tools preserve your real features. To maximize likeness, upload clear, varied source photos and choose results that still clearly resemble you rather than the most glamorous option.
 
 **What's a good alternative to Aragon AI?**
-JPT AI is a solid free-to-start alternative, especially if you want to test quality before committing money or need background removal and upscaling in the same platform.
+Pixel Shine is a solid free-to-start alternative, especially if you want to test quality before committing money or need background removal and upscaling in the same platform.
 
 **How long do AI headshots take?**
 Instant tools deliver results in seconds to minutes. Train-a-model services can take several hours to a day because they train a custom model first.`,
@@ -12595,7 +12595,7 @@ Instant tools deliver results in seconds to minutes. Train-a-model services can 
         heading: "Key Takeaways",
         body: `The best AI headshot generator in 2025 isn't a single winner — it's the one that fits your specific need. If you want a huge variety pack and don't mind paying $40-60 and waiting hours, train-a-model services like Aragon AI deliver volume. But most people just need one or two professional, recognizable headshots, and for them, a fast free-to-start tool is the smarter play.
 
-The golden rule: test free before you pay. JPT AI's AI Headshot Generator gives new users free trials, so you can see the quality on your own face at zero cost, then decide if you ever need more. Head to sjpt.io, try it, and let the results — not the marketing — make your decision.`,
+The golden rule: test free before you pay. Pixel Shine's AI Headshot Generator gives new users free trials, so you can see the quality on your own face at zero cost, then decide if you ever need more. Head to sjpt.io, try it, and let the results — not the marketing — make your decision.`,
       },
     ],
   },
@@ -12603,7 +12603,7 @@ The golden rule: test free before you pay. JPT AI's AI Headshot Generator gives 
   {
     slug: "how-to-take-best-photo-for-ai-headshot",
     title: "How to Take the Perfect Source Photo for AI Headshots",
-    metaTitle: "Best Photo for AI Headshot Tips and Guide | JPT AI",
+    metaTitle: "Best Photo for AI Headshot Tips and Guide | Pixel Shine",
     metaDescription: "Learn how to take the perfect source photo for AI headshot generation. Better input photos produce dramatically better AI headshot results.",
     excerpt: "The quality of your AI headshot depends heavily on your source photo. Here is exactly what to do to get the best possible result.",
     date: "2025-07-09",
@@ -12666,7 +12666,7 @@ Get the angle, framing, and background right, and you've handed the AI a clean, 
 
 **Step 7: Review and pick the best.** Choose the sharpest, best-lit, most natural-looking shots. Delete any that are blurry, shadowed, or awkwardly angled.
 
-**Step 8: Upload to JPT AI.** Go to sjpt.io, open the AI Headshot Generator, and upload your best source photos. New users get free trials, so you can generate and evaluate your headshots at no cost.`,
+**Step 8: Upload to Pixel Shine.** Go to sjpt.io, open the AI Headshot Generator, and upload your best source photos. New users get free trials, so you can generate and evaluate your headshots at no cost.`,
       },
       {
         heading: "Pro Tips for Standout Source Photos",
@@ -12708,7 +12708,7 @@ Get the angle, framing, and background right, and you've handed the AI a clean, 
 
 **Where a studio helps is only if you skip the fundamentals.** A professional photographer will get lighting and angle right by default. But you can replicate that with a window and a little attention, for free.
 
-**The practical bottom line:** invest your effort, not your money. Spend five minutes getting the lighting and angle right at home, and the AI does the rest. That's the entire value proposition — turning an accessible home photo into a polished professional headshot without a photographer. JPT AI's free trials let you prove this to yourself before spending anything.`,
+**The practical bottom line:** invest your effort, not your money. Spend five minutes getting the lighting and angle right at home, and the AI does the rest. That's the entire value proposition — turning an accessible home photo into a polished professional headshot without a photographer. Pixel Shine's free trials let you prove this to yourself before spending anything.`,
       },
       {
         heading: "Who Benefits from Getting the Source Photo Right",
@@ -12716,7 +12716,7 @@ Get the angle, framing, and background right, and you've handed the AI a clean, 
 
 **Founders and freelancers** building a personal brand generate consistent, professional imagery on demand. **Entire teams** photographed in different locations can each capture a good home source photo and end up with matching, cohesive headshots. **Anyone facing a deadline** — a last-minute conference bio, a sudden job application — can shoot and generate a headshot in under an hour.
 
-The unifying benefit is independence: once you know how to take a great source photo, you never again need to schedule and pay for a headshot session. A window, a phone, and JPT AI's free trials are all it takes.`,
+The unifying benefit is independence: once you know how to take a great source photo, you never again need to schedule and pay for a headshot session. A window, a phone, and Pixel Shine's free trials are all it takes.`,
       },
       {
         heading: "Frequently Asked Questions",
@@ -12756,7 +12756,7 @@ Avoid the common traps of harsh lighting, shooting from below, heavy filters, an
   {
     slug: "ai-headshot-for-linkedin-resume",
     title: "AI Headshots for LinkedIn and Resume: A Complete Guide",
-    metaTitle: "AI Headshot for LinkedIn and Resume | JPT AI",
+    metaTitle: "AI Headshot for LinkedIn and Resume | Pixel Shine",
     metaDescription: "Get a professional AI headshot for LinkedIn and your resume. Generate a studio-quality headshot from a selfie in minutes, free to try.",
     excerpt: "Your LinkedIn photo affects how recruiters and colleagues perceive you before they have read a single word. Here is how to get the right one with AI.",
     date: "2025-07-13",
@@ -12769,7 +12769,7 @@ Avoid the common traps of harsh lighting, shooting from below, heavy filters, an
       {
         body: `An AI headshot for LinkedIn and your resume might be the single highest-return upgrade you can make to your professional presence this year. Your profile photo is the first thing recruiters, hiring managers, and connections see — and the data backs up its importance: LinkedIn profiles with a professional photo get dramatically more views and connection requests than those without. Yet a professional photographer session can cost $150-300 and require scheduling, travel, and coordination. An AI headshot delivers a comparable result in minutes, from home, often for free to start.
 
-This guide is a complete walkthrough of using AI headshots specifically for career purposes — LinkedIn profiles, resumes, email signatures, and job applications. We'll cover what makes a headshot recruiter-ready, how to choose styles that fit your industry, the exact steps to create one, and the mistakes that make an AI photo look off. Whether you're actively job hunting, building your personal brand, or just overdue for a profile refresh, you'll learn how to create a professional headshot for your resume and LinkedIn that looks like you paid a photographer — using JPT AI's free-to-start generator.`,
+This guide is a complete walkthrough of using AI headshots specifically for career purposes — LinkedIn profiles, resumes, email signatures, and job applications. We'll cover what makes a headshot recruiter-ready, how to choose styles that fit your industry, the exact steps to create one, and the mistakes that make an AI photo look off. Whether you're actively job hunting, building your personal brand, or just overdue for a profile refresh, you'll learn how to create a professional headshot for your resume and LinkedIn that looks like you paid a photographer — using Pixel Shine's free-to-start generator.`,
       },
       {
         heading: "Why Your Profile Photo Matters More Than You Think",
@@ -12805,7 +12805,7 @@ Hit every item on this checklist and your headshot does its job: it makes recrui
       },
       {
         heading: "Step-by-Step: Create Your LinkedIn Headshot",
-        body: `Here's the full process to generate a career-ready headshot with JPT AI.
+        body: `Here's the full process to generate a career-ready headshot with Pixel Shine.
 
 **Step 1: Take or select good source photos.** Use clear, well-lit, front-facing photos of yourself at eye level. If you're shooting fresh, face a window for soft light and capture a few angles and expressions.
 
@@ -12819,7 +12819,7 @@ Hit every item on this checklist and your headshot does its job: it makes recrui
 
 **Step 6: Pick the one that looks most like you.** Prioritize recognizability over pure glamour. The best choice is professional and unmistakably you.
 
-**Step 7: Upscale for crisp quality.** Run your chosen headshot through JPT AI's upscaler so it looks sharp on LinkedIn, in print, and at larger sizes.
+**Step 7: Upscale for crisp quality.** Run your chosen headshot through Pixel Shine's upscaler so it looks sharp on LinkedIn, in print, and at larger sizes.
 
 **Step 8: Crop and export for each use.** LinkedIn displays profile photos as a circle, so keep your face centered with a little margin. Export versions sized for LinkedIn, your resume header, and your email signature.`,
       },
@@ -12837,7 +12837,7 @@ Hit every item on this checklist and your headshot does its job: it makes recrui
 
 **Refresh it periodically.** Update your headshot every couple of years or after a significant change in appearance, so people recognize you when you meet.
 
-**Use background removal for flexibility.** If a specific application wants a white or branded background, generate your headshot then use JPT AI's background remover to place it exactly where you need it — all in the same free platform.`,
+**Use background removal for flexibility.** If a specific application wants a white or branded background, generate your headshot then use Pixel Shine's background remover to place it exactly where you need it — all in the same free platform.`,
       },
       {
         heading: "Common Mistakes to Avoid",
@@ -12867,7 +12867,7 @@ Hit every item on this checklist and your headshot does its job: it makes recrui
 
 **Executive and leadership roles** across any industry lean toward polished, high-quality, confident imagery that conveys authority.
 
-The common principle: your headshot should look like it belongs in your industry. With JPT AI, you can generate several styles and pick the one that fits your field's expectations, then use it consistently. Because it's free to start, experimenting with different professional styles costs you nothing.`,
+The common principle: your headshot should look like it belongs in your industry. With Pixel Shine, you can generate several styles and pick the one that fits your field's expectations, then use it consistently. Because it's free to start, experimenting with different professional styles costs you nothing.`,
       },
       {
         heading: "Who Uses AI Headshots for Career Purposes",
@@ -12877,7 +12877,7 @@ The common principle: your headshot should look like it belongs in your industry
 
 **Sales professionals** put their headshot on email signatures, proposals, and outreach. **Executives and founders** need consistent, professional photos for bios, press, and speaking engagements. And plenty of **working professionals** simply realize their current photo is a decade old or a cropped selfie and want a proper update.
 
-All of them get a photographer-quality result from home, and with JPT AI's free trials, they can create it before spending a cent.`,
+All of them get a photographer-quality result from home, and with Pixel Shine's free trials, they can create it before spending a cent.`,
       },
       {
         heading: "Frequently Asked Questions",
@@ -12891,7 +12891,7 @@ Yes, where a photo is expected or accepted (note that in some countries, like th
 A good AI headshot looks like a professional photo, and the key is that it genuinely resembles you. As long as it's recognizable and professional, it serves its purpose exactly like a photographer's headshot would.
 
 **How much does an AI headshot cost compared to a photographer?**
-A photographer session typically runs $150-300. AI headshots are dramatically cheaper — JPT AI is free to start with free trials for new users, so you can create one at no upfront cost.
+A photographer session typically runs $150-300. AI headshots are dramatically cheaper — Pixel Shine is free to start with free trials for new users, so you can create one at no upfront cost.
 
 **What should I wear for a LinkedIn headshot?**
 Dress for your industry: formal attire (suit or blazer) for finance and law, smart-casual for tech and creative fields. Solid colors and clean styling photograph best.
@@ -12909,7 +12909,7 @@ Every couple of years, or sooner if your appearance changes significantly, so th
         heading: "Key Takeaways",
         body: `Your professional headshot is one of the highest-return elements of your career presence — it drives profile views, shapes recruiter first impressions, and reinforces your personal brand across LinkedIn, resumes, and email signatures. A recruiter-ready headshot is clear, well-lit, appropriately styled for your industry, and, above all, genuinely recognizable as you. AI now delivers this from home in minutes, closing the gap that expensive photographer sessions once created.
 
-The practical path: use good source photos, pick a style that fits your field, choose the result that looks most like you, and upscale it for crisp quality everywhere. JPT AI's AI Headshot Generator is free to start, so head to sjpt.io, create your professional headshot at no upfront cost, and give your career presence the upgrade it deserves.`,
+The practical path: use good source photos, pick a style that fits your field, choose the result that looks most like you, and upscale it for crisp quality everywhere. Pixel Shine's AI Headshot Generator is free to start, so head to sjpt.io, create your professional headshot at no upfront cost, and give your career presence the upgrade it deserves.`,
       },
     ],
   },
@@ -12917,7 +12917,7 @@ The practical path: use good source photos, pick a style that fits your field, c
   {
     slug: "ai-headshot-corporate-team-photos",
     title: "How Teams Use AI Headshots for Corporate Directories and Websites",
-    metaTitle: "AI Corporate Team Headshots | JPT AI",
+    metaTitle: "AI Corporate Team Headshots | Pixel Shine",
     metaDescription: "Use AI to generate consistent corporate headshots for your entire team. Save time and money compared to organizing a studio photoshoot for everyone.",
     excerpt: "Getting consistent professional headshots for an entire team is expensive and time-consuming. AI headshot tools solve this, and here is how companies are using them.",
     date: "2025-07-17",
@@ -12930,7 +12930,7 @@ The practical path: use good source photos, pick a style that fits your field, c
       {
         body: `For any company building a corporate directory, an About Us page, or a staff wall, AI headshots for teams have quietly become the practical alternative to the traditional group photo shoot. Coordinating a professional photographer to capture every employee — matching schedules, booking a space, dealing with remote workers, and re-shooting whenever someone joins — is expensive, slow, and logistically painful. A corporate team headshot generated with AI sidesteps all of that: each person submits a photo from wherever they are, and the whole team ends up with consistent, professional, on-brand headshots.
 
-The result is a directory or website where everyone looks cohesive, even though the source photos were taken in different cities, rooms, and lighting conditions. That consistency is what makes a team page look intentional and credible rather than like a patchwork of mismatched selfies. In this guide, we'll cover how teams actually use AI headshots at scale — the workflow, how to keep the whole set consistent, cost and logistics compared to a traditional shoot, and how JPT AI's free-to-start platform makes it accessible for teams of any size and budget.`,
+The result is a directory or website where everyone looks cohesive, even though the source photos were taken in different cities, rooms, and lighting conditions. That consistency is what makes a team page look intentional and credible rather than like a patchwork of mismatched selfies. In this guide, we'll cover how teams actually use AI headshots at scale — the workflow, how to keep the whole set consistent, cost and logistics compared to a traditional shoot, and how Pixel Shine's free-to-start platform makes it accessible for teams of any size and budget.`,
       },
       {
         heading: "The Problem with Traditional Team Photo Shoots",
@@ -12956,7 +12956,7 @@ AI headshots address each of these: no scheduling, dramatically lower cost, nati
 
 **Set clear source-photo guidelines.** Give employees simple instructions: face a window for soft light, shoot at eye level, plain background, head-and-shoulders framing, neutral expression. Consistent input leads to more consistent output. (Sharing a short guide on taking a good source photo pays off here.)
 
-**Use a uniform background.** Decide on one background — clean white, a brand color, or a consistent neutral — and apply it to the whole team. This is often the strongest unifying element, and JPT AI's background remover lets you place everyone on the identical backdrop.
+**Use a uniform background.** Decide on one background — clean white, a brand color, or a consistent neutral — and apply it to the whole team. This is often the strongest unifying element, and Pixel Shine's background remover lets you place everyone on the identical backdrop.
 
 **Match framing and crop.** Crop every headshot to the same proportions and head size so the directory grid looks even and orderly.
 
@@ -12966,7 +12966,7 @@ AI headshots address each of these: no scheduling, dramatically lower cost, nati
       },
       {
         heading: "Step-by-Step: Generate Headshots for a Team",
-        body: `Here's a practical workflow for producing consistent headshots across an entire team with JPT AI.
+        body: `Here's a practical workflow for producing consistent headshots across an entire team with Pixel Shine.
 
 **Step 1: Define your standard.** Decide on the background, framing, and attire level for the whole team before you start. Document it in a short one-page brief.
 
@@ -12976,7 +12976,7 @@ AI headshots address each of these: no scheduling, dramatically lower cost, nati
 
 **Step 4: Generate each person's headshot in the agreed style.** Upload each employee's source photos and apply the same style settings across the board for consistency.
 
-**Step 5: Standardize the background.** Use JPT AI's background remover to place every headshot on the identical backdrop — white, a brand color, or a consistent neutral.
+**Step 5: Standardize the background.** Use Pixel Shine's background remover to place every headshot on the identical backdrop — white, a brand color, or a consistent neutral.
 
 **Step 6: Crop uniformly.** Apply the same crop dimensions and head-size proportion to every image so the directory grid is even.
 
@@ -13020,7 +13020,7 @@ AI headshots address each of these: no scheduling, dramatically lower cost, nati
         heading: "Cost and Logistics vs. a Traditional Shoot",
         body: `For decision-makers weighing the options, the practical comparison is stark.
 
-**Cost.** A professional photographer for a full team ranges from several hundred to several thousand dollars, plus employee time. AI headshots start free — JPT AI offers free trials for new users, with cheap credits only if you need higher volume. Even at scale, the cost is a fraction of a traditional shoot.
+**Cost.** A professional photographer for a full team ranges from several hundred to several thousand dollars, plus employee time. AI headshots start free — Pixel Shine offers free trials for new users, with cheap credits only if you need higher volume. Even at scale, the cost is a fraction of a traditional shoot.
 
 **Time and scheduling.** A traditional shoot requires coordinating everyone's calendars, booking space, and a shoot day. AI headshots require only that each person submit a photo on their own time, then a single person processes the batch. There's no shoot day at all.
 
@@ -13040,7 +13040,7 @@ The honest bottom line: for consistency, cost, flexibility, and support for mode
 
 **Nonprofits and educational institutions** with limited budgets create professional staff and faculty directories affordably. And any organization refreshing its website or brand can update every team photo at once without the logistics of gathering everyone.
 
-The common thread is the need for consistent, professional headshots across many people, quickly and affordably. JPT AI's free-to-start platform makes that achievable for teams of any size.`,
+The common thread is the need for consistent, professional headshots across many people, quickly and affordably. Pixel Shine's free-to-start platform makes that achievable for teams of any size.`,
       },
       {
         heading: "Frequently Asked Questions",
@@ -13051,7 +13051,7 @@ Yes. AI headshots are well-suited to teams because you can apply one consistent 
 Standardize the style, background, framing, and crop across all employees, provide clear source-photo guidelines, and review the headshots together as a grid. Using the same background on everyone (via background removal) is the strongest unifying element.
 
 **Is it cheaper than hiring a photographer?**
-Significantly. A team photographer costs hundreds to thousands of dollars, while AI headshots start free with JPT AI's free trials and use only cheap credits for higher volume. There's also no shoot-day time cost.
+Significantly. A team photographer costs hundreds to thousands of dollars, while AI headshots start free with Pixel Shine's free trials and use only cheap credits for higher volume. There's also no shoot-day time cost.
 
 **How does this work for remote teams?**
 Perfectly — each person submits a photo from wherever they are, and you process them centrally. Location doesn't matter, which is why distributed teams especially benefit.
@@ -13063,16 +13063,16 @@ Just run the same process for the new person using your established style. They'
 Yes, if you choose results that preserve each person's real features. For a directory where colleagues need to be recognizable, prioritize likeness over the most stylized option.
 
 **What background should we use for a corporate directory?**
-A clean white or a subtle brand color, applied uniformly to everyone. JPT AI's background remover lets you place the whole team on the identical backdrop.
+A clean white or a subtle brand color, applied uniformly to everyone. Pixel Shine's background remover lets you place the whole team on the identical backdrop.
 
 **How do we make sure the headshots look professional in print?**
-Upscale the final images with JPT AI's upscaler so they're crisp on the website and in printed materials or large displays.`,
+Upscale the final images with Pixel Shine's upscaler so they're crisp on the website and in printed materials or large displays.`,
       },
       {
         heading: "Key Takeaways",
         body: `AI headshots solve the real headaches of team photography: scheduling, cost, distributed staff, and constant re-shoots for new hires. By standardizing style, background, framing, and crop across everyone — and reviewing the results as a set — you get a corporate directory or About page where the whole team looks cohesive and professional, even though the source photos came from different cities and rooms. For remote and growing companies especially, it's far more practical than a traditional shoot.
 
-The workflow is straightforward: define a standard, collect source photos, generate in a consistent style, unify the background, crop uniformly, and upscale. JPT AI is free to start with free trials for new users, so head to sjpt.io, test the AI Headshot Generator on a few team members, and see how easily your whole team's imagery comes together.`,
+The workflow is straightforward: define a standard, collect source photos, generate in a consistent style, unify the background, crop uniformly, and upscale. Pixel Shine is free to start with free trials for new users, so head to sjpt.io, test the AI Headshot Generator on a few team members, and see how easily your whole team's imagery comes together.`,
       },
     ],
   },
@@ -13080,9 +13080,9 @@ The workflow is straightforward: define a standard, collect source photos, gener
   {
     slug: "change-background-ai-editor",
     title: "How to Change Any Photo Background with AI (Step-by-Step)",
-    metaTitle: "Change Photo Background with AI Editor | JPT AI",
-    metaDescription: "Change any photo background with AI in seconds. Use JPT AI's editor to remove, swap, or customize your photo background, free online, no Photoshop needed.",
-    excerpt: "Changing a photo background with AI is now a 30-second task. Here is exactly how to do it with JPT AI's free editor.",
+    metaTitle: "Change Photo Background with AI Editor | Pixel Shine",
+    metaDescription: "Change any photo background with AI in seconds. Use Pixel Shine's editor to remove, swap, or customize your photo background, free online, no Photoshop needed.",
+    excerpt: "Changing a photo background with AI is now a 30-second task. Here is exactly how to do it with Pixel Shine's free editor.",
     date: "2025-07-22",
     readTime: "11 min read",
     category: "Tutorial",
@@ -13093,7 +13093,7 @@ The workflow is straightforward: define a standard, collect source photos, gener
       {
         body: `Learning how to change background AI-style used to require Photoshop skills, a steady hand, and about 20 minutes per image. Today, an AI background changer can swap the setting behind any photo in under 10 seconds — no manual selecting, no jagged edges, no design degree required. Whether you want to replace a cluttered home office with a clean studio backdrop, drop a product onto a pure white background, or transport your vacation selfie to a beach in Bali, the technology has finally caught up to what most people actually need.
 
-In this step-by-step guide, we'll walk through exactly how to replace a photo background online for free using JPT AI, plus the pro tricks that separate a believable edit from an obviously fake one. You'll learn how to swap background photo free of charge, when to use a solid color versus a scene, and how to avoid the telltale signs of a rushed AI edit. By the end, you'll be able to change any background in less time than it takes to read this intro — and the basic tools won't cost you a cent.`,
+In this step-by-step guide, we'll walk through exactly how to replace a photo background online for free using Pixel Shine, plus the pro tricks that separate a believable edit from an obviously fake one. You'll learn how to swap background photo free of charge, when to use a solid color versus a scene, and how to avoid the telltale signs of a rushed AI edit. By the end, you'll be able to change any background in less time than it takes to read this intro — and the basic tools won't cost you a cent.`,
       },
       {
         heading: "Why AI Background Changing Beats the Old Manual Method",
@@ -13103,7 +13103,7 @@ In this step-by-step guide, we'll walk through exactly how to replace a photo ba
 
 **Where it shines:** The biggest wins are speed and consistency. If you're an e-commerce seller with 200 product shots, AI gives every image the same clean white background in minutes, not days. Studies of online retail show that listings with clean, consistent backgrounds convert up to 30% better than cluttered ones, simply because the product becomes the undisputed focus.
 
-**The free advantage:** Historically, batch background editing meant a Photoshop subscription at around $23/month. JPT AI removes that barrier — you can change backgrounds without paying, without watermarks, and without even creating an account for basic edits.`,
+**The free advantage:** Historically, batch background editing meant a Photoshop subscription at around $23/month. Pixel Shine removes that barrier — you can change backgrounds without paying, without watermarks, and without even creating an account for basic edits.`,
       },
       {
         heading: "Solid Color vs. Scene Replacement: Choosing the Right Background",
@@ -13127,11 +13127,11 @@ In this step-by-step guide, we'll walk through exactly how to replace a photo ba
       },
       {
         heading: "Step-by-Step: How to Change a Photo Background with AI",
-        body: `Here's the exact process to replace a photo background online using JPT AI's free editor. The whole thing takes under a minute.
+        body: `Here's the exact process to replace a photo background online using Pixel Shine's free editor. The whole thing takes under a minute.
 
 **Step 1 — Open the editor.** Head to sjpt.io and click into the AI Photo Editor. You don't need to sign in for basic edits, so there's zero friction to get started.
 
-**Step 2 — Upload your image.** Drag and drop your photo, or click to browse your files. JPT AI accepts JPG, PNG, and WebP. For best results, use the highest-resolution version you have — more pixels give the AI more detail to work with around edges.
+**Step 2 — Upload your image.** Drag and drop your photo, or click to browse your files. Pixel Shine accepts JPG, PNG, and WebP. For best results, use the highest-resolution version you have — more pixels give the AI more detail to work with around edges.
 
 **Step 3 — Let the AI isolate your subject.** The moment your image loads, the background remover automatically detects and separates the main subject from the background. This happens in about 3 to 5 seconds. You'll see your subject on a transparent (checkerboard) canvas.
 
@@ -13181,7 +13181,7 @@ In this step-by-step guide, we'll walk through exactly how to replace a photo ba
 
 **Small business owners** create professional marketing materials without hiring a designer — flyers, ads, and web banners that look agency-made.
 
-**Everyday users** simply want a nicer photo: removing a photobomber's background, cleaning up a family portrait, or making a fun composite. The common thread? All of them save time and money, and with JPT AI's free tier, none of them need a subscription to do it.`,
+**Everyday users** simply want a nicer photo: removing a photobomber's background, cleaning up a family portrait, or making a fun composite. The common thread? All of them save time and money, and with Pixel Shine's free tier, none of them need a subscription to do it.`,
       },
       {
         heading: "Real-World Results: What Users Actually Achieve",
@@ -13196,7 +13196,7 @@ The pattern is consistent: a task that once required money, software, and skill 
       {
         heading: "Frequently Asked Questions",
         body: `**Can I change a photo background for free?**
-Yes. JPT AI lets you change backgrounds for free with no mandatory sign-in for basic edits, and there are no watermarks on your downloads. New users also get free trials across the tool suite.
+Yes. Pixel Shine lets you change backgrounds for free with no mandatory sign-in for basic edits, and there are no watermarks on your downloads. New users also get free trials across the tool suite.
 
 **What's the best file format to save my edited image?**
 Use PNG if you need a transparent background (for placing your subject in other designs). Use JPG if you've added a solid or scene background and want a smaller file size.
@@ -13205,7 +13205,7 @@ Use PNG if you need a transparent background (for placing your subject in other 
 Modern AI handles most hair well, but very wispy or curly hair can need a few seconds of manual refinement with the edge brush. High-resolution source images dramatically improve hair accuracy.
 
 **Can I replace the background with a specific scene I imagine?**
-Yes. JPT AI's editor supports text-prompt background generation, so you can describe a scene — like 'sunset beach' or 'modern office' — and have the AI create it behind your subject.
+Yes. Pixel Shine's editor supports text-prompt background generation, so you can describe a scene — like 'sunset beach' or 'modern office' — and have the AI create it behind your subject.
 
 **Do I need Photoshop skills to do this?**
 No. The entire point of an AI background changer is that it removes the technical barrier. If you can upload a file and click a color, you can do this.
@@ -13225,7 +13225,7 @@ Yes, images you edit and download are yours to use for your business, listings, 
 
 Whether you're an e-commerce seller chasing higher conversions, a professional polishing a headshot, or just someone who wants a cleaner photo, an AI background changer puts studio-quality editing in your hands — for free.
 
-Ready to try it yourself? Open JPT AI's free editor at sjpt.io, upload any photo, and swap the background in seconds. No account, no watermark, no cost. Change your first background free and see the difference for yourself.`,
+Ready to try it yourself? Open Pixel Shine's free editor at sjpt.io, upload any photo, and swap the background in seconds. No account, no watermark, no cost. Change your first background free and see the difference for yourself.`,
       },
     ],
   },
@@ -13233,7 +13233,7 @@ Ready to try it yourself? Open JPT AI's free editor at sjpt.io, upload any photo
   {
     slug: "ai-photo-editor-vs-photoshop",
     title: "AI Photo Editor vs Photoshop: Which Should You Use in 2025?",
-    metaTitle: "AI Photo Editor vs Photoshop 2025 | JPT AI",
+    metaTitle: "AI Photo Editor vs Photoshop 2025 | Pixel Shine",
     metaDescription: "AI photo editor vs Photoshop, which is right for you in 2025? Compare capabilities, cost, and ease of use to make the right choice for your workflow.",
     excerpt: "Photoshop is powerful but expensive and has a steep learning curve. AI photo editors are instant and free. Here is when to use which.",
     date: "2025-07-28",
@@ -13246,7 +13246,7 @@ Ready to try it yourself? Open JPT AI's free editor at sjpt.io, upload any photo
       {
         body: `The AI photo editor vs Photoshop debate has never been more relevant than it is in 2025. For three decades, Adobe Photoshop was the undisputed king of image editing — and if you wanted professional results, you paid the subscription and climbed the steep learning curve. But a new generation of AI image editing tools has changed the equation entirely, letting anyone remove backgrounds, upscale photos, and transform images with a single click or a text prompt.
 
-So which should you actually use? The honest answer is: it depends on what you're trying to do. If you're a retoucher compositing a magazine cover, Photoshop still wins. But if you're an e-commerce seller, social media creator, or small business owner who needs great-looking images fast and free, an AI editor will save you hours and hundreds of dollars. In this comparison, we'll break down speed, cost, learning curve, output quality, and real-world use cases — and help you decide whether a free Photoshop alternative like JPT AI belongs in your workflow. By the end, you'll know exactly which tool fits your needs in 2025.`,
+So which should you actually use? The honest answer is: it depends on what you're trying to do. If you're a retoucher compositing a magazine cover, Photoshop still wins. But if you're an e-commerce seller, social media creator, or small business owner who needs great-looking images fast and free, an AI editor will save you hours and hundreds of dollars. In this comparison, we'll break down speed, cost, learning curve, output quality, and real-world use cases — and help you decide whether a free Photoshop alternative like Pixel Shine belongs in your workflow. By the end, you'll know exactly which tool fits your needs in 2025.`,
       },
       {
         heading: "The Core Difference: Manual Control vs. AI Automation",
@@ -13256,13 +13256,13 @@ So which should you actually use? The honest answer is: it depends on what you'r
 
 **AI editors automate the decisions.** Instead of telling the software exactly which pixels to change, you tell it what you want — 'remove the background,' 'make this a professional headshot,' 'turn this into an anime portrait' — and the trained model figures out the how. You trade granular control for staggering speed.
 
-**Why this matters in 2025:** For most everyday tasks, the AI's automated result is now good enough — or genuinely better — than what a non-expert could achieve manually in Photoshop. Background removal, upscaling, and object cleanup, which used to be the bread and butter of skilled retouchers, are now one-click operations. Photoshop itself has added AI features (Generative Fill), but it locks them behind a paid Creative Cloud subscription. Standalone AI editors like JPT AI deliver the same magic on a free tier, no subscription required.`,
+**Why this matters in 2025:** For most everyday tasks, the AI's automated result is now good enough — or genuinely better — than what a non-expert could achieve manually in Photoshop. Background removal, upscaling, and object cleanup, which used to be the bread and butter of skilled retouchers, are now one-click operations. Photoshop itself has added AI features (Generative Fill), but it locks them behind a paid Creative Cloud subscription. Standalone AI editors like Pixel Shine deliver the same magic on a free tier, no subscription required.`,
       },
       {
         heading: "Cost, Learning Curve, and Speed Compared",
         body: `Let's put hard numbers on the three factors that matter most to real users.
 
-**Cost.** Photoshop requires a Creative Cloud subscription — roughly $22.99/month for the Photography plan, or about $263/year, forever. There's no permanent free version. JPT AI, by contrast, offers a genuinely free tier: unlimited Normal Upscale with no sign-in, no watermarks, and free trials across every tool. Advanced AI features use inexpensive credits, but the essentials cost nothing. Over a year, that's a $260+ difference for the casual user.
+**Cost.** Photoshop requires a Creative Cloud subscription — roughly $22.99/month for the Photography plan, or about $263/year, forever. There's no permanent free version. Pixel Shine, by contrast, offers a genuinely free tier: unlimited Normal Upscale with no sign-in, no watermarks, and free trials across every tool. Advanced AI features use inexpensive credits, but the essentials cost nothing. Over a year, that's a $260+ difference for the casual user.
 
 **Learning curve.** Photoshop is notoriously deep. Adobe's own tutorials run for hours, and mastering layers, masks, and selections takes weeks of practice. Surveys of new users routinely cite the interface as overwhelming. AI editors flip this: the learning curve is measured in minutes. If you can upload a photo and click a button, you're productive immediately.
 
@@ -13278,13 +13278,13 @@ So which should you actually use? The honest answer is: it depends on what you'r
 
 **Step 3 — Consider your volume.** Editing 3 photos? Either tool works. Editing 300? AI's batch speed makes it the only sane choice for standard operations.
 
-**Step 4 — Check your budget.** No subscription budget? Start with a free AI editor like JPT AI. You'll cover 90% of common needs without spending anything.
+**Step 4 — Check your budget.** No subscription budget? Start with a free AI editor like Pixel Shine. You'll cover 90% of common needs without spending anything.
 
-**Step 5 — Match the tool to the job.** For background removal, upscaling, headshots, and creative effects, open JPT AI at sjpt.io and get instant results. For pixel-precise compositing, custom brushwork, or print-production color management, use Photoshop.
+**Step 5 — Match the tool to the job.** For background removal, upscaling, headshots, and creative effects, open Pixel Shine at sjpt.io and get instant results. For pixel-precise compositing, custom brushwork, or print-production color management, use Photoshop.
 
 **Step 6 — Consider using both.** Many pros now use AI editors for the heavy lifting (fast background removal, upscaling) and Photoshop only for the final 10% of fine detail. This hybrid workflow is faster and cheaper than Photoshop alone.
 
-**Step 7 — Test before committing.** Since JPT AI's core tools are free, run your typical task through it first. If it nails the result, you've just saved a subscription.`,
+**Step 7 — Test before committing.** Since Pixel Shine's core tools are free, run your typical task through it first. If it nails the result, you've just saved a subscription.`,
       },
       {
         heading: "Pro Tips for Getting the Most From Either Tool",
@@ -13306,7 +13306,7 @@ So which should you actually use? The honest answer is: it depends on what you'r
 
 **Mistake 2 — Expecting AI to handle every creative composite.** AI editors excel at defined tasks, but a highly custom, artistic composite with precise layering still benefits from Photoshop's manual control. Don't force the wrong tool.
 
-**Mistake 3 — Ignoring watermarks and hidden costs on 'free' tools.** Many so-called free editors slap watermarks on downloads or lock exports behind paywalls. Verify a tool is genuinely free — JPT AI has no watermarks and no mandatory account for basics.
+**Mistake 3 — Ignoring watermarks and hidden costs on 'free' tools.** Many so-called free editors slap watermarks on downloads or lock exports behind paywalls. Verify a tool is genuinely free — Pixel Shine has no watermarks and no mandatory account for basics.
 
 **Mistake 4 — Not checking output resolution.** Some free tools downscale your image on export. Always confirm you're getting full-resolution downloads.
 
@@ -13346,7 +13346,7 @@ Meanwhile, a professional wedding photographer kept Photoshop for her final albu
       {
         heading: "Frequently Asked Questions",
         body: `**Is there a free alternative to Photoshop that's actually good?**
-Yes. JPT AI offers free background removal, unlimited Normal upscaling, AI headshots, and creative effects with no watermarks and no mandatory sign-in. For standard editing tasks, it rivals or beats manual Photoshop work.
+Yes. Pixel Shine offers free background removal, unlimited Normal upscaling, AI headshots, and creative effects with no watermarks and no mandatory sign-in. For standard editing tasks, it rivals or beats manual Photoshop work.
 
 **Can AI photo editors fully replace Photoshop?**
 For most everyday tasks — yes. For highly specialized professional compositing and print production, Photoshop still has an edge. Many pros now use both.
@@ -13358,13 +13358,13 @@ Only if you regularly need its advanced manual features. If your tasks are backg
 AI editors, by a wide margin. Most take minutes to learn; Photoshop takes weeks to master.
 
 **Do AI photo editors add watermarks?**
-Some do, but JPT AI does not. Always check a tool's export policy before relying on it for commercial work.
+Some do, but Pixel Shine does not. Always check a tool's export policy before relying on it for commercial work.
 
 **Can I get professional-quality results from an AI editor?**
 Absolutely, especially for background removal, upscaling, and headshots. The output quality has reached a point where the results are indistinguishable from manual professional work for most use cases.
 
 **What about image quality and resolution?**
-JPT AI provides full-resolution downloads and includes an AI upscaler to increase resolution when needed, so you're not sacrificing quality for convenience.
+Pixel Shine provides full-resolution downloads and includes an AI upscaler to increase resolution when needed, so you're not sacrificing quality for convenience.
 
 **Is my data safe when using online AI editors?**
 Reputable tools process your images securely. Always use trusted platforms and avoid uploading sensitive documents to unknown sites.`,
@@ -13375,7 +13375,7 @@ Reputable tools process your images securely. Always use trusted platforms and a
 
 In 2025, the smartest approach is to start with a free AI tool and only reach for Photoshop when the job genuinely requires manual precision. You'll save time, money, and a lot of frustration.
 
-Want to see how far free AI editing has come? Try JPT AI's editor at sjpt.io — no subscription, no watermark, no account needed for the basics. Test it on your next photo and see if you ever need Photoshop again.`,
+Want to see how far free AI editing has come? Try Pixel Shine's editor at sjpt.io — no subscription, no watermark, no account needed for the basics. Test it on your next photo and see if you ever need Photoshop again.`,
       },
     ],
   },
@@ -13383,7 +13383,7 @@ Want to see how far free AI editing has come? Try JPT AI's editor at sjpt.io —
   {
     slug: "ai-image-editor-product-photography",
     title: "How to Use AI to Perfect Your Product Photography for Free",
-    metaTitle: "AI Photo Editor for Product Photography | JPT AI",
+    metaTitle: "AI Photo Editor for Product Photography | Pixel Shine",
     metaDescription: "Use AI to enhance product photography for free. Remove backgrounds, fix lighting, sharpen detail, and create studio-quality product images with AI tools.",
     excerpt: "Studio-quality product photography used to require expensive equipment and skills. AI tools let anyone achieve professional results from a phone photo.",
     date: "2025-08-02",
@@ -13396,7 +13396,7 @@ Want to see how far free AI editing has come? Try JPT AI's editor at sjpt.io —
       {
         body: `Great product photography sells — and now an AI product photography editor lets you achieve studio-quality results for free, without a camera crew, a lightbox, or a design degree. If you run an online store, you already know the stakes: research consistently shows that high-quality product images are the single biggest driver of purchase decisions in e-commerce, with some studies attributing over 75% of a buyer's confidence to the photos alone. Yet professional product shoots cost hundreds of dollars, and hiring a retoucher adds even more.
 
-That's exactly where AI changes the game. In this guide, you'll learn how to improve product photos with AI — cleaning up backgrounds, upscaling low-res shots, fixing lighting, and creating the consistent, marketplace-ready look that makes shoppers trust your brand. We'll walk through a complete free workflow using JPT AI, share the pro tricks that make DIY product shots look agency-made, and cover the mistakes that quietly kill conversions. Whether you sell handmade jewelry, dropship gadgets, or run a boutique Shopify store, you'll finish this article able to perfect your product images with AI for free — no studio required.`,
+That's exactly where AI changes the game. In this guide, you'll learn how to improve product photos with AI — cleaning up backgrounds, upscaling low-res shots, fixing lighting, and creating the consistent, marketplace-ready look that makes shoppers trust your brand. We'll walk through a complete free workflow using Pixel Shine, share the pro tricks that make DIY product shots look agency-made, and cover the mistakes that quietly kill conversions. Whether you sell handmade jewelry, dropship gadgets, or run a boutique Shopify store, you'll finish this article able to perfect your product images with AI for free — no studio required.`,
       },
       {
         heading: "Why Product Photos Make or Break Your Sales",
@@ -13416,7 +13416,7 @@ That's exactly where AI changes the game. In this guide, you'll learn how to imp
 
 **1. Cluttered or inconsistent backgrounds.** This is the biggest offender. An AI background remover isolates your product in seconds, letting you drop it onto pure white, a brand color, or a lifestyle scene. Suddenly your kitchen-table jewelry looks like it's from a catalog.
 
-**2. Low resolution and softness.** Maybe your best shot is small or slightly soft. An AI upscaler increases resolution and sharpens detail, so you can use one photo for a thumbnail and a zoomed-in detail view without pixelation. JPT AI's Normal upscale is free and unlimited for this.
+**2. Low resolution and softness.** Maybe your best shot is small or slightly soft. An AI upscaler increases resolution and sharpens detail, so you can use one photo for a thumbnail and a zoomed-in detail view without pixelation. Pixel Shine's Normal upscale is free and unlimited for this.
 
 **3. Poor lighting and dullness.** Products shot at home often look flat, yellow, or underexposed. AI photo enhancement corrects brightness, white balance, and contrast automatically, making colors pop and surfaces look crisp and true-to-life.
 
@@ -13426,11 +13426,11 @@ That's exactly where AI changes the game. In this guide, you'll learn how to imp
       },
       {
         heading: "Step-by-Step: Perfect a Product Photo with AI for Free",
-        body: `Here's the complete free workflow using JPT AI. Follow it and any product shot becomes catalog-ready.
+        body: `Here's the complete free workflow using Pixel Shine. Follow it and any product shot becomes catalog-ready.
 
 **Step 1 — Start with the best raw shot you can.** Even AI works better with good input. Shoot in bright, even, indirect light (a window on an overcast day is ideal), fill the frame with your product, and keep the camera steady. A cheap tripod or propping your phone against books helps.
 
-**Step 2 — Upload to JPT AI.** Go to sjpt.io and open the AI Photo Editor. No sign-in needed to start. Drag your image in.
+**Step 2 — Upload to Pixel Shine.** Go to sjpt.io and open the AI Photo Editor. No sign-in needed to start. Drag your image in.
 
 **Step 3 — Remove the background.** The AI automatically isolates your product in 3 to 5 seconds. You'll see it on a transparent canvas, ready for a new background.
 
@@ -13501,13 +13501,13 @@ The common thread: AI let budget-constrained sellers compete visually with estab
       {
         heading: "Frequently Asked Questions",
         body: `**Can I really improve product photos for free?**
-Yes. JPT AI offers free background removal, unlimited Normal upscaling, and photo enhancement with no watermarks and no mandatory sign-in for basics. You can produce marketplace-ready images at zero cost.
+Yes. Pixel Shine offers free background removal, unlimited Normal upscaling, and photo enhancement with no watermarks and no mandatory sign-in for basics. You can produce marketplace-ready images at zero cost.
 
 **What background should I use for Amazon product photos?**
 Amazon requires pure white (hex #FFFFFF) for main images, with the product filling about 85% of the frame. AI background removal makes this easy to achieve consistently.
 
 **How do I make my low-resolution product photos usable?**
-Run them through an AI upscaler. JPT AI's Normal upscale is free and unlimited and will increase resolution and sharpness so images hold up when buyers zoom in.
+Run them through an AI upscaler. Pixel Shine's Normal upscale is free and unlimited and will increase resolution and sharpness so images hold up when buyers zoom in.
 
 **Will AI editing make my products look fake?**
 Only if you over-edit. Aim for accurate, true-to-life results — correct color and clean backgrounds, not extreme saturation. Accurate photos reduce returns.
@@ -13530,7 +13530,7 @@ Absolutely, as long as they accurately represent the product. Editing for clarit
 
 The formula is simple: start with the best raw shot you can, standardize your backgrounds, correct your lighting and color accurately, add subtle shadows, and upscale for crisp detail. Do this consistently across your catalog and your store will look like an established brand — because visually, it will be.
 
-Ready to transform your product photos? Head to JPT AI at sjpt.io and perfect your first product image for free — no watermark, no account needed, no studio required. Better photos start selling more, starting today.`,
+Ready to transform your product photos? Head to Pixel Shine at sjpt.io and perfect your first product image for free — no watermark, no account needed, no studio required. Better photos start selling more, starting today.`,
       },
     ],
   },
@@ -13538,8 +13538,8 @@ Ready to transform your product photos? Head to JPT AI at sjpt.io and perfect yo
   {
     slug: "creative-ai-photo-effects-viral",
     title: "20 Creative AI Photo Effects That Are Going Viral Right Now",
-    metaTitle: "Creative AI Photo Effects Going Viral | JPT AI",
-    metaDescription: "Discover the creative AI photo effects going viral in 2025, from funko pop to anime, claymation to old Hollywood. Try them all free on JPT AI.",
+    metaTitle: "Creative AI Photo Effects Going Viral | Pixel Shine",
+    metaDescription: "Discover the creative AI photo effects going viral in 2025, from funko pop to anime, claymation to old Hollywood. Try them all free on Pixel Shine.",
     excerpt: "AI photo effects have exploded on social media. Here are the most creative and viral AI transformations you can try right now for free.",
     date: "2025-08-07",
     readTime: "11 min read",
@@ -13551,7 +13551,7 @@ Ready to transform your product photos? Head to JPT AI at sjpt.io and perfect yo
       {
         body: `Creative AI photo effects have completely taken over social media in 2025, turning ordinary selfies into Funko Pop figurines, anime characters, claymation scenes, and cinematic portraits that rack up millions of views. If your feed looks anything like ours, you've watched friends morph into action figures, tiny toy versions of themselves, and painterly Renaissance portraits — all generated in seconds by AI. These viral AI photo filters aren't just fun; they're the fastest-growing category of content on Instagram, TikTok, and Pinterest right now.
 
-The best part? You don't need any of these effects to be locked behind expensive apps. In this roundup, we've gathered 20 of the best AI photo effects for 2025 — the exact transformations that are trending, going viral, and racking up engagement — along with tips on which ones work best for which photos and how to create them for free. Whether you want a quirky profile picture, scroll-stopping content, or just a laugh, these AI photo transformation ideas will give you plenty to try. Let's dive into the effects everyone's obsessing over, and show you how to make your own with JPT AI's free creative tools.`,
+The best part? You don't need any of these effects to be locked behind expensive apps. In this roundup, we've gathered 20 of the best AI photo effects for 2025 — the exact transformations that are trending, going viral, and racking up engagement — along with tips on which ones work best for which photos and how to create them for free. Whether you want a quirky profile picture, scroll-stopping content, or just a laugh, these AI photo transformation ideas will give you plenty to try. Let's dive into the effects everyone's obsessing over, and show you how to make your own with Pixel Shine's free creative tools.`,
       },
       {
         heading: "Why AI Photo Effects Went Viral",
@@ -13611,7 +13611,7 @@ The best part? You don't need any of these effects to be locked behind expensive
 
 **20. Double exposure** — Artistic blend of a portrait with nature or cityscapes.
 
-Each of these is available through JPT AI's Creative AI Photo Effects, and many can be produced free.`,
+Each of these is available through Pixel Shine's Creative AI Photo Effects, and many can be produced free.`,
       },
       {
         heading: "Step-by-Step: How to Create a Viral AI Effect",
@@ -13619,7 +13619,7 @@ Each of these is available through JPT AI's Creative AI Photo Effects, and many 
 
 **Step 1 — Pick the right source photo.** This matters more than anything. Use a clear, well-lit photo with your face and subject fully visible. For figure effects (Funko, action figure), a front-facing full or half-body shot works best. For portrait styles (anime, painting), a clear headshot shines.
 
-**Step 2 — Open JPT AI's Creative tools.** Go to sjpt.io and navigate to the Creative AI Photo Effects section. New users get free trials to experiment.
+**Step 2 — Open Pixel Shine's Creative tools.** Go to sjpt.io and navigate to the Creative AI Photo Effects section. New users get free trials to experiment.
 
 **Step 3 — Choose your effect.** Browse the effect library — Funko Pop, anime, claymation, saree, and more — and select the transformation you want.
 
@@ -13675,7 +13675,7 @@ Each of these is available through JPT AI's Creative AI Photo Effects, and many 
 
 **For dramatic, cinematic posts:** Cyberpunk, fantasy RPG, and superhero effects deliver high-impact visuals perfect for reveals and character content.
 
-**The strategy:** match the effect to your account's identity and your immediate goal. A business might use polished cartoon avatars for team intros; a lifestyle creator might rotate through artistic painterly effects; a comedy account lives on Funko and caricature transformations. All of them are available in JPT AI's Creative effects, many on the free tier.`,
+**The strategy:** match the effect to your account's identity and your immediate goal. A business might use polished cartoon avatars for team intros; a lifestyle creator might rotate through artistic painterly effects; a comedy account lives on Funko and caricature transformations. All of them are available in Pixel Shine's Creative effects, many on the free tier.`,
       },
       {
         heading: "Real-World Results: How Creators Use AI Effects",
@@ -13690,7 +13690,7 @@ Across all of them, the pattern holds: a single good photo plus the right trendi
       {
         heading: "Frequently Asked Questions",
         body: `**Are AI photo effects free to use?**
-Many are. JPT AI offers Creative AI Photo Effects with free trials for new users and no watermarks on downloads, so you can create and share without cost or ugly branding.
+Many are. Pixel Shine offers Creative AI Photo Effects with free trials for new users and no watermarks on downloads, so you can create and share without cost or ugly branding.
 
 **What's the most viral AI effect right now?**
 The Funko Pop and action-figure transformations have dominated 2025, thanks to their humor, personalization, and shareability. Anime and claymation effects are close behind.
@@ -13705,7 +13705,7 @@ Usually 10 to 30 seconds per image, depending on the effect and complexity.
 Yes. Transform each person individually, or use effects that support group photos. Group transformations tend to get shared more, boosting reach.
 
 **Do these tools add watermarks?**
-JPT AI does not add watermarks, so your creations look clean and professional when posted.
+Pixel Shine does not add watermarks, so your creations look clean and professional when posted.
 
 **How do I make my AI effect post go viral?**
 Jump on trends early, use a high-quality source photo, pair it with trending audio, create a before-and-after reveal, and post at peak hours with relevant hashtags.
@@ -13719,7 +13719,7 @@ Yes. The creative effects library grows as new trends emerge, so there's always 
 
 From the 20 effects in this guide, there's something for every account — playful, artistic, cultural, or dramatic. And the best news is you don't need pricey apps to create them.
 
-Ready to transform your photos? Head to JPT AI's Creative AI Photo Effects at sjpt.io, grab your free trials, and turn your next selfie into scroll-stopping content — no watermark, no cost. The next viral post could be yours.`,
+Ready to transform your photos? Head to Pixel Shine's Creative AI Photo Effects at sjpt.io, grab your free trials, and turn your next selfie into scroll-stopping content — no watermark, no cost. The next viral post could be yours.`,
       },
     ],
   },
@@ -13727,7 +13727,7 @@ Ready to transform your photos? Head to JPT AI's Creative AI Photo Effects at sj
   {
     slug: "ai-filter-trending-social-media",
     title: "The Most Trending AI Filters on Social Media Right Now",
-    metaTitle: "Trending AI Filters on Social Media | JPT AI",
+    metaTitle: "Trending AI Filters on Social Media | Pixel Shine",
     metaDescription: "Discover the most trending AI filters on Instagram, TikTok, and social media in 2025. Find out which effects are going viral and try them free.",
     excerpt: "AI filters are dominating social media feeds. Here are the ones getting the most engagement right now and how to use them for free.",
     date: "2025-08-12",
@@ -13740,7 +13740,7 @@ Ready to transform your photos? Head to JPT AI's Creative AI Photo Effects at sj
       {
         body: `Trending AI filters are dominating social media in 2025, and if you're not using them, you're missing the single biggest engagement driver on Instagram, TikTok, and beyond. From the viral Funko Pop transformation to anime portraits and cinematic AI headshots, these viral AI photo filters have generated hundreds of millions of posts this year — turning everyday users into overnight content creators and helping brands rack up reach they could never buy. The right AI filter, posted at the right moment, can push an ordinary account to explosive growth.
 
-But with new filters trending every week, which ones actually matter? In this guide, we've tracked the most popular AI filters of 2025 — the transformations lighting up Instagram and TikTok feeds right now — and broken down why each one works, who it's best for, and how to create your own for free. You'll learn the strategy behind AI filter virality, the mistakes that keep posts from taking off, and how to ride each trend before it peaks. Whether you're chasing followers, building a brand, or just want to join the fun, these are the trending AI filters you need to know — and JPT AI lets you make them free.`,
+But with new filters trending every week, which ones actually matter? In this guide, we've tracked the most popular AI filters of 2025 — the transformations lighting up Instagram and TikTok feeds right now — and broken down why each one works, who it's best for, and how to create your own for free. You'll learn the strategy behind AI filter virality, the mistakes that keep posts from taking off, and how to ride each trend before it peaks. Whether you're chasing followers, building a brand, or just want to join the fun, these are the trending AI filters you need to know — and Pixel Shine lets you make them free.`,
       },
       {
         heading: "Why AI Filters Took Over Social Media in 2025",
@@ -13778,7 +13778,7 @@ But with new filters trending every week, which ones actually matter? In this gu
 
 **Barbie / doll style** — The glossy plastic aesthetic that trends in waves around pop-culture moments.
 
-All of these are available through JPT AI's Creative AI Photo Effects and AI Headshot Generator, and many can be created free — no need to hop between multiple apps.`,
+All of these are available through Pixel Shine's Creative AI Photo Effects and AI Headshot Generator, and many can be created free — no need to hop between multiple apps.`,
       },
       {
         heading: "Step-by-Step: How to Create a Trending AI Filter Post",
@@ -13788,13 +13788,13 @@ All of these are available through JPT AI's Creative AI Photo Effects and AI Hea
 
 **Step 2 — Choose a strong source photo.** Use a clear, well-lit, front-facing image. For figure filters (Funko, action figure), a half or full-body shot works best; for portrait filters (anime, headshot), a crisp face shot wins.
 
-**Step 3 — Open JPT AI.** Head to sjpt.io and go to the Creative AI Photo Effects or AI Headshot Generator. New users get free trials to experiment.
+**Step 3 — Open Pixel Shine.** Head to sjpt.io and go to the Creative AI Photo Effects or AI Headshot Generator. New users get free trials to experiment.
 
 **Step 4 — Select your filter and upload.** Pick the trending effect, drop in your photo, and let the AI work. Higher-resolution photos produce sharper, more believable results.
 
 **Step 5 — Generate and choose your best result.** In 10 to 30 seconds you'll have your transformation. If it's not perfect, try a cleaner source photo — input quality drives output quality.
 
-**Step 6 — Download watermark-free.** Save your creation. JPT AI adds no watermark, so your post looks clean and professional.
+**Step 6 — Download watermark-free.** Save your creation. Pixel Shine adds no watermark, so your post looks clean and professional.
 
 **Step 7 — Optimize your post.** On TikTok and Reels, pair it with trending audio. Add relevant hashtags, write a hook caption, and consider a before-and-after reveal for higher watch time. Post at peak hours for your audience.
 
@@ -13824,7 +13824,7 @@ All of these are available through JPT AI's Creative AI Photo Effects and AI Hea
 
 **Mistake 4 — No hook or reveal.** Posting the finished image with no context wastes its impact. Use a reveal structure and a scroll-stopping first line.
 
-**Mistake 5 — Using low-quality apps with watermarks.** A watermark screams 'low effort' and hurts shareability. Use a tool like JPT AI that exports clean, watermark-free images.`,
+**Mistake 5 — Using low-quality apps with watermarks.** A watermark screams 'low effort' and hurts shareability. Use a tool like Pixel Shine that exports clean, watermark-free images.`,
       },
       {
         heading: "AI Filters vs. Traditional Social Media Filters",
@@ -13836,7 +13836,7 @@ All of these are available through JPT AI's Creative AI Photo Effects and AI Hea
 
 **Where each fits:** Traditional filters still have a place for quick, live-camera fun and subtle enhancement. But for creating standout, viral-ready content, AI filters win decisively. They deliver the 'wow' that stops scrolls and earns shares.
 
-**The workflow difference:** Traditional filters apply live in the camera app. AI filters typically process an uploaded photo through a tool like JPT AI, then you download and post the result. That extra step is trivial — under a minute — and the payoff is dramatically more impactful content. For anyone serious about growth in 2025, AI filters are the clear priority, with traditional filters as a casual supplement.`,
+**The workflow difference:** Traditional filters apply live in the camera app. AI filters typically process an uploaded photo through a tool like Pixel Shine, then you download and post the result. That extra step is trivial — under a minute — and the payoff is dramatically more impactful content. For anyone serious about growth in 2025, AI filters are the clear priority, with traditional filters as a casual supplement.`,
       },
       {
         heading: "Real-World Results: How Trends Drive Growth",
@@ -13854,7 +13854,7 @@ The throughline: AI filters gave each of them content that punched far above the
 The Funko Pop and AI action-figure transformations have led the year, followed by anime/Ghibli styles and AI professional headshots. These generated tens of millions of posts each.
 
 **Are trending AI filters free to use?**
-Many are. JPT AI offers Creative AI Photo Effects and an AI Headshot Generator with free trials for new users and no watermarks, so you can join trends without cost.
+Many are. Pixel Shine offers Creative AI Photo Effects and an AI Headshot Generator with free trials for new users and no watermarks, so you can join trends without cost.
 
 **How do I find out which AI filter is trending right now?**
 Watch your Instagram Explore and TikTok For You pages. When you see the same transformation repeatedly, it's trending — and acting early maximizes your reach.
@@ -13869,7 +13869,7 @@ Post early in the trend, use a high-quality source photo, pair it with trending 
 Yes. Brands use them for team intros, product-and-founder posts, and playful campaigns. The personal, novel nature of AI filters humanizes brands and boosts engagement.
 
 **Will these filters add a watermark to my post?**
-JPT AI does not add watermarks, keeping your content clean and professional.
+Pixel Shine does not add watermarks, keeping your content clean and professional.
 
 **How is an AI filter different from a normal Instagram filter?**
 Traditional filters overlay effects on your photo; AI filters fully transform it into something new — a toy, a cartoon, a painting. AI filters create genuinely novel, more share-worthy content.`,
@@ -13880,7 +13880,7 @@ Traditional filters overlay effects on your photo; AI filters fully transform it
 
 Unlike the simple overlays of the past, today's AI filters create genuinely new content that stops scrolls and earns shares — and you don't need expensive apps to make them.
 
-Ready to ride the next trend? Head to JPT AI at sjpt.io, grab your free trials, and create trending AI filter content — watermark-free and free to start. The next viral post is one upload away.`,
+Ready to ride the next trend? Head to Pixel Shine at sjpt.io, grab your free trials, and create trending AI filter content — watermark-free and free to start. The next viral post is one upload away.`,
       },
     ],
   },
@@ -13888,7 +13888,7 @@ Ready to ride the next trend? Head to JPT AI at sjpt.io, grab your free trials, 
   {
     slug: "image-resolution-explained-beginners",
     title: "Image Resolution Explained for Beginners (DPI, PPI, Pixels and More)",
-    metaTitle: "Image Resolution Explained for Beginners | JPT AI",
+    metaTitle: "Image Resolution Explained for Beginners | Pixel Shine",
     metaDescription: "Confused by DPI, PPI, and pixels? This beginner's guide explains image resolution in plain English and how to fix resolution problems for free.",
     excerpt: "Image resolution is one of the most misunderstood concepts in digital photography. This guide explains everything you need to know in plain English.",
     date: "2025-08-18",
@@ -13943,7 +13943,7 @@ By the end, you'll understand what resolution really is, the crucial difference 
 
 **Step 5 — Upscale with AI.** Go to sjpt.io and open the AI Upscaler. Upload your low-resolution image. Unlike basic stretching, AI upscaling intelligently generates new detail, reconstructing edges and textures to increase resolution while staying sharp.
 
-**Step 6 — Choose your upscale level.** JPT AI's Normal upscale is free and unlimited — perfect for most needs. For maximum detail on important images, Pro AI upscale delivers the highest quality.
+**Step 6 — Choose your upscale level.** Pixel Shine's Normal upscale is free and unlimited — perfect for most needs. For maximum detail on important images, Pro AI upscale delivers the highest quality.
 
 **Step 7 — Download and verify.** Save the upscaled image and re-check its pixel dimensions. You now have a higher-resolution file ready for larger display or print.
 
@@ -13989,7 +13989,7 @@ By the end, you'll understand what resolution really is, the crucial difference 
 
 **Product photos for marketplaces:** Amazon recommends at least 1600 pixels on the longest side to enable zoom; 2000+ is better.
 
-**The universal principle:** figure out the final display or print size, then ensure you have enough pixels. If you fall short, AI upscaling with JPT AI can bridge the gap — its free Normal upscale handles most everyday resolution shortfalls without costing anything.`,
+**The universal principle:** figure out the final display or print size, then ensure you have enough pixels. If you fall short, AI upscaling with Pixel Shine can bridge the gap — its free Normal upscale handles most everyday resolution shortfalls without costing anything.`,
       },
       {
         heading: "Real-World Scenarios: When Resolution Matters Most",
@@ -14013,7 +14013,7 @@ No. For screens, only pixel dimensions matter. A 1000 x 1000 image looks identic
 300 DPI at your final print size. Multiply print dimensions in inches by 300 — an 8x10 print needs about 2400 x 3000 pixels.
 
 **Can I increase the resolution of a low-quality image?**
-Yes, with AI upscaling. Unlike basic stretching (which just blurs), AI intelligently generates new detail. JPT AI's Normal upscale is free and unlimited.
+Yes, with AI upscaling. Unlike basic stretching (which just blurs), AI intelligently generates new detail. Pixel Shine's Normal upscale is free and unlimited.
 
 **What does 'megapixels' mean?**
 One megapixel is one million pixels. A 12-megapixel camera captures images with about 12 million pixels — more megapixels means more detail and larger possible print sizes.
@@ -14033,7 +14033,7 @@ Yes. Shrinking an image (reducing pixels) keeps it crisp. Only enlarging beyond 
 
 When an image is too low-resolution for what you need, you're no longer stuck — AI upscaling can intelligently add detail and rescue files that traditional resizing would ruin.
 
-Have a low-res image that needs more detail? Try JPT AI's AI Upscaler at sjpt.io — the Normal upscale is completely free and unlimited, no sign-in required. Turn your blurry, too-small images into crisp, high-resolution files in seconds.`,
+Have a low-res image that needs more detail? Try Pixel Shine's AI Upscaler at sjpt.io — the Normal upscale is completely free and unlimited, no sign-in required. Turn your blurry, too-small images into crisp, high-resolution files in seconds.`,
       },
     ],
   },
@@ -14041,7 +14041,7 @@ Have a low-res image that needs more detail? Try JPT AI's AI Upscaler at sjpt.io
   {
     slug: "remove-background-logo-design",
     title: "How to Remove Background from a Logo (Transparent PNG for Designers)",
-    metaTitle: "Remove Background from Logo Free | JPT AI",
+    metaTitle: "Remove Background from Logo Free | Pixel Shine",
     metaDescription: "Remove the background from any logo to get a transparent PNG file. Perfect for designers, marketers, and businesses needing a versatile logo format.",
     excerpt: "A logo on a transparent background is one of the most useful assets any brand can have. Here is how to create one for free in seconds.",
     date: "2025-08-24",
@@ -14084,11 +14084,11 @@ In this guide, we'll walk through exactly how to make a logo transparent online,
       },
       {
         heading: "Step-by-Step: How to Remove a Logo Background",
-        body: `Here's the complete process to create a transparent logo PNG for free using JPT AI.
+        body: `Here's the complete process to create a transparent logo PNG for free using Pixel Shine.
 
 **Step 1 — Gather your best logo file.** Find the highest-resolution version of your logo you have. Bigger is better for crisp edges, especially around thin text and small details.
 
-**Step 2 — Upscale first if it's small (optional).** If your logo is low-resolution, run it through JPT AI's free Upscaler at sjpt.io before removing the background. This ensures sharp, clean edges in the final PNG.
+**Step 2 — Upscale first if it's small (optional).** If your logo is low-resolution, run it through Pixel Shine's free Upscaler at sjpt.io before removing the background. This ensures sharp, clean edges in the final PNG.
 
 **Step 3 — Open the Background Remover.** Go to sjpt.io and open the Background Remover tool. No sign-in is required to start.
 
@@ -14100,7 +14100,7 @@ In this guide, we'll walk through exactly how to make a logo transparent online,
 
 **Step 7 — Refine if needed.** Use the refine or erase tools to clean up any stray pixels the AI missed, or to add back any part of the logo that was accidentally removed. Thin fonts and detailed icons occasionally need a quick touch-up.
 
-**Step 8 — Export as PNG.** Download your logo as a PNG — the only common format that preserves transparency. JPG will not work, as it fills transparency with white. JPT AI exports with no watermark, so your logo stays clean and professional.
+**Step 8 — Export as PNG.** Download your logo as a PNG — the only common format that preserves transparency. JPG will not work, as it fills transparency with white. Pixel Shine exports with no watermark, so your logo stays clean and professional.
 
 **Step 9 — Test on multiple backgrounds.** Place your new transparent PNG on white, dark, and colored backgrounds to confirm the edges look clean everywhere.`,
       },
@@ -14148,7 +14148,7 @@ In this guide, we'll walk through exactly how to make a logo transparent online,
 
 **Partnerships and co-branding:** Placing your logo alongside others on a shared background demands transparency for a clean, unified look.
 
-**The common need:** every one of these uses requires a logo free of its background. Creating one high-quality transparent PNG — free, in seconds, with JPT AI — gives you a versatile asset that serves every branding scenario your business will ever encounter.`,
+**The common need:** every one of these uses requires a logo free of its background. Creating one high-quality transparent PNG — free, in seconds, with Pixel Shine — gives you a versatile asset that serves every branding scenario your business will ever encounter.`,
       },
       {
         heading: "Real-World Results: Designers and Businesses",
@@ -14163,7 +14163,7 @@ A startup founder building a pitch deck needed the company logo to sit cleanly o
       {
         heading: "Frequently Asked Questions",
         body: `**How do I make my logo background transparent for free?**
-Upload your logo to JPT AI's Background Remover at sjpt.io. The AI removes the background in seconds, and you can download a transparent PNG with no watermark and no mandatory sign-in.
+Upload your logo to Pixel Shine's Background Remover at sjpt.io. The AI removes the background in seconds, and you can download a transparent PNG with no watermark and no mandatory sign-in.
 
 **What file format should a transparent logo be?**
 PNG. It's the standard format that supports transparency. Never use JPG for transparent logos, as JPG fills transparent areas with white.
@@ -14178,7 +14178,7 @@ Because it's saved as a JPG or has a solid background baked in. Remove the backg
 PNG is a pixel-based (raster) format with a fixed resolution that supports transparency. SVG is a vector format that scales infinitely. For most web and print uses, a transparent PNG works perfectly; SVG is ideal when infinite scaling is needed.
 
 **My logo file is low resolution — what should I do?**
-Upscale it first using JPT AI's free AI Upscaler, then remove the background. This produces sharp, clean edges even at larger sizes.
+Upscale it first using Pixel Shine's free AI Upscaler, then remove the background. This produces sharp, clean edges even at larger sizes.
 
 **Can I use the transparent logo commercially?**
 Yes. As long as you own or have rights to the logo, the transparent version you create is yours to use across all your branding and marketing.
@@ -14192,7 +14192,7 @@ No. Removing the background only affects the background pixels; your logo itself
 
 Avoid the common pitfalls — saving as JPG, using low-res sources, and ignoring color fringing — and you'll have a versatile brand asset that works everywhere.
 
-Have a logo trapped on a background? Head to JPT AI's Background Remover at sjpt.io and create a clean transparent PNG for free — no watermark, no account needed to start. Turn your boxed-in logo into a professional, ready-for-anything brand mark in seconds.`,
+Have a logo trapped on a background? Head to Pixel Shine's Background Remover at sjpt.io and create a clean transparent PNG for free — no watermark, no account needed to start. Turn your boxed-in logo into a professional, ready-for-anything brand mark in seconds.`,
       },
     ],
   },
@@ -14200,7 +14200,7 @@ Have a logo trapped on a background? Head to JPT AI's Background Remover at sjpt
   {
     slug: "ai-photo-editor-real-estate-listings",
     title: "AI Photo Editor for Real Estate: Brighten Rooms, Fix Lighting, Remove Clutter",
-    metaTitle: "AI Photo Editor for Real Estate Listings | JPT AI",
+    metaTitle: "AI Photo Editor for Real Estate Listings | Pixel Shine",
     metaDescription: "Use AI to enhance real estate listing photos. Brighten rooms, fix lighting, remove clutter, and make properties look their best, free online.",
     excerpt: "Better listing photos sell homes faster and at higher prices. AI photo editing makes professional-quality enhancement accessible to every agent.",
     date: "2025-08-30",
@@ -14213,7 +14213,7 @@ Have a logo trapped on a background? Head to JPT AI's Background Remover at sjpt
       {
         body: `An AI photo editor for real estate can transform a dim, cluttered listing photo into a bright, inviting image that makes buyers stop scrolling — and it can do it in seconds, for free. If you're an agent, property manager, or homeowner selling your place, you already know the truth: listing photos sell homes. Research consistently shows that listings with high-quality photos sell faster and for more money, and that the vast majority of buyers start their search online, judging properties on images alone before they ever schedule a showing. A brighter room, corrected lighting, and a decluttered space can be the difference between a scroll-past and a showing request.
 
-In this guide, you'll learn how to use AI to brighten rooms, fix lighting, remove clutter, and enhance real estate photos without expensive software or a professional photographer. We'll walk through a complete free workflow with JPT AI, share pro techniques that make listings look magazine-ready, and cover the ethical line between enhancing and misrepresenting a property. Whether you're listing a starter condo or a luxury home, these AI real estate photo enhancement techniques will help your listings shine — and get more clicks, showings, and offers. Let's turn your ordinary listing photos into scroll-stopping ones, for free.`,
+In this guide, you'll learn how to use AI to brighten rooms, fix lighting, remove clutter, and enhance real estate photos without expensive software or a professional photographer. We'll walk through a complete free workflow with Pixel Shine, share pro techniques that make listings look magazine-ready, and cover the ethical line between enhancing and misrepresenting a property. Whether you're listing a starter condo or a luxury home, these AI real estate photo enhancement techniques will help your listings shine — and get more clicks, showings, and offers. Let's turn your ordinary listing photos into scroll-stopping ones, for free.`,
       },
       {
         heading: "Why Listing Photos Make or Break a Sale",
@@ -14243,17 +14243,17 @@ In this guide, you'll learn how to use AI to brighten rooms, fix lighting, remov
 
 **Sky and window enhancement.** Blown-out windows (pure white outside) and gray skies can be balanced so you see the view and the sky looks pleasant — a hallmark of professional real estate photography.
 
-**The combined effect:** run an average phone photo through these enhancements and you get a bright, color-accurate, clutter-free, crisp image that looks like it came from a professional shoot — at zero cost with JPT AI.`,
+**The combined effect:** run an average phone photo through these enhancements and you get a bright, color-accurate, clutter-free, crisp image that looks like it came from a professional shoot — at zero cost with Pixel Shine.`,
       },
       {
         heading: "Step-by-Step: Enhance a Listing Photo with AI for Free",
-        body: `Here's the complete free workflow using JPT AI to turn a raw listing photo into a scroll-stopping one.
+        body: `Here's the complete free workflow using Pixel Shine to turn a raw listing photo into a scroll-stopping one.
 
 **Step 1 — Shoot the best raw photo you can.** Even AI works better with good input. Shoot during the day with curtains open for natural light, turn on interior lights, hold the camera steady (a tripod helps), and shoot from a corner at chest height to make rooms look spacious.
 
 **Step 2 — Declutter physically first if possible.** Remove obvious personal items and mess before shooting. AI can handle the rest, but a tidy starting point yields the best results.
 
-**Step 3 — Open JPT AI's AI Editor.** Go to sjpt.io and open the AI Photo Editor. No sign-in needed to start.
+**Step 3 — Open Pixel Shine's AI Editor.** Go to sjpt.io and open the AI Photo Editor. No sign-in needed to start.
 
 **Step 4 — Upload your room photo.** Drag and drop your image into the editor.
 
@@ -14320,10 +14320,10 @@ Across these cases, AI let agents and owners produce compelling, professional-lo
       {
         heading: "Frequently Asked Questions",
         body: `**Can I enhance real estate photos for free?**
-Yes. JPT AI offers free photo enhancement, brightening, and unlimited Normal upscaling with no watermarks and no mandatory sign-in for basics, so you can produce professional-looking listing photos at no cost.
+Yes. Pixel Shine offers free photo enhancement, brightening, and unlimited Normal upscaling with no watermarks and no mandatory sign-in for basics, so you can produce professional-looking listing photos at no cost.
 
 **How do I brighten a dark room photo?**
-Upload it to JPT AI's AI Editor at sjpt.io and increase the brightness and adjust contrast. AI brightening lifts shadows and evens exposure, making dim rooms look open and inviting.
+Upload it to Pixel Shine's AI Editor at sjpt.io and increase the brightness and adjust contrast. AI brightening lifts shadows and evens exposure, making dim rooms look open and inviting.
 
 **Is it ethical to edit real estate listing photos?**
 Enhancing photos — brightening, color-correcting, sharpening, and removing minor clutter — is standard and ethical. What's not acceptable is misrepresenting the property, like erasing permanent defects or making spaces look dramatically larger than they are. Enhance honestly.
@@ -14349,7 +14349,7 @@ Yes. Apply the same brightness, color, and style settings across all photos for 
 
 The keys are simple: shoot the best raw photo you can, brighten and color-correct honestly, remove distractions, keep your edits consistent across the listing, and always lead with your most impressive image. Just remember to enhance, not misrepresent — honest, appealing photos build trust and drive real showings.
 
-Ready to make your listings shine? Head to JPT AI's AI Editor at sjpt.io and enhance your first listing photo for free — no watermark, no account needed to start. Brighter rooms and cleaner spaces are just seconds away.`,
+Ready to make your listings shine? Head to Pixel Shine's AI Editor at sjpt.io and enhance your first listing photo for free — no watermark, no account needed to start. Brighter rooms and cleaner spaces are just seconds away.`,
       },
     ],
   },

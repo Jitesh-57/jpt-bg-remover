@@ -6,11 +6,8 @@ const nextConfig = {
       // 301 to the home page so old sitemap/crawled URLs don't 404.
       { source: '/instagram-video-downloader', destination: '/', permanent: true },
       { source: '/youtube-video-downloader', destination: '/', permanent: true },
-      // The home page already renders the upscaler (identical content), so
-      // Google flagged /upscale as a duplicate and chose / as canonical. 301
-      // /upscale → / to consolidate signals onto one page. Exact match only —
-      // the /upscale/<variant> landing pages (e.g. /upscale/4k) are untouched.
-      { source: '/upscale', destination: '/', permanent: true },
+      // /upscale is its own landing page again — the homepage now has its own
+      // identity, so there is no duplicate to consolidate.
     ];
   },
   webpack: (config) => {

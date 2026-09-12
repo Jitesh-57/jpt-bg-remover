@@ -1,6 +1,8 @@
 'use client'
 
 import { useRef, useState, useEffect, DragEvent } from 'react'
+import PricingSection from '@/app/_components/PricingSection'
+import { PACKS, CREDIT_COST } from '@/lib/plans'
 import FAQAccordion from './FAQAccordion'
 import { PageSEO } from '@/lib/page-config'
 import { PAGE_IMAGES, PAGE_BEFORE_AFTER } from '@/lib/landing-images'
@@ -47,11 +49,13 @@ const FREE_TOOL_LINKS: { id: string; icon: string; title: string; href: string }
 // Per-tool floating hero decorations. Two "cards" (left + right) that theme
 // each page — either a colored file badge (text) or a white icon card (emoji).
 type DecoBadge = { text?: string; emoji?: string; color?: string; bg?: string }
-const FILE_BLUE = { color: '#0F766E', bg: 'linear-gradient(135deg,#CCFBF1,#99F6E4)' }
-const FILE_GREEN = { color: 'var(--success)', bg: 'linear-gradient(135deg,#DCFCE7,var(--success-soft))' }
-const FILE_AMBER = { color: 'var(--warn)', bg: 'linear-gradient(135deg,#FEF3C7,#FDE68A)' }
-const FILE_VIOLET = { color: 'var(--accent)', bg: 'linear-gradient(135deg,var(--accent-soft),#A7F3D0)' }
-const FILE_RED = { color: 'var(--danger)', bg: 'linear-gradient(135deg,var(--danger-soft),var(--danger-soft))' }
+// Hero decoration chips. Token-driven so they follow the theme rather than
+// keeping the pastel tints the light palette used.
+const FILE_BLUE = { color: 'var(--accent)', bg: 'linear-gradient(135deg,var(--surface-3),var(--surface-2))' }
+const FILE_GREEN = { color: 'var(--success)', bg: 'linear-gradient(135deg,var(--surface-3),var(--surface-2))' }
+const FILE_AMBER = { color: 'var(--warn)', bg: 'linear-gradient(135deg,var(--surface-3),var(--surface-2))' }
+const FILE_VIOLET = { color: 'var(--accent-2)', bg: 'linear-gradient(135deg,var(--accent-soft),var(--surface-3))' }
+const FILE_RED = { color: 'var(--danger)', bg: 'linear-gradient(135deg,var(--danger-soft),var(--surface-3))' }
 
 const PAGE_DECOR: Record<string, [DecoBadge, DecoBadge]> = {
   upscale: [{ text: 'HD', ...FILE_BLUE }, { text: '4K', ...FILE_VIOLET }],
@@ -72,7 +76,7 @@ const DEFAULT_DECOR: [DecoBadge, DecoBadge] = [{ text: 'JPG', ...FILE_BLUE }, { 
 function DecoCard({ badge }: { badge: DecoBadge }) {
   if (badge.emoji) {
     return (
-      <div style={{ width: 60, height: 60, borderRadius: 16, background: 'var(--surface)', boxShadow: '0 8px 24px rgba(15,157,107,0.16)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26 }}>
+      <div style={{ width: 60, height: 60, borderRadius: 16, background: 'var(--surface)', boxShadow: '0 8px 24px var(--accent-soft)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26 }}>
         {badge.emoji}
       </div>
     )
@@ -179,10 +183,10 @@ const PAGE_TESTIMONIALS: Record<string, { name: string; role: string; avatar: st
   'remove-bg': [
     { name: 'Priya Sharma', role: 'E-commerce Owner', avatar: 'PS', quote: 'I was spending 30 minutes per product photo in Photoshop. Now I process 40 images before morning coffee. My store looks completely professional.', stars: 5 },
     { name: 'Rahul Mehta', role: 'Freelance Photographer', avatar: 'RM', quote: 'Background removal on hair and fine details is flawless. My clients can\'t tell the difference from a manual Photoshop cutout.', stars: 5 },
-    { name: 'Sneha Patel', role: 'Social Media Manager', avatar: 'SP', quote: 'Switched from remove.bg — same quality, but JPT AI has all the other tools too. No watermarks, instant results. Perfect.', stars: 5 },
+    { name: 'Sneha Patel', role: 'Social Media Manager', avatar: 'SP', quote: 'Switched from remove.bg — same quality, but Pixel Shine has all the other tools too. No watermarks, instant results. Perfect.', stars: 5 },
   ],
   headshot: [
-    { name: 'Aditya Kumar', role: 'Software Engineer', avatar: 'AK', quote: 'Updated my LinkedIn with a JPT AI headshot. Got 3 recruiter messages in the same week. The photo looks completely professional.', stars: 5 },
+    { name: 'Aditya Kumar', role: 'Software Engineer', avatar: 'AK', quote: 'Updated my LinkedIn with a Pixel Shine headshot. Got 3 recruiter messages in the same week. The photo looks completely professional.', stars: 5 },
     { name: 'Nisha Gupta', role: 'Marketing Manager', avatar: 'NG', quote: 'Used it for our entire team\'s company page. Saved us a ₹30,000 studio session. Everyone looks consistent and polished.', stars: 5 },
     { name: 'Vivek Joshi', role: 'Freelance Consultant', avatar: 'VJ', quote: 'I needed a quick headshot for a conference speaker profile. Done in 2 minutes, looked better than my old studio photo.', stars: 5 },
   ],
@@ -230,47 +234,47 @@ const PAGE_COMPARISON: Record<string, { feature: string; jpt: boolean; alt1: boo
 
 const PAGE_SEO_CONTENT: Record<string, { heading: string; body: string }[]> = {
   upscale: [
-    { heading: 'What is AI image upscaling?', body: 'AI image upscaling uses deep learning super-resolution to intelligently add detail when enlarging images — unlike traditional upscaling which just stretches pixels and creates blurry results. JPT AI\'s upscaler analyses textures, edges, and patterns to reconstruct sharp, high-resolution output up to 4× the original size.' },
-    { heading: 'Upscale images to 4K online for free', body: 'JPT AI lets you upscale any photo to 2× or 4× resolution directly online — no software to install, no credit card required. Basic upscale is free and unlimited for everyone. Upgrade for unlimited 4K Pro AI upscaling with priority processing.' },
-    { heading: 'Best for e-commerce, photography & print', body: 'Whether you\'re a seller needing high-resolution product photos, a photographer restoring old images, or a designer upscaling AI art for print — JPT AI delivers professional results in seconds. Works on portraits, products, landscapes, screenshots, and AI-generated images.' },
+    { heading: 'What is AI image upscaling?', body: 'AI image upscaling uses deep learning super-resolution to intelligently add detail when enlarging images — unlike traditional upscaling which just stretches pixels and creates blurry results. Pixel Shine\'s upscaler analyses textures, edges, and patterns to reconstruct sharp, high-resolution output up to 4× the original size.' },
+    { heading: 'Upscale images to 4K online for free', body: 'Pixel Shine lets you upscale any photo to 2× or 4× resolution directly online — no software to install, no credit card required. Basic upscale is free and unlimited for everyone. Upgrade for unlimited 4K Pro AI upscaling with priority processing.' },
+    { heading: 'Best for e-commerce, photography & print', body: 'Whether you\'re a seller needing high-resolution product photos, a photographer restoring old images, or a designer upscaling AI art for print — Pixel Shine delivers professional results in seconds. Works on portraits, products, landscapes, screenshots, and AI-generated images.' },
   ],
   'remove-bg': [
-    { heading: 'What is AI background removal?', body: 'AI background removal uses deep learning image segmentation to detect and separate the subject from the background automatically — no manual selection, no magic wand tool, no green screen required. JPT AI handles people, products, objects, animals, and complex edges like hair with pixel-level precision.' },
-    { heading: 'Remove background online free — no watermark', body: 'JPT AI removes backgrounds instantly online. The output is a full-resolution transparent PNG — no watermarks, no quality degradation, free to use. Perfect for e-commerce product photos, LinkedIn headshots, YouTube thumbnails, and marketing materials.' },
-    { heading: 'The best remove.bg alternative for India', body: 'Unlike remove.bg, JPT AI gives you an all-in-one toolkit: remove backgrounds AND upscale, edit with AI prompts, generate new backgrounds, and resize — all in one place, with pricing in INR and no foreign card required.' },
+    { heading: 'What is AI background removal?', body: 'AI background removal uses deep learning image segmentation to detect and separate the subject from the background automatically — no manual selection, no magic wand tool, no green screen required. Pixel Shine handles people, products, objects, animals, and complex edges like hair with pixel-level precision.' },
+    { heading: 'Remove background online free — no watermark', body: 'Pixel Shine removes backgrounds instantly online. The output is a full-resolution transparent PNG — no watermarks, no quality degradation, free to use. Perfect for e-commerce product photos, LinkedIn headshots, YouTube thumbnails, and marketing materials.' },
+    { heading: 'The best remove.bg alternative for India', body: 'Unlike remove.bg, Pixel Shine gives you an all-in-one toolkit: remove backgrounds AND upscale, edit with AI prompts, generate new backgrounds, and resize — all in one place, with pricing in INR and no foreign card required.' },
   ],
   headshot: [
-    { heading: 'What is an AI headshot generator?', body: 'An AI headshot generator uses artificial intelligence to transform casual photos into professional-looking headshots. JPT AI analyses your photo and applies professional lighting, background removal, and image enhancement to produce corporate-quality portraits without a studio session.' },
-    { heading: 'Professional AI headshots for LinkedIn — free to try', body: 'LinkedIn profiles with professional headshots get 21× more profile views and 9× more connection requests. JPT AI generates LinkedIn-ready headshots in seconds — no photographer, no studio, no expensive session. Free credits included when you sign up.' },
-    { heading: 'AI headshots for companies and teams', body: 'Get consistent, professional headshots for your entire team without booking a studio. JPT AI delivers uniform lighting and style across all photos — ideal for company websites, directories, and corporate materials. Process multiple team members quickly with batch uploads.' },
+    { heading: 'What is an AI headshot generator?', body: 'An AI headshot generator uses artificial intelligence to transform casual photos into professional-looking headshots. Pixel Shine analyses your photo and applies professional lighting, background removal, and image enhancement to produce corporate-quality portraits without a studio session.' },
+    { heading: 'Professional AI headshots for LinkedIn — free to try', body: 'LinkedIn profiles with professional headshots get 21× more profile views and 9× more connection requests. Pixel Shine generates LinkedIn-ready headshots in seconds — no photographer, no studio, no expensive session. Free credits included when you sign up.' },
+    { heading: 'AI headshots for companies and teams', body: 'Get consistent, professional headshots for your entire team without booking a studio. Pixel Shine delivers uniform lighting and style across all photos — ideal for company websites, directories, and corporate materials. Process multiple team members quickly with batch uploads.' },
   ],
   'ai-editor': [
-    { heading: 'Edit photos with text prompts — no Photoshop needed', body: 'JPT AI lets you describe any edit in plain English and applies it instantly. "Change the background to a sunset", "add soft studio lighting", "make it look cinematic" — no design skills, no complex tools, no learning curve. Just type and transform.' },
-    { heading: 'The best AI photo editor online free', body: 'Unlike Photoshop or Adobe Firefly, JPT AI is free to start with no credit card required. Edit images online — remove backgrounds, generate new backgrounds, apply styles, and upscale quality all in one tool. No watermarks on free tier.' },
+    { heading: 'Edit photos with text prompts — no Photoshop needed', body: 'Pixel Shine lets you describe any edit in plain English and applies it instantly. "Change the background to a sunset", "add soft studio lighting", "make it look cinematic" — no design skills, no complex tools, no learning curve. Just type and transform.' },
+    { heading: 'The best AI photo editor online free', body: 'Unlike Photoshop or Adobe Firefly, Pixel Shine is free to start with no credit card required. Edit images online — remove backgrounds, generate new backgrounds, apply styles, and upscale quality all in one tool. No watermarks on free tier.' },
     { heading: 'AI image editing for e-commerce and marketing', body: 'Create professional product photos, ad creatives, and social media visuals in minutes. Change backgrounds, adjust lighting, apply brand styles, and generate consistent imagery at scale — without a designer or agency. Perfect for Shopify, Amazon, Instagram, and paid ads.' },
   ],
   'compress-image': [
-    { heading: 'How to compress an image for free', body: 'JPT AI shrinks your image file size online — no upload, no sign-up, no watermark. Just drag the quality slider until the estimated size is where you want it, then download. Most photos drop to a fraction of their original size with quality loss that is almost impossible to see.' },
+    { heading: 'How to compress an image for free', body: 'Pixel Shine shrinks your image file size online — no upload, no sign-up, no watermark. Just drag the quality slider until the estimated size is where you want it, then download. Most photos drop to a fraction of their original size with quality loss that is almost impossible to see.' },
     { heading: 'Reduce photo size to KB without losing quality', body: 'Need a photo under 100 KB or 200 KB for a form, website, or email? Lower the quality slider and the live size read-out shows you exactly where you land. Because compression happens on your device, it is instant and completely private.' },
-    { heading: 'Why compress images?', body: 'Smaller images load faster, improving your website speed and Google ranking, slip under email and upload limits, and save storage on your phone or drive. JPT AI makes it a one-slider, one-click job — free and unlimited.' },
+    { heading: 'Why compress images?', body: 'Smaller images load faster, improving your website speed and Google ranking, slip under email and upload limits, and save storage on your phone or drive. Pixel Shine makes it a one-slider, one-click job — free and unlimited.' },
   ],
   'convert-image': [
-    { heading: 'How to convert an image format for free', body: 'Upload your image, pick JPG, PNG, or WEBP, and click convert — JPT AI does it instantly online with no watermark and no sign-up. Your file never leaves your device, so conversion is private and fast.' },
+    { heading: 'How to convert an image format for free', body: 'Upload your image, pick JPG, PNG, or WEBP, and click convert — Pixel Shine does it instantly online with no watermark and no sign-up. Your file never leaves your device, so conversion is private and fast.' },
     { heading: 'JPG to PNG, PNG to JPG, and WEBP explained', body: 'Choose PNG when you need transparency or the sharpest edges for logos and graphics. Choose JPG for the smallest photo files that every app accepts. Choose WEBP for the best of both — small size with transparency support — ideal for modern, fast-loading websites.' },
-    { heading: 'A free image converter that respects your privacy', body: 'Unlike many online converters, JPT AI processes everything privately on your device. No queue, no upload limits, no account — convert as many images as you like between JPG, PNG, and WEBP, completely free.' },
+    { heading: 'A free image converter that respects your privacy', body: 'Unlike many online converters, Pixel Shine processes everything privately on your device. No queue, no upload limits, no account — convert as many images as you like between JPG, PNG, and WEBP, completely free.' },
   ],
   'crop-image': [
-    { heading: 'How to crop an image online for free', body: 'Upload your photo, choose a ready-made ratio — Square, Portrait, Story, Wide, Classic, or Circle — and JPT AI crops it instantly online. No watermark, no sign-up, and your image stays private on your device.' },
+    { heading: 'How to crop an image online for free', body: 'Upload your photo, choose a ready-made ratio — Square, Portrait, Story, Wide, Classic, or Circle — and Pixel Shine crops it instantly online. No watermark, no sign-up, and your image stays private on your device.' },
     { heading: 'Crop photos for Instagram, YouTube, and profiles', body: 'Get the exact aspect ratios each platform wants: 1:1 for Instagram feed, 4:5 for tall posts, 9:16 for Stories and Reels, and 16:9 for YouTube thumbnails. The circle crop turns any photo into a clean round profile picture with a transparent background.' },
     { heading: 'Free, unlimited, and private', body: 'Cropping only trims edges, so your image keeps full quality. Because everything runs online, there are no upload limits and no waiting — crop as many photos as you like for free.' },
   ],
   'rotate-image': [
-    { heading: 'How to rotate an image online for free', body: 'Upload your photo and tap Rotate Left, Rotate Right, or 180° — JPT AI turns it instantly online. Rotation is lossless, so your image keeps its full quality. No watermark, no sign-up.' },
+    { heading: 'How to rotate an image online for free', body: 'Upload your photo and tap Rotate Left, Rotate Right, or 180° — Pixel Shine turns it instantly online. Rotation is lossless, so your image keeps its full quality. No watermark, no sign-up.' },
     { heading: 'Flip and mirror images in one click', body: 'Use Flip Horizontal to mirror a photo left-to-right (great for selfies) or Flip Vertical to mirror top-to-bottom. Perfect for fixing orientation, correcting mirrored text, or creating reflection effects.' },
     { heading: 'Fix sideways and upside-down photos', body: 'Phone photos and scanned documents often upload rotated. A quick 90° or 180° turn straightens them right away. Everything runs on your device, so it is fast, private, and free with no limits.' },
   ],
   'image-to-pdf': [
-    { heading: 'How to convert an image to PDF for free', body: 'Upload a JPG, PNG, or WEBP and click Download as PDF — JPT AI builds the PDF online with no watermark and no sign-up. The page is sized to your image so it looks clean and professional.' },
+    { heading: 'How to convert an image to PDF for free', body: 'Upload a JPG, PNG, or WEBP and click Download as PDF — Pixel Shine builds the PDF online with no watermark and no sign-up. The page is sized to your image so it looks clean and professional.' },
     { heading: 'JPG to PDF and PNG to PDF, instantly', body: 'Turning photos into PDFs makes them easy to share, print, and archive. Forms, IDs, receipts, and notes all become tidy, universal PDF files that any device and office can open.' },
     { heading: 'Private, unlimited, and watermark-free', body: 'Because the PDF is generated privately on your device, your image never leaves your device. Convert as many images to PDF as you like — completely free, with no watermark and no account required.' },
   ],
@@ -281,7 +285,7 @@ const PAGE_SEO_CONTENT: Record<string, { heading: string; body: string }[]> = {
   ],
   'meme-generator': [
     { heading: 'How to make a meme for free', body: 'Upload any image, type your top and bottom captions, and click Create Meme. Your text renders in the classic bold Impact style with a black outline, then downloads instantly — free, no sign-up, no watermark.' },
-    { heading: 'The classic meme look, done right', body: 'JPT AI uses uppercase Impact with a heavy outline — the format everyone recognises. Long captions wrap automatically to fit the image, so your meme always looks clean on any picture.' },
+    { heading: 'The classic meme look, done right', body: 'Pixel Shine uses uppercase Impact with a heavy outline — the format everyone recognises. Long captions wrap automatically to fit the image, so your meme always looks clean on any picture.' },
     { heading: 'Private and unlimited', body: 'Memes are generated entirely online, so your images never leave your device. Make as many as you like for Instagram, WhatsApp, X, Reddit, and group chats — completely free with no limits.' },
   ],
 }
@@ -314,7 +318,7 @@ const PAGE_VISUALS: Record<string, { before: string; after: string; label: strin
     label: 'Smaller File',
   },
   'convert-image': {
-    before: 'linear-gradient(135deg, #CCFBF1 0%, #99F6E4 100%)',
+    before: 'linear-gradient(135deg, var(--surface-3) 0%, var(--surface-2) 100%)',
     after: 'linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%)',
     label: 'Converted',
   },
@@ -334,7 +338,7 @@ const PAGE_VISUALS: Record<string, { before: string; after: string; label: strin
     label: 'PDF Ready',
   },
   'watermark-image': {
-    before: 'linear-gradient(135deg, var(--accent-soft) 0%, #A7F3D0 100%)',
+    before: 'linear-gradient(135deg, var(--accent-soft) 0%, var(--surface-3) 100%)',
     after: 'linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%)',
     label: 'Watermarked',
   },
@@ -372,6 +376,36 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
       }
     : null
 
+  const pageUrl = isHome ? SITE_BASE : crumbLink ? `${SITE_BASE}${crumbLink.href}` : SITE_BASE
+
+  // WebPage → tells crawlers what this URL is, matching the visible H1/subtitle.
+  const webPageLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: config.title,
+    description: config.meta_description,
+    url: pageUrl,
+  }
+
+  // SoftwareApplication + Offer → the free-tool signal, and the credit price
+  // for the AI features. Prices come from lib/plans.ts, never hardcoded.
+  const appLd = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: config.h1 || config.title,
+    description: config.meta_description,
+    url: pageUrl,
+    applicationCategory: 'MultimediaApplication',
+    operatingSystem: 'Web',
+    offers: {
+      '@type': 'AggregateOffer',
+      priceCurrency: 'USD',
+      lowPrice: '0',
+      highPrice: String(PACKS[PACKS.length - 1].usd),
+      offerCount: String(PACKS.length + 1),
+    },
+  }
+
   // Two-tone H1: the last word gets a gradient fill (e.g. "Free Image Compressor").
   const h1Words = (config.h1 || '').trim().split(/\s+/)
   const h1Last = h1Words.length > 1 ? h1Words[h1Words.length - 1] : ''
@@ -386,6 +420,24 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
   const visual = PAGE_VISUALS[pageId] ?? PAGE_VISUALS['upscale']
   const heroImg = PAGE_IMAGES[pageId]
   const beforeAfter = PAGE_BEFORE_AFTER[pageId]
+
+  // ImageObject → the hero visual, when there is a real image rather than a
+  // gradient placeholder. Declared here because it needs heroImg/beforeAfter.
+  const heroLdImage = beforeAfter?.after || heroImg
+  const imageLd = heroLdImage
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'ImageObject',
+        contentUrl: heroLdImage.startsWith('http') ? heroLdImage : `${SITE_BASE}${heroLdImage}`,
+        caption: `${config.h1} — example result`,
+        creator: { '@type': 'Organization', name: 'Pixel Shine' },
+      }
+    : null
+
+  // A single self-contained sentence defining the tool, used in the About
+  // block. Built from real page data rather than boilerplate so it stays
+  // accurate for every tool this component renders.
+  const aeoDefinition = `${config.h1} is a free online tool from Pixel Shine. ${config.subtitle}`
   const fileRef = useRef<HTMLInputElement>(null)
   const [isDragging, setIsDragging] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
@@ -452,6 +504,9 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
       {/* Structured data for rich results */}
       {faqLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />}
       {breadcrumbLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(appLd) }} />
+      {imageLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(imageLd) }} />}
 
 
       {/* Animations: floating hero decor, scroll reveal, CTA shine */}
@@ -494,7 +549,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
         <div style={{ position: 'relative', maxWidth: 780, margin: '0 auto' }}>
           {/* Badge */}
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'var(--accent-soft)', color: 'var(--accent)', fontWeight: 700, fontSize: 12, borderRadius: 20, padding: '6px 14px', marginBottom: 28, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-            ☁️ JPT AI
+            ☁️ Pixel Shine
           </div>
 
           <h1 style={{ fontSize: 'clamp(2.2rem, 5vw, 3.6rem)', fontWeight: 900, color: 'var(--text)', lineHeight: 1.1, letterSpacing: '-0.03em', margin: '0 0 20px' }}>
@@ -522,7 +577,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
                 padding: '36px 32px 28px',
                 cursor: 'pointer',
                 transition: 'border-color 0.18s, background 0.18s',
-                boxShadow: isDragging ? '0 0 0 4px rgba(15,157,107,0.12)' : '0 2px 24px rgba(15,157,107,0.07)',
+                boxShadow: isDragging ? '0 0 0 4px var(--accent-soft)' : '0 2px 24px var(--accent-soft)',
               }}
               onClick={() => fileRef.current?.click()}
             >
@@ -545,7 +600,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
                   display: 'inline-flex', alignItems: 'center', gap: 8,
                   background: 'linear-gradient(135deg,var(--accent),var(--accent-2))', color: '#fff',
                   fontWeight: 800, fontSize: 15, padding: '13px 32px', borderRadius: 12,
-                  border: 'none', cursor: 'pointer', boxShadow: '0 6px 22px rgba(15,157,107,0.38)',
+                  border: 'none', cursor: 'pointer', boxShadow: '0 6px 22px rgba(255,106,26,0.40)',
                   letterSpacing: '-0.01em', marginBottom: 16,
                 }}
               >
@@ -573,7 +628,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
             <>
               <button
                 onClick={handleCTAClick}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg, var(--accent), var(--accent-2))', color: '#fff', fontWeight: 800, fontSize: 16, padding: '16px 36px', borderRadius: 14, border: 'none', cursor: 'pointer', boxShadow: '0 8px 30px rgba(15,157,107,0.4)', letterSpacing: '-0.01em' }}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg, var(--accent), var(--accent-2))', color: '#fff', fontWeight: 800, fontSize: 16, padding: '16px 36px', borderRadius: 14, border: 'none', cursor: 'pointer', boxShadow: '0 8px 30px rgba(255,106,26,0.40)', letterSpacing: '-0.01em' }}
               >
                 {config.cta_text || 'Try It Free'} →
               </button>
@@ -596,11 +651,11 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
             <div style={{ flex: 1, position: 'relative' }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={beforeAfter.after} alt={`${config.h1} — after (free 4K enhanced result, no watermark)`} loading="eager" fetchPriority="high" decoding="async" style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }} />
-              <span style={{ position: 'absolute', bottom: 14, right: 14, padding: '6px 14px', background: 'rgba(15,157,107,0.92)', color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', borderRadius: 8 }}>✨ 4K AI Upscaled</span>
+              <span style={{ position: 'absolute', bottom: 14, right: 14, padding: '6px 14px', background: 'rgba(255,106,26,0.40)', color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', borderRadius: 8 }}>✨ 4K AI Upscaled</span>
             </div>
           </div>
         ) : heroImg ? (
-          <div style={{ position: 'relative', maxWidth: 940, margin: '56px auto 0', borderRadius: 24, overflow: 'hidden', background: 'var(--surface)', padding: 10, boxShadow: '0 24px 80px rgba(15,157,107,0.16)', border: '1px solid var(--accent-soft)' }}>
+          <div style={{ position: 'relative', maxWidth: 940, margin: '56px auto 0', borderRadius: 24, overflow: 'hidden', background: 'var(--surface)', padding: 10, boxShadow: '0 24px 80px var(--accent-soft)', border: '1px solid var(--accent-soft)' }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={heroImg} alt={`${config.h1} — free online tool, no watermark (${visual.label})`} loading="eager" fetchPriority="high" decoding="async" width={1200} height={750} style={{ display: 'block', width: '100%', height: 'auto', borderRadius: 16 }} />
           </div>
@@ -613,7 +668,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
             </div>
             <div style={{ position: 'relative', height: 280, background: visual.after, display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
               <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(circle at 30% 40%, rgba(255,255,255,0.18) 0%, transparent 60%)' }} />
-              <span style={{ position: 'relative', padding: '10px 16px', background: 'rgba(15,157,107,0.85)', color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', borderTopLeftRadius: 10 }}>✨ {visual.label}</span>
+              <span style={{ position: 'relative', padding: '10px 16px', background: 'rgba(255,106,26,0.40)', color: '#fff', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', borderTopLeftRadius: 10 }}>✨ {visual.label}</span>
             </div>
           </div>
         )}
@@ -721,7 +776,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 20 }}>
               {config.features.map((f, i) => (
                 <div key={i} style={{ background: 'var(--surface-2)', border: '1.5px solid var(--border)', borderRadius: 20, padding: '28px 24px', transition: 'transform 0.2s, box-shadow 0.2s' }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = '0 8px 32px rgba(15,157,107,0.12)'; (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-2px)'; }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = '0 8px 32px var(--accent-soft)'; (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-2px)'; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = 'none'; (e.currentTarget as HTMLDivElement).style.transform = 'none'; }}>
                   <div style={{ width: 52, height: 52, background: 'linear-gradient(135deg, var(--accent-soft), var(--accent-soft))', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, marginBottom: 16 }}>{f.icon}</div>
                   <h3 style={{ fontSize: 16, fontWeight: 800, color: 'var(--text)', margin: '0 0 8px' }}>{f.title}</h3>
@@ -746,7 +801,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
                 {i < HOW_IT_WORKS.length - 1 && (
                   <div style={{ display: 'none' /* hidden on mobile */ }} />
                 )}
-                <div style={{ width: 72, height: 72, background: 'var(--surface)', border: '2px solid var(--accent-soft)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', boxShadow: '0 4px 20px rgba(15,157,107,0.12)' }}>
+                <div style={{ width: 72, height: 72, background: 'var(--surface)', border: '2px solid var(--accent-soft)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', boxShadow: '0 4px 20px var(--accent-soft)' }}>
                   <span style={{ fontSize: 22, fontWeight: 900, color: 'var(--accent)', fontVariantNumeric: 'tabular-nums' }}>{step.step}</span>
                 </div>
                 <h3 style={{ fontSize: 17, fontWeight: 800, color: 'var(--text)', margin: '0 0 10px' }}>{step.title}</h3>
@@ -760,18 +815,18 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
       {/* ── UPLOAD CTA SECTION ───────────────────────────────────────────── */}
       <section style={{ padding: '88px 24px', background: 'var(--surface)' }}>
         <div style={{ maxWidth: 760, margin: '0 auto' }}>
-          <div style={{ background: 'linear-gradient(135deg,#0C3A2A,#071F17)', borderRadius: 28, padding: '56px 48px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
-            <div style={{ position: 'absolute', top: -60, right: -60, width: 240, height: 240, background: 'radial-gradient(circle, rgba(15,157,107,0.3) 0%, transparent 70%)', pointerEvents: 'none' }} />
-            <div style={{ position: 'absolute', bottom: -40, left: -40, width: 180, height: 180, background: 'radial-gradient(circle, rgba(20,184,166,0.3) 0%, transparent 70%)', pointerEvents: 'none' }} />
+          <div style={{ background: 'linear-gradient(135deg,var(--surface-3),var(--bg-elevated))', borderRadius: 28, padding: '56px 48px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', top: -60, right: -60, width: 240, height: 240, background: 'radial-gradient(circle, rgba(255,106,26,0.40) 0%, transparent 70%)', pointerEvents: 'none' }} />
+            <div style={{ position: 'absolute', bottom: -40, left: -40, width: 180, height: 180, background: 'radial-gradient(circle, var(--accent-soft) 0%, transparent 70%)', pointerEvents: 'none' }} />
             <div style={{ position: 'relative' }}>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.14)', color: '#A7F3D0', fontWeight: 700, fontSize: 12, borderRadius: 20, padding: '6px 14px', marginBottom: 20, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Free to try</div>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.14)', color: 'var(--accent-strong)', fontWeight: 700, fontSize: 12, borderRadius: 20, padding: '6px 14px', marginBottom: 20, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Free to try</div>
               <h2 style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', fontWeight: 900, color: '#fff', margin: '0 0 14px', letterSpacing: '-0.02em' }}>
                 Ready to transform your images?
               </h2>
               <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.78)', margin: '0 0 32px' }}>100% free · No sign-up required · No watermark.</p>
               <a
                 href={toolHref}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg, var(--accent), var(--accent-2))', color: '#fff', fontWeight: 800, fontSize: 16, padding: '16px 40px', borderRadius: 14, textDecoration: 'none', boxShadow: '0 8px 30px rgba(15,157,107,0.5)' }}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg, var(--accent), var(--accent-2))', color: '#fff', fontWeight: 800, fontSize: 16, padding: '16px 40px', borderRadius: 14, textDecoration: 'none', boxShadow: '0 8px 30px rgba(255,106,26,0.40)' }}
               >
                 {config.cta_text || 'Try It Free'} →
               </a>
@@ -843,7 +898,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
             <div style={{ maxWidth: 860, margin: '0 auto' }}>
               <div style={{ textAlign: 'center', marginBottom: 48 }}>
                 <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>Comparison</div>
-                <h2 style={{ fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', fontWeight: 900, color: 'var(--text)', margin: '0 0 12px', letterSpacing: '-0.02em' }}>JPT AI vs the alternatives</h2>
+                <h2 style={{ fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', fontWeight: 900, color: 'var(--text)', margin: '0 0 12px', letterSpacing: '-0.02em' }}>Pixel Shine vs the alternatives</h2>
                 <p style={{ fontSize: 16, color: 'var(--text-muted)', margin: 0 }}>One tool. Everything included. No hidden paywalls.</p>
               </div>
               <div style={{ overflowX: 'auto' }}>
@@ -851,7 +906,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
                   <thead>
                     <tr style={{ borderBottom: '2px solid var(--border)' }}>
                       <th style={{ textAlign: 'left', padding: '12px 16px', color: 'var(--text-muted)', fontWeight: 700, fontSize: 13 }}>Feature</th>
-                      <th style={{ textAlign: 'center', padding: '12px 16px', color: 'var(--accent)', fontWeight: 900, fontSize: 13, background: 'var(--accent-soft)' }}>✦ JPT AI</th>
+                      <th style={{ textAlign: 'center', padding: '12px 16px', color: 'var(--accent)', fontWeight: 900, fontSize: 13, background: 'var(--accent-soft)' }}>✦ Pixel Shine</th>
                       <th style={{ textAlign: 'center', padding: '12px 16px', color: 'var(--text-muted)', fontWeight: 700, fontSize: 13 }}>{alt1}</th>
                       <th style={{ textAlign: 'center', padding: '12px 16px', color: 'var(--text-muted)', fontWeight: 700, fontSize: 13 }}>{alt2}</th>
                     </tr>
@@ -908,7 +963,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
               {FREE_TOOL_LINKS.filter(l => l.id !== pageId).map(l => (
                 <a key={l.id} href={l.href}
                   style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, padding: '22px 16px', textDecoration: 'none', boxShadow: '0 2px 12px rgba(0,0,0,0.04)', transition: 'transform 0.18s, box-shadow 0.18s' }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 8px 28px rgba(15,157,107,0.16)'; (e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(-2px)'; }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 8px 28px var(--accent-soft)'; (e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(-2px)'; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 2px 12px rgba(0,0,0,0.04)'; (e.currentTarget as HTMLAnchorElement).style.transform = 'none'; }}>
                   <span style={{ fontSize: 30 }}>{l.icon}</span>
                   <span style={{ fontSize: 14, fontWeight: 800, color: 'var(--text)', textAlign: 'center' }}>{l.title}</span>
@@ -919,6 +974,29 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
           </div>
         </section>
       )}
+
+      {/* ── PRICING (shared) ─────────────────────────────────────────────── */}
+      <PricingSection toolName={config.h1} />
+
+      {/* ── ABOUT ────────────────────────────────────────────────────────────
+          Editorial block. Gives the page a standalone, citable explanation of
+          the tool — the signal answer engines look for, and the thing a
+          feature grid alone never provides. */}
+      <section style={{ padding: '80px 24px', background: 'var(--surface-2)' }}>
+        <div style={{ maxWidth: 760, margin: '0 auto' }}>
+          <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>About</div>
+          <h2 style={{ fontSize: 'clamp(1.6rem, 2.6vw, 2.1rem)', fontWeight: 900, color: 'var(--text)', margin: '0 0 18px', letterSpacing: '-0.02em' }}>
+            About {config.h1}
+          </h2>
+          <p style={{ fontSize: 16, color: 'var(--text-muted)', lineHeight: 1.8, margin: '0 0 14px' }}>{aeoDefinition}</p>
+          <p style={{ fontSize: 16, color: 'var(--text-muted)', lineHeight: 1.8, margin: 0 }}>
+            Nothing is uploaded for the browser-based tools — the work happens on your own device, which is
+            why they are free and have no per-image limit. The AI features do run on a server, and those are
+            the ones that use credits: {CREDIT_COST} credits a generation, bought once, never expiring. There
+            is no subscription on Pixel Shine and no watermark on anything you export.
+          </p>
+        </div>
+      </section>
 
       {/* ── FAQ ──────────────────────────────────────────────────────────── */}
       {config.faq?.length > 0 && (

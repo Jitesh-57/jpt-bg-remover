@@ -15,7 +15,7 @@ export const SEO_POSTS_3: BlogPost[] = [
   P(
     "how-to-convert-png-to-jpg",
     "How to Convert PNG to JPG (Free, No Quality Loss You'll Notice)",
-    "How to Convert PNG to JPG — Free Online | JPT AI",
+    "How to Convert PNG to JPG — Free Online | Pixel Shine",
     "Learn how to convert PNG to JPG online free. Shrink big screenshots and graphics into small, shareable photos — no watermark, no sign-up.",
     "PNG files are often huge. Converting to JPG can cut the size by 80% or more with no visible loss — here's when and how to do it.",
     "2026-06-30", "Guide",
@@ -28,7 +28,7 @@ export const SEO_POSTS_3: BlogPost[] = [
       { heading: "How to convert PNG to JPG (free)", body: `**Step 1 — Open the converter** at sjpt.io.\n\n**Step 2 — Upload your PNG.** It's processed privately in your browser.\n\n**Step 3 — Choose JPG** as the output.\n\n**Step 4 — Download** the smaller JPG.\n\nNo watermark, no sign-up, and your original never leaves your device.` },
       { heading: "What happens to transparency", body: `A PNG with a transparent background will get a **solid background** when saved as JPG (usually white), because JPG has no transparency channel. If you need to keep transparency, stay with PNG. If the transparency doesn't matter — the image sits on a white page anyway — converting to JPG is a free, easy win on file size.` },
       { heading: "Frequently asked questions", body: FAQ([
-        ["How do I convert PNG to JPG for free?", "Upload your PNG to JPT AI's converter, choose JPG, and download. Free, no watermark, no sign-up."],
+        ["How do I convert PNG to JPG for free?", "Upload your PNG to Pixel Shine's converter, choose JPG, and download. Free, no watermark, no sign-up."],
         ["Will converting PNG to JPG lose quality?", "JPG is lossy, but at normal quality the loss is invisible while the file gets dramatically smaller."],
         ["Why is my PNG so large?", "PNG is lossless, so photos and detailed screenshots don't compress well. JPG is designed for that content."],
         ["Does it keep transparency?", "No — JPG has no transparency, so a transparent PNG gets a solid background. Keep PNG if transparency matters."],
@@ -40,7 +40,7 @@ export const SEO_POSTS_3: BlogPost[] = [
   P(
     "how-to-resize-an-image",
     "How to Resize an Image (Exact Pixels or Percent, Free)",
-    "How to Resize an Image Online — Free | JPT AI",
+    "How to Resize an Image Online — Free | Pixel Shine",
     "Learn how to resize an image online free — set exact pixel dimensions or scale by percent while keeping proportions. No watermark, no sign-up.",
     "Resizing an image to exact dimensions is the fix for slow pages, upload limits and off-spec profile photos. Here's how to do it right.",
     "2026-07-01", "Guide",
@@ -53,7 +53,7 @@ export const SEO_POSTS_3: BlogPost[] = [
       { heading: "Keep proportions to avoid stretching", body: `The number-one resizing mistake is **stretching** — changing width and height by different amounts, so faces and circles distort. Always keep the **aspect ratio locked** so both dimensions scale together. If you truly need a different shape (say a square from a landscape photo), **crop** to that shape first, then resize — don't squash.` },
       { heading: "Common resize targets", body: `**Web images:** 1200–1600px wide is plenty for full-width; 600–800px for in-article.\n\n**Profile pictures:** commonly 400×400 square.\n\n**Email/thumbnails:** 300–600px keeps them light.\n\n**Print:** think in inches × DPI (e.g. 4×6in at 300 DPI = 1200×1800px).\n\nResizing down is lossless-looking; enlarging beyond the original adds softness — for that, use an upscaler instead.` },
       { heading: "Frequently asked questions", body: FAQ([
-        ["How do I resize an image to exact pixels?", "Open JPT AI's resize tool, upload, enter the width and height in pixels (keep proportions locked), and download."],
+        ["How do I resize an image to exact pixels?", "Open Pixel Shine's resize tool, upload, enter the width and height in pixels (keep proportions locked), and download."],
         ["Will resizing blur my image?", "Resizing down stays sharp. Enlarging past the original softens it — use an AI upscaler to enlarge without blur."],
         ["Is it free?", "Yes — free, no watermark, no sign-up, processed privately in your browser."],
         ["How do I resize without stretching?", "Keep the aspect ratio locked so width and height scale together; crop first if you need a different shape."],
@@ -65,7 +65,7 @@ export const SEO_POSTS_3: BlogPost[] = [
   P(
     "how-to-convert-heic-to-jpg",
     "How to Convert HEIC to JPG (Open iPhone Photos Anywhere)",
-    "How to Convert HEIC to JPG — Free Online | JPT AI",
+    "How to Convert HEIC to JPG — Free Online | Pixel Shine",
     "Learn how to convert HEIC to JPG online free so iPhone photos open on any device or website. No watermark, no sign-up, no app.",
     "HEIC is Apple's space-saving photo format — but it won't open everywhere. Convert HEIC to JPG for universal compatibility.",
     "2026-07-02", "Guide",
@@ -78,7 +78,7 @@ export const SEO_POSTS_3: BlogPost[] = [
       { heading: "Stop your iPhone shooting HEIC (optional)", body: `If you'd rather avoid converting each time, you can make your iPhone capture JPG directly: **Settings → Camera → Formats → Most Compatible**. New photos then save as JPG. You'll use a bit more storage, but every photo will open anywhere without a conversion step. Already-taken HEIC photos still need converting — that's where the tool above comes in.` },
       { heading: "Does converting lose quality?", body: `You'll keep the quality that matters. JPG is lossy, but at normal quality the difference from the HEIC original is invisible at typical viewing sizes. The file may be a touch larger than the HEIC (JPG is less efficient), but in return you get a photo that opens and uploads **everywhere** — usually a trade worth making.` },
       { heading: "Frequently asked questions", body: FAQ([
-        ["How do I convert HEIC to JPG for free?", "Upload the HEIC file to JPT AI's converter, choose JPG, and download. Free, no app, no watermark, no sign-up."],
+        ["How do I convert HEIC to JPG for free?", "Upload the HEIC file to Pixel Shine's converter, choose JPG, and download. Free, no app, no watermark, no sign-up."],
         ["Why can't I open a HEIC file?", "Many non-Apple devices, Windows apps and websites don't support HEIC. Converting to JPG fixes it."],
         ["Will I lose photo quality?", "No visible loss at normal quality — the JPG looks the same at typical viewing sizes."],
         ["Can I stop my iPhone making HEIC?", "Yes — Settings → Camera → Formats → Most Compatible saves new photos as JPG."],
@@ -90,7 +90,7 @@ export const SEO_POSTS_3: BlogPost[] = [
   P(
     "how-to-make-an-image-smaller",
     "How to Make an Image Smaller (File Size or Dimensions)",
-    "How to Make an Image Smaller — Free Online | JPT AI",
+    "How to Make an Image Smaller — Free Online | Pixel Shine",
     "Learn how to make an image smaller online free — cut the file size in KB or reduce the dimensions in pixels. No watermark, no sign-up.",
     "\"Make it smaller\" can mean two things — fewer KB or fewer pixels. Here's how to do both, free, and when to use each.",
     "2026-07-03", "Guide",
@@ -103,7 +103,7 @@ export const SEO_POSTS_3: BlogPost[] = [
       { heading: "How to shrink the dimensions (free)", body: `If the image is simply too big in pixels (say a 6000px-wide photo used as a 1200px web image), reduce the dimensions with the **resize** tool: upload, enter a sensible width (keep proportions locked), and download. Fewer pixels means a lighter file *and* a right-sized image — often the cleanest way to make something smaller.` },
       { heading: "Which should you use?", body: `**Hitting an upload limit?** Compress to a target size.\n\n**Image looks oversized on the page?** Resize the dimensions.\n\n**Want the absolute smallest file?** Resize to the display size first, then compress.\n\n**Need it razor-sharp and lossless?** Resize down (compression adds slight artefacts; downsizing doesn't).` },
       { heading: "Frequently asked questions", body: FAQ([
-        ["How do I make an image smaller in KB?", "Use JPT AI's compressor: upload, set a target size (like 200KB) or lower the quality, and download."],
+        ["How do I make an image smaller in KB?", "Use Pixel Shine's compressor: upload, set a target size (like 200KB) or lower the quality, and download."],
         ["How do I make the dimensions smaller?", "Use the resize tool: enter a smaller width and height (keep proportions locked) and download."],
         ["Which makes the smallest file?", "Resize the dimensions to the size you actually display, then compress — the two together beat either alone."],
         ["Is it free?", "Yes — both compressing and resizing are free, no watermark, no sign-up, done in your browser."],
@@ -115,7 +115,7 @@ export const SEO_POSTS_3: BlogPost[] = [
   P(
     "instagram-profile-picture-size",
     "Instagram Profile Picture Size (and How to Crop One Perfectly)",
-    "Instagram Profile Picture Size 2026 — Free Crop | JPT AI",
+    "Instagram Profile Picture Size 2026 — Free Crop | Pixel Shine",
     "The correct Instagram profile picture size and how to crop a photo to it free. Get a sharp, centred, un-squashed DP — no watermark, no sign-up.",
     "Instagram displays your profile picture as a circle from a 320×320 square. Here's the right size and how to crop one that looks sharp and centred.",
     "2026-07-04", "Guide",
@@ -130,7 +130,7 @@ export const SEO_POSTS_3: BlogPost[] = [
       { heading: "Frequently asked questions", body: FAQ([
         ["What size is an Instagram profile picture?", "Square (1:1). It displays around 320×320 but upload 1080×1080 to stay sharp on high-res screens."],
         ["Why does Instagram crop my profile photo?", "It shows a square image inside a circle, so corners get cut. Centre your subject to avoid clipping."],
-        ["How do I crop a photo for Instagram free?", "Use JPT AI's crop tool, pick the 1:1 square preset, centre your face, and download. Free, no watermark."],
+        ["How do I crop a photo for Instagram free?", "Use Pixel Shine's crop tool, pick the 1:1 square preset, centre your face, and download. Free, no watermark."],
         ["Why is my DP blurry?", "Start from a clear photo and upload at 1080×1080 — small or soft source images look worse after Instagram re-compresses."],
       ]) },
       { heading: "Key takeaways", body: `Upload a square (ideally 1080×1080) profile picture with your subject centred, because Instagram crops it into a circle. Crop it free at sjpt.io for a sharp, un-clipped DP. Crop for Instagram Free →` },
@@ -140,7 +140,7 @@ export const SEO_POSTS_3: BlogPost[] = [
   P(
     "how-to-add-text-to-a-photo",
     "How to Add Text to a Photo (Free, No App)",
-    "How to Add Text to a Photo — Free Online | JPT AI",
+    "How to Add Text to a Photo — Free Online | Pixel Shine",
     "Learn how to add text to a photo online free — captions, quotes and labels with clean, readable type. No watermark, no sign-up, no app.",
     "Adding text to a photo turns an image into a caption, quote or meme. Here's how to do it free with type that stays readable.",
     "2026-07-05", "Guide",
@@ -153,7 +153,7 @@ export const SEO_POSTS_3: BlogPost[] = [
       { heading: "Keep text readable over any photo", body: `The classic problem: white text vanishing into a bright sky. Fixes:\n\n**Add an outline or shadow** so letters separate from the background (the meme style does this automatically).\n\n**Use high contrast** — light text on dark areas, dark text on light areas.\n\n**Pick a bold, simple font** — thin decorative fonts disappear at small sizes.\n\n**Give it space** — place text over a calmer part of the photo, not the busiest.` },
       { heading: "Sizing text for where it'll be seen", body: `Text that looks fine on your big screen can be unreadable in a phone feed. Make it **bigger than feels necessary** — captions should be legible on a thumbnail. Keep lines **short** (a few words each) so they don't wrap awkwardly, and leave a margin from the edges so nothing gets cropped by the platform.` },
       { heading: "Frequently asked questions", body: FAQ([
-        ["How do I add text to a photo for free?", "Upload your photo to JPT AI, type your text, position it, and download. Free, no watermark, no sign-up, no app."],
+        ["How do I add text to a photo for free?", "Upload your photo to Pixel Shine, type your text, position it, and download. Free, no watermark, no sign-up, no app."],
         ["How do I make text readable over a busy photo?", "Use an outline or shadow, high contrast, and a bold font — and place text over a calmer part of the image."],
         ["Can I make a meme with it?", "Yes — the same tool does classic top-and-bottom meme text with an automatic outline."],
         ["Does it add a watermark?", "No — the finished image is clean, with no watermark and no sign-up."],
@@ -165,7 +165,7 @@ export const SEO_POSTS_3: BlogPost[] = [
   P(
     "how-to-upscale-an-image-to-4k",
     "How to Upscale an Image to 4K (Free AI Upscaler)",
-    "How to Upscale an Image to 4K — Free Online | JPT AI",
+    "How to Upscale an Image to 4K — Free Online | Pixel Shine",
     "Learn how to upscale an image to 4K online free with AI — enlarge low-resolution photos to crisp, high-res detail. No watermark, no sign-up.",
     "Upscaling to 4K turns a small, soft image into a sharp, high-resolution one. Here's how AI upscaling works and how to do it free.",
     "2026-07-06", "Guide",
@@ -178,7 +178,7 @@ export const SEO_POSTS_3: BlogPost[] = [
       { heading: "How to upscale to 4K (free)", body: `**Step 1 — Open the upscaler** at sjpt.io.\n\n**Step 2 — Upload your image.**\n\n**Step 3 — Choose the upscale factor** (2× or 4×) to reach 4K-class dimensions.\n\n**Step 4 — Download** your high-resolution result — no watermark, no sign-up.\n\nGreat for wallpapers, prints, old photos and product images.` },
       { heading: "Getting the best 4K result", body: `**Start from the cleanest source you have** — AI upscaling enhances detail, but it can't invent what heavy blur or compression destroyed. A reasonably clear small image upscales better than a badly damaged one.\n\n**Match the factor to the source:** a tiny image may need 4× to reach 4K; a mid-size one only 2×.\n\n**Upscale before adding text or effects**, so those stay crisp at the final resolution.` },
       { heading: "Frequently asked questions", body: FAQ([
-        ["How do I upscale an image to 4K for free?", "Upload it to JPT AI's upscaler, choose 2× or 4×, and download the high-resolution result. Free, no watermark, no sign-up."],
+        ["How do I upscale an image to 4K for free?", "Upload it to Pixel Shine's upscaler, choose 2× or 4×, and download the high-resolution result. Free, no watermark, no sign-up."],
         ["Does AI upscaling really add detail?", "Yes — it predicts realistic detail from training, so results look sharp rather than just enlarged and blurry."],
         ["What's the best source image?", "The clearest one you have — upscaling enhances detail but can't recover what heavy blur or compression removed."],
         ["Is there a limit?", "It's free with no sign-up; start from a clean source and pick the factor that reaches your target size."],
@@ -190,7 +190,7 @@ export const SEO_POSTS_3: BlogPost[] = [
   P(
     "how-to-convert-webp-to-png",
     "How to Convert WebP to PNG (Save & Edit WebP Images)",
-    "How to Convert WebP to PNG — Free Online | JPT AI",
+    "How to Convert WebP to PNG — Free Online | Pixel Shine",
     "Learn how to convert WebP to PNG online free so images open and edit in any app — with transparency preserved. No watermark, no sign-up.",
     "WebP is great for the web but not every app accepts it. Convert WebP to PNG for universal editing — with transparency kept intact.",
     "2026-07-07", "Guide",
@@ -203,7 +203,7 @@ export const SEO_POSTS_3: BlogPost[] = [
       { heading: "PNG or JPG — which output?", body: `Convert WebP to **PNG** if the image has **transparency** or sharp edges/text you want kept crisp and lossless. Convert to **JPG** instead if it's a **photo** you just want small and shareable (JPG will be much lighter). If you're unsure and the image might have a transparent background, PNG is the safe choice — it can't accidentally add a solid background the way JPG does.` },
       { heading: "Where WebP files come from", body: `You'll most often meet WebP when you **save an image from a website** — many sites now serve WebP for speed, so the download lands as a .webp file. Screenshots and exports can be WebP too. If an app rejects the file or shows an error, WebP is a likely culprit — convert it to PNG and it'll behave like any normal image.` },
       { heading: "Frequently asked questions", body: FAQ([
-        ["How do I convert WebP to PNG for free?", "Upload the WebP file to JPT AI's converter, choose PNG, and download. Free, no watermark, no sign-up."],
+        ["How do I convert WebP to PNG for free?", "Upload the WebP file to Pixel Shine's converter, choose PNG, and download. Free, no watermark, no sign-up."],
         ["Does converting keep transparency?", "Yes — PNG supports transparency, so a transparent WebP stays transparent as a PNG."],
         ["Why won't my WebP file open?", "Some older apps don't support WebP. Converting to PNG (or JPG) makes it open everywhere."],
         ["PNG or JPG for a WebP photo?", "JPG for a small, shareable photo; PNG to keep transparency or sharp edges losslessly."],
@@ -215,7 +215,7 @@ export const SEO_POSTS_3: BlogPost[] = [
   P(
     "how-to-compress-an-image-to-100kb",
     "How to Compress an Image to 100KB (Exactly, Free)",
-    "How to Compress an Image to 100KB — Free | JPT AI",
+    "How to Compress an Image to 100KB — Free | Pixel Shine",
     "Learn how to compress an image to 100KB online free — hit a strict upload limit while keeping the photo usable. No watermark, no sign-up.",
     "Lots of forms cap uploads at 100KB. Here's how to compress an image to exactly 100KB — without guessing at a quality slider.",
     "2026-07-08", "Guide",
@@ -228,7 +228,7 @@ export const SEO_POSTS_3: BlogPost[] = [
       { heading: "Keeping a 100KB photo usable", body: `100KB is tight, so help the tool:\n\n**Resize first.** A 4000px photo forced to 100KB looks rough; resize to the size the form actually shows (often ~600×800 for a photo) and each pixel keeps more quality.\n\n**Crop to what matters.** Fewer pixels of background means more budget for the subject — ideal for ID/passport photos.\n\n**Start from the original**, not an already-squeezed copy.` },
       { heading: "For ID and passport uploads", body: `Many 100KB limits are for **ID or passport-style photos**. For those: crop to the required aspect ratio first, keep the face centred and well-lit, resize to the portal's pixel spec if given, *then* compress to 100KB. Doing it in that order gives a photo that's both **within the size limit** and **clearly acceptable** — rather than a tiny, mushy image that gets bounced for quality.` },
       { heading: "Frequently asked questions", body: FAQ([
-        ["How do I compress an image to exactly 100KB?", "Upload it to JPT AI's compressor, set the target to 100KB, and download. It adjusts quality (and dimensions) to fit under 100KB."],
+        ["How do I compress an image to exactly 100KB?", "Upload it to Pixel Shine's compressor, set the target to 100KB, and download. It adjusts quality (and dimensions) to fit under 100KB."],
         ["Why do forms want 100KB?", "It keeps their servers light. Passport, visa, exam and job portals commonly cap uploads around 100KB."],
         ["Will a 100KB photo look bad?", "It can if forced from a huge image — resize and crop first so the pixels that remain keep more quality."],
         ["Is it free?", "Yes — free, no watermark, no sign-up, done privately in your browser."],
@@ -240,7 +240,7 @@ export const SEO_POSTS_3: BlogPost[] = [
   P(
     "how-to-combine-images-into-a-pdf",
     "How to Combine Images into a PDF (Free, No App)",
-    "How to Combine Images into a PDF — Free Online | JPT AI",
+    "How to Combine Images into a PDF — Free Online | Pixel Shine",
     "Learn how to combine multiple images into a single PDF online free — perfect for documents, scans and portfolios. No watermark, no sign-up.",
     "Turning several images into one PDF makes them easy to send, print and archive. Here's how to combine images into a PDF free.",
     "2026-07-09", "Guide",
@@ -253,7 +253,7 @@ export const SEO_POSTS_3: BlogPost[] = [
       { heading: "Great uses for image-to-PDF", body: `**Document scans** — combine photos of a multi-page document or contract into one file.\n\n**Receipts and expenses** — merge receipt photos into a single PDF to submit.\n\n**Portfolios** — put your best shots into one shareable document.\n\n**Homework and forms** — turn phone photos of pages into a single upload.\n\n**ID copies** — front and back of a card on separate pages.` },
       { heading: "Tips for a clean PDF", body: `**Get the order right** before exporting — reordering pages afterward is more work.\n\n**Crop and straighten** photographed documents first so pages look tidy, not skewed.\n\n**Compress large images** beforehand if the PDF needs to stay under an email or upload limit — a dozen full-resolution phone photos can make a heavy file.\n\n**Consistent orientation** — rotate any sideways images so every page reads the same way.` },
       { heading: "Frequently asked questions", body: FAQ([
-        ["How do I combine images into one PDF for free?", "Upload your images to JPT AI's image-to-PDF tool, set the order, and download a single PDF. Free, no watermark, no sign-up."],
+        ["How do I combine images into one PDF for free?", "Upload your images to Pixel Shine's image-to-PDF tool, set the order, and download a single PDF. Free, no watermark, no sign-up."],
         ["Can I control the page order?", "Yes — arrange the images before exporting so the PDF pages read in the right sequence."],
         ["What image types can I use?", "Common formats like JPG and PNG — mix them freely into one PDF."],
         ["Is my file uploaded to a server?", "No — it's processed privately in your browser, so your images never leave your device."],

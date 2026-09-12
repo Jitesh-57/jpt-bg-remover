@@ -3,9 +3,9 @@ import Link from "next/link";
 import { POSTS } from "./_data/posts";
 
 export const metadata: Metadata = {
-  title: { absolute: "Image Upscaling Blog — Tips, Tutorials & Guides | JPT AI" },
+  title: { absolute: "Image Upscaling Blog — Tips, Tutorials & Guides | Pixel Shine" },
   description:
-    "Learn how to upscale images, enhance photo quality, fix blurry pictures, and get print-ready resolution. Free upscaling tutorials and guides from JPT AI.",
+    "Learn how to upscale images, enhance photo quality, fix blurry pictures, and get print-ready resolution. Free upscaling tutorials and guides from Pixel Shine.",
   keywords: [
     "image upscaling tips",
     "upscale image tutorial",
@@ -15,16 +15,18 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: "https://www.sjpt.io/blog" },
   openGraph: {
-    title: "Image Upscaling Blog | JPT AI",
+    title: "Image Upscaling Blog | Pixel Shine",
     description: "Tutorials, guides and tips for upscaling and enhancing images for free.",
     type: "website",
   },
 };
 
+// Badge fills sit under white text, so they use --accent-fill (dark enough for
+// white) rather than --accent (which is tuned to read as text on near-black).
 const CATEGORY_COLORS: Record<string, string> = {
-  Tutorial: "var(--accent)",
-  Guide: "var(--accent-strong)",
-  News: "var(--accent-strong)",
+  Tutorial: "var(--accent-fill)",
+  Guide: "var(--accent-fill)",
+  News: "var(--accent-fill)",
 };
 
 export default function BlogIndexPage() {
@@ -33,7 +35,7 @@ export default function BlogIndexPage() {
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: 56 }}>
-          <div style={{ display: "inline-block", background: "rgba(15,157,107,0.1)", color: "var(--accent)", border: "1px solid rgba(15,157,107,0.2)", borderRadius: 100, padding: "5px 14px", fontSize: 12, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", marginBottom: 16 }}>
+          <div style={{ display: "inline-block", background: "var(--accent-soft)", color: "var(--accent)", border: "1px solid var(--accent-border)", borderRadius: 100, padding: "5px 14px", fontSize: 12, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", marginBottom: 16 }}>
             Blog
           </div>
           <h1 style={{ margin: "0 0 14px", fontSize: "clamp(28px, 4vw, 42px)", fontWeight: 900, color: "var(--text)", letterSpacing: "-0.8px", lineHeight: 1.15 }}>
@@ -55,7 +57,7 @@ export default function BlogIndexPage() {
                 )}
                 <div style={{ padding: "24px 28px 28px" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
-                    <span style={{ background: CATEGORY_COLORS[post.category] || "var(--accent)", color: "#fff", fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 20, letterSpacing: 0.5 }}>
+                    <span style={{ background: CATEGORY_COLORS[post.category] || "var(--accent-fill)", color: "#fff", fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 20, letterSpacing: 0.5 }}>
                       {post.category}
                     </span>
                   </div>

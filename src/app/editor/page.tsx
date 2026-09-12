@@ -9,6 +9,8 @@ import {
   trackBeginCheckout, trackPurchase, trackPaymentFailed,
 } from "@/lib/analytics";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
+import { CREDIT_COST } from "@/lib/plans";
+import { savePendingContext, loadPendingContext, clearPendingContext } from "@/lib/pending-image";
 import { applyWatermark, renderMeme, type WatermarkPosition } from "@/lib/tools-canvas";
 import ToolIcon from "./ToolIcon";
 import UnlimitedModal from "@/app/_components/UnlimitedModal";
@@ -34,7 +36,7 @@ interface User { userId?: string; email: string; name: string; picture?: string;
 
 const FREE_CREDITS = 10;
 const FREE_TRIAL_LIMIT = 5;
-const CREDIT_COST = 2;
+// CREDIT_COST now comes from @/lib/plans so the price of a generation is defined once.
 const BASIC_UPSCALE_COST = 1;
 const SUPPORTED_IMAGE_FORMATS = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 const MAX_UPSCALE_OUTPUT_PX = 20000;
@@ -590,7 +592,7 @@ export default function ImageEditorPage() {
         order_id: orderData.order_id,
         amount: orderData.amount,
         currency: orderData.currency || "INR",
-        name: "JPT AI",
+        name: "Pixel Shine",
         description: `${planKey.charAt(0).toUpperCase() + planKey.slice(1)} Plan — ${orderData.credits} credits`,
         theme: { color: "var(--accent)" },
         modal: { ondismiss() { trackPaymentFailed(planKey, "cancelled_by_user"); setBuyingPlan(null); } },
@@ -686,29 +688,10 @@ export default function ImageEditorPage() {
       if (/^\d+:\d+$/.test(ratio) || ratio === "circle") setCropRatio(ratio);
     }
 
-    // 2. Pending image/prompt from sessionStorage (from My Library "Open in Editor")
+    // 2. A prompt handed over from My Library "Open in Editor" (still sync).
     try {
       const pp = sessionStorage.getItem("jpt_pending_prompt");
-      const pi = sessionStorage.getItem("jpt_pending_image");
-      const pt = sessionStorage.getItem("jpt_pending_tool") as Tool | null;
       if (pp) { setPrompt(pp); setActiveTool("ai-edit"); sessionStorage.removeItem("jpt_pending_prompt"); }
-      if (pi) {
-        const img = new Image();
-        img.onload = () => {
-          setOriginal({ dataUrl: pi, w: img.naturalWidth, h: img.naturalHeight, name: "uploaded" });
-          setResizeW(img.naturalWidth); setResizeH(img.naturalHeight);
-          if (pt && TOOLS.some(t => t.id === pt)) setActiveTool(pt);
-          try {
-            localStorage.setItem(SESSION_KEY, JSON.stringify({ dataUrl: pi, name: "uploaded", w: img.naturalWidth, h: img.naturalHeight, ts: Date.now() }));
-          } catch {}
-          sessionStorage.removeItem("jpt_pending_image");
-          sessionStorage.removeItem("jpt_pending_tool");
-        };
-        img.src = pi;
-        // Don't delete sessionStorage items here — do it in onload above so
-        // persistContextForAuth can still read them if sign-in is clicked quickly.
-        return () => clearTimeout(authTimeout); // skip localStorage restore, auth already started
-      }
     } catch {}
 
     // 3. Auto-restore saved session (24h) from localStorage — no prompt needed
@@ -948,12 +931,14 @@ export default function ImageEditorPage() {
     if (!src || processing) return;
 
     const isPro = upscaleMode === "pro";
-    const isUnlimited = user?.plan === "unlimited";
-    // Pro (AI) upscale is gated by sign-in + trial/credits.
+    // Normal 4× is the paid tier of the free upscaler: it needs a credit
+    // balance. (It used to check for an "unlimited" plan that no longer exists,
+    // which made the unlock unreachable.)
+    const canRun4x = (user?.credits ?? 0) >= CREDIT_COST;
+    // Pro (AI) upscale is gated by sign-in + credits.
     // Normal 2× upscale is a free basic tool (5 trials for guests, then sign in).
-    // Normal 4× upscale is a Pro feature — unlocked by the one-time Unlimited plan.
     if (isPro && requireSignIn()) return;
-    if (!isPro && upscaleScale === "4x" && !isUnlimited) {
+    if (!isPro && upscaleScale === "4x" && !canRun4x) {
       openUnlimited("4× upscaling");
       return;
     }
@@ -1001,14 +986,41 @@ export default function ImageEditorPage() {
     finally { setProcessing(false); setProcessingLabel(""); }
   };
 
+  // Restore an image stashed before a sign-in redirect (or handed over from My
+  // Library). Async because it may come from IndexedDB, which is the only store
+  // big enough for a full-resolution data URL.
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      const ctx = await loadPendingContext();
+      if (!alive || !ctx?.image) return;
+      const pi = ctx.image;
+      const img = new Image();
+      img.onload = () => {
+        if (!alive) return;
+        setOriginal({ dataUrl: pi, w: img.naturalWidth, h: img.naturalHeight, name: "uploaded" });
+        setResizeW(img.naturalWidth); setResizeH(img.naturalHeight);
+        const pt = ctx.tool as Tool | undefined;
+        if (pt && TOOLS.some((t) => t.id === pt)) setActiveTool(pt);
+        try {
+          localStorage.setItem(SESSION_KEY, JSON.stringify({ dataUrl: pi, name: "uploaded", w: img.naturalWidth, h: img.naturalHeight, ts: Date.now() }));
+        } catch {}
+        void clearPendingContext();
+      };
+      img.onerror = () => { void clearPendingContext(); };
+      img.src = pi;
+    })();
+    return () => { alive = false; };
+  }, []);
+
   // Persist the current image + active tool so they survive the sign-in
   // round-trip (OAuth redirect or reload) and the editor reopens with context.
-  const persistContextForAuth = () => {
-    try {
-      const cur = working || original?.dataUrl;
-      if (cur) sessionStorage.setItem("jpt_pending_image", cur);
-      if (activeTool) sessionStorage.setItem("jpt_pending_tool", activeTool);
-    } catch {}
+  const persistContextForAuth = async () => {
+    const cur = working || original?.dataUrl;
+    if (!cur && !activeTool) return;
+    // Awaited: the caller navigates straight after, and a full-resolution data
+    // URL is too big for sessionStorage, so this has to reach IndexedDB first.
+    await savePendingContext({ image: cur || undefined, tool: activeTool || undefined });
   };
 
   // Expose the persist fn so the global NavBar's sign-in can preserve editor
@@ -1156,7 +1168,7 @@ export default function ImageEditorPage() {
       const result = await applyWatermark(src, { text: wmText, position: wmPosition, fontScale: wmFontScale, color: wmColor, opacity: wmOpacity / 100 });
       setEditHistory(prev => working ? [...prev, working] : prev);
       setWorking(result);
-      setToolResult({ title: "Watermark added", detail: `"${wmText || "© JPT AI"}" · ${wmPosition.replace("-", " ")}` });
+      setToolResult({ title: "Watermark added", detail: `"${wmText || "© Pixel Shine"}" · ${wmPosition.replace("-", " ")}` });
       recordAnonTransform();
       autoSaveToDrive(result, "watermark", wmText);
     }
@@ -1265,11 +1277,20 @@ export default function ImageEditorPage() {
     finally { setProcessing(false); }
   };
 
+  // The bottom prompt bar routes through the same AI Edit path as the tool panel.
+  const submitPromptBar = () => {
+    if (!prompt.trim() || processing) return;
+    if (requireSignIn()) return;
+    if ((user?.credits ?? 0) < CREDIT_COST) { openUnlimited("AI Edit"); return; }
+    setActiveTool("ai-edit");
+    void handleAiEdit();
+  };
+
   const handleAiEdit = async () => {
     const src = working || original?.dataUrl;
     if (!src || !prompt.trim() || processing) return;
     trackTransformButtonClicked("ai-edit");
-    setProcessing(true); setProcessingLabel("Editing with JPT AI…"); setError(null);
+    setProcessing(true); setProcessingLabel("Editing with Pixel Shine…"); setError(null);
     const prevCreditsAI = user?.credits ?? 0;
     setUser(u => u ? { ...u, credits: Math.max(0, u.credits - CREDIT_COST) } : u);
     try {
@@ -1508,7 +1529,7 @@ export default function ImageEditorPage() {
   const processingOverlay = (
     <div style={{ position: "absolute", inset: 0, zIndex: 30, borderRadius: 16, overflow: "hidden", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 14, background: "rgba(15,23,42,0.58)", backdropFilter: "blur(2px)" }}>
       {/* sweeping scan line across the image */}
-      <div style={{ position: "absolute", left: 0, right: 0, top: 0, height: "42%", background: "linear-gradient(180deg, transparent, rgba(20,184,166,0.45), rgba(15,157,107,0.18), transparent)", animation: "jptScan 1.5s ease-in-out infinite", pointerEvents: "none" }} />
+      <div style={{ position: "absolute", left: 0, right: 0, top: 0, height: "42%", background: "linear-gradient(180deg, transparent, var(--accent-soft), var(--accent-soft), transparent)", animation: "jptScan 1.5s ease-in-out infinite", pointerEvents: "none" }} />
       <div style={{ position: "relative", width: 52, height: 52, border: "4px solid rgba(255,255,255,0.25)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
       <div style={{ position: "relative", color: "#fff", fontWeight: 800, fontSize: 15, textAlign: "center", padding: "0 18px" }}>Please wait — we&apos;re processing your image…</div>
       <div style={{ position: "relative", color: "rgba(255,255,255,0.82)", fontSize: 12.5 }}>{processingLabel || "This usually takes just a moment"}</div>
@@ -1525,7 +1546,7 @@ export default function ImageEditorPage() {
         <div style={s.pageHeaderInner}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <span style={s.pageIcon}>🖼</span>
-            <span style={s.pageTitle}>JPT AI Editor</span>
+            <span style={s.pageTitle}>Pixel Shine Editor</span>
           </div>
 
           {/* Low credits warning */}
@@ -1549,7 +1570,7 @@ export default function ImageEditorPage() {
                   : <span style={s.avatarFallback}>{user.name[0]}</span>}
                 <span style={s.userName}>{user.name.split(" ")[0]}</span>
                 {!PAID_FEATURES_ENABLED ? (
-                  <span style={{ ...s.creditsBadge, background: "#DCFCE7", color: "var(--success)" }}>♾️ Free</span>
+                  <span style={{ ...s.creditsBadge, background: "var(--surface-3)", color: "var(--success)" }}>♾️ Free</span>
                 ) : user.plan === "free" ? (
                   <span style={{ ...s.creditsBadge, ...((user.trialsRemaining ?? 0) === 0 ? s.creditsEmpty : {}) }}>
                     🎁 {user.trialsRemaining ?? 0}
@@ -1574,7 +1595,7 @@ export default function ImageEditorPage() {
                 </button>
               ) : (
                 <button
-                  style={{ padding: "7px 14px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: 20, fontSize: 12, fontWeight: 800, cursor: "pointer", whiteSpace: "nowrap" as const, boxShadow: "0 2px 8px rgba(15,157,107,0.4)" }}
+                  style={{ padding: "7px 14px", background: "var(--accent-fill)", color: "#fff", border: "none", borderRadius: 20, fontSize: 12, fontWeight: 800, cursor: "pointer", whiteSpace: "nowrap" as const, boxShadow: "0 2px 8px rgba(255,106,26,0.40)" }}
                   onClick={() => { setSignInReason("unlimited"); setShowSignInModal(true); }}
                 >
                   Sign up free — unlimited →
@@ -1590,37 +1611,63 @@ export default function ImageEditorPage() {
 
         {/* ── Left Sidebar (desktop only) ──────────────────────────────────── */}
         {!isMobile && <div style={s.sidebar}>
-          {TOOLS.map((t) => (
-            <button
-              key={t.id}
-              disabled={!hasImage}
-              onClick={() => {
-                // Free tools: always usable immediately (no auth needed to select panel).
-                if (t.free) { setActiveTool(activeTool === t.id ? null : t.id); return; }
-                // For paid tools, wait until auth is resolved before gating.
-                if (!authChecked) { setActiveTool(activeTool === t.id ? null : t.id); return; }
-                if (!user) { requireSignIn(); return; }
-                const isPaidUser = !!(user.plan && user.plan !== "free");
-                const trialUsedForTool = !!(t.id && user.trialToolsUsed?.includes(t.id));
-                const trialAvailable = !trialUsedForTool && (user.trialsRemaining ?? 0) > 0;
-                if (t.paid && !isPaidUser && !trialAvailable) {
-                  setBlockedTool(t);
-                  openUnlimited();
-                  return;
-                }
-                setActiveTool(activeTool === t.id ? null : t.id);
-              }}
-              title={`${t.label}${t.free || ["resize", "adjust"].includes(t.id ?? "") ? " (Free)" : ` (${CREDIT_COST} credits, or a free trial)`}`}
-              style={{ ...s.toolBtn, ...(activeTool === t.id ? s.toolBtnActive : {}), ...(!hasImage ? { opacity: 0.35, cursor: "not-allowed" } : {}) }}
-            >
-              <ToolIcon id={t.id ?? "default"} active={activeTool === t.id} size={38} />
-              <span style={s.toolLabel}>{t.label}</span>
-            </button>
+          {([["Free", TOOLS.filter((t) => t.free)], ["Pro", TOOLS.filter((t) => !t.free)]] as const).map(([group, list]) => list.length > 0 && (
+            <div key={group} style={{ display: "flex", flexDirection: "column", gap: 4, marginBottom: 10 }}>
+              <div style={s.railGroup}>{group}</div>
+              {list.map((t) => (
+                <button
+                  key={t.id}
+                  disabled={!hasImage}
+                  onClick={() => {
+                    // Free tools: always usable immediately (no auth needed to select panel).
+                    if (t.free) { setActiveTool(activeTool === t.id ? null : t.id); return; }
+                    // For Pro tools, wait until auth is resolved before gating.
+                    if (!authChecked) { setActiveTool(activeTool === t.id ? null : t.id); return; }
+                    if (!user) { requireSignIn(); return; }
+                    // Pure credit model: the balance is the only thing that matters.
+                    if (t.paid && (user.credits ?? 0) < CREDIT_COST) {
+                      setBlockedTool(t);
+                      openUnlimited(t.label);
+                      return;
+                    }
+                    setActiveTool(activeTool === t.id ? null : t.id);
+                  }}
+                  title={`${t.label}${t.free ? " (Free)" : ` (${CREDIT_COST} credits)`}`}
+                  style={{ ...s.toolBtn, ...(activeTool === t.id ? s.toolBtnActive : {}), ...(!hasImage ? { opacity: 0.35, cursor: "not-allowed" } : {}) }}
+                >
+                  <ToolIcon id={t.id ?? "default"} active={activeTool === t.id} size={38} />
+                  <span style={s.toolLabel}>{t.label}</span>
+                </button>
+              ))}
+            </div>
           ))}
         </div>}
 
         {/* ── Canvas Area ───────────────────────────────────────────────────── */}
         <div style={{ ...s.canvasArea, ...(isMobile ? { padding: "12px", paddingBottom: 72 } : {}) }}>
+          {hasImage && (
+            <div style={s.dockBar}>
+              <span style={s.dockBarIcon}>✨</span>
+              <input
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); submitPromptBar(); } }}
+                placeholder="Describe an edit — “remove the background”, “make it golden hour”, “turn it into a 1980s portrait”…"
+                aria-label="Describe an edit"
+                disabled={processing}
+                style={s.dockBarInput}
+              />
+              <span style={s.dockBarMeta}>AI Edit · {CREDIT_COST} credits</span>
+              <button
+                onClick={submitPromptBar}
+                disabled={processing || !prompt.trim()}
+                aria-label="Apply edit"
+                style={{ ...s.dockBarGo, ...(processing || !prompt.trim() ? { opacity: 0.45, cursor: "not-allowed" } : {}) }}
+              >
+                {processing ? "…" : "↑"}
+              </button>
+            </div>
+          )}
 
           {/* Saved session banner */}
           {!hasImage && savedSession && (
@@ -1634,7 +1681,7 @@ export default function ImageEditorPage() {
               <div style={{ display: "flex", gap: 10 }}>
                 <button
                   onClick={() => restoreSession(savedSession)}
-                  style={{ padding: "10px 20px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer" }}
+                  style={{ padding: "10px 20px", background: "var(--accent-fill)", color: "#fff", border: "none", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer" }}
                 >
                   Resume Editing
                 </button>
@@ -1752,7 +1799,7 @@ export default function ImageEditorPage() {
                       <div style={{ fontSize: 11, fontWeight: 700 }}>Original</div>
                       {original && <div style={{ fontSize: 10, opacity: 0.75, marginTop: 1 }}>{original.w} × {original.h}px</div>}
                     </div>
-                    <div style={{ position: "absolute", top: 12, right: 12, zIndex: 4, background: "rgba(15,157,107,0.85)", backdropFilter: "blur(4px)", color: "#fff", padding: "4px 10px", borderRadius: 6, pointerEvents: "none" }}>
+                    <div style={{ position: "absolute", top: 12, right: 12, zIndex: 4, background: "rgba(255,106,26,0.40)", backdropFilter: "blur(4px)", color: "#fff", padding: "4px 10px", borderRadius: 6, pointerEvents: "none" }}>
                       <div style={{ fontSize: 11, fontWeight: 700 }}>✨ Result</div>
                       {workingSize && <div style={{ fontSize: 10, opacity: 0.85, marginTop: 1 }}>{workingSize.w} × {workingSize.h}px</div>}
                     </div>
@@ -1906,7 +1953,7 @@ export default function ImageEditorPage() {
             {activeTool === "ai-edit" && (
               <div style={s.panelContent}>
                 <div style={s.panelTitle}>✨ AI Edit</div>
-                <p style={s.panelSub}>Describe any change — JPT AI enhances your prompt and edits the image</p>
+                <p style={s.panelSub}>Describe any change — Pixel Shine enhances your prompt and edits the image</p>
                 <div style={s.creditNote}>
                   {user?.plan === "free"
                     ? user.trialToolsUsed?.includes("ai-edit") ? `Free trial used · ${CREDIT_COST} credits after upgrading` : (user.trialsRemaining ?? 0) > 0 ? "1 free trial available" : "No free trials left · upgrade to use"
@@ -2012,7 +2059,7 @@ export default function ImageEditorPage() {
                     if (maxDim > 0 && maxDim * mult > MAX_UPSCALE_OUTPUT_PX) {
                       const tooLargeFor2x = maxDim * 2 > MAX_UPSCALE_OUTPUT_PX;
                       return (
-                        <div style={{ marginTop: 8, background: "#FFF7ED", border: "1px solid #FED7AA", borderRadius: 8, padding: "7px 12px", fontSize: 12, color: "#92400E", display: "flex", alignItems: "flex-start", gap: 6 }}>
+                        <div style={{ marginTop: 8, background: "var(--surface-3)", border: "1px solid #FED7AA", borderRadius: 8, padding: "7px 12px", fontSize: 12, color: "#92400E", display: "flex", alignItems: "flex-start", gap: 6 }}>
                           ⚠️ {tooLargeFor2x
                             ? `Image is already very high-res (${curW}×${curH}px). Upscaling is not needed.`
                             : `Image is too large for 4× upscale (output would be ${curW * 4}×${curH * 4}px). Use 2× instead.`}
@@ -2025,7 +2072,7 @@ export default function ImageEditorPage() {
 
 
                 {appliedUpscale === upscaleScale && (
-                  <div style={{ background: "#FFFBEB", border: "1px solid #FDE68A", borderRadius: 8, padding: "7px 12px", marginBottom: 10, fontSize: 12, color: "#92400E", display: "flex", alignItems: "center", gap: 6 }}>
+                  <div style={{ background: "var(--surface-3)", border: "1px solid var(--surface-3)", borderRadius: 8, padding: "7px 12px", marginBottom: 10, fontSize: 12, color: "#92400E", display: "flex", alignItems: "center", gap: 6 }}>
                     😅 Already upscaled {upscaleScale}
                   </div>
                 )}
@@ -2052,8 +2099,8 @@ export default function ImageEditorPage() {
                     ? `⚠️ Resolution Limit Reached`
                     : upscaleMode === "pro"
                     ? `✨ Pro Upscale ${upscaleScale}`
-                    : upscaleScale === "4x" && user?.plan !== "unlimited"
-                    ? `🔒 Unlock 4× — Go Unlimited`
+                    : upscaleScale === "4x" && (user?.credits ?? 0) < CREDIT_COST
+                    ? `🔒 Unlock 4× — Buy credits`
                     : `🔍 Upscale ${upscaleScale}`}
                 </button>
                 {resultBlock()}
@@ -2778,27 +2825,33 @@ export default function ImageEditorPage() {
 // ─── Styles ───────────────────────────────────────────────────────────────────
 
 const s: Record<string, React.CSSProperties> = {
-  root: { minHeight: "100vh", background: "#F6F7FB", fontFamily: "system-ui,-apple-system,sans-serif", color: "var(--text)", display: "flex", flexDirection: "column" },
+  root: { minHeight: "100vh", background: "var(--surface-2)", fontFamily: "system-ui,-apple-system,sans-serif", color: "var(--text)", display: "flex", flexDirection: "column" },
 
-  pageHeader: { background: "rgba(255,255,255,0.92)", borderBottom: "1px solid var(--border)", backdropFilter: "blur(8px)", position: "relative" as const, zIndex: 90, flexShrink: 0 },
+  pageHeader: { background: "var(--bg-elevated)", borderBottom: "1px solid var(--border)", backdropFilter: "blur(8px)", position: "relative" as const, zIndex: 90, flexShrink: 0 },
   pageHeaderInner: { maxWidth: 1400, margin: "0 auto", padding: "8px 20px", display: "flex", alignItems: "center", gap: 12 },
   pageIcon: { fontSize: 18 },
   pageTitle: { fontSize: 14, fontWeight: 700, color: "var(--text)", marginRight: 8 },
   pageHeaderRight: { display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" as const, marginLeft: "auto" },
-  lowCreditsBar: { flex: 1, textAlign: "center" as const, fontSize: 12, fontWeight: 600, color: "#92400E", background: "#FEF3C7", borderRadius: 6, padding: "4px 12px" },
+  lowCreditsBar: { flex: 1, textAlign: "center" as const, fontSize: 12, fontWeight: 600, color: "var(--warn)", background: "var(--surface-3)", borderRadius: 6, padding: "4px 12px" },
   dlBtn: { background: "var(--bg-elevated)", color: "#fff", border: "none", borderRadius: 8, padding: "6px 14px", fontSize: 13, fontWeight: 700, cursor: "pointer" },
   ghostBtn: { background: "none", border: "1px solid var(--border)", borderRadius: 8, padding: "6px 12px", fontSize: 13, cursor: "pointer", color: "var(--text-muted)", display: "flex", alignItems: "center", gap: 6 },
   userChip: { display: "flex", alignItems: "center", gap: 8, background: "none", border: "1px solid var(--border)", borderRadius: 10, padding: "5px 10px", cursor: "pointer" },
   avatar: { width: 26, height: 26, borderRadius: "50%", flexShrink: 0 },
-  avatarFallback: { width: 26, height: 26, borderRadius: "50%", background: "var(--accent)", color: "#fff", fontSize: 12, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" },
+  avatarFallback: { width: 26, height: 26, borderRadius: "50%", background: "var(--accent-fill)", color: "#fff", fontSize: 12, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" },
   userName: { fontSize: 13, fontWeight: 600, color: "var(--text-muted)" },
   creditsBadge: { fontSize: 11, fontWeight: 800, background: "var(--surface-2)", color: "var(--accent)", borderRadius: 6, padding: "2px 7px" },
   creditsEmpty: { background: "var(--danger-soft)", color: "var(--danger)" },
-  creditsLow: { background: "#FEF3C7", color: "var(--warn)" },
+  creditsLow: { background: "var(--surface-3)", color: "var(--warn)" },
   googleBtn: { display: "flex", alignItems: "center", gap: 8, background: "var(--surface)", border: "1px solid #DDD", borderRadius: 8, padding: "6px 14px", fontSize: 13, fontWeight: 600, color: "var(--text-muted)", textDecoration: "none", whiteSpace: "nowrap" as const },
 
   layout: { display: "flex", flex: 1, minHeight: 0, overflow: "hidden" },
   sidebar: { width: 72, flexShrink: 0, background: "var(--surface)", borderRight: "1px solid var(--border)", display: "flex", flexDirection: "column" as const, padding: "12px 6px", gap: 4, overflowY: "auto" as const },
+  railGroup: { fontSize: 9.5, fontWeight: 800, color: "var(--text-faint)", textTransform: "uppercase" as const, letterSpacing: "0.12em", textAlign: "center" as const, padding: "4px 0 2px" },
+  dockBar: { order: 99, marginTop: "auto", display: "flex", alignItems: "center", gap: 10, background: "var(--surface)", border: "1px solid var(--border-strong)", borderRadius: 999, padding: "8px 8px 8px 16px", boxShadow: "var(--shadow-lg)", maxWidth: 760, width: "100%", alignSelf: "center", position: "sticky" as const, bottom: 12, zIndex: 5 },
+  dockBarIcon: { fontSize: 16, flexShrink: 0 },
+  dockBarInput: { flex: 1, minWidth: 0, border: "none", outline: "none", background: "transparent", color: "var(--text)", fontSize: 14.5, fontFamily: "inherit" },
+  dockBarMeta: { fontSize: 11.5, fontWeight: 700, color: "var(--text-faint)", whiteSpace: "nowrap" as const, flexShrink: 0 },
+  dockBarGo: { width: 38, height: 38, borderRadius: "50%", border: "none", background: "var(--grad-strong)", color: "#fff", fontWeight: 900, fontSize: 17, cursor: "pointer", flexShrink: 0, fontFamily: "inherit", boxShadow: "var(--glow)" },
   toolBtn: { width: "100%", display: "flex", flexDirection: "column" as const, alignItems: "center", gap: 4, padding: "10px 4px", borderRadius: 10, border: "none", background: "none", cursor: "pointer", color: "var(--text-muted)" },
   toolBtnActive: { background: "var(--surface-2)", color: "var(--accent)" },
   toolLabel: { fontSize: 9, fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: 0.5, lineHeight: 1 },
@@ -2809,7 +2862,7 @@ const s: Record<string, React.CSSProperties> = {
   uploadTitle: { margin: "0 0 8px", fontSize: 17, fontWeight: 700 },
   uploadHint: { margin: "0 0 24px", fontSize: 14, color: "var(--text-faint)" },
   featureRow: { display: "flex", flexWrap: "wrap" as const, gap: 8, justifyContent: "center", marginBottom: 16 },
-  featureChip: { background: "#F0F0FA", border: "1px solid #E0E0F0", borderRadius: 20, padding: "5px 12px", fontSize: 12, fontWeight: 600, color: "var(--accent)" },
+  featureChip: { background: "var(--surface-2)", border: "1px solid #E0E0F0", borderRadius: 20, padding: "5px 12px", fontSize: 12, fontWeight: 600, color: "var(--accent)" },
   signInHint: { fontSize: 13, color: "var(--text-faint)", marginTop: 8 },
 
   imgWrap: { position: "relative", borderRadius: 16, overflow: "hidden", boxShadow: "0 8px 40px rgba(0,0,0,0.12)", maxWidth: "100%", background: "var(--surface)" },
@@ -2837,8 +2890,8 @@ const s: Record<string, React.CSSProperties> = {
   panelSection: { display: "flex", flexDirection: "column" as const, gap: 10 },
   creditNote: { fontSize: 11, color: "var(--accent)", fontWeight: 700, background: "var(--surface-2)", borderRadius: 6, padding: "4px 8px", display: "inline-block", alignSelf: "flex-start" },
 
-  successNote: { background: "var(--success-soft)", border: "1px solid #A7F3D0", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#047857", fontWeight: 600 },
-  retryNote: { background: "#FFF7ED", border: "1px solid #FED7AA", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#92400E" },
+  successNote: { background: "var(--success-soft)", border: "1px solid var(--surface-3)", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#047857", fontWeight: 600 },
+  retryNote: { background: "var(--surface-3)", border: "1px solid #FED7AA", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#92400E" },
   retryLink: { background: "none", border: "none", color: "var(--accent-strong)", fontWeight: 700, cursor: "pointer", textDecoration: "underline", padding: 0, fontSize: 12 },
   tabBar: { display: "flex", gap: 2, background: "var(--surface-2)", borderRadius: 8, padding: 2 },
   tabBtn: { flex: 1, padding: "5px 2px", borderRadius: 6, border: "none", background: "none", fontSize: 10, fontWeight: 700, cursor: "pointer", color: "var(--text-faint)" },
@@ -2846,7 +2899,7 @@ const s: Record<string, React.CSSProperties> = {
   swatchGrid: { display: "flex", flexWrap: "wrap" as const, gap: 6 },
   swatch: { width: 30, height: 30, borderRadius: 7, cursor: "pointer", flexShrink: 0 },
   colorPicker: { width: 36, height: 36, border: "2px solid var(--border)", borderRadius: 6, cursor: "pointer", padding: 2 },
-  smallBtn: { background: "var(--accent)", color: "#fff", border: "none", borderRadius: 6, padding: "6px 12px", fontSize: 12, fontWeight: 700, cursor: "pointer" },
+  smallBtn: { background: "var(--accent-fill)", color: "#fff", border: "none", borderRadius: 6, padding: "6px 12px", fontSize: 12, fontWeight: 700, cursor: "pointer" },
   pendingRow: { display: "flex", alignItems: "center", gap: 8, background: "var(--accent-soft)", border: "1px solid #C4C4F0", borderRadius: 8, padding: "8px 10px" },
   xBtn: { background: "none", border: "none", color: "var(--text-faint)", cursor: "pointer", fontSize: 13, padding: 2, marginLeft: "auto" },
   gradGrid: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 },
@@ -2883,10 +2936,10 @@ const s: Record<string, React.CSSProperties> = {
   creditBarBg: { height: 8, background: "var(--surface-2)", borderRadius: 100, overflow: "hidden" },
   creditBarFill: { height: "100%", borderRadius: 100, transition: "width 0.4s ease" },
   noCreditsNote: { marginTop: 10, background: "var(--danger-soft)", border: "1px solid var(--danger-soft)", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#B91C1C", textAlign: "left" as const },
-  lowNote: { marginTop: 10, background: "#FEF3C7", border: "1px solid #FDE68A", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#92400E", textAlign: "left" as const },
+  lowNote: { marginTop: 10, background: "var(--surface-3)", border: "1px solid var(--surface-3)", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#92400E", textAlign: "left" as const },
   usageGrid: { display: "flex", flexDirection: "column" as const, gap: 6, marginBottom: 16, textAlign: "left" as const },
   usageItem: { display: "flex", justifyContent: "space-between", fontSize: 13, color: "var(--text-muted)", padding: "4px 0", borderBottom: "1px solid #F0F0F0" },
 
   // No credits modal
-  noCreditsInfo: { background: "#F0FFF4", border: "1px solid #A7F3D0", borderRadius: 10, padding: "14px", marginBottom: 16, fontSize: 13, color: "#047857", lineHeight: 1.8, textAlign: "left" as const },
+  noCreditsInfo: { background: "var(--surface-3)", border: "1px solid var(--surface-3)", borderRadius: 10, padding: "14px", marginBottom: 16, fontSize: 13, color: "#047857", lineHeight: 1.8, textAlign: "left" as const },
 };

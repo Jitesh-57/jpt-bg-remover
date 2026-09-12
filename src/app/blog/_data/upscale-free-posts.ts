@@ -14,7 +14,7 @@ export const UPSCALE_FREE_POSTS: BlogPost[] = [
     image: IMG(1181671),
     slug: "free-image-upscaler-no-sign-up",
     title: "Free Image Upscaler — No Sign-Up, No Watermark, No Catch",
-    metaTitle: "Free Image Upscaler — No Sign Up, No Watermark | JPT AI",
+    metaTitle: "Free Image Upscaler — No Sign Up, No Watermark | Pixel Shine",
     metaDescription:
       "A genuinely free image upscaler — no sign-up, no watermark, no daily limit. Upscale any photo 2× or 4× online and download it clean.",
     excerpt:
@@ -29,7 +29,7 @@ export const UPSCALE_FREE_POSTS: BlogPost[] = [
       {
         body: `Let's be honest about the word "free." You search for a free image upscaler, upload your photo, wait for it to process — and then it hits you with a watermark, or a "sign up to download," or a "you've used your 1 free credit" wall. It's exhausting. I built this guide around a tool that skips all of that: upload, upscale, download. No account, no watermark, no counting your images.
 
-JPT AI's upscaler is free the way "free" is supposed to mean. You don't create a login to try it. You don't get a watermark stamped across your image. And there's no daily cap quietly waiting to stop you on image number four. It runs online and hands you back a clean, higher-resolution file. That's the whole thing.`,
+Pixel Shine's upscaler is free the way "free" is supposed to mean. You don't create a login to try it. You don't get a watermark stamped across your image. And there's no daily cap quietly waiting to stop you on image number four. It runs online and hands you back a clean, higher-resolution file. That's the whole thing.`,
       },
       {
         heading: "Why so many 'free' upscalers aren't really free",
@@ -59,7 +59,7 @@ What it doesn't pretend to be: a magic button that recovers detail that was neve
     image: IMG(220453),
     slug: "upscale-image-free-without-photoshop",
     title: "How to Upscale an Image Free — Without Photoshop",
-    metaTitle: "Upscale Image Free Without Photoshop | JPT AI",
+    metaTitle: "Upscale Image Free Without Photoshop | Pixel Shine",
     metaDescription:
       "You don't need Photoshop (or a subscription) to enlarge a photo. Upscale any image free online, 2× or 4×, with no watermark and no software to install.",
     excerpt:
@@ -102,7 +102,7 @@ If you're used to Photoshop, think of this as the "Image Size" dialog — except
     image: IMG(270637),
     slug: "enlarge-image-without-losing-quality-free",
     title: "How to Enlarge an Image Without Losing Quality (Free)",
-    metaTitle: "Enlarge Image Without Losing Quality — Free | JPT AI",
+    metaTitle: "Enlarge Image Without Losing Quality — Free | Pixel Shine",
     metaDescription:
       "Enlarging a photo the normal way makes it blurry. Here's how to enlarge an image without losing quality, free online, using AI — no watermark.",
     excerpt:
@@ -145,7 +145,7 @@ Quick tip: always start from the highest-quality original you have. The more rea
     image: IMG(1051075),
     slug: "upscale-image-on-phone-free",
     title: "How to Upscale an Image on Your Phone — Free (Android & iPhone)",
-    metaTitle: "Upscale Image on Phone Free — Android & iPhone | JPT AI",
+    metaTitle: "Upscale Image on Phone Free — Android & iPhone | Pixel Shine",
     metaDescription:
       "No app needed. Upscale and enhance photos free right on your phone — Android or iPhone. 2× or 4×, no watermark, no sign-up.",
     excerpt:
@@ -186,7 +186,7 @@ On both Android and iPhone the downloaded file lands in your Photos/Downloads, s
     image: IMG(1124062),
     slug: "free-alternative-to-topaz-gigapixel",
     title: "A Free Alternative to Topaz Gigapixel AI (No $99 Needed)",
-    metaTitle: "Free Alternative to Topaz Gigapixel AI | JPT AI",
+    metaTitle: "Free Alternative to Topaz Gigapixel AI | Pixel Shine",
     metaDescription:
       "Topaz Gigapixel is great but costs ~$99. Here's a free alternative to upscale images online — 2× or 4×, no watermark, no one-off fee.",
     excerpt:
@@ -229,7 +229,7 @@ Is it identical to a $99 desktop app on the most extreme cases? No — dedicated
     image: IMG(1144687),
     slug: "free-alternative-to-lets-enhance",
     title: "A Free Alternative to Let's Enhance (No Credits, No Watermark)",
-    metaTitle: "Free Alternative to Let's Enhance | JPT AI Upscaler",
+    metaTitle: "Free Alternative to Let's Enhance | Pixel Shine Upscaler",
     metaDescription:
       "Let's Enhance limits you to a few free credits. Here's a free alternative to upscale and enhance images with no credit system and no watermark.",
     excerpt:
@@ -254,7 +254,7 @@ It's a fine business model, but it's a bad experience when you just want to get 
       },
       {
         heading: "The no-credits alternative",
-        body: `JPT AI's basic upscaler doesn't meter you. Upload, upscale 2× or 4×, download — no watermark, and signed-in users get unlimited use. You can run your whole set of photos in one sitting without watching a credit counter tick toward zero.
+        body: `Pixel Shine's basic upscaler doesn't meter you. Upload, upscale 2× or 4×, download — no watermark, and signed-in users get unlimited use. You can run your whole set of photos in one sitting without watching a credit counter tick toward zero.
 
 The workflow is the same simplicity you'd expect: drag in a photo, choose the enlargement, download the result. JPG, PNG, WebP all supported.`,
       },
@@ -272,7 +272,7 @@ The workflow is the same simplicity you'd expect: drag in a photo, choose the en
     image: IMG(1152077),
     slug: "free-ai-upscaler-unlimited-no-limits",
     title: "Free AI Image Upscaler With No Limits (Upscale as Many as You Want)",
-    metaTitle: "Free AI Upscaler — No Limits, Unlimited | JPT AI",
+    metaTitle: "Free AI Upscaler — No Limits, Unlimited | Pixel Shine",
     metaDescription:
       "Upscale unlimited images free. No daily cap, no credits, no watermark. A free AI image upscaler that lets you enhance as many photos as you want.",
     excerpt:
@@ -313,7 +313,7 @@ For big batches, our Batch Editor lets you queue many images at once — also fr
     image: IMG(1239291),
     slug: "upscale-jpeg-without-losing-quality-free",
     title: "How to Upscale a JPEG Without Losing Quality (Free)",
-    metaTitle: "Upscale JPEG Without Losing Quality Free | JPT AI",
+    metaTitle: "Upscale JPEG Without Losing Quality Free | Pixel Shine",
     metaDescription:
       "JPEGs lose quality every time they're saved. Here's how to upscale a JPEG free online and recover sharpness — no watermark, no software.",
     excerpt:
@@ -354,7 +354,7 @@ AI upscaling is well suited to this because it reconstructs clean edges and text
     image: IMG(1261731),
     slug: "free-bulk-image-upscaler-batch",
     title: "Free Bulk Image Upscaler — Batch-Enhance Many Photos at Once",
-    metaTitle: "Free Bulk Image Upscaler — Batch Enhance | JPT AI",
+    metaTitle: "Free Bulk Image Upscaler — Batch Enhance | Pixel Shine",
     metaDescription:
       "Enhance a whole folder of photos at once. A free bulk image upscaler to batch-upscale many images — no watermark, no per-image fee.",
     excerpt:
@@ -393,7 +393,7 @@ For a handful of images, the regular upscaler is quicker; for a folder, batch is
     image: IMG(1264210),
     slug: "how-to-make-picture-higher-resolution-free",
     title: "How to Make a Picture Higher Resolution — Free",
-    metaTitle: "How to Make a Picture Higher Resolution Free | JPT AI",
+    metaTitle: "How to Make a Picture Higher Resolution Free | Pixel Shine",
     metaDescription:
       "Need a higher-resolution version of a photo? Here's how to increase image resolution free online with AI — 2× or 4×, no watermark, no software.",
     excerpt:
@@ -430,7 +430,7 @@ For a handful of images, the regular upscaler is quicker; for a folder, batch is
     image: IMG(1366919),
     slug: "make-old-photos-hd-free",
     title: "How to Make Old Photos HD — Free",
-    metaTitle: "Make Old Photos HD Free Online | JPT AI",
+    metaTitle: "Make Old Photos HD Free Online | Pixel Shine",
     metaDescription:
       "Turn faded, low-res old photos into crisp HD versions. Free AI enhancement to make old family photos HD — no watermark, no software.",
     excerpt:
@@ -467,7 +467,7 @@ For a handful of images, the regular upscaler is quicker; for a folder, batch is
     image: IMG(1413412),
     slug: "free-online-photo-sharpener",
     title: "Free Online Photo Sharpener — Fix Soft & Slightly Blurry Photos",
-    metaTitle: "Free Online Photo Sharpener | JPT AI",
+    metaTitle: "Free Online Photo Sharpener | Pixel Shine",
     metaDescription:
       "Sharpen soft or slightly blurry photos free online. AI photo sharpener that adds real detail — no watermark, no download, no sign-up to try.",
     excerpt:
@@ -506,7 +506,7 @@ AI-based sharpening works differently. Because the model understands what real d
     image: IMG(1431822),
     slug: "upscale-ai-generated-images-free",
     title: "How to Upscale AI-Generated Images Free (Midjourney, DALL·E & More)",
-    metaTitle: "Upscale AI-Generated Images Free | JPT AI",
+    metaTitle: "Upscale AI-Generated Images Free | Pixel Shine",
     metaDescription:
       "AI images often export small. Here's how to upscale AI-generated images (Midjourney, DALL·E, Stable Diffusion) free to print resolution — no watermark.",
     excerpt:
@@ -543,7 +543,7 @@ AI-based sharpening works differently. Because the model understands what real d
     image: IMG(1438081),
     slug: "best-free-image-upscaler-no-watermark",
     title: "The Best Free Image Upscaler With No Watermark (2025)",
-    metaTitle: "Best Free Image Upscaler No Watermark 2025 | JPT AI",
+    metaTitle: "Best Free Image Upscaler No Watermark 2025 | Pixel Shine",
     metaDescription:
       "Looking for a free image upscaler with no watermark? Here's what to look for in 2025 — unlimited use, 4×, no sign-up — and how to upscale clean.",
     excerpt:
@@ -565,8 +565,8 @@ AI-based sharpening works differently. Because the model understands what real d
 If a tool ticks those boxes, it's genuinely free and genuinely useful. If it fails any of them, keep looking.`,
       },
       {
-        heading: "How JPT AI stacks up",
-        body: `JPT AI's upscaler was built around exactly those criteria: no watermark on your download, no sign-up required to try it, unlimited upscaling for signed-in users, real AI super-resolution at 2× and 4×, and support for the common formats. It runs online, so there's nothing to install, and it works the same on a phone or a laptop.`,
+        heading: "How Pixel Shine stacks up",
+        body: `Pixel Shine's upscaler was built around exactly those criteria: no watermark on your download, no sign-up required to try it, unlimited upscaling for signed-in users, real AI super-resolution at 2× and 4×, and support for the common formats. It runs online, so there's nothing to install, and it works the same on a phone or a laptop.`,
       },
       {
         heading: "Test any tool with this quick check",
@@ -582,7 +582,7 @@ If a tool ticks those boxes, it's genuinely free and genuinely useful. If it fai
     image: IMG(1552212),
     slug: "is-ai-image-upscaling-free",
     title: "Is AI Image Upscaling Free? Yes — Here's How",
-    metaTitle: "Is AI Image Upscaling Free? Yes — Here's How | JPT AI",
+    metaTitle: "Is AI Image Upscaling Free? Yes — Here's How | Pixel Shine",
     metaDescription:
       "Wondering if AI image upscaling is free? It can be — no watermark, no sign-up, no per-image fee. Here's how to upscale images completely free.",
     excerpt:

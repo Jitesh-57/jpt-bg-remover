@@ -96,7 +96,7 @@ export default function HistoryPage() {
         <div style={{ textAlign: "center", padding: "60px 20px", background: "var(--surface)", borderRadius: 12, border: "2px dashed var(--border)" }}>
           <div style={{ fontSize: 48, marginBottom: 16 }}>📝</div>
           <p style={{ fontSize: 16, color: "var(--text-muted)", marginBottom: 16 }}>No transformations yet</p>
-          <a href="/editor" style={{ display: "inline-block", padding: "10px 20px", background: "var(--accent)", color: "#fff", textDecoration: "none", borderRadius: 6, fontWeight: 600 }}>
+          <a href="/editor" style={{ display: "inline-block", padding: "10px 20px", background: "var(--accent-fill)", color: "#fff", textDecoration: "none", borderRadius: 6, fontWeight: 600 }}>
             Start Editing →
           </a>
         </div>
@@ -137,7 +137,7 @@ export default function HistoryPage() {
                     style={{
                       flex: 1,
                       padding: "8px 12px",
-                      background: "var(--accent)",
+                      background: "var(--accent-fill)",
                       color: "#fff",
                       textDecoration: "none",
                       borderRadius: 6,

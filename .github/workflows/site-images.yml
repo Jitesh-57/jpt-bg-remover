@@ -1,0 +1,58 @@
+# Fills the site's image slots after a production deploy.
+#
+# The nightly Vercel cron (vercel.json) does the same thing, but only at 03:00
+# UTC. This runs it as soon as a deploy is live so a fresh slot does not sit
+# empty for up to a day, and gives a manual "Run workflow" button as well.
+#
+# Set ADMIN_IMAGE_TOKEN as a repository secret and as a Vercel environment
+# variable, both to the same value. Without it this falls back to the default
+# already present in the code, which is public — so setting it is worth doing.
+name: Generate site images
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: site-images
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for the production deploy to serve the route
+        id: wait
+        run: |
+          # An unauthenticated request is free and tells us what we need: 401
+          # means the route is deployed, 404 means this build is not live yet.
+          for i in $(seq 1 30); do
+            code=$(curl -s -o /dev/null -m 20 -w '%{http_code}' \
+              "https://www.sjpt.io/api/cron/site-images" || echo 000)
+            echo "attempt $i: HTTP $code"
+            if [ "$code" = "401" ]; then echo "live=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+            sleep 30
+          done
+          echo "live=false" >> "$GITHUB_OUTPUT"
+          echo "::warning::Route never became available; the nightly cron will pick this up."
+
+      - name: Generate the missing images
+        if: steps.wait.outputs.live == 'true'
+        env:
+          TOKEN: ${{ secrets.ADMIN_IMAGE_TOKEN || 'jptblog2026' }}
+        run: |
+          # The endpoint chains its own follow-up invocations server-side, so
+          # one call walks the whole set. A long timeout is expected: the first
+          # batch generates images before it responds.
+          code=$(curl -sS -m 600 -o response.json -w '%{http_code}' \
+            "https://www.sjpt.io/api/cron/site-images?token=${TOKEN}" || echo 000)
+          echo "HTTP $code"
+          cat response.json || true
+          echo
+          case "$code" in
+            200) echo "::notice::Generation started; it continues in the background." ;;
+            412) echo "::warning::FAL_KEY is not set on the deployment, so nothing was generated." ;;
+            401) echo "::error::Token rejected. Set ADMIN_IMAGE_TOKEN to the same value in GitHub and Vercel." ; exit 1 ;;
+            *)   echo "::warning::Unexpected status $code; the nightly cron will retry." ;;
+          esac

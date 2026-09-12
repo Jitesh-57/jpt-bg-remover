@@ -12,7 +12,7 @@ const BASE = "https://www.sjpt.io";
 const URL = `${BASE}/80s-ai-photo-prompts`;
 
 export const metadata: Metadata = {
-  title: { absolute: "100 Free 80s AI Photo Prompts (Copy & Paste) — ChatGPT & Gemini | JPT AI" },
+  title: { absolute: "100 Free 80s AI Photo Prompts (Copy & Paste) — ChatGPT & Gemini | Pixel Shine" },
   description:
     "100 free copy-paste prompts for the viral 80s AI photo trend. Motorcycle and classic-car portraits, rainy streets, weddings, disco nights and family albums — all written to keep your real face. Works in ChatGPT and Gemini.",
   keywords:
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
       "The viral 80s AI photo trend, solved: 100 ready-made prompts for ChatGPT and Gemini — street, travel, romance, weddings, disco and family portraits.",
     url: URL,
     type: "article",
-    siteName: "JPT AI",
+    siteName: "Pixel Shine",
   },
   twitter: {
     card: "summary_large_image",

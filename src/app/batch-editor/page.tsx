@@ -5,6 +5,7 @@ import PricingModal from "@/app/_components/PricingModal";
 import UnlimitedModal from "@/app/_components/UnlimitedModal";
 import SignInModal from "@/app/_components/SignInModal";
 import SharePrompt, { shouldShowSharePrompt } from "@/app/_components/SharePrompt";
+import BrandLogo from "@/app/_components/BrandLogo";
 import ToolIcon from "@/app/editor/ToolIcon";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
 import {
@@ -532,7 +533,7 @@ export default function BatchEditorPage() {
       {/* Header */}
       <div style={{ background: "var(--surface)", borderBottom: "1px solid var(--border)", padding: "14px 28px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <a href="/" style={{ color: "var(--accent)", fontWeight: 900, fontSize: 17, textDecoration: "none" }}>✦ JPT AI</a>
+          <a href="/" style={{ display: "inline-flex", alignItems: "center", textDecoration: "none" }}><BrandLogo height={28} variant="wordmark" /></a>
           <span style={{ color: "var(--text-muted)" }}>|</span>
           <span style={{ fontWeight: 800, fontSize: 15, color: "var(--text)" }}>⚡ Batch Editor</span>
           <span style={{ background: "var(--accent-soft)", color: "var(--accent)", fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 20 }}>Up to 100 images</span>
@@ -544,7 +545,7 @@ export default function BatchEditorPage() {
             </span>
           )}
           {doneCount > 0 && (
-            <button onClick={downloadAll} style={{ padding: "9px 20px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: 8, fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+            <button onClick={downloadAll} style={{ padding: "9px 20px", background: "var(--accent-fill)", color: "#fff", border: "none", borderRadius: 8, fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
               ⬇ Download All ({doneCount})
             </button>
           )}
@@ -872,7 +873,7 @@ export default function BatchEditorPage() {
               background: processing || !totalPending || !selectedTools.size ? "var(--text-faint)" : "linear-gradient(135deg, var(--accent), var(--accent-2))",
               color: "#fff", border: "none", borderRadius: 10, fontWeight: 800, fontSize: 15,
               cursor: processing || !totalPending || !selectedTools.size ? "not-allowed" : "pointer",
-              boxShadow: !processing && totalPending && selectedTools.size ? "0 4px 16px rgba(15,157,107,0.4)" : "none",
+              boxShadow: !processing && totalPending && selectedTools.size ? "0 4px 16px rgba(255,106,26,0.40)" : "none",
             }}
           >
             {processing
@@ -1112,7 +1113,7 @@ export default function BatchEditorPage() {
                   {items.length < MAX_IMAGES && <span style={{ color: "var(--text-faint)" }}> · drag more to add</span>}
                 </div>
                 <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                  <button onClick={() => fileInputRef.current?.click()} style={{ padding: "8px 16px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: 8, fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+                  <button onClick={() => fileInputRef.current?.click()} style={{ padding: "8px 16px", background: "var(--accent-fill)", color: "#fff", border: "none", borderRadius: 8, fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
                     + Add More
                   </button>
                   <button onClick={() => setItems(prev => prev.filter(i => i.status !== "done"))} style={{ padding: "8px 14px", background: "var(--surface)", color: "var(--text-muted)", border: "1.5px solid var(--border)", borderRadius: 8, fontWeight: 600, fontSize: 13, cursor: "pointer" }}>
@@ -1145,7 +1146,7 @@ export default function BatchEditorPage() {
                       style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", cursor: "zoom-in" }} />
 
                     {item.status === "processing" && (
-                      <div style={{ position: "absolute", inset: 0, background: "rgba(15,157,107,0.65)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                      <div style={{ position: "absolute", inset: 0, background: "rgba(255,106,26,0.40)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8 }}>
                         <div style={{ width: 26, height: 26, border: "3px solid rgba(255,255,255,0.35)", borderTop: "3px solid #fff", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
                         <span style={{ color: "#fff", fontSize: 11, fontWeight: 600 }}>Processing…</span>
                       </div>
@@ -1210,7 +1211,7 @@ export default function BatchEditorPage() {
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                 <span style={{ color: "var(--text-muted)", fontSize: 13, fontWeight: 600, maxWidth: "40vw", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{previewItem.name}</span>
                 <button onClick={download}
-                  style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 22px", background: "linear-gradient(135deg,var(--accent),var(--accent-2))", color: "#fff", border: "none", borderRadius: 10, fontSize: 14, fontWeight: 800, cursor: "pointer", boxShadow: "0 4px 16px rgba(15,157,107,0.5)" }}>
+                  style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 22px", background: "linear-gradient(135deg,var(--accent),var(--accent-2))", color: "#fff", border: "none", borderRadius: 10, fontSize: 14, fontWeight: 800, cursor: "pointer", boxShadow: "0 4px 16px rgba(255,106,26,0.40)" }}>
                   ⬇ Download {showingOriginal ? "Original" : "Result"}
                 </button>
                 <button onClick={() => setPreviewItem(null)}

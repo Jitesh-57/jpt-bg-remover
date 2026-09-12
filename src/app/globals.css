@@ -1,50 +1,52 @@
 /* ============================================================================
-   sjpt.io — design tokens (dark premium / glass)
+   sjpt.io — design tokens (dark studio: near-black + warm orange)
    Every colour, surface, border, radius, shadow and motion value lives here.
    Components reference these via var(--token), so changing the whole site's
    look is an edit to THIS FILE ONLY.
    ========================================================================== */
 :root {
-  /* Canvas & surfaces (light) */
-  --bg:            #FFFFFF;
-  --bg-elevated:   #FFFFFF;
-  --surface:       #FFFFFF;
-  --surface-2:     #F2FAF6;
-  --surface-3:     #E4F3EC;
-  --surface-glass: rgba(255,255,255,0.72);
+  /* Canvas & surfaces — near-black, very slightly warm so orange sits naturally */
+  --bg:            #0B0B0E;
+  --bg-elevated:   #101016;
+  --surface:       #16161D;
+  --surface-2:     #1C1C25;
+  --surface-3:     #25252F;
+  --surface-glass: rgba(255,255,255,0.05);
 
-  /* Borders */
-  --border:        #DDEDE5;
-  --border-strong: #C3DED2;
+  /* Borders — light at low alpha reads as a hairline on dark */
+  --border:        rgba(255,255,255,0.09);
+  --border-strong: rgba(255,255,255,0.17);
 
   /* Text */
-  --text:          #0B1A14;
-  --text-muted:    #4A5A53;
-  --text-faint:    #5F6B64;
+  --text:          #F4F4F7;
+  --text-muted:    #A8A8B6;
+  --text-faint:    #8A8A98;
 
-  /* Brand accents */
-  --accent:        #0F9D6B;
-  --accent-2:      #14B8A6;
-  --accent-strong: #0B7C55;
-  --accent-soft:   rgba(15,157,107,0.09);
-  --accent-border: rgba(15,157,107,0.22);
-  --grad:          linear-gradient(120deg,#0F9D6B,#14B8A6);
-  --grad-strong:   linear-gradient(120deg,#0B7C55,#0F9D6B);
+  /* Brand accents — warm orange into red */
+  --accent:        #FF7A2F;
+  --accent-2:      #FF5C70;
+  --accent-strong: #FF9155;
+  --accent-fill:   #C2410C;
+  --accent-soft:   rgba(255,122,47,0.13);
+  --accent-border: rgba(255,122,47,0.34);
+  --grad:          linear-gradient(120deg,#C2410C,#A81E3C);
+  --grad-strong:   linear-gradient(120deg,#C2410C,#A81E3C);
 
-  /* Status */
-  --success:       #0F9D6B;
-  --success-soft:  rgba(15,157,107,0.10);
-  --danger:        #DC2626;
-  --danger-soft:   rgba(220,38,38,0.08);
-  --warn:          #B45309;
+  /* Status — success stays green so it reads as success, not brand */
+  --success:       #34D399;
+  --success-soft:  rgba(52,211,153,0.13);
+  --danger:        #FB7185;
+  --danger-soft:   rgba(251,113,133,0.13);
+  --warn:          #FBBF24;
+
   /* Radii */
   --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-xl: 22px; --r-2xl: 28px; --r-full: 999px;
 
-  /* Shadows & glow */
-  --shadow-sm: 0 1px 3px rgba(16,19,28,0.06), 0 1px 2px rgba(16,19,28,0.04);
-  --shadow-md: 0 8px 24px rgba(16,19,28,0.08);
-  --shadow-lg: 0 24px 60px rgba(16,19,28,0.12);
-  --glow:      0 8px 24px rgba(15,157,107,0.26);
+  /* Shadows & glow — depth on dark comes from glow, not grey drop shadows */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.5), 0 1px 2px rgba(0,0,0,0.4);
+  --shadow-md: 0 10px 30px rgba(0,0,0,0.55);
+  --shadow-lg: 0 28px 70px rgba(0,0,0,0.65);
+  --glow:      0 10px 30px rgba(255,122,47,0.30);
 
   /* Motion */
   --ease: cubic-bezier(.16,1,.3,1);
@@ -56,7 +58,7 @@
 
 * { box-sizing: border-box; }
 
-html { -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; color-scheme: dark; }
 
 body {
   margin: 0; padding: 0;
@@ -74,12 +76,12 @@ body {
 body::before {
   content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
   background:
-    radial-gradient(820px 480px at 10% -10%, rgba(15,157,107,0.07), transparent 62%),
-    radial-gradient(720px 440px at 94% 0%, rgba(20,184,166,0.06), transparent 60%);
+    radial-gradient(900px 520px at 8% -12%, rgba(255,122,47,0.13), transparent 64%),
+    radial-gradient(760px 460px at 96% -4%, rgba(255,92,112,0.10), transparent 62%);
 }
 body > * { position: relative; z-index: 1; }
 
-::selection { background: rgba(15,157,107,0.18); color: inherit; }
+::selection { background: rgba(255,122,47,0.30); color: #fff; }
 
 a { color: inherit; }
 
@@ -244,3 +246,46 @@ a { color: inherit; }
 @media (max-width: 760px) {
   .jpt-footer-grid { grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 30px; }
 }
+
+/* ── AI app workspace ──────────────────────────────────────────────────────
+   Two columns on desktop: a sticky control rail and the before/after viewer.
+   Stacks to one column on tablet and below, with the rail first so the
+   upload button is the first thing reachable on a phone. */
+.jpt-workspace {
+  display: grid;
+  grid-template-columns: 340px minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+.jpt-rail {
+  position: sticky;
+  top: 88px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 18px;
+  min-width: 0;
+}
+.jpt-preset-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+  max-height: 268px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+.jpt-compare { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+
+@media (max-width: 980px) {
+  .jpt-workspace { grid-template-columns: minmax(0, 1fr); gap: 22px; }
+  .jpt-rail { position: static; top: auto; }
+  .jpt-preset-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); max-height: none; overflow-y: visible; }
+}
+@media (max-width: 560px) {
+  .jpt-preset-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .jpt-compare { grid-template-columns: minmax(0, 1fr); }
+}
+
+@keyframes jptSpin { to { transform: rotate(360deg); } }
+.jpt-spin { animation: jptSpin 1s linear infinite; }
+@media (prefers-reduced-motion: reduce) { .jpt-spin { animation: none; } }

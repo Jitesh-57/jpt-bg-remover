@@ -1,27 +1,30 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import BlurTool from "./BlurTool";
+import PricingSection from "@/app/_components/PricingSection";
+import SafeImage from "@/app/_components/SafeImage";
+import { blogCreative } from "@/lib/creative-images";
 
 const BASE = "https://www.sjpt.io";
 const URL = `${BASE}/blur-image`;
 const GRAD = "linear-gradient(120deg,var(--accent),var(--accent-2))";
 
 export const metadata: Metadata = {
-  title: { absolute: "Free Blur Image Tool — Blur or Pixelate Part of a Photo | JPT AI" },
+  title: { absolute: "Free Blur Image Tool — Blur or Pixelate Part of a Photo | Pixel Shine" },
   description:
     "Blur or pixelate part of an image free online. Hide faces, licence plates, addresses and sensitive info — drag a box to censor it. No watermark, no sign-up, private in your browser.",
   keywords:
     "blur image, blur part of image, blur face, pixelate image, censor image, blur image online free, hide sensitive information image, blur license plate",
   openGraph: {
-    title: "Free Blur Image Tool — Blur or Pixelate Part of a Photo | JPT AI",
+    title: "Free Blur Image Tool — Blur or Pixelate Part of a Photo | Pixel Shine",
     description: "Blur or pixelate faces and sensitive info in a photo, free. Drag a box to censor — no watermark, no sign-up.",
     url: URL,
     type: "website",
-    siteName: "JPT AI",
+    siteName: "Pixel Shine",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Free Blur Image Tool | JPT AI",
+    title: "Free Blur Image Tool | Pixel Shine",
     description: "Blur or pixelate part of a photo free — hide faces and sensitive info. No sign-up.",
   },
   alternates: { canonical: URL },
@@ -80,6 +83,16 @@ export default function Page() {
           </div>
         </section>
 
+
+        {/* SHOWCASE — creative slot (Blogs bucket: blur-image-before-after.png) */}
+        <section style={{ padding: "8px 24px 48px", background: "var(--surface)" }}>
+          <SafeImage
+            src={blogCreative("blur-image-before-after")}
+            alt="Blur Image — a face and a licence plate blurred in a photo, before and after"
+            wrapperStyle={{ maxWidth: 900, margin: "0 auto" }}
+            style={{ width: "100%", height: "auto", display: "block", borderRadius: 18, border: "1px solid var(--border)", boxShadow: "0 18px 50px rgba(0,0,0,0.25)" }}
+          />
+        </section>
         {/* HOW IT WORKS */}
         <section style={{ padding: "56px 24px", background: "var(--surface)" }}>
           <div style={{ maxWidth: 900, margin: "0 auto" }}>
@@ -101,6 +114,9 @@ export default function Page() {
             </div>
           </div>
         </section>
+
+        {/* PRICING (shared) */}
+        <PricingSection toolName="Blur Image" />
 
         {/* FAQ */}
         <section style={{ padding: "48px 24px", background: "var(--surface-2)" }}>

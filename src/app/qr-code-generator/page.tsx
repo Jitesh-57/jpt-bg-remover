@@ -1,27 +1,30 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import QrGenerator from "./QrGenerator";
+import PricingSection from "@/app/_components/PricingSection";
+import SafeImage from "@/app/_components/SafeImage";
+import { blogCreative } from "@/lib/creative-images";
 
 const BASE = "https://www.sjpt.io";
 const URL = `${BASE}/qr-code-generator`;
 const GRAD = "linear-gradient(120deg,var(--accent),var(--accent-2))";
 
 export const metadata: Metadata = {
-  title: { absolute: "Free QR Code Generator — Create a QR Code Online | JPT AI" },
+  title: { absolute: "Free QR Code Generator — Create a QR Code Online | Pixel Shine" },
   description:
     "Free online QR code generator. Turn any link or text into a QR code and download it as a PNG or SVG — custom colours, no watermark, no sign-up, made in your browser.",
   keywords:
     "qr code generator, free qr code generator, create qr code, qr code maker online, generate qr code free, qr code png svg, custom qr code",
   openGraph: {
-    title: "Free QR Code Generator — Create & Download QR Codes | JPT AI",
+    title: "Free QR Code Generator — Create & Download QR Codes | Pixel Shine",
     description: "Turn any link or text into a QR code and download PNG or SVG — free, custom colours, no sign-up.",
     url: URL,
     type: "website",
-    siteName: "JPT AI",
+    siteName: "Pixel Shine",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Free QR Code Generator | JPT AI",
+    title: "Free QR Code Generator | Pixel Shine",
     description: "Create a QR code from any link or text and download it free — PNG or SVG, no sign-up.",
   },
   alternates: { canonical: URL },
@@ -80,6 +83,16 @@ export default function Page() {
           </div>
         </section>
 
+
+        {/* SHOWCASE — creative slot (Blogs bucket: qr-code-generator-showcase.png) */}
+        <section style={{ padding: "8px 24px 48px", background: "var(--surface)" }}>
+          <SafeImage
+            src={blogCreative("qr-code-generator-showcase")}
+            alt="QR Code Generator — a scannable QR code generated from a link"
+            wrapperStyle={{ maxWidth: 900, margin: "0 auto" }}
+            style={{ width: "100%", height: "auto", display: "block", borderRadius: 18, border: "1px solid var(--border)", boxShadow: "0 18px 50px rgba(0,0,0,0.25)" }}
+          />
+        </section>
         {/* HOW IT WORKS */}
         <section style={{ padding: "56px 24px", background: "var(--surface)" }}>
           <div style={{ maxWidth: 900, margin: "0 auto" }}>
@@ -101,6 +114,9 @@ export default function Page() {
             </div>
           </div>
         </section>
+
+        {/* PRICING (shared) */}
+        <PricingSection toolName="QR Code Generator" />
 
         {/* FAQ */}
         <section style={{ padding: "48px 24px", background: "var(--surface-2)" }}>

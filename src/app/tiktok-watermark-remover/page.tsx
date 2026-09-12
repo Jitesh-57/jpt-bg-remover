@@ -5,21 +5,21 @@ const BASE = "https://www.sjpt.io";
 const URL = `${BASE}/tiktok-watermark-remover`;
 
 export const metadata: Metadata = {
-  title: { absolute: "Free TikTok Watermark Remover — Download Video No Watermark | JPT AI" },
+  title: { absolute: "Free TikTok Watermark Remover — Download Video No Watermark | Pixel Shine" },
   description:
     "Remove the TikTok watermark and download videos free online. Paste a TikTok link and get a clean, no-watermark HD MP4 (or MP3 audio) — no app, no sign-up.",
   keywords:
     "tiktok watermark remover, remove tiktok watermark free, download tiktok without watermark, tiktok video downloader no watermark, save tiktok no watermark",
   openGraph: {
-    title: "Free TikTok Watermark Remover — Download No-Watermark Video | JPT AI",
+    title: "Free TikTok Watermark Remover — Download No-Watermark Video | Pixel Shine",
     description: "Paste a TikTok link and download the video without the watermark in HD — free, no app, no sign-up.",
     url: URL,
     type: "website",
-    siteName: "JPT AI",
+    siteName: "Pixel Shine",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Free TikTok Watermark Remover | JPT AI",
+    title: "Free TikTok Watermark Remover | Pixel Shine",
     description: "Download TikTok videos without the watermark — free, HD, no sign-up.",
   },
   alternates: { canonical: URL },

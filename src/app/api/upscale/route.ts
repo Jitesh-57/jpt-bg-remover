@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkAuth, withCredits } from "@/lib/auth";
+// Free, unlimited tier: stays on Gemini deliberately. Routing it through fal
+// would spend the paid fal balance on users who are not paying for credits.
 import { geminiUpscale } from "@/lib/gemini";
 
 export const runtime = "nodejs";

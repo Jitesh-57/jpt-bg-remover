@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: { absolute: "Privacy Policy | JPT AI" },
-  description: "Privacy Policy for JPT AI — how we collect, use, and protect your data.",
+  title: { absolute: "Privacy Policy | Pixel Shine" },
+  description: "Privacy Policy for Pixel Shine — how we collect, use, and protect your data.",
   alternates: { canonical: "https://www.sjpt.io/privacy" },
   robots: { index: true, follow: true },
 };
@@ -15,7 +15,7 @@ export default function PrivacyPage() {
         <p style={{ color: "var(--text-muted)", fontSize: 14, marginBottom: 48 }}>Last updated: June 23, 2025</p>
 
         <Section title="1. Introduction">
-          JPT AI (&quot;we&quot;, &quot;our&quot;, or &quot;us&quot;) operates the website{" "}
+          Pixel Shine (&quot;we&quot;, &quot;our&quot;, or &quot;us&quot;) operates the website{" "}
           <a href="https://www.sjpt.io" style={{ color: "var(--accent)" }}>www.sjpt.io</a> and provides AI-powered image editing tools. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our service.
         </Section>
 
@@ -32,7 +32,7 @@ export default function PrivacyPage() {
         <Section title="3. How We Use Your Information">
           We use your information to:
           <ul style={{ paddingLeft: 20, lineHeight: 2 }}>
-            <li>Provide and operate the JPT AI service</li>
+            <li>Provide and operate the Pixel Shine service</li>
             <li>Manage your account, credits, and subscription plan</li>
             <li>Process payments and send receipts</li>
             <li>Respond to support requests</li>
@@ -78,7 +78,7 @@ export default function PrivacyPage() {
         </Section>
 
         <Section title="9. Children's Privacy">
-          JPT AI is not directed to children under 13. We do not knowingly collect personal information from children under 13. If you believe a child has provided us with personal data, please contact us.
+          Pixel Shine is not directed to children under 13. We do not knowingly collect personal information from children under 13. If you believe a child has provided us with personal data, please contact us.
         </Section>
 
         <Section title="10. Changes to This Policy">
@@ -88,7 +88,7 @@ export default function PrivacyPage() {
         <Section title="11. Contact Us">
           If you have questions about this Privacy Policy, please contact us at:
           <br /><br />
-          <b>JPT AI</b><br />
+          <b>Pixel Shine</b><br />
           Email: <a href="mailto:support@sjpt.io" style={{ color: "var(--accent)" }}>support@sjpt.io</a><br />
           Website: <a href="https://www.sjpt.io" style={{ color: "var(--accent)" }}>www.sjpt.io</a>
         </Section>

@@ -22,7 +22,7 @@ export const SEO_POSTS_10: BlogPost[] = [
   P(
     "upscale-image-to-8k-free",
     "How to Upscale an Image to 8K Free (No Software)",
-    "Upscale an Image to 8K — Free Online | JPT AI",
+    "Upscale an Image to 8K — Free Online | Pixel Shine",
     "Upscale any image to 8K free online with AI — no software, no watermark, no sign-up. Add resolution and detail for huge prints and displays.",
     "4K not enough? Here's how to upscale an image all the way to 8K, free, right in your browser.",
     "2026-08-14", "Guide",
@@ -47,7 +47,7 @@ export const SEO_POSTS_10: BlogPost[] = [
   P(
     "upscale-profile-picture-for-linkedin",
     "How to Upscale a Profile Picture for LinkedIn (Free)",
-    "Upscale a LinkedIn Profile Picture — Free | JPT AI",
+    "Upscale a LinkedIn Profile Picture — Free | Pixel Shine",
     "Upscale your LinkedIn profile picture free with AI — turn a small or blurry headshot into a sharp, professional photo. No app, no watermark.",
     "A blurry LinkedIn photo undersells you. Here's how to upscale your profile picture to a crisp, professional headshot, free.",
     "2026-08-14", "Guide",
@@ -72,7 +72,7 @@ export const SEO_POSTS_10: BlogPost[] = [
   P(
     "upscale-real-estate-listing-photos",
     "How to Upscale Real Estate Listing Photos (Free)",
-    "Upscale Real Estate Listing Photos — Free | JPT AI",
+    "Upscale Real Estate Listing Photos — Free | Pixel Shine",
     "Upscale real estate and property photos free with AI — sharpen listing images for portals and print. No software, no watermark, no sign-up.",
     "Sharp listing photos sell homes faster. Here's how to upscale property images for portals and brochures, free.",
     "2026-08-14", "Guide",
@@ -97,7 +97,7 @@ export const SEO_POSTS_10: BlogPost[] = [
   P(
     "enhance-cctv-security-camera-image-free",
     "How to Enhance a CCTV / Security Camera Image (Free)",
-    "Enhance a CCTV / Security Camera Image — Free | JPT AI",
+    "Enhance a CCTV / Security Camera Image — Free | Pixel Shine",
     "Enhance a blurry CCTV or security camera image free with AI — sharpen low-resolution footage stills. No software, no watermark, no sign-up.",
     "Security-camera stills are notoriously blurry. Here's how AI can sharpen and enlarge a CCTV image, free.",
     "2026-08-14", "Guide",
@@ -122,7 +122,7 @@ export const SEO_POSTS_10: BlogPost[] = [
   P(
     "upscale-image-for-facebook-cover-free",
     "How to Upscale an Image for a Facebook Cover (Free)",
-    "Upscale an Image for a Facebook Cover — Free | JPT AI",
+    "Upscale an Image for a Facebook Cover — Free | Pixel Shine",
     "Upscale an image for a Facebook cover photo free with AI — get a sharp, correctly-sized banner that isn't blurry or stretched. No watermark.",
     "Facebook stretches small cover photos into a blurry mess. Here's how to upscale an image so your cover looks crisp, free.",
     "2026-08-14", "Guide",
@@ -147,7 +147,7 @@ export const SEO_POSTS_10: BlogPost[] = [
   P(
     "how-to-enhance-a-zoomed-in-photo",
     "How to Enhance a Zoomed-In (Cropped) Photo Free",
-    "Enhance a Zoomed-In / Cropped Photo — Free | JPT AI",
+    "Enhance a Zoomed-In / Cropped Photo — Free | Pixel Shine",
     "Cropped in and now it's blurry? Enhance a zoomed-in photo free with AI — recover sharpness and resolution after cropping. No watermark, no app.",
     "Cropping in throws away pixels and leaves you blurry. Here's how to enhance a zoomed-in photo and get the sharpness back, free.",
     "2026-08-14", "Guide",
@@ -174,7 +174,7 @@ export const SEO_POSTS_10: BlogPost[] = [
   P(
     "download-tiktok-video-in-hd-no-watermark",
     "How to Download a TikTok Video in HD With No Watermark (Free)",
-    "Download a TikTok Video in HD, No Watermark — Free | JPT AI",
+    "Download a TikTok Video in HD, No Watermark — Free | Pixel Shine",
     "Download any TikTok video in HD with no watermark, free — paste the link and save a clean, high-quality MP4. No app, no sign-up.",
     "Want the clean HD version without the bouncing TikTok logo? Here's how to download a TikTok in HD, no watermark, free.",
     "2026-08-14", "Guide",
@@ -199,7 +199,7 @@ export const SEO_POSTS_10: BlogPost[] = [
   P(
     "how-to-download-a-tiktok-without-the-app",
     "How to Download a TikTok Video Without the App (Free)",
-    "Download a TikTok Without the App — Free | JPT AI",
+    "Download a TikTok Without the App — Free | Pixel Shine",
     "Download a TikTok video without any app — paste the link in your browser and save it watermark-free. Works on iPhone, Android and desktop.",
     "No app, no installs. Here's how to download a TikTok video straight from your browser, watermark-free and free.",
     "2026-08-14", "Guide",

@@ -10,12 +10,12 @@ const BASE = "https://www.sjpt.io";
 const URL = `${BASE}/tools`;
 
 export const metadata: Metadata = {
-  title: { absolute: "All Free Image Tools — Convert, Compress, Crop, Upscale & More | JPT AI" },
+  title: { absolute: "All Free Image Tools — Convert, Compress, Crop, Upscale & More | Pixel Shine" },
   description:
-    "Every free JPT AI image tool in one place: upscale, compress, convert (PNG, JPG, WebP), crop, rotate, watermark, meme maker, image to PDF, and TikTok downloader. No watermark, no sign-up.",
+    "Every free Pixel Shine image tool in one place: upscale, compress, convert (PNG, JPG, WebP), crop, rotate, watermark, meme maker, image to PDF, and TikTok downloader. No watermark, no sign-up.",
   keywords: "free image tools, online image tools, image converter, image compressor, crop image, upscale image, free photo tools",
   alternates: { canonical: URL },
-  openGraph: { title: "All Free Image Tools | JPT AI", description: "Every free JPT AI image tool in one place — no watermark, no sign-up.", url: URL, type: "website", siteName: "JPT AI" },
+  openGraph: { title: "All Free Image Tools | Pixel Shine", description: "Every free Pixel Shine image tool in one place — no watermark, no sign-up.", url: URL, type: "website", siteName: "Pixel Shine" },
 };
 
 const CORE_TOOLS = [
@@ -106,7 +106,7 @@ export default function ToolsPage() {
               All Free Image Tools
             </h1>
             <p style={{ fontSize: "clamp(1rem,2vw,1.15rem)", color: "var(--text-muted)", lineHeight: 1.7, maxWidth: 560, margin: "0 auto" }}>
-              Every JPT AI tool in one place — convert, compress, crop, upscale and more. All free, no watermark, nothing to install.
+              Every Pixel Shine tool in one place — convert, compress, crop, upscale and more. All free, no watermark, nothing to install.
             </p>
           </div>
         </section>

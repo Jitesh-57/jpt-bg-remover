@@ -35,7 +35,7 @@ export const VARIANTS: LandingVariant[] = [
   {
     parent: "remove-bg",
     slug: "product-photos",
-    title: "Free Background Remover for Product Photos — White Background in One Click | JPT AI",
+    title: "Free Background Remover for Product Photos — White Background in One Click | Pixel Shine",
     metaDescription: "Remove backgrounds from product photos free online. Get clean white or transparent backgrounds for Amazon, Shopify, Flipkart & Etsy listings in seconds — no watermark.",
     keywords: "product photo background remover free, white background product photo, amazon product photo background, ecommerce background remover free",
     h1: "Free Product Photo Background Remover",
@@ -51,7 +51,7 @@ export const VARIANTS: LandingVariant[] = [
   {
     parent: "remove-bg",
     slug: "signature",
-    title: "Free Signature Background Remover — Make Signature Transparent Online | JPT AI",
+    title: "Free Signature Background Remover — Make Signature Transparent Online | Pixel Shine",
     metaDescription: "Remove the background from a signature free online. Get a clean transparent PNG of your signature for documents, contracts and e-signing in one click.",
     keywords: "signature background remover free, transparent signature png, remove white background from signature, signature transparent online free",
     h1: "Free Signature Background Remover",
@@ -66,7 +66,7 @@ export const VARIANTS: LandingVariant[] = [
   {
     parent: "remove-bg",
     slug: "logo",
-    title: "Free Logo Background Remover — Transparent Logo PNG Online | JPT AI",
+    title: "Free Logo Background Remover — Transparent Logo PNG Online | Pixel Shine",
     metaDescription: "Remove the background from a logo free online. Get a clean transparent PNG logo for websites, merch and presentations in one click — no watermark.",
     keywords: "logo background remover free, transparent logo png, remove white background from logo, make logo transparent free",
     h1: "Free Logo Background Remover",
@@ -81,7 +81,7 @@ export const VARIANTS: LandingVariant[] = [
   {
     parent: "remove-bg",
     slug: "passport-photo",
-    title: "Free Passport Photo Background Changer — White/Blue Background Online | JPT AI",
+    title: "Free Passport Photo Background Changer — White/Blue Background Online | Pixel Shine",
     metaDescription: "Change passport photo background to white or blue free online. AI removes the background instantly so you can meet visa and ID photo requirements — no watermark.",
     keywords: "passport photo background changer free, white background passport photo, change id photo background, visa photo background remover free",
     h1: "Free Passport Photo Background Changer",
@@ -97,7 +97,7 @@ export const VARIANTS: LandingVariant[] = [
   {
     parent: "upscale",
     slug: "old-photos",
-    title: "Free Old Photo Enhancer — Restore & Upscale Blurry Old Photos with AI | JPT AI",
+    title: "Free Old Photo Enhancer — Restore & Upscale Blurry Old Photos with AI | Pixel Shine",
     metaDescription: "Restore and upscale old, blurry, low-resolution photos free with AI. Recover lost detail, reduce noise and sharpen vintage family photos online — no watermark.",
     keywords: "old photo enhancer free, restore old photos online free, upscale old photos ai, fix blurry old photos free, enhance vintage photo",
     h1: "Free Old Photo Enhancer & Restorer",
@@ -112,14 +112,14 @@ export const VARIANTS: LandingVariant[] = [
   {
     parent: "upscale",
     slug: "4k",
-    title: "Free 4K Image Upscaler — Upscale Photos to 4K Resolution Online | JPT AI",
+    title: "Free 4K Image Upscaler — Upscale Photos to 4K Resolution Online | Pixel Shine",
     metaDescription: "Upscale any image to 4K resolution free online with AI. Enhance photos up to 4× without losing quality — sharp, clean results with no watermark.",
     keywords: "4k image upscaler free, upscale image to 4k, ai 4k upscaler online free, increase image resolution to 4k",
     h1: "Free 4K Image Upscaler",
     subtitle: "Upscale any photo to crisp 4K resolution with AI super-resolution. Up to 4× larger with no loss of quality — free, instant, no watermark.",
     cta_text: "Upscale to 4K Free",
     faq: [
-      { q: "Can I upscale an image to 4K for free?", a: "Yes. Basic upscale is free and unlimited — JPT AI upscales images up to 4× their original size, enough to reach 4K from most source photos. Pro AI upscale gives you a free trial too." },
+      { q: "Can I upscale an image to 4K for free?", a: "Yes. Basic upscale is free and unlimited — Pixel Shine upscales images up to 4× their original size, enough to reach 4K from most source photos. Pro AI upscale gives you a free trial too." },
       { q: "Will upscaling to 4K blur the image?", a: "No. Unlike basic resizing, AI super-resolution reconstructs detail so the 4K result looks sharp and natural, not stretched." },
       { q: "What's the maximum output size?", a: "You can upscale up to 4× and to very large output dimensions — easily covering 4K and beyond for most images." },
     ],
@@ -127,7 +127,7 @@ export const VARIANTS: LandingVariant[] = [
   {
     parent: "upscale",
     slug: "anime",
-    title: "Free Anime & Art Upscaler — Upscale Anime Images to HD/4K with AI | JPT AI",
+    title: "Free Anime & Art Upscaler — Upscale Anime Images to HD/4K with AI | Pixel Shine",
     metaDescription: "Upscale anime, illustrations and AI art free online. Enhance resolution to HD or 4K while keeping clean lines and vivid colour — no watermark.",
     keywords: "anime upscaler free, upscale anime image ai, ai art upscaler online free, enhance illustration resolution free",
     h1: "Free Anime & AI-Art Upscaler",
@@ -142,7 +142,7 @@ export const VARIANTS: LandingVariant[] = [
   {
     parent: "upscale",
     slug: "profile-picture",
-    title: "Free Profile Picture Enhancer — Upscale & Sharpen Your PFP with AI | JPT AI",
+    title: "Free Profile Picture Enhancer — Upscale & Sharpen Your PFP with AI | Pixel Shine",
     metaDescription: "Enhance and upscale your profile picture free online. Sharpen blurry PFPs for Instagram, LinkedIn, Discord and WhatsApp with AI — no watermark.",
     keywords: "profile picture enhancer free, upscale profile picture ai, sharpen pfp online free, enhance instagram profile photo",
     h1: "Free Profile Picture Enhancer",
@@ -158,7 +158,7 @@ export const VARIANTS: LandingVariant[] = [
   {
     parent: "ai-headshot",
     slug: "linkedin",
-    title: "Free LinkedIn Headshot Generator — Professional Profile Photo with AI | JPT AI",
+    title: "Free LinkedIn Headshot Generator — Professional Profile Photo with AI | Pixel Shine",
     metaDescription: "Create a professional LinkedIn headshot free with AI. Turn any selfie into a polished profile photo that gets 21× more views — no photographer, no watermark.",
     keywords: "linkedin headshot generator free, professional linkedin photo ai, ai profile photo for linkedin free, linkedin profile picture maker",
     h1: "Free LinkedIn Headshot Generator",
@@ -173,7 +173,7 @@ export const VARIANTS: LandingVariant[] = [
   {
     parent: "ai-headshot",
     slug: "corporate",
-    title: "Free Corporate Headshot Generator — Team & Business Photos with AI | JPT AI",
+    title: "Free Corporate Headshot Generator — Team & Business Photos with AI | Pixel Shine",
     metaDescription: "Generate consistent corporate headshots free with AI. Professional team photos for company websites and directories without a studio — no watermark.",
     keywords: "corporate headshot generator free, business headshot ai, team photo generator free, professional company headshot online",
     h1: "Free Corporate Headshot Generator",
@@ -189,7 +189,7 @@ export const VARIANTS: LandingVariant[] = [
   {
     parent: "ai-editor",
     slug: "change-background",
-    title: "Free AI Background Changer — Replace Photo Background with Text Prompt | JPT AI",
+    title: "Free AI Background Changer — Replace Photo Background with Text Prompt | Pixel Shine",
     metaDescription: "Change any photo background free with AI. Describe a new scene in plain English — studio, beach, office — and AI replaces it instantly. No watermark.",
     keywords: "ai background changer free, replace photo background ai, change background online free, ai background generator free",
     h1: "Free AI Background Changer",
@@ -204,7 +204,7 @@ export const VARIANTS: LandingVariant[] = [
   {
     parent: "ai-editor",
     slug: "remove-object",
-    title: "Free AI Object Remover — Erase Objects & People from Photos Online | JPT AI",
+    title: "Free AI Object Remover — Erase Objects & People from Photos Online | Pixel Shine",
     metaDescription: "Remove unwanted objects, people or text from photos free with AI. Describe what to erase and AI fills the gap naturally — no Photoshop, no watermark.",
     keywords: "ai object remover free, remove object from photo online free, erase people from photo ai, remove unwanted object free",
     h1: "Free AI Object Remover",

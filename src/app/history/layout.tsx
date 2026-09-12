@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 // Private per-user history page — never indexed.
 export const metadata: Metadata = {
-  title: "Your History — JPT AI",
+  title: "Your History — Pixel Shine",
   robots: { index: false, follow: false },
 };
 

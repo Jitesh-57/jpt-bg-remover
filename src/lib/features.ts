@@ -1,14 +1,12 @@
 // Master switch for the paid / AI features.
 //
-// While FALSE, the app runs in "free-only" mode: the Creative Apps, AI Editor,
-// AI Headshot, Generate BG, Remove BG (AI), Pro Upscale, the blog, and pricing
-// are all hidden from the UI, and their pages redirect home. Only the free,
-// on-device tools stay: the Image Editor's Upscale (Normal) / Resize / Adjust
-// and the Batch Editor.
+// TRUE: the Creative Apps, AI Editor, AI Headshot, Generate BG, Remove BG (AI)
+// and Pro Upscale are visible and run on credits (see lib/plans.ts). The free
+// on-device tools — Upscale (Normal), Resize, Adjust, Batch Editor and the
+// browser-side tools — stay free and unlimited for everyone regardless.
 //
-// Set this to TRUE to bring every paid/AI feature back (e.g. once Gemini
-// billing is active). Nothing is deleted — it's purely a visibility switch.
-export const PAID_FEATURES_ENABLED = false;
+// FALSE puts the app back into free-only mode; nothing is deleted either way.
+export const PAID_FEATURES_ENABLED = true;
 
 // Route prefixes that are hidden in free-only mode (middleware redirects them
 // to "/"). Keep in sync with the nav/footer/landing conditionals.

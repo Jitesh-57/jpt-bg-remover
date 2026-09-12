@@ -1,8 +1,13 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import FAQAccordion from "@/app/_components/FAQAccordion";
-import CreativeApp from "./CreativeApp";
+import AppWorkspace from "./AppWorkspace";
+import { presetsFor } from "@/lib/app-presets";
+import { presetImagesFor, sampleImages } from "@/lib/preset-images.server";
 import { CREATIVE_APPS, getCreativeApp, getCreativeContent, CREATIVE_BASE, previewUrl } from "@/lib/creative-apps";
+import { longContentFor } from "@/lib/app-content";
+
+export const revalidate = 300;
 
 const BASE = "https://www.sjpt.io";
 
@@ -25,6 +30,36 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
+
+/** Two-line feature card, used by every composed section on this page. */
+function Cards({ items, min = 260 }: { items: { t: string; d: string }[]; min?: number }) {
+  return (
+    <div style={{ display: "grid", gridTemplateColumns: `repeat(auto-fit, minmax(min(${min}px, 100%), 1fr))`, gap: 18 }}>
+      {items.map((i) => (
+        <div key={i.t} style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 16, padding: "20px 20px 22px" }}>
+          <h3 style={{ fontSize: 15.5, fontWeight: 800, color: "var(--text)", margin: "0 0 8px", lineHeight: 1.35 }}>{i.t}</h3>
+          <p style={{ fontSize: 14, color: "var(--text-muted)", lineHeight: 1.65, margin: 0 }}>{i.d}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function Head2({ children, sub }: { children: React.ReactNode; sub?: string }) {
+  return (
+    <div style={{ maxWidth: 720, margin: "0 auto 36px", textAlign: "center" }}>
+      <h2 style={{ fontSize: "clamp(1.5rem,3vw,2.1rem)", fontWeight: 900, color: "var(--text)", margin: 0, letterSpacing: "-0.02em", lineHeight: 1.22 }}>{children}</h2>
+      {sub && <p style={{ fontSize: 15.5, color: "var(--text-muted)", lineHeight: 1.7, margin: "14px 0 0" }}>{sub}</p>}
+    </div>
+  );
+}
+
+function Head3({ children }: { children: React.ReactNode }) {
+  return (
+    <h3 style={{ fontSize: "clamp(1.15rem,2vw,1.45rem)", fontWeight: 850, color: "var(--text)", margin: "0 0 20px", letterSpacing: "-0.01em" }}>{children}</h3>
+  );
+}
+
 export default async function CreativeAppPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const a = getCreativeApp(slug);
@@ -32,7 +67,25 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
 
   const url = `${BASE}${CREATIVE_BASE}/${slug}`;
   const related = CREATIVE_APPS.filter((x) => x.slug !== a.slug).slice(0, 6);
+
+  // Preset thumbnails and sample photos are resolved from Supabase at ISR time,
+  // so they appear as soon as they're uploaded — no redeploy needed.
+  const [presetImages, samples] = await Promise.all([
+    presetImagesFor(a.slug, presetsFor(a, "solo"), a.cat),
+    sampleImages(),
+  ]);
   const content = getCreativeContent(slug);
+  const lc = longContentFor(a);
+
+  // Hand-written copy wins where it exists; the composed copy fills the rest of
+  // the page. Tips are merged rather than replaced so the 42 hand-written apps
+  // end up with more advice than the composed ones, not less.
+  const paragraphs = content?.paragraphs?.length ? content.paragraphs : lc.intro;
+  const tipsTitle = content?.tipsTitle || lc.bestResults.heading;
+  const seen = new Set<string>();
+  const tips = [...(content?.tips ?? []), ...lc.bestResults.items]
+    .filter((t) => { const k = t.slice(0, 40).toLowerCase(); return seen.has(k) ? false : (seen.add(k), true); })
+    .slice(0, 11);
 
   const appLd = {
     "@context": "https://schema.org",
@@ -50,7 +103,7 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
   const faqLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: a.faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+    mainEntity: lc.faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
   };
   const breadcrumbLd = {
     "@context": "https://schema.org",
@@ -70,32 +123,26 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
 
       <main style={{ fontFamily: "system-ui, -apple-system, sans-serif", color: "var(--text)", background: "var(--surface)" }}>
         {/* HERO + on-page generator */}
-        <section style={{ background: "linear-gradient(160deg,var(--surface-2) 0%,var(--surface) 55%,var(--success-soft) 100%)", padding: "56px 24px 64px" }}>
-          <div style={{ maxWidth: 880, margin: "0 auto", textAlign: "center" }}>
-            <a href={CREATIVE_BASE} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "var(--accent-soft)", color: "var(--accent)", fontWeight: 700, fontSize: 12, borderRadius: 20, padding: "6px 14px", marginBottom: 20, letterSpacing: "0.06em", textTransform: "uppercase", textDecoration: "none" }}>
-              {a.emoji} JPT Creative App
+        <section style={{ background: "var(--bg)", padding: "34px 24px 64px" }}>
+          <div style={{ maxWidth: 1240, margin: "0 auto" }}>
+            <a href={CREATIVE_BASE} style={{ display: "inline-flex", alignItems: "center", gap: 6, color: "var(--text-muted)", fontWeight: 700, fontSize: 12.5, marginBottom: 22, textDecoration: "none" }}>
+              ← All AI apps
             </a>
-            <h1 style={{ fontSize: "clamp(2rem,4.5vw,3.2rem)", fontWeight: 900, color: "var(--text)", lineHeight: 1.1, letterSpacing: "-0.03em", margin: "0 0 16px" }}>{a.h1}</h1>
-            <p style={{ fontSize: "clamp(1rem,2vw,1.15rem)", color: "var(--text-muted)", lineHeight: 1.6, maxWidth: 560, margin: "0 auto 36px" }}>{a.tagline}</p>
           </div>
 
-          <CreativeApp slug={a.slug} prompt={a.prompt} cta="Generate Now" badge={a.badge} gradient={a.gradient} appName={a.h1} />
+          <AppWorkspace app={a} presetImages={presetImages} samples={samples} />
         </section>
 
         {/* How it works */}
         <section style={{ padding: "72px 24px", background: "linear-gradient(160deg,var(--surface-2) 0%,var(--accent-soft) 100%)" }}>
           <div style={{ maxWidth: 960, margin: "0 auto" }}>
-            <h2 style={{ fontSize: "clamp(1.6rem,3vw,2.2rem)", fontWeight: 900, color: "var(--text)", textAlign: "center", margin: "0 0 48px", letterSpacing: "-0.02em" }}>How the {a.h1} works</h2>
+            <h2 style={{ fontSize: "clamp(1.6rem,3vw,2.2rem)", fontWeight: 900, color: "var(--text)", textAlign: "center", margin: "0 0 48px", letterSpacing: "-0.02em" }}>How to use {a.h1}</h2>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 28 }}>
-              {[
-                { n: "01", t: "Upload your photo", d: "Drag and drop or select any photo — JPG, PNG or WEBP. Everything happens right on this page." },
-                { n: "02", t: "AI generates instantly", d: `Our AI applies the ${a.h1.replace(/^AI /, "").toLowerCase()} transformation in seconds — no editing skills needed.` },
-                { n: "03", t: "Download your result", d: "Preview the before/after, then download your full-quality image. No watermark." },
-              ].map((s) => (
-                <div key={s.n} style={{ textAlign: "center" }}>
-                  <div style={{ width: 64, height: 64, background: "var(--surface)", border: "2px solid var(--accent-soft)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px", fontWeight: 900, color: "var(--accent)", fontSize: 20 }}>{s.n}</div>
-                  <h3 style={{ fontSize: 16, fontWeight: 800, color: "var(--text)", margin: "0 0 8px" }}>{s.t}</h3>
-                  <p style={{ fontSize: 14, color: "var(--text-muted)", lineHeight: 1.6, margin: 0 }}>{s.d}</p>
+              {lc.howTo.map((step, i) => (
+                <div key={step.t} style={{ textAlign: "center" }}>
+                  <div style={{ width: 64, height: 64, background: "var(--surface)", border: "2px solid var(--accent-soft)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px", fontWeight: 900, color: "var(--accent)", fontSize: 20 }}>{`0${i + 1}`}</div>
+                  <h3 style={{ fontSize: 16, fontWeight: 800, color: "var(--text)", margin: "0 0 8px" }}>{step.t}</h3>
+                  <p style={{ fontSize: 14, color: "var(--text-muted)", lineHeight: 1.6, margin: 0 }}>{step.d}</p>
                 </div>
               ))}
             </div>
@@ -107,27 +154,85 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
           <div style={{ maxWidth: 820, margin: "0 auto", textAlign: "center" }}>
             <h2 style={{ fontSize: "clamp(1.5rem,3vw,2rem)", fontWeight: 900, color: "var(--text)", margin: "0 0 28px", letterSpacing: "-0.02em" }}>See it in action — real before &amp; after</h2>
             <figure style={{ margin: 0 }}>
-              <div style={{ borderRadius: 18, overflow: "hidden", boxShadow: "0 20px 60px rgba(0,0,0,0.16)", border: "1px solid var(--border)" }}>
+              {/*
+                The labels are drawn here rather than generated into the image.
+                Lettering is the least reliable thing an image model produces,
+                and a misspelled badge baked into the file could only be fixed
+                by regenerating it — in HTML they are crisp and cost nothing.
+                The creative is a top/bottom split at 4:5, so before sits at the
+                top and after at the bottom.
+              */}
+              <div style={{ position: "relative", borderRadius: 18, overflow: "hidden", boxShadow: "0 20px 60px rgba(0,0,0,0.16)", border: "1px solid var(--border)" }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={previewUrl(a.slug)} alt={`${a.h1}: real before and after AI example`} style={{ width: "100%", display: "block" }} />
+                <img src={previewUrl(a.slug)} alt={`${a.h1}: before and after example`} style={{ width: "100%", display: "block" }} />
+                <span style={{ position: "absolute", top: 12, left: 12, background: "rgba(11,11,14,0.82)", color: "#fff", backdropFilter: "blur(6px)", fontSize: 11, fontWeight: 800, letterSpacing: "0.09em", borderRadius: 999, padding: "5px 11px" }}>BEFORE</span>
+                <span style={{ position: "absolute", bottom: 12, right: 12, background: "var(--accent-fill)", color: "#fff", fontSize: 11, fontWeight: 800, letterSpacing: "0.09em", borderRadius: 999, padding: "5px 11px" }}>AFTER</span>
               </div>
               <figcaption style={{ fontSize: 12.5, color: "var(--text-faint)", marginTop: 10 }}>Real AI example — actual output from this Creative App</figcaption>
             </figure>
           </div>
         </section>
 
-        {/* SEO content */}
-        {content && (
-          <section style={{ padding: "72px 24px", background: "var(--surface-2)" }}>
+        {/* Why use — composed per category, led by this app's own description */}
+        <section style={{ padding: "76px 24px", background: "var(--bg)" }}>
+          <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+            <Head2>{lc.why.heading}</Head2>
+            <Cards items={lc.why.items} min={300} />
+          </div>
+        </section>
+
+        {/* What this app actually asks the model for — unique to each app */}
+        {lc.transform && (
+          <section style={{ padding: "0 24px 76px", background: "var(--bg)" }}>
+            <div style={{ maxWidth: 860, margin: "0 auto", background: "var(--surface)", border: "1px solid var(--accent-border)", borderRadius: 18, padding: "26px 28px" }}>
+              <h3 style={{ fontSize: 15, fontWeight: 850, color: "var(--accent)", margin: "0 0 10px", letterSpacing: "0.04em", textTransform: "uppercase" }}>What {a.h1} changes</h3>
+              <p style={{ fontSize: 15.5, color: "var(--text)", lineHeight: 1.75, margin: 0 }}>{lc.transform}</p>
+              <p style={{ fontSize: 13.5, color: "var(--text-muted)", lineHeight: 1.7, margin: "14px 0 0" }}>
+                Your face, bone structure and skin tone are held fixed on every generation — only what is described above is changed. Add your own brief in the Custom tab to take it further.
+              </p>
+            </div>
+          </section>
+        )}
+
+        {/* Built for */}
+        <section style={{ padding: "76px 24px", background: "var(--surface)", borderTop: "1px solid var(--border)" }}>
+          <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+            <Head2 sub={lc.built.sub}>{lc.built.heading}</Head2>
+            <Cards items={lc.built.items} min={380} />
+          </div>
+        </section>
+
+        {/* Key highlights — benefits, use cases, prompt ideas */}
+        <section style={{ padding: "76px 24px", background: "var(--bg)" }}>
+          <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+            <Head2>Key highlights of {a.h1}</Head2>
+
+            <Head3>Benefits</Head3>
+            <Cards items={lc.benefits} min={300} />
+
+            <div style={{ height: 52 }} />
+            <Head3>What people use it for</Head3>
+            <Cards items={lc.useCases} min={300} />
+
+            <div style={{ height: 52 }} />
+            <Head3>Prompt ideas</Head3>
+            <p style={{ fontSize: 15.5, color: "var(--text-muted)", lineHeight: 1.75, margin: "0 0 22px", maxWidth: 780 }}>{lc.promptIdeas.intro}</p>
+            <Cards items={lc.promptIdeas.items} min={260} />
+          </div>
+        </section>
+
+        {/* Long-form copy: hand-written where it exists, composed otherwise */}
+        {paragraphs.length > 0 && (
+          <section style={{ padding: "76px 24px", background: "var(--surface-2)" }}>
             <div style={{ maxWidth: 760, margin: "0 auto", fontSize: 16, color: "var(--text-muted)", lineHeight: 1.85 }}>
-              <h2 style={{ fontSize: "clamp(1.5rem,3vw,2rem)", fontWeight: 900, color: "var(--text)", margin: "0 0 22px", letterSpacing: "-0.02em" }}>{a.h1}</h2>
-              {content.paragraphs.map((p, i) => (
+              <h2 style={{ fontSize: "clamp(1.5rem,3vw,2rem)", fontWeight: 900, color: "var(--text)", margin: "0 0 22px", letterSpacing: "-0.02em" }}>More about {a.h1}</h2>
+              {paragraphs.map((p, i) => (
                 <p key={i} style={{ marginTop: i === 0 ? 0 : 18 }}>{p}</p>
               ))}
 
-              <h3 style={{ fontSize: 19, fontWeight: 800, color: "var(--text)", margin: "34px 0 14px" }}>{content.tipsTitle}</h3>
+              <h3 style={{ fontSize: 19, fontWeight: 800, color: "var(--text)", margin: "34px 0 14px" }}>{tipsTitle}</h3>
               <ul style={{ margin: 0, paddingLeft: 22 }}>
-                {content.tips.map((t, i) => (
+                {tips.map((t, i) => (
                   <li key={i} style={{ marginBottom: 10 }}>{t}</li>
                 ))}
               </ul>
@@ -145,7 +250,7 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
         <section style={{ padding: "72px 24px", background: "var(--surface)" }}>
           <div style={{ maxWidth: 720, margin: "0 auto" }}>
             <h2 style={{ fontSize: "clamp(1.6rem,3vw,2.2rem)", fontWeight: 900, color: "var(--text)", textAlign: "center", margin: "0 0 40px", letterSpacing: "-0.02em" }}>Frequently Asked Questions</h2>
-            <FAQAccordion faqs={a.faq} />
+            <FAQAccordion faqs={lc.faq} />
           </div>
         </section>
 

@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { getPageConfig } from "@/lib/page-config";
-import LandingPage from "./_components/LandingPage";
+import HomePage from "./_components/HomePage";
 
 const BASE = "https://www.sjpt.io";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const config = await getPageConfig("upscale");
+  const config = await getPageConfig("home");
   return {
     title: { absolute: config.title },
     description: config.meta_description,
@@ -15,7 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description: config.og_description || config.meta_description,
       images: config.og_image ? [config.og_image] : [],
       type: "website",
-      siteName: "JPT AI",
+      siteName: "Pixel Shine",
       url: BASE,
     },
     twitter: {
@@ -29,25 +29,13 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Page() {
-  const config = await getPageConfig("upscale");
+  const config = await getPageConfig("home");
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: "JPT AI Image Upscaler",
-    description: config.meta_description,
-    applicationCategory: "MultimediaApplication",
-    operatingSystem: "Web",
-    browserRequirements: "Requires JavaScript",
-    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-    url: BASE,
-  };
 
-  // FAQ structured data is emitted by <LandingPage> to avoid duplication.
+  // FAQ and WebPage structured data are emitted by <HomePage>.
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <LandingPage config={config} toolHref="/editor?tool=upscale" pageId="upscale" isHome />
+      <HomePage config={config} />
     </>
   );
 }

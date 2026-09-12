@@ -1,16 +1,13 @@
 /**
- * auth.ts — Trial system for free users, credit system for paid plans
+ * auth.ts — credit system.
  *
- * Plans:
- *   free     → 5 lifetime free trials total, max ONE trial per distinct tool/app,
- *              plus unlimited free basic (non-AI) upscale and resize/adjust
- *   starter  → 50 paid credits, all tools
- *   creator  → 100 paid credits, all tools
- *   pro      → 300 paid credits, all tools
+ * Pure credit model (see lib/plans.ts): credits are bought in one-time packs,
+ * never expire, and are spent per AI generation. There is no free trial for AI
+ * features and no subscription.
  *
- * Costs (paid plans only — free plan uses the trial system below):
- *   resize / color-adjust / basic-upscale → 0 credits (always free, everyone)
- *   AI tools                              → 2 credits (paid users only)
+ * Costs:
+ *   resize / color-adjust / basic-upscale → 0 credits, unlimited, no account needed
+ *   AI tools                              → CREDIT_COST credits, requires a balance
  */
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
@@ -18,15 +15,16 @@ import { createClient as createSupabaseAdmin } from "@supabase/supabase-js";
 
 export const FREE_CREDITS = 10;
 export const DAILY_FREE_CREDITS = 10;
-export const CREDIT_COST = 2;
+// Re-exported from plans.ts so the price of a generation is defined once.
+export { CREDIT_COST } from "@/lib/plans";
+import { CREDIT_COST } from "@/lib/plans";
 export const BASIC_UPSCALE_COST = 1;
 export const FREE_TOOLS = ["resize", "color-adjust"];
 export const FREE_TRIAL_LIMIT = 5;
 
-// When true, AI (Gemini) tools are paid-plan-only and free users get the
-// upgrade popup. Used as a temporary switch while Gemini billing was inactive.
-// Billing is now on the paid tier, so the normal 5-free-trial system is back on.
-export const AI_TOOLS_PAID_ONLY = false;
+// AI tools are credits-only: no free trials. Free users hit the buy-credits
+// prompt on their first AI request. The on-device tools stay free for everyone.
+export const AI_TOOLS_PAID_ONLY = true;
 
 export type Plan = "free" | "starter" | "creator" | "pro" | "unlimited";
 
@@ -232,16 +230,11 @@ export async function withCredits(
     return NextResponse.json({ ...body, credits: session.credits });
   }
 
-  // Paid plans: unchanged — deduct from their purchased credit balance.
-  if (session.plan !== "free") {
+  // Pure credit model: anyone holding credits spends them, whatever their plan
+  // label says. Keying off the balance rather than the plan means credits bought
+  // under a legacy plan id still work, and a lapsed plan never strands them.
+  if (session.credits >= CREDIT_COST) {
     const cost = CREDIT_COST;
-    if (session.credits < cost) {
-      return NextResponse.json({
-        error: "No credits remaining. Purchase more to continue.",
-        credits: session.credits,
-        upgradeRequired: false,
-      }, { status: 402 });
-    }
     const newCredits = Math.max(0, session.credits - cost);
     const admin = createAdminSupabase();
     const { error: adminErr } = await admin
@@ -258,13 +251,16 @@ export async function withCredits(
     return NextResponse.json({ ...body, credits: newCredits });
   }
 
-  // Paid-only mode: free users get the upgrade popup instead of a free trial.
+  // No credits left (or none ever bought). AI features have no free tier, so
+  // this is the end of the line until they buy a pack.
   if (AI_TOOLS_PAID_ONLY) {
     return NextResponse.json({
-      error: "AI tools are currently available on paid plans only. Upgrade to continue.",
+      error: session.credits > 0
+        ? `You need ${CREDIT_COST} credits for this. Top up to continue.`
+        : "AI features run on credits. Grab a pack to start — from $2, and they never expire.",
       upgradeRequired: true,
       credits: session.credits,
-    }, { status: 403 });
+    }, { status: 402 });
   }
 
   // Free plan: gated by the 5-distinct-tool trial system.
@@ -337,13 +333,16 @@ export async function checkEntitlement(
     return null;
   }
 
-  // Paid-only mode: free users get the upgrade popup instead of a free trial.
+  // No credits left (or none ever bought). AI features have no free tier, so
+  // this is the end of the line until they buy a pack.
   if (AI_TOOLS_PAID_ONLY) {
     return NextResponse.json({
-      error: "AI tools are currently available on paid plans only. Upgrade to continue.",
+      error: session.credits > 0
+        ? `You need ${CREDIT_COST} credits for this. Top up to continue.`
+        : "AI features run on credits. Grab a pack to start — from $2, and they never expire.",
       upgradeRequired: true,
       credits: session.credits,
-    }, { status: 403 });
+    }, { status: 402 });
   }
 
   if (!toolId) {

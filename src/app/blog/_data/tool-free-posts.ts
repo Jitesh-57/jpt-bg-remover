@@ -13,7 +13,7 @@ export const TOOL_FREE_POSTS: BlogPost[] = [
     image: IMG(220453),
     slug: "compress-image-to-100kb-free",
     title: "How to Compress an Image to 100 KB (Free, No Quality Loss)",
-    metaTitle: "Compress Image to 100 KB Free Online | JPT AI",
+    metaTitle: "Compress Image to 100 KB Free Online | Pixel Shine",
     metaDescription:
       "Need a photo under 100 KB for a form or upload? Compress any image to 100 KB free online with a quality slider — no watermark, no sign-up.",
     excerpt:
@@ -36,7 +36,7 @@ export const TOOL_FREE_POSTS: BlogPost[] = [
     image: IMG(270637),
     slug: "compress-photo-for-email-free",
     title: "How to Compress a Photo for Email (Free)",
-    metaTitle: "Compress Photo for Email Free Online | JPT AI",
+    metaTitle: "Compress Photo for Email Free Online | Pixel Shine",
     metaDescription:
       "Email bouncing because your photos are too big? Compress photos for email free online — get them under the attachment limit without emailing a blurry mess.",
     excerpt:
@@ -61,7 +61,7 @@ export const TOOL_FREE_POSTS: BlogPost[] = [
     image: IMG(1051075),
     slug: "convert-jpg-to-png-free",
     title: "How to Convert JPG to PNG for Free (and When You Should)",
-    metaTitle: "Convert JPG to PNG Free Online | JPT AI",
+    metaTitle: "Convert JPG to PNG Free Online | Pixel Shine",
     metaDescription:
       "Convert JPG to PNG free online in one click. Get crisp edges and a lossless file for logos, graphics, and transparency work — no watermark, no sign-up.",
     excerpt:
@@ -84,7 +84,7 @@ export const TOOL_FREE_POSTS: BlogPost[] = [
     image: IMG(1124062),
     slug: "convert-png-to-jpg-free",
     title: "How to Convert PNG to JPG for Free (Smaller Files, Same Look)",
-    metaTitle: "Convert PNG to JPG Free Online | JPT AI",
+    metaTitle: "Convert PNG to JPG Free Online | Pixel Shine",
     metaDescription:
       "Convert PNG to JPG free online to shrink big files for web and email. Fast, online, no watermark, no sign-up — keeps your photo looking sharp.",
     excerpt:
@@ -109,7 +109,7 @@ export const TOOL_FREE_POSTS: BlogPost[] = [
     image: IMG(1144687),
     slug: "crop-image-for-instagram-free",
     title: "How to Crop a Photo for Instagram (Free, Every Size)",
-    metaTitle: "Crop Photo for Instagram Free Online | JPT AI",
+    metaTitle: "Crop Photo for Instagram Free Online | Pixel Shine",
     metaDescription:
       "Crop photos for Instagram free online — perfect 1:1 posts, 4:5 portraits, and 9:16 Stories and Reels. One tap each, no watermark, no sign-up.",
     excerpt:
@@ -132,7 +132,7 @@ export const TOOL_FREE_POSTS: BlogPost[] = [
     image: IMG(1152077),
     slug: "make-round-profile-picture-free",
     title: "How to Make a Round Profile Picture for Free",
-    metaTitle: "Round Profile Picture Maker Free Online | JPT AI",
+    metaTitle: "Round Profile Picture Maker Free Online | Pixel Shine",
     metaDescription:
       "Make a round profile picture free online. Circle-crop any photo into a clean round avatar with a transparent background — no watermark, no sign-up.",
     excerpt:
@@ -157,7 +157,7 @@ export const TOOL_FREE_POSTS: BlogPost[] = [
     image: IMG(1181671),
     slug: "rotate-image-online-free",
     title: "How to Rotate an Image Online for Free",
-    metaTitle: "Rotate Image Online Free — No Quality Loss | JPT AI",
+    metaTitle: "Rotate Image Online Free — No Quality Loss | Pixel Shine",
     metaDescription:
       "Rotate an image online free — 90°, 180°, or straighten a sideways photo in one tap. Lossless, no watermark, no sign-up, instant download.",
     excerpt:
@@ -180,7 +180,7 @@ export const TOOL_FREE_POSTS: BlogPost[] = [
     image: IMG(1239291),
     slug: "flip-mirror-image-free",
     title: "How to Flip or Mirror an Image for Free",
-    metaTitle: "Flip / Mirror Image Free Online | JPT AI",
+    metaTitle: "Flip / Mirror Image Free Online | Pixel Shine",
     metaDescription:
       "Flip or mirror an image free online — horizontal or vertical, in one tap. Great for selfies and reflection effects. No watermark, no sign-up.",
     excerpt:
@@ -205,7 +205,7 @@ export const TOOL_FREE_POSTS: BlogPost[] = [
     image: IMG(1261731),
     slug: "add-watermark-to-photos-free",
     title: "How to Add a Watermark to Photos for Free",
-    metaTitle: "Add Watermark to Photos Free Online | JPT AI",
+    metaTitle: "Add Watermark to Photos Free Online | Pixel Shine",
     metaDescription:
       "Add a text watermark to your photos free online. Protect your name or brand — choose position, size, color, and opacity. No sign-up, no tool watermark.",
     excerpt:
@@ -228,7 +228,7 @@ export const TOOL_FREE_POSTS: BlogPost[] = [
     image: IMG(1264210),
     slug: "watermark-photos-in-bulk-free",
     title: "How to Watermark Photos in Bulk for Free",
-    metaTitle: "Bulk Watermark Photos Free Online | JPT AI",
+    metaTitle: "Bulk Watermark Photos Free Online | Pixel Shine",
     metaDescription:
       "Watermark up to 100 photos at once free online. Add a consistent text watermark to a whole gallery or product catalog — no watermark from the tool, no sign-up.",
     excerpt:
@@ -253,7 +253,7 @@ export const TOOL_FREE_POSTS: BlogPost[] = [
     image: IMG(1366919),
     slug: "make-a-meme-free-no-app",
     title: "How to Make a Meme for Free (No App, No Watermark)",
-    metaTitle: "Make a Meme Free Online — No Watermark | JPT AI",
+    metaTitle: "Make a Meme Free Online — No Watermark | Pixel Shine",
     metaDescription:
       "Make a meme free online with classic top and bottom text. No app to install, no watermark, no sign-up — just add your caption and download.",
     excerpt:
@@ -278,7 +278,7 @@ export const TOOL_FREE_POSTS: BlogPost[] = [
     image: IMG(1413412),
     slug: "convert-image-to-pdf-free",
     title: "How to Convert an Image to PDF for Free",
-    metaTitle: "Convert Image to PDF Free Online | JPT AI",
+    metaTitle: "Convert Image to PDF Free Online | Pixel Shine",
     metaDescription:
       "Convert an image to PDF free online in one click. Turn JPG, PNG, or WEBP photos into a clean PDF for forms and sharing — no watermark, no sign-up.",
     excerpt:
@@ -301,7 +301,7 @@ export const TOOL_FREE_POSTS: BlogPost[] = [
     image: IMG(1431822),
     slug: "jpg-to-pdf-free",
     title: "JPG to PDF: How to Convert Free Without Losing Quality",
-    metaTitle: "JPG to PDF Free — No Quality Loss | JPT AI",
+    metaTitle: "JPG to PDF Free — No Quality Loss | Pixel Shine",
     metaDescription:
       "Convert JPG to PDF free online without losing quality. One click, high-quality embedding, no watermark, no sign-up — your file stays on your device.",
     excerpt:

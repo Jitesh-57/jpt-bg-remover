@@ -1,26 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkAuth, checkEntitlement, withCredits } from "@/lib/auth";
-import { geminiEditImage } from "@/lib/gemini";
+import { editImage } from "@/lib/ai-image";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
 /**
- * Creative Apps generation endpoint.
+ * AI app generation endpoint.
  *
- * Each Creative App slug is its own distinct "tool" in the shared 5-trial
- * system (see src/lib/auth.ts) — free-plan users get one free trial per
- * distinct creative app, up to 5 distinct tools total across the whole site.
+ * Credits-only: every generation costs CREDIT_COST, whichever app it came from.
+ * The caller picks the model (nano-banana or gpt-image) and an aspect ratio.
  */
 export async function POST(req: NextRequest) {
   const { session, error } = await checkAuth(req);
   if (error) return error; // 401 when not signed in
 
-  const { dataUrl, imageUrl, prompt, slug } = (await req.json()) as {
+  const { dataUrl, imageUrl, prompt, slug, model, aspectRatio } = (await req.json()) as {
     dataUrl?: string;
     imageUrl?: string;
     prompt?: string;
     slug?: string;
+    model?: string;
+    aspectRatio?: string;
   };
   const src = imageUrl || dataUrl;
   if (!src || !prompt) {
@@ -34,7 +35,7 @@ export async function POST(req: NextRequest) {
   if (blocked) return blocked;
 
   try {
-    const result = await geminiEditImage(src, prompt);
+    const result = await editImage(src, prompt, model, aspectRatio);
     return withCredits({ dataUrl: result }, session!, "ai", req, `creative:${slug}`);
   } catch (e) {
     console.error("[creative-edit]", e);

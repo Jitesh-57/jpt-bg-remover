@@ -15,7 +15,7 @@ export const SEO_POSTS_4: BlogPost[] = [
   P(
     "how-to-remove-a-watermark-from-a-photo",
     "How to Remove a Watermark From a Photo (Free, Online)",
-    "How to Remove a Watermark From a Photo — Free | JPT AI",
+    "How to Remove a Watermark From a Photo — Free | Pixel Shine",
     "Learn how to remove a watermark from a photo online free. Erase logos, text and stock marks with an AI watermark remover — no software, no sign-up.",
     "Removing a watermark used to mean fiddly manual editing. An AI watermark remover now clears logos, text and stamps in a couple of clicks.",
     "2026-07-12", "Guide",
@@ -40,7 +40,7 @@ export const SEO_POSTS_4: BlogPost[] = [
   P(
     "how-to-remove-a-watermark-on-your-phone",
     "How to Remove a Watermark on Your Phone (No App)",
-    "How to Remove a Watermark on Your Phone — Free | JPT AI",
+    "How to Remove a Watermark on Your Phone — Free | Pixel Shine",
     "Remove watermarks from photos on your phone free — no app to install. Upload, tap Remove Watermark, and download a clean image right in your browser.",
     "You don't need an app to remove a watermark on your phone. A browser-based AI remover does it in a few taps, free.",
     "2026-07-13", "Guide",
@@ -65,7 +65,7 @@ export const SEO_POSTS_4: BlogPost[] = [
   P(
     "is-it-legal-to-remove-a-watermark",
     "Is It Legal to Remove a Watermark? (What You Need to Know)",
-    "Is It Legal to Remove a Watermark? — Explained | JPT AI",
+    "Is It Legal to Remove a Watermark? — Explained | Pixel Shine",
     "Is it legal to remove a watermark from an image? Here's a clear, plain-English guide to when it's fine, when it isn't, and how to stay on the right side.",
     "Removing a watermark is legal in plenty of cases — and a problem in others. Here's the plain-English line between the two.",
     "2026-07-14", "Guide",
@@ -90,7 +90,7 @@ export const SEO_POSTS_4: BlogPost[] = [
   P(
     "how-to-remove-text-from-an-image",
     "How to Remove Text From an Image (Free, AI-Powered)",
-    "How to Remove Text From an Image — Free Online | JPT AI",
+    "How to Remove Text From an Image — Free Online | Pixel Shine",
     "Learn how to remove text from an image online free — captions, timestamps, subtitles and overlays erased with AI. No software, no sign-up.",
     "Unwanted text on a photo — a caption, timestamp or subtitle — can be erased cleanly with AI. Here's how to remove text from an image free.",
     "2026-07-15", "Guide",
@@ -115,7 +115,7 @@ export const SEO_POSTS_4: BlogPost[] = [
   P(
     "how-to-remove-a-logo-from-an-image",
     "How to Remove a Logo From an Image (Free, Online)",
-    "How to Remove a Logo From an Image — Free | JPT AI",
+    "How to Remove a Logo From an Image — Free | Pixel Shine",
     "Learn how to remove a logo from an image online free with AI. Erase brand marks and logo watermarks cleanly — no software, no sign-up.",
     "A logo stamped on a photo can be rebuilt away with AI inpainting. Here's how to remove a logo from an image free — on images you own.",
     "2026-07-16", "Guide",
@@ -140,7 +140,7 @@ export const SEO_POSTS_4: BlogPost[] = [
   P(
     "how-to-convert-png-to-webp",
     "How to Convert PNG to WebP (Smaller Files, Same Quality)",
-    "How to Convert PNG to WebP — Free Online | JPT AI",
+    "How to Convert PNG to WebP — Free Online | Pixel Shine",
     "Learn how to convert PNG to WebP online free — much smaller files with the same quality and transparency for faster websites. No sign-up.",
     "WebP files are far smaller than PNG at the same quality — with transparency kept. Here's how to convert PNG to WebP free.",
     "2026-07-17", "Guide",
@@ -153,7 +153,7 @@ export const SEO_POSTS_4: BlogPost[] = [
       { heading: "When to keep PNG", body: `Keep a PNG master for **editing** (WebP support in some older design apps is patchy) and for anywhere that **must** accept PNG. The smart workflow is: edit in PNG, then **export WebP for the website**. That way you get a clean lossless master to work from and a lightweight file for visitors to download.` },
       { heading: "Does WebP lose quality?", body: `Not if you don't want it to — WebP has a **lossless** mode that matches PNG exactly while still saving space. Its **lossy** mode saves even more with a tiny, usually invisible quality trade-off, similar to a high-quality JPEG but smaller. For graphics with transparency, lossless WebP gives you PNG quality at a smaller size.` },
       { heading: "Frequently asked questions", body: FAQ([
-        ["How do I convert PNG to WebP for free?", "Upload your PNG to JPT AI's converter, choose WebP, and download. Free, no watermark, no sign-up."],
+        ["How do I convert PNG to WebP for free?", "Upload your PNG to Pixel Shine's converter, choose WebP, and download. Free, no watermark, no sign-up."],
         ["Does WebP keep transparency?", "Yes — WebP supports an alpha channel, so transparent PNGs stay transparent."],
         ["Is WebP smaller than PNG?", "Usually much smaller at the same quality — a big speed win for websites."],
         ["Will every browser show WebP?", "All modern browsers support WebP. Keep a PNG fallback only if you must support very old software."],
@@ -165,7 +165,7 @@ export const SEO_POSTS_4: BlogPost[] = [
   P(
     "how-to-resize-an-image-for-instagram",
     "How to Resize an Image for Instagram (All Sizes 2026)",
-    "How to Resize an Image for Instagram — Free | JPT AI",
+    "How to Resize an Image for Instagram — Free | Pixel Shine",
     "Learn how to resize an image for Instagram free — feed posts, portraits, stories and reels at the right pixels so nothing gets cropped. No sign-up.",
     "Instagram crops images that aren't the right shape. Here's every Instagram size and how to resize your photo to fit perfectly.",
     "2026-07-18", "Guide",
@@ -190,7 +190,7 @@ export const SEO_POSTS_4: BlogPost[] = [
   P(
     "how-to-reduce-photo-size-for-whatsapp",
     "How to Reduce Photo Size for WhatsApp (Send Full Quality)",
-    "How to Reduce Photo Size for WhatsApp — Free | JPT AI",
+    "How to Reduce Photo Size for WhatsApp — Free | Pixel Shine",
     "Learn how to reduce photo size for WhatsApp free so images send fast and clear. Compress before sending to beat WhatsApp's own quality drop. No sign-up.",
     "WhatsApp compresses your photos hard. Reduce the size yourself first and you control the quality — here's how, free.",
     "2026-07-19", "Guide",
@@ -215,7 +215,7 @@ export const SEO_POSTS_4: BlogPost[] = [
   P(
     "youtube-banner-size-guide",
     "YouTube Banner Size Guide (Perfect Channel Art in 2026)",
-    "YouTube Banner Size — Correct Dimensions & Safe Area | JPT AI",
+    "YouTube Banner Size — Correct Dimensions & Safe Area | Pixel Shine",
     "The correct YouTube banner size and safe area, plus how to crop your channel art free so it looks right on phone, desktop and TV. No sign-up.",
     "YouTube shows your banner differently on phone, desktop and TV. Here's the correct size, the safe area, and how to crop it right.",
     "2026-07-20", "Guide",
@@ -240,7 +240,7 @@ export const SEO_POSTS_4: BlogPost[] = [
   P(
     "how-to-mirror-an-image",
     "How to Mirror an Image (Flip Horizontally, Free)",
-    "How to Mirror an Image — Free Online Flip Tool | JPT AI",
+    "How to Mirror an Image — Free Online Flip Tool | Pixel Shine",
     "Learn how to mirror an image online free — flip a photo horizontally or vertically in one click. Fix selfies and reversed text. No watermark, no sign-up.",
     "Mirroring an image flips it like a reflection — handy for selfies, symmetry and layout. Here's how to mirror a photo free.",
     "2026-07-21", "Guide",

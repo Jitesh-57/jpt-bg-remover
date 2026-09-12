@@ -3,8 +3,10 @@
 import { useRef, useState, useEffect } from "react";
 import FAQAccordion from "@/app/_components/FAQAccordion";
 import { landingImg } from "@/lib/landing-images";
+import { savePendingContext } from "@/lib/pending-image";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
+import BrandLogo from "@/app/_components/BrandLogo";
 
 // AI-generated landing images served from Supabase Storage (public "landing" bucket).
 const thumb = (file: string) => landingImg(file);
@@ -76,7 +78,7 @@ const STEPS = [
   {
     icon: "⚡",
     title: "Edit with AI",
-    desc: "Pick a tool from the sidebar or type a prompt — JPT AI handles the heavy lifting instantly.",
+    desc: "Pick a tool from the sidebar or type a prompt — Pixel Shine handles the heavy lifting instantly.",
   },
   {
     icon: "⬇️",
@@ -126,7 +128,7 @@ const TESTIMONIALS = [
     name: "Priya Sharma",
     role: "E-commerce Owner",
     avatar: "PS",
-    quote: "I was spending 30 minutes per product photo in Photoshop. Now I process 40 images before morning coffee. JPT AI saved my business.",
+    quote: "I was spending 30 minutes per product photo in Photoshop. Now I process 40 images before morning coffee. Pixel Shine saved my business.",
     stars: 5,
   },
   {
@@ -158,7 +160,7 @@ const COMPARISON = [
 
 const FAQS = [
   {
-    q: "Is JPT AI free to use?",
+    q: "Is Pixel Shine free to use?",
     a: "Yes — sign in with your Google account and get 10 free AI credits instantly. No credit card required. Free credits never expire.",
   },
   {
@@ -170,12 +172,12 @@ const FAQS = [
     a: "You can browse and explore the editor without an account. To process images, a free sign-in with Google takes under 10 seconds.",
   },
   {
-    q: "What image formats does JPT AI support?",
-    a: "JPT AI supports JPG, PNG, and WEBP upload. Downloads are available as PNG (with transparency) or JPG.",
+    q: "What image formats does Pixel Shine support?",
+    a: "Pixel Shine supports JPG, PNG, and WEBP upload. Downloads are available as PNG (with transparency) or JPG.",
   },
   {
     q: "How does AI background removal work?",
-    a: "JPT AI uses deep learning image segmentation to detect subjects and separate them from backgrounds with pixel-level precision — no manual selection needed. Works on people, products, objects, and complex scenes.",
+    a: "Pixel Shine uses deep learning image segmentation to detect subjects and separate them from backgrounds with pixel-level precision — no manual selection needed. Works on people, products, objects, and complex scenes.",
   },
   {
     q: "Can I upscale images to 4K online for free?",
@@ -183,7 +185,7 @@ const FAQS = [
   },
   {
     q: "Is this good for e-commerce product photos?",
-    a: "Absolutely. JPT AI is built for e-commerce. Remove backgrounds, replace with white, or generate custom backgrounds for your product photos — ready for Amazon, Flipkart, Shopify, and any marketplace.",
+    a: "Absolutely. Pixel Shine is built for e-commerce. Remove backgrounds, replace with white, or generate custom backgrounds for your product photos — ready for Amazon, Flipkart, Shopify, and any marketplace.",
   },
   {
     q: "What happens to my images? Are they stored?",
@@ -191,10 +193,10 @@ const FAQS = [
   },
   {
     q: "Can I edit images with just a text prompt?",
-    a: "Yes. Type any change — 'make the background blurry', 'add dramatic studio lighting', 'change sky to golden sunset' — and JPT AI applies it instantly.",
+    a: "Yes. Type any change — 'make the background blurry', 'add dramatic studio lighting', 'change sky to golden sunset' — and Pixel Shine applies it instantly.",
   },
   {
-    q: "Can I use JPT AI results commercially?",
+    q: "Can I use Pixel Shine results commercially?",
     a: "Yes. All outputs are yours to use for personal, professional, or commercial purposes with no attribution required.",
   },
   {
@@ -203,7 +205,7 @@ const FAQS = [
   },
   {
     q: "Do I need to install anything?",
-    a: "No. JPT AI runs entirely online. Sign in and start editing — no downloads, no plugins, no desktop software required.",
+    a: "No. Pixel Shine runs entirely online. Sign in and start editing — no downloads, no plugins, no desktop software required.",
   },
 ];
 
@@ -261,7 +263,9 @@ export default function LandingPageClient() {
   const handleUpload = async (file: File) => {
     if (!file.type.startsWith("image/")) return;
     const url = await readFile(file);
-    try { sessionStorage.setItem("jpt_pending_image", url); } catch {}
+    // Via the shared store: a full-resolution data URL overflows sessionStorage.
+    await savePendingContext({ image: url });
+    // Going to the editor is intentional here — this page has no canvas.
     window.location.href = "/editor";
   };
 
@@ -274,10 +278,8 @@ export default function LandingPageClient() {
     if (!file.type.startsWith("image/")) return;
     const url = await readFile(file);
     const tool = pendingFeatureTool.current;
-    try {
-      sessionStorage.setItem("jpt_pending_image", url);
-      sessionStorage.setItem("jpt_pending_tool", tool);
-    } catch {}
+    // Via the shared store: a full-resolution data URL overflows sessionStorage.
+    await savePendingContext({ image: url, tool });
     window.location.href = `/editor?tool=${tool}`;
   };
 
@@ -293,17 +295,24 @@ export default function LandingPageClient() {
     setShowSignIn(true);
   };
 
-  const savePending = () => {
+  const savePending = async () => {
     try {
-      if (pendingType === "upload" && uploadImage) sessionStorage.setItem("jpt_pending_image", uploadImage.url);
+      // Via the shared store: a full-resolution data URL overflows sessionStorage.
+      if (pendingType === "upload" && uploadImage) await savePendingContext({ image: uploadImage.url });
       else if (pendingType === "prompt") {
         if (prompt.trim()) sessionStorage.setItem("jpt_pending_prompt", prompt.trim());
-        if (refImage) sessionStorage.setItem("jpt_pending_image", refImage.url);
+        // Via the shared store: a full-resolution data URL overflows sessionStorage.
+        if (refImage) await savePendingContext({ image: refImage.url });
       }
     } catch {}
   };
 
-  const handleOAuthRedirect = () => { savePending(); window.location.href = "/api/auth/google?next=/editor"; };
+  const handleOAuthRedirect = async () => {
+    await savePending();
+    // Return to this page, not the editor — the upload is preserved either way.
+    const next = (window.location.pathname + window.location.search) || "/";
+    window.location.href = `/api/auth/google?next=${encodeURIComponent(next)}`;
+  };
 
   const handleEmailAuth = async () => {
     if (!authEmail.trim() || !authPassword.trim()) { setAuthError("Email and password required"); return; }
@@ -317,8 +326,8 @@ export default function LandingPageClient() {
       const data = await res.json() as { ok?: boolean; error?: string; needsConfirmation?: boolean };
       if (!res.ok) { setAuthError(data.error || "Authentication failed"); return; }
       if (data.needsConfirmation) { setAuthError("✅ Check your email for a confirmation link, then sign in."); return; }
-      savePending();
-      window.location.href = "/editor";
+      await savePending();
+      window.location.reload();
     } catch { setAuthError("Network error. Please try again."); }
     finally { setAuthLoading(false); }
   };
@@ -409,15 +418,15 @@ export default function LandingPageClient() {
           </div>
 
           {/* Hero showcase — AI before/after with prompt callouts */}
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginTop: 18, background: "var(--accent-soft)", color: "var(--accent)", fontSize: 14, fontWeight: 800, padding: "7px 16px", borderRadius: 100, border: "1px solid rgba(15,157,107,0.2)" }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginTop: 18, background: "var(--accent-soft)", color: "var(--accent)", fontSize: 14, fontWeight: 800, padding: "7px 16px", borderRadius: 100, border: "1px solid var(--accent-border)" }}>
             ✨ See what you can do with prompts
           </div>
           <div style={s.heroShowcase}>
-            <img src={HERO_SHOWCASE} alt="Before and after — raw selfie transformed by JPT AI with text prompts" style={s.heroShowcaseImg} loading="eager" />
+            <img src={HERO_SHOWCASE} alt="Before and after — raw selfie transformed by Pixel Shine with text prompts" style={s.heroShowcaseImg} loading="eager" />
 
             {/* BEFORE / AFTER labels */}
             <div style={{ position: "absolute", bottom: 12, left: 12, background: "rgba(0,0,0,0.6)", color: "#fff", fontSize: 12, fontWeight: 800, padding: "4px 12px", borderRadius: 6, letterSpacing: 1 }}>BEFORE</div>
-            <div style={s.heroShowcaseBadge}>✦ Real result from JPT AI</div>
+            <div style={s.heroShowcaseBadge}>✦ Real result from Pixel Shine</div>
 
             {/* Prompt callout chips over the AFTER (right) half */}
             {[
@@ -426,11 +435,11 @@ export default function LandingPageClient() {
               { top: "76%", label: "✨ Style", prompt: "“cinematic warm glow”" },
             ].map((c) => (
               <div key={c.label} style={{ position: "absolute", top: c.top, right: "3%", display: "flex", alignItems: "center", gap: 6, maxWidth: "44%" }}>
-                <div style={{ background: "rgba(12,12,22,0.82)", borderRadius: 10, padding: "6px 10px", boxShadow: "0 4px 14px rgba(0,0,0,0.25)", border: "1px solid rgba(15,157,107,0.3)" }}>
+                <div style={{ background: "rgba(12,12,22,0.82)", borderRadius: 10, padding: "6px 10px", boxShadow: "0 4px 14px rgba(0,0,0,0.25)", border: "1px solid rgba(255,106,26,0.40)" }}>
                   <div style={{ fontSize: 11, fontWeight: 800, color: "var(--accent)", lineHeight: 1.2 }}>{c.label}</div>
                   <div style={{ fontSize: 11, color: "var(--text-muted)", lineHeight: 1.2, whiteSpace: "nowrap" as const }}>{c.prompt}</div>
                 </div>
-                <div style={{ width: 7, height: 7, borderRadius: "50%", background: "var(--accent)", flexShrink: 0, boxShadow: "0 0 0 3px rgba(15,157,107,0.3)" }} />
+                <div style={{ width: 7, height: 7, borderRadius: "50%", background: "var(--accent-fill)", flexShrink: 0, boxShadow: "0 0 0 3px rgba(255,106,26,0.40)" }} />
               </div>
             ))}
           </div>
@@ -472,7 +481,7 @@ export default function LandingPageClient() {
             {FEATURES.map((f) => (
               <div key={f.title} style={{ ...s.featureCard, cursor: "pointer" }}
                 onClick={() => handleFeatureCardClick(f.tool)}
-                onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = "0 8px 32px rgba(15,157,107,0.18)"; (e.currentTarget as HTMLDivElement).style.transform = "translateY(-3px)"; }}
+                onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = "0 8px 32px var(--accent-soft)"; (e.currentTarget as HTMLDivElement).style.transform = "translateY(-3px)"; }}
                 onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = "0 2px 14px rgba(0,0,0,0.05)"; (e.currentTarget as HTMLDivElement).style.transform = "none"; }}>
                 <div style={s.featureImgWrap}>
                   {f.tool === "remove-bg" ? (
@@ -519,7 +528,7 @@ export default function LandingPageClient() {
       </section>
 
       {/* ── How it works ───────────────────────────────────────────────────── */}
-      <section style={{ ...s.section, background: "#F4F5FB" }}>
+      <section style={{ ...s.section, background: "var(--surface-2)" }}>
         <div style={{ ...s.sectionInner, textAlign: "center" }}>
           <div style={s.sectionLabel}>HOW IT WORKS</div>
           <h2 style={s.h2}>{t.stepsH2}</h2>
@@ -542,7 +551,7 @@ export default function LandingPageClient() {
         <div style={s.sectionInner}>
           <div style={s.sectionLabel}>USE CASES</div>
           <h2 style={s.h2}>Built for creators, teams, and businesses</h2>
-          <p style={s.sectionSub}>Whatever you create, JPT AI makes it faster — and the numbers prove it.</p>
+          <p style={s.sectionSub}>Whatever you create, Pixel Shine makes it faster — and the numbers prove it.</p>
           <div style={s.useCaseGrid}>
             {USE_CASES.map((u) => (
               <div key={u.title} style={s.useCaseCard}>
@@ -561,7 +570,7 @@ export default function LandingPageClient() {
       </section>
 
       {/* ── Testimonials ───────────────────────────────────────────────────── */}
-      <section style={{ ...s.section, background: "#F4F5FB" }}>
+      <section style={{ ...s.section, background: "var(--surface-2)" }}>
         <div style={s.sectionInner}>
           <div style={s.sectionLabel}>TESTIMONIALS</div>
           <h2 style={s.h2}>Loved by creators worldwide</h2>
@@ -592,14 +601,14 @@ export default function LandingPageClient() {
       <section style={s.section}>
         <div style={s.sectionInner}>
           <div style={s.sectionLabel}>COMPARISON</div>
-          <h2 style={s.h2}>JPT AI vs the alternatives</h2>
+          <h2 style={s.h2}>Pixel Shine vs the alternatives</h2>
           <p style={s.sectionSub}>One tool. Everything included. No hidden paywalls.</p>
           <div style={{ overflowX: "auto" }}>
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
               <thead>
                 <tr style={{ borderBottom: "2px solid var(--border)" }}>
                   <th style={{ textAlign: "left", padding: "12px 16px", color: "var(--text-muted)", fontWeight: 700, fontSize: 13 }}>Feature</th>
-                  <th style={{ textAlign: "center", padding: "12px 16px", color: "var(--accent)", fontWeight: 900, fontSize: 13, background: "var(--accent-soft)", borderRadius: "12px 12px 0 0" }}>✦ JPT AI</th>
+                  <th style={{ textAlign: "center", padding: "12px 16px", color: "var(--accent)", fontWeight: 900, fontSize: 13, background: "var(--accent-soft)", borderRadius: "12px 12px 0 0" }}>✦ Pixel Shine</th>
                   <th style={{ textAlign: "center", padding: "12px 16px", color: "var(--text-muted)", fontWeight: 700, fontSize: 13 }}>Photoshop</th>
                   <th style={{ textAlign: "center", padding: "12px 16px", color: "var(--text-muted)", fontWeight: 700, fontSize: 13 }}>remove.bg</th>
                 </tr>
@@ -626,15 +635,15 @@ export default function LandingPageClient() {
       </section>
 
       {/* ── SEO Rich Content ───────────────────────────────────────────────── */}
-      <section style={{ ...s.section, background: "#F4F5FB" }}>
+      <section style={{ ...s.section, background: "var(--surface-2)" }}>
         <div style={{ maxWidth: 860, margin: "0 auto" }}>
-          <div style={s.sectionLabel}>ABOUT JPT AI</div>
+          <div style={s.sectionLabel}>ABOUT Pixel Shine</div>
           <h2 style={{ ...s.h2, marginBottom: 28 }}>The best free AI image editor online — no watermark, no signup friction</h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(380px, 100%), 1fr))", gap: 32, fontSize: 15, color: "var(--text-muted)", lineHeight: 1.8 }}>
             <div>
               <h3 style={{ fontSize: 17, fontWeight: 800, color: "var(--text)", marginBottom: 10 }}>Free AI Background Remover</h3>
-              <p style={{ margin: "0 0 16px" }}>JPT AI&apos;s background remover uses deep learning to detect and separate subjects from any background in seconds. Whether you&apos;re editing product photos for e-commerce, removing backgrounds from portraits, or preparing images for marketing materials — our AI delivers clean cutouts with no manual effort.</p>
-              <p style={{ margin: 0 }}>Unlike other online background removers, JPT AI outputs full-resolution PNG with transparency — no watermarks, no degraded quality, free to use.</p>
+              <p style={{ margin: "0 0 16px" }}>Pixel Shine&apos;s background remover uses deep learning to detect and separate subjects from any background in seconds. Whether you&apos;re editing product photos for e-commerce, removing backgrounds from portraits, or preparing images for marketing materials — our AI delivers clean cutouts with no manual effort.</p>
+              <p style={{ margin: 0 }}>Unlike other online background removers, Pixel Shine outputs full-resolution PNG with transparency — no watermarks, no degraded quality, free to use.</p>
             </div>
             <div>
               <h3 style={{ fontSize: 17, fontWeight: 800, color: "var(--text)", marginBottom: 10 }}>AI Image Upscaler — Upscale to 4K Online Free</h3>
@@ -643,13 +652,13 @@ export default function LandingPageClient() {
             </div>
             <div>
               <h3 style={{ fontSize: 17, fontWeight: 800, color: "var(--text)", marginBottom: 10 }}>Edit Images with Text Prompts</h3>
-              <p style={{ margin: "0 0 16px" }}>Describe any edit in plain English and JPT AI makes it happen. &ldquo;Make the background a sunset&rdquo;, &ldquo;add professional studio lighting&rdquo;, &ldquo;remove the object on the left&rdquo; — no Photoshop skills required.</p>
+              <p style={{ margin: "0 0 16px" }}>Describe any edit in plain English and Pixel Shine makes it happen. &ldquo;Make the background a sunset&rdquo;, &ldquo;add professional studio lighting&rdquo;, &ldquo;remove the object on the left&rdquo; — no Photoshop skills required.</p>
               <p style={{ margin: 0 }}>This is the fastest way to edit photos online for non-designers, social media managers, and anyone who needs quick, high-quality image edits without learning complex software.</p>
             </div>
             <div>
               <h3 style={{ fontSize: 17, fontWeight: 800, color: "var(--text)", marginBottom: 10 }}>AI Headshots & Professional Photos</h3>
               <p style={{ margin: "0 0 16px" }}>Create professional AI headshots for LinkedIn, company directories, and resumes. Remove distracting backgrounds, replace with clean office or outdoor environments, and look polished in every photo.</p>
-              <p style={{ margin: 0 }}>LinkedIn profiles with professional headshots get 21× more profile views. JPT AI makes it possible without expensive photography sessions.</p>
+              <p style={{ margin: 0 }}>LinkedIn profiles with professional headshots get 21× more profile views. Pixel Shine makes it possible without expensive photography sessions.</p>
             </div>
           </div>
         </div>
@@ -659,7 +668,7 @@ export default function LandingPageClient() {
       <section style={{ ...s.section, background: "var(--surface)" }}>
         <div style={{ ...s.sectionInner, maxWidth: 780 }}>
           <div style={s.sectionLabel}>FAQ</div>
-          <h2 style={{ ...s.h2, marginBottom: 40 }}>Frequently asked questions about JPT AI</h2>
+          <h2 style={{ ...s.h2, marginBottom: 40 }}>Frequently asked questions about Pixel Shine</h2>
           <FAQAccordion faqs={FAQS} />
         </div>
       </section>
@@ -669,10 +678,10 @@ export default function LandingPageClient() {
         <div style={s.ctaInner}>
           <h2 style={s.ctaH2}>{t.ctaH2}</h2>
           <p style={s.ctaSub}>{t.ctaPara}</p>
-          <a href="/api/auth/google?next=/editor" style={s.ctaBtn}>
+          <button onClick={handleOAuthRedirect} style={{ ...s.ctaBtn, border: "none", cursor: "pointer", fontFamily: "inherit" }}>
             <GoogleIcon />
             {t.getStarted}
-          </a>
+          </button>
         </div>
       </section>
 
@@ -680,14 +689,13 @@ export default function LandingPageClient() {
       <footer style={s.footer}>
         <div style={s.footerInner}>
           <div style={s.footerBrand}>
-            <span>✦</span>
-            <span style={{ fontWeight: 800 }}>JPT AI</span>
+            <BrandLogo height={30} variant="wordmark" />
           </div>
           <div style={s.footerLinks}>
             <a href="/editor" style={s.footerLink}>AI Editor</a>
             <a href="/headshot" style={s.footerLink}>AI Headshot</a>
           </div>
-          <div style={s.footerCopy}>© 2025 JPT AI. All rights reserved.</div>
+          <div style={s.footerCopy}>© 2025 Pixel Shine. All rights reserved.</div>
         </div>
       </footer>
 
@@ -699,7 +707,7 @@ export default function LandingPageClient() {
               {pendingType === "upload" && uploadImage
                 ? <div style={{ marginBottom: 12, borderRadius: 10, overflow: "hidden", maxHeight: 110 }}><img src={uploadImage.url} alt="preview" style={{ width: "100%", height: 110, objectFit: "cover" }} /></div>
                 : <div style={{ fontSize: 40, marginBottom: 8 }}>✨</div>}
-              <div style={{ fontWeight: 900, fontSize: 20, color: "var(--text)" }}>Sign in to JPT AI</div>
+              <div style={{ fontWeight: 900, fontSize: 20, color: "var(--text)" }}>Sign in to Pixel Shine</div>
               <p style={{ fontSize: 13, color: "var(--text-muted)", margin: "4px 0 0" }}>Get <strong>10 free AI credits</strong> to start editing</p>
             </div>
 
@@ -765,7 +773,7 @@ const s: Record<string, React.CSSProperties> = {
   // Hero
   hero: { background: "linear-gradient(160deg, var(--accent-soft) 0%, #FAFAFE 60%, var(--surface) 100%)", padding: "72px 24px 80px", textAlign: "center" },
   heroInner: { maxWidth: 760, margin: "0 auto", display: "flex", flexDirection: "column", alignItems: "center", gap: 20 },
-  badge: { display: "inline-block", background: "rgba(15,157,107,0.1)", color: "var(--accent)", border: "1px solid rgba(15,157,107,0.2)", borderRadius: 100, padding: "6px 16px", fontSize: 13, fontWeight: 700 },
+  badge: { display: "inline-block", background: "var(--accent-soft)", color: "var(--accent)", border: "1px solid var(--accent-border)", borderRadius: 100, padding: "6px 16px", fontSize: 13, fontWeight: 700 },
   h1: { margin: 0, fontSize: "clamp(36px, 6vw, 58px)", fontWeight: 900, letterSpacing: "-1.5px", lineHeight: 1.1 },
   h1Accent: { background: "linear-gradient(135deg, var(--accent), var(--accent-2))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" },
   heroPara: { margin: 0, fontSize: 18, color: "var(--text-muted)", lineHeight: 1.7, maxWidth: 580 },
@@ -810,7 +818,7 @@ const s: Record<string, React.CSSProperties> = {
   featureDesc: { margin: 0, fontSize: 14, color: "var(--text-muted)", lineHeight: 1.65 },
 
   // Hero showcase
-  heroShowcase: { position: "relative", width: "100%", maxWidth: 880, marginTop: 16, borderRadius: 20, overflow: "hidden", boxShadow: "0 20px 60px rgba(15,157,107,0.25)", border: "1px solid rgba(15,157,107,0.15)" },
+  heroShowcase: { position: "relative", width: "100%", maxWidth: 880, marginTop: 16, borderRadius: 20, overflow: "hidden", boxShadow: "0 20px 60px var(--accent-border)", border: "1px solid var(--accent-soft)" },
   heroShowcaseImg: { width: "100%", display: "block" },
   heroShowcaseBadge: { position: "absolute", bottom: 14, right: 14, background: "rgba(15,23,42,0.85)", color: "#fff", fontSize: 12, fontWeight: 700, padding: "6px 12px", borderRadius: 100, backdropFilter: "blur(4px)" },
 
@@ -853,7 +861,7 @@ const s: Record<string, React.CSSProperties> = {
   modalBox: { background: "var(--surface)", borderRadius: 20, padding: "32px 28px", maxWidth: 420, width: "100%", textAlign: "center", boxShadow: "0 32px 80px rgba(0,0,0,0.25)" },
   modalTitle: { fontSize: 22, fontWeight: 900, letterSpacing: "-0.4px", marginBottom: 10 },
   modalSub: { margin: "0 0 16px", fontSize: 14, color: "var(--text-muted)", lineHeight: 1.6 },
-  promptPreview: { background: "#F4F5FB", borderRadius: 8, padding: "10px 14px", fontSize: 13, color: "var(--text-muted)", fontStyle: "italic", marginBottom: 16, textAlign: "left" },
+  promptPreview: { background: "var(--surface-2)", borderRadius: 8, padding: "10px 14px", fontSize: 13, color: "var(--text-muted)", fontStyle: "italic", marginBottom: 16, textAlign: "left" },
   modalFeatures: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 20, textAlign: "left" },
   modalFeatureRow: { display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "var(--text-muted)" },
   modalGoogleBtn: { display: "flex", alignItems: "center", justifyContent: "center", gap: 10, background: "var(--surface)", border: "1.5px solid #DDD", borderRadius: 10, padding: "12px 20px", fontSize: 14, fontWeight: 700, color: "var(--text-muted)", cursor: "pointer", width: "100%", boxSizing: "border-box", boxShadow: "0 1px 4px rgba(0,0,0,0.08)" },

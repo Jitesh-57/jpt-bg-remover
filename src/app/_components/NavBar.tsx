@@ -6,7 +6,9 @@ import { createSupabaseClient } from "@/lib/supabase";
 import { trackSignUp, setAnalyticsUser, trackSignInClicked, trackSignInFailed, trackPaymentPopupTriggered } from "@/lib/analytics";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
+import { persistAuthContext } from "@/lib/pending-image";
 import ToolIcon, { iconKeyForHref } from "@/app/editor/ToolIcon";
+import BrandLogo from "./BrandLogo";
 
 const PricingModal = lazy(() => import("./PricingModal"));
 
@@ -129,15 +131,12 @@ export default function NavBar() {
   const closeModal = () => { setShowModal(false); setAuthError(""); };
   // Let the current page (e.g. the editor) persist its in-memory context
   // (uploaded image + active tool) so it survives the sign-in round-trip.
-  const persistPageContext = () => {
-    try { (window as unknown as { __jptPersistContext?: () => void }).__jptPersistContext?.(); } catch {}
-  };
-  const handleGoogleSignIn = () => {
+  const handleGoogleSignIn = async () => {
     trackSignUp("google");
-    persistPageContext();
-    const current = window.location.pathname + window.location.search;
-    // On the homepage there's nothing to return to — send to the editor.
-    const next = current === "/" || current === "" ? "/editor" : current;
+    // Awaited: the stash may go to IndexedDB, and we navigate immediately after.
+    await persistAuthContext();
+    // Come back to whichever page they signed in from, upload and all.
+    const next = (window.location.pathname + window.location.search) || "/";
     window.location.href = `/api/auth/google?next=${encodeURIComponent(next)}`;
   };
   const handleLogout = async () => {
@@ -158,9 +157,10 @@ export default function NavBar() {
       if (!res.ok) { trackSignInFailed("email", data.error || "unknown"); setAuthError(data.error || "Authentication failed"); return; }
       if (data.needsConfirmation) { setAuthError("✅ Check your email and click the confirmation link, then sign in."); return; }
       trackSignUp(mode === "signup" ? "email_signup" : "email_login");
-      persistPageContext();
-      const current = window.location.pathname + window.location.search;
-      window.location.href = current === "/" || current === "" ? "/editor" : current;
+      // Email sign-in reloads the page too, so the upload needs the same stash.
+      await persistAuthContext();
+      // Reload the page they signed in from rather than sending them elsewhere.
+      window.location.reload();
     } catch { trackSignInFailed("email", "network_error"); setAuthError("Network error. Please try again."); }
     finally { setAuthLoading(false); }
   };
@@ -174,15 +174,14 @@ export default function NavBar() {
 
           {/* Brand — never wraps, never shrinks (the larger base font used to break this on phones) */}
           <a href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none", marginRight: 8, flexShrink: 0, whiteSpace: "nowrap" }}>
-            <span style={{ fontSize: 18, fontWeight: 900, color: "var(--accent)" }}>✦</span>
-            <span style={{ fontSize: 16, fontWeight: 900, color: "var(--text)", letterSpacing: "-0.02em", whiteSpace: "nowrap" }}>JPT AI</span>
+            <BrandLogo height={34} variant="wordmark" />
           </a>
 
           {/* AI Tools Dropdown */}
           <div ref={dropdownRef} style={{ position: "relative" }}>
             <button
               onClick={() => setShowToolsDropdown(v => !v)}
-              style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", background: showToolsDropdown ? "rgba(15,157,107,0.15)" : "transparent", border: "none", borderRadius: 8, color: "var(--text-muted)", fontSize: 14, fontWeight: 600, cursor: "pointer" }}
+              style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", background: showToolsDropdown ? "var(--accent-soft)" : "transparent", border: "none", borderRadius: 8, color: "var(--text-muted)", fontSize: 14, fontWeight: 600, cursor: "pointer" }}
             >
               {PAID_FEATURES_ENABLED ? "AI Tools" : "Tools"}
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ transform: showToolsDropdown ? "rotate(180deg)" : "none", opacity: 0.7 }}>
@@ -268,9 +267,9 @@ export default function NavBar() {
           {/* Creative Apps — standalone navbar link (hidden in free-only mode) */}
           {PAID_FEATURES_ENABLED && (
             <a href="/creative"
-              style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", color: "var(--text-muted)", fontSize: 14, fontWeight: 600, textDecoration: "none", borderRadius: 8, background: "rgba(15,157,107,0.12)", border: "1px solid rgba(15,157,107,0.25)" }}
-              onMouseEnter={e => { e.currentTarget.style.background = "rgba(15,157,107,0.22)"; e.currentTarget.style.borderColor = "rgba(15,157,107,0.5)"; }}
-              onMouseLeave={e => { e.currentTarget.style.background = "rgba(15,157,107,0.12)"; e.currentTarget.style.borderColor = "rgba(15,157,107,0.25)"; }}>
+              style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", color: "var(--text-muted)", fontSize: 14, fontWeight: 600, textDecoration: "none", borderRadius: 8, background: "var(--accent-soft)", border: "1px solid var(--accent-border)" }}
+              onMouseEnter={e => { e.currentTarget.style.background = "var(--accent-border)"; e.currentTarget.style.borderColor = "rgba(255,106,26,0.40)"; }}
+              onMouseLeave={e => { e.currentTarget.style.background = "var(--accent-soft)"; e.currentTarget.style.borderColor = "var(--accent-border)"; }}>
               <span style={{ fontSize: 13 }}>✦</span>
               Creative Apps
             </a>
@@ -278,26 +277,26 @@ export default function NavBar() {
 
           <div style={{ flex: 1 }} />
 
-          {/* Go Unlimited — single $3 / 30-day plan. Shows active status once owned. */}
+          {/* Credits CTA — shows the live balance once the user has one. */}
           <a href="/pricing"
-            style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 15px", color: "#fff", fontSize: 14, fontWeight: 800, textDecoration: "none", borderRadius: 999, background: user?.plan === "unlimited" ? "linear-gradient(120deg,var(--success),var(--accent-2))" : "linear-gradient(120deg,var(--accent),var(--accent-2))", border: "1px solid rgba(255,255,255,0.15)", boxShadow: "0 4px 14px rgba(15,157,107,0.4)" }}
+            style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 15px", color: "#fff", fontSize: 14, fontWeight: 800, textDecoration: "none", borderRadius: 999, background: (user?.credits ?? 0) > 0 ? "linear-gradient(120deg,var(--success),var(--accent-2))" : "linear-gradient(120deg,var(--accent),var(--accent-2))", border: "1px solid rgba(255,255,255,0.15)", boxShadow: "0 4px 14px rgba(255,106,26,0.40)" }}
             onMouseEnter={e => (e.currentTarget.style.opacity = "0.9")}
             onMouseLeave={e => (e.currentTarget.style.opacity = "1")}>
             <span style={{ fontSize: 13 }}>✨</span>
-            {user?.plan === "unlimited" ? "Unlimited" : "Go Unlimited"}
+            {(user?.credits ?? 0) > 0 ? `${user!.credits} credits` : "Buy credits"}
           </a>
 
           {/* Auth */}
           {user ? (
             <div style={{ position: "relative" }}>
               <button onClick={() => setShowMenu(!showMenu)}
-                style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 10px 6px 6px", background: "rgba(15,157,107,0.15)", border: "1px solid rgba(15,157,107,0.3)", borderRadius: 24, cursor: "pointer" }}>
+                style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 10px 6px 6px", background: "var(--accent-soft)", border: "1px solid rgba(255,106,26,0.40)", borderRadius: 24, cursor: "pointer" }}>
                 {user.picture
                   ? <img src={user.picture} alt="" style={{ width: 28, height: 28, borderRadius: "50%", flexShrink: 0 }} />
-                  : <div style={{ width: 28, height: 28, borderRadius: "50%", background: "var(--accent)", color: "#fff", fontSize: 13, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>{user.name[0]}</div>}
+                  : <div style={{ width: 28, height: 28, borderRadius: "50%", background: "var(--accent-fill)", color: "#fff", fontSize: 13, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>{user.name[0]}</div>}
                 <span style={{ fontSize: 13, fontWeight: 600, color: "var(--text-muted)" }}>{user.name.split(" ")[0]}</span>
                 {PAID_FEATURES_ENABLED && (
-                  <span style={{ fontSize: 11, background: "var(--accent)", color: "#fff", padding: "2px 8px", borderRadius: 12, fontWeight: 700 }}>
+                  <span style={{ fontSize: 11, background: "var(--accent-fill)", color: "#fff", padding: "2px 8px", borderRadius: 12, fontWeight: 700 }}>
                     {user.plan === "free" ? `🎁 ${user.trialsRemaining}` : `⚡ ${user.credits}`}
                   </span>
                 )}
@@ -314,7 +313,7 @@ export default function NavBar() {
                       <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 5 }}>You&apos;ve used all {FREE_TRIAL_LIMIT} free trials, one per tool.</div>
                       <div style={{ fontSize: 11, color: "var(--accent)", fontWeight: 600, marginTop: 4 }}>Unlock all AI features with a paid plan</div>
                       <button onClick={() => { trackPaymentPopupTriggered("trial_exhausted"); setShowPricing(true); setShowMenu(false); }}
-                        style={{ marginTop: 8, width: "100%", padding: "7px 12px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
+                        style={{ marginTop: 8, width: "100%", padding: "7px 12px", background: "var(--accent-fill)", color: "#fff", border: "none", borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
                         Buy Paid Plan
                       </button>
                     </div>
@@ -371,7 +370,7 @@ export default function NavBar() {
                     <div style={{ fontSize: 11, fontWeight: 700, color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>🎁 Free trials used up</div>
                     <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 5 }}>You&apos;ve used all {FREE_TRIAL_LIMIT} free trials, one per tool.</div>
                     <button onClick={() => { trackPaymentPopupTriggered("trial_exhausted"); setShowPricing(true); setShowMenu(false); }}
-                      style={{ marginTop: 8, width: "100%", padding: "10px 12px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+                      style={{ marginTop: 8, width: "100%", padding: "10px 12px", background: "var(--accent-fill)", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
                       Buy Paid Plan
                     </button>
                   </div>
@@ -413,7 +412,7 @@ export default function NavBar() {
               <button onClick={openModal} style={{ padding: "7px 16px", background: "transparent", color: "var(--text-muted)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
                 {t.navSignIn}
               </button>
-              <button onClick={openModal} style={{ padding: "7px 16px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer", boxShadow: "0 2px 8px rgba(15,157,107,0.4)" }}>
+              <button onClick={openModal} style={{ padding: "7px 16px", background: "var(--accent-fill)", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer", boxShadow: "0 2px 8px rgba(255,106,26,0.40)" }}>
                 {t.getStarted}
               </button>
             </div>
@@ -439,7 +438,7 @@ export default function NavBar() {
           <div onClick={e => e.stopPropagation()} style={{ background: "var(--surface)", borderRadius: 20, padding: 32, maxWidth: 440, width: "100%", boxShadow: "0 24px 80px rgba(0,0,0,0.3)" }}>
             <div style={{ textAlign: "center", marginBottom: 24 }}>
               <div style={{ fontSize: 44, marginBottom: 8 }}>✨</div>
-              <div style={{ fontWeight: 900, fontSize: 22, color: "var(--text)", marginBottom: 6 }}>Sign in to JPT AI</div>
+              <div style={{ fontWeight: 900, fontSize: 22, color: "var(--text)", marginBottom: 6 }}>Sign in to Pixel Shine</div>
               <p style={{ fontSize: 14, color: "var(--text-muted)", margin: 0 }}>Get <strong>10 free AI credits</strong> to start editing</p>
             </div>
             <div style={{ display: "flex", background: "var(--surface-2)", borderRadius: 10, padding: 3, marginBottom: 22 }}>

@@ -5,12 +5,12 @@ const BASE = "https://www.sjpt.io";
 const URL = `${BASE}${CREATIVE_BASE}`;
 
 export const metadata: Metadata = {
-  title: { absolute: "JPT AI Creative Apps — Free AI Photo Generators Online | JPT AI" },
+  title: { absolute: "Pixel Shine Creative Apps — Free AI Photo Generators Online | Pixel Shine" },
   description:
-    "Free JPT AI Creative apps — saree photoshoot, 3D figurine, retro Bollywood, pet portrait, anime and more. Upload a photo and get the result right on the page. No app, no watermark.",
+    "Free Pixel Shine Creative apps — saree photoshoot, 3D figurine, retro Bollywood, pet portrait, anime and more. Upload a photo and get the result right on the page. No app, no watermark.",
   keywords: "ai creative apps, ai photo generator free, ai photoshoot online, ai photo trends, free ai photo editor apps",
   alternates: { canonical: URL },
-  openGraph: { title: "JPT AI Creative Apps — Free AI Photo Generators", description: "Upload a photo and get viral AI results right on the page. Free, no watermark.", url: URL },
+  openGraph: { title: "Pixel Shine Creative Apps — Free AI Photo Generators", description: "Upload a photo and get viral AI results right on the page. Free, no watermark.", url: URL },
 };
 
 const itemListLd = {
@@ -27,13 +27,13 @@ export default function CreativeHub() {
         <section style={{ background: "linear-gradient(160deg,var(--surface-2) 0%,var(--surface) 55%,var(--success-soft) 100%)", padding: "80px 24px 48px", textAlign: "center" }}>
           <div style={{ maxWidth: 800, margin: "0 auto" }}>
             <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "var(--accent-soft)", color: "var(--accent)", fontWeight: 700, fontSize: 12, borderRadius: 20, padding: "6px 14px", marginBottom: 24, letterSpacing: "0.06em", textTransform: "uppercase" }}>
-              ✦ JPT AI Creative Apps
+              ✦ Pixel Shine Creative Apps
             </div>
             <h1 style={{ fontSize: "clamp(2.2rem,5vw,3.4rem)", fontWeight: 900, color: "var(--text)", lineHeight: 1.1, letterSpacing: "-0.03em", margin: "0 0 18px" }}>
-              Viral AI Photo Apps — Free &amp; Instant
+              Viral AI Photo Apps — One Tap, No Prompt
             </h1>
             <p style={{ fontSize: "clamp(1rem,2vw,1.2rem)", color: "var(--text-muted)", lineHeight: 1.7, maxWidth: 620, margin: "0 auto" }}>
-              Upload a photo and get the result right on the page — saree photoshoots, 3D figurines, retro portraits, pet art and more. No app to download, no watermark.
+              Upload a photo and get the result right on the page — saree photoshoots, 3D figurines, retro portraits, pet art and more. Each runs on credits, with no app to download and no watermark.
             </p>
           </div>
         </section>
@@ -46,12 +46,12 @@ export default function CreativeHub() {
                   <div style={{ aspectRatio: "16 / 10", background: `linear-gradient(135deg, ${a.gradient[0]}, ${a.gradient[1]})`, position: "relative" }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={previewUrl(a.slug)} alt={`${a.h1} before and after example`} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-                    <span style={{ position: "absolute", bottom: 10, right: 10, padding: "5px 12px", background: "rgba(255,255,255,0.92)", color: "var(--accent)", fontSize: 11, fontWeight: 800, borderRadius: 8 }}>{a.emoji} {a.badge}</span>
+                    <span style={{ position: "absolute", bottom: 10, right: 10, padding: "5px 12px", background: "rgba(11,11,14,0.82)", color: "var(--accent)", border: "1px solid var(--accent-border)", backdropFilter: "blur(6px)", fontSize: 11, fontWeight: 800, borderRadius: 8 }}>{a.emoji} {a.badge}</span>
                   </div>
                   <div style={{ padding: "18px 18px 20px" }}>
                     <div style={{ fontSize: 16, fontWeight: 800, color: "var(--text)", marginBottom: 6, lineHeight: 1.3 }}>{a.h1}</div>
                     <p style={{ margin: 0, fontSize: 13.5, color: "var(--text-muted)", lineHeight: 1.6 }}>{a.intro}</p>
-                    <div style={{ marginTop: 14, fontSize: 13, fontWeight: 800, color: "var(--accent)" }}>Try free →</div>
+                    <div style={{ marginTop: 14, fontSize: 13, fontWeight: 800, color: "var(--accent)" }}>Open app →</div>
                   </div>
                 </a>
               ))}

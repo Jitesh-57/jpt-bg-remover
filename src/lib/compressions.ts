@@ -50,7 +50,7 @@ export function buildCompressContent(c: CompressTarget): CompressContent {
     label: L,
     kb: c.kb,
     h1: `Compress Image to ${L}`,
-    title: `Compress Image to ${L} — Free Online Image Compressor | JPT AI`,
+    title: `Compress Image to ${L} — Free Online Image Compressor | Pixel Shine`,
     metaDescription: `Compress an image to ${L} or less online free. Upload a JPG or PNG and reduce it to exactly ${L} in seconds — no watermark, no sign-up. Perfect for forms, uploads, and email.`,
     keywords: `compress image to ${L.toLowerCase()}, reduce image size to ${L.toLowerCase()}, image compressor ${L.toLowerCase()}, compress photo to ${L.toLowerCase()}, resize image to ${L.toLowerCase()}`,
     intro: `Need to compress an image to ${L}? This free online compressor reduces any JPG or PNG to ${L} or smaller in seconds — right in your browser, with no watermark, no sign-up, and no software. Just upload, and the tool automatically finds the right quality (and downscales if needed) to hit your target size while keeping the image as sharp as possible.`,
@@ -61,7 +61,7 @@ export function buildCompressContent(c: CompressTarget): CompressContent {
       { t: "Download the smaller file", d: `Save your compressed image at ${L} or under. No watermark, no quality-wrecking, and no limit on how many you compress.` },
     ],
     faqs: [
-      { q: `How do I compress an image to ${L}?`, a: `Upload it to JPT AI's free compressor, set the target size to ${L}, and download the result. The tool automatically adjusts quality (and dimensions if needed) to fit under ${L}.` },
+      { q: `How do I compress an image to ${L}?`, a: `Upload it to Pixel Shine's free compressor, set the target size to ${L}, and download the result. The tool automatically adjusts quality (and dimensions if needed) to fit under ${L}.` },
       { q: `Will compressing to ${L} ruin the quality?`, a: c.kb <= 50
           ? `Very small targets like ${L} require heavier compression, so some detail is lost — but the tool keeps the image as sharp as possible for that size, which is usually fine for forms and thumbnails.`
           : `${L} leaves enough room to keep the image looking clean for web and email use. The tool uses the highest quality that still fits under ${L}.` },
