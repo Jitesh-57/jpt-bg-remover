@@ -7,6 +7,7 @@ import {
   type PresetTab, type Preset, type AspectRatio,
 } from "@/lib/app-presets";
 import { CREDIT_COST } from "@/lib/plans";
+import { SHOW_PRESET_TABS, SHOW_STYLE_PICKER } from "@/lib/workspace-config";
 import { trackEvent } from "@/lib/analytics";
 import { persistAuthContext, savePendingContext } from "@/lib/pending-image";
 
@@ -199,7 +200,8 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
           </div>
         )}
 
-        {/* Tabs */}
+        {/* Tabs — hidden by SHOW_PRESET_TABS; see lib/workspace-config.ts */}
+        {SHOW_PRESET_TABS && (
         <div style={{ display: "flex", gap: 4, background: "var(--surface-2)", borderRadius: 999, padding: 4, marginBottom: 14 }}>
           {TABS.map((t) => {
             const on = tab === t.id;
@@ -221,9 +223,10 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
             );
           })}
         </div>
+        )}
 
-        {/* Presets, or the custom prompt box */}
-        {tab === "custom" ? (
+        {/* Presets, or the custom prompt box — hidden by SHOW_STYLE_PICKER */}
+        {!SHOW_STYLE_PICKER ? null : tab === "custom" ? (
           <div style={{ marginBottom: 16 }}>
             <label style={ctlLabel} htmlFor="custom-prompt">Describe the look</label>
             <textarea

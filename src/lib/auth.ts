@@ -322,15 +322,19 @@ export async function checkEntitlement(
 ): Promise<NextResponse | null> {
   if (toolType === "free" || toolType === "basic") return null;
 
+  // Balance first, exactly as withCredits does. This preflight used to branch
+  // on the plan label, which refused anyone whose plan still read "free" even
+  // when they were holding credits: the 402 said "You need 2 credits" while
+  // its own payload reported a balance of 10, because the charge path is a
+  // pure credit model and this check was not. Credits are credits.
+  if (session.credits >= CREDIT_COST) return null;
+
   if (session.plan !== "free") {
-    if (session.credits < CREDIT_COST) {
-      return NextResponse.json({
-        error: "No credits remaining. Purchase more to continue.",
-        credits: session.credits,
-        upgradeRequired: false,
-      }, { status: 402 });
-    }
-    return null;
+    return NextResponse.json({
+      error: "No credits remaining. Purchase more to continue.",
+      credits: session.credits,
+      upgradeRequired: false,
+    }, { status: 402 });
   }
 
   // No credits left (or none ever bought). AI features have no free tier, so
