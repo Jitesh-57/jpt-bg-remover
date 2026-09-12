@@ -114,6 +114,36 @@ async function viaFal(
   }
 
 
+/**
+ * Runs a fal call, dropping to Nano Banana if GPT Image is not set up.
+ *
+ * The GPT Image endpoints are fal's BYOK ones — `/byok` in the path — which
+ * need an OpenAI key configured on the fal account. Without it fal answers
+ * 401/403, indistinguishable at a glance from a bad FAL_KEY, and the user
+ * sees "the image service rejected our credentials" for a model sitting right
+ * there in the picker. So picking it cannot dead-end: the request is served
+ * by the default model instead, and the substitution is logged.
+ */
+async function withModelFallback(
+  m: FalModel,
+  run: (model: FalModel) => Promise<string>
+): Promise<string> {
+  if (m !== "gpt-image") return run(m);
+  try {
+    return await run(m);
+  } catch (e) {
+    const fal = e instanceof FalError ? e : null;
+    if (fal && (fal.status === 401 || fal.status === 403)) {
+      console.warn(
+        "[ai-image] GPT Image needs an OpenAI key on the fal account (BYOK); " +
+        "serving this request with Nano Banana instead."
+      );
+      return run("nano-banana");
+    }
+    throw e;
+  }
+}
+
 export function editImage(
   src: string,
   prompt: string,
@@ -127,16 +157,20 @@ export function editImage(
     // raw: send the caller's prompt as written. The editor prefix below is
     // right for a user typing "make the sky bluer" and wrong for an app's
     // own tuned prompt, which is already a complete instruction.
-    return falEditImage(
-      src,
-      opts.raw ? prompt : `You are a professional photo editor. Edit this image: ${prompt}. Return only the edited image.`,
-      m,
-      aspectRatio,
-      opts.budgetMs
+    return withModelFallback(m, (mm) =>
+      falEditImage(
+        src,
+        opts.raw ? prompt : `You are a professional photo editor. Edit this image: ${prompt}. Return only the edited image.`,
+        mm,
+        aspectRatio,
+        opts.budgetMs
+      )
     );
   }
   return viaFal(
-    () => falEditImage(src, `You are a professional photo editor. Edit this image: ${prompt}. Return only the edited image.`, m, aspectRatio, opts?.budgetMs),
+    () => withModelFallback(m, (mm) =>
+      falEditImage(src, `You are a professional photo editor. Edit this image: ${prompt}. Return only the edited image.`, mm, aspectRatio, opts?.budgetMs)
+    ),
     () => geminiEditImage(src, prompt),
     "edit"
   );
@@ -217,11 +251,13 @@ export function generateFromText(
   const m = resolveModel(opts?.model);
   const aspect = opts?.aspect_ratio || "16:9";
   const run = () =>
-    falGenerateImage(
-      `High-quality, photorealistic image (${aspect} aspect ratio): ${prompt}`,
-      m,
-      aspect,
-      opts?.budgetMs
+    withModelFallback(m, (mm) =>
+      falGenerateImage(
+        `High-quality, photorealistic image (${aspect} aspect ratio): ${prompt}`,
+        mm,
+        aspect,
+        opts?.budgetMs
+      )
     );
   if (opts?.strict) {
     if (!falConfigured()) throw new Error("FAL_KEY is not configured.");
