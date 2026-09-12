@@ -131,16 +131,28 @@ export async function GET(req: NextRequest) {
     IMAGE_JOBS.filter((j) => !todo.includes(j)).map((j) => keyOf(j.bucket, j.path))
   );
 
-  for (const job of todo) {
+  // Rotated by hop: a job that cannot currently be generated sits at the head
+  // of this list every time, and run 7 burned its whole budget on thirteen
+  // such jobs while 240 workable ones went untouched. Starting each hop at a
+  // different offset guarantees the run reaches them.
+  const offset = todo.length ? (hop * MAX_PER_RUN) % todo.length : 0;
+  const ordered = [...todo.slice(offset), ...todo.slice(0, offset)];
+
+  for (const job of ordered) {
     if (made >= MAX_PER_RUN || Date.now() - started > BUDGET_MS) break;
     const key = `${job.bucket}/${job.path}`;
 
     // Sources are generated first and the list is ordered to match, but a
-    // partial run can still reach an app before its source exists. Skipping is
-    // right: the next hop picks it up once the source has landed.
-    if (job.editOf && !present.has(keyOf(job.bucket, job.editOf))) {
-      results[key] = `waiting for ${job.editOf}`;
-      continue;
+    // partial run can still reach an app before its source exists.
+    let source = job.editOf;
+    if (source && !present.has(keyOf(job.bucket, source))) {
+      const alt = job.editOfFallback;
+      if (alt && present.has(keyOf(job.bucket, alt))) {
+        source = alt;
+      } else {
+        results[key] = `waiting for ${job.editOf}`;
+        continue;
+      }
     }
 
     // fal rate-limits, and the first production run lost 14 of 17 images to a
@@ -152,8 +164,8 @@ export async function GET(req: NextRequest) {
         // An edit job runs the app's own prompt over a stored source photo, so
         // the result is what the tool actually produces. A generate job makes
         // an image from the prompt alone.
-        const dataUrl = job.editOf
-          ? await editImage(publicUrl(job.bucket, job.editOf), job.prompt, undefined, job.aspect, {
+        const dataUrl = source
+          ? await editImage(publicUrl(job.bucket, source), job.prompt, undefined, job.aspect, {
               // raw: the app's prompt is already a complete instruction and
               // must not be wrapped in the interactive editor's preamble.
               strict: true, raw: true, budgetMs: 120_000,
