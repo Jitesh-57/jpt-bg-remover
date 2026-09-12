@@ -161,6 +161,21 @@ export async function GET(req: NextRequest) {
     (q.get("token") || "").trim() === TOKEN;
   if (!authed) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  // Kill switch, default off.
+  //
+  // Bulk generation spends real money at fal, and each invocation starts the
+  // next one itself — so once a run is walking the queue there is no way to
+  // stop it from outside except to take the endpoint away. It is off unless
+  // SITE_IMAGES_ENABLED is set to "on" in the environment, which means a
+  // deploy stops an in-flight chain at its next hop, and neither the nightly
+  // cron nor a stray call can restart it.
+  if (process.env.SITE_IMAGES_ENABLED !== "on") {
+    return NextResponse.json({
+      stopped: "image generation is switched off",
+      hint: 'Set SITE_IMAGES_ENABLED="on" in the Vercel environment to allow a run, and unset it again afterwards.',
+    }, { status: 423 });
+  }
+
   const hop = Math.max(Number(q.get("hop") || 0), 0);
   if (hop > MAX_HOPS) {
     return NextResponse.json({ stopped: "hop limit reached", hop });

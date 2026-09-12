@@ -200,10 +200,11 @@ export default function PricingPage() {
               {p.label}
             </div>
 
-            <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
-              <span style={{ fontSize: 48, fontWeight: 900, color: "var(--text)", letterSpacing: "-0.03em", lineHeight: 1 }}>${p.usd}</span>
+            <div style={{ display: "flex", alignItems: "baseline", gap: 4, flexWrap: "wrap" }}>
+              <span style={{ fontSize: 48, fontWeight: 900, color: "var(--text)", letterSpacing: "-0.03em", lineHeight: 1 }}>₹{p.inr}</span>
               <span style={{ fontSize: 14.5, color: "var(--text-faint)", fontWeight: 600 }}>one time</span>
             </div>
+            <div style={{ fontSize: 13, color: "var(--text-faint)", marginTop: 5 }}>≈ ${p.usd} · charged in INR via Razorpay</div>
 
             <div style={{ marginTop: 12, fontSize: 17, fontWeight: 800, color: "var(--text)" }}>{p.credits} credits</div>
             <div style={{ fontSize: 14, color: "var(--text-muted)", marginTop: 2 }}>

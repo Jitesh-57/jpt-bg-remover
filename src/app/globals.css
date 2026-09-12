@@ -302,3 +302,17 @@ a { color: inherit; }
   .jpt-pricing-modal { grid-template-columns: 1fr; }
   .jpt-pricing-aside { min-height: 210px; }
 }
+
+/* ── NavBar: the header has to fit a 390px phone ───────────────────────────
+   Every inline link used to render at every width, so the row overflowed and
+   the brand was clipped off the left edge. Below 768px the links collapse
+   into the ☰ sheet, which nests them under the tools tree; from 768px up the
+   sheet's button disappears and the inline row is back. Done in CSS rather
+   than with the isMobile state so the first paint is already correct. */
+.jpt-nav-links { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.jpt-nav-burger { display: none; }
+
+@media (max-width: 767px) {
+  .jpt-nav-links { display: none !important; }
+  .jpt-nav-burger { display: inline-flex !important; }
+}

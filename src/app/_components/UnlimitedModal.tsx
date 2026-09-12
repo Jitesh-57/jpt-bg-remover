@@ -3,13 +3,13 @@
 import { useState } from "react";
 import { trackBeginCheckout, trackPurchase, trackBuyButtonClicked, trackPaymentFailed } from "@/lib/analytics";
 import { persistAuthContext } from "@/lib/pending-image";
-import { PACKS, CREDIT_COST, USD_TO_INR, usdPerCredit, type Pack } from "@/lib/plans";
+import { PACKS, CREDIT_COST, inrPerCredit, type Pack } from "@/lib/plans";
 import { landingImg } from "@/lib/landing-images";
 
 // Buy-credits modal. Shown when someone hits the credit wall on an AI tool.
 // Kept at this filename/default export so existing callers don't change.
 
-export const CREDITS_ENTRY_LABEL = `From $${PACKS[0].usd}`;
+export const CREDITS_ENTRY_LABEL = `From ₹${PACKS[0].inr}`;
 export const CREDITS_ENTRY_SUB = `${PACKS[0].credits} credits · never expire`;
 
 interface Props {
@@ -248,8 +248,8 @@ export default function UnlimitedModal({ onClose, loggedIn, reason, prefillUser,
                   />
                   <span style={{ minWidth: 0, flex: 1 }}>
                     <span style={{ display: "flex", alignItems: "baseline", gap: 8, flexWrap: "wrap" }}>
-                      <span style={{ fontSize: 19, fontWeight: 900, color: "var(--text)" }}>${p.usd}</span>
-                      <span style={{ fontSize: 12, color: "var(--text-faint)" }}>₹{Math.round(p.usd * USD_TO_INR)}</span>
+                      <span style={{ fontSize: 19, fontWeight: 900, color: "var(--text)" }}>₹{p.inr}</span>
+                      <span style={{ fontSize: 12, color: "var(--text-faint)" }}>≈ ${p.usd}</span>
                       {p.popular && (
                         <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: "0.07em", color: "#fff", background: "var(--accent-fill)", borderRadius: 999, padding: "3px 8px" }}>
                           POPULAR
@@ -263,7 +263,7 @@ export default function UnlimitedModal({ onClose, loggedIn, reason, prefillUser,
                       {p.credits} credits
                     </span>
                     <span style={{ display: "block", fontSize: 11.5, color: "var(--text-faint)", marginTop: 2 }}>
-                      {p.generations} generations · ${usdPerCredit(p).toFixed(2)}/credit
+                      {p.generations} generations · ₹{inrPerCredit(p).toFixed(1)}/credit
                     </span>
                   </span>
                 </button>
@@ -286,7 +286,7 @@ export default function UnlimitedModal({ onClose, loggedIn, reason, prefillUser,
             {loadingPack
               ? "Opening checkout…"
               : loggedIn
-                ? `Get ${selected.credits} credits — $${selected.usd}`
+                ? `Get ${selected.credits} credits — ₹${selected.inr}`
                 : "Sign in to continue"}
           </button>
 

@@ -9,9 +9,11 @@
 # already present in the code, which is public — so setting it is worth doing.
 name: Generate site images
 
+# Manual only. It used to fire on every push to main, which meant any deploy
+# could start a few-hundred-image run without anyone asking for one. The
+# endpoint is also gated on SITE_IMAGES_ENABLED, so this button does nothing
+# until that is switched on in the Vercel environment.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 concurrency:

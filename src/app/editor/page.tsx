@@ -9,7 +9,7 @@ import {
   trackBeginCheckout, trackPurchase, trackPaymentFailed,
 } from "@/lib/analytics";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
-import { CREDIT_COST } from "@/lib/plans";
+import { CREDIT_COST, PACKS, inrPerCredit } from "@/lib/plans";
 import { savePendingContext, loadPendingContext, clearPendingContext } from "@/lib/pending-image";
 import { applyWatermark, renderMeme, type WatermarkPosition } from "@/lib/tools-canvas";
 import ToolIcon from "./ToolIcon";
@@ -559,7 +559,9 @@ export default function ImageEditorPage() {
     else if (!user) setAnalyticsUser(null);
   }, [user]);
 
-  const PLAN_PRICES: Record<string, number> = { starter: 499, creator: 999, pro: 2499 };
+  // Analytics value for a pack, in rupees — the amount actually charged.
+  const PLAN_PRICES: Record<string, number> =
+    Object.fromEntries(PACKS.map((pk) => [pk.id, pk.inr]));
 
   async function handleBuyPlan(planKey: string) {
     const planValue = PLAN_PRICES[planKey] || 0;
@@ -2793,11 +2795,30 @@ export default function ImageEditorPage() {
               <div style={{ fontSize: 13, fontWeight: 700, color: "var(--text-faint)", textAlign: "center" as const, marginBottom: 16, textTransform: "uppercase" as const, letterSpacing: 1 }}>Choose a plan · one-time payment · credits never expire</div>
 
               <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 12, marginBottom: 20 }}>
-                {[
-                  { name: "Starter", planKey: "starter", price: "₹499", credits: 50, perCredit: "₹9.98", color: "var(--accent)", features: ["50 AI credits", "~25 transformations", "All AI tools", "No expiry"] },
-                  { name: "Creator", planKey: "creator", price: "₹999", credits: 100, perCredit: "₹9.99", color: "var(--accent-strong)", popular: true, features: ["100 AI credits", "~50 transformations", "All AI tools", "No expiry"] },
-                  { name: "Pro", planKey: "pro", price: "₹2499", credits: 300, perCredit: "₹8.33", color: "#5B21B6", features: ["300 AI credits", "~150 transformations", "All AI tools", "No expiry"] },
-                ].map((plan) => (
+                {/*
+                  Built from PACKS rather than typed out. These cards used to
+                  offer starter/creator/pro at ₹499/₹999/₹2499 — prices and
+                  credit counts that no longer exist, and plan ids that
+                  /api/create-order rejects with "Invalid plan", so every
+                  Buy Now here returned 400 and silently did nothing.
+                */}
+                {PACKS.map((pk) => {
+                  const plan = {
+                    name: pk.label,
+                    planKey: pk.id,
+                    price: `₹${pk.inr}`,
+                    credits: pk.credits,
+                    perCredit: `₹${inrPerCredit(pk).toFixed(1)}`,
+                    color: pk.popular ? "var(--accent-strong)" : "var(--accent)",
+                    popular: pk.popular,
+                    features: [
+                      `${pk.credits} AI credits`,
+                      `≈ ${pk.generations} generations`,
+                      "All AI tools",
+                      "Never expires",
+                    ],
+                  };
+                  return (
                   <div key={plan.name} style={{ border: `2px solid ${plan.popular ? plan.color : "var(--text-muted)"}`, borderRadius: 16, padding: "18px 14px", textAlign: "center" as const, position: "relative", background: plan.popular ? "var(--surface-2)" : "var(--surface-2)", transition: "transform 0.1s" }}>
                     {plan.popular && (
                       <div style={{ position: "absolute", top: -11, left: "50%", transform: "translateX(-50%)", background: plan.color, color: "#fff", fontSize: 9, fontWeight: 900, padding: "3px 12px", borderRadius: 20, whiteSpace: "nowrap" as const, letterSpacing: 0.5 }}>
@@ -2820,7 +2841,8 @@ export default function ImageEditorPage() {
                       {buyingPlan === plan.planKey ? "Processing…" : "Buy Now →"}
                     </button>
                   </div>
-                ))}
+                  );
+                })}
               </div>
 
               <div style={{ textAlign: "center" as const }}>
