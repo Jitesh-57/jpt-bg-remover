@@ -1,8 +1,12 @@
-# Fills the site's image slots after a production deploy.
+# Fills the site's image slots. Manual, and the only trigger there is.
 #
-# The nightly Vercel cron (vercel.json) does the same thing, but only at 03:00
-# UTC. This runs it as soon as a deploy is live so a fresh slot does not sit
-# empty for up to a day, and gives a manual "Run workflow" button as well.
+# There was a nightly Vercel cron in vercel.json as well; it is gone, and so is
+# vercel.json, because that file held nothing else. Unattended runs spend real
+# money at fal, and the endpoint starts its own follow-up invocations, so a run
+# nobody asked for could not be stopped from outside.
+#
+# Two switches have to be on for this to do anything: run this workflow, and
+# SITE_IMAGES_ENABLED="on" in the Vercel environment. Unset it afterwards.
 #
 # Set ADMIN_IMAGE_TOKEN as a repository secret and as a Vercel environment
 # variable, both to the same value. Without it this falls back to the default
