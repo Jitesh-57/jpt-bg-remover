@@ -1,4 +1,0 @@
-{
-  "_comment": "The nightly site-images cron was removed on purpose: it spent fal credit unattended, and the endpoint chains its own follow-up invocations. Generation is manual now - run the site-images GitHub Actions workflow with SITE_IMAGES_ENABLED=on in the Vercel environment, then unset it.",
-  "crons": []
-}
