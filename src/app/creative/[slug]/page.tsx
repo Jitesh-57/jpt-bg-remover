@@ -7,6 +7,7 @@ import { presetImagesFor, sampleImages } from "@/lib/preset-images.server";
 import { CREATIVE_APPS, getCreativeApp, getCreativeContent, CREATIVE_BASE, previewUrl } from "@/lib/creative-apps";
 import { longContentFor } from "@/lib/app-content";
 import { sourceFor, sourceImageUrl } from "@/lib/image-jobs";
+import { SHOW_PRESET_TABS } from "@/lib/workspace-config";
 
 export const revalidate = 300;
 
@@ -202,7 +203,8 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
               <h3 style={{ fontSize: 15, fontWeight: 850, color: "var(--accent)", margin: "0 0 10px", letterSpacing: "0.04em", textTransform: "uppercase" }}>What {a.h1} changes</h3>
               <p style={{ fontSize: 15.5, color: "var(--text)", lineHeight: 1.75, margin: 0 }}>{lc.transform}</p>
               <p style={{ fontSize: 13.5, color: "var(--text-muted)", lineHeight: 1.7, margin: "14px 0 0" }}>
-                Your face, bone structure and skin tone are held fixed on every generation — only what is described above is changed. Add your own brief in the Custom tab to take it further.
+                Your face, bone structure and skin tone are held fixed on every generation — only what is described above is changed.
+                {SHOW_PRESET_TABS && " Add your own brief in the Custom tab to take it further."}
               </p>
             </div>
           </section>
