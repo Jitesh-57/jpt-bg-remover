@@ -89,11 +89,11 @@ Both halves must clearly show the same subject from the same angle, so the diffe
  * professionally shot makes the after look like it did nothing.
  */
 const SOURCE_SUBJECTS: Record<string, string> = {
-  "person-plain": "A plain, honest smartphone selfie of a smiling man in his thirties in a simple t-shirt against a blank magnolia wall. Flat, uneven indoor ceiling light. Whole face clearly visible and front-facing. It must look like a real everyday phone photo: slightly soft, unstyled, no retouching.",
+  "person-plain": "A plain, ordinary phone photograph of a smiling man in his thirties in a simple t-shirt against a blank magnolia wall. Flat, uneven indoor ceiling light. Whole face clearly visible and front-facing. It must look like a real everyday phone photo: slightly soft, unstyled, no retouching.",
   "person-clean": "A clear front-facing smartphone portrait of a woman in her twenties against a plain pale wall in even daylight. No glasses, no hat, no jewellery, neutral expression, hair simple and tidy. An ordinary photo, well lit but completely unstyled.",
   "person-body": "An ordinary smartphone photograph of a man in his thirties standing square to camera in a plain fitted t-shirt and jeans, in an undecorated room with a bare wall behind. Flat indoor light, full body in frame.",
   "person-dim": "An ordinary smartphone snapshot of a woman in her thirties standing in a dim hallway in everyday clothes. Underexposed, slight motion softness, a warm yellow cast from a ceiling bulb. Clearly an unedited phone photo.",
-  "couple": "An ordinary smartphone snapshot of a couple in their thirties standing side by side in everyday clothes against a plain wall, flat indoor light, both faces clearly visible, slightly awkward framing.",
+  "couple": "An ordinary smartphone snapshot of two friends in their thirties standing side by side in everyday clothes against a plain wall, flat indoor light, both faces clearly visible, slightly awkward framing.",
   "pet": "An ordinary snapshot of a friendly dog sitting on a living-room floor, photographed from standing height in flat indoor light. Cluttered domestic background, nothing styled.",
   "product": "A single consumer product — a pair of over-ear headphones — photographed on a cluttered domestic kitchen worktop under yellow overhead lighting. Crumbs and household objects visible behind it. An honest, unstyled phone photo.",
   "car": "A used hatchback car photographed in a residential driveway on a dull overcast day. Wheelie bins and a fence visible behind it, puddles on the tarmac, flat grey light.",
@@ -278,14 +278,14 @@ const TOOLS: ImageJob[] = [
 
 // The watermark-remover page shows four separate before/after pairs.
 const WATERMARK_CASES: { before: string; after: string }[] = [
-  { before: "a product photograph of a ceramic mug on a pale surface with a semi-transparent abstract logo mark across the centre",
-    after: "the same mug photograph completely clean, the surface behind it fully rebuilt with no trace of the mark" },
-  { before: "a photograph of a mountain lake with a small semi-transparent block of abstract marks and a date stamp in the lower corner",
+  { before: "a product photograph of a ceramic mug on a pale surface with a faint translucent overlay of abstract geometric shapes across the centre",
+    after: "the same mug photograph completely clean, the surface behind it fully rebuilt with no trace of the overlay" },
+  { before: "a photograph of a mountain lake with a faint translucent panel of abstract shapes and a small orange numeric stamp in the lower corner",
     after: "the same lake photograph with the corner entirely clean, water and sky continuing naturally" },
-  { before: "a stock-style photograph of a person working at a laptop, covered by a large faint repeating diagonal pattern of abstract marks",
+  { before: "a stock-style photograph of a person working at a laptop, covered by a large faint repeating diagonal pattern of abstract translucent shapes",
     after: "the same photograph with the pattern entirely removed and full detail restored" },
-  { before: "a photograph of a painted canvas with a handwritten-looking signature mark in the lower right corner",
-    after: "the same canvas photograph with the corner clean, the paint texture continuing through where the mark was" },
+  { before: "a photograph of a painted canvas with a small handwritten-looking squiggle in the lower right corner",
+    after: "the same canvas photograph with the corner clean, the paint texture continuing through where the squiggle was" },
 ];
 WATERMARK_CASES.forEach((c, i) => {
   TOOLS.push(
@@ -337,7 +337,7 @@ const SUBJECT_RULES: [RegExp, string][] = [
     "an ordinary smartphone photograph of a person standing in a plain t-shirt in an undecorated room, flat indoor light"],
   [/\bpet|dog|cat\b/, "an ordinary snapshot of a dog sitting on a living-room floor, taken from standing height in flat indoor light"],
   [/baby|toddler|kid/, "an ordinary snapshot of a baby sitting on a plain rug, flat indoor light, slightly awkward framing"],
-  [/couple|wedding|anniversary|engagement/, "an ordinary snapshot of a couple in their thirties standing side by side in everyday clothes against a plain wall"],
+  [/couple|wedding|anniversary|engagement/, "an ordinary snapshot of two friends in their thirties standing side by side in everyday clothes against a plain wall"],
   [/family|group/, "an ordinary snapshot of three people standing in a row in everyday clothes in a plain room"],
   [/\bcar\b|automotive|dealer|vehicle/, "a used car photographed in a residential driveway on an overcast day, bins and a fence visible behind it"],
   [/bike|motorcycle|truck/, "a motorcycle photographed in a plain concrete car park on a dull day, clutter in the background"],
