@@ -1,6 +1,8 @@
 'use client'
 
 import { useRef, useState, useEffect, DragEvent } from 'react'
+import PricingSection from '@/app/_components/PricingSection'
+import { PACKS, CREDIT_COST } from '@/lib/plans'
 import FAQAccordion from './FAQAccordion'
 import { PageSEO } from '@/lib/page-config'
 import { PAGE_IMAGES, PAGE_BEFORE_AFTER } from '@/lib/landing-images'
@@ -372,6 +374,36 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
       }
     : null
 
+  const pageUrl = isHome ? SITE_BASE : crumbLink ? `${SITE_BASE}${crumbLink.href}` : SITE_BASE
+
+  // WebPage → tells crawlers what this URL is, matching the visible H1/subtitle.
+  const webPageLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: config.title,
+    description: config.meta_description,
+    url: pageUrl,
+  }
+
+  // SoftwareApplication + Offer → the free-tool signal, and the credit price
+  // for the AI features. Prices come from lib/plans.ts, never hardcoded.
+  const appLd = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: config.h1 || config.title,
+    description: config.meta_description,
+    url: pageUrl,
+    applicationCategory: 'MultimediaApplication',
+    operatingSystem: 'Web',
+    offers: {
+      '@type': 'AggregateOffer',
+      priceCurrency: 'USD',
+      lowPrice: '0',
+      highPrice: String(PACKS[PACKS.length - 1].usd),
+      offerCount: String(PACKS.length + 1),
+    },
+  }
+
   // Two-tone H1: the last word gets a gradient fill (e.g. "Free Image Compressor").
   const h1Words = (config.h1 || '').trim().split(/\s+/)
   const h1Last = h1Words.length > 1 ? h1Words[h1Words.length - 1] : ''
@@ -386,6 +418,24 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
   const visual = PAGE_VISUALS[pageId] ?? PAGE_VISUALS['upscale']
   const heroImg = PAGE_IMAGES[pageId]
   const beforeAfter = PAGE_BEFORE_AFTER[pageId]
+
+  // ImageObject → the hero visual, when there is a real image rather than a
+  // gradient placeholder. Declared here because it needs heroImg/beforeAfter.
+  const heroLdImage = beforeAfter?.after || heroImg
+  const imageLd = heroLdImage
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'ImageObject',
+        contentUrl: heroLdImage.startsWith('http') ? heroLdImage : `${SITE_BASE}${heroLdImage}`,
+        caption: `${config.h1} — example result`,
+        creator: { '@type': 'Organization', name: 'JPT AI' },
+      }
+    : null
+
+  // A single self-contained sentence defining the tool, used in the About
+  // block. Built from real page data rather than boilerplate so it stays
+  // accurate for every tool this component renders.
+  const aeoDefinition = `${config.h1} is a free online tool from JPT AI. ${config.subtitle}`
   const fileRef = useRef<HTMLInputElement>(null)
   const [isDragging, setIsDragging] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
@@ -452,6 +502,9 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
       {/* Structured data for rich results */}
       {faqLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />}
       {breadcrumbLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(appLd) }} />
+      {imageLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(imageLd) }} />}
 
 
       {/* Animations: floating hero decor, scroll reveal, CTA shine */}
@@ -919,6 +972,29 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
           </div>
         </section>
       )}
+
+      {/* ── PRICING (shared) ─────────────────────────────────────────────── */}
+      <PricingSection toolName={config.h1} />
+
+      {/* ── ABOUT ────────────────────────────────────────────────────────────
+          Editorial block. Gives the page a standalone, citable explanation of
+          the tool — the signal answer engines look for, and the thing a
+          feature grid alone never provides. */}
+      <section style={{ padding: '80px 24px', background: 'var(--surface-2)' }}>
+        <div style={{ maxWidth: 760, margin: '0 auto' }}>
+          <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>About</div>
+          <h2 style={{ fontSize: 'clamp(1.6rem, 2.6vw, 2.1rem)', fontWeight: 900, color: 'var(--text)', margin: '0 0 18px', letterSpacing: '-0.02em' }}>
+            About {config.h1}
+          </h2>
+          <p style={{ fontSize: 16, color: 'var(--text-muted)', lineHeight: 1.8, margin: '0 0 14px' }}>{aeoDefinition}</p>
+          <p style={{ fontSize: 16, color: 'var(--text-muted)', lineHeight: 1.8, margin: 0 }}>
+            Nothing is uploaded for the browser-based tools — the work happens on your own device, which is
+            why they are free and have no per-image limit. The AI features do run on a server, and those are
+            the ones that use credits: {CREDIT_COST} credits a generation, bought once, never expiring. There
+            is no subscription on JPT AI and no watermark on anything you export.
+          </p>
+        </div>
+      </section>
 
       {/* ── FAQ ──────────────────────────────────────────────────────────── */}
       {config.faq?.length > 0 && (

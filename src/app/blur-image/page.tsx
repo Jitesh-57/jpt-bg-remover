@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import BlurTool from "./BlurTool";
+import PricingSection from "@/app/_components/PricingSection";
 
 const BASE = "https://www.sjpt.io";
 const URL = `${BASE}/blur-image`;
@@ -101,6 +102,9 @@ export default function Page() {
             </div>
           </div>
         </section>
+
+        {/* PRICING (shared) */}
+        <PricingSection toolName="Blur Image" />
 
         {/* FAQ */}
         <section style={{ padding: "48px 24px", background: "var(--surface-2)" }}>
