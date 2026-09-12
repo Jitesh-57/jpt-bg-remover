@@ -12,7 +12,6 @@
 import { CREATIVE_APPS, type CreativeApp } from "@/lib/creative-apps";
 import { CAT_META, type AppCat } from "@/lib/app-catalog";
 import { presetsFor, PRESET_IMAGE_BUCKET } from "@/lib/app-presets";
-import { categoryOf } from "@/lib/app-content";
 import { CONVERSIONS, buildContent } from "@/lib/conversions";
 import { FAL_ASPECT_RATIOS } from "@/lib/fal";
 import { COMPRESSIONS } from "@/lib/compressions";
@@ -99,18 +98,66 @@ Both halves must clearly show the same subject from the same angle, so the diffe
  * professionally shot makes the after look like it did nothing.
  */
 const SOURCE_SUBJECTS: Record<string, string> = {
-  "person-plain": "A plain, ordinary phone photograph of a smiling man in his thirties in a simple t-shirt against a blank magnolia wall. Flat, uneven indoor ceiling light. Whole face clearly visible and front-facing. It must look like a real everyday phone photo: slightly soft, unstyled, no retouching.",
-  "person-clean": "A clear front-facing smartphone portrait of a woman in her twenties against a plain pale wall in even daylight. No glasses, no hat, no jewellery, neutral expression, hair simple and tidy. An ordinary photo, well lit but completely unstyled.",
-  "person-body": "An ordinary smartphone photograph of a man in his thirties standing square to camera in a plain fitted t-shirt and jeans, in an undecorated room with a bare wall behind. Flat indoor light, full body in frame.",
-  "person-dim": "An ordinary smartphone snapshot of a woman in her thirties standing in a dim hallway in everyday clothes. Underexposed, slight motion softness, a warm yellow cast from a ceiling bulb. Clearly an unedited phone photo.",
-  "couple": "An ordinary smartphone snapshot of two friends in their thirties standing side by side in everyday clothes against a plain wall, flat indoor light, both faces clearly visible, slightly awkward framing.",
-  "pet": "An ordinary snapshot of a friendly dog sitting on a living-room floor, photographed from standing height in flat indoor light. Cluttered domestic background, nothing styled.",
-  "product": "A single consumer product — a pair of over-ear headphones — photographed on a cluttered domestic kitchen worktop under yellow overhead lighting. Crumbs and household objects visible behind it. An honest, unstyled phone photo.",
-  "car": "A used hatchback car photographed in a residential driveway on a dull overcast day. Wheelie bins and a fence visible behind it, puddles on the tarmac, flat grey light.",
-  "jewellery": "A gold ring photographed on a kitchen worktop under warm yellow domestic lighting, slightly out of focus, dust visible on the metal, cluttered surface.",
-  "room": "A living room photographed on a phone in dull daylight: uneven exposure, a cluttered coffee table, a crooked horizon and a washed-out window.",
-  "old-print": "A photograph of an old damaged printed family photo lying on a table: colours faded towards magenta, a crease across one corner, surface scratches, dust and worn edges. Shot flat from above.",
-  "lowres-face": "A deliberately low-resolution, soft and slightly pixelated photograph of a man's face, head and shoulders against a plain background. It must clearly read as a small image that has been enlarged far past its real size.",
+  // Faces, front-facing and unobstructed — the input the filter and try-on
+  // tools need. Four of them, deliberately different people, because these
+  // cover roughly fifty app cards between them.
+  "face-1": "A clear front-facing smartphone portrait of a South Asian woman in her twenties against a plain pale wall in even daylight. No glasses, no hat, no jewellery, neutral expression, hair simple and tidy. An ordinary photo, well lit but completely unstyled.",
+  "face-2": "A clear front-facing smartphone portrait of a Black man in his thirties with short hair and a clean-shaven face, against a plain light grey wall in even indoor light. No glasses or accessories, relaxed neutral expression. An ordinary unstyled phone photo.",
+  "face-3": "A clear front-facing smartphone portrait of an East Asian woman in her thirties against a plain white wall in soft window light. Shoulder-length hair, no accessories, gentle neutral expression. Plain and unretouched.",
+  "face-4": "A clear front-facing smartphone portrait of a white man in his forties with short greying hair, against a plain beige wall in flat ceiling light. No glasses, no hat, neutral expression, nothing styled about the photo.",
+
+  // Ordinary head-and-shoulders snapshots — the generic "before".
+  "plain-1": "A plain, ordinary phone photograph of a smiling South Asian man in his thirties in a simple t-shirt against a blank magnolia wall. Flat, uneven indoor ceiling light. Whole face clearly visible and front-facing. It must look like a real everyday phone photo: slightly soft, unstyled, no retouching.",
+  "plain-2": "A plain, ordinary phone photograph of a Latina woman in her twenties in a plain sweatshirt against a bare white wall, taken at arm's length. Uneven flat indoor light, slightly off-centre framing, no retouching.",
+  "plain-3": "A plain, ordinary phone photograph of a Middle Eastern man in his twenties in a plain shirt, standing in front of a bare painted wall in a hallway. Flat light, slightly soft focus, completely unstyled.",
+
+  // Full-length, for body, outfit and fashion tools.
+  "body-1": "An ordinary smartphone photograph of a South Asian man in his thirties standing square to camera in a plain fitted t-shirt and jeans, in an undecorated room with a bare wall behind. Flat indoor light, full body in frame.",
+  "body-2": "An ordinary smartphone photograph of a Black woman in her twenties standing square to camera in plain everyday jeans and a plain top, against a bare wall in a plain room. Flat indoor light, full body in frame.",
+  "body-3": "An ordinary smartphone photograph of a white woman in her thirties standing full length in a simple plain dress against a blank wall, flat uneven indoor light, nothing styled.",
+
+  // Badly lit snapshots — the ones the mood, colour and enhance tools fix.
+  "dim-1": "An ordinary smartphone snapshot of a South Asian woman in her thirties standing in a dim hallway in everyday clothes. Underexposed, slight motion softness, a warm yellow cast from a ceiling bulb. Clearly an unedited phone photo.",
+  "dim-2": "An ordinary smartphone snapshot of a young man standing outdoors on an overcast afternoon in a plain jacket, flat grey light, dull washed-out colour, a cluttered street behind him.",
+  "dim-3": "An ordinary smartphone snapshot of a woman in her twenties sitting at a table in a dimly lit room, harsh direct flash from the phone, hard shadow on the wall behind her.",
+
+  // More than one person.
+  "couple-1": "An ordinary smartphone snapshot of two friends in their thirties standing side by side in everyday clothes against a plain wall, flat indoor light, both faces clearly visible, slightly awkward framing.",
+  "couple-2": "An ordinary smartphone snapshot of a young couple standing close together outdoors in front of a plain garden fence on a dull day, everyday clothes, flat light, both faces clearly visible.",
+  "family-1": "An ordinary smartphone snapshot of three family members standing in a row in a plain living room in everyday clothes, flat ceiling light, slightly crooked framing, all faces visible.",
+  "baby-1": "An ordinary snapshot of a baby sitting on a plain rug in a living room, flat indoor light, slightly awkward framing, nothing styled.",
+
+  // Animals.
+  "pet-dog": "An ordinary snapshot of a friendly dog sitting on a living-room floor, photographed from standing height in flat indoor light. Cluttered domestic background, nothing styled.",
+  "pet-cat": "An ordinary snapshot of a cat sitting on a kitchen chair, photographed from standing height under yellow ceiling light, cluttered domestic background.",
+
+  // Objects, for the e-commerce and product tools. Four different categories,
+  // so a headphone photo does not end up standing in for a bottle of serum.
+  "product-headphones": "A pair of over-ear headphones photographed on a cluttered domestic kitchen worktop under yellow overhead lighting. Crumbs and household objects visible behind them. An honest, unstyled phone photo.",
+  "product-bottle": "A single skincare bottle photographed on a bathroom shelf under warm domestic lighting, other bottles and clutter visible behind it, slightly soft focus.",
+  "product-shoe": "A single running shoe photographed on a wooden floor beside a skirting board in dull daylight, dust and a cable visible nearby, unstyled phone photo.",
+  "product-watch": "A wristwatch photographed lying on a cluttered desk under yellow lamplight, papers and a mug edge in frame, slightly soft focus.",
+
+  // Vehicles.
+  "car-hatchback": "A used hatchback car photographed in a residential driveway on a dull overcast day. Wheelie bins and a fence visible behind it, puddles on the tarmac, flat grey light.",
+  "car-suv": "A dusty SUV photographed in a supermarket car park on a grey day, other cars and a trolley bay visible behind it, flat dull light.",
+  "bike-motorcycle": "A motorcycle photographed in a plain concrete car park on a dull day, clutter and a wall behind it, flat grey light.",
+  "truck-pickup": "A working pickup truck photographed on a gravel yard on an overcast day, a fence and stacked pallets behind it, flat light and dull colour.",
+
+  // Small valuables.
+  "jewellery-ring": "A gold ring photographed on a kitchen worktop under warm yellow domestic lighting, slightly out of focus, dust visible on the metal, cluttered surface.",
+  "jewellery-necklace": "A silver necklace photographed lying on a dark wooden table under warm domestic lighting, tangled slightly, dust visible, cluttered surface.",
+
+  // Places and food.
+  "room-living": "A living room photographed on a phone in dull daylight: uneven exposure, a cluttered coffee table, a crooked horizon and a washed-out window.",
+  "room-kitchen": "A domestic kitchen photographed on a phone under yellow ceiling light: cluttered worktops, uneven exposure, dull colour and a slightly tilted frame.",
+  "food-plate": "A plated meal photographed on a restaurant table under dim yellow light, cutlery and a glass crowding the frame, dull colour and a shadow across the plate.",
+
+  // Damaged and low-quality inputs.
+  "old-print-1": "A photograph of an old damaged printed family photo lying on a table: colours faded towards magenta, a crease across one corner, surface scratches, dust and worn edges. Shot flat from above.",
+  "old-print-2": "A photograph of an old black-and-white printed portrait lying on a table: yellowed, foxed at the edges, a tear across the lower corner, dust and fine scratches across the surface. Shot flat from above.",
+  "lowres-1": "A deliberately low-resolution, soft and slightly pixelated photograph of a man's face, head and shoulders against a plain background. It must clearly read as a small image that has been enlarged far past its real size.",
+  "lowres-2": "A deliberately low-resolution, blurry and noisy photograph of a woman's face against a plain wall, visibly compressed and enlarged far past its real size, soft edges and blocky detail.",
 };
 
 /**
@@ -155,41 +202,85 @@ const SOURCES: ImageJob[] = Object.entries(SOURCE_SUBJECTS).map(([name, prompt])
 }));
 
 /**
- * Substitute for a source that cannot be generated.
+ * Source groups, keyed by what kind of photo an app needs.
  *
- * Keyed by the source that is missing. Only the six the checker refuses need
- * one; the substitute is always a source that has generated successfully.
+ * The point of the groups is variety. One source per kind meant the same
+ * stock-looking man appeared on forty different app cards, which made the
+ * catalogue read as one tool repeated rather than two hundred. Every group now
+ * holds several genuinely different subjects and an app is assigned one by a
+ * hash of its slug, so the assignment is stable — the app page shows the same
+ * "before" as the card — while neighbouring apps in the grid get different
+ * people, ages and settings.
  */
-const SOURCE_FALLBACK: Record<string, string> = {
-  "person-plain": "person-clean",
-  "person-body": "person-dim",
-  "couple": "person-clean",
-  "jewellery": "product",
-  "room": "car",
-  "lowres-face": "person-clean",
+const SOURCE_GROUPS: Record<string, string[]> = {
+  face: ["face-1", "face-2", "face-3", "face-4"],
+  plain: ["plain-1", "plain-2", "plain-3", "face-1", "face-2"],
+  body: ["body-1", "body-2", "body-3"],
+  dim: ["dim-1", "dim-2", "dim-3", "plain-2"],
+  group: ["couple-1", "couple-2", "family-1"],
+  baby: ["baby-1"],
+  pet: ["pet-dog", "pet-cat"],
+  product: ["product-headphones", "product-bottle", "product-shoe", "product-watch"],
+  vehicle: ["car-hatchback", "car-suv", "bike-motorcycle", "truck-pickup"],
+  jewellery: ["jewellery-ring", "jewellery-necklace"],
+  place: ["room-living", "room-kitchen"],
+  food: ["food-plate"],
+  restore: ["old-print-1", "old-print-2"],
+  lowres: ["lowres-1", "lowres-2"],
 };
 
-/** Which source photo an app's card should be built from. */
-const SOURCE_RULES: [RegExp, string][] = [
-  [/piercing|beard|glasses|braces|hairstyle|hair-color|bangs|curly|blonde|bald|buzz-cut|long-hair|eyebrow|eye-color|smile|expression|baby-face|no-beard/, "person-clean"],
-  [/unpixelate|unblur|upscal|enlarge|sharpen|denoise|hd-photo|4k|image-enlarger/, "lowres-face"],
-  [/old-photo|restoration|colorize|colourise|black-and-white|yearbook/, "old-print"],
-  [/muscle|\babs\b|six-pack|body-editor|fitness|gym|skinny|slim|outfit|dress|saree|suit|fashion|apparel/, "person-body"],
-  [/\bpet|dog|cat\b/, "pet"],
-  [/couple|wedding|anniversary|engagement|family|group|baby-predictor/, "couple"],
-  [/\bcar\b|automotive|dealer|vehicle|bike|motorcycle|truck|license-plate/, "car"],
-  [/jewel|ring|necklace/, "jewellery"],
-  [/real-estate|house|property|interior|room|home-decor|hotel|architect|restaurant|food/, "room"],
-  [/product|amazon|ecommerce|shopify|ebay|magento|woocommerce|beauty|electronics|gadget|png-maker|white-background|background-remover/, "product"],
-  [/aesthetic|photoshoot|selfie|travel|instagram|facebook|birthday|festival|christmas|graduation|prom|thanksgiving|maternity/, "person-dim"],
+/** Which group an app's card should be built from. First match wins. */
+const SOURCE_RULES: [RegExp, keyof typeof SOURCE_GROUPS][] = [
+  [/unpixelate|unblur|upscal|enlarge|sharpen|denoise|hd-photo|4k|image-enlarger/, "lowres"],
+  [/old-photo|restoration|colorize|colourise|black-and-white|yearbook|ancestor/, "restore"],
+  [/piercing|beard|glasses|braces|hairstyle|hair-color|bangs|curly|blonde|bald|buzz-cut|long-hair|eyebrow|eye-color|smile|expression|baby-face|no-beard|teeth|freckle|makeup|lipstick|passport|visa|\bid\b|headshot|profile-pic|linkedin/, "face"],
+  [/baby|toddler|kid|newborn/, "baby"],
+  [/couple|wedding|anniversary|engagement|family|group|baby-predictor|reunion/, "group"],
+  [/muscle|\babs\b|six-pack|body-editor|fitness|gym|skinny|slim|outfit|dress|saree|suit|fashion|apparel|clothing|try-on|tattoo/, "body"],
+  [/\bpet|dog|cat\b|puppy|kitten/, "pet"],
+  [/\bcar\b|automotive|dealer|vehicle|bike|motorcycle|truck|license-plate/, "vehicle"],
+  [/jewel|ring|necklace|watch-photo/, "jewellery"],
+  [/food|restaurant|menu|dish|cafe|bakery/, "food"],
+  [/real-estate|house|property|interior|room|home-decor|hotel|architect|airbnb/, "place"],
+  [/product|amazon|ecommerce|shopify|ebay|magento|woocommerce|beauty|electronics|gadget|png-maker|white-background|background-remover|shoe|sneaker|bottle|furniture/, "product"],
+  [/aesthetic|photoshoot|selfie|travel|instagram|facebook|birthday|festival|christmas|diwali|halloween|graduation|prom|thanksgiving|maternity|retro|vintage|filter/, "dim"],
 ];
+
+/** FNV-1a, so the choice within a group is stable across builds. */
+function hashSlug(s: string): number {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 0x01000193) >>> 0;
+  }
+  return h >>> 0;
+}
+
+function groupFor(app: CreativeApp): keyof typeof SOURCE_GROUPS {
+  const hay = `${app.slug} ${app.h1}`.toLowerCase();
+  for (const [re, g] of SOURCE_RULES) if (re.test(hay)) return g;
+  return "plain";
+}
 
 /** The source photo an app's creative is built from — exported so the app page
  * can show that same photo as the "before" beside the generated result. */
 export function sourceFor(app: CreativeApp): string {
-  const hay = `${app.slug} ${app.h1}`.toLowerCase();
-  for (const [re, name] of SOURCE_RULES) if (re.test(hay)) return name;
-  return "person-plain";
+  const pool = SOURCE_GROUPS[groupFor(app)];
+  return pool[hashSlug(app.slug) % pool.length];
+}
+
+/**
+ * Substitute when an app's assigned source cannot be generated.
+ *
+ * The next member of the same group, so a refused photo is replaced by one of
+ * the same kind rather than by something unrelated. Single-member groups fall
+ * back to a clear face, which is the safest generic "before".
+ */
+function fallbackFor(app: CreativeApp): string | undefined {
+  const pool = SOURCE_GROUPS[groupFor(app)];
+  if (pool.length < 2) return "face-1";
+  const i = hashSlug(app.slug) % pool.length;
+  return pool[(i + 1) % pool.length];
 }
 
 /* ── 1. homepage ────────────────────────────────────────────────────────── */
@@ -323,73 +414,14 @@ WATERMARK_CASES.forEach((c, i) => {
 
 /* ── 3. the 200 app cards ───────────────────────────────────────────────── */
 
-/**
- * The "before" half of an app's comparison image, by category.
- *
- * This used to be a ten-entry hand-written map, which meant 190 apps had no
- * creative to generate at all. Deriving it from the category covers all of
- * them, and the "after" half is the app's own prompt, so each image is still
- * specific to its app.
- */
-const BEFORE_BY_CAT: Record<string, string> = {
-  headshot: "a casual arm's-length selfie of a person in a plain t-shirt against a bedroom wall, flat uneven indoor light",
-  portrait: "an ordinary smartphone snapshot of a woman in her thirties standing in a dim hallway in everyday clothes",
-  style: "a plain, unremarkable smartphone portrait of a person against a blank wall in even flat light",
-  retouch: "a smartphone portrait of a person with visible forehead shine, a green colour cast from overhead office lighting and one small blemish on the cheek",
-  restore: "an old damaged photographic print: faded to magenta, a crease across one corner, surface scratches and dust, edges worn",
-  background: "a photograph of a person standing in a cluttered kitchen, dishes and cupboards distracting behind them",
-  remove: "a holiday photograph of a landmark with three unrelated strangers walking through the frame and a litter bin at the edge",
-  enhance: "a small, soft, visibly low-resolution and slightly noisy photograph of a face, clearly enlarged too far",
-  product: "a product photographed on a cluttered domestic worktop under yellow kitchen lighting, crumbs and objects behind it",
-  social: "an off-centre snapshot of a person in a wide frame with the subject too small and a lot of dead space",
-  fun: "a plain, ordinary smartphone selfie of a person in colourful casual clothes against a blank wall",
-};
-
-/**
- * Subject overrides, matched on words in the app's slug or name.
- *
- * The category alone is not enough: a "Car Photo Editor" and a "Jewellery
- * Photo Editor" are both `product`, and showing a person — or the wrong
- * object — in the "before" half makes the card read as unrelated to the tool.
- * First match wins, so the more specific keywords are listed first.
- */
-const SUBJECT_RULES: [RegExp, string][] = [
-  [/piercing|beard|glasses|braces|tattoo|hairstyle|hair-color|bangs|curly|blonde|bald|buzz-cut|long-hair|eyebrow|eye-color|smile|expression/,
-    "a clear front-facing smartphone portrait of a person in plain even light against a blank wall, no accessories and nothing unusual about the face"],
-  [/unpixelate|unblur|upscal|enlarge|sharpen|denoise|hd-photo|4k|image-enlarger/,
-    "a small, soft, visibly low-resolution and slightly pixelated photograph of a face, clearly enlarged far past its real size"],
-  [/muscle|\babs\b|six-pack|body-editor|fitness|gym|skinny|slim/,
-    "an ordinary smartphone photograph of a person standing in a plain t-shirt in an undecorated room, flat indoor light"],
-  [/\bpet|dog|cat\b/, "an ordinary snapshot of a dog sitting on a living-room floor, taken from standing height in flat indoor light"],
-  [/baby|toddler|kid/, "an ordinary snapshot of a baby sitting on a plain rug, flat indoor light, slightly awkward framing"],
-  [/couple|wedding|anniversary|engagement/, "an ordinary snapshot of two friends in their thirties standing side by side in everyday clothes against a plain wall"],
-  [/family|group/, "an ordinary snapshot of three people standing in a row in everyday clothes in a plain room"],
-  [/\bcar\b|automotive|dealer|vehicle/, "a used car photographed in a residential driveway on an overcast day, bins and a fence visible behind it"],
-  [/bike|motorcycle|truck/, "a motorcycle photographed in a plain concrete car park on a dull day, clutter in the background"],
-  [/jewel|ring|necklace/, "a gold ring photographed on a kitchen worktop under yellow domestic lighting, dust visible on the metal"],
-  [/food|restaurant|menu|dish/, "a plated meal photographed on a restaurant table under dim yellow light, cutlery and a glass crowding the frame"],
-  [/real-estate|house|property|interior|room|home-decor|hotel|architect/, "a living room photographed on a phone in dull daylight: uneven exposure, a cluttered coffee table and a crooked horizon"],
-  [/saree|dress|outfit|fashion|clothing|apparel/, "an ordinary snapshot of a person in plain everyday clothes standing against a blank wall in flat light"],
-  [/shoe|sneaker|watch|headphone|bottle|electronic|gadget|amazon|ecommerce|shopify|product|beauty/, "a single consumer product photographed on a cluttered domestic worktop under yellow kitchen lighting"],
-  [/logo|icon|signature|png-maker/, "a hand-drawn mark on white paper photographed on a desk, the paper edges and shadows visible"],
-  [/thumbnail|youtube|banner|cover|poster|album/, "an ordinary off-centre snapshot of a person with a lot of dead space around them and nowhere obvious for a title"],
-  [/old-photo|restoration|colorize|colourise|black-and-white|yearbook/, "an old damaged photographic print: faded towards magenta, a crease across one corner, surface scratches and dust"],
-  [/passport|visa|\bid\b/, "a casual arm's-length selfie of a person against a patterned wall, head tilted, uneven shadow across the face"],
-];
-
-/** The "before" half for an app: a keyword rule if one matches, else its category. */
-function beforeSubjectFor(app: CreativeApp): string {
-  const hay = `${app.slug} ${app.h1}`.toLowerCase();
-  for (const [re, subject] of SUBJECT_RULES) if (re.test(hay)) return subject;
-  return BEFORE_BY_CAT[categoryOf(app)] || BEFORE_BY_CAT.portrait;
-}
-
 const APPS: ImageJob[] = CREATIVE_APPS.map((a) => {
   const noInput = NO_INPUT_PHOTO.has(a.slug);
   return {
     set: "apps" as const,
     bucket: LANDING,
-    path: `creative/${a.slug}.png`,
+    // v2/: see previewUrl() — the old folder holds stale collages that the
+    // generator would otherwise treat as already done.
+    path: `creative/v2/${a.slug}.png`,
     // 4:5 portrait: the card on the homepage and the hub, and the "after" on
     // the app's own page, where the source photo sits beside it.
     aspect: "4:5",
@@ -402,7 +434,7 @@ const APPS: ImageJob[] = CREATIVE_APPS.map((a) => {
       ? {}
       : (() => {
           const src = sourceFor(a);
-          const alt = SOURCE_FALLBACK[src];
+          const alt = fallbackFor(a);
           return {
             editOf: `sources/${src}.png`,
             ...(alt ? { editOfFallback: `sources/${alt}.png` } : {}),
@@ -417,6 +449,40 @@ const APPS: ImageJob[] = CREATIVE_APPS.map((a) => {
  * `<category>__<preset-id>.png` covers every app in that category, which is
  * 74 files instead of the 1,200 that per-app thumbnails would need.
  */
+/**
+ * Who or what a preset thumbnail shows.
+ *
+ * "a person" for every people-facing thumbnail meant a category's six tiles
+ * were six pictures of the same invented model, and the grid read as one photo
+ * recoloured six times. Rotating through these by a hash of the filename keeps
+ * each tile stable between runs while making the row look like six examples.
+ */
+const THUMB_PEOPLE = [
+  "a South Asian woman in her twenties",
+  "a Black man in his thirties",
+  "an East Asian woman in her thirties",
+  "a white man in his forties",
+  "a Latina woman in her thirties",
+  "a Middle Eastern man in his twenties",
+];
+
+const THUMB_PRODUCTS = [
+  "a single pair of over-ear headphones",
+  "a single skincare bottle",
+  "a single running shoe",
+  "a single wristwatch",
+];
+
+/** A stable subject for a thumbnail, varied by its filename. */
+function thumbSubject(cat: string | undefined, file: string): string {
+  const h = hashSlug(file);
+  if (cat === "product") return THUMB_PRODUCTS[h % THUMB_PRODUCTS.length];
+  if (cat === "restore") return "an old family photograph";
+  if (cat === "remove") return "a photograph with unwanted objects removed";
+  if (cat === "enhance") return "a sharp, detailed photograph";
+  return THUMB_PEOPLE[h % THUMB_PEOPLE.length];
+}
+
 const PRESETS: ImageJob[] = (() => {
   const out: ImageJob[] = [];
   const seen = new Set<string>();
@@ -424,13 +490,8 @@ const PRESETS: ImageJob[] = (() => {
     const cat = app.cat;
     if (!cat || seen.has(cat)) continue;
     seen.add(cat);
-    const subject =
-      cat === "product" ? "a single consumer product"
-      : cat === "restore" ? "an old family photograph"
-      : cat === "remove" ? "a photograph with unwanted objects removed"
-      : cat === "enhance" ? "a sharp, detailed photograph"
-      : "a person";
     for (const p of presetsFor(app, "solo")) {
+      const subject = thumbSubject(cat, `${cat}__${p.id}`);
       out.push({
         set: "presets", bucket: PRESET_IMAGE_BUCKET, path: `${cat}__${p.id}.png`, aspect: "3:4",
         prompt: `A small thumbnail example of ${subject}, shown in this exact treatment: ${p.modifier} It must read instantly as an example of "${p.label}" for ${CAT_META[cat as AppCat]?.label ?? cat}. Single subject, tightly framed, no borders. ${STYLE}`,
@@ -446,7 +507,7 @@ const PRESETS: ImageJob[] = (() => {
     for (const p of presetsFor(generic, "solo")) {
       out.push({
         set: "presets", bucket: PRESET_IMAGE_BUCKET, path: `preset__${p.id}.png`, aspect: "3:4",
-        prompt: `A small thumbnail example of a person photographed in this exact treatment: ${p.modifier} It must read instantly as an example of "${p.label}". Single subject, tightly framed, no borders. ${STYLE}`,
+        prompt: `A small thumbnail example of ${thumbSubject(undefined, `preset__${p.id}`)} photographed in this exact treatment: ${p.modifier} It must read instantly as an example of "${p.label}". Single subject, tightly framed, no borders. ${STYLE}`,
       });
     }
   }
@@ -456,7 +517,7 @@ const PRESETS: ImageJob[] = (() => {
     for (const p of presetsFor(app, "solo")) {
       out.push({
         set: "presets", bucket: PRESET_IMAGE_BUCKET, path: `${slug}__${p.id}.png`, aspect: "3:4",
-        prompt: `A small thumbnail example of a person photographed in this exact treatment: ${p.modifier} It must read instantly as an example of "${p.label}". Single subject, tightly framed, no borders. ${STYLE}`,
+        prompt: `A small thumbnail example of ${thumbSubject(undefined, `${slug}__${p.id}`)} photographed in this exact treatment: ${p.modifier} It must read instantly as an example of "${p.label}". Single subject, tightly framed, no borders. ${STYLE}`,
       });
     }
   }
@@ -467,9 +528,9 @@ const PRESETS: ImageJob[] = (() => {
 
 const SAMPLES: ImageJob[] = [
   { set: "samples", bucket: PRESET_IMAGE_BUCKET, path: "sample1.png", aspect: "3:4",
-    prompt: `An ordinary, honest smartphone portrait of a smiling woman in a plain top against a blank light wall, even flat indoor light, whole face clearly visible and front-facing. It should look like a real everyday selfie, not a professional photo. ${STYLE}` },
+    prompt: `An ordinary, honest smartphone portrait of a smiling South Asian woman in her twenties in a plain top against a blank light wall, even flat indoor light, whole face clearly visible and front-facing. It should look like a real everyday selfie, not a professional photo. ${STYLE}` },
   { set: "samples", bucket: PRESET_IMAGE_BUCKET, path: "sample2.png", aspect: "3:4",
-    prompt: `An ordinary, honest smartphone portrait of a smiling man in a plain shirt against a blank light wall, even flat indoor light, whole face clearly visible and front-facing. It should look like a real everyday selfie, not a professional photo. ${STYLE}` },
+    prompt: `An ordinary, honest smartphone portrait of a smiling Black man in his thirties in a plain shirt against a blank light wall, even flat indoor light, whole face clearly visible and front-facing. It should look like a real everyday selfie, not a professional photo. ${STYLE}` },
   { set: "samples", bucket: PRESET_IMAGE_BUCKET, path: "sample3.png", aspect: "3:4",
     prompt: `An ordinary smartphone photograph of a single consumer product — a pair of headphones — on a plain pale table under ordinary room lighting, whole product in frame, slightly dull and unstyled. ${STYLE}` },
 ];

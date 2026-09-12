@@ -131,6 +131,31 @@ export class FalError extends Error {
   get transient(): boolean {
     return this.status === 429 || this.status === 408 || this.status >= 500;
   }
+
+  /**
+   * A credentials or billing problem: every other request will fail the same
+   * way, so a bulk job should stop rather than burn through its queue.
+   */
+  get fatal(): boolean {
+    return this.status === 401 || this.status === 402 || this.status === 403;
+  }
+
+  /**
+   * fal refused *this* prompt (or this prompt/image pair) and will keep
+   * refusing it, but nothing is wrong with the key or the account.
+   *
+   * Worth distinguishing because run 10 conflated the two: one app prompt came
+   * back 422 "Could not generate images with the given prompts and images",
+   * that was read as fatal, and a run which had already produced 24 images
+   * stopped with dozens of workable jobs still queued.
+   */
+  get promptRejected(): boolean {
+    const text = `${this.detail} ${this.message}`;
+    return (
+      this.status === 422 ||
+      /content_policy|content checker|invalid_request|did not generate the expected output/i.test(text)
+    );
+  }
 }
 
 /** Turns a fal error body into something worth showing a user. */

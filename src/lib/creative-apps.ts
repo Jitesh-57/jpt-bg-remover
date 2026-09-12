@@ -1468,7 +1468,18 @@ export const getCreativeContent = (slug: string): CreativeContent | undefined =>
 // "landing" public bucket). Populated once via scripts/migrate-previews-to-supabase.mjs.
 const SUPABASE_PUBLIC = "https://lwworujvfttxkrjfrgav.supabase.co/storage/v1/object/public/landing";
 
-/** Public Supabase URL for an app's before/after preview image. */
+/**
+ * Public Supabase URL for an app's example image.
+ *
+ * `v2/` on purpose. The original `creative/<slug>.png` files were single-image
+ * collages a text-to-image model had guessed at, and many showed a person who
+ * appears nowhere else on the page — so the app page's "before" (a real source
+ * photo) and its "after" were two different people. Those files already
+ * existed, which meant the generator skipped every one of them and the
+ * mismatch could not be fixed by re-running it. A new prefix retires them in
+ * one line: the folder starts empty, gets filled with the app's own prompt run
+ * over its own source photo, and the stale collages are never served again.
+ */
 export function previewUrl(slug: string): string {
-  return `${SUPABASE_PUBLIC}/creative/${slug}.png`;
+  return `${SUPABASE_PUBLIC}/creative/v2/${slug}.png`;
 }
