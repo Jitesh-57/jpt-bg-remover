@@ -52,7 +52,7 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
       .catch(() => {});
   }, []);
 
-  // Default to the first preset so Apply is never a no-op.
+  // Default to the first preset so Generate is never a no-op.
   useEffect(() => {
     if (tab !== "custom" && !preset && presets.length) setPreset(presets[0]);
   }, [tab, preset, presets]);
@@ -153,6 +153,8 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
   };
 
   const canApply = !!original && !busy && (tab !== "custom" || !!custom.trim());
+  /** Signed in, but the balance cannot cover a generation. */
+  const short = loggedIn && credits !== null && needsCredits({ credits }, CREDIT_COST);
 
   return (
     <div className="jpt-workspace">
@@ -323,20 +325,31 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
           </div>
         )}
 
-        <button
-          onClick={loggedIn ? apply : signIn}
-          disabled={loggedIn && !canApply}
-          style={{
-            width: "100%", padding: "15px", borderRadius: 13, border: "none",
-            background: loggedIn && !canApply ? "var(--surface-3)" : "var(--grad-strong)",
-            color: loggedIn && !canApply ? "var(--text-faint)" : "#fff",
-            fontWeight: 800, fontSize: 16, fontFamily: "inherit",
-            cursor: loggedIn && !canApply ? "not-allowed" : "pointer",
-            boxShadow: loggedIn && canApply ? "var(--glow)" : "none",
-          }}
-        >
-          {!loggedIn ? "Sign in to generate" : busy ? "Generating…" : original ? "Apply" : "Upload a photo first"}
-        </button>
+        {(() => {
+          // Out of credits is an offer, not a dead end: the button becomes the
+          // packs. Waiting for a photo is the only genuinely disabled state.
+          const off = loggedIn && !short && !canApply;
+          return (
+            <button
+              onClick={!loggedIn ? signIn : short ? () => openPricing(app.h1) : apply}
+              disabled={off}
+              style={{
+                width: "100%", padding: "15px", borderRadius: 13, border: "none",
+                background: off ? "var(--surface-3)" : "var(--grad-strong)",
+                color: off ? "var(--text-faint)" : "#fff",
+                fontWeight: 800, fontSize: 16, fontFamily: "inherit",
+                cursor: off ? "not-allowed" : "pointer",
+                boxShadow: off ? "none" : "var(--glow)",
+              }}
+            >
+              {!loggedIn ? "Sign in to generate"
+                : short ? "Get credits to generate"
+                : busy ? "Generating…"
+                : original ? "Generate"
+                : "Upload a photo first"}
+            </button>
+          );
+        })()}
 
         <div style={{ fontSize: 12, color: "var(--text-faint)", textAlign: "center", marginTop: 10, lineHeight: 1.6 }}>
           {CREDIT_COST} credits per generation
@@ -371,7 +384,7 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
                 Upload a photo to start
               </div>
               <p style={{ fontSize: 14, color: "var(--text-muted)", margin: 0, maxWidth: 380, lineHeight: 1.65 }}>
-                Pick a style on the left, then hit Apply. Your original stays untouched — you always see both.
+                Pick a style on the left, then hit Generate. Your original stays untouched — you always see both.
               </p>
             </div>
           ) : (
@@ -381,7 +394,7 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
                 label="Transformed"
                 src={result}
                 busy={busy}
-                emptyText={busy ? "Generating…" : "Hit Apply to see the result"}
+                emptyText={busy ? "Generating…" : "Hit Generate to see the result"}
               />
             </div>
           )}
@@ -423,7 +436,12 @@ function Pane({ label, src, busy, emptyText }: { label: string; src: string | nu
       </span>
       <div
         style={{
-          aspectRatio: "3 / 4", maxWidth: "100%", borderRadius: 14, overflow: "hidden",
+          // A fixed, viewport-relative height rather than a 3:4 box. The box
+          // grew with the column, so a portrait photo was taller than the
+          // screen and you could see neither the whole image nor the controls.
+          // Capped like this, the upload always fits inside its pane — and
+          // `contain` below means it is the whole image, never a crop.
+          height: "clamp(240px, 42vh, 420px)", maxWidth: "100%", borderRadius: 14, overflow: "hidden",
           background: "var(--surface-2)", display: "flex", alignItems: "center", justifyContent: "center",
         }}
       >

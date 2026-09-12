@@ -728,9 +728,10 @@ export default function ImageEditorPage() {
     setUnlimitedReason(reason); setShowUnlimitedModal(true);
   };
 
-  // Free basic tools give anonymous visitors 5 trials, then they must sign in
-  // (basic tools stay free for signed-in users; 4× upscale & batch are Pro).
-  const ANON_FREE_TRANSFORMS = 5;
+  // Free tools without an account: two edits, then sign in. Signing in lifts
+  // the cap entirely and costs nothing — the free tools run in the browser, so
+  // there is no per-use cost to recover, only a reason to create the account.
+  const ANON_FREE_TRANSFORMS = 2;
   const anonBlocked = (): boolean => {
     if (!authChecked || user) return false; // signed in → unlimited
     let used = 0;
@@ -2774,7 +2775,7 @@ export default function ImageEditorPage() {
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 20 }}>
                 <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: 12, padding: "12px 14px" }}>
                   <div style={{ fontWeight: 800, fontSize: 12, marginBottom: 8, opacity: 0.8 }}>✅ FREE (Your Plan)</div>
-                  {["↔️ Resize", "🎨 Color Adjust", "🔢 Basic Crop", "🔍 Unlimited Basic Upscale", "🎁 5 free AI trials"].map(f => (
+                  {["↔️ Resize", "🎨 Color Adjust", "🔢 Basic Crop", "🔍 Unlimited Basic Upscale", "🔓 Every free tool, unlimited"].map(f => (
                     <div key={f} style={{ fontSize: 12, opacity: 0.9, marginBottom: 4 }}>{f}</div>
                   ))}
                 </div>

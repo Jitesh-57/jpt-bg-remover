@@ -156,27 +156,40 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
           <div style={{ maxWidth: 820, margin: "0 auto", textAlign: "center" }}>
             <h2 style={{ fontSize: "clamp(1.5rem,3vw,2rem)", fontWeight: 900, color: "var(--text)", margin: "0 0 28px", letterSpacing: "-0.02em" }}>See it in action — real before &amp; after</h2>
             {/*
-              Two real images, laid out here rather than generated as one
-              collage. The left panel is the exact photo the right panel was
-              produced from — the app's own prompt run over it — so the pair is
-              a genuine before and after rather than a model's impression of
-              one. Doing the layout and the labels in HTML also means crisp
-              type instead of the mangled lettering image models produce.
+              One frame, two flush halves — the layout the comparison actually
+              wants. It used to be two separate cards with a gap between them,
+              which read as two unrelated photos rather than one change, and
+              the BEFORE was visibly a different person from the AFTER because
+              the stale collage in the old bucket path was being served.
+
+              Still two files rather than a generated collage, and deliberately
+              so: the left half is the exact photo the right half was produced
+              from, the source photo is shared by every app in its group, and
+              the labels are HTML, so this costs one generation per app and the
+              type is crisp instead of the mangled lettering image models make.
             */}
             <figure style={{ margin: 0 }}>
-              <div className="jpt-compare" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(240px, 100%), 1fr))", gap: 12 }}>
+              <div
+                style={{
+                  display: "grid", gridTemplateColumns: "1fr 1fr", gap: 0,
+                  borderRadius: 18, overflow: "hidden",
+                  border: "1px solid var(--border)", background: "var(--surface-2)",
+                  boxShadow: "var(--shadow-sm)",
+                }}
+              >
                 {[
-                  { label: "Before", src: sourceImageUrl(sourceFor(a)), alt: `The photo uploaded to ${a.h1}`, accent: false },
-                  { label: "After", src: previewUrl(a.slug), alt: `The result from ${a.h1}`, accent: true },
+                  { label: "Before", src: sourceImageUrl(sourceFor(a)), alt: `The photo uploaded to ${a.h1}`, side: "left" as const },
+                  { label: "After", src: previewUrl(a.slug), alt: `The result from ${a.h1}`, side: "right" as const },
                 ].map((pane) => (
-                  <div key={pane.label} style={{ position: "relative", borderRadius: 16, overflow: "hidden", border: "1px solid var(--border)", background: "var(--surface-2)", aspectRatio: "4 / 5" }}>
+                  <div key={pane.label} style={{ position: "relative", aspectRatio: "4 / 5", minWidth: 0 }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={pane.src} alt={pane.alt} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                     <span style={{
-                      position: "absolute", top: 10, left: 10, fontSize: 10.5, fontWeight: 800, letterSpacing: "0.09em",
-                      borderRadius: 999, padding: "4px 10px", color: "#fff",
-                      background: pane.accent ? "var(--accent-fill)" : "rgba(11,11,14,0.82)",
-                      backdropFilter: pane.accent ? undefined : "blur(6px)",
+                      position: "absolute", top: 12,
+                      ...(pane.side === "left" ? { left: 12 } : { right: 12 }),
+                      fontSize: 11.5, fontWeight: 900, letterSpacing: "0.08em",
+                      borderRadius: 999, padding: "6px 14px", color: "#fff",
+                      background: "rgba(24,24,28,0.86)", backdropFilter: "blur(6px)",
                     }}>{pane.label.toUpperCase()}</span>
                   </div>
                 ))}

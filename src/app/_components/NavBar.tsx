@@ -9,6 +9,7 @@ import { PAID_FEATURES_ENABLED } from "@/lib/features";
 import { persistAuthContext } from "@/lib/pending-image";
 import ToolIcon, { iconKeyForHref } from "@/app/editor/ToolIcon";
 import BrandLogo from "./BrandLogo";
+import { openPricing } from "@/lib/pricing-modal";
 
 const PricingModal = lazy(() => import("./PricingModal"));
 
@@ -277,14 +278,17 @@ export default function NavBar() {
 
           <div style={{ flex: 1 }} />
 
-          {/* Credits CTA — shows the live balance once the user has one. */}
-          <a href="/pricing"
-            style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 15px", color: "#fff", fontSize: 14, fontWeight: 800, textDecoration: "none", borderRadius: 999, background: (user?.credits ?? 0) > 0 ? "linear-gradient(120deg,var(--success),var(--accent-2))" : "linear-gradient(120deg,var(--accent),var(--accent-2))", border: "1px solid rgba(255,255,255,0.15)", boxShadow: "0 4px 14px rgba(255,106,26,0.40)" }}
+          {/* Buy credits — always the same offer, and always the packs modal.
+              It used to read "10 credits" once you had a balance, which turned
+              the one commercial button in the header into a passive readout;
+              the balance itself already sits in the account chip beside it. */}
+          <button onClick={() => { trackPaymentPopupTriggered("navbar_credits"); openPricing("more AI credits"); }}
+            style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 15px", color: "#fff", fontSize: 14, fontWeight: 800, borderRadius: 999, background: "linear-gradient(120deg,var(--accent),var(--accent-2))", border: "1px solid rgba(255,255,255,0.15)", boxShadow: "0 4px 14px rgba(255,106,26,0.40)", cursor: "pointer", fontFamily: "inherit", whiteSpace: "nowrap" }}
             onMouseEnter={e => (e.currentTarget.style.opacity = "0.9")}
             onMouseLeave={e => (e.currentTarget.style.opacity = "1")}>
             <span style={{ fontSize: 13 }}>✨</span>
-            {(user?.credits ?? 0) > 0 ? `${user!.credits} credits` : "Buy credits"}
-          </a>
+            Buy credits
+          </button>
 
           {/* Auth */}
           {user ? (
@@ -297,7 +301,7 @@ export default function NavBar() {
                 <span style={{ fontSize: 13, fontWeight: 600, color: "var(--text-muted)" }}>{user.name.split(" ")[0]}</span>
                 {PAID_FEATURES_ENABLED && (
                   <span style={{ fontSize: 11, background: "var(--accent-fill)", color: "#fff", padding: "2px 8px", borderRadius: 12, fontWeight: 700 }}>
-                    {user.plan === "free" ? `🎁 ${user.trialsRemaining}` : `⚡ ${user.credits}`}
+                    {`⚡ ${user.credits}`}
                   </span>
                 )}
               </button>

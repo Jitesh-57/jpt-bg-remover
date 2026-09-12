@@ -11,7 +11,7 @@ export const maxDuration = 300;
 /**
  * Fills the site's image slots without anyone having to click anything.
  *
- * The work is described in src/lib/image-jobs.ts — 339 slots across the
+ * The work is described in src/lib/image-jobs.ts — every slot across the
  * homepage, the tool pages, the 200 app cards, the preset thumbnails, the
  * samples and the programmatic pages. Blog images are deliberately not in that
  * list and are not generated here.
@@ -19,7 +19,7 @@ export const maxDuration = 300;
  * Each invocation generates until its time budget is nearly spent, then starts
  * the next invocation itself and returns. A single trigger therefore walks the
  * whole set, which matters because the daily cron only fires once and a
- * 339-image run cannot fit in one function lifetime.
+ * few-hundred-image run cannot fit in one function lifetime.
  *
  * Triggered by the Vercel cron in vercel.json, or manually with ?token=…
  * Idempotent: a slot that already has a file is skipped, so re-running is free
@@ -87,6 +87,31 @@ function publicUrl(bucket: string, path: string): string {
 }
 
 
+/**
+ * Creates any bucket a job writes to that does not exist yet.
+ *
+ * Run 10 lost all 83 preset thumbnails and all 3 sample photos to
+ * "upload failed: Bucket not found": the code has always read them from a
+ * bucket named "App preset images", and that bucket had never been created.
+ * The service-role key can create it, so the generator does — public, because
+ * the pages link to these files directly.
+ */
+async function ensureBuckets(
+  supabase: ReturnType<typeof createAdminSupabase>
+): Promise<string[]> {
+  const needed = Array.from(new Set(IMAGE_JOBS.map((j) => j.bucket)));
+  const { data: existing } = await supabase.storage.listBuckets();
+  const have = new Set((existing || []).map((b) => b.name));
+  const created: string[] = [];
+  for (const name of needed) {
+    if (have.has(name)) continue;
+    const { error } = await supabase.storage.createBucket(name, { public: true });
+    if (!error) created.push(name);
+    else console.warn(`[site-images] could not create bucket "${name}": ${error.message}`);
+  }
+  return created;
+}
+
 async function missingJobs(
   supabase: ReturnType<typeof createAdminSupabase>
 ): Promise<ImageJob[]> {
@@ -150,6 +175,7 @@ export async function GET(req: NextRequest) {
 
   const started = Date.now();
   const supabase = createAdminSupabase();
+  const createdBuckets = await ensureBuckets(supabase);
   const all = await missingJobs(supabase);
 
   // Drop anything previously established as unproducible by either provider.
@@ -162,7 +188,7 @@ export async function GET(req: NextRequest) {
 
   if (!todo.length) {
     return NextResponse.json({
-      done: true, hop, remaining: 0, skippedPermanently,
+      done: true, hop, remaining: 0, skippedPermanently, createdBuckets,
       note: skippedPermanently
         ? `every remaining slot has a file; ${skippedPermanently} are on the skip list (delete landing/${REFUSED_PREFIX}/ to retry them)`
         : "every slot already has a file",
@@ -221,6 +247,75 @@ export async function GET(req: NextRequest) {
       }
     }
 
+    const contentType = job.path.endsWith(".jpg") ? "image/jpeg" : "image/png";
+
+    /** Writes bytes to the slot and records the win. Throws on upload failure. */
+    async function store(bytes: Buffer, note: string): Promise<void> {
+      const { error } = await supabase.storage
+        .from(job.bucket)
+        .upload(job.path, bytes, { contentType, upsert: true });
+      if (error) throw new Error(`upload failed: ${error.message}`);
+      results[key] = `${note} (${Math.round(bytes.length / 1024)} KB)`;
+      made += 1;
+      // A source that has just landed unblocks the apps that edit from it,
+      // within this same run.
+      present.add(keyOf(job.bucket, job.path));
+    }
+
+    const bytesOfDataUrl = (dataUrl: string) =>
+      Buffer.from(dataUrl.includes(",") ? dataUrl.split(",")[1] : dataUrl, "base64");
+
+    /**
+     * What to do when fal refuses this particular prompt.
+     *
+     * Three things are tried before giving up, because a blank card is the
+     * worst outcome and the middle rung recovers most of them:
+     *
+     *  1. If this was an *edit*, generate the same idea from the prompt alone.
+     *     Roughly sixty app cards failed on run 10 with "Could not generate
+     *     images with the given prompts and images" — the prompt/photo pair is
+     *     what the model objected to, and the prompt on its own is fine. The
+     *     card then shows an imagined result rather than a real edit of the
+     *     stored source, which is a fair trade for having artwork at all.
+     *  2. Gemini, which has a different checker.
+     *  3. The skip list, so later runs spend no time on it.
+     */
+    async function onPromptRejected(why: string): Promise<void> {
+      if (source) {
+        try {
+          const dataUrl = await generateFromText(job.prompt, {
+            aspect_ratio: job.aspect,
+            strict: true,
+            budgetMs: 120_000,
+          });
+          await store(bytesOfDataUrl(dataUrl), "ok as a fresh generation — fal refused the edit");
+          return;
+        } catch {
+          // Fall through to Gemini.
+        }
+      }
+      try {
+        if (geminiExhausted) throw new Error("Gemini quota already exhausted this run");
+        const viaGemini = await geminiGenerateFromText(job.prompt, { aspect_ratio: job.aspect });
+        const res = await fetch(viaGemini);
+        if (!res.ok) throw new Error(`fetch ${res.status}`);
+        await store(Buffer.from(await res.arrayBuffer()), "ok via Gemini — fal refused this prompt");
+        return;
+      } catch (g) {
+        const gm = (g as Error).message;
+        if (/high demand|quota|exhausted/i.test(gm)) geminiExhausted = true;
+        results[key] = `SKIPPED: fal refused it (${why}) and Gemini failed too (${gm})`;
+        await supabase.storage
+          .from(LANDING_BUCKET)
+          .upload(
+            refusedMarker(job.bucket, job.path),
+            Buffer.from(`${new Date().toISOString()} fal: ${why} | gemini: ${gm}`),
+            { contentType: "text/plain", upsert: true }
+          )
+          .catch(() => {});
+      }
+    }
+
     let lastError = "";
     for (let attempt = 0; attempt < RETRIES; attempt++) {
       if (outOfTime()) break;
@@ -239,63 +334,28 @@ export async function GET(req: NextRequest) {
               strict: true,
               budgetMs: 120_000,
             });
-        const b64 = dataUrl.includes(",") ? dataUrl.split(",")[1] : dataUrl;
-        const bytes = Buffer.from(b64, "base64");
-        const contentType = job.path.endsWith(".jpg") ? "image/jpeg" : "image/png";
-        const { error } = await supabase.storage
-          .from(job.bucket)
-          .upload(job.path, bytes, { contentType, upsert: true });
-        if (error) throw new Error(`upload failed: ${error.message}`);
-        results[key] = `ok (${Math.round(bytes.length / 1024)} KB)`;
-        made += 1;
-        // A source that has just landed unblocks the apps that edit from it,
-        // within this same run.
-        present.add(keyOf(job.bucket, job.path));
+        await store(bytesOfDataUrl(dataUrl), "ok");
         lastError = "";
         return;
       } catch (e) {
         const fal = e instanceof FalError ? e : null;
         lastError = fal ? `fal ${fal.status}: ${fal.detail || fal.message}` : (e as Error).message;
 
-        const policyRejected = !!fal && /content_policy|content checker/i.test(fal.detail || fal.message);
-        if (policyRejected) {
-          try {
-            if (geminiExhausted) throw new Error("Gemini quota already exhausted this run");
-            const viaGemini = await geminiGenerateFromText(job.prompt, { aspect_ratio: job.aspect });
-            const res = await fetch(viaGemini);
-            if (!res.ok) throw new Error(`fetch ${res.status}`);
-            const bytes = Buffer.from(await res.arrayBuffer());
-            const { error } = await supabase.storage
-              .from(job.bucket)
-              .upload(job.path, bytes, { contentType: job.path.endsWith(".jpg") ? "image/jpeg" : "image/png", upsert: true });
-            if (error) throw new Error(`upload failed: ${error.message}`);
-            results[key] = `ok via Gemini (${Math.round(bytes.length / 1024)} KB) — fal's checker refused this prompt`;
-            made += 1;
-            present.add(keyOf(job.bucket, job.path));
-            lastError = "";
-          } catch (g) {
-            const gm = (g as Error).message;
-            if (/high demand|quota|exhausted/i.test(gm)) geminiExhausted = true;
-            results[key] = `SKIPPED: fal's checker refused it and Gemini failed too (${gm})`;
-            await supabase.storage
-              .from(LANDING_BUCKET)
-              .upload(refusedMarker(job.bucket, job.path), Buffer.from(`${new Date().toISOString()} ${gm}`), {
-                contentType: "text/plain",
-                upsert: true,
-              })
-              .catch(() => {});
-          }
-          return;
-        }
-
-        // A rejected key, an empty balance or a malformed request will fail
-        // every remaining job identically. Stopping the whole run is handled
-        // by the caller via fatal, so the other workers wind down too.
-        if (fal && !fal.transient) {
+        // Only a rejected key or an empty balance fails every remaining job
+        // identically. Stopping the whole run is handled by the caller via
+        // fatal, so the other workers wind down too.
+        if (fal?.fatal) {
           fatalRef.current = { status: fal.status, detail: fal.detail };
           results[key] = `FAILED: ${lastError}`;
           return;
         }
+
+        if (fal?.promptRejected) {
+          await onPromptRejected(fal.detail || fal.message);
+          if (!results[key]?.startsWith("SKIPPED")) lastError = "";
+          return;
+        }
+
         if (attempt < RETRIES - 1) await sleep(BACKOFF_MS * (attempt + 1));
       }
     }
@@ -323,6 +383,7 @@ export async function GET(req: NextRequest) {
     hop,
     generatedThisRun: made,
     failedThisRun: failed,
+    createdBuckets,
     skippedPermanently,
     remaining,
     done: remaining === 0,
