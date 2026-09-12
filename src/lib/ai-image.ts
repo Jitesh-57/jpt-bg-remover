@@ -44,10 +44,10 @@ async function viaFal(
   }
 }
 
-export function editImage(src: string, prompt: string, model?: string): Promise<string> {
+export function editImage(src: string, prompt: string, model?: string, aspectRatio?: string): Promise<string> {
   const m = resolveModel(model);
   return viaFal(
-    () => falEditImage(src, `You are a professional photo editor. Edit this image: ${prompt}. Return only the edited image.`, m),
+    () => falEditImage(src, `You are a professional photo editor. Edit this image: ${prompt}. Return only the edited image.`, m, aspectRatio),
     () => geminiEditImage(src, prompt),
     "edit"
   );

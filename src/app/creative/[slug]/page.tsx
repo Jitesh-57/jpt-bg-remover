@@ -1,8 +1,12 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import FAQAccordion from "@/app/_components/FAQAccordion";
-import CreativeApp from "./CreativeApp";
+import AppWorkspace from "./AppWorkspace";
+import { presetsFor } from "@/lib/app-presets";
+import { presetImagesFor, sampleImages } from "@/lib/preset-images.server";
 import { CREATIVE_APPS, getCreativeApp, getCreativeContent, CREATIVE_BASE, previewUrl } from "@/lib/creative-apps";
+
+export const revalidate = 300;
 
 const BASE = "https://www.sjpt.io";
 
@@ -32,6 +36,13 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
 
   const url = `${BASE}${CREATIVE_BASE}/${slug}`;
   const related = CREATIVE_APPS.filter((x) => x.slug !== a.slug).slice(0, 6);
+
+  // Preset thumbnails and sample photos are resolved from Supabase at ISR time,
+  // so they appear as soon as they're uploaded — no redeploy needed.
+  const [presetImages, samples] = await Promise.all([
+    presetImagesFor(a.slug, presetsFor(a, "solo")),
+    sampleImages(),
+  ]);
   const content = getCreativeContent(slug);
 
   const appLd = {
@@ -70,16 +81,14 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
 
       <main style={{ fontFamily: "system-ui, -apple-system, sans-serif", color: "var(--text)", background: "var(--surface)" }}>
         {/* HERO + on-page generator */}
-        <section style={{ background: "linear-gradient(160deg,var(--surface-2) 0%,var(--surface) 55%,var(--success-soft) 100%)", padding: "56px 24px 64px" }}>
-          <div style={{ maxWidth: 880, margin: "0 auto", textAlign: "center" }}>
-            <a href={CREATIVE_BASE} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "var(--accent-soft)", color: "var(--accent)", fontWeight: 700, fontSize: 12, borderRadius: 20, padding: "6px 14px", marginBottom: 20, letterSpacing: "0.06em", textTransform: "uppercase", textDecoration: "none" }}>
-              {a.emoji} JPT Creative App
+        <section style={{ background: "var(--bg)", padding: "34px 24px 64px" }}>
+          <div style={{ maxWidth: 1240, margin: "0 auto" }}>
+            <a href={CREATIVE_BASE} style={{ display: "inline-flex", alignItems: "center", gap: 6, color: "var(--text-muted)", fontWeight: 700, fontSize: 12.5, marginBottom: 22, textDecoration: "none" }}>
+              ← All AI apps
             </a>
-            <h1 style={{ fontSize: "clamp(2rem,4.5vw,3.2rem)", fontWeight: 900, color: "var(--text)", lineHeight: 1.1, letterSpacing: "-0.03em", margin: "0 0 16px" }}>{a.h1}</h1>
-            <p style={{ fontSize: "clamp(1rem,2vw,1.15rem)", color: "var(--text-muted)", lineHeight: 1.6, maxWidth: 560, margin: "0 auto 36px" }}>{a.tagline}</p>
           </div>
 
-          <CreativeApp slug={a.slug} prompt={a.prompt} cta="Generate Now" badge={a.badge} gradient={a.gradient} appName={a.h1} />
+          <AppWorkspace app={a} presetImages={presetImages} samples={samples} />
         </section>
 
         {/* How it works */}

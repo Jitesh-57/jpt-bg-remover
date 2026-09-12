@@ -150,19 +150,41 @@ async function urlToDataUrl(url: string): Promise<string> {
   return `data:${mime};base64,${buf.toString("base64")}`;
 }
 
+/** Maps an aspect ratio to the nearest size GPT Image accepts. */
+function gptImageSize(aspectRatio?: string): string {
+  switch (aspectRatio) {
+    case "16:9":
+    case "3:2":
+      return "1536x1024";
+    case "9:16":
+    case "4:5":
+    case "3:4":
+      return "1024x1536";
+    case "1:1":
+      return "1024x1024";
+    default:
+      return "auto";
+  }
+}
+
 /** Edits an existing image from a text instruction. */
 export async function falEditImage(
   src: string,
   prompt: string,
-  model: FalModel = DEFAULT_MODEL
+  model: FalModel = DEFAULT_MODEL,
+  aspectRatio?: string
 ): Promise<string> {
   const imageUrl = await toFalImageUrl(src);
   const endpoint = ENDPOINTS[model].edit;
 
+  // The two families name this differently: nano-banana takes aspect_ratio,
+  // gpt-image takes image_size. Omitted means "keep the source framing".
   const input =
     model === "nano-banana"
-      ? { prompt, image_urls: [imageUrl], num_images: 1, output_format: "png" }
-      : { prompt, image_urls: [imageUrl], num_images: 1, image_size: "auto", quality: "high" };
+      ? { prompt, image_urls: [imageUrl], num_images: 1, output_format: "png",
+          ...(aspectRatio ? { aspect_ratio: aspectRatio } : {}) }
+      : { prompt, image_urls: [imageUrl], num_images: 1, quality: "high",
+          image_size: gptImageSize(aspectRatio) };
 
   const result = await runQueued(endpoint, input);
   return urlToDataUrl(firstImageUrl(result));
