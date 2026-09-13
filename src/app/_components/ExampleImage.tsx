@@ -1,26 +1,35 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
+import ToolArtwork from "./ToolArtwork";
 
 /**
- * An example image that says so when it is missing.
+ * An example image that draws the tool when the photo is missing.
  *
  * The comparison panes used a bare <img>, so a slot whose file has not been
- * generated yet painted the browser's broken-image icon and the alt text
- * across the pane — which is how "The result from AI Polaroid Photo Maker"
- * ended up as the visible content of an AFTER panel.
+ * generated painted the browser's broken-image icon and the alt text across
+ * the pane — which is how "The result from AI Polaroid Photo Maker" ended up
+ * as the visible content of an AFTER panel.
  *
  * A creative is generated per app and the set fills in over time, so a missing
- * file is a normal state rather than an error, and this renders it as one: the
- * app's own emoji over its gradient, with a line saying the example is on its
- * way. The tool itself is unaffected and sits directly above.
+ * file is a normal state rather than an error. It now renders as the app's own
+ * placeholder artwork: its palette, a motif matched to what the tool does, its
+ * emoji and its name.
+ *
+ * The photo itself goes through next/image, because these are full-size PNGs
+ * and a 4:5 card does not need 1.5 MB of them.
  */
 export default function ExampleImage({
   src,
   alt,
   emoji,
   gradient,
+  slug,
+  name,
   note = "Example coming soon",
+  sizes = "(max-width: 768px) 100vw, 420px",
+  eager = false,
 }: {
   src: string;
   alt: string;
@@ -28,7 +37,13 @@ export default function ExampleImage({
   emoji?: string;
   /** `[from, to]` for the placeholder's background. */
   gradient?: [string, string];
+  /** Used to choose the placeholder's motif. */
+  slug?: string;
+  /** Drawn on the placeholder. Falls back to the alt text. */
+  name?: string;
   note?: string;
+  sizes?: string;
+  eager?: boolean;
 }) {
   const [failed, setFailed] = useState(!src);
   const [loaded, setLoaded] = useState(false);
@@ -38,6 +53,9 @@ export default function ExampleImage({
     : "var(--surface-2)";
 
   if (failed) {
+    if (gradient && slug) {
+      return <ToolArtwork slug={slug} name={name || alt} emoji={emoji} gradient={gradient} note={note} />;
+    }
     return (
       <div
         style={{
@@ -59,18 +77,19 @@ export default function ExampleImage({
       {/* The gradient sits behind while the file decodes, so the pane is never
           an empty grey box mid-load. */}
       <div style={{ position: "absolute", inset: 0, background: bg, opacity: loaded ? 0 : 1, transition: "opacity .3s var(--ease)" }} />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <Image
         src={src}
         alt={alt}
-        loading="lazy"
-        decoding="async"
+        fill
+        sizes={sizes}
+        priority={eager}
+        loading={eager ? undefined : "lazy"}
         onLoad={() => setLoaded(true)}
         onError={() => setFailed(true)}
         style={{
-          position: "absolute", inset: 0, width: "100%", height: "100%",
-          objectFit: "cover", display: "block",
-          opacity: loaded ? 1 : 0, transition: "opacity .3s var(--ease)",
+          objectFit: "cover",
+          opacity: loaded ? 1 : 0,
+          transition: "opacity .3s var(--ease)",
         }}
       />
     </>

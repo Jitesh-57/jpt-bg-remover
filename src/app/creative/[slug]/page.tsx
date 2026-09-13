@@ -186,9 +186,13 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
                     <ExampleImage
                       src={pane.src}
                       alt={pane.alt}
+                      slug={a.slug}
+                      name={a.h1}
                       emoji={a.emoji}
                       gradient={[a.gradient[0], a.gradient[1]]}
                       note={pane.note}
+                      sizes="(max-width: 768px) 50vw, 410px"
+                      eager
                     />
                     <span style={{
                       position: "absolute", top: 12,
@@ -298,7 +302,15 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
                 <a key={r.slug} href={`${CREATIVE_BASE}/${r.slug}`} style={{ textDecoration: "none" }}>
                   {/* position: relative — ExampleImage fills its container. */}
                   <div style={{ position: "relative", aspectRatio: "16 / 10", borderRadius: 14, overflow: "hidden", marginBottom: 8, background: `linear-gradient(135deg, ${r.gradient[0]}, ${r.gradient[1]})` }}>
-                    <ExampleImage src={previewUrl(r.slug)} alt={`${r.h1} example`} emoji={r.emoji} gradient={[r.gradient[0], r.gradient[1]]} />
+                    <ExampleImage
+                      src={previewUrl(r.slug)}
+                      alt={`${r.h1} example`}
+                      slug={r.slug}
+                      name={r.h1}
+                      emoji={r.emoji}
+                      gradient={[r.gradient[0], r.gradient[1]]}
+                      sizes="(max-width: 768px) 45vw, 200px"
+                    />
                   </div>
                   <div style={{ fontSize: 13, fontWeight: 700, color: "var(--text)", textAlign: "center", lineHeight: 1.3 }}>{r.h1}</div>
                 </a>

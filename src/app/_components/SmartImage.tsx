@@ -1,33 +1,64 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
+import ToolArtwork from "./ToolArtwork";
 
 /**
- * An image slot that degrades gracefully. Creatives are uploaded to Supabase
- * over time, so a slot may be empty for a while: instead of a broken-image
- * icon it shows the gradient fallback until the file exists.
+ * An image slot that degrades gracefully, and does not cost megabytes.
+ *
+ * Two things were wrong with the plain <img> this replaces.
+ *
+ * The creatives in the bucket are full-size PNGs, 1 to 2 MB each, and the
+ * homepage shows eleven of them — so a cold refresh pulled something like
+ * fifteen megabytes and every card sat on its gradient until it arrived,
+ * which is exactly what "the images don't load" looked like. next/image
+ * resizes each file to the width it is actually displayed at and serves AVIF
+ * or WebP, which takes a 1.5 MB card down to tens of kilobytes.
+ *
+ * And a slot with no file rendered a flat two-stop gradient, so a gallery of
+ * missing creatives read as coloured rectangles. Given an `artwork` prop it
+ * now draws the tool's own placeholder instead.
  */
 export default function SmartImage({
-  src, alt, fallback, style, eager = false,
+  src, alt, fallback, style, eager = false, sizes = "(max-width: 768px) 50vw, 300px", artwork,
 }: {
-  src: string; alt: string; fallback: string; style?: React.CSSProperties; eager?: boolean;
+  src: string;
+  alt: string;
+  /** CSS background shown while loading and when there is no artwork. */
+  fallback: string;
+  style?: React.CSSProperties;
+  eager?: boolean;
+  /** What widths this slot is rendered at, so the optimiser picks one. */
+  sizes?: string;
+  /** Drawn instead of the bare gradient when the file is missing. */
+  artwork?: { slug: string; name: string; emoji?: string; gradient: [string, string]; note?: string };
 }) {
   const [ok, setOk] = useState(true);
   const [loaded, setLoaded] = useState(false);
+
+  const showArtwork = !ok && !!artwork;
+
   return (
-    <div style={{ position: "relative", width: "100%", height: "100%", background: fallback, ...style }}>
+    <div style={{ position: "relative", width: "100%", height: "100%", background: fallback, overflow: "hidden", ...style }}>
+      {showArtwork && <ToolArtwork {...artwork!} />}
       {ok && src && (
         // Invisible until it has actually loaded: otherwise a pending or missing
         // file paints its alt text over the fallback instead of the fallback.
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
+        <Image
           src={src}
           alt={alt}
-          loading={eager ? "eager" : "lazy"}
-          decoding="async"
+          fill
+          sizes={sizes}
+          priority={eager}
+          loading={eager ? undefined : "lazy"}
           onLoad={() => setLoaded(true)}
           onError={() => setOk(false)}
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: loaded ? 1 : 0, transition: "opacity .35s var(--ease)" }}
+          style={{
+            objectFit: "cover",
+            opacity: loaded ? 1 : 0,
+            transition: "opacity .35s var(--ease)",
+          }}
         />
       )}
     </div>

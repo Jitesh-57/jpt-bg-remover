@@ -149,6 +149,8 @@ export default function HomePage({
                     src={previewUrl(a.slug)}
                     alt={`A photo turned into ${a.h1}`}
                     fallback={`linear-gradient(135deg, ${a.gradient[0]}, ${a.gradient[1]})`}
+                    sizes="(max-width: 768px) 33vw, 393px"
+                    artwork={{ slug: a.slug, name: a.h1, emoji: a.emoji, gradient: [a.gradient[0], a.gradient[1]] }}
                     eager
                   />
                   <span style={{ position: "absolute", left: 12, bottom: 12, right: 12, background: "rgba(11,11,14,0.78)", backdropFilter: "blur(6px)", color: "#fff", fontSize: 12.5, fontWeight: 800, borderRadius: 10, padding: "8px 11px", lineHeight: 1.35 }}>
@@ -171,7 +173,13 @@ export default function HomePage({
               {apps.map((a) => (
                 <Link key={a.slug} href={`${CREATIVE_BASE}/${a.slug}`} className="jpt-hover" style={{ textDecoration: "none", borderRadius: 18, overflow: "hidden", border: "1px solid var(--border)", background: "var(--surface)", display: "block" }}>
                   <div style={{ aspectRatio: "4 / 5", position: "relative" }}>
-                    <SmartImage src={previewUrl(a.slug)} alt={`${a.h1} example`} fallback={`linear-gradient(135deg, ${a.gradient[0]}, ${a.gradient[1]})`} />
+                    <SmartImage
+                      src={previewUrl(a.slug)}
+                      alt={`${a.h1} example`}
+                      fallback={`linear-gradient(135deg, ${a.gradient[0]}, ${a.gradient[1]})`}
+                      sizes="(max-width: 768px) 50vw, 280px"
+                      artwork={{ slug: a.slug, name: a.h1, emoji: a.emoji, gradient: [a.gradient[0], a.gradient[1]], note: "Example coming soon" }}
+                    />
                     <span style={{ position: "absolute", top: 10, left: 10, background: "rgba(11,11,14,0.8)", color: "var(--accent)", border: "1px solid var(--accent-border)", backdropFilter: "blur(6px)", fontSize: 11, fontWeight: 800, borderRadius: 999, padding: "4px 10px" }}>{a.emoji} {a.badge}</span>
                   </div>
                   <div style={{ padding: "14px 15px 16px" }}>

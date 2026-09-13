@@ -12,6 +12,7 @@ import { openPricing, needsCredits } from "@/lib/pricing-modal";
 import { trackEvent } from "@/lib/analytics";
 import { persistAuthContext, savePendingContext } from "@/lib/pending-image";
 import { prepareDataUrl, parseJsonResponse } from "@/lib/upload-prep";
+import Image from "next/image";
 
 const MAX_MB = 10;
 const ACCEPT = "image/jpeg,image/jpg,image/png,image/webp";
@@ -246,8 +247,9 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
                   cursor: "pointer", background: "var(--surface-2)",
                 }}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                {/* 40px on screen; the file behind it is a full-size photo, so
+                    it goes through the optimiser like everything else. */}
+                <Image src={src} alt="" width={40} height={40} sizes="40px" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               </button>
             ))}
           </div>
