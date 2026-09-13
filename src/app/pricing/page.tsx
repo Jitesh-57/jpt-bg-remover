@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { trackBeginCheckout, trackPurchase, trackBuyButtonClicked, trackPaymentFailed } from "@/lib/analytics";
 import { explainPaymentFailure } from "@/lib/pricing-modal";
 import { PACKS, CREDIT_COST, type Pack } from "@/lib/plans";
+import { beginGoogleSignIn } from "@/lib/auth-return";
 
 /** The shape Razorpay hands to a "payment.failed" listener. */
 interface RazorpayFailure {
@@ -59,7 +60,7 @@ export default function PricingPage() {
   }, []);
 
   function signInWithGoogle() {
-    window.location.href = `/api/auth/google?next=${encodeURIComponent("/pricing")}`;
+    void beginGoogleSignIn("/pricing");
   }
 
   async function handleBuy(p: Pack) {

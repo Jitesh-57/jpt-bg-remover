@@ -10,7 +10,8 @@ import { CREDIT_COST } from "@/lib/plans";
 import { SHOW_PRESET_TABS, SHOW_STYLE_PICKER } from "@/lib/workspace-config";
 import { openPricing, needsCredits } from "@/lib/pricing-modal";
 import { trackEvent } from "@/lib/analytics";
-import { persistAuthContext, savePendingContext } from "@/lib/pending-image";
+import { savePendingContext } from "@/lib/pending-image";
+import { beginGoogleSignIn } from "@/lib/auth-return";
 import { prepareDataUrl, parseJsonResponse } from "@/lib/upload-prep";
 import Image from "next/image";
 
@@ -40,6 +41,9 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
   const [loggedIn, setLoggedIn] = useState(false);
   /** True once a pack has been bought; `plan` only leaves "free" on purchase. */
   const [purchased, setPurchased] = useState(false);
+
+  /** Highlights the drop target while a file is over it. */
+  const [dragging, setDragging] = useState(false);
 
   const fileRef = useRef<HTMLInputElement>(null);
   const presets = useMemo(() => presetsFor(app, tab), [app, tab]);
@@ -92,9 +96,7 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
   }, []);
 
   const signIn = async () => {
-    await persistAuthContext();
-    const next = (window.location.pathname + window.location.search) || "/";
-    window.location.href = `/api/auth/google?next=${encodeURIComponent(next)}`;
+    await beginGoogleSignIn();
   };
 
   const apply = async () => {
@@ -419,14 +421,61 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
           }}
         >
           {!original ? (
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 320, textAlign: "center", padding: 24 }}>
+            /*
+              The panel is the upload control, not a caption for one.
+
+              It is the largest thing on the page and it said "Upload a photo to
+              start", so first-time visitors clicked it — and nothing happened,
+              because the only way in was the button over in the left rail. It
+              now takes a click, a drop and a keypress, through the same handler
+              that button uses, so wherever someone aims they get the picker.
+            */
+            <div
+              role="button"
+              tabIndex={0}
+              aria-label="Upload a photo"
+              onClick={() => fileRef.current?.click()}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") { e.preventDefault(); fileRef.current?.click(); }
+              }}
+              onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+              onDragEnter={(e) => { e.preventDefault(); setDragging(true); }}
+              onDragLeave={() => setDragging(false)}
+              onDrop={(e) => {
+                e.preventDefault();
+                setDragging(false);
+                const f = e.dataTransfer.files?.[0];
+                if (f) void onFile(f);
+              }}
+              style={{
+                display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+                minHeight: 320, textAlign: "center", padding: 24, cursor: "pointer",
+                borderRadius: 16,
+                border: `1.5px dashed ${dragging ? "var(--accent)" : "var(--border-strong)"}`,
+                background: dragging ? "var(--accent-soft)" : "transparent",
+                transition: "background 120ms ease, border-color 120ms ease",
+              }}
+            >
               <div style={{ fontSize: 42, marginBottom: 12 }}>{app.emoji}</div>
               <div style={{ fontSize: 16.5, fontWeight: 800, color: "var(--text)", marginBottom: 6 }}>
-                Upload a photo to start
+                {dragging ? "Drop your photo here" : "Upload a photo to start"}
               </div>
               <p style={{ fontSize: 14, color: "var(--text-muted)", margin: 0, maxWidth: 380, lineHeight: 1.65 }}>
-                Pick a style on the left, then hit Generate. Your original stays untouched — you always see both.
+                Click anywhere in this box or drag a photo in. Pick a style on the left, then hit Generate — your
+                original stays untouched, you always see both.
               </p>
+              <span
+                style={{
+                  marginTop: 18, padding: "11px 22px", borderRadius: 999,
+                  background: "var(--grad-strong)", color: "#fff", fontWeight: 800, fontSize: 14.5,
+                  boxShadow: "var(--glow)",
+                }}
+              >
+                + Choose a photo
+              </span>
+              <div style={{ fontSize: 12, color: "var(--text-faint)", marginTop: 10 }}>
+                JPG · PNG · WEBP, up to {MAX_MB}MB
+              </div>
             </div>
           ) : (
             <div className="jpt-compare">

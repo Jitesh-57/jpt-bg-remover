@@ -7,6 +7,7 @@ import { trackSignUp, setAnalyticsUser, trackSignInClicked, trackSignInFailed, t
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
 import { persistAuthContext } from "@/lib/pending-image";
+import { beginGoogleSignIn } from "@/lib/auth-return";
 import ToolIcon, { iconKeyForHref } from "@/app/editor/ToolIcon";
 import BrandLogo from "./BrandLogo";
 import { openPricing } from "@/lib/pricing-modal";
@@ -142,11 +143,9 @@ export default function NavBar() {
   // (uploaded image + active tool) so it survives the sign-in round-trip.
   const handleGoogleSignIn = async () => {
     trackSignUp("google");
-    // Awaited: the stash may go to IndexedDB, and we navigate immediately after.
-    await persistAuthContext();
-    // Come back to whichever page they signed in from, upload and all.
-    const next = (window.location.pathname + window.location.search) || "/";
-    window.location.href = `/api/auth/google?next=${encodeURIComponent(next)}`;
+    // Stashes the upload, records the return path and navigates — see
+    // lib/auth-return.ts for why the return path is kept in the browser too.
+    await beginGoogleSignIn();
   };
   const handleLogout = async () => {
     try { await createSupabaseClient().auth.signOut(); } catch {}
@@ -506,7 +505,7 @@ export default function NavBar() {
             <div style={{ textAlign: "center", marginBottom: 24 }}>
               <div style={{ fontSize: 44, marginBottom: 8 }}>✨</div>
               <div style={{ fontWeight: 900, fontSize: 22, color: "var(--text)", marginBottom: 6 }}>Sign in to Pixel Shine</div>
-              <p style={{ fontSize: 14, color: "var(--text-muted)", margin: 0 }}>Get <strong>10 free AI credits</strong> to start editing</p>
+              <p style={{ fontSize: 14, color: "var(--text-muted)", margin: 0 }}><strong>Unlimited free tools</strong>, and your edits saved to your account</p>
             </div>
             <div style={{ display: "flex", background: "var(--surface-2)", borderRadius: 10, padding: 3, marginBottom: 22 }}>
               {(["google", "email"] as const).map(t => (
