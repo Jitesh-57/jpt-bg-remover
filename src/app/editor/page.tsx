@@ -11,6 +11,7 @@ import {
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
 import { CREDIT_COST, PACKS, inrPerCredit } from "@/lib/plans";
 import { parseJsonResponse } from "@/lib/upload-prep";
+import { explainPaymentFailure } from "@/lib/pricing-modal";
 import { savePendingContext, loadPendingContext, clearPendingContext } from "@/lib/pending-image";
 import { applyWatermark, renderMeme, type WatermarkPosition } from "@/lib/tools-canvas";
 import ToolIcon from "./ToolIcon";
@@ -641,7 +642,7 @@ export default function ImageEditorPage() {
       rzp.on?.("payment.failed", (resp: RazorpayFailure) => {
         trackPaymentFailed(planKey, resp?.error?.reason || "payment_failed");
         console.error("[editor] razorpay payment.failed:", JSON.stringify(resp?.error || {}));
-        setError(resp?.error?.description || "Payment failed. Please try again.");
+        setError(explainPaymentFailure(resp?.error?.description, resp?.error?.reason));
         setBuyingPlan(null);
       });
 

@@ -31,3 +31,28 @@ export function openPricing(reason?: string): void {
 export function needsCredits(user: { credits?: number } | null | undefined, cost: number): boolean {
   return !user || (user.credits ?? 0) < cost;
 }
+
+/**
+ * Turns a Razorpay failure into something the reader can act on.
+ *
+ * The website-mismatch rejection is the one worth special-casing: Razorpay
+ * refuses it at payment_initiation with "Payment blocked as website does not
+ * match registered website(s)", which tells a customer nothing and tells the
+ * operator only half of what they need. The half that matters is the origin
+ * the checkout actually ran on, because that is the exact string that has to
+ * be registered — and it is not always the one in the address bar, since
+ * Chrome hides "www." and a preview deployment has a different host entirely.
+ */
+export function explainPaymentFailure(description?: string, reason?: string): string {
+  const text = `${description || ""} ${reason || ""}`;
+  const origin = typeof window !== "undefined" ? window.location.origin : "";
+
+  if (/website|risk_check_failed/i.test(text)) {
+    return (
+      `Payments are not enabled for ${origin || "this address"} yet. ` +
+      `This site's address has to be registered on the Razorpay account ` +
+      `(Account & Settings → Website and app details) before it can take payments.`
+    );
+  }
+  return description || "Payment failed. Please try again.";
+}
