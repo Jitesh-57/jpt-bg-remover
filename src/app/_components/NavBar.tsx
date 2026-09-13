@@ -397,6 +397,12 @@ export default function NavBar() {
                           onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
                           ✦ My Generations
                         </a>
+                        <a href="/invoices" onClick={() => setShowMenu(false)}
+                          style={{ display: "block", padding: "10px 16px", fontSize: 13, color: "var(--text)", textDecoration: "none", fontWeight: 500 }}
+                          onMouseEnter={e => (e.currentTarget.style.background = "var(--surface-2)")}
+                          onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
+                          🧾 Invoices
+                        </a>
                         <button onClick={() => { trackPaymentPopupTriggered("manual"); setShowPricing(true); setShowMenu(false); }}
                           style={{ width: "100%", padding: "10px 16px", background: "none", border: "none", textAlign: "left", fontSize: 13, color: "var(--accent)", cursor: "pointer", fontWeight: 600 }}
                           onMouseEnter={e => (e.currentTarget.style.background = "var(--surface-2)")}
@@ -444,6 +450,10 @@ export default function NavBar() {
                       <a href="/generations" onClick={() => setShowMenu(false)}
                         style={{ display: "block", padding: "14px 16px", fontSize: 14.5, color: "var(--text)", textDecoration: "none", fontWeight: 600 }}>
                         ✦ My Generations
+                      </a>
+                      <a href="/invoices" onClick={() => setShowMenu(false)}
+                        style={{ display: "block", padding: "14px 16px", fontSize: 14.5, color: "var(--text)", textDecoration: "none", fontWeight: 600 }}>
+                        🧾 Invoices
                       </a>
                       <button onClick={() => { trackPaymentPopupTriggered("manual"); setShowPricing(true); setShowMenu(false); }}
                         style={{ width: "100%", padding: "14px 16px", background: "none", border: "none", textAlign: "left", fontSize: 14.5, color: "var(--accent)", cursor: "pointer", fontWeight: 700 }}>
