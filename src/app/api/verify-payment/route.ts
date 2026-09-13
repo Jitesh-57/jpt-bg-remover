@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { checkAuth, createAdminSupabase } from "@/lib/auth";
 import { PACKS, inrPaise } from "@/lib/plans";
+import { financialYear, invoiceNumber } from "@/lib/invoice";
 
 export const runtime = "nodejs";
 
@@ -58,15 +59,53 @@ export async function POST(req: NextRequest) {
 
   // Credits never expire, so nothing time-based is written here.
 
-  // Record the purchase for audit
-  void admin.from("purchases").insert({
+  /*
+    Record the purchase, and give it an invoice number.
+
+    Awaited, unlike before: this row is the only record that the payment
+    happened, and it is what the buyer's invoice is rendered from. Firing it
+    off unawaited meant a purchase could complete with nothing written down.
+
+    It still cannot fail the request. The credits are already in the account
+    and the money has already moved; refusing here would tell the buyer their
+    payment failed when it did not. A failure is logged loudly instead, with
+    the payment id, so the row can be reconstructed.
+
+    Numbering: sequential within the Indian financial year, which is the
+    convention a buyer's accountant expects. Derived from the count of rows
+    already in this year — fine at this volume, and the unique index in
+    docs/invoices.md turns a race into a visible error rather than two
+    customers holding the same invoice number.
+  */
+  const now = new Date();
+  const fy = financialYear(now);
+  let invoiceNo: string | null = null;
+  try {
+    const yearStart = new Date(Date.UTC(Number(fy.slice(0, 4)), 3, 1)).toISOString();
+    const { count } = await admin
+      .from("purchases")
+      .select("id", { count: "exact", head: true })
+      .gte("created_at", yearStart);
+    invoiceNo = invoiceNumber((count ?? 0) + 1, now);
+  } catch (e) {
+    console.warn("[verify-payment] could not number the invoice:", (e as Error).message);
+  }
+
+  const { error: purchaseErr } = await admin.from("purchases").insert({
     user_id: session!.userId,
     razorpay_order_id,
     razorpay_payment_id,
     plan,
     credits_added: planCredits,
     amount_paise: PLAN_CREDITS[plan].amountPaise,
-  }); // non-blocking, table may not exist yet
+    ...(invoiceNo ? { invoice_no: invoiceNo } : {}),
+  });
+  if (purchaseErr) {
+    console.error(
+      `[verify-payment] purchase row NOT saved for payment ${razorpay_payment_id} ` +
+      `(user ${session!.userId}, plan ${plan}): ${purchaseErr.message}`
+    );
+  }
 
-  return NextResponse.json({ success: true, plan, credits: newCredits });
+  return NextResponse.json({ success: true, plan, credits: newCredits, invoiceNo });
 }

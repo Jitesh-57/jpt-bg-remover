@@ -326,3 +326,21 @@ a { color: inherit; }
      row its last 120px and pushed Sign in off the edge. */
   .jpt-nav-cta { display: none !important; }
 }
+
+/* ── Invoices ──────────────────────────────────────────────────────────────
+   The invoice is printed and filed, so the printed sheet drops the site
+   furniture and the page's own background: only the document survives. */
+@media print {
+  .jpt-no-print,
+  nav,
+  footer { display: none !important; }
+
+  html, body { background: #fff !important; }
+
+  #jpt-invoice {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+  }
+}
