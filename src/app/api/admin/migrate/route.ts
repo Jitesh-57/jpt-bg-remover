@@ -23,10 +23,15 @@ export const maxDuration = 120;
  *   GET /api/admin/migrate?token=…&apply=1  run it
  *
  * Needs SUPABASE_DB_URL — Supabase → Project Settings → Database → Connection
- * string → URI, with the password filled in. Use the pooled (port 6543) URI:
- * a serverless function makes a new connection per invocation and the direct
- * port runs out of them. The value is a database superuser credential, so it
- * belongs in the environment and nowhere else.
+ * string, with the password filled in.
+ *
+ * Use the **Session pooler** URI (port 5432). The direct `db.<ref>.supabase.co`
+ * host is IPv6-only on newer projects and a serverless function generally
+ * cannot reach it; the transaction pooler on 6543 can be reached but does not
+ * support prepared statements, so nothing here uses one.
+ *
+ * The value is a database superuser credential. It belongs in the environment
+ * and nowhere else — never in a query string, which is logged.
  */
 
 const DIR = path.join(process.cwd(), "supabase", "migrations");
@@ -76,7 +81,7 @@ export async function GET(req: NextRequest) {
   if (!url) {
     return NextResponse.json({
       error: "SUPABASE_DB_URL is not set, so there is no database to migrate.",
-      fix: "Supabase → Project Settings → Database → Connection string → URI. Use the pooled URI (port 6543), put the password in it, and set it as SUPABASE_DB_URL in the Vercel project. Then redeploy and call this again.",
+      fix: "Supabase → Project Settings → Database → Connection string → Session pooler (port 5432). Put the real password in it, set it as SUPABASE_DB_URL in the Vercel project's environment variables, and call this again once the redeploy finishes.",
       migrations: names,
     }, { status: 503 });
   }
@@ -103,7 +108,7 @@ export async function GET(req: NextRequest) {
   } catch (e) {
     return NextResponse.json({
       error: `Could not connect to the database: ${(e as Error).message}`,
-      fix: "Check SUPABASE_DB_URL — it needs the real password in it, and the pooled host (port 6543) rather than the direct one.",
+      fix: "Check SUPABASE_DB_URL. It needs the real password in it (not the [YOUR-PASSWORD] placeholder), and a host this function can reach: use the Session pooler URI on port 5432. The direct db.<ref>.supabase.co host is IPv6-only on newer projects and is usually unreachable from here.",
     }, { status: 502 });
   }
 
@@ -152,7 +157,19 @@ export async function GET(req: NextRequest) {
       await client.query("begin");
       try {
         await client.query(body);
-        await client.query("insert into public.schema_migrations (name) values ($1)", [name]);
+        /*
+          Escaped into the statement rather than passed as a parameter.
+
+          A parameterised query goes over the extended protocol, which means a
+          prepared statement — and Supabase's transaction-mode pooler (port
+          6543) does not support those. Someone who pastes that connection
+          string would have every migration apply and then fail to be recorded.
+          The value is a filename from our own folder either way; escapeLiteral
+          is what makes inlining it safe rather than the source being trusted.
+        */
+        await client.query(
+          `insert into public.schema_migrations (name) values (${client.escapeLiteral(name)})`
+        );
         await client.query("commit");
         applied.push(name);
       } catch (e) {

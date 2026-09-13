@@ -8,9 +8,21 @@ GET /api/admin/migrate?token=<ADMIN_IMAGE_TOKEN>&apply=1  # apply it
 ```
 
 Needs `SUPABASE_DB_URL` — Supabase → Project Settings → Database → Connection
-string → URI, with the password filled in. Use the **pooled** URI (port 6543): a
-serverless function opens a connection per invocation and the direct port runs
-out of them.
+string, with the real password in it. Use the **Session pooler** URI (port
+5432): the direct `db.<ref>.supabase.co` host is IPv6-only on newer projects and
+a serverless function generally cannot reach it, while the transaction pooler on
+6543 does not support prepared statements. Nothing here uses one, so 6543 works
+too — but 5432 is the one to paste.
+
+Then check the result:
+
+```
+GET /api/admin/db-check?token=<ADMIN_IMAGE_TOKEN>
+```
+
+Read-only. It compares the schema against every column the app reads or writes,
+confirms RLS is on and each table has a policy, counts the rows, and lists what
+is wrong in `problems`. `ok: true` means there is nothing left to do.
 
 `supabase-js` speaks PostgREST, which has no DDL, which is why the tables could
 not be created from the app before and had to be pasted into the SQL editor by
