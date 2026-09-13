@@ -25,7 +25,7 @@ export const SEO_POSTS_4: BlogPost[] = [
       { body: `**Removing a watermark from a photo** used to mean painstaking work with a clone tool — matching textures pixel by pixel. Today an **AI watermark remover** does the hard part for you: it detects the mark and rebuilds what was behind it, so a logo, caption or stamp simply disappears. Here's how it works and how to do it free.` },
       { heading: "When it's fine to remove a watermark", body: `Remove watermarks from images you **own** or have permission to edit — your own photos, a design where you added a mark by mistake, a client file you're licensed to use, or a stock image you've properly purchased. Don't strip a watermark from someone else's copyrighted work to reuse it without a licence; that's the mark doing its job. Used on your own images, a watermark remover is just a cleanup tool.` },
       { heading: "How AI watermark removal works", body: `A watermark sits *on top of* the photo, so removing it means reconstructing the pixels it covered. AI inpainting has learned from millions of images what a plausible background looks like, so it fills the gap to match the surrounding texture, colour and lighting. On busy or textured backgrounds the result is often invisible; on smooth areas like sky it's usually flawless.` },
-      { heading: "How to remove a watermark (free)", body: `**Step 1 — Open the watermark remover** at sjpt.io/watermark-remover.\n\n**Step 2 — Upload your photo.**\n\n**Step 3 — Click Remove Watermark.** The AI detects the mark and rebuilds the area behind it.\n\n**Step 4 — Download** your clean image.\n\nFree to try, no software to install, works on phone and computer.` },
+      { heading: "How to remove a watermark (free)", body: `**Step 1 — Open the watermark remover** on Pixel Shine.\n\n**Step 2 — Upload your photo.**\n\n**Step 3 — Click Remove Watermark.** The AI detects the mark and rebuilds the area behind it.\n\n**Step 4 — Download** your clean image.\n\nFree to try, no software to install, works on phone and computer.` },
       { heading: "Tips for the cleanest result", body: `**Start from the highest-quality copy** you have — more detail gives the AI more to work with.\n\n**Simple backgrounds clean up best** — a mark over sky, wall or blur vanishes most cleanly; heavy detail right under the mark is the hardest case.\n\n**Big or tiled watermarks** covering the whole image are tougher than a small corner logo — expect the best results on contained marks.` },
       { heading: "Frequently asked questions", body: FAQ([
         ["How do I remove a watermark from a photo for free?", "Upload your image to the watermark remover, click Remove Watermark, and download the cleaned result. Free to try, no install."],
@@ -33,7 +33,7 @@ export const SEO_POSTS_4: BlogPost[] = [
         ["Will the photo still look natural?", "Usually yes — AI inpainting rebuilds the area to match the surrounding image, especially on simple or textured backgrounds."],
         ["Does it work on my phone?", "Yes — it runs in your browser, so it works on phones, tablets and computers with nothing to download."],
       ]) },
-      { heading: "Key takeaways", body: `An AI watermark remover clears logos, text and stamps by rebuilding what was behind them — clean, fast and free to try on images you own. Try it at sjpt.io/watermark-remover. Remove Watermark →` },
+      { heading: "Key takeaways", body: `An AI watermark remover clears logos, text and stamps by rebuilding what was behind them — clean, fast and free to try on images you own. Try it on Pixel Shine. Remove Watermark →` },
     ],
   ),
 
@@ -49,7 +49,7 @@ export const SEO_POSTS_4: BlogPost[] = [
     [
       { body: `Most "watermark remover" apps want an install, an account, or a payment before they'll do anything. You don't need any of that. A **browser-based AI watermark remover** works right on your phone — **no app to download** — and clears logos, text and stamps in a few taps. Here's how to remove a watermark on your phone, free.` },
       { heading: "Why skip the app", body: `App-store watermark removers are often bloated with ads, ask for photo-library permissions, and paywall the actual export. A web tool sidesteps all of it: nothing installed, nothing to uninstall later, and it works the same on **iPhone and Android** because it runs in your mobile browser. Fewer permissions, less hassle, same result.` },
-      { heading: "How to remove a watermark on your phone (free)", body: `**Step 1 — Open sjpt.io/watermark-remover** in Safari or Chrome on your phone.\n\n**Step 2 — Tap to upload** the photo from your camera roll.\n\n**Step 3 — Tap Remove Watermark.** The AI rebuilds the area behind the mark.\n\n**Step 4 — Download** the clean image straight to your phone.\n\nFree to try, no app, no sign-up.` },
+      { heading: "How to remove a watermark on your phone (free)", body: `**Step 1 — Open the Pixel Shine watermark remover** in Safari or Chrome on your phone.\n\n**Step 2 — Tap to upload** the photo from your camera roll.\n\n**Step 3 — Tap Remove Watermark.** The AI rebuilds the area behind the mark.\n\n**Step 4 — Download** the clean image straight to your phone.\n\nFree to try, no app, no sign-up.` },
       { heading: "Only remove marks you're allowed to", body: `On your phone it's tempting to clean up any image you've saved — but stick to photos you **own or are licensed to edit**. Removing your own accidental watermark, a mark on a photo you took, or a stock image you've bought is fine. Stripping someone else's watermark to repost their work isn't. The tool is for tidying your own images, not bypassing licences.` },
       { heading: "Getting a clean result on mobile", body: `**Upload the original**, not a screenshot of it — screenshots lose detail the AI needs.\n\n**Marks on simple backgrounds** (sky, walls, blur) disappear most cleanly.\n\n**Zoom in to check** the result before you download, and re-run if a busy area needs another pass.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -58,7 +58,7 @@ export const SEO_POSTS_4: BlogPost[] = [
         ["Is it free?", "It's free to try with no sign-up and nothing to install."],
         ["Is it okay to remove any watermark?", "Only from images you own or are licensed to edit — not from others' copyrighted work you want to reuse."],
       ]) },
-      { heading: "Key takeaways", body: `You don't need an app to remove a watermark on your phone — a browser-based AI remover does it in a few taps on iPhone or Android, free, on images you own. Try it at sjpt.io/watermark-remover. Remove Watermark →` },
+      { heading: "Key takeaways", body: `You don't need an app to remove a watermark on your phone — a browser-based AI remover does it in a few taps on iPhone or Android, free, on images you own. Try it on Pixel Shine. Remove Watermark →` },
     ],
   ),
 
@@ -99,7 +99,7 @@ export const SEO_POSTS_4: BlogPost[] = [
     [
       { body: `Unwanted **text on an image** — a caption baked into a photo, a timestamp, a subtitle, a meme's old text — is one of the most common things people want gone. Manually painting it out is fiddly; an **AI remover** rebuilds the background behind the letters so the text simply vanishes. Here's how to remove text from an image free.` },
       { heading: "What kinds of text it removes", body: `**Captions and titles** burned into a photo.\n\n**Date and time stamps** from a camera or screenshot.\n\n**Subtitles** captured in a video still.\n\n**Old meme text** you want to replace.\n\n**Labels and annotations** added over an image.\n\nBecause the text sits on top of the picture, removing it is really about reconstructing what was underneath — which is exactly what AI inpainting does well.` },
-      { heading: "How to remove text from an image (free)", body: `**Step 1 — Open the remover** at sjpt.io/watermark-remover (it handles text overlays too).\n\n**Step 2 — Upload your image.**\n\n**Step 3 — Click Remove.** The AI detects the text and fills the area to match the background.\n\n**Step 4 — Download** the clean, text-free image.\n\nFree to try, nothing to install.` },
+      { heading: "How to remove text from an image (free)", body: `**Step 1 — Open the remover** at the Pixel Shine watermark remover (it handles text overlays too).\n\n**Step 2 — Upload your image.**\n\n**Step 3 — Click Remove.** The AI detects the text and fills the area to match the background.\n\n**Step 4 — Download** the clean, text-free image.\n\nFree to try, nothing to install.` },
       { heading: "Where it works best", body: `Text over a **plain or softly-blurred background** — sky, a wall, bokeh — comes out flawlessly, because the AI has a clear pattern to continue. Text sitting over **fine detail** (a face, dense foliage, small print behind it) is harder, and may need a second pass or a light touch-up. The higher the resolution of your source, the cleaner the fill.` },
       { heading: "Only remove text you're allowed to", body: `As with any editing tool, remove text from images you **own or are permitted to edit**. Clearing your own caption, timestamp or subtitle is fine. Removing a photographer's credit or a copyright line to reuse their work without permission isn't — that text may be there to protect their rights.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -108,7 +108,7 @@ export const SEO_POSTS_4: BlogPost[] = [
         ["Will the background look natural?", "On plain or blurred backgrounds, yes — the AI matches the surrounding area. Fine detail behind the text is harder."],
         ["Is it okay to remove any text?", "Only from images you own or may edit — not credits or copyright lines on others' work you want to reuse."],
       ]) },
-      { heading: "Key takeaways", body: `Removing text from an image means rebuilding what was behind it — AI does that cleanly on plain or blurred backgrounds, free and in your browser, on images you own. Try it at sjpt.io/watermark-remover. Remove Text →` },
+      { heading: "Key takeaways", body: `Removing text from an image means rebuilding what was behind it — AI does that cleanly on plain or blurred backgrounds, free and in your browser, on images you own. Try it on Pixel Shine. Remove Text →` },
     ],
   ),
 
@@ -124,7 +124,7 @@ export const SEO_POSTS_4: BlogPost[] = [
     [
       { body: `A **logo stamped onto a photo** — a brand mark, a channel logo, a semi-transparent watermark logo — is a classic thing to want gone from your own images. An **AI remover** treats it like any watermark: detect the logo, rebuild the pixels behind it, and blend it into the surrounding image. Here's how to remove a logo from an image free.` },
       { heading: "When removing a logo is okay", body: `Remove a logo from images you **own or are licensed to edit** — your own design where the logo is in the wrong place, a photo you took that happens to include a logo you have rights to clear, or a licensed asset you're finalising. Don't remove a brand's logo to pass off their content as your own or to bypass a licence; a logo is often a trademark and a rights marker. On your own images, it's simply cleanup.` },
-      { heading: "How to remove a logo (free)", body: `**Step 1 — Open the remover** at sjpt.io/watermark-remover.\n\n**Step 2 — Upload the image** with the logo.\n\n**Step 3 — Click Remove.** The AI reconstructs the area the logo covered.\n\n**Step 4 — Download** the clean image.\n\nFree to try, no software, works on any device.` },
+      { heading: "How to remove a logo (free)", body: `**Step 1 — Open the remover** on Pixel Shine.\n\n**Step 2 — Upload the image** with the logo.\n\n**Step 3 — Click Remove.** The AI reconstructs the area the logo covered.\n\n**Step 4 — Download** the clean image.\n\nFree to try, no software, works on any device.` },
       { heading: "Getting a clean logo removal", body: `**Corner logos over simple areas** clean up best — a logo on sky, a plain wall, or a blurred backdrop often disappears completely.\n\n**Semi-transparent logos** that let the background show through are easier than solid ones.\n\n**Large or centre-frame logos** over detailed subjects are the hardest — expect the best results on contained marks, and touch up if needed.` },
       { heading: "Logos vs. other watermarks", body: `A logo is just a specific kind of watermark, so the same tool handles it alongside text overlays, timestamps and tiled stock marks. If your image has a logo *and* a caption, one pass often clears both. The key factor isn't what the mark is — it's how much detail sits behind it and how large it is.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -133,7 +133,7 @@ export const SEO_POSTS_4: BlogPost[] = [
         ["Is it legal to remove a logo?", "On images you own or are licensed to edit, yes. Don't remove a brand's logo to reuse their content or bypass a licence."],
         ["What about a logo over a busy background?", "Contained logos over simple areas clean up best; large logos over fine detail may need a touch-up."],
       ]) },
-      { heading: "Key takeaways", body: `Removing a logo works like removing any watermark — AI rebuilds what was behind it, cleanest on contained marks over simple backgrounds, free and on images you own. Try it at sjpt.io/watermark-remover. Remove Logo →` },
+      { heading: "Key takeaways", body: `Removing a logo works like removing any watermark — AI rebuilds what was behind it, cleanest on contained marks over simple backgrounds, free and on images you own. Try it on Pixel Shine. Remove Logo →` },
     ],
   ),
 
@@ -149,7 +149,7 @@ export const SEO_POSTS_4: BlogPost[] = [
     [
       { body: `**Converting PNG to WebP** is one of the easiest speed wins for a website. WebP delivers the **same visual quality and transparency as PNG at a fraction of the file size** — often 25–35% smaller, sometimes far more. Smaller images mean faster pages and better Core Web Vitals. Here's how to convert PNG to WebP free.` },
       { heading: "Why WebP beats PNG for the web", body: `PNG is lossless and universal, but heavy — great for editing, wasteful for shipping. **WebP** was built for the web: it supports both lossless and lossy modes *and* transparency, so you keep PNG's best feature (an alpha channel) while cutting the weight dramatically. For logos, icons and graphics on a website, WebP is usually the better delivery format.` },
-      { heading: "How to convert PNG to WebP (free)", body: `**Step 1 — Open the converter** at sjpt.io.\n\n**Step 2 — Upload your PNG.**\n\n**Step 3 — Choose WebP** as the output.\n\n**Step 4 — Download** the smaller WebP.\n\nTransparency is preserved, and it's processed privately in your browser — no watermark, no sign-up.` },
+      { heading: "How to convert PNG to WebP (free)", body: `**Step 1 — Open the converter** at Pixel Shine.\n\n**Step 2 — Upload your PNG.**\n\n**Step 3 — Choose WebP** as the output.\n\n**Step 4 — Download** the smaller WebP.\n\nTransparency is preserved, and it's processed privately in your browser — no watermark, no sign-up.` },
       { heading: "When to keep PNG", body: `Keep a PNG master for **editing** (WebP support in some older design apps is patchy) and for anywhere that **must** accept PNG. The smart workflow is: edit in PNG, then **export WebP for the website**. That way you get a clean lossless master to work from and a lightweight file for visitors to download.` },
       { heading: "Does WebP lose quality?", body: `Not if you don't want it to — WebP has a **lossless** mode that matches PNG exactly while still saving space. Its **lossy** mode saves even more with a tiny, usually invisible quality trade-off, similar to a high-quality JPEG but smaller. For graphics with transparency, lossless WebP gives you PNG quality at a smaller size.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -158,7 +158,7 @@ export const SEO_POSTS_4: BlogPost[] = [
         ["Is WebP smaller than PNG?", "Usually much smaller at the same quality — a big speed win for websites."],
         ["Will every browser show WebP?", "All modern browsers support WebP. Keep a PNG fallback only if you must support very old software."],
       ]) },
-      { heading: "Key takeaways", body: `Convert PNG to WebP to ship the same quality and transparency at a fraction of the size — keep a PNG master for editing, export WebP for the web. Do it free at sjpt.io. Convert Image Free →` },
+      { heading: "Key takeaways", body: `Convert PNG to WebP to ship the same quality and transparency at a fraction of the size — keep a PNG master for editing, export WebP for the web. Do it free at Pixel Shine. Convert Image Free →` },
     ],
   ),
 
@@ -174,7 +174,7 @@ export const SEO_POSTS_4: BlogPost[] = [
     [
       { body: `Post a photo that's the wrong shape and **Instagram crops it for you** — usually badly, cutting off heads or edges. The fix is to **resize and crop to Instagram's sizes** before you upload. Here's every current Instagram image size and how to get your photo to fit perfectly, free.` },
       { heading: "Instagram image sizes", body: `**Square post:** 1080 × 1080 (1:1).\n\n**Portrait post:** 1080 × 1350 (4:5) — the tallest a feed post can be, and it takes up the most screen space.\n\n**Landscape post:** 1080 × 566 (1.91:1).\n\n**Stories & Reels:** 1080 × 1920 (9:16) — full vertical screen.\n\n**Profile picture:** 320 × 320, shown as a circle.\n\nUpload at 1080px on the short side so Instagram doesn't re-compress a smaller image.` },
-      { heading: "How to resize for Instagram (free)", body: `**Step 1 — Open the crop/resize tool** at sjpt.io.\n\n**Step 2 — Upload your photo.**\n\n**Step 3 — Pick the ratio** — 1:1, 4:5, 1.91:1 or 9:16 — and position your subject.\n\n**Step 4 — Download** and post.\n\nNo watermark, no sign-up, and nothing gets cropped by surprise.` },
+      { heading: "How to resize for Instagram (free)", body: `**Step 1 — Open the crop/resize tool** at Pixel Shine.\n\n**Step 2 — Upload your photo.**\n\n**Step 3 — Pick the ratio** — 1:1, 4:5, 1.91:1 or 9:16 — and position your subject.\n\n**Step 4 — Download** and post.\n\nNo watermark, no sign-up, and nothing gets cropped by surprise.` },
       { heading: "Portrait (4:5) is your friend", body: `On a phone feed, **4:5 portrait** posts take up more vertical space than square or landscape, so they stop the scroll better. If your photo suits it, crop to 1080 × 1350 rather than square — you'll get a noticeably bigger presence in the feed for free. Just keep your subject centred so the taller crop flatters it.` },
       { heading: "Avoid the surprise crop", body: `Instagram's auto-crop is the culprit behind chopped-off heads. Cropping to the exact ratio yourself means **you** decide the framing, not the algorithm. Leave a little margin around important parts, and check that faces and text sit safely inside the frame before you export.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -183,7 +183,7 @@ export const SEO_POSTS_4: BlogPost[] = [
         ["What size are Stories and Reels?", "1080×1920 (9:16), full vertical screen."],
         ["Is resizing for Instagram free?", "Yes — crop and resize to any Instagram ratio free, no watermark, no sign-up."],
       ]) },
-      { heading: "Key takeaways", body: `Resize to Instagram's ratios — 1:1, 4:5, 1.91:1 or 9:16 at 1080px — before posting so you control the crop; portrait 4:5 wins the most feed space. Do it free at sjpt.io. Crop for Instagram Free →` },
+      { heading: "Key takeaways", body: `Resize to Instagram's ratios — 1:1, 4:5, 1.91:1 or 9:16 at 1080px — before posting so you control the crop; portrait 4:5 wins the most feed space. Do it free at Pixel Shine. Crop for Instagram Free →` },
     ],
   ),
 
@@ -199,7 +199,7 @@ export const SEO_POSTS_4: BlogPost[] = [
     [
       { body: `WhatsApp **compresses every photo you send** — often heavily — which is why images can arrive soft or blocky. The trick to sending clear photos is to **reduce the size sensibly yourself first**, so WhatsApp has less to crush. Here's how to reduce photo size for WhatsApp while keeping it looking good, free.` },
       { heading: "Why WhatsApp photos look worse", body: `To save data, WhatsApp re-compresses and resizes photos sent as "Photo" — big originals get squeezed the most, which is where visible artefacts come from. If you send a **right-sized, already-optimised image**, there's far less for WhatsApp's compression to degrade, so it arrives cleaner. You're getting ahead of the compression instead of fighting it.` },
-      { heading: "How to reduce a photo for WhatsApp (free)", body: `**Step 1 — Open the compressor** at sjpt.io.\n\n**Step 2 — Upload your photo.**\n\n**Step 3 — Resize to around 1600px** on the long side and compress to a modest size (a few hundred KB is plenty).\n\n**Step 4 — Download and send** on WhatsApp.\n\nFree, no watermark, no sign-up.` },
+      { heading: "How to reduce a photo for WhatsApp (free)", body: `**Step 1 — Open the compressor** at Pixel Shine.\n\n**Step 2 — Upload your photo.**\n\n**Step 3 — Resize to around 1600px** on the long side and compress to a modest size (a few hundred KB is plenty).\n\n**Step 4 — Download and send** on WhatsApp.\n\nFree, no watermark, no sign-up.` },
       { heading: "Send as a Document for full quality", body: `If you need the photo to arrive **exactly** as-is — for print, proof or detail — send it via **Attach → Document** instead of Photo. WhatsApp doesn't re-compress documents, so the file comes through untouched. Combine the two: optimise the image to a reasonable size first, then send it as a document for a clear result that isn't a huge download.` },
       { heading: "Good sizes for WhatsApp", body: `**Everyday sharing:** ~1600px long side, a few hundred KB — clear on any phone and quick to send.\n\n**Quality-critical:** send the optimised file as a *document* so it isn't re-compressed.\n\n**Lots of photos at once:** compress each so the batch stays light and sends fast on any connection.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -208,7 +208,7 @@ export const SEO_POSTS_4: BlogPost[] = [
         ["How do I send a photo without losing quality?", "Send it via Attach → Document; WhatsApp doesn't re-compress documents."],
         ["Is it free?", "Yes — compress and resize for WhatsApp free, no watermark, no sign-up."],
       ]) },
-      { heading: "Key takeaways", body: `Reduce a photo to ~1600px and a few hundred KB before sending so WhatsApp's compression has less to ruin — or send as a document for untouched quality. Do it free at sjpt.io. Compress Image Free →` },
+      { heading: "Key takeaways", body: `Reduce a photo to ~1600px and a few hundred KB before sending so WhatsApp's compression has less to ruin — or send as a document for untouched quality. Do it free at Pixel Shine. Compress Image Free →` },
     ],
   ),
 
@@ -225,7 +225,7 @@ export const SEO_POSTS_4: BlogPost[] = [
       { body: `Your **YouTube banner** (channel art) is shown at wildly different sizes on phone, desktop and TV — so a banner that looks fine on your laptop can have its logo cut off on mobile. The key is designing to the right **size** and keeping everything important inside the **safe area**. Here's the YouTube banner size guide, plus how to crop yours free.` },
       { heading: "The correct banner size", body: `Upload your YouTube banner at **2560 × 1440 pixels** (16:9). That's the full canvas YouTube stores. But it never shows all of it at once — different devices crop into that image. So while you upload 2560 × 1440, you design for the **safe area** in the middle.` },
       { heading: "The all-important safe area", body: `The **safe area is 1546 × 423 pixels, centred**. That's the only region guaranteed to be visible on **every** device — phone, desktop and TV. Keep your channel name, logo and any text inside it. Everything outside the safe area is decorative background that may be cropped on smaller screens, so never put anything essential out there.` },
-      { heading: "How to crop your banner (free)", body: `**Step 1 — Open the crop/resize tool** at sjpt.io.\n\n**Step 2 — Upload your artwork.**\n\n**Step 3 — Crop or pad to 2560 × 1440**, keeping your key elements within the centred safe area.\n\n**Step 4 — Download** and upload it to YouTube.\n\nFree, no watermark, no sign-up.` },
+      { heading: "How to crop your banner (free)", body: `**Step 1 — Open the crop/resize tool** at Pixel Shine.\n\n**Step 2 — Upload your artwork.**\n\n**Step 3 — Crop or pad to 2560 × 1440**, keeping your key elements within the centred safe area.\n\n**Step 4 — Download** and upload it to YouTube.\n\nFree, no watermark, no sign-up.` },
       { heading: "Design tips for every screen", body: `**Centre everything important** — logo and channel name in the middle safe zone.\n\n**Use the outer area for atmosphere** — colour, texture or imagery that can be cropped without losing meaning.\n\n**Test at small sizes** — glance at it as a thumbnail to make sure the text still reads on a phone.\n\n**Keep the file under YouTube's limit** (6MB) — compress if needed.` },
       { heading: "Frequently asked questions", body: FAQ([
         ["What size should a YouTube banner be?", "Upload at 2560×1440 (16:9), and keep key content within the centred 1546×423 safe area."],
@@ -233,7 +233,7 @@ export const SEO_POSTS_4: BlogPost[] = [
         ["Why is my banner cut off on mobile?", "Anything outside the safe area gets cropped on smaller screens. Move essential elements to the centre."],
         ["Is cropping a banner free?", "Yes — crop and resize your channel art free, no watermark, no sign-up."],
       ]) },
-      { heading: "Key takeaways", body: `Upload a YouTube banner at 2560×1440 but design for the centred 1546×423 safe area so nothing critical is cropped on phone or TV. Crop yours free at sjpt.io. Crop Banner Free →` },
+      { heading: "Key takeaways", body: `Upload a YouTube banner at 2560×1440 but design for the centred 1546×423 safe area so nothing critical is cropped on phone or TV. Crop yours free at Pixel Shine. Crop Banner Free →` },
     ],
   ),
 
@@ -249,7 +249,7 @@ export const SEO_POSTS_4: BlogPost[] = [
     [
       { body: `**Mirroring an image** flips it into its reflection — left becomes right — which is exactly what you want for fixing a back-to-front selfie, balancing a layout, or making a symmetrical design. It takes one click. Here's how to mirror an image free, and when to flip horizontally versus vertically.` },
       { heading: "Mirror vs. rotate vs. flip", body: `**Mirror / flip horizontal** — reflects left-to-right, like looking in a mirror. Faces and scenes look natural but reversed.\n\n**Flip vertical** — reflects top-to-bottom, turning the image upside down as a reflection.\n\n**Rotate** — turns the image around its centre (90°, 180°) without reflecting it.\n\nFor a selfie that looks "wrong way round", you want a **horizontal flip**.` },
-      { heading: "How to mirror an image (free)", body: `**Step 1 — Open the rotate/flip tool** at sjpt.io.\n\n**Step 2 — Upload your photo.**\n\n**Step 3 — Choose Flip Horizontal** (or Vertical) to mirror it.\n\n**Step 4 — Download** the mirrored image.\n\nOne click, no watermark, no sign-up, done in your browser.` },
+      { heading: "How to mirror an image (free)", body: `**Step 1 — Open the rotate/flip tool** at Pixel Shine.\n\n**Step 2 — Upload your photo.**\n\n**Step 3 — Choose Flip Horizontal** (or Vertical) to mirror it.\n\n**Step 4 — Download** the mirrored image.\n\nOne click, no watermark, no sign-up, done in your browser.` },
       { heading: "Why selfies look reversed", body: `Many phone front cameras save the **mirrored preview** you see while framing, so text on your shirt reads backwards and your part looks flipped. Mirroring the photo horizontally flips it back to how the world actually saw you — the quickest fix for that "this isn't how I look" feeling, and for making any reversed text readable again.` },
       { heading: "Handy uses for mirroring", body: `**Fix reversed selfies** so text and features read correctly.\n\n**Balance a layout** — flip a photo so a subject faces into your design rather than off the edge.\n\n**Create symmetry** — mirror a copy for reflections and kaleidoscope effects.\n\n**Match a set** — flip one image so a pair or grid faces the same way.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -258,7 +258,7 @@ export const SEO_POSTS_4: BlogPost[] = [
         ["How do I fix a reversed selfie?", "Flip it horizontally — that undoes the front-camera mirror so text and features read correctly."],
         ["Is it free?", "Yes — flip and mirror images free, no watermark, no sign-up."],
       ]) },
-      { heading: "Key takeaways", body: `Mirroring flips an image into its reflection — use a horizontal flip to fix reversed selfies and text, and to balance layouts. Do it free in one click at sjpt.io. Flip & Mirror Free →` },
+      { heading: "Key takeaways", body: `Mirroring flips an image into its reflection — use a horizontal flip to fix reversed selfies and text, and to balance layouts. Do it free in one click at Pixel Shine. Flip & Mirror Free →` },
     ],
   ),
 ];

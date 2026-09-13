@@ -25,7 +25,7 @@ export const SEO_POSTS_8: BlogPost[] = [
     [
       { body: `You don't need to install anything to **remove a watermark from a picture** — an AI watermark remover works right in your browser. Upload the image, and it rebuilds what was behind the mark. Here's how to remove a watermark online, free, and when it works best.` },
       { heading: "Why online beats software", body: `Desktop watermark tools mean downloads, installs and often a licence fee. An **online AI remover** needs none of that — it runs in the browser on any device, detects the mark, and reconstructs the area behind it. Nothing to install, nothing to uninstall.` },
-      { heading: "How to remove a watermark online (free)", body: `**Step 1 — Open sjpt.io/watermark-remover.**\n\n**Step 2 — Upload your picture.**\n\n**Step 3 — Click Remove Watermark** — the AI rebuilds what the mark covered.\n\n**Step 4 — Download** the clean image.\n\nFree to try, no software.` },
+      { heading: "How to remove a watermark online (free)", body: `**Step 1 — Open the Pixel Shine watermark remover.**\n\n**Step 2 — Upload your picture.**\n\n**Step 3 — Click Remove Watermark** — the AI rebuilds what the mark covered.\n\n**Step 4 — Download** the clean image.\n\nFree to try, no software.` },
       { heading: "Where it works best", body: `Marks over **simple or blurred backgrounds** (sky, walls, bokeh) clean up most convincingly; heavy detail directly under the mark is the hardest case. Start from the **highest-quality copy** — the more detail the AI has, the better the fill.` },
       { heading: "Only on images you own", body: `Remove watermarks from pictures you **own or are licensed to edit** — your own photos, a mark you added by mistake, a properly-licensed asset. Don't strip a watermark from copyrighted work to reuse it without permission.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -34,7 +34,7 @@ export const SEO_POSTS_8: BlogPost[] = [
         ["When does it work best?", "On marks over simple or blurred backgrounds; heavy detail under the mark is harder."],
         ["Is it okay to remove any watermark?", "Only from images you own or are licensed to edit — not others' copyrighted work."],
       ]) },
-      { heading: "Key takeaways", body: `An online AI remover clears watermarks in the browser — best on simple backgrounds, and only on images you own. Try it free at sjpt.io/watermark-remover. Remove Watermark →` },
+      { heading: "Key takeaways", body: `An online AI remover clears watermarks in the browser — best on simple backgrounds, and only on images you own. Try it free on Pixel Shine. Remove Watermark →` },
     ],
   ),
   P(
@@ -49,7 +49,7 @@ export const SEO_POSTS_8: BlogPost[] = [
     [
       { body: `Old cameras (and some phone apps) burn an **orange date/time stamp** into the corner of photos — charming once, distracting now. Because it's baked into the pixels, you can't just toggle it off; you rebuild what's behind it. AI does exactly that. Here's how to remove a date stamp from a photo, free.` },
       { heading: "Why the date is 'stuck'", body: `A burned-in date stamp is **part of the image**, not metadata you can switch off — the camera drew it onto the photo. Removing it means reconstructing the pixels it covered, which is what AI inpainting is built for.` },
-      { heading: "How to remove a date stamp (free)", body: `**Step 1 — Open sjpt.io/watermark-remover** (it handles date stamps too).\n\n**Step 2 — Upload your photo.**\n\n**Step 3 — Click Remove** — the AI rebuilds the area under the date.\n\n**Step 4 — Download** the clean photo.\n\nFree to try, no software.` },
+      { heading: "How to remove a date stamp (free)", body: `**Step 1 — Open the Pixel Shine watermark remover** (it handles date stamps too).\n\n**Step 2 — Upload your photo.**\n\n**Step 3 — Click Remove** — the AI rebuilds the area under the date.\n\n**Step 4 — Download** the clean photo.\n\nFree to try, no software.` },
       { heading: "Best results", body: `Date stamps usually sit in a **corner over a fairly plain area** — which is the easy case, so results are often flawless. If the stamp overlaps busy detail, expect a good result that may need a light touch-up. Start from the best copy you have.` },
       { heading: "Turn it off for future photos", body: `To stop new photos getting a stamp, check your **camera/app settings** for a "date stamp" or "timestamp" toggle and switch it off. The date is still saved in the photo's metadata, just not drawn onto the image.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -58,7 +58,7 @@ export const SEO_POSTS_8: BlogPost[] = [
         ["Will it look natural?", "Usually yes — date stamps sit over plain corners, which clean up cleanly."],
         ["How do I stop future date stamps?", "Turn off the date/timestamp setting in your camera or photo app."],
       ]) },
-      { heading: "Key takeaways", body: `A burned-in date stamp is pixels, not metadata — AI rebuilds the corner behind it cleanly. Do it free at sjpt.io/watermark-remover, and switch the stamp off for future shots. Remove Date Stamp →` },
+      { heading: "Key takeaways", body: `A burned-in date stamp is pixels, not metadata — AI rebuilds the corner behind it cleanly. Do it free on Pixel Shine, and switch the stamp off for future shots. Remove Date Stamp →` },
     ],
   ),
   P(
@@ -73,7 +73,7 @@ export const SEO_POSTS_8: BlogPost[] = [
     [
       { body: `A **photobomber**, a stray bin, a distracting sign — one unwanted object can spoil an otherwise great photo. AI can erase it and rebuild the background so it looks like it was never there. Here's how to remove an object from a photo, free.` },
       { heading: "How object removal works", body: `The AI **reconstructs the background** where the object was, matching the surrounding texture, colour and lighting — the same inpainting that powers watermark removal. On clean, continuous backgrounds the result is often invisible.` },
-      { heading: "How to remove an object (free)", body: `**Step 1 — Open sjpt.io/watermark-remover** (it removes objects and marks alike).\n\n**Step 2 — Upload your photo.**\n\n**Step 3 — Remove** the unwanted area — the AI fills it from the surroundings.\n\n**Step 4 — Download** the clean photo.\n\nFree to try, no software.` },
+      { heading: "How to remove an object (free)", body: `**Step 1 — Open the Pixel Shine watermark remover** (it removes objects and marks alike).\n\n**Step 2 — Upload your photo.**\n\n**Step 3 — Remove** the unwanted area — the AI fills it from the surroundings.\n\n**Step 4 — Download** the clean photo.\n\nFree to try, no software.` },
       { heading: "What removes cleanly (and what's hard)", body: `**Easy:** objects over sky, water, grass, walls or blur — the background is predictable. **Harder:** objects overlapping faces, fine patterns or another subject, where the AI has less to go on. For tricky cases, expect a good result that may want a light touch-up.` },
       { heading: "Tips for a clean removal", body: `Start from the **highest-quality photo**. Remove **one thing at a time** for the cleanest fill. If a large object sits over busy detail, it's the toughest case — smaller, contained objects over simple areas vanish best.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -82,7 +82,7 @@ export const SEO_POSTS_8: BlogPost[] = [
         ["Can it remove a photobomber?", "Yes — especially over a simple background; over fine detail it may need a touch-up."],
         ["Do I need software?", "No — it runs in your browser, free to try."],
       ]) },
-      { heading: "Key takeaways", body: `AI removes an unwanted object by rebuilding the background — cleanest over simple areas, one object at a time. Free at sjpt.io/watermark-remover. Remove Object Free →` },
+      { heading: "Key takeaways", body: `AI removes an unwanted object by rebuilding the background — cleanest over simple areas, one object at a time. Free on Pixel Shine. Remove Object Free →` },
     ],
   ),
   P(
@@ -97,7 +97,7 @@ export const SEO_POSTS_8: BlogPost[] = [
     [
       { body: `Screenshots from certain apps arrive with a **watermark, banner or overlay** stamped on top. If it's your own content you want to tidy, an AI remover can rebuild what's behind the mark. Here's how to remove a watermark from a screenshot, free — and when it's appropriate.` },
       { heading: "Screenshot marks vs. photo marks", body: `Screenshot overlays are often **flat colour over flat UI**, which can be the *easiest* case for AI to rebuild — clean edges, predictable background. The tool detects the mark and reconstructs the interface or image beneath it.` },
-      { heading: "How to remove it (free)", body: `**Step 1 — Open sjpt.io/watermark-remover.**\n\n**Step 2 — Upload your screenshot.**\n\n**Step 3 — Click Remove** — the AI rebuilds the area under the mark.\n\n**Step 4 — Download** the clean screenshot.\n\nFree to try, no software.` },
+      { heading: "How to remove it (free)", body: `**Step 1 — Open the Pixel Shine watermark remover.**\n\n**Step 2 — Upload your screenshot.**\n\n**Step 3 — Click Remove** — the AI rebuilds the area under the mark.\n\n**Step 4 — Download** the clean screenshot.\n\nFree to try, no software.` },
       { heading: "Crop as an alternative", body: `If the watermark sits at the **edge** of the screenshot, the quickest fix is simply to **crop it off** — no reconstruction needed. Use the remover when the mark is *within* the content you need to keep.` },
       { heading: "Keep it fair", body: `Clean up **your own** screenshots and content. Don't remove watermarks to pass off a paid or copyrighted app's output as unmarked when the mark is there to denote a licence — use it responsibly on content you're entitled to edit.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -106,7 +106,7 @@ export const SEO_POSTS_8: BlogPost[] = [
         ["Should I crop instead?", "If the mark is at the edge, cropping is the fastest fix."],
         ["Is it okay to remove it?", "Use it on your own content; don't strip marks that denote someone else's licence."],
       ]) },
-      { heading: "Key takeaways", body: `AI cleans watermarks from screenshots (flat overlays rebuild easily) — or just crop an edge mark. Use it on your own content. Free at sjpt.io/watermark-remover. Remove Watermark →` },
+      { heading: "Key takeaways", body: `AI cleans watermarks from screenshots (flat overlays rebuild easily) — or just crop an edge mark. Use it on your own content. Free on Pixel Shine. Remove Watermark →` },
     ],
   ),
   P(
@@ -121,7 +121,7 @@ export const SEO_POSTS_8: BlogPost[] = [
     [
       { body: `Some AI image generators add a **small corner logo or watermark** to their outputs. If you generated the image and your plan allows a clean version, an AI remover can tidy it up. Here's how to remove a watermark from AI-generated images, free — plus the rights to check first.` },
       { heading: "Check your rights first", body: `Before removing anything, check the **generator's terms and your licence**. Many tools grant you full rights to your generations (sometimes only on paid tiers) and the corner logo is just branding you may clear; others require attribution. Remove marks only where your licence permits.` },
-      { heading: "How to remove it (free)", body: `**Step 1 — Open sjpt.io/watermark-remover.**\n\n**Step 2 — Upload your AI image.**\n\n**Step 3 — Click Remove** — the AI rebuilds the small area under the logo.\n\n**Step 4 — Download** the clean image.\n\nFree to try, no software.` },
+      { heading: "How to remove it (free)", body: `**Step 1 — Open the Pixel Shine watermark remover.**\n\n**Step 2 — Upload your AI image.**\n\n**Step 3 — Click Remove** — the AI rebuilds the small area under the logo.\n\n**Step 4 — Download** the clean image.\n\nFree to try, no software.` },
       { heading: "Why it usually cleans well", body: `These logos are typically **small and in a corner**, often over a fairly plain part of the image — the easy case for AI inpainting. The result is usually seamless, since there's little detail to reconstruct.` },
       { heading: "Or just crop it", body: `Because the mark is usually a **corner logo**, cropping a sliver off the edge is often the simplest fix and loses very little of the image. Use the remover when you'd rather keep the full frame.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -130,7 +130,7 @@ export const SEO_POSTS_8: BlogPost[] = [
         ["Does it clean up well?", "Usually — corner logos over plain areas are the easy case for AI."],
         ["Is cropping easier?", "Often yes, since the logo sits in a corner — cropping loses very little."],
       ]) },
-      { heading: "Key takeaways", body: `Check your licence, then clear a small corner logo from your own AI images with AI (or just crop it). Free at sjpt.io/watermark-remover. Remove Watermark →` },
+      { heading: "Key takeaways", body: `Check your licence, then clear a small corner logo from your own AI images with AI (or just crop it). Free on Pixel Shine. Remove Watermark →` },
     ],
   ),
 
@@ -147,7 +147,7 @@ export const SEO_POSTS_8: BlogPost[] = [
     [
       { body: `Resizing photos **one at a time** is tedious when you have dozens. A batch editor resizes them **all at once** to the same dimensions — perfect for web galleries, product sets and uploads. Here's how to resize multiple images at once, free.` },
       { heading: "Why bulk resize", body: `Consistent sizing looks **professional** (a gallery where every image matches) and saves huge time. Uploading a folder of full-resolution phone photos is slow and often over the limit; resizing the whole set first fixes both at once.` },
-      { heading: "How to resize in bulk (free)", body: `**Step 1 — Open the batch editor** at sjpt.io/batch-editor.\n\n**Step 2 — Add all your images.**\n\n**Step 3 — Choose Resize** and set the target dimensions.\n\n**Step 4 — Run and download** the whole set.\n\nProcessed in your browser.` },
+      { heading: "How to resize in bulk (free)", body: `**Step 1 — Open the batch editor** on Pixel Shine.\n\n**Step 2 — Add all your images.**\n\n**Step 3 — Choose Resize** and set the target dimensions.\n\n**Step 4 — Run and download** the whole set.\n\nProcessed in your browser.` },
       { heading: "Pick the right size", body: `**Web galleries:** 1200–1600px wide. **Thumbnails:** 400–600px. **Profile sets:** 400×400 square. Keep proportions locked so nothing stretches. Resize once, apply to all.` },
       { heading: "Resize then compress", body: `For the lightest, fastest set, **resize and compress together** — the batch editor can do both in one pass, so your whole folder comes out right-sized and web-ready.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -156,7 +156,7 @@ export const SEO_POSTS_8: BlogPost[] = [
         ["Can I resize and compress together?", "Yes — apply both in one pass for the lightest, web-ready set."],
         ["Is it private?", "Yes — processed in your browser."],
       ]) },
-      { heading: "Key takeaways", body: `Bulk-resize a whole folder to matching dimensions in one pass — lock proportions and combine with compression for web-ready sets. Free at sjpt.io/batch-editor. Bulk Resize Free →` },
+      { heading: "Key takeaways", body: `Bulk-resize a whole folder to matching dimensions in one pass — lock proportions and combine with compression for web-ready sets. Free on Pixel Shine. Bulk Resize Free →` },
     ],
   ),
   P(
@@ -171,7 +171,7 @@ export const SEO_POSTS_8: BlogPost[] = [
     [
       { body: `Got a folder of heavy photos to lighten? Compressing them **one at a time** is a slog. A batch editor compresses them **all at once**, so a whole set gets smaller in a single pass — ideal for websites, email and uploads. Here's how, free.` },
       { heading: "Why compress in bulk", body: `Lighter images mean **faster pages, quicker uploads and smaller emails** — and doing a whole folder together saves you repeating the same task dozens of times. One setting, applied to every image.` },
-      { heading: "How to bulk compress (free)", body: `**Step 1 — Open the batch editor** at sjpt.io/batch-editor.\n\n**Step 2 — Add all your images.**\n\n**Step 3 — Choose Compress** (set quality or a target size).\n\n**Step 4 — Run and download** the whole set.\n\nProcessed in your browser.` },
+      { heading: "How to bulk compress (free)", body: `**Step 1 — Open the batch editor** on Pixel Shine.\n\n**Step 2 — Add all your images.**\n\n**Step 3 — Choose Compress** (set quality or a target size).\n\n**Step 4 — Run and download** the whole set.\n\nProcessed in your browser.` },
       { heading: "Resize first for the biggest win", body: `If the images are much larger than needed, **resize the set first**, then compress. Fewer pixels plus compression gives the smallest files — often 80–90% lighter with no visible change.` },
       { heading: "Common uses", body: `**Website galleries** — fast-loading, SEO-friendly. **Email batches** — send many without hitting limits. **Marketplace listings** — meet size caps across a set. **Cloud storage** — fit more in less space.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -180,7 +180,7 @@ export const SEO_POSTS_8: BlogPost[] = [
         ["Should I resize too?", "Yes — resizing oversized images first gives the smallest files."],
         ["Is there a limit?", "It's free and handles large batches in the browser."],
       ]) },
-      { heading: "Key takeaways", body: `Bulk-compress a whole folder in one pass (resize first for the biggest saving) — lighter files for faster pages and easier uploads. Free at sjpt.io/batch-editor. Bulk Compress Free →` },
+      { heading: "Key takeaways", body: `Bulk-compress a whole folder in one pass (resize first for the biggest saving) — lighter files for faster pages and easier uploads. Free on Pixel Shine. Bulk Compress Free →` },
     ],
   ),
   P(
@@ -195,7 +195,7 @@ export const SEO_POSTS_8: BlogPost[] = [
     [
       { body: `Need a folder of images all in the **same format**? Converting them individually is a waste of time. A batch editor converts them **all at once** — to JPG, PNG or WebP — in a single pass. Here's how to convert multiple images at once, free.` },
       { heading: "Why bulk convert", body: `Maybe a system only accepts **JPG**, you want **WebP** to speed up a site, or you need **PNG** for transparency across a set. Whatever the reason, converting the whole folder together is far faster than one file at a time — and keeps the set consistent.` },
-      { heading: "How to bulk convert (free)", body: `**Step 1 — Open the batch editor** at sjpt.io/batch-editor.\n\n**Step 2 — Add all your images.**\n\n**Step 3 — Choose Convert** and pick the output format (JPG · PNG · WebP).\n\n**Step 4 — Run and download** the converted set.\n\nProcessed in your browser.` },
+      { heading: "How to bulk convert (free)", body: `**Step 1 — Open the batch editor** on Pixel Shine.\n\n**Step 2 — Add all your images.**\n\n**Step 3 — Choose Convert** and pick the output format (JPG · PNG · WebP).\n\n**Step 4 — Run and download** the converted set.\n\nProcessed in your browser.` },
       { heading: "Pick the right format", body: `**JPG** for photos (small, universal). **WebP** for the web (smallest, keeps transparency). **PNG** for graphics needing transparency or sharp edges. Convert the whole set to whichever the job needs.` },
       { heading: "Convert then compress", body: `Converting to WebP already shrinks files; add a **compress** step in the same pass for the lightest web-ready set. One run, right format, right size.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -204,7 +204,7 @@ export const SEO_POSTS_8: BlogPost[] = [
         ["Can I convert and compress together?", "Yes — apply both in one pass for a light, consistent set."],
         ["Is it private?", "Yes — processed in your browser."],
       ]) },
-      { heading: "Key takeaways", body: `Bulk-convert a folder to JPG, PNG or WebP in one pass — add compression for a light, consistent, web-ready set. Free at sjpt.io/batch-editor. Bulk Convert Free →` },
+      { heading: "Key takeaways", body: `Bulk-convert a folder to JPG, PNG or WebP in one pass — add compression for a light, consistent, web-ready set. Free on Pixel Shine. Bulk Convert Free →` },
     ],
   ),
   P(
@@ -219,7 +219,7 @@ export const SEO_POSTS_8: BlogPost[] = [
     [
       { body: `Branding a **whole shoot or product set** with a watermark, one photo at a time, is soul-destroying. A batch editor applies the **same watermark to every image at once** — consistent placement, zero repetition. Here's how to watermark multiple photos at once, free.` },
       { heading: "Why bulk watermark", body: `Consistency matters: the **same mark, same spot** across a gallery looks professional and reinforces your brand. And doing 50 photos in one pass instead of 50 separate edits saves real time — essential for photographers and sellers.` },
-      { heading: "How to bulk watermark (free)", body: `**Step 1 — Open the batch editor** at sjpt.io/batch-editor.\n\n**Step 2 — Add all your photos.**\n\n**Step 3 — Choose Watermark**, set your text, opacity and position.\n\n**Step 4 — Run and download** the whole branded set.\n\nProcessed in your browser.` },
+      { heading: "How to bulk watermark (free)", body: `**Step 1 — Open the batch editor** on Pixel Shine.\n\n**Step 2 — Add all your photos.**\n\n**Step 3 — Choose Watermark**, set your text, opacity and position.\n\n**Step 4 — Run and download** the whole branded set.\n\nProcessed in your browser.` },
       { heading: "Keep it subtle and consistent", body: `Use a **semi-transparent** mark in a **consistent corner** so it brands without distracting. Set it once; it applies identically to every image. A tasteful, uniform watermark makes a set look like a proper portfolio.` },
       { heading: "Combine with resize/compress", body: `Preparing a web gallery? **Resize, compress and watermark** the whole set in one pass — every image comes out branded, right-sized and web-ready together.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -228,7 +228,7 @@ export const SEO_POSTS_8: BlogPost[] = [
         ["Can I resize and watermark together?", "Yes — combine resize, compress and watermark in one pass."],
         ["Is it private?", "Yes — processed in your browser."],
       ]) },
-      { heading: "Key takeaways", body: `Watermark a whole set at once with consistent, subtle branding — combine with resize/compress for web-ready galleries. Free at sjpt.io/batch-editor. Bulk Watermark Free →` },
+      { heading: "Key takeaways", body: `Watermark a whole set at once with consistent, subtle branding — combine with resize/compress for web-ready galleries. Free on Pixel Shine. Bulk Watermark Free →` },
     ],
   ),
   P(
@@ -243,7 +243,7 @@ export const SEO_POSTS_8: BlogPost[] = [
     [
       { body: `When you've got a **whole folder** to process, editing photos individually doesn't scale. A batch editor applies the same steps — **resize, compress, convert, crop, rotate, watermark** — to every image at once. Here's how to bulk edit photos, free.` },
       { heading: "What you can bulk apply", body: `In one pass you can **resize** to matching dimensions, **compress** for lighter files, **convert** to JPG/PNG/WebP, **crop** to a ratio, **rotate/flip**, and **watermark** the whole set. Stack several steps and they all apply to every image together.` },
-      { heading: "How to bulk edit (free)", body: `**Step 1 — Open the batch editor** at sjpt.io/batch-editor.\n\n**Step 2 — Add all your photos.**\n\n**Step 3 — Pick the steps** (e.g. resize + compress + watermark) and set their options.\n\n**Step 4 — Run and download** the finished set.\n\nProcessed in your browser.` },
+      { heading: "How to bulk edit (free)", body: `**Step 1 — Open the batch editor** on Pixel Shine.\n\n**Step 2 — Add all your photos.**\n\n**Step 3 — Pick the steps** (e.g. resize + compress + watermark) and set their options.\n\n**Step 4 — Run and download** the finished set.\n\nProcessed in your browser.` },
       { heading: "A typical web-ready recipe", body: `For a website gallery: **crop to a consistent ratio → resize to display width → compress → convert to WebP**. Run once, and the whole folder comes out uniform, light and fast-loading — a job that would take ages one by one.` },
       { heading: "Why it's private and free", body: `Everything runs **in your browser**, so your photos never leave your device — quick, private and free, with no per-image limits to slow you down. Great for photographers, sellers and anyone with a lot of images.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -252,7 +252,7 @@ export const SEO_POSTS_8: BlogPost[] = [
         ["Is a whole folder supported?", "Yes — add many images and process them together."],
         ["Is it private?", "Yes — everything runs in your browser; photos don't leave your device."],
       ]) },
-      { heading: "Key takeaways", body: `Bulk edit a whole folder — resize, compress, convert, crop, rotate, watermark — in one private, browser-based pass. Free at sjpt.io/batch-editor. Bulk Edit Free →` },
+      { heading: "Key takeaways", body: `Bulk edit a whole folder — resize, compress, convert, crop, rotate, watermark — in one private, browser-based pass. Free on Pixel Shine. Bulk Edit Free →` },
     ],
   ),
 ];

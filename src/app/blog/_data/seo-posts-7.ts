@@ -25,7 +25,7 @@ export const SEO_POSTS_7: BlogPost[] = [
     [
       { body: `Making a **meme on your phone** doesn't need an app full of ads and paywalls. A browser-based meme maker adds classic top-and-bottom text to any image in seconds and saves it straight to your camera roll. Here's how, free, on iPhone or Android.` },
       { heading: "Why skip the meme apps", body: `App-store meme makers often bury the export behind ads, watermarks or a subscription. A web tool needs **no install, no account**, adds **no watermark**, and works the same in Safari and Chrome. Make the meme, download it, done.` },
-      { heading: "How to make a meme on your phone (free)", body: `**Step 1 — Open the meme generator** at sjpt.io.\n\n**Step 2 — Upload your image** from your camera roll.\n\n**Step 3 — Type the top and bottom text.**\n\n**Step 4 — Download** and share.\n\nNo app, no sign-up, no watermark.` },
+      { heading: "How to make a meme on your phone (free)", body: `**Step 1 — Open the meme generator** at Pixel Shine.\n\n**Step 2 — Upload your image** from your camera roll.\n\n**Step 3 — Type the top and bottom text.**\n\n**Step 4 — Download** and share.\n\nNo app, no sign-up, no watermark.` },
       { heading: "Make it funny and readable", body: `Classic memes use **bold white text with a black outline** so it reads over any image — the tool adds this automatically. Keep lines **short and punchy**, top sets up, bottom delivers. Big text beats clever text for a phone feed.` },
       { heading: "Share anywhere", body: `Once downloaded, the meme is a normal image — post it to Instagram, WhatsApp, Reddit, group chats, anywhere. No watermark means it looks native to wherever you share it.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -34,7 +34,7 @@ export const SEO_POSTS_7: BlogPost[] = [
         ["Is there a watermark?", "No — the finished meme is clean, ready to post anywhere."],
         ["What font do memes use?", "Bold white text with a black outline (Impact-style), added automatically for readability."],
       ]) },
-      { heading: "Key takeaways", body: `Make a meme in your phone browser — no app, no watermark, bold outlined text added automatically, saved straight to your gallery. Free at sjpt.io. Make a Meme Free →` },
+      { heading: "Key takeaways", body: `Make a meme in your phone browser — no app, no watermark, bold outlined text added automatically, saved straight to your gallery. Free at Pixel Shine. Make a Meme Free →` },
     ],
   ),
   P(
@@ -49,7 +49,7 @@ export const SEO_POSTS_7: BlogPost[] = [
     [
       { body: `Adding a **caption to a photo** turns a plain image into a message, a quote, an announcement or a meme. The key is text that stays **readable** over the picture. Here's how to caption any photo in seconds, free, and keep the words crisp against any background.` },
       { heading: "What captions are good for", body: `**Social posts** — a line of context or a punchline. **Announcements** — a date, price or "SOLD". **Quote cards** — words over a backdrop. **Memes** — classic top/bottom text. One tool covers all of it.` },
-      { heading: "How to add a caption (free)", body: `**Step 1 — Open the tool** at sjpt.io.\n\n**Step 2 — Upload your photo.**\n\n**Step 3 — Type your caption** and position it (top, bottom or anywhere).\n\n**Step 4 — Download.**\n\nNo watermark, no sign-up.` },
+      { heading: "How to add a caption (free)", body: `**Step 1 — Open the tool** at Pixel Shine.\n\n**Step 2 — Upload your photo.**\n\n**Step 3 — Type your caption** and position it (top, bottom or anywhere).\n\n**Step 4 — Download.**\n\nNo watermark, no sign-up.` },
       { heading: "Keep text readable", body: `Use an **outline or shadow** so letters separate from the background, **high contrast** (light on dark, dark on light), and a **bold, simple font**. Place the caption over a calmer part of the photo, not the busiest.` },
       { heading: "Size it for the feed", body: `Make text **bigger than feels necessary** — captions must read on a phone thumbnail. Keep lines short so they don't wrap awkwardly, and leave a margin from the edges so nothing gets cropped by the platform.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -58,7 +58,7 @@ export const SEO_POSTS_7: BlogPost[] = [
         ["Can I caption for Instagram?", "Yes — crop to 1:1 or 4:5 first, then add readable, well-sized text."],
         ["Is there a watermark?", "No — the captioned image is clean."],
       ]) },
-      { heading: "Key takeaways", body: `Add a readable caption with a bold, outlined, high-contrast font sized for a phone feed. Free at sjpt.io. Add a Caption Free →` },
+      { heading: "Key takeaways", body: `Add a readable caption with a bold, outlined, high-contrast font sized for a phone feed. Free at Pixel Shine. Add a Caption Free →` },
     ],
   ),
   P(
@@ -73,7 +73,7 @@ export const SEO_POSTS_7: BlogPost[] = [
     [
       { body: `The **demotivational poster** — a photo framed in black, with a big title and a smaller caption underneath — is a classic meme format that still lands. It's simple to make: an image, a punchy title, a deadpan caption. Here's how to make a demotivational poster, free.` },
       { heading: "The anatomy of the format", body: `A demotivator has three parts: a **black frame** around the image, a **large title** (usually one word or short phrase, in caps), and a **smaller caption** below it delivering the joke. The contrast between the serious layout and the silly text is what makes it funny.` },
-      { heading: "How to make one (free)", body: `**Step 1 — Open the tool** at sjpt.io.\n\n**Step 2 — Upload your image** (add dark space or a border around it).\n\n**Step 3 — Add a big title and a smaller caption** below the photo.\n\n**Step 4 — Download.**\n\nNo watermark, no sign-up.` },
+      { heading: "How to make one (free)", body: `**Step 1 — Open the tool** at Pixel Shine.\n\n**Step 2 — Upload your image** (add dark space or a border around it).\n\n**Step 3 — Add a big title and a smaller caption** below the photo.\n\n**Step 4 — Download.**\n\nNo watermark, no sign-up.` },
       { heading: "Writing the joke", body: `The **title** sets a serious, motivational-poster tone (one bold word: FAILURE, PATIENCE, TEAMWORK). The **caption** undercuts it with a dry, unexpected twist. Keep the caption short — the humour is in the deadpan contrast, not length.` },
       { heading: "Style tips", body: `Use a **classic serif** for the title if you want the authentic look, white text on black. Centre everything. Keep the image clean so the text carries the joke. Consistent framing makes a set look like a proper "series".` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -82,7 +82,7 @@ export const SEO_POSTS_7: BlogPost[] = [
         ["What font should I use?", "A classic serif in white for the authentic motivational-poster look; centred."],
         ["Is there a watermark?", "No — the finished poster is clean."],
       ]) },
-      { heading: "Key takeaways", body: `A demotivational poster is a black frame, a bold caps title and a dry caption — let the deadpan contrast carry the joke. Free at sjpt.io. Make a Poster Free →` },
+      { heading: "Key takeaways", body: `A demotivational poster is a black frame, a bold caps title and a dry caption — let the deadpan contrast carry the joke. Free at Pixel Shine. Make a Poster Free →` },
     ],
   ),
   P(
@@ -97,7 +97,7 @@ export const SEO_POSTS_7: BlogPost[] = [
     [
       { body: `**Putting text on a meme** is the whole point — the image sets it up, the text lands the joke. The classic look is bold white letters with a black outline, top and bottom. Here's how to add meme text to any image so it reads instantly, free.` },
       { heading: "The classic meme text style", body: `Memes use **Impact-style bold white text with a black outline** so it's legible over any image, bright or dark. Text goes **top and bottom**, in caps, kept short. The tool applies this automatically — you just type.` },
-      { heading: "How to put text on a meme (free)", body: `**Step 1 — Open the meme generator** at sjpt.io.\n\n**Step 2 — Upload your image.**\n\n**Step 3 — Type the top and bottom lines.**\n\n**Step 4 — Download.**\n\nNo app, no watermark, no sign-up.` },
+      { heading: "How to put text on a meme (free)", body: `**Step 1 — Open the meme generator** at Pixel Shine.\n\n**Step 2 — Upload your image.**\n\n**Step 3 — Type the top and bottom lines.**\n\n**Step 4 — Download.**\n\nNo app, no watermark, no sign-up.` },
       { heading: "Write text that lands", body: `**Top line sets up, bottom line delivers.** Keep both short — a few words each. Caps read as "meme". Don't overexplain; the image does half the work. Big text beats a clever paragraph in a fast-scrolling feed.` },
       { heading: "Beyond top and bottom", body: `You can also drop text **mid-image** to label a part of the picture (the "labelled" meme style). Same rules: bold, outlined, short. Position it where it points at what you mean.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -106,7 +106,7 @@ export const SEO_POSTS_7: BlogPost[] = [
         ["Can I add text in the middle?", "Yes — place text anywhere to label part of the image."],
         ["Is it free with no watermark?", "Yes — the finished meme is clean and free."],
       ]) },
-      { heading: "Key takeaways", body: `Bold, outlined, short caps text top and bottom is the meme formula — set up on top, deliver on the bottom. Free at sjpt.io. Add Meme Text Free →` },
+      { heading: "Key takeaways", body: `Bold, outlined, short caps text top and bottom is the meme formula — set up on top, deliver on the bottom. Free at Pixel Shine. Add Meme Text Free →` },
     ],
   ),
   P(
@@ -122,7 +122,7 @@ export const SEO_POSTS_7: BlogPost[] = [
       { body: `Ever noticed memes almost always use the **same chunky font**? That's **Impact** — the unofficial typeface of internet humour. Here's why memes settled on Impact, why it works so well over images, and how to make your own memes with that classic look, free.` },
       { heading: "Why memes use Impact", body: `**Impact** is a heavy, condensed sans-serif that shipped with Windows for decades — so it was **available to everyone** in early meme days. It's **bold and tightly spaced**, so a lot of text fits and stays legible even shrunk down. White Impact with a black outline became the default, and stuck.` },
       { heading: "Why it works over any image", body: `The **thick strokes plus a black outline** keep letters readable over bright skies, dark shadows and busy backgrounds alike. All-caps Impact reads fast in a scrolling feed. It's not elegant — it's *loud*, which is exactly what a meme wants.` },
-      { heading: "How to make an Impact-style meme (free)", body: `**Step 1 — Open the meme generator** at sjpt.io.\n\n**Step 2 — Upload your image.**\n\n**Step 3 — Type your text** — the classic bold, outlined meme style is applied for you.\n\n**Step 4 — Download.**\n\nNo watermark, no sign-up.` },
+      { heading: "How to make an Impact-style meme (free)", body: `**Step 1 — Open the meme generator** at Pixel Shine.\n\n**Step 2 — Upload your image.**\n\n**Step 3 — Type your text** — the classic bold, outlined meme style is applied for you.\n\n**Step 4 — Download.**\n\nNo watermark, no sign-up.` },
       { heading: "When to break the mould", body: `Impact says "classic meme". For a different vibe — wholesome, aesthetic, brand content — a **clean sans-serif** or a **handwritten** look can fit better. But if you want it to *read* as a meme instantly, bold outlined caps is still the move.` },
       { heading: "Frequently asked questions", body: FAQ([
         ["What font do memes use?", "Impact — a heavy condensed sans-serif, usually white with a black outline, in caps."],
@@ -130,7 +130,7 @@ export const SEO_POSTS_7: BlogPost[] = [
         ["How do I make an Impact meme free?", "Use Pixel Shine's meme generator — type your text and the bold, outlined style is applied automatically."],
         ["Can I use a different font?", "Yes — but bold outlined caps reads as a meme instantly; other fonts suit different vibes."],
       ]) },
-      { heading: "Key takeaways", body: `Memes use Impact because it was everywhere and stays bold and legible over any image — white, outlined, caps. Make one free at sjpt.io. Make a Meme Free →` },
+      { heading: "Key takeaways", body: `Memes use Impact because it was everywhere and stays bold and legible over any image — white, outlined, caps. Make one free at Pixel Shine. Make a Meme Free →` },
     ],
   ),
 
@@ -147,7 +147,7 @@ export const SEO_POSTS_7: BlogPost[] = [
     [
       { body: `Turning a **JPG into a PDF** makes it easier to send, print and archive — one tidy file that opens the same on every device. Whether it's a single photo or a stack of them, converting to PDF takes seconds. Here's how, free.` },
       { heading: "Why convert JPG to PDF", body: `A PDF **prints as a clean page**, is **universally accepted** by forms and printers, and keeps **multiple images in a fixed order** in one file. It's the standard for documents, receipts, applications and anything you need to look consistent everywhere.` },
-      { heading: "How to convert JPG to PDF (free)", body: `**Step 1 — Open the image-to-PDF tool** at sjpt.io.\n\n**Step 2 — Upload one or more JPGs.**\n\n**Step 3 — Arrange the order** (if several).\n\n**Step 4 — Download** the PDF.\n\nOne image per page, no watermark, no sign-up.` },
+      { heading: "How to convert JPG to PDF (free)", body: `**Step 1 — Open the image-to-PDF tool** at Pixel Shine.\n\n**Step 2 — Upload one or more JPGs.**\n\n**Step 3 — Arrange the order** (if several).\n\n**Step 4 — Download** the PDF.\n\nOne image per page, no watermark, no sign-up.` },
       { heading: "One JPG or many", body: `Convert a **single** JPG for a quick document, or **combine several** into a multi-page PDF — great for scans, receipts and portfolios. Set the page order before exporting so it reads correctly.` },
       { heading: "Tips for a clean PDF", body: `**Rotate** any sideways photos first so every page reads the same way. **Crop and compress** large images if the PDF needs to stay under an email limit. Get the **order** right before exporting.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -156,7 +156,7 @@ export const SEO_POSTS_7: BlogPost[] = [
         ["Is my file uploaded to a server?", "No — it's processed privately in your browser."],
         ["Does it add a watermark?", "No — the PDF is clean."],
       ]) },
-      { heading: "Key takeaways", body: `Convert one or many JPGs to a tidy, ordered PDF for easy sending and printing — rotate and compress first for a clean result. Free at sjpt.io. JPG to PDF Free →` },
+      { heading: "Key takeaways", body: `Convert one or many JPGs to a tidy, ordered PDF for easy sending and printing — rotate and compress first for a clean result. Free at Pixel Shine. JPG to PDF Free →` },
     ],
   ),
   P(
@@ -171,7 +171,7 @@ export const SEO_POSTS_7: BlogPost[] = [
     [
       { body: `Converting a **PNG to PDF** is the easy way to turn screenshots, graphics and diagrams into a clean, shareable, printable document. One PNG or a whole set, it takes seconds. Here's how to convert PNG to PDF, free.` },
       { heading: "Why PNG to PDF", body: `PNGs are perfect for **screenshots and crisp graphics**, but a PDF is easier to **send, print and combine**. Turning PNGs into a PDF gives you one tidy file that keeps everything sharp and in order — ideal for reports, guides and documentation.` },
-      { heading: "How to convert PNG to PDF (free)", body: `**Step 1 — Open the image-to-PDF tool** at sjpt.io.\n\n**Step 2 — Upload one or more PNGs.**\n\n**Step 3 — Arrange the order** if several.\n\n**Step 4 — Download** the PDF.\n\nNo watermark, no sign-up.` },
+      { heading: "How to convert PNG to PDF (free)", body: `**Step 1 — Open the image-to-PDF tool** at Pixel Shine.\n\n**Step 2 — Upload one or more PNGs.**\n\n**Step 3 — Arrange the order** if several.\n\n**Step 4 — Download** the PDF.\n\nNo watermark, no sign-up.` },
       { heading: "Great for screenshots", body: `Turn a sequence of **screenshots into a step-by-step PDF** guide, or bundle diagrams and charts into one document. Crop each screenshot first so the pages look tidy and focused.` },
       { heading: "Keep it sharp and light", body: `PNGs of text and graphics stay **crisp** in a PDF. If the set is large, compress the PNGs first so the PDF stays small enough to email. Keep consistent orientation across pages.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -180,7 +180,7 @@ export const SEO_POSTS_7: BlogPost[] = [
         ["Will graphics stay sharp?", "Yes — PNG text and graphics stay crisp in the PDF."],
         ["Is it private?", "Yes — processed in your browser; files don't leave your device."],
       ]) },
-      { heading: "Key takeaways", body: `Convert PNG screenshots and graphics to a sharp, ordered PDF for easy sharing — crop and compress first for tidy, light pages. Free at sjpt.io. PNG to PDF Free →` },
+      { heading: "Key takeaways", body: `Convert PNG screenshots and graphics to a sharp, ordered PDF for easy sharing — crop and compress first for tidy, light pages. Free at Pixel Shine. PNG to PDF Free →` },
     ],
   ),
   P(
@@ -195,7 +195,7 @@ export const SEO_POSTS_7: BlogPost[] = [
     [
       { body: `You don't need a scanner — your **phone camera plus a free tool** does the job. Photograph your pages, combine them into a PDF, and you've got a clean, shareable document. Here's how to "scan" a document with your phone, free, no app required.` },
       { heading: "Phone photos → a real document", body: `A stack of page photos is awkward to send; a **single PDF** is the standard everyone expects. Converting your photos to one ordered PDF turns casual snaps into a proper document for email, forms, uploads and printing.` },
-      { heading: "How to scan to PDF (free)", body: `**Step 1 — Photograph each page** flat, well-lit, straight-on.\n\n**Step 2 — Open the image-to-PDF tool** at sjpt.io.\n\n**Step 3 — Upload the page photos and set the order.**\n\n**Step 4 — Download** the PDF.\n\nNo app, no sign-up.` },
+      { heading: "How to scan to PDF (free)", body: `**Step 1 — Photograph each page** flat, well-lit, straight-on.\n\n**Step 2 — Open the image-to-PDF tool** at Pixel Shine.\n\n**Step 3 — Upload the page photos and set the order.**\n\n**Step 4 — Download** the PDF.\n\nNo app, no sign-up.` },
       { heading: "Get clean 'scans'", body: `Shoot on a **plain, contrasting surface** in **even light** (avoid shadows). Keep the camera **parallel** to the page. **Crop** each photo tight to the page and **straighten** if tilted. Rotate any sideways pages before exporting.` },
       { heading: "Multi-page documents", body: `For a contract or form, photograph every page, upload them all, and arrange them in order — the PDF becomes a proper multi-page document. Compress if it needs to fit an email limit.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -204,7 +204,7 @@ export const SEO_POSTS_7: BlogPost[] = [
         ["Can I scan multiple pages?", "Yes — upload all the page photos and arrange them into a multi-page PDF."],
         ["Do I need an app?", "No — it works in your phone's browser."],
       ]) },
-      { heading: "Key takeaways", body: `Photograph pages in even light, crop and straighten, then combine into one ordered PDF — a scanner-free document from your phone. Free at sjpt.io. Scan to PDF Free →` },
+      { heading: "Key takeaways", body: `Photograph pages in even light, crop and straighten, then combine into one ordered PDF — a scanner-free document from your phone. Free at Pixel Shine. Scan to PDF Free →` },
     ],
   ),
   P(
@@ -219,7 +219,7 @@ export const SEO_POSTS_7: BlogPost[] = [
     [
       { body: `Need to turn some **iPhone photos into a single PDF** — a receipt, a form, a set of pages? You can do it **right in Safari**, no app to install. Here's how to make a PDF from photos on iPhone, free.` },
       { heading: "Why a browser tool", body: `iOS has some built-in PDF tricks, but they're fiddly for combining several photos in a set order. A **browser tool** makes it simple: upload the photos, arrange them, export one PDF — with clean one-image-per-page layout and no app clutter.` },
-      { heading: "How to make a PDF on iPhone (free)", body: `**Step 1 — Open sjpt.io** in Safari and go to the image-to-PDF tool.\n\n**Step 2 — Tap upload** and pick your photos from the camera roll.\n\n**Step 3 — Drag to set the page order.**\n\n**Step 4 — Download** the PDF to Files.\n\nNo app, no sign-up.` },
+      { heading: "How to make a PDF on iPhone (free)", body: `**Step 1 — Open Pixel Shine** in Safari and go to the image-to-PDF tool.\n\n**Step 2 — Tap upload** and pick your photos from the camera roll.\n\n**Step 3 — Drag to set the page order.**\n\n**Step 4 — Download** the PDF to Files.\n\nNo app, no sign-up.` },
       { heading: "Tidy pages", body: `**Crop** each photo to the content and **straighten** tilted pages before exporting. **Rotate** any sideways shots so every page reads the same way. For documents, shoot in even light on a plain surface first.` },
       { heading: "Save and share", body: `The PDF downloads to your **Files** app, ready to email, upload to a portal, AirDrop or print. One tidy file beats sending five separate photos that arrive out of order.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -228,7 +228,7 @@ export const SEO_POSTS_7: BlogPost[] = [
         ["Where does the PDF save?", "To your Files app, ready to email, upload or print."],
         ["Do I need an app?", "No — it works right in Safari."],
       ]) },
-      { heading: "Key takeaways", body: `Combine iPhone photos into one ordered PDF in Safari — crop, straighten and order first, then save to Files. Free at sjpt.io. Photos to PDF Free →` },
+      { heading: "Key takeaways", body: `Combine iPhone photos into one ordered PDF in Safari — crop, straighten and order first, then save to Files. Free at Pixel Shine. Photos to PDF Free →` },
     ],
   ),
   P(
@@ -243,7 +243,7 @@ export const SEO_POSTS_7: BlogPost[] = [
     [
       { body: `Screenshots pile up fast — a chat thread, an order confirmation, a set of instructions. Turning them into a **PDF** makes them easy to send, print and keep in order. Here's how to turn a screenshot (or a whole batch) into a PDF, free.` },
       { heading: "Why a PDF beats loose screenshots", body: `A PDF keeps screenshots **in order in one file**, prints cleanly, and is accepted everywhere. Sending one PDF is far tidier than attaching six images that arrive jumbled — ideal for records, tickets, receipts and evidence.` },
-      { heading: "How to convert (free)", body: `**Step 1 — Open the image-to-PDF tool** at sjpt.io.\n\n**Step 2 — Upload your screenshot(s).**\n\n**Step 3 — Arrange the order** if there are several.\n\n**Step 4 — Download** the PDF.\n\nNo watermark, no sign-up.` },
+      { heading: "How to convert (free)", body: `**Step 1 — Open the image-to-PDF tool** at Pixel Shine.\n\n**Step 2 — Upload your screenshot(s).**\n\n**Step 3 — Arrange the order** if there are several.\n\n**Step 4 — Download** the PDF.\n\nNo watermark, no sign-up.` },
       { heading: "Tidy them first", body: `**Crop** each screenshot to the relevant area and remove status bars or personal info you don't want to share. Keep a **consistent size** so pages look uniform. Order them logically before exporting.` },
       { heading: "Common uses", body: `**Order & payment records** — bundle confirmations into one file. **Chat evidence** — a threaded conversation as ordered pages. **Instructions** — a step-by-step how-to. **Reports** — dashboards and stats in a single document.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -252,7 +252,7 @@ export const SEO_POSTS_7: BlogPost[] = [
         ["Should I crop first?", "Yes — crop to the relevant area and remove personal info before exporting."],
         ["Is it private?", "Yes — processed in your browser; nothing is uploaded to a server."],
       ]) },
-      { heading: "Key takeaways", body: `Turn screenshots into one ordered, printable PDF — crop and remove personal info first for tidy, shareable pages. Free at sjpt.io. Screenshot to PDF Free →` },
+      { heading: "Key takeaways", body: `Turn screenshots into one ordered, printable PDF — crop and remove personal info first for tidy, shareable pages. Free at Pixel Shine. Screenshot to PDF Free →` },
     ],
   ),
 
@@ -269,7 +269,7 @@ export const SEO_POSTS_7: BlogPost[] = [
     [
       { body: `The moving **TikTok watermark** (the logo and username that drift around the video) makes clips look messy when reposted elsewhere. Downloading a **watermark-free** version gives you a clean HD MP4 to reuse, edit or share. Here's how, free — just paste the link.` },
       { heading: "Why remove the watermark", body: `A clean clip looks **professional** on other platforms, is easier to **edit** (no logo drifting through your cut), and keeps the focus on the content. Creators repurposing their own TikToks to Reels or YouTube Shorts especially want the watermark gone.` },
-      { heading: "How to download without watermark (free)", body: `**Step 1 — Copy the TikTok link** (Share → Copy link).\n\n**Step 2 — Open the tool** at sjpt.io/tiktok-watermark-remover.\n\n**Step 3 — Paste the link** and fetch.\n\n**Step 4 — Download** the clean HD MP4.\n\nNo app, no sign-up.` },
+      { heading: "How to download without watermark (free)", body: `**Step 1 — Copy the TikTok link** (Share → Copy link).\n\n**Step 2 — Open the tool** at the Pixel Shine TikTok watermark remover.\n\n**Step 3 — Paste the link** and fetch.\n\n**Step 4 — Download** the clean HD MP4.\n\nNo app, no sign-up.` },
       { heading: "Works on phone and computer", body: `The tool runs in your browser, so it works the same on **iPhone, Android and desktop**. Paste, download, done — the clean MP4 saves straight to your device, ready to post or edit.` },
       { heading: "Use it responsibly", body: `Download your **own** videos, or others' only with permission and proper credit. Respect creators' rights and TikTok's terms — a watermark remover is for reusing content you're allowed to use, not for reposting others' work as your own.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -278,7 +278,7 @@ export const SEO_POSTS_7: BlogPost[] = [
         ["Does it work on my phone?", "Yes — it runs in the browser on iPhone, Android and desktop."],
         ["Can I download any video?", "Download your own, or others' only with permission and credit — respect creators' rights."],
       ]) },
-      { heading: "Key takeaways", body: `Paste a TikTok link to download a clean, watermark-free HD MP4 — great for reposting and editing your own content. Free at sjpt.io. Download TikTok Free →` },
+      { heading: "Key takeaways", body: `Paste a TikTok link to download a clean, watermark-free HD MP4 — great for reposting and editing your own content. Free at Pixel Shine. Download TikTok Free →` },
     ],
   ),
   P(
@@ -293,7 +293,7 @@ export const SEO_POSTS_7: BlogPost[] = [
     [
       { body: `Saving a **TikTok to your camera roll** is handy for keeping favourites, reposting or editing — and with a free tool you can get a **clean, watermark-free MP4** straight to your phone. Here's how to save TikTok videos to your gallery, free.` },
       { heading: "In-app save vs. clean download", body: `TikTok's own "save" adds the **moving watermark** and sometimes isn't available on every video. A browser tool fetches the **original clean MP4**, so what lands in your camera roll looks professional and is ready to reuse.` },
-      { heading: "How to save to your camera roll (free)", body: `**Step 1 — Copy the TikTok link** (Share → Copy link).\n\n**Step 2 — Open sjpt.io/tiktok-watermark-remover.**\n\n**Step 3 — Paste the link** and fetch.\n\n**Step 4 — Download** — the MP4 saves to your camera roll.\n\nNo app, no sign-up.` },
+      { heading: "How to save to your camera roll (free)", body: `**Step 1 — Copy the TikTok link** (Share → Copy link).\n\n**Step 2 — Open the Pixel Shine TikTok watermark remover.**\n\n**Step 3 — Paste the link** and fetch.\n\n**Step 4 — Download** — the MP4 saves to your camera roll.\n\nNo app, no sign-up.` },
       { heading: "iPhone and Android", body: `On both, the download lands in your **Photos/Gallery** ready to view, repost or edit. Because it runs in the browser, there's nothing to install and it works identically across devices.` },
       { heading: "Save responsibly", body: `Save your **own** content freely; for others' videos, get permission and credit the creator. Keep to TikTok's terms — this is for keeping and reusing content you're entitled to, not for reposting someone else's work uncredited.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -302,7 +302,7 @@ export const SEO_POSTS_7: BlogPost[] = [
         ["Does it work on iPhone and Android?", "Yes — the download lands in Photos/Gallery on both."],
         ["Is it free?", "Yes — free, no app, no sign-up."],
       ]) },
-      { heading: "Key takeaways", body: `Paste a TikTok link to save a clean MP4 straight to your camera roll on iPhone or Android — no watermark, no app. Free at sjpt.io. Save TikTok Free →` },
+      { heading: "Key takeaways", body: `Paste a TikTok link to save a clean MP4 straight to your camera roll on iPhone or Android — no watermark, no app. Free at Pixel Shine. Save TikTok Free →` },
     ],
   ),
   P(
@@ -317,7 +317,7 @@ export const SEO_POSTS_7: BlogPost[] = [
     [
       { body: `Sometimes it's the **sound** you want from a TikTok — a track, a voiceover, a clip of audio. The simplest route is to **download the clean video** and keep its audio. Here's how to get a TikTok's sound, free, and how to use it responsibly.` },
       { heading: "Video first, then audio", body: `The reliable way to capture a TikTok's sound is to **download the clean MP4** and then extract or keep the audio in any editor. Grabbing the watermark-free video means the audio comes through cleanly, without the app's overlays.` },
-      { heading: "How to download the clip (free)", body: `**Step 1 — Copy the TikTok link** (Share → Copy link).\n\n**Step 2 — Open sjpt.io/tiktok-watermark-remover.**\n\n**Step 3 — Paste the link** and fetch.\n\n**Step 4 — Download** the MP4 — the audio comes with it.\n\nNo app, no sign-up.` },
+      { heading: "How to download the clip (free)", body: `**Step 1 — Copy the TikTok link** (Share → Copy link).\n\n**Step 2 — Open the Pixel Shine TikTok watermark remover.**\n\n**Step 3 — Paste the link** and fetch.\n\n**Step 4 — Download** the MP4 — the audio comes with it.\n\nNo app, no sign-up.` },
       { heading: "Keeping just the sound", body: `Once you have the MP4, use any free video/audio editor to **export the audio track** (to MP3 or similar). The clean download ensures the sound isn't muddied by watermark overlays or re-compression from screen recording.` },
       { heading: "Respect music rights", body: `Much TikTok audio is **licensed music**. Use downloaded sound for personal use, or where you have the rights — don't redistribute copyrighted tracks. For your own original audio, do as you like; for others', follow the rules.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -326,7 +326,7 @@ export const SEO_POSTS_7: BlogPost[] = [
         ["Is the sound good quality?", "Yes — a clean download avoids the muddiness of screen-recording the audio."],
         ["Can I use any TikTok sound?", "Much of it is licensed music — use it where you have the rights; don't redistribute copyrighted tracks."],
       ]) },
-      { heading: "Key takeaways", body: `Download the clean TikTok MP4, then export its audio in any editor — clean sound, no overlays. Respect music rights. Free at sjpt.io. Download TikTok Free →` },
+      { heading: "Key takeaways", body: `Download the clean TikTok MP4, then export its audio in any editor — clean sound, no overlays. Respect music rights. Free at Pixel Shine. Download TikTok Free →` },
     ],
   ),
   P(
@@ -341,7 +341,7 @@ export const SEO_POSTS_7: BlogPost[] = [
     [
       { body: `That **@username and TikTok logo** that drift around a downloaded clip make it look cluttered — especially when you repost to another platform. The clean way to get rid of them is to fetch the **original watermark-free MP4**. Here's how to remove the TikTok username from a video, free.` },
       { heading: "Why the username appears", body: `TikTok stamps a **moving watermark** — the logo and the creator's **@username** — onto videos saved through the app, so shared clips credit the source. It's useful for attribution but messy for reposting or editing. Downloading the clean original removes it.` },
-      { heading: "How to get a clean version (free)", body: `**Step 1 — Copy the TikTok link** (Share → Copy link).\n\n**Step 2 — Open sjpt.io/tiktok-watermark-remover.**\n\n**Step 3 — Paste the link** and fetch.\n\n**Step 4 — Download** the clean HD MP4 — no logo, no username.\n\nNo app, no sign-up.` },
+      { heading: "How to get a clean version (free)", body: `**Step 1 — Copy the TikTok link** (Share → Copy link).\n\n**Step 2 — Open the Pixel Shine TikTok watermark remover.**\n\n**Step 3 — Paste the link** and fetch.\n\n**Step 4 — Download** the clean HD MP4 — no logo, no username.\n\nNo app, no sign-up.` },
       { heading: "Cleaner than cropping", body: `Because the watermark **moves around the frame**, you can't just crop it out without losing part of the video. Fetching the original clean file avoids that entirely — you keep the full frame with no overlay drifting through it.` },
       { heading: "Credit creators anyway", body: `Removing the on-screen username is fine for **your own** clips or when you'll **credit the creator** yourself. Don't strip attribution to pass off someone else's video as your own — download responsibly and give credit where it's due.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -350,7 +350,7 @@ export const SEO_POSTS_7: BlogPost[] = [
         ["Is it free?", "Yes — free, no sign-up, no app."],
         ["Should I still credit the creator?", "Yes — remove the overlay for your own clips or when you credit the creator; don't strip attribution to repost others' work."],
       ]) },
-      { heading: "Key takeaways", body: `Fetch the original clean MP4 to remove the drifting TikTok logo and @username — cleaner than cropping, and keep crediting creators. Free at sjpt.io. Remove Watermark Free →` },
+      { heading: "Key takeaways", body: `Fetch the original clean MP4 to remove the drifting TikTok logo and @username — cleaner than cropping, and keep crediting creators. Free at Pixel Shine. Remove Watermark Free →` },
     ],
   ),
   P(
@@ -365,7 +365,7 @@ export const SEO_POSTS_7: BlogPost[] = [
     [
       { body: `Working on a **computer**? You can download **TikTok videos without the watermark** right in your browser — no software to install. Paste the link, get a clean HD MP4 on your PC or Mac. Here's how, free.` },
       { heading: "Why download on PC", body: `A computer is where you **edit, archive and repurpose** — cutting Reels, building compilations, saving clips to a drive. Downloading the clean MP4 on your PC drops it straight into your editing workflow, no watermark in the way.` },
-      { heading: "How to download on PC (free)", body: `**Step 1 — Get the link:** on tiktok.com, click **Share → Copy link** (or copy the URL from the address bar).\n\n**Step 2 — Open sjpt.io/tiktok-watermark-remover.**\n\n**Step 3 — Paste the link** and fetch.\n\n**Step 4 — Download** the clean HD MP4 to your computer.\n\nNo software, no sign-up.` },
+      { heading: "How to download on PC (free)", body: `**Step 1 — Get the link:** on tiktok.com, click **Share → Copy link** (or copy the URL from the address bar).\n\n**Step 2 — Open the Pixel Shine TikTok watermark remover.**\n\n**Step 3 — Paste the link** and fetch.\n\n**Step 4 — Download** the clean HD MP4 to your computer.\n\nNo software, no sign-up.` },
       { heading: "PC and Mac", body: `It's all in the browser, so **Windows, Mac and Linux** work the same — Chrome, Edge, Firefox or Safari. The MP4 saves to your Downloads folder, ready to edit or archive.` },
       { heading: "Use it responsibly", body: `Download your **own** videos freely; for others', get permission and credit the creator, and follow TikTok's terms. A downloader is for reusing content you're entitled to — not for reposting others' work as your own.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -374,7 +374,7 @@ export const SEO_POSTS_7: BlogPost[] = [
         ["Is there a watermark?", "No — you get the clean HD version."],
         ["Is it free?", "Yes — free, no software, no sign-up."],
       ]) },
-      { heading: "Key takeaways", body: `On a computer, paste a TikTok link to download a clean HD MP4 straight to Downloads — no software, works on PC and Mac. Free at sjpt.io. Download TikTok Free →` },
+      { heading: "Key takeaways", body: `On a computer, paste a TikTok link to download a clean HD MP4 straight to Downloads — no software, works on PC and Mac. Free at Pixel Shine. Download TikTok Free →` },
     ],
   ),
 ];

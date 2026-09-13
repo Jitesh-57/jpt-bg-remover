@@ -7,18 +7,18 @@ const BASE = "https://www.sjpt.io";
 const GRAD = "linear-gradient(120deg,var(--accent),var(--accent-2))";
 
 export const metadata: Metadata = {
-  title: { absolute: "Free Alternatives to Popular Image Tools (No Watermark) | sjpt.io" },
+  title: { absolute: "Free Alternatives to Popular Image Tools (No Watermark) | Pixel Shine" },
   description:
     "Free, no-watermark, no-sign-up alternatives to Remove.bg, Canva, PhotoRoom, Photoshop, TinyPNG and more. Remove backgrounds, upscale, compress and convert images online.",
   keywords:
     "free image tool alternatives, remove.bg alternative, canva alternative, photoroom alternative, tinypng alternative, free background remover, no watermark",
   alternates: { canonical: `${BASE}/alternatives` },
   openGraph: {
-    title: "Free Alternatives to Popular Image Tools | sjpt.io",
+    title: "Free Alternatives to Popular Image Tools | Pixel Shine",
     description: "Free, no-watermark alternatives to the tools you already know.",
     url: `${BASE}/alternatives`,
     type: "website",
-    siteName: "sjpt.io",
+    siteName: "Pixel Shine",
   },
 };
 
@@ -62,7 +62,7 @@ export default function AlternativesIndex() {
               to the tools you know
             </h1>
             <p style={{ fontSize: "clamp(1rem,2vw,1.12rem)", color: "var(--text-muted)", lineHeight: 1.7, maxWidth: 600, margin: "0 auto" }}>
-              Hit a paywall, watermark or sign-up wall? sjpt.io does the same core jobs — free, in your browser, with nothing to install.
+              Hit a paywall, watermark or sign-up wall? Pixel Shine does the same core jobs — free, in your browser, with nothing to install.
             </p>
           </div>
         </section>

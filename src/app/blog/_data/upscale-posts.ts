@@ -36,7 +36,7 @@ export const UPSCALE_POSTS: BlogPost[] = [
         heading: "Upscale your thumbnail in three steps",
         body: `**Step 1 — Pick your best frame or photo.** Start with the sharpest source you have. Even a small image works, but avoid ones that are already heavily compressed or motion-blurred.
 
-**Step 2 — Upscale 2× or 4×.** Open the free upscaler at sjpt.io, drop in your image, and choose 2× for a modest boost or 4× for maximum resolution. The AI reconstructs edges, textures, and fine detail rather than just stretching pixels.
+**Step 2 — Upscale 2× or 4×.** Open the free upscaler at Pixel Shine, drop in your image, and choose 2× for a modest boost or 4× for maximum resolution. The AI reconstructs edges, textures, and fine detail rather than just stretching pixels.
 
 **Step 3 — Crop and add text.** Export the upscaled image, crop to 16:9 (1280×720), and add your title text in any editor. Because the base image is now high-resolution, your text and face will stay crisp.`,
       },
@@ -48,7 +48,7 @@ export const UPSCALE_POSTS: BlogPost[] = [
         heading: "Free, unlimited, no watermark",
         body: `You should never pay a subscription just to sharpen a thumbnail. Pixel Shine's basic upscaler is free and unlimited, runs online, and exports clean images with no watermark. Upscale as many thumbnails as you publish — daily uploads, A/B test variants, back-catalogue refreshes — without hitting a paywall.
 
-Ready to lift your click-through rate? Head to sjpt.io, upload your thumbnail image, and download a razor-sharp result in seconds.`,
+Ready to lift your click-through rate? Head to Pixel Shine, upload your thumbnail image, and download a razor-sharp result in seconds.`,
       },
     ],
   },
@@ -79,7 +79,7 @@ Ready to lift your click-through rate? Head to sjpt.io, upload your thumbnail im
         heading: "Step-by-step: screenshot to 4K",
         body: `**Step 1 — Grab your cleanest capture.** Avoid frames with heavy motion blur or HUD clutter over the focal point.
 
-**Step 2 — Upscale 4×.** At sjpt.io, upload the screenshot and select 4× for maximum resolution. The AI enhances edges, foliage, armour, and lighting detail without introducing the blur that plain stretching causes.
+**Step 2 — Upscale 4×.** At Pixel Shine, upload the screenshot and select 4× for maximum resolution. The AI enhances edges, foliage, armour, and lighting detail without introducing the blur that plain stretching causes.
 
 **Step 3 — Set as wallpaper or post it.** Download the result and use it as a wallpaper, YouTube thumbnail, or Discord/Instagram post. It'll stay sharp at full screen.`,
       },
@@ -91,7 +91,7 @@ Ready to lift your click-through rate? Head to sjpt.io, upload your thumbnail im
         heading: "Free and unlimited for gamers",
         body: `Pixel Shine's upscaler is free, unlimited, and watermark-free — perfect for building a whole wallpaper collection or a thumbnail library for your channel. It runs online, so there's nothing to install.
 
-Level up your captures at sjpt.io — upload a screenshot and download a crisp 4K version in seconds.`,
+Level up your captures at Pixel Shine — upload a screenshot and download a crisp 4K version in seconds.`,
       },
     ],
   },
@@ -122,7 +122,7 @@ Level up your captures at sjpt.io — upload a screenshot and download a crisp 4
         heading: "How to enhance a scanned photo",
         body: `**Step 1 — Scan or photograph the print cleanly.** Use the highest DPI your scanner allows, or shoot the print flat in even, glare-free light.
 
-**Step 2 — Upscale and sharpen.** Upload the scan to sjpt.io and choose 2× or 4×. The AI sharpens edges, recovers texture in faces and clothing, and reduces the grainy noise typical of scans.
+**Step 2 — Upscale and sharpen.** Upload the scan to Pixel Shine and choose 2× or 4×. The AI sharpens edges, recovers texture in faces and clothing, and reduces the grainy noise typical of scans.
 
 **Step 3 — Adjust and save.** Fine-tune brightness and contrast if the scan looks flat, then download your enhanced high-resolution file — ready to reprint or share.`,
       },
@@ -134,7 +134,7 @@ Level up your captures at sjpt.io — upload a screenshot and download a crisp 4
         heading: "Preserve memories for free",
         body: `Pixel Shine's enhancer is completely free, unlimited, and watermark-free, so you can digitise an entire shoebox of prints without paying per photo. Everything runs online.
 
-Bring your old prints back to life at sjpt.io — upload a scan and download a sharp, enhanced version in seconds.`,
+Bring your old prints back to life at Pixel Shine — upload a scan and download a sharp, enhanced version in seconds.`,
       },
     ],
   },
@@ -165,7 +165,7 @@ Bring your old prints back to life at sjpt.io — upload a scan and download a s
         heading: "Enhance your pet photo in seconds",
         body: `**Step 1 — Choose your best shot.** Even a small or slightly soft photo works, as long as it isn't a total motion smear.
 
-**Step 2 — Upscale 2× or 4×.** Upload to sjpt.io and pick your enhancement level. The AI sharpens eyes, nose, and fur while reducing indoor-lighting noise.
+**Step 2 — Upscale 2× or 4×.** Upload to Pixel Shine and pick your enhancement level. The AI sharpens eyes, nose, and fur while reducing indoor-lighting noise.
 
 **Step 3 — Download and print.** Save the high-resolution result — now crisp enough for a framed print, a phone wallpaper, or a social post.`,
       },
@@ -177,7 +177,7 @@ Bring your old prints back to life at sjpt.io — upload a scan and download a s
         heading: "Free for every pet parent",
         body: `Pixel Shine is free, unlimited, and watermark-free, so you can enhance your whole camera roll of pet photos without paying a cent. It works entirely online.
 
-Give your furry friend the crisp photos they deserve — head to sjpt.io and upload one now.`,
+Give your furry friend the crisp photos they deserve — head to Pixel Shine and upload one now.`,
       },
     ],
   },
@@ -208,7 +208,7 @@ Give your furry friend the crisp photos they deserve — head to sjpt.io and upl
         heading: "Upscale a dish photo in three steps",
         body: `**Step 1 — Shoot in good light.** Natural light near a window beats harsh kitchen bulbs. Get close and fill the frame with the dish.
 
-**Step 2 — Upscale 2× or 4×.** Upload to sjpt.io and enhance. The AI sharpens edges and textures while cleaning up noise from dim indoor shots.
+**Step 2 — Upscale 2× or 4×.** Upload to Pixel Shine and enhance. The AI sharpens edges and textures while cleaning up noise from dim indoor shots.
 
 **Step 3 — Adjust colour and upload.** A slight saturation and contrast boost makes food look fresh and vibrant. Download and upload to your menu or delivery app.`,
       },
@@ -220,7 +220,7 @@ Give your furry friend the crisp photos they deserve — head to sjpt.io and upl
         heading: "Free for restaurants and home kitchens",
         body: `Pixel Shine's upscaler is free, unlimited, and watermark-free — ideal for cafés, cloud kitchens, and home-based food businesses working on a tight budget. No app, no subscription.
 
-Make your menu irresistible at sjpt.io — upload a dish photo and download a crisp version in seconds.`,
+Make your menu irresistible at Pixel Shine — upload a dish photo and download a crisp version in seconds.`,
       },
     ],
   },
@@ -251,7 +251,7 @@ Make your menu irresistible at sjpt.io — upload a dish photo and download a cr
         heading: "Upscale your aerial shot",
         body: `**Step 1 — Start with your sharpest frame.** Avoid shots taken in strong wind or low light where motion blur creeps in.
 
-**Step 2 — Upscale 2× or 4×.** Upload to sjpt.io and choose your level. The AI sharpens structures and natural textures while cleaning up haze-related softness.
+**Step 2 — Upscale 2× or 4×.** Upload to Pixel Shine and choose your level. The AI sharpens structures and natural textures while cleaning up haze-related softness.
 
 **Step 3 — Crop and export.** Crop to your final composition and download the high-resolution result for print, web, or listings.`,
       },
@@ -263,7 +263,7 @@ Make your menu irresistible at sjpt.io — upload a dish photo and download a cr
         heading: "Free and unlimited",
         body: `Pixel Shine's upscaler is free, unlimited, and watermark-free — great for hobbyist pilots and property marketers alike. Everything runs online.
 
-Give your aerials the resolution they deserve — upload one at sjpt.io and download a crisp version in seconds.`,
+Give your aerials the resolution they deserve — upload one at Pixel Shine and download a crisp version in seconds.`,
       },
     ],
   },
@@ -294,7 +294,7 @@ Give your aerials the resolution they deserve — upload one at sjpt.io and down
         heading: "Enhance a black & white photo",
         body: `**Step 1 — Scan or photograph the print.** Capture it flat in even light at the highest resolution you can.
 
-**Step 2 — Upscale 2× or 4×.** Upload to sjpt.io. The AI sharpens facial features and fabric texture while reducing grain and softness.
+**Step 2 — Upscale 2× or 4×.** Upload to Pixel Shine. The AI sharpens facial features and fabric texture while reducing grain and softness.
 
 **Step 3 — Adjust tone and save.** A small contrast lift restores depth to faded prints. Download the enhanced high-resolution file for framing or sharing.`,
       },
@@ -306,7 +306,7 @@ Give your aerials the resolution they deserve — upload one at sjpt.io and down
         heading: "Preserve your heritage for free",
         body: `Pixel Shine is free, unlimited, and watermark-free, so you can enhance an entire family archive at no cost. It all runs online — nothing to install.
 
-Honour your family history at sjpt.io — upload an old photo and download a crisp, enhanced version in seconds.`,
+Honour your family history at Pixel Shine — upload an old photo and download a crisp, enhanced version in seconds.`,
       },
     ],
   },
@@ -337,7 +337,7 @@ Honour your family history at sjpt.io — upload an old photo and download a cri
         heading: "Sharpen a screenshot in seconds",
         body: `**Step 1 — Use the least-compressed version.** If possible, get the original screenshot rather than a forwarded copy.
 
-**Step 2 — Upscale 2× or 4×.** Upload to sjpt.io and enhance. The AI sharpens text edges and fine detail, improving legibility.
+**Step 2 — Upscale 2× or 4×.** Upload to Pixel Shine and enhance. The AI sharpens text edges and fine detail, improving legibility.
 
 **Step 3 — Download and read.** Save the clearer version. For dense text, a 4× upscale usually makes small fonts readable again.`,
       },
@@ -349,7 +349,7 @@ Honour your family history at sjpt.io — upload an old photo and download a cri
         heading: "Free and instant",
         body: `Pixel Shine's upscaler is free, unlimited, and watermark-free, and runs entirely online — no upload limits, no sign-up.
 
-Make that blurry screenshot readable again at sjpt.io in just a few seconds.`,
+Make that blurry screenshot readable again at Pixel Shine in just a few seconds.`,
       },
     ],
   },
@@ -380,7 +380,7 @@ Make that blurry screenshot readable again at sjpt.io in just a few seconds.`,
         heading: "Upscale for Stories and Reels",
         body: `**Step 1 — Pick your sharpest photo.** Even a small image works as a starting point.
 
-**Step 2 — Upscale 2× or 4×.** Upload to sjpt.io and enhance so the image comfortably exceeds Instagram's display resolution.
+**Step 2 — Upscale 2× or 4×.** Upload to Pixel Shine and enhance so the image comfortably exceeds Instagram's display resolution.
 
 **Step 3 — Crop to 9:16 and post.** Crop to the vertical Story/Reel ratio, add your text or stickers, and upload. The extra resolution keeps everything crisp full-screen.`,
       },
@@ -392,7 +392,7 @@ Make that blurry screenshot readable again at sjpt.io in just a few seconds.`,
         heading: "Free for every creator",
         body: `Pixel Shine's upscaler is free, unlimited, and watermark-free — ideal for creators posting daily. It runs online with nothing to install.
 
-Keep your Stories and Reels crisp — upload a photo at sjpt.io and download a sharp version in seconds.`,
+Keep your Stories and Reels crisp — upload a photo at Pixel Shine and download a sharp version in seconds.`,
       },
     ],
   },
@@ -423,7 +423,7 @@ Keep your Stories and Reels crisp — upload a photo at sjpt.io and download a s
         heading: "Enhance your ID photo",
         body: `**Step 1 — Start with a compliant photo.** Plain background, even lighting, neutral expression, facing the camera.
 
-**Step 2 — Upscale and sharpen.** Upload to sjpt.io and enhance 2× to increase resolution and crispness while cleaning up noise.
+**Step 2 — Upscale and sharpen.** Upload to Pixel Shine and enhance 2× to increase resolution and crispness while cleaning up noise.
 
 **Step 3 — Crop to spec and download.** Crop to the exact dimensions your application requires, then download the clearer, higher-resolution file.`,
       },
@@ -435,7 +435,7 @@ Keep your Stories and Reels crisp — upload a photo at sjpt.io and download a s
         heading: "Free and private",
         body: `Pixel Shine's upscaler is free, unlimited, and watermark-free, and processing happens online. There's no cost and no software to install.
 
-Sharpen your passport or visa photo at sjpt.io before you submit — it takes just seconds.`,
+Sharpen your passport or visa photo at Pixel Shine before you submit — it takes just seconds.`,
       },
     ],
   },
@@ -466,7 +466,7 @@ Sharpen your passport or visa photo at sjpt.io before you submit — it takes ju
         heading: "Upscale artwork for print",
         body: `**Step 1 — Export your highest-quality version.** Use a PNG or high-quality export from your art tool.
 
-**Step 2 — Upscale 4×.** Upload to sjpt.io and choose 4× for maximum print resolution. The AI keeps edges crisp and colours smooth.
+**Step 2 — Upscale 4×.** Upload to Pixel Shine and choose 4× for maximum print resolution. The AI keeps edges crisp and colours smooth.
 
 **Step 3 — Check at 100% and send to print.** Zoom in to confirm the detail holds, then send the upscaled file to your print service.`,
       },
@@ -478,7 +478,7 @@ Sharpen your passport or visa photo at sjpt.io before you submit — it takes ju
         heading: "Free for artists",
         body: `Pixel Shine's upscaler is free, unlimited, and watermark-free — perfect for building a print shop or Etsy store without upfront costs. It runs online.
 
-Get your art print-ready at sjpt.io — upload your piece and download a high-resolution version in seconds.`,
+Get your art print-ready at Pixel Shine — upload your piece and download a high-resolution version in seconds.`,
       },
     ],
   },
@@ -509,7 +509,7 @@ Get your art print-ready at sjpt.io — upload your piece and download a high-re
         heading: "Upscale your car photos",
         body: `**Step 1 — Shoot in good light.** Photograph the car in daylight from multiple angles: front-three-quarter, sides, rear, interior, dashboard, and any flaws (honesty builds trust).
 
-**Step 2 — Upscale 2× or 4×.** Upload each photo to sjpt.io and enhance. The AI sharpens edges and detail while cleaning up noise from shaded or evening shots.
+**Step 2 — Upscale 2× or 4×.** Upload each photo to Pixel Shine and enhance. The AI sharpens edges and detail while cleaning up noise from shaded or evening shots.
 
 **Step 3 — Adjust and upload.** A slight brightness and contrast bump makes the paint pop. Download and upload to your listing.`,
       },
@@ -521,7 +521,7 @@ Get your art print-ready at sjpt.io — upload your piece and download a high-re
         heading: "Free for every seller",
         body: `Pixel Shine's upscaler is free, unlimited, and watermark-free — no subscription, no app. It runs entirely online.
 
-Sell your car faster with sharp photos — upload one at sjpt.io and download a crisp version in seconds.`,
+Sell your car faster with sharp photos — upload one at Pixel Shine and download a crisp version in seconds.`,
       },
     ],
   },
@@ -552,7 +552,7 @@ Sell your car faster with sharp photos — upload one at sjpt.io and download a 
         heading: "Upscale a fashion photo",
         body: `**Step 1 — Shoot with even light.** Soft, diffused daylight shows texture best. Fill the frame with the outfit.
 
-**Step 2 — Upscale 2× or 4×.** Upload to sjpt.io and enhance. The AI sharpens fabric detail and edges while cleaning up noise.
+**Step 2 — Upscale 2× or 4×.** Upload to Pixel Shine and enhance. The AI sharpens fabric detail and edges while cleaning up noise.
 
 **Step 3 — Colour-correct and publish.** Make sure colours match the real garment, then download and post. Accurate, crisp images reduce returns.`,
       },
@@ -564,7 +564,7 @@ Sell your car faster with sharp photos — upload one at sjpt.io and download a 
         heading: "Free for fashion brands",
         body: `Pixel Shine's upscaler is free, unlimited, and watermark-free — ideal for boutique labels and resellers on a budget. It runs online.
 
-Make your lookbook look premium at sjpt.io — upload a photo and download a crisp version in seconds.`,
+Make your lookbook look premium at Pixel Shine — upload a photo and download a crisp version in seconds.`,
       },
     ],
   },
@@ -595,7 +595,7 @@ Make your lookbook look premium at sjpt.io — upload a photo and download a cri
         heading: "Upscale a landscape photo",
         body: `**Step 1 — Choose a sharp, well-exposed frame.** Avoid shots with heavy haze or camera shake.
 
-**Step 2 — Upscale 4×.** Upload to sjpt.io and pick 4× for print and wallpaper resolution. The AI sharpens natural texture across the whole scene.
+**Step 2 — Upscale 4×.** Upload to Pixel Shine and pick 4× for print and wallpaper resolution. The AI sharpens natural texture across the whole scene.
 
 **Step 3 — Enhance and export.** A gentle contrast and clarity boost adds depth. Download the high-resolution result for print or wallpaper use.`,
       },
@@ -607,7 +607,7 @@ Make your lookbook look premium at sjpt.io — upload a photo and download a cri
         heading: "Free and unlimited",
         body: `Pixel Shine's upscaler is free, unlimited, and watermark-free — perfect for hobbyist photographers building a print or wallpaper collection. It runs online.
 
-Bring your landscapes to life at sjpt.io — upload a photo and download a crisp 4K version in seconds.`,
+Bring your landscapes to life at Pixel Shine — upload a photo and download a crisp 4K version in seconds.`,
       },
     ],
   },
@@ -638,7 +638,7 @@ Bring your landscapes to life at sjpt.io — upload a photo and download a crisp
         heading: "Enhance a low-light photo",
         body: `**Step 1 — Pick the least-blurry frame.** Choose the shot where your subject is sharpest, even if it's dark.
 
-**Step 2 — Upscale 2× or 4×.** Upload to sjpt.io and enhance. The AI reduces noise and sharpens detail simultaneously.
+**Step 2 — Upscale 2× or 4×.** Upload to Pixel Shine and enhance. The AI reduces noise and sharpens detail simultaneously.
 
 **Step 3 — Brighten and save.** Lift brightness and contrast to recover the scene, then download the cleaner, higher-resolution result.`,
       },
@@ -650,7 +650,7 @@ Bring your landscapes to life at sjpt.io — upload a photo and download a crisp
         heading: "Free for every fan",
         body: `Pixel Shine's enhancer is free, unlimited, and watermark-free, and runs online. Rescue your whole event album at no cost.
 
-Relive the show in sharper detail — upload a concert photo at sjpt.io and enhance it in seconds.`,
+Relive the show in sharper detail — upload a concert photo at Pixel Shine and enhance it in seconds.`,
       },
     ],
   },
@@ -681,7 +681,7 @@ Relive the show in sharper detail — upload a concert photo at sjpt.io and enha
         heading: "Enhance a baby photo",
         body: `**Step 1 — Choose your sharpest, best-lit shot.** Natural window light produces the cleanest source.
 
-**Step 2 — Upscale 2×.** Upload to sjpt.io and enhance gently. A 2× boost usually adds clarity while keeping skin looking soft and natural.
+**Step 2 — Upscale 2×.** Upload to Pixel Shine and enhance gently. A 2× boost usually adds clarity while keeping skin looking soft and natural.
 
 **Step 3 — Save and print.** Download the higher-resolution result for a framed print, an album, or sharing with relatives.`,
       },
@@ -693,7 +693,7 @@ Relive the show in sharper detail — upload a concert photo at sjpt.io and enha
         heading: "Free for new parents",
         body: `Pixel Shine is free, unlimited, and watermark-free, and runs online — no cost, no software, no limits during those busy newborn days.
 
-Treasure every moment in crisp detail — upload a baby photo at sjpt.io and enhance it in seconds.`,
+Treasure every moment in crisp detail — upload a baby photo at Pixel Shine and enhance it in seconds.`,
       },
     ],
   },
@@ -724,7 +724,7 @@ Treasure every moment in crisp detail — upload a baby photo at sjpt.io and enh
         heading: "Upscale a tattoo reference",
         body: `**Step 1 — Find the best available source.** Start from the largest, least-compressed version of the design you can.
 
-**Step 2 — Upscale 4×.** Upload to sjpt.io and choose 4× to maximise line and detail clarity.
+**Step 2 — Upscale 4×.** Upload to Pixel Shine and choose 4× to maximise line and detail clarity.
 
 **Step 3 — Use it for stencil and consult.** Download the crisp result to plan placement, size, and adjustments before inking.`,
       },
@@ -736,7 +736,7 @@ Treasure every moment in crisp detail — upload a baby photo at sjpt.io and enh
         heading: "Free for artists and clients",
         body: `Pixel Shine's upscaler is free, unlimited, and watermark-free, and runs online. Prep as many references as a full appointment book needs.
 
-Get a crystal-clear reference at sjpt.io — upload a design and download a sharp version in seconds.`,
+Get a crystal-clear reference at Pixel Shine — upload a design and download a sharp version in seconds.`,
       },
     ],
   },
@@ -767,7 +767,7 @@ Get a crystal-clear reference at sjpt.io — upload a design and download a shar
         heading: "Upscale your cover image",
         body: `**Step 1 — Prepare your best source.** Use the highest-quality photo or artwork for your cover concept.
 
-**Step 2 — Upscale 4×.** Upload to sjpt.io and choose 4× to comfortably exceed KDP's minimums. The AI keeps edges and text-friendly areas crisp.
+**Step 2 — Upscale 4×.** Upload to Pixel Shine and choose 4× to comfortably exceed KDP's minimums. The AI keeps edges and text-friendly areas crisp.
 
 **Step 3 — Design and export.** Add your title and author text in a design tool over the upscaled image, then export to KDP's required dimensions.`,
       },
@@ -779,7 +779,7 @@ Get a crystal-clear reference at sjpt.io — upload a design and download a shar
         heading: "Free for indie authors",
         body: `Pixel Shine's upscaler is free, unlimited, and watermark-free — ideal for self-publishers watching every rupee. It runs online.
 
-Give your book a pro cover at sjpt.io — upload your image and download a high-resolution version in seconds.`,
+Give your book a pro cover at Pixel Shine — upload your image and download a high-resolution version in seconds.`,
       },
     ],
   },
@@ -810,7 +810,7 @@ Give your book a pro cover at sjpt.io — upload your image and download a high-
         heading: "Enhance a call screenshot",
         body: `**Step 1 — Capture at full size.** Screenshot with the video as large as possible on screen for maximum starting detail.
 
-**Step 2 — Upscale 2× or 4×.** Upload to sjpt.io and enhance. The AI sharpens faces and reduces the blockiness typical of compressed video.
+**Step 2 — Upscale 2× or 4×.** Upload to Pixel Shine and enhance. The AI sharpens faces and reduces the blockiness typical of compressed video.
 
 **Step 3 — Crop and save.** Crop to your subject and download the clearer, higher-resolution version.`,
       },
@@ -822,7 +822,7 @@ Give your book a pro cover at sjpt.io — upload your image and download a high-
         heading: "Free and instant",
         body: `Pixel Shine's upscaler is free, unlimited, and watermark-free, running entirely online. There are no limits and nothing to install.
 
-Rescue that call screenshot at sjpt.io — upload it and download a sharper version in seconds.`,
+Rescue that call screenshot at Pixel Shine — upload it and download a sharper version in seconds.`,
       },
     ],
   },
@@ -853,7 +853,7 @@ Rescue that call screenshot at sjpt.io — upload it and download a sharper vers
         heading: "Upscale a WhatsApp photo",
         body: `**Step 1 — Get the best copy you can.** If possible, ask the sender to share the photo "as document" next time, which skips compression. For photos you already have, use the least-forwarded version.
 
-**Step 2 — Upscale 2× or 4×.** Upload the compressed image to sjpt.io and enhance. The AI sharpens detail and reduces the blocky artefacts.
+**Step 2 — Upscale 2× or 4×.** Upload the compressed image to Pixel Shine and enhance. The AI sharpens detail and reduces the blocky artefacts.
 
 **Step 3 — Save the restored photo.** Download the crisper, higher-resolution result for printing, sharing, or archiving.`,
       },
@@ -865,7 +865,7 @@ Rescue that call screenshot at sjpt.io — upload it and download a sharper vers
         heading: "Free and unlimited",
         body: `Pixel Shine's upscaler is free, unlimited, and watermark-free, and runs online — perfect for fixing the endless stream of compressed photos WhatsApp produces.
 
-Restore your WhatsApp photos at sjpt.io — upload one and download a sharp version in seconds.`,
+Restore your WhatsApp photos at Pixel Shine — upload one and download a sharp version in seconds.`,
       },
     ],
   },

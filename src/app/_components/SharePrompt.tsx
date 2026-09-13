@@ -6,7 +6,7 @@ import { trackEvent } from "@/lib/analytics";
 /**
  * Post-download share prompt — the site's viral loop.
  *
- * After a user downloads a result we invite them to share sjpt.io. Every share
+ * After a user downloads a result we invite them to share Pixel Shine. Every share
  * is a potential backlink / referral and a fresh visitor, so this is shown once
  * per browser session (gated by sessionStorage) to stay helpful, not naggy.
  *
@@ -16,7 +16,7 @@ import { trackEvent } from "@/lib/analytics";
 
 const SHARE_URL = "https://www.sjpt.io/?ref=share";
 const SHARE_TEXT =
-  "I just edited my photo for free at sjpt.io — remove backgrounds, upscale, convert & more. No watermark, no sign-up. 🎨";
+  "I just edited my photo for free at Pixel Shine — remove backgrounds, upscale, convert & more. No watermark, no sign-up. 🎨";
 const GRAD = "linear-gradient(120deg,var(--accent),var(--accent-2))";
 
 type Net = { key: string; label: string; icon: string; color: string; href: string };
@@ -107,7 +107,7 @@ export default function SharePrompt({
   const nativeShare = async () => {
     trackEvent("share_clicked", { network: "native", tool: tool || "editor" });
     try {
-      await navigator.share({ title: "sjpt.io", text: SHARE_TEXT, url: SHARE_URL });
+      await navigator.share({ title: "Pixel Shine", text: SHARE_TEXT, url: SHARE_URL });
     } catch {
       /* user cancelled the share sheet — nothing to do */
     }
@@ -128,7 +128,7 @@ export default function SharePrompt({
     <div
       role="dialog"
       aria-modal="true"
-      aria-label="Share sjpt.io"
+      aria-label="Share Pixel Shine"
       onClick={onClose}
       style={{
         position: "fixed",
@@ -179,7 +179,7 @@ export default function SharePrompt({
           Download started!
         </h2>
         <p style={{ fontSize: 14.5, color: "var(--text-muted)", lineHeight: 1.6, margin: "0 0 20px" }}>
-          Loved it? Help a friend find sjpt.io — it&apos;s free, no watermark, no sign-up.
+          Loved it? Help a friend find Pixel Shine — it&apos;s free, no watermark, no sign-up.
         </p>
 
         {canNativeShare && (

@@ -3,11 +3,13 @@
 //
 // These target high-intent searchers already looking to switch tools — a much
 // warmer audience than generic "background remover" queries. Each entry maps a
-// competitor to the free sjpt.io tool that replaces it, and the shared generator
+// competitor to the free Pixel Shine tool that replaces it, and the shared generator
 // below produces the page copy, FAQ and a side-by-side comparison table.
 //
 // Claims about competitors are kept qualitative and evergreen on purpose (no
 // hard prices, which change) so the pages stay accurate over time.
+
+import { BRAND } from "@/lib/brand";
 
 export type ToolKey = "remove-bg" | "editor" | "upscale" | "compress" | "convert" | "pdf";
 
@@ -30,10 +32,10 @@ export interface Alternative {
   slug: string;       // full URL slug, e.g. "remove-bg-alternative"
   name: string;       // competitor display name, e.g. "Remove.bg"
   category: string;   // short category label, e.g. "background remover"
-  tool: ToolKey;      // which sjpt tool replaces it
+  tool: ToolKey;      // which Pixel Shine tool replaces it
   // The two or three things people dislike about the competitor's free tier.
   gripes: string[];
-  // The competitor's cell values in the comparison table (sjpt's are constant).
+  // The competitor's cell values in the comparison table (ours are constant).
   compare: { price: string; watermark: string; signup: string; limit: string };
 }
 
@@ -145,13 +147,13 @@ export interface AlternativeContent {
 
 export function buildContent(a: Alternative): AlternativeContent {
   const tool = TOOLS[a.tool];
-  const title = `Best Free ${a.name} Alternative (2026) — No Watermark, No Sign-Up | sjpt.io`;
-  const metaDescription = `Looking for a free ${a.name} alternative? sjpt.io lets you ${tool.verb} online in seconds — no watermark, no credits, no account. See the full comparison.`;
+  const title = `Best Free ${a.name} Alternative (2026) — No Watermark, No Sign-Up | ${BRAND}`;
+  const metaDescription = `Looking for a free ${a.name} alternative? ${BRAND} lets you ${tool.verb} online in seconds — no watermark, no credits, no account. See the full comparison.`;
 
   const steps = [
-    { t: "Open the free tool", d: `Head to the sjpt.io ${tool.label} — nothing to install and no account to create.` },
+    { t: "Open the free tool", d: `Head to the ${BRAND} ${tool.label} — nothing to install and no account to create.` },
     { t: "Upload your image", d: "Drag and drop a photo or pick one from your device. Your image is processed privately." },
-    { t: `Let sjpt ${tool.verb}`, d: "The result is ready in seconds, at full quality with no watermark added." },
+    { t: `Let ${BRAND} ${tool.verb}`, d: "The result is ready in seconds, at full quality with no watermark added." },
     { t: "Download free", d: "Save your image instantly — no credits spent, no paywall, no catch." },
   ];
 
@@ -165,8 +167,8 @@ export function buildContent(a: Alternative): AlternativeContent {
 
   const faqs = [
     {
-      q: `Is sjpt.io really a free ${a.name} alternative?`,
-      a: `Yes. sjpt.io's ${tool.label} lets you ${tool.verb} for free with no watermark and no account. It's built to do the core job of ${a.name} without the paywall.`,
+      q: `Is ${BRAND} really a free ${a.name} alternative?`,
+      a: `Yes. ${BRAND}'s ${tool.label} lets you ${tool.verb} for free with no watermark and no account. It's built to do the core job of ${a.name} without the paywall.`,
     },
     {
       q: `Do I need to create an account to use it?`,
@@ -174,15 +176,15 @@ export function buildContent(a: Alternative): AlternativeContent {
     },
     {
       q: `Will there be a watermark on my download?`,
-      a: `No. Unlike some free tiers, sjpt.io never stamps a watermark on your result — what you download is clean and full quality.`,
+      a: `No. Unlike some free tiers, ${BRAND} never stamps a watermark on your result — what you download is clean and full quality.`,
     },
     {
       q: `Is my image kept private?`,
       a: `Your image is used only to produce your result and isn't sold or shared. Many of the tools run right in your browser for extra privacy.`,
     },
     {
-      q: `What else can sjpt.io do besides being a ${a.name} alternative?`,
-      a: `Plenty — background removal, upscaling, compression, format conversion, cropping, watermarking and image-to-PDF are all free at sjpt.io.`,
+      q: `What else can ${BRAND} do besides being a ${a.name} alternative?`,
+      a: `Plenty — background removal, upscaling, compression, format conversion, cropping, watermarking and image-to-PDF are all free at ${BRAND}.`,
     },
   ];
 
@@ -192,10 +194,10 @@ export function buildContent(a: Alternative): AlternativeContent {
     tool,
     title,
     metaDescription,
-    keywords: `${a.name} alternative, free ${a.name} alternative, ${a.name} alternative no watermark, ${a.category}, free ${a.category}, sjpt.io`,
+    keywords: `${a.name} alternative, free ${a.name} alternative, ${a.name} alternative no watermark, ${a.category}, free ${a.category}, ${BRAND}`,
     h1: `The Free ${a.name} Alternative`,
-    heroSub: `Get everything you need from ${a.name} — ${tool.verb} online — without the watermark, credits or sign-up. 100% free at sjpt.io.`,
-    intro: `If you've hit ${a.name}'s paywall, watermark or sign-up wall, you're not alone. sjpt.io is a genuinely free ${a.category} that ${tool.verb} in seconds, right in your browser. No account, no credits, no watermark — just upload, process and download.`,
+    heroSub: `Get everything you need from ${a.name} — ${tool.verb} online — without the watermark, credits or sign-up. 100% free at ${BRAND}.`,
+    intro: `If you've hit ${a.name}'s paywall, watermark or sign-up wall, you're not alone. ${BRAND} is a genuinely free ${a.category} that ${tool.verb} in seconds, right in your browser. No account, no credits, no watermark — just upload, process and download.`,
     whyHeading: `Why people switch from ${a.name}`,
     gripes: a.gripes,
     steps,
