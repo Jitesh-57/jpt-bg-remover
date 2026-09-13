@@ -147,6 +147,8 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
           slug: app.slug,
           model,
           aspectRatio: ratio,
+          // Recorded with the generation, so a row says which style made it.
+          preset: tab === "custom" ? "custom" : preset?.id,
         }),
       });
       // A gateway timeout or a size rejection is not JSON, and res.json() on

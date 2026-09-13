@@ -32,8 +32,12 @@ create index if not exists creative_app_translations_slug_locale
 alter table blog_post_translations enable row level security;
 alter table creative_app_translations enable row level security;
 
+-- Dropped first so this file can be run again: create policy has no
+-- "if not exists", and a second run would otherwise fail.
+drop policy if exists "Public read blog translations" on blog_post_translations;
 create policy "Public read blog translations"
   on blog_post_translations for select using (true);
 
+drop policy if exists "Public read creative translations" on creative_app_translations;
 create policy "Public read creative translations"
   on creative_app_translations for select using (true);

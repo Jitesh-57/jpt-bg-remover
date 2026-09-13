@@ -44,6 +44,15 @@ const nextConfig = {
     serverActions: {
       bodySizeLimit: '20mb',
     },
+    /*
+      The migration route reads its SQL from disk at runtime, and the path is
+      built with path.join — which the bundler cannot follow, so the .sql files
+      would be left out of the serverless function and the route would fail on
+      Vercel while working locally. This says to ship them.
+    */
+    outputFileTracingIncludes: {
+      '/api/admin/migrate': ['./supabase/migrations/**'],
+    },
   },
 };
 
