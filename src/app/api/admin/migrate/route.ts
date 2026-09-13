@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { Client } from "pg";
 import { readFile, readdir } from "fs/promises";
 import path from "path";
-import { requireAdmin } from "@/lib/admin-token";
+import { requireAdmin, databaseUrl } from "@/lib/admin-token";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
@@ -48,11 +48,6 @@ async function migrations(): Promise<string[]> {
   return names.sort();
 }
 
-function dbUrl(): string | null {
-  const raw = (process.env.SUPABASE_DB_URL || process.env.POSTGRES_URL || "").trim();
-  return raw || null;
-}
-
 /*
   Read from disk rather than imported as a string, so the SQL stays a .sql file
   — readable, diffable, and pasteable into the Supabase editor — instead of
@@ -77,18 +72,19 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: `Could not read the migrations: ${(e as Error).message}` }, { status: 500 });
   }
 
-  const url = dbUrl();
-  if (!url) {
+  const db = databaseUrl();
+  if (!db) {
     return NextResponse.json({
-      error: "SUPABASE_DB_URL is not set, so there is no database to migrate.",
-      fix: "Supabase → Project Settings → Database → Connection string → Session pooler (port 5432). Put the real password in it, set it as SUPABASE_DB_URL in the Vercel project's environment variables, and call this again once the redeploy finishes.",
+      error: "No database connection string is set, so there is nothing to migrate.",
+      fix: "Supabase → Project Settings → Database → Connection string → Session pooler (port 5432). Put the real password in it, add it to the Vercel project as SUPABASE_DB_URL, and call this again once the redeploy finishes.",
+      looked_for: ["SUPABASE_DB_URL", "POSTGRES_URL_NON_POOLING", "POSTGRES_URL", "DATABASE_URL"],
       migrations: names,
     }, { status: 503 });
   }
 
 
   const client = new Client({
-    connectionString: url,
+    connectionString: db.url,
     /*
       Supabase terminates TLS with a certificate this client has no root for;
       the connection is still encrypted and the host is fixed by the URL, so the
@@ -98,7 +94,7 @@ export async function GET(req: NextRequest) {
       speak TLS at all — a local one, in practice. Forcing SSL on those fails
       the handshake rather than falling back.
     */
-    ssl: /[?&]sslmode=disable\b/.test(url) ? false : { rejectUnauthorized: false },
+    ssl: /[?&]sslmode=disable\b/.test(db.url) ? false : { rejectUnauthorized: false },
     connectionTimeoutMillis: 15_000,
     statement_timeout: 90_000,
   });
@@ -210,6 +206,7 @@ export async function GET(req: NextRequest) {
     applied,
     skipped,
     tables,
+    connectionFrom: db.from,
     note: applied.length
       ? "Schema is up to date."
       : "Everything had already been applied; nothing to do.",
