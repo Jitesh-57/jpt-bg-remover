@@ -1,27 +1,38 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminSupabase } from "@/lib/auth";
+import { purchasedByUser } from "@/lib/purchases.server";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
 /**
- * Clears credits nobody paid for.
+ * Brings every balance back to what was actually paid for.
  *
  * Closing the signup grant stopped new accounts getting free AI generations,
- * but it could not touch the balances already handed out — and an account
- * holding those is, as far as every gate is concerned, a paying customer. That
- * is why AI generation still worked on an account that had never bought
- * anything: not a hole in the gate, a leftover in the data.
+ * but it could not touch the balances already handed out — and to every gate in
+ * the app, an account holding those is indistinguishable from a paying
+ * customer. That is why AI generation still worked on an account that had never
+ * bought anything, and why an account that bought the 5-credit pack showed 11:
+ * a leftover grant of 10, four of it spent, plus the 5 it paid for.
  *
- * "Paid for" means a row in `purchases`. Anyone with one is left completely
- * alone, balance and plan intact; the reset only touches profiles with credits
- * and no purchase behind them.
+ * The rule is `min(current, purchased)`:
+ *
+ *   · it never takes away a credit someone paid for — a buyer who has spent
+ *     down to 3 of a 20-pack keeps 3, not 20;
+ *   · it never leaves a granted credit behind — someone granted 10 who never
+ *     bought goes to 0;
+ *   · and where the two are mixed, the purchase survives whole and the grant
+ *     does not, which is the reading that cannot overcharge anyone.
+ *
+ * "Purchased" comes from Razorpay, not from the `purchases` table: the money
+ * moved at the gateway, its order notes carry the buyer's id and the credits,
+ * and it is there whether or not the table has been created.
  *
  *   GET /api/admin/reset-free-credits?token=…          what would change
  *   GET /api/admin/reset-free-credits?token=…&apply=1  change it
  *
- * Dry by default, because this spends nothing but cannot be undone: the
- * previous balances are only in the response, so read it before applying.
+ * Dry by default, because this cannot be undone: the previous balances are only
+ * in the response, so read it before applying.
  */
 const TOKEN = process.env.ADMIN_IMAGE_TOKEN || "jptblog2026";
 
@@ -48,66 +59,68 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ applied: false, holders: 0, note: "No account is holding credits." });
   }
 
-  // One query for the buyers, rather than one per profile.
-  const { data: paidRows, error: purchErr } = await admin
-    .from("purchases")
-    .select("user_id")
-    .in("user_id", holders.map((h) => h.id)) as { data: { user_id: string }[] | null; error: { message: string } | null };
-
-  if (purchErr && !/does not exist|schema cache/i.test(purchErr.message)) {
-    return NextResponse.json({ error: `Could not read purchases: ${purchErr.message}` }, { status: 500 });
-  }
   /*
-    A missing purchases table would make every holder look unpaid, which would
-    wipe real customers' balances. Refuse instead: the table is what proves a
-    purchase, and without it this cannot tell the two apart.
+    A null here means Razorpay could not be asked, not that nobody has paid.
+    Carrying on would read every balance as granted and clear real customers'
+    credits, so it refuses instead.
   */
-  if (purchErr) {
+  const purchased = await purchasedByUser();
+  if (!purchased) {
     return NextResponse.json({
-      error: "The purchases table does not exist, so paid and unpaid balances cannot be told apart.",
-      fix: "Create it with the SQL in docs/invoices.md first — running this without it would clear real customers' credits.",
+      error: "Razorpay could not be reached, so paid and granted credits cannot be told apart.",
+      fix: "Check RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET are set in the environment, then try again. Running without them would clear credits people bought.",
     }, { status: 412 });
   }
 
-  const paid = new Set((paidRows || []).map((r) => r.user_id));
-  const unpaid = holders.filter((h) => !paid.has(h.id));
-
-  const preview = unpaid.map((h) => ({
-    id: h.id,
-    email: h.email ?? null,
-    credits: h.credits ?? 0,
-    plan: h.plan ?? "free",
-  }));
+  const changes = holders
+    .map((h) => {
+      const paid = purchased.get(h.id);
+      const bought = paid?.credits ?? 0;
+      const was = h.credits ?? 0;
+      const wasPlan = h.plan ?? "free";
+      return {
+        id: h.id,
+        email: h.email ?? null,
+        was,
+        bought,
+        // `bought` is the cap, not the floor: spending already happened and
+        // must not be refunded, so a buyer down to 3 of a 20-pack stays at 3.
+        becomes: Math.min(was, bought),
+        wasPlan,
+        // A buyer's plan must not read "free" — the header hides the balance on
+        // a free plan, which is what makes a paid account look unpaid.
+        plan: bought > 0 ? (paid?.plan || wasPlan) : "free",
+      };
+    })
+    .filter((c) => c.becomes !== c.was || c.plan !== c.wasPlan);
 
   if (!apply) {
     return NextResponse.json({
       applied: false,
       holders: holders.length,
-      paid: holders.length - unpaid.length,
-      wouldClear: unpaid.length,
-      accounts: preview,
-      note: "Nothing changed. Re-run with &apply=1 to clear these.",
+      wouldChange: changes.length,
+      accounts: changes,
+      note: "Nothing changed. Re-run with &apply=1 to write these. `becomes` is min(current, purchased): purchases are kept whole, grants are removed.",
     });
   }
 
-  let cleared = 0;
+  let changed = 0;
   const failures: string[] = [];
-  for (const u of unpaid) {
+  for (const c of changes) {
     const { error } = await admin
       .from("profiles")
-      .update({ credits: 0, plan: "free" })
-      .eq("id", u.id);
-    if (error) failures.push(`${u.id}: ${error.message}`);
-    else cleared += 1;
+      .update({ credits: c.becomes, plan: c.plan })
+      .eq("id", c.id);
+    if (error) failures.push(`${c.id}: ${error.message}`);
+    else changed += 1;
   }
 
   return NextResponse.json({
     applied: true,
     holders: holders.length,
-    paid: holders.length - unpaid.length,
-    cleared,
+    changed,
     failures,
-    accounts: preview,
-    note: "Balances above were granted, not bought. Paying accounts were left untouched.",
+    accounts: changes,
+    note: "Balances are now min(previous, purchased). Nobody lost a credit they bought.",
   });
 }

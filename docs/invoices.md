@@ -12,12 +12,32 @@ Both read with the visitor's own Supabase session, never the service role, so a
 guessed payment id in the URL returns nothing rather than someone else's name,
 email and payment reference.
 
-## 1. The table
+## Where the data comes from
+
+**Razorpay is the source of record, and nothing has to be set up for invoices to
+work.** `create-order` writes the buyer's id, the plan and the credit count into
+each order's `notes`, so `lib/purchases.server.ts` can reconstruct every sale
+from the gateway — which is where the money actually moved. The pages fall back
+to this whenever the table below is missing a row, or missing entirely.
+
+The same source answers "has this account ever paid", which is what
+`/api/admin/reset-free-credits` needs to tell a bought balance from a granted
+one.
+
+Ownership still holds on the Razorpay path: only orders whose `notes.userId`
+matches the signed-in user are returned, so a guessed payment id in the URL
+finds nothing.
+
+## 1. The table (optional)
 
 `verify-payment` writes a row per purchase. If the table does not exist the
 purchase still completes — credits are added and the money has moved — and the
-failure is logged with the payment id so the row can be reconstructed. Create
-it once:
+failure is logged with the payment id.
+
+The table is worth creating anyway: it is one query instead of several calls to
+Razorpay, and it pins the invoice number that was issued at the time of the sale
+rather than re-deriving it. Where both hold the same payment, the table wins.
+Create it once:
 
 ```sql
 create table if not exists public.purchases (
@@ -88,10 +108,28 @@ GET /api/admin/reset-free-credits?token=<ADMIN_IMAGE_TOKEN>          # preview
 GET /api/admin/reset-free-credits?token=<ADMIN_IMAGE_TOKEN>&apply=1  # apply
 ```
 
-"Paid for" means a row in `purchases`. Accounts with one are left completely
-alone. The preview lists every account it would clear, with the balance it
-currently holds, and nothing changes until `&apply=1`.
+It also explains the account that bought the 5-credit pack and then showed 11:
+a leftover grant of 10, four of it spent, plus the 5 it paid for.
 
-It refuses outright if the `purchases` table does not exist, because without it
-a paying customer is indistinguishable from a granted balance — and clearing
-the wrong one takes credits from someone who paid.
+Each balance becomes **`min(current, purchased)`**, where `purchased` is the
+total credits bought, read from Razorpay:
+
+| Case | Current | Purchased | Becomes |
+| --- | --- | --- | --- |
+| Granted 10, never bought | 10 | 0 | **0** |
+| Granted 10, spent 4, bought 5 | 11 | 5 | **5** |
+| Bought 20, spent down to 3 | 3 | 20 | **3** |
+
+So a purchase is never reduced and a grant is never left behind. Spending is
+never refunded either — `purchased` is the cap, not the floor.
+
+A buyer's `plan` is set to the pack they bought rather than `free`, because the
+header hides the balance on a free plan, which is what made a paid account look
+unpaid.
+
+The preview lists every account it would change, with the old and new balance,
+and nothing is written until `&apply=1`.
+
+It refuses outright if Razorpay cannot be reached, because then every balance
+would read as granted and clearing them would take credits from people who
+paid. Set `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` and try again.
