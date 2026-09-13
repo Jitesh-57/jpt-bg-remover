@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkAuth, withCredits } from "@/lib/google-drive";
+import { checkEntitlement } from "@/lib/auth";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -66,6 +67,18 @@ async function enhancePrompt(prompt: string): Promise<string> {
 export async function POST(req: NextRequest) {
   const { session, error } = await checkAuth(req);
   if (error) return error;
+
+  /*
+    Check the balance before generating, not after.
+
+    withCredits at the end does refuse a user who cannot pay — they never
+    receive the image — but by then the generation has already run and been
+    billed to us. Every other AI route preflights; this one was missed, so a
+    visitor with no credits could make the account spend money on an image
+    they would then be denied. The client turns this 402 into the packs modal.
+  */
+  const blocked = await checkEntitlement(session!, "ai", "ai-background");
+  if (blocked) return blocked;
 
   try {
     const { prompt } = (await req.json()) as { prompt: string };
