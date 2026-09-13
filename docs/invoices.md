@@ -73,3 +73,25 @@ statement for a seller who is not registered.
 
 Numbering restarts each Indian financial year (April–March), which is the
 convention a buyer's accountant expects.
+
+---
+
+# Clearing credits nobody paid for
+
+Closing the signup grant stopped new accounts receiving free AI generations,
+but it could not touch balances already handed out — and to every gate, an
+account holding those looks exactly like a paying customer. That is why AI
+generation kept working on accounts that had never bought anything.
+
+```
+GET /api/admin/reset-free-credits?token=<ADMIN_IMAGE_TOKEN>          # preview
+GET /api/admin/reset-free-credits?token=<ADMIN_IMAGE_TOKEN>&apply=1  # apply
+```
+
+"Paid for" means a row in `purchases`. Accounts with one are left completely
+alone. The preview lists every account it would clear, with the balance it
+currently holds, and nothing changes until `&apply=1`.
+
+It refuses outright if the `purchases` table does not exist, because without it
+a paying customer is indistinguishable from a granted balance — and clearing
+the wrong one takes credits from someone who paid.
