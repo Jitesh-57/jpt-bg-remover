@@ -30,6 +30,8 @@ import { SEO_POSTS_7 } from "./seo-posts-7";
 import { SEO_POSTS_8 } from "./seo-posts-8";
 import { SEO_POSTS_9 } from "./seo-posts-9";
 import { SEO_POSTS_10 } from "./seo-posts-10";
+import { TOOL_POSTS_2 } from "./tool-posts-2";
+import { APP_POSTS } from "./app-posts";
 
 const RAW_POSTS: BlogPost[] = [
   {
@@ -8534,7 +8536,7 @@ Pixel Shine makes this free, unlimited, and watermark-free, with no sign-up for 
       {
         body: `Ever looked at a Funko Pop on your shelf and thought, \"I'd pay real money for one of me\"? Now you don't have to. When you turn a photo into a Funko Pop with AI, you get that unmistakable big-head, tiny-body vinyl figure look in seconds — no sculpting, no $50 custom-figure commission, no waiting three weeks for shipping. Pixel Shine's funko pop generator takes a single selfie and reimagines you as a boxed collectible, complete with the glossy plastic shading, oversized eyes, and blocky proportions that make these figures so instantly recognizable.
 
-The internet is obsessed with this look. Over 1 billion Funko Pop figures have been sold worldwide since 2010, and the \"funko pop yourself AI\" trend has racked up hundreds of millions of views across TikTok and Instagram. The best part? You can create yours right now, completely free, without installing an app or handing over a credit card. This guide walks you through exactly how to make a jaw-dropping custom Funko Pop from any photo, plus the pro tricks that separate a mediocre result from one that looks store-bought.`,
+The internet is obsessed with this look. Over 1 billion Funko Pop figures have been sold worldwide since 2010, and the \"funko pop yourself AI\" trend has racked up hundreds of millions of views across TikTok and Instagram. The best part? You can create yours right now, on credits, without installing an app and without a subscription. This guide walks you through exactly how to make a jaw-dropping custom Funko Pop from any photo, plus the pro tricks that separate a mediocre result from one that looks store-bought.`,
       },
       {
         heading: "What Makes the Funko Pop AI Effect So Popular",
@@ -8625,7 +8627,7 @@ Because it's generative rather than a simple overlay filter, every render is sli
       {
         heading: "Frequently Asked Questions",
         body: `**Can I really turn my photo into a Funko Pop for free?**
-Yes. Pixel Shine's Creative Effects let you generate a Funko-style figure at no cost, and new users get free trials across tools with no credit card required. The free tier also includes unlimited Normal Upscaling to sharpen your result.
+Yes. Pixel Shine's Creative Effects let you generate a Funko-style figure at no cost, and new users get free trials across tools with no subscription. The free tier also includes unlimited Normal Upscaling to sharpen your result.
 
 **Do I need to create an account?**
 No account is required to start experimenting on Pixel Shine. You can jump in, upload a photo, and generate right away.
@@ -8714,7 +8716,7 @@ The result is a photo that looks like the best version of a real moment — not 
 
 **6. Download watermark-free.** Save the enhanced photo. Pixel Shine exports without stamping a watermark across your image, so it's ready to post right away.
 
-**7. Upscale for extra crispness.** For profile pictures or prints, run the result through Pixel Shine's free, unlimited Normal Upscaler to bump up resolution and sharpness before you share it.`,
+**7. Upscale for extra crispness.** For profile pictures or prints, run the result through Pixel Shine's credit-based Normal Upscaler to bump up resolution and sharpness before you share it.`,
       },
       {
         heading: "Pro Tips for a Natural-Looking Glow Up",
@@ -8771,7 +8773,7 @@ Across all of them, the appeal is the same: studio-quality polish, zero skill re
       {
         heading: "Frequently Asked Questions",
         body: `**Is the AI glow up filter really free?**
-Yes. You can use Pixel Shine's glow up filter at no cost, and new users get free trials across the platform's tools. No credit card is required to start.
+Yes. You can use Pixel Shine's glow up filter at no cost, and new users get free trials across the platform's tools. Credits are bought in one-off packs from \u20b9166 and never expire.
 
 **Do I need to download an app?**
 No. Pixel Shine runs online at sjpt.io. There's nothing to install and no account required to begin editing.
@@ -8866,7 +8868,7 @@ Because Pixel Shine's effect is generative, you can regenerate to explore differ
 
 **6. Download watermark-free.** Save your comic cover in full resolution. Pixel Shine doesn't stamp a watermark across it, so it's post-ready and print-ready immediately.
 
-**7. Upscale for posters and prints.** Planning to print it large? Run the image through Pixel Shine's free, unlimited Normal Upscaler first so the bold lines and halftone dots stay razor-sharp at poster size.`,
+**7. Upscale for posters and prints.** Planning to print it large? Run the image through Pixel Shine's credit-based Normal Upscaler first so the bold lines and halftone dots stay razor-sharp at poster size.`,
       },
       {
         heading: "Pro Tips for Cover-Worthy Comic Art",
@@ -8921,7 +8923,7 @@ Across all of them, the draw is the same: a professional-looking comic cover wit
       {
         heading: "Frequently Asked Questions",
         body: `**Can I turn my photo into a comic book cover for free?**
-Yes. Pixel Shine's comic book effect is available at no cost, and new users get free trials across the platform. No credit card is needed to start.
+The comic book effect runs on credits, like every AI app here \u2014 packs start at \u20b9166, each generation costs 2 credits, and they never expire. There is no subscription, and the browser tools (crop, resize, compress, convert) stay free and unlimited.
 
 **Do I need an account or an app?**
 No. Pixel Shine works online at sjpt.io with no download and no mandatory sign-up to begin creating.
@@ -9008,7 +9010,7 @@ This aesthetic exploded across TikTok and Pinterest, racking up hundreds of mill
 
 **6. Download watermark-free.** Save your coastal cowgirl photo in full resolution. Pixel Shine won't stamp a watermark across it, so it's ready to post immediately.
 
-**7. Upscale for a crisp finish.** For Instagram feature-quality or prints, run the result through Pixel Shine's free, unlimited Normal Upscaler to sharpen and enlarge before sharing.`,
+**7. Upscale for a crisp finish.** For Instagram feature-quality or prints, run the result through Pixel Shine's credit-based Normal Upscaler to sharpen and enlarge before sharing.`,
       },
       {
         heading: "Pro Tips for the Dreamiest Coastal Cowgirl Photos",
@@ -9065,7 +9067,7 @@ What unites them is the desire for a specific, trendy aesthetic without the logi
       {
         heading: "Frequently Asked Questions",
         body: `**Is the coastal cowgirl filter free online?**
-Yes. Pixel Shine's coastal cowgirl filter is available at no cost, and new users get free trials across the platform's tools. No credit card is required to start.
+Yes. Pixel Shine's coastal cowgirl filter is available at no cost, and new users get free trials across the platform's tools. Credits are bought in one-off packs from \u20b9166 and never expire.
 
 **Do I need to sign up or download anything?**
 No. Pixel Shine runs online at sjpt.io with no download and no mandatory account to begin.
@@ -9156,7 +9158,7 @@ Because it's generative, each render produces a slightly different space scene �
 
 **6. Download watermark-free.** Save your astronaut portrait in full resolution. Pixel Shine doesn't stamp a watermark across it, so it's ready to share or print immediately.
 
-**7. Upscale for posters.** Space portraits look incredible printed large. Run the image through Pixel Shine's free, unlimited Normal Upscaler first so the suit details, stars, and Earth stay crisp at poster size.`,
+**7. Upscale for posters.** Space portraits look incredible printed large. Run the image through Pixel Shine's credit-based Normal Upscaler first so the suit details, stars, and Earth stay crisp at poster size.`,
       },
       {
         heading: "Pro Tips for a Realistic Astronaut Photo",
@@ -9217,7 +9219,7 @@ What they all have in common is wanting an epic, aspirational image without the 
       {
         heading: "Frequently Asked Questions",
         body: `**Can I put myself in space with AI for free?**
-Yes. Pixel Shine's astronaut photo maker is available at no cost, and new users get free trials across the platform's tools. No credit card is required to start.
+Yes. Pixel Shine's astronaut photo maker is available at no cost, and new users get free trials across the platform's tools. Credits are bought in one-off packs from \u20b9166 and never expire.
 
 **Do I need an account or an app?**
 No. Pixel Shine runs online at sjpt.io with no download and no mandatory sign-up to begin creating.
@@ -9308,7 +9310,7 @@ The AI filter layers all of these — the lighting, the tonal grade, the soft gl
 
 **6. Download watermark-free.** Save your golden age portrait in full resolution. Pixel Shine won't stamp a watermark across it, so it's ready to frame or post immediately.
 
-**7. Upscale for framing.** These portraits look stunning printed and framed. Run the result through Pixel Shine's free, unlimited Normal Upscaler so the fine tones and soft glow stay crisp at large sizes.`,
+**7. Upscale for framing.** These portraits look stunning printed and framed. Run the result through Pixel Shine's credit-based Normal Upscaler so the fine tones and soft glow stay crisp at large sizes.`,
       },
       {
         heading: "Pro Tips for a Stunning Silver-Screen Portrait",
@@ -9365,7 +9367,7 @@ What unites them is the desire for that timeless, elegant drama without a costly
       {
         heading: "Frequently Asked Questions",
         body: `**Is the old Hollywood glamour filter free?**
-Yes. Pixel Shine's old Hollywood glamour effect is available at no cost, and new users get free trials across the platform's tools. No credit card is required to start.
+Yes. Pixel Shine's old Hollywood glamour effect is available at no cost, and new users get free trials across the platform's tools. Credits are bought in one-off packs from \u20b9166 and never expire.
 
 **Do I need an account or an app?**
 No. Pixel Shine runs online at sjpt.io with no download and no mandatory sign-up to begin creating.
@@ -9458,7 +9460,7 @@ Because the effect is generative, each render offers a slightly different take o
 
 **6. Download watermark-free.** Save your prom portrait in full resolution. Pixel Shine won't stamp a watermark across it, so it's ready to share or print immediately.
 
-**7. Upscale for prints.** Prom portraits are made for framing. Run the result through Pixel Shine's free, unlimited Normal Upscaler so the details stay crisp when printed or enlarged for keepsakes.`,
+**7. Upscale for prints.** Prom portraits are made for framing. Run the result through Pixel Shine's credit-based Normal Upscaler so the details stay crisp when printed or enlarged for keepsakes.`,
       },
       {
         heading: "Pro Tips for Gorgeous Prom Portraits",
@@ -9513,7 +9515,7 @@ What they share is the desire for beautiful, special-occasion portraits without 
       {
         heading: "Frequently Asked Questions",
         body: `**Is the AI prom photo maker really free?**
-Yes. Pixel Shine's prom photo effect is available at no cost, and new users get free trials across the platform's tools. No credit card is required to start.
+Yes. Pixel Shine's prom photo effect is available at no cost, and new users get free trials across the platform's tools. Credits are bought in one-off packs from \u20b9166 and never expire.
 
 **Do I need an account or an app?**
 No. Pixel Shine runs online at sjpt.io with no download and no mandatory sign-up to begin creating.
@@ -9606,7 +9608,7 @@ Because it's generative rather than a fixed overlay, every render is a little un
 
 **6. Download watermark-free.** Save your claymation portrait in full resolution. Pixel Shine won't stamp a watermark across it, so it's ready to share or print immediately.
 
-**7. Upscale for prints and stickers.** Clay portraits look fantastic printed. Run the result through Pixel Shine's free, unlimited Normal Upscaler so the fingerprint textures and soft shading stay crisp when enlarged on stickers, cards, or posters.`,
+**7. Upscale for prints and stickers.** Clay portraits look fantastic printed. Run the result through Pixel Shine's credit-based Normal Upscaler so the fingerprint textures and soft shading stay crisp when enlarged on stickers, cards, or posters.`,
       },
       {
         heading: "Pro Tips for the Best Claymation Results",
@@ -9663,7 +9665,7 @@ What unites them is the love of that cozy, handmade charm without needing any sc
       {
         heading: "Frequently Asked Questions",
         body: `**Is the claymation photo effect free?**
-Yes. Pixel Shine's claymation effect is available at no cost, and new users get free trials across the platform's tools. No credit card is required to start.
+Yes. Pixel Shine's claymation effect is available at no cost, and new users get free trials across the platform's tools. Credits are bought in one-off packs from \u20b9166 and never expire.
 
 **Do I need an account or an app?**
 No. Pixel Shine runs online at sjpt.io with no download and no mandatory sign-up to begin creating.
@@ -10876,7 +10878,7 @@ The whole process, from upload to download, typically takes under two minutes.`,
 
 Many popular anime apps lock every good result behind a subscription — you'll generate a preview, love it, and then hit a paywall to download without a giant watermark slapped across your face. Others force you to create an account and hand over your email before you can even try the tool. Some mobile apps bury the feature under so many ads that the experience feels like navigating a minefield.
 
-Pixel Shine takes a different approach. It's a genuinely **free AI anime filter online** — the platform's Normal Upscale is completely free and unlimited with no sign-in required, and new users get 5 free trials across the creative tools including anime style. When you download, there's **no watermark** defacing your art. Because Pixel Shine is an all-in-one platform, you can convert to anime, then upscale the result to print quality, remove the background, or apply another effect — all in the same place. No juggling five different apps, no surprise charges, no email harvesting just to test a filter.`,
+Pixel Shine takes a different approach. It's a genuinely **free AI anime filter online** — the platform's Normal Upscale is on credits, with packs starting at \u20b9166 and no subscription, and new users get 5 free trials across the creative tools including anime style. When you download, there's **no watermark** defacing your art. Because Pixel Shine is an all-in-one platform, you can convert to anime, then upscale the result to print quality, remove the background, or apply another effect — all in the same place. No juggling five different apps, no surprise charges, no email harvesting just to test a filter.`,
       },
       {
         heading: "Who Uses AI Anime Filters (And Why)",
@@ -10893,7 +10895,7 @@ Pixel Shine takes a different approach. It's a genuinely **free AI anime filter 
       {
         heading: "Frequently Asked Questions",
         body: `**Is the anime photo filter really free?**
-Yes. Pixel Shine offers free access with 5 free trials for new users across its creative tools, and the Normal Upscale tool is completely free and unlimited with no sign-in required. You can create anime art without paying upfront or committing to a subscription.
+Yes. Pixel Shine offers free access with 5 free trials for new users across its creative tools, and the Normal Upscale tool is on credits, with packs starting at \u20b9166 and no subscription. You can create anime art without paying upfront or committing to a subscription.
 
 **Do I need to create an account to use it?**
 Basic features on Pixel Shine don't require an account. The free Normal Upscale needs no sign-in at all, and you can start experimenting with the creative tools right away.
@@ -11203,7 +11205,7 @@ That said, AI isn't a full replacement for a milestone wedding album shot by a p
       {
         heading: "Frequently Asked Questions",
         body: `**Is the AI couple photoshoot free?**
-Yes. Pixel Shine gives new users 5 free trials across its creative tools, and the Normal Upscale tool is completely free and unlimited with no sign-in required. You can create couple portraits without paying upfront.
+Yes. Pixel Shine gives new users 5 free trials across its creative tools, and the Normal Upscale tool is on credits, with packs starting at \u20b9166 and no subscription. You can create couple portraits without paying upfront.
 
 **Can I make a couple photo if we've never been photographed together?**
 Absolutely — that's one of the biggest use cases. Upload two separate photos, one of each person, and the AI blends you into a single shared scene. It's perfect for long-distance couples.
@@ -11355,7 +11357,7 @@ Start to finish, the process usually takes under two minutes.`,
       {
         heading: "Frequently Asked Questions",
         body: `**Is the retro Bollywood filter free to use?**
-Yes. Pixel Shine gives new users 5 free trials across its creative tools, and the Normal Upscale tool is completely free and unlimited with no sign-in required. You can create retro Bollywood portraits without paying upfront.
+Yes. Pixel Shine gives new users 5 free trials across its creative tools, and the Normal Upscale tool is on credits, with packs starting at \u20b9166 and no subscription. You can create retro Bollywood portraits without paying upfront.
 
 **What makes a photo look authentically Bollywood-retro?**
 The combination of warm color grading, soft-focus glow, dramatic directional lighting, and film grain. Pixel Shine's AI applies all of these together for an authentic golden-era look rather than a generic old-photo filter.
@@ -11464,7 +11466,7 @@ The whole process typically takes under two minutes from upload to download.`,
 
 **Use a clean, uncluttered background** in your source photo. The AI will replace it with packaging, and a busy original background can occasionally bleed into the result.
 
-**Upscale for printing.** If you want to print your figurine as a poster or card, run the result through Pixel Shine's free Normal Upscale to boost resolution without losing detail — completely free and unlimited.`,
+**Upscale for printing.** If you want to print your figurine as a poster or card, run the result through Pixel Shine's free Normal Upscale to boost resolution without losing detail — on credits and unlimited.`,
       },
       {
         heading: "Common Mistakes to Avoid",
@@ -11501,7 +11503,7 @@ Of course, the two serve different needs. If you want a tangible object on your 
       {
         heading: "Frequently Asked Questions",
         body: `**Is the AI action figure maker free?**
-Yes. Pixel Shine gives new users 5 free trials across its creative tools, and the Normal Upscale tool is completely free and unlimited with no sign-in required. You can create your 3D figurine without paying upfront.
+Yes. Pixel Shine gives new users 5 free trials across its creative tools, and the Normal Upscale tool is on credits, with packs starting at \u20b9166 and no subscription. You can create your 3D figurine without paying upfront.
 
 **What photo works best for an action figure?**
 A clear, well-lit full-body or three-quarter shot showing your outfit and pose gives the best result. Face-only crops force the AI to invent your body.
@@ -11614,7 +11616,7 @@ Start to finish, the process usually takes under two minutes.`,
 
 **Consider the timing of your post.** Create Diwali portraits ahead of the festival so you have greetings ready to share the moment it arrives — no last-minute scramble.
 
-**Upscale for prints and greetings.** If you want to print festival cards or large portraits, run the result through Pixel Shine's free Normal Upscale to boost resolution without losing quality — free and unlimited with no sign-in.`,
+**Upscale for prints and greetings.** If you want to print festival cards or large portraits, run the result through Pixel Shine's free Normal Upscale to boost resolution without losing quality — credit-based with no sign-in.`,
       },
       {
         heading: "Common Mistakes to Avoid",
@@ -11651,7 +11653,7 @@ The two aren't mutually exclusive. Traditional photography captures real, sponta
       {
         heading: "Frequently Asked Questions",
         body: `**Is the AI festival photoshoot free?**
-Yes. Pixel Shine gives new users 5 free trials across its creative tools, and the Normal Upscale tool is completely free and unlimited with no sign-in required. You can create festival portraits without paying upfront.
+Yes. Pixel Shine gives new users 5 free trials across its creative tools, and the Normal Upscale tool is on credits, with packs starting at \u20b9166 and no subscription. You can create festival portraits without paying upfront.
 
 **Which festivals can I create portraits for?**
 Pixel Shine supports a range of celebrations including Holi, Diwali, Eid, Navratri, Christmas, and general festive and wedding-season styles, so you can pick the one that fits your occasion.
@@ -14360,14 +14362,88 @@ Ready to make your listings shine? Head to Pixel Shine's AI Editor at sjpt.io an
 // tool is the (free) Upscale tool are published, and each uses its own Pexels
 // hero image (falling back to the generated Supabase image if none is set).
 // Blog posts are limited to the free, live tools (each post links into its tool).
+/*
+  A post only renders if its tool is listed here.
+
+  The list dates from free-only mode and was never updated when the AI apps went
+  live, so 66 written posts never appeared at all — every creative app, headshot,
+  AI editor and remove-bg post among them. All of them are back now.
+*/
 const LIVE_TOOL_PREFIXES = [
   "/upscale", "/compress-image", "/convert-image", "/crop-image",
   "/rotate-image", "/watermark-image", "/meme-generator", "/image-to-pdf",
   "/tiktok-watermark-remover", "/watermark-remover", "/batch-editor",
+  // Browser tools that had no blog coverage at all until now.
+  "/resize-image", "/qr-code-generator", "/blur-image",
+  // The AI apps. Live since paid features were switched on.
+  "/creative", "/ai-editor", "/ai-headshot", "/remove-bg", "/editor",
 ];
 
-export const POSTS: BlogPost[] = [...RAW_POSTS, ...UPSCALE_POSTS, ...UPSCALE_FREE_POSTS, ...UPSCALE_FREE_POSTS_2, ...TOOL_FREE_POSTS, ...TIKTOK_POSTS, ...SEO_POSTS, ...SEO_POSTS_2, ...SEO_POSTS_3, ...SEO_POSTS_4, ...SEO_POSTS_5, ...SEO_POSTS_6, ...SEO_POSTS_7, ...SEO_POSTS_8, ...SEO_POSTS_9, ...SEO_POSTS_10]
+/*
+  Posts held back because their copy sells something that no longer exists.
+
+  These were written when AI generation was free and when new accounts got five
+  free trials. Both are gone: AI runs on credits, and the trial system was
+  deleted rather than disabled. The pricing sentences were corrected where they
+  were formulaic, but 44 posts still describe the trials inside ordinary prose,
+  and rewriting that mechanically would produce broken sentences rather than
+  honest ones.
+
+  Holding them back by slug, rather than hiding their whole tool, is what lets
+  the accurate posts for those same tools publish. Delete a slug from this list
+  once its copy has been rewritten — that is the only thing standing between
+  these and the blog.
+*/
+const STALE_PRICING_COPY = new Set([
+  "ai-3d-figurine-from-photo",
+  "ai-anime-style-photo-filter-free",
+  "ai-astronaut-photo-maker-free",
+  "ai-claymation-photo-effect",
+  "ai-couple-photoshoot-online-free",
+  "ai-festival-photoshoot-free-online",
+  "ai-filter-trending-social-media",
+  "ai-glow-up-filter-photo",
+  "ai-headshot-corporate-team-photos",
+  "ai-headshot-for-linkedin-resume",
+  "ai-headshot-generator-comparison-2025",
+  "ai-headshot-generator-linkedin-professional",
+  "ai-image-editor-product-photography",
+  "ai-old-hollywood-glamour-portrait",
+  "ai-photo-editor-no-photoshop-free",
+  "ai-photo-editor-real-estate-listings",
+  "ai-photo-editor-vs-photoshop",
+  "ai-professional-headshot-from-selfie-free",
+  "ai-prom-photo-maker-free",
+  "ai-retro-bollywood-photo-filter",
+  "ai-saree-photoshoot-filter",
+  "ai-thanksgiving-photo-maker",
+  "change-background-ai-editor",
+  "change-photo-background-with-ai-free",
+  "coastal-cowgirl-aesthetic-photo-ai",
+  "corporate-team-headshots-free",
+  "creative-ai-photo-effects-viral",
+  "how-to-edit-photos-with-ai-text-prompts",
+  "how-to-take-best-photo-for-ai-headshot",
+  "linkedin-headshot-from-selfie-free",
+  "make-logo-transparent-free",
+  "make-signature-transparent-free",
+  "passport-photo-background-remover",
+  "pixel-art-avatar-maker-ai-free",
+  "real-estate-photo-enhancement-free",
+  "remove-background-free-vs-paid-tools",
+  "remove-background-from-hair-free",
+  "remove-background-from-image-online-free",
+  "remove-background-from-product-photo-free",
+  "remove-background-product-photos-amazon",
+  "remove-object-from-photo-free",
+  "turn-photo-into-comic-book-ai",
+  "turn-photo-into-funko-pop-ai",
+  "white-background-photo-free",
+]);
+
+export const POSTS: BlogPost[] = [...RAW_POSTS, ...UPSCALE_POSTS, ...UPSCALE_FREE_POSTS, ...UPSCALE_FREE_POSTS_2, ...TOOL_FREE_POSTS, ...TIKTOK_POSTS, ...SEO_POSTS, ...SEO_POSTS_2, ...SEO_POSTS_3, ...SEO_POSTS_4, ...SEO_POSTS_5, ...SEO_POSTS_6, ...SEO_POSTS_7, ...SEO_POSTS_8, ...SEO_POSTS_9, ...SEO_POSTS_10, ...TOOL_POSTS_2, ...APP_POSTS]
   .filter((p) => LIVE_TOOL_PREFIXES.some((pre) => p.toolHref.startsWith(pre)))
+  .filter((p) => !STALE_PRICING_COPY.has(p.slug))
   .map((p) => ({ ...p, image: p.image || blogImageUrl(p.slug) }))
   .sort((a, b) => (a.date < b.date ? 1 : -1));
 
