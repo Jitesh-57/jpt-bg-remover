@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
 import { buildInvoice, rupees, invoiceDate, type Purchase } from "@/lib/invoice";
+import { razorpayPurchases } from "@/lib/purchases.server";
 import PrintButton from "./PrintButton";
 
 export const runtime = "nodejs";
@@ -39,7 +40,19 @@ async function loadInvoice(paymentId: string) {
     .eq("user_id", user.id)
     .maybeSingle();
 
-  if (!data) return null;
+  /*
+    No row is not the same as no purchase.
+
+    The table may not exist, or the row may have failed to write after a payment
+    that did go through. Razorpay is asked before giving up — and the same
+    ownership rule holds there, because razorpayPurchases only returns orders
+    whose notes name this user, so a guessed payment id still finds nothing.
+  */
+  const purchase = (data as Purchase | null)
+    || (await razorpayPurchases(user.id)).find((p) => p.razorpay_payment_id === paymentId)
+    || null;
+
+  if (!purchase) return null;
 
   const { data: profile } = await supabase
     .from("profiles")
@@ -47,7 +60,7 @@ async function loadInvoice(paymentId: string) {
     .eq("id", user.id)
     .maybeSingle() as { data: { name?: string; email?: string } | null };
 
-  return buildInvoice(data as Purchase, {
+  return buildInvoice(purchase, {
     name: profile?.name || (user.user_metadata?.name as string | undefined),
     email: profile?.email || user.email || undefined,
   });

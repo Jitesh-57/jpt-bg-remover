@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
 import { PACK_BY_ID } from "@/lib/plans";
 import { rupees, invoiceDate, type Purchase } from "@/lib/invoice";
+import { razorpayPurchases, mergePurchases } from "@/lib/purchases.server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -17,12 +18,14 @@ export const metadata: Metadata = {
 /**
  * The buyer's own purchase history.
  *
- * Read with the visitor's own session rather than the service role, so the
- * rows they can see are the rows the database says are theirs. An invoice
- * carries a name, an email address and a payment reference; it must not be
- * possible to reach someone else's by changing a number in the URL.
+ * An invoice carries a name, an email address and a payment reference, so it
+ * must not be possible to reach someone else's by changing a value in the URL.
+ * Both sources enforce that independently: the table is read with the visitor's
+ * own session rather than the service role, so RLS decides which rows come
+ * back; and the Razorpay path is asked for one user id and returns only orders
+ * whose notes carry it.
  */
-async function purchasesForUser(): Promise<{ rows: Purchase[]; signedIn: boolean; tableMissing: boolean }> {
+async function purchasesForUser(): Promise<{ rows: Purchase[]; signedIn: boolean }> {
   const store = await cookies();
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -31,7 +34,7 @@ async function purchasesForUser(): Promise<{ rows: Purchase[]; signedIn: boolean
   );
 
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { rows: [], signedIn: false, tableMissing: false };
+  if (!user) return { rows: [], signedIn: false };
 
   const { data, error } = await supabase
     .from("purchases")
@@ -39,15 +42,23 @@ async function purchasesForUser(): Promise<{ rows: Purchase[]; signedIn: boolean
     .eq("user_id", user.id)
     .order("created_at", { ascending: false });
 
-  // 42P01 is "relation does not exist" — the table has not been created yet.
-  const tableMissing = !!error && /does not exist|schema cache/i.test(error.message);
-  if (error && !tableMissing) console.error("[invoices] query failed:", error.message);
+  /*
+    A missing table is no longer an error the buyer has to read.
 
-  return { rows: (data as Purchase[]) || [], signedIn: true, tableMissing };
+    It used to render "purchase history is not available yet" over the whole
+    page, which is a note to the operator shown to the customer — and the
+    customer had paid. Razorpay holds the same sales, so the table failing (42P01
+    while it does not exist, or anything else) just means the gateway is the
+    only source for this render.
+  */
+  if (error) console.warn("[invoices] purchases table unavailable, using Razorpay:", error.message);
+
+  const fromGateway = await razorpayPurchases(user.id);
+  return { rows: mergePurchases((data as Purchase[]) || [], fromGateway), signedIn: true };
 }
 
 export default async function InvoicesPage() {
-  const { rows, signedIn, tableMissing } = await purchasesForUser();
+  const { rows, signedIn } = await purchasesForUser();
 
   const shell = (children: React.ReactNode) => (
     <main style={{ background: "var(--bg)", minHeight: "70vh", padding: "56px 24px 80px" }}>
@@ -67,15 +78,6 @@ export default async function InvoicesPage() {
     return shell(
       <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 16, padding: "26px 24px", color: "var(--text-muted)", fontSize: 15, lineHeight: 1.7 }}>
         Sign in to see your purchases. <Link href="/pricing" style={{ color: "var(--accent)", fontWeight: 700 }}>View the credit packs →</Link>
-      </div>
-    );
-  }
-
-  if (tableMissing) {
-    return shell(
-      <div style={{ background: "var(--danger-soft)", border: "1px solid var(--danger-soft)", borderRadius: 16, padding: "22px 24px", color: "var(--danger)", fontSize: 14.5, lineHeight: 1.7 }}>
-        Purchase history is not available yet — the <code>purchases</code> table has not been created.
-        See <code>docs/invoices.md</code> for the one-off SQL that creates it.
       </div>
     );
   }
