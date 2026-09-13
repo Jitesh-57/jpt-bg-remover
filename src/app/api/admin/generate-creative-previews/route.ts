@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/admin-token";
 import { createAdminSupabase } from "@/lib/auth";
 import { geminiGenerateFromText } from "@/lib/gemini";
 import { CREATIVE_APPS } from "@/lib/creative-apps";
@@ -13,7 +14,7 @@ export const maxDuration = 120;
  * creative/<slug>.png — the exact path previewUrl() points to.
  * Token-protected; idempotent (skips files that already exist unless ?force=1).
  *
- *   /api/admin/generate-creative-previews?token=jptblog2026&slug=funko-pop-figure
+ *   /api/admin/generate-creative-previews?token=<ADMIN_IMAGE_TOKEN>&slug=funko-pop-figure
  */
 const BUCKET = "landing";
 
@@ -40,9 +41,8 @@ Add a small bold rounded label badge in the top-left corner of the left half rea
 }
 
 export async function GET(req: NextRequest) {
-  if ((req.nextUrl.searchParams.get("token") || "").trim() !== "jptblog2026") {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const denied = requireAdmin(req);
+  if (denied) return denied;
   const force = req.nextUrl.searchParams.get("force") === "1";
   const onlySlug = req.nextUrl.searchParams.get("slug");
   const supabase = createAdminSupabase();

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/admin-token";
 import { createAdminSupabase } from "@/lib/auth";
 
 export const runtime = "nodejs";
@@ -8,7 +9,7 @@ export const maxDuration = 60;
  * One-time: copy the remaining PixelBin-CDN creatives into Supabase Storage
  * (landing bucket) so nothing is served from PixelBin. Token-protected;
  * idempotent (skips files that already exist unless ?force=1).
- *   /api/admin/migrate-creatives?token=jptblog2026
+ *   /api/admin/migrate-creatives?token=<ADMIN_IMAGE_TOKEN>
  */
 const BUCKET = "landing";
 const PB = "https://cdn.pixelbin.io/v2/misty-band-06f445";
@@ -21,9 +22,8 @@ const FILES: Record<string, string> = {
 };
 
 export async function GET(req: NextRequest) {
-  if ((req.nextUrl.searchParams.get("token") || "").trim() !== "jptblog2026") {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const denied = requireAdmin(req);
+  if (denied) return denied;
   const force = req.nextUrl.searchParams.get("force") === "1";
   const supabase = createAdminSupabase();
   const { data: existing } = await supabase.storage.from(BUCKET).list("", { limit: 1000 });

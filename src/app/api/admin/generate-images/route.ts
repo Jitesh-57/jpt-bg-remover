@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin, adminToken } from "@/lib/admin-token";
 import { createAdminSupabase } from "@/lib/auth";
 import { editImage, generateFromText } from "@/lib/ai-image";
 import { falConfigured } from "@/lib/fal";
@@ -26,7 +27,6 @@ export const maxDuration = 300;
  *   ...&model=gpt-image    use GPT Image instead of Nano Banana
  *   ...&path=creative/ghibli-style.png    one specific slot
  */
-const TOKEN = process.env.ADMIN_IMAGE_TOKEN || "jptblog2026";
 
 /** bucket + path, joined for set membership. Buckets cannot contain "|". */
 const keyOf = (bucket: string, path: string) => `${bucket}|${path}`;
@@ -66,9 +66,8 @@ async function existing(
 
 export async function GET(req: NextRequest) {
   const q = req.nextUrl.searchParams;
-  if ((q.get("token") || "").trim() !== TOKEN) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const denied = requireAdmin(req);
+  if (denied) return denied;
 
   const set = q.get("set");
   const onePath = q.get("path");
@@ -102,7 +101,7 @@ export async function GET(req: NextRequest) {
       ...(q.get("show") === "1"
         ? { prompts: todo.slice(0, Number(q.get("showLimit") || limit)).map((j) => ({ path: `${j.bucket}/${j.path}`, aspect: j.aspect, prompt: j.prompt })) }
         : {}),
-      runNext: `${baseUrl(req)}?token=${TOKEN}&set=${set || "all"}&run=1&limit=${limit}`,
+      runNext: `${baseUrl(req)}?token=${adminToken()}&set=${set || "all"}&run=1&limit=${limit}`,
     });
   }
 
@@ -153,7 +152,7 @@ export async function GET(req: NextRequest) {
     // No offset needed: the files just written are no longer missing, so the
     // recomputed list on the next call starts where this batch finished.
     next: remaining > 0
-      ? `${baseUrl(req)}?token=${TOKEN}&set=${set || "all"}&run=1&limit=${limit}`
+      ? `${baseUrl(req)}?token=${adminToken()}&set=${set || "all"}&run=1&limit=${limit}`
       : null,
   });
 }

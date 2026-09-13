@@ -140,7 +140,24 @@ export async function razorpayPurchases(userId: string): Promise<Purchase[]> {
  * caller must treat as "unknown", never as "nobody has paid", because acting on
  * the second would clear balances people bought.
  */
-export async function purchasedByUser(): Promise<Map<string, { credits: number; plan: string }> | null> {
+export interface Purchased {
+  /** Total credits bought, across every paid order. */
+  credits: number;
+  /** The most recent pack id. */
+  plan: string;
+  /**
+   * At least one paid order could not be turned into a credit count — an
+   * unrecognised plan with no `credits` note, most likely a legacy pack sold
+   * before the current ids.
+   *
+   * The account bought *something*, and how much cannot be said. Callers that
+   * would remove credits must leave these alone: reading "unquantifiable" as
+   * "zero" would take credits from someone who paid.
+   */
+  unknown: boolean;
+}
+
+export async function purchasedByUser(): Promise<Map<string, Purchased> | null> {
   const rzp = client();
   if (!rzp) return null;
 
@@ -152,16 +169,20 @@ export async function purchasedByUser(): Promise<Map<string, { credits: number; 
     return null;
   }
 
-  const out = new Map<string, { credits: number; plan: string }>();
+  const out = new Map<string, Purchased>();
   for (const order of orders) {
     const userId = String(order.notes?.userId || "");
     if (!userId) continue;
     const plan = String(order.notes?.plan || "");
     const noted = Number(order.notes?.credits);
-    const credits = Number.isFinite(noted) ? noted : (PACK_BY_ID[plan]?.credits ?? 0);
+    const known = Number.isFinite(noted) ? noted : PACK_BY_ID[plan]?.credits;
     const prev = out.get(userId);
     // Orders arrive oldest first, so the last plan seen is the latest one.
-    out.set(userId, { credits: (prev?.credits ?? 0) + credits, plan: plan || prev?.plan || "" });
+    out.set(userId, {
+      credits: (prev?.credits ?? 0) + (known ?? 0),
+      plan: plan || prev?.plan || "",
+      unknown: (prev?.unknown ?? false) || known === undefined,
+    });
   }
   return out;
 }

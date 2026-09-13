@@ -3,6 +3,7 @@ import crypto from "crypto";
 import { checkAuth, createAdminSupabase } from "@/lib/auth";
 import { PACKS, inrPaise } from "@/lib/plans";
 import { financialYear, invoiceNumber } from "@/lib/invoice";
+import { recordCredits } from "@/lib/ledger";
 
 export const runtime = "nodejs";
 
@@ -91,7 +92,7 @@ export async function POST(req: NextRequest) {
     console.warn("[verify-payment] could not number the invoice:", (e as Error).message);
   }
 
-  const { error: purchaseErr } = await admin.from("purchases").insert({
+  const { data: purchaseRow, error: purchaseErr } = await admin.from("purchases").insert({
     user_id: session!.userId,
     razorpay_order_id,
     razorpay_payment_id,
@@ -99,13 +100,30 @@ export async function POST(req: NextRequest) {
     credits_added: planCredits,
     amount_paise: PLAN_CREDITS[plan].amountPaise,
     ...(invoiceNo ? { invoice_no: invoiceNo } : {}),
-  });
+  }).select("id").single() as { data: { id: number } | null; error: { message: string } | null };
   if (purchaseErr) {
     console.error(
       `[verify-payment] purchase row NOT saved for payment ${razorpay_payment_id} ` +
       `(user ${session!.userId}, plan ${plan}): ${purchaseErr.message}`
     );
   }
+
+  /*
+    And the credits arriving, as a ledger entry.
+
+    profiles.credits is only ever the current number. Without this there is no
+    way to answer where a balance came from — which is the question an account
+    showing 11 credits after a 5-credit pack raised, and which nothing in the
+    data could answer at the time.
+  */
+  await recordCredits({
+    userId: session!.userId,
+    delta: planCredits,
+    balanceAfter: newCredits,
+    reason: "purchase",
+    purchaseId: purchaseRow?.id ?? null,
+    note: `${plan} · ${razorpay_payment_id}${invoiceNo ? ` · ${invoiceNo}` : ""}`,
+  });
 
   return NextResponse.json({ success: true, plan, credits: newCredits, invoiceNo });
 }

@@ -26,6 +26,7 @@ export const FREE_CREDITS = 0;
 // Re-exported from plans.ts so the price of a generation is defined once.
 export { CREDIT_COST } from "@/lib/plans";
 import { CREDIT_COST } from "@/lib/plans";
+import { recordCredits } from "@/lib/ledger";
 export const BASIC_UPSCALE_COST = 1;
 export const FREE_TOOLS = ["resize", "color-adjust"];
 
@@ -200,6 +201,23 @@ export async function withCredits(
         .upsert({ id: session.userId, credits: newCredits }, { onConflict: "id" });
       if (userErr) console.error("[withCredits] user-auth upsert also failed:", userErr.message);
     }
+    /*
+      The spend is written down as well as applied.
+
+      profiles.credits is only the current number; without a ledger there is no
+      way to answer why it is that number, which is exactly the question a
+      balance of 11 raised after a 5-credit pack was bought. Awaited so the row
+      lands before the response, but it cannot fail the request — the credits
+      have already been taken and the image has already been made.
+    */
+    await recordCredits({
+      userId: session.userId,
+      delta: -cost,
+      balanceAfter: newCredits,
+      reason: "generation",
+      tool: toolId ?? null,
+    });
+
     return NextResponse.json({ ...body, credits: newCredits });
   }
 

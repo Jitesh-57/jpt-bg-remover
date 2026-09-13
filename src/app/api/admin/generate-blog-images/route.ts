@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/admin-token";
 import { createAdminSupabase } from "@/lib/auth";
 import { geminiGenerateFromText } from "@/lib/gemini";
 import { deriveBlogPrompt } from "@/lib/blog-images";
@@ -14,19 +15,15 @@ export const maxDuration = 300;
  * Supabase). Token-protected.
  *
  * Process in batches to stay under the function time limit:
- *   /api/admin/generate-blog-images?token=jptblog2026&offset=0&limit=6
+ *   /api/admin/generate-blog-images?token=<ADMIN_IMAGE_TOKEN>&offset=0&limit=6
  * Use the returned `nextOffset` for the next call until `done` is true.
  * Idempotent: pass force=1 to regenerate images that already exist.
  */
 const BUCKET = "landing";
 
 export async function GET(req: NextRequest) {
-  // Fixed token (independent of MIGRATE_TOKEN). Safe: only generates a fixed set
-  // of blog images and uploads them to a known path. Temporary one-time endpoint.
-  const token = (req.nextUrl.searchParams.get("token") || "").trim();
-  if (token !== "jptblog2026") {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const denied = requireAdmin(req);
+  if (denied) return denied;
 
   const offset = parseInt(req.nextUrl.searchParams.get("offset") || "0", 10);
   const limit = Math.min(parseInt(req.nextUrl.searchParams.get("limit") || "6", 10), 12);
