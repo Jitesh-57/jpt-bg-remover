@@ -20,10 +20,19 @@ interface Props {
   onSuccess?: () => void;
 }
 
+/** The shape Razorpay hands to a "payment.failed" listener. */
+interface RazorpayFailure {
+  error?: { description?: string; reason?: string; step?: string; code?: string };
+}
+
 declare global {
   interface Window {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Razorpay: new (opts: Record<string, unknown>) => { open(): void };
+    Razorpay: new (opts: Record<string, unknown>) => {
+      open(): void;
+      /** Razorpay reports a rejected payment here, not through ondismiss. */
+      on?(event: "payment.failed", cb: (resp: RazorpayFailure) => void): void;
+    };
   }
 }
 
@@ -80,11 +89,15 @@ export default function UnlimitedModal({ onClose, loggedIn, reason, prefillUser,
         currency: orderData.currency || "INR",
         name: "Pixel Shine",
         description: `${p.credits} credits — ${p.label} pack`,
-        theme: { color: "var(--accent)" },
+        // A literal hex, not var(--accent): Razorpay's checkout renders in its
+        // own document and cannot resolve our CSS custom properties, so the
+        // variable was silently ignored and checkout fell back to its default
+        // blue.
+        theme: { color: "#FF7A2F" },
         modal: {
           ondismiss() {
             trackPaymentFailed(p.id, "cancelled_by_user");
-            setStatusMsg({ text: "Payment cancelled", ok: false });
+            setStatusMsg((prev) => prev && !prev.ok ? prev : { text: "Payment cancelled", ok: false });
             setLoadingPack(null);
           },
         },
@@ -111,6 +124,16 @@ export default function UnlimitedModal({ onClose, loggedIn, reason, prefillUser,
           setLoadingPack(null);
         },
         prefill: { name: prefillUser?.name || "", email: prefillUser?.email || "" },
+      });
+
+      // See the pricing page: a rejected payment arrives here, and ondismiss
+      // would otherwise relabel it "Payment cancelled".
+      rzp.on?.("payment.failed", (resp: RazorpayFailure) => {
+        const why = resp?.error?.description || resp?.error?.reason || "Payment failed";
+        trackPaymentFailed(p.id, resp?.error?.reason || "payment_failed");
+        console.error("[pricing-modal] razorpay payment.failed:", JSON.stringify(resp?.error || {}));
+        setStatusMsg({ text: why, ok: false });
+        setLoadingPack(null);
       });
 
       rzp.open();

@@ -20,10 +20,19 @@ import SharePrompt, { shouldShowSharePrompt } from "@/app/_components/SharePromp
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
+/** The shape Razorpay hands to a "payment.failed" listener. */
+interface RazorpayFailure {
+  error?: { description?: string; reason?: string; step?: string; code?: string };
+}
+
 declare global {
   interface Window {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Razorpay: new (opts: Record<string, unknown>) => { open(): void };
+    Razorpay: new (opts: Record<string, unknown>) => {
+      open(): void;
+      /** Razorpay reports a rejected payment here, not through ondismiss. */
+      on?(event: "payment.failed", cb: (resp: RazorpayFailure) => void): void;
+    };
   }
 }
 
@@ -31,12 +40,12 @@ type Tool = "ai-edit" | "generate-bg" | "upscale" | "resize" | "adjust" | "remov
 type BgMode = "color" | "gradient" | "image" | "ai";
 
 interface GradientPreset { label: string; from: string; to: string; angle: number }
-interface User { userId?: string; email: string; name: string; picture?: string; credits: number; plan?: string; dailyCreditResetAt?: string | null; trialToolsUsed?: string[]; trialsRemaining?: number }
+interface User { userId?: string; email: string; name: string; picture?: string; credits: number; plan?: string; dailyCreditResetAt?: string | null }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const FREE_CREDITS = 10;
-const FREE_TRIAL_LIMIT = 5;
+// Display default only: an account with no credits has none, not ten.
+const FREE_CREDITS = 0;
 // CREDIT_COST now comes from @/lib/plans so the price of a generation is defined once.
 const BASIC_UPSCALE_COST = 1;
 const SUPPORTED_IMAGE_FORMATS = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
@@ -597,7 +606,11 @@ export default function ImageEditorPage() {
         currency: orderData.currency || "INR",
         name: "Pixel Shine",
         description: `${planKey.charAt(0).toUpperCase() + planKey.slice(1)} Plan — ${orderData.credits} credits`,
-        theme: { color: "var(--accent)" },
+        // A literal hex, not var(--accent): Razorpay's checkout renders in its
+        // own document and cannot resolve our CSS custom properties, so the
+        // variable was silently ignored and checkout fell back to its default
+        // blue.
+        theme: { color: "#FF7A2F" },
         modal: { ondismiss() { trackPaymentFailed(planKey, "cancelled_by_user"); setBuyingPlan(null); } },
         handler: async (response: { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string }) => {
           try {
@@ -622,6 +635,16 @@ export default function ImageEditorPage() {
         },
         prefill: { name: user?.name || "", email: user?.email || "" },
       });
+      // A rejected payment (a card decline, or Razorpay refusing the origin)
+      // arrives here; without it the editor just cleared the spinner and left
+      // the buyer with no idea why nothing happened.
+      rzp.on?.("payment.failed", (resp: RazorpayFailure) => {
+        trackPaymentFailed(planKey, resp?.error?.reason || "payment_failed");
+        console.error("[editor] razorpay payment.failed:", JSON.stringify(resp?.error || {}));
+        setError(resp?.error?.description || "Payment failed. Please try again.");
+        setBuyingPlan(null);
+      });
+
       rzp.open();
     } catch (e) {
       trackPaymentFailed(planKey, (e as Error).message || "unknown_error");
@@ -638,9 +661,9 @@ export default function ImageEditorPage() {
     const loadUser = (retries = 1): Promise<void> =>
       fetch("/api/auth/google/me")
         .then(r => r.json())
-        .then((d: { authenticated: boolean; userId?: string; email?: string; name?: string; picture?: string; credits?: number; plan?: string; dailyCreditResetAt?: string | null; trialToolsUsed?: string[]; trialsRemaining?: number }) => {
+        .then((d: { authenticated: boolean; userId?: string; email?: string; name?: string; picture?: string; credits?: number; plan?: string; dailyCreditResetAt?: string | null }) => {
           if (d.authenticated && d.email) {
-            setUser({ userId: d.userId, email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? FREE_CREDITS, plan: d.plan || "free", dailyCreditResetAt: d.dailyCreditResetAt, trialToolsUsed: d.trialToolsUsed ?? [], trialsRemaining: d.trialsRemaining ?? 0 });
+            setUser({ userId: d.userId, email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? FREE_CREDITS, plan: d.plan || "free", dailyCreditResetAt: d.dailyCreditResetAt });
             setAuthChecked(true);
           } else if (retries > 0) {
             return new Promise<void>(res => setTimeout(() => loadUser(retries - 1).then(res), 300));
@@ -1527,7 +1550,9 @@ export default function ImageEditorPage() {
   const creditsLeft = user?.credits ?? 0;
   // Denominator scales up once a user buys more than the free allotment,
   // so the bar/ratio never shows nonsense like "82 / 10" or negative "used".
-  const creditsTotal = Math.max(creditsLeft, FREE_CREDITS);
+  // The bar is "of what you bought", so an empty balance reads as empty
+  // rather than as a fraction of a starter grant that is no longer given.
+  const creditsTotal = Math.max(creditsLeft, 1);
   const lowCredits = creditsLeft > 0 && creditsLeft <= CREDIT_COST * 2;
 
   // ── Render ────────────────────────────────────────────────────────────────────
@@ -1578,10 +1603,6 @@ export default function ImageEditorPage() {
                 <span style={s.userName}>{user.name.split(" ")[0]}</span>
                 {!PAID_FEATURES_ENABLED ? (
                   <span style={{ ...s.creditsBadge, background: "var(--surface-3)", color: "var(--success)" }}>♾️ Free</span>
-                ) : user.plan === "free" ? (
-                  <span style={{ ...s.creditsBadge, ...((user.trialsRemaining ?? 0) === 0 ? s.creditsEmpty : {}) }}>
-                    🎁 {user.trialsRemaining ?? 0}
-                  </span>
                 ) : (
                   <span style={{ ...s.creditsBadge, ...(creditsLeft === 0 ? s.creditsEmpty : lowCredits ? s.creditsLow : {}) }}>
                     ⚡ {creditsLeft}
@@ -1894,9 +1915,7 @@ export default function ImageEditorPage() {
                 <div style={s.panelTitle}>🌅 Generate Background</div>
                 <p style={s.panelSub}>Choose a template or describe your own background</p>
                 <div style={s.creditNote}>
-                  {user?.plan === "free"
-                    ? user.trialToolsUsed?.includes("generate-bg") ? `Free trial used · ${CREDIT_COST} credits after upgrading` : (user.trialsRemaining ?? 0) > 0 ? "1 free trial available" : "No free trials left · upgrade to use"
-                    : `Uses ${CREDIT_COST} credits · ${creditsLeft} remaining`}
+                  {`Uses ${CREDIT_COST} credits · ${creditsLeft} remaining`}
                 </div>
 
                 {/* Background Templates Grid */}
@@ -1975,9 +1994,7 @@ export default function ImageEditorPage() {
                 <div style={s.panelTitle}>✨ AI Edit</div>
                 <p style={s.panelSub}>Describe any change — Pixel Shine enhances your prompt and edits the image</p>
                 <div style={s.creditNote}>
-                  {user?.plan === "free"
-                    ? user.trialToolsUsed?.includes("ai-edit") ? `Free trial used · ${CREDIT_COST} credits after upgrading` : (user.trialsRemaining ?? 0) > 0 ? "1 free trial available" : "No free trials left · upgrade to use"
-                    : `Uses ${CREDIT_COST} credits · ${creditsLeft} remaining`}
+                  {`Uses ${CREDIT_COST} credits · ${creditsLeft} remaining`}
                 </div>
                 <textarea value={prompt} onChange={(e) => setPrompt(e.target.value)} placeholder={'e.g. "Make the background blurry"\n"Change the sky to sunset"\n"Add dramatic lighting"'} style={s.textarea} rows={4} disabled={processing} />
                 <div style={s.suggestions}>
@@ -2007,11 +2024,10 @@ export default function ImageEditorPage() {
                     <button
                       key={m.key}
                       onClick={() => {
-                        // Pro upscale is paid-only — free users get one trial, then the payment popup.
-                        const isPaidUser = !!(user && user.plan && user.plan !== "free");
-                        const trialUsedForUpscalePro = !!user?.trialToolsUsed?.includes("upscale-pro");
-                        const trialAvailable = !trialUsedForUpscalePro && (user?.trialsRemaining ?? 0) > 0;
-                        if (m.key === "pro" && !isPaidUser && !trialAvailable) {
+                        // Pro upscale costs credits. Holding enough is the only
+                        // thing that opens it — there is no trial to fall back on.
+                        const canAfford = (user?.credits ?? 0) >= CREDIT_COST;
+                        if (m.key === "pro" && !canAfford) {
                           setBlockedTool({ id: "upscale", icon: "✨", label: "Upscale (Pro)" });
                           openUnlimited();
                           return;
@@ -2448,10 +2464,9 @@ export default function ImageEditorPage() {
                 if (t.free) { const next = activeTool === t.id ? null : t.id; setActiveTool(next); setMobileSheetOpen(!!next); return; }
                 if (!authChecked) { const next = activeTool === t.id ? null : t.id; setActiveTool(next); setMobileSheetOpen(!!next); return; }
                 if (!user) { requireSignIn(); return; }
-                const isPaidUser = !!(user.plan && user.plan !== "free");
-                const trialUsedForTool = !!(t.id && user.trialToolsUsed?.includes(t.id));
-                const trialAvailable = !trialUsedForTool && (user.trialsRemaining ?? 0) > 0;
-                if (t.paid && !isPaidUser && !trialAvailable) { setBlockedTool(t); openUnlimited(); return; }
+                // Credits are the entitlement; the packs modal is what an
+                // empty balance opens.
+                if (t.paid && (user.credits ?? 0) < CREDIT_COST) { setBlockedTool(t); openUnlimited(); return; }
                 const next = activeTool === t.id ? null : t.id;
                 setActiveTool(next);
                 setMobileSheetOpen(!!next);
@@ -2600,28 +2615,15 @@ export default function ImageEditorPage() {
               </div>
             </div>
 
-            {/* Credits / trials section — hidden in free-only mode */}
-            {PAID_FEATURES_ENABLED && (user.plan === "free" ? (
-              <div style={s.creditsSection}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-                  <div style={{ fontWeight: 800, fontSize: 15 }}>🎁 Free Trials</div>
-                  <div style={{ fontWeight: 900, fontSize: 20, color: (user.trialsRemaining ?? 0) === 0 ? "var(--danger)" : "var(--accent)" }}>
-                    {user.trialsRemaining ?? 0} <span style={{ fontSize: 13, color: "var(--text-faint)", fontWeight: 400 }}>/ {FREE_TRIAL_LIMIT}</span>
-                  </div>
-                </div>
-                <div style={s.creditBarBg}>
-                  <div style={{ ...s.creditBarFill, width: `${((user.trialsRemaining ?? 0) / FREE_TRIAL_LIMIT) * 100}%`, background: (user.trialsRemaining ?? 0) === 0 ? "var(--danger)" : "var(--accent)" }} />
-                </div>
-                <div style={{ fontSize: 12, color: "var(--text-faint)", marginTop: 8, lineHeight: 1.6 }}>
-                  One free trial per tool — Resize, Adjust and Normal Upscale are always free, no trial needed.
-                </div>
-                {(user.trialsRemaining ?? 0) === 0 && (
-                  <div style={s.noCreditsNote}>
-                    You&apos;ve used all {FREE_TRIAL_LIMIT} free trials. Upgrade to a paid plan to keep using AI tools.
-                  </div>
-                )}
-              </div>
-            ) : (
+            {/*
+              One panel, not two. The other branch showed "🎁 Free Trials
+              — N / 5" to anyone on the free plan, advertising a trial system
+              that no longer exists: AI generation is sold as credits and
+              never granted. What a free account needs to see is that it has
+              no credits and where to get some, which the credits panel below
+              already says.
+            */}
+            {PAID_FEATURES_ENABLED && (
               <div style={s.creditsSection}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
                   <div style={{ fontWeight: 800, fontSize: 15 }}>⚡ AI Credits</div>
@@ -2648,7 +2650,7 @@ export default function ImageEditorPage() {
                   <div style={s.lowNote}>Running low! Resize, Adjust and Normal Upscale are free — no credits needed.</div>
                 )}
               </div>
-            ))}
+            )}
 
             {/* Usage breakdown */}
             <div style={s.usageGrid}>
@@ -2661,13 +2663,11 @@ export default function ImageEditorPage() {
                 { icon: "↔️", label: "Resize", id: "resize", cost: 0 },
                 { icon: "🎨", label: "Adjust", id: "adjust", cost: 0 },
               ].filter(item => PAID_FEATURES_ENABLED || item.cost === 0).map((item) => {
-                const trialUsed = user.plan === "free" && !!user.trialToolsUsed?.includes(item.id);
-                const trialAvailable = user.plan === "free" && item.cost > 0 && !trialUsed && (user.trialsRemaining ?? 0) > 0;
                 return (
                   <div key={item.label} style={s.usageItem}>
                     <span>{item.icon} {item.label}</span>
-                    <span style={{ fontWeight: 700, color: item.cost === 0 ? "var(--success)" : trialAvailable ? "var(--success)" : "var(--accent)" }}>
-                      {item.cost === 0 ? "Free" : trialAvailable ? "1 free trial" : user.plan === "free" ? `${item.cost} cr (after trial)` : `${item.cost} cr`}
+                    <span style={{ fontWeight: 700, color: item.cost === 0 ? "var(--success)" : "var(--accent)" }}>
+                      {item.cost === 0 ? "Free" : `${item.cost} cr`}
                     </span>
                   </div>
                 );
@@ -2678,7 +2678,7 @@ export default function ImageEditorPage() {
               <>
                 {user.plan === "free" && (
                   <div style={{ fontSize: 12, color: "var(--text-faint)", textAlign: "center" as const, marginBottom: 8 }}>
-                    Free plan · {user.trialsRemaining ?? 0} of {FREE_TRIAL_LIMIT} free trials left
+                    Free tools are unlimited · AI tools run on credits
                   </div>
                 )}
                 <button style={{ ...s.primaryBtn, marginTop: 4 }} onClick={() => { setShowAccountModal(false); openUnlimited(); }}>
