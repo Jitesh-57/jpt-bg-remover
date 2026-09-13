@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Client } from "pg";
-import { requireAdmin } from "@/lib/admin-token";
+import { requireAdmin, databaseUrl } from "@/lib/admin-token";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -53,17 +53,18 @@ export async function GET(req: NextRequest) {
   const denied = requireAdmin(req);
   if (denied) return denied;
 
-  const url = (process.env.SUPABASE_DB_URL || process.env.POSTGRES_URL || "").trim();
-  if (!url) {
+  const db = databaseUrl();
+  if (!db) {
     return NextResponse.json({
-      error: "SUPABASE_DB_URL is not set, so the database cannot be inspected.",
-      fix: "Set it from Supabase → Project Settings → Database → Connection string → Session pooler (port 5432).",
+      error: "No database connection string is set, so the database cannot be inspected.",
+      fix: "Set SUPABASE_DB_URL from Supabase → Project Settings → Database → Connection string → Session pooler (port 5432).",
+      looked_for: ["SUPABASE_DB_URL", "POSTGRES_URL_NON_POOLING", "POSTGRES_URL", "DATABASE_URL"],
     }, { status: 503 });
   }
 
   const client = new Client({
-    connectionString: url,
-    ssl: /[?&]sslmode=disable\b/.test(url) ? false : { rejectUnauthorized: false },
+    connectionString: db.url,
+    ssl: /[?&]sslmode=disable\b/.test(db.url) ? false : { rejectUnauthorized: false },
     connectionTimeoutMillis: 15_000,
     statement_timeout: 30_000,
   });
@@ -142,6 +143,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({
       ok: problems.length === 0,
+      connectionFrom: db.from,
       problems,
       fix: problems.length
         ? "Run /api/admin/migrate?token=…&apply=1 — it creates what is missing and never touches existing data."

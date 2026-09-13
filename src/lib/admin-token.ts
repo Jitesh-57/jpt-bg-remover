@@ -49,3 +49,26 @@ export function requireAdmin(req: NextRequest): NextResponse | null {
   }
   return null;
 }
+
+/**
+ * The Postgres connection string, under whatever name it arrived as.
+ *
+ * The Supabase and Neon Vercel integrations set these themselves, so a project
+ * that has ever used one already has a working URL and needs nothing added by
+ * hand. SUPABASE_DB_URL is checked first so an explicitly set value always
+ * wins; POSTGRES_URL_NON_POOLING is preferred over POSTGRES_URL because the
+ * integration points the latter at the transaction pooler.
+ */
+export function databaseUrl(): { url: string; from: string } | null {
+  const names = [
+    "SUPABASE_DB_URL",
+    "POSTGRES_URL_NON_POOLING",
+    "POSTGRES_URL",
+    "DATABASE_URL",
+  ];
+  for (const name of names) {
+    const v = (process.env[name] || "").trim();
+    if (v) return { url: v, from: name };
+  }
+  return null;
+}
