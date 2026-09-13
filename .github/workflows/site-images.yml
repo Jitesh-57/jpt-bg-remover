@@ -47,7 +47,7 @@ jobs:
       - name: Generate the missing images
         if: steps.wait.outputs.live == 'true'
         env:
-          TOKEN: ${{ secrets.ADMIN_IMAGE_TOKEN || 'jptblog2026' }}
+          TOKEN: ${{ secrets.ADMIN_IMAGE_TOKEN }}
         run: |
           # The endpoint chains its own follow-up invocations server-side, so
           # one call walks the whole set. A long timeout is expected: the first

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin, adminToken } from "@/lib/admin-token";
 import { falKeyShape, falProbe } from "@/lib/fal";
 
 export const runtime = "nodejs";
@@ -18,12 +19,9 @@ export const runtime = "nodejs";
  * The key is never returned — only its length and whether it is present, which
  * is enough to spot a truncated paste or an empty variable.
  */
-const TOKEN = process.env.ADMIN_IMAGE_TOKEN || "jptblog2026";
-
 export async function GET(req: NextRequest) {
-  if ((req.nextUrl.searchParams.get("token") || "").trim() !== TOKEN) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const denied = requireAdmin(req);
+  if (denied) return denied;
 
   const shape = falKeyShape();
   if (!shape.configured) {

@@ -108,6 +108,10 @@ GET /api/admin/reset-free-credits?token=<ADMIN_IMAGE_TOKEN>          # preview
 GET /api/admin/reset-free-credits?token=<ADMIN_IMAGE_TOKEN>&apply=1  # apply
 ```
 
+`ADMIN_IMAGE_TOKEN` must be set in the environment. There is no default: the
+old one was written into this repository, which is public, so it protected
+nothing. Unset, every `/api/admin` route answers 503 and says so.
+
 It also explains the account that bought the 5-credit pack and then showed 11:
 a leftover grant of 10, four of it spent, plus the 5 it paid for.
 
@@ -129,6 +133,16 @@ unpaid.
 
 The preview lists every account it would change, with the old and new balance,
 and nothing is written until `&apply=1`.
+
+An account whose purchases cannot be quantified — a paid order for a plan with
+no credit count, most likely a legacy pack — is left completely alone and listed
+under `skipped`. Reading "cannot tell" as "bought nothing" would take credits
+from someone who paid.
+
+An account whose profile claims a paid plan while Razorpay has no record of a
+payment is still changed, but carries a `flag` in the preview: that balance was
+granted by hand or carried over from an older system, so it is worth a look
+before applying.
 
 It refuses outright if Razorpay cannot be reached, because then every balance
 would read as granted and clearing them would take credits from people who

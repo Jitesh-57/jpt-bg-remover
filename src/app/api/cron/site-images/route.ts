@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin, adminToken } from "@/lib/admin-token";
 import { createAdminSupabase } from "@/lib/auth";
 import { editImage, generateFromText } from "@/lib/ai-image";
 import { geminiGenerateFromText } from "@/lib/gemini";
@@ -25,7 +26,6 @@ export const maxDuration = 300;
  * Idempotent: a slot that already has a file is skipped, so re-running is free
  * and interrupting it loses nothing.
  */
-const TOKEN = process.env.ADMIN_IMAGE_TOKEN || "jptblog2026";
 
 /** Stop starting new generations once this much of the budget is gone. */
 const BUDGET_MS = 230_000;
@@ -148,7 +148,7 @@ async function missingJobs(
  * The next instance runs independently, so its body is of no interest here.
  */
 async function startNextHop(req: NextRequest, hop: number): Promise<string> {
-  const url = `${req.nextUrl.origin}${req.nextUrl.pathname}?token=${TOKEN}&hop=${hop + 1}`;
+  const url = `${req.nextUrl.origin}${req.nextUrl.pathname}?token=${adminToken()}&hop=${hop + 1}`;
   try {
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 4000);
@@ -164,10 +164,12 @@ async function startNextHop(req: NextRequest, hop: number): Promise<string> {
 
 export async function GET(req: NextRequest) {
   const q = req.nextUrl.searchParams;
-  const authed =
-    req.headers.get("x-vercel-cron") !== null ||
-    (q.get("token") || "").trim() === TOKEN;
-  if (!authed) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  // Vercel's own cron header still gets in without a token; everything else
+  // goes through the shared guard, which has no published default.
+  if (req.headers.get("x-vercel-cron") === null) {
+    const denied = requireAdmin(req);
+    if (denied) return denied;
+  }
 
   // Kill switch, default off.
   //
