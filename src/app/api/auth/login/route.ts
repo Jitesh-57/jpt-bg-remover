@@ -44,6 +44,7 @@ export async function POST(req: NextRequest) {
     ok: true,
     email: data.user.email,
     name: profile?.name || data.user.email?.split("@")[0],
+    // A missing profile row means no credits, not a starter grant.
     credits: profile?.credits ?? FREE_CREDITS,
   });
   cookiesToApply.forEach(({ name, value, options }) => finalResponse.cookies.set(name, value, options));

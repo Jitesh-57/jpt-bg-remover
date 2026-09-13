@@ -13,14 +13,21 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { createClient as createSupabaseAdmin } from "@supabase/supabase-js";
 
-export const FREE_CREDITS = 10;
-export const DAILY_FREE_CREDITS = 10;
+/**
+ * Credits a new account starts with: none.
+ *
+ * The AI tools have no free tier — they cost real money per generation and are
+ * sold as credit packs. Granting 10 at signup handed every new account five
+ * free generations billed to the fal balance, which is the opposite of the
+ * pricing. The browser-based tools stay free and unlimited and never touch
+ * this number.
+ */
+export const FREE_CREDITS = 0;
 // Re-exported from plans.ts so the price of a generation is defined once.
 export { CREDIT_COST } from "@/lib/plans";
 import { CREDIT_COST } from "@/lib/plans";
 export const BASIC_UPSCALE_COST = 1;
 export const FREE_TOOLS = ["resize", "color-adjust"];
-export const FREE_TRIAL_LIMIT = 5;
 
 // AI tools are credits-only: no free trials. Free users hit the buy-credits
 // prompt on their first AI request. The on-device tools stay free for everyone.
@@ -65,7 +72,6 @@ export interface SessionPayload {
   userId: string; email: string; name: string; picture?: string;
   provider: "google" | "email"; credits: number; plan: Plan;
   planExpiresAt?: string | null;
-  trialToolsUsed: string[]; trialsRemaining: number;
   iat: number; exp: number;
 }
 export type GoogleSession = SessionPayload;
@@ -99,53 +105,7 @@ export function createAdminSupabase() {
   );
 }
 
-// ─── Free-trial tracking (replaces the old daily-credit grant) ───────────────
-//
-// Free-plan users get FREE_TRIAL_LIMIT (5) lifetime trials, max one per distinct
-// toolId, tracked in Supabase Auth user_metadata.trial_tools_used (a string[]).
-// This avoids a DB schema change, same approach as the old single-trial flag.
-
-async function getUserMetadata(
-  admin: ReturnType<typeof createAdminSupabase>,
-  userId: string
-): Promise<Record<string, unknown>> {
-  try {
-    const { data } = await admin.auth.admin.getUserById(userId);
-    return data?.user?.user_metadata || {};
-  } catch {
-    return {};
-  }
-}
-
-export async function getTrialToolsUsed(
-  admin: ReturnType<typeof createAdminSupabase>,
-  userId: string
-): Promise<string[]> {
-  const metadata = await getUserMetadata(admin, userId);
-  const used = metadata.trial_tools_used;
-  return Array.isArray(used) ? used.filter((t): t is string => typeof t === "string") : [];
-}
-
-async function markTrialToolUsed(
-  admin: ReturnType<typeof createAdminSupabase>,
-  userId: string,
-  toolId: string
-): Promise<void> {
-  try {
-    const currentMetadata = await getUserMetadata(admin, userId);
-    const trialToolsUsed = Array.isArray(currentMetadata.trial_tools_used)
-      ? (currentMetadata.trial_tools_used as unknown[]).filter((t): t is string => typeof t === "string")
-      : [];
-    if (trialToolsUsed.includes(toolId)) return; // already recorded, avoid duplicate
-    await admin.auth.admin.updateUserById(userId, {
-      user_metadata: { ...currentMetadata, trial_tools_used: [...trialToolsUsed, toolId] },
-    });
-  } catch (e) {
-    console.warn("[auth] could not record trial usage:", (e as Error).message);
-  }
-}
-
-// ─── checkAuth ────────────────────────────────────────────────────────────────
+// ─── Sessions ────────────────────────────────────────────────────────────────
 
 export async function checkAuth(req: NextRequest): Promise<
   { session: null; error: NextResponse } | { session: GoogleSession; error: null }
@@ -173,8 +133,7 @@ export async function checkAuth(req: NextRequest): Promise<
 
   if (!profile) {
     // No profile row — create one now so future updates have a target.
-    // Free-plan users no longer get a daily credit grant; their free usage
-    // is governed by the trial system (see getTrialToolsUsed/withCredits).
+    // Zero credits: AI generation is sold, never granted.
     credits = 0;
     await admin.from("profiles").upsert({
       id: user.id,
@@ -187,11 +146,6 @@ export async function checkAuth(req: NextRequest): Promise<
     credits = profile.credits ?? 0;
   }
 
-  const trialToolsUsedRaw = user.user_metadata?.trial_tools_used;
-  const trialToolsUsed: string[] = Array.isArray(trialToolsUsedRaw)
-    ? trialToolsUsedRaw.filter((t): t is string => typeof t === "string")
-    : [];
-
   return {
     session: {
       userId: user.id,
@@ -202,8 +156,6 @@ export async function checkAuth(req: NextRequest): Promise<
       credits,
       plan,
       planExpiresAt,
-      trialToolsUsed,
-      trialsRemaining: Math.max(0, FREE_TRIAL_LIMIT - trialToolsUsed.length),
       iat: 0, exp: 0,
     },
     error: null,
@@ -251,59 +203,24 @@ export async function withCredits(
     return NextResponse.json({ ...body, credits: newCredits });
   }
 
-  // No credits left (or none ever bought). AI features have no free tier, so
-  // this is the end of the line until they buy a pack.
-  if (AI_TOOLS_PAID_ONLY) {
-    return NextResponse.json({
-      error: session.credits > 0
-        ? `You need ${CREDIT_COST} credits for this. Top up to continue.`
-        : "AI features run on credits. Grab a pack to start — from ₹166, and they never expire.",
-      upgradeRequired: true,
-      credits: session.credits,
-    }, { status: 402 });
-  }
+  /*
+    No credits: the end of the line until they buy a pack.
 
-  // Free plan: gated by the 5-distinct-tool trial system.
-  if (!toolId) {
-    console.error("[withCredits] missing toolId for free-plan ai/standard request");
-    return NextResponse.json({
-      error: "This feature requires a paid plan. Upgrade to use AI transformations.",
-      upgradeRequired: true,
-      credits: session.credits,
-    }, { status: 403 });
-  }
-
-  const admin = createAdminSupabase();
-  const trialToolsUsed = await getTrialToolsUsed(admin, session.userId);
-
-  if (trialToolsUsed.includes(toolId)) {
-    return NextResponse.json({
-      error: "You've already used your free trial for this tool. Upgrade to keep using it.",
-      upgradeRequired: true,
-      trialUsed: true,
-      credits: session.credits,
-      trialsRemaining: Math.max(0, FREE_TRIAL_LIMIT - trialToolsUsed.length),
-    }, { status: 403 });
-  }
-
-  if (trialToolsUsed.length >= FREE_TRIAL_LIMIT) {
-    return NextResponse.json({
-      error: `You've used all ${FREE_TRIAL_LIMIT} free trials. Upgrade to a paid plan to keep creating.`,
-      upgradeRequired: true,
-      trialUsed: true,
-      credits: session.credits,
-      trialsRemaining: 0,
-    }, { status: 403 });
-  }
-
-  await markTrialToolUsed(admin, session.userId, toolId);
-
+    There is deliberately no branch below this. A five-tool free-trial system
+    used to follow, unreachable because AI_TOOLS_PAID_ONLY is on — but
+    "unreachable" is one constant away from "live", and the whole point of the
+    pricing is that AI generation is never free. It is gone rather than
+    disabled, so nothing can hand out generations that cost real money.
+    The browser tools remain free and unlimited; they never reach this
+    function with an "ai" toolType.
+  */
   return NextResponse.json({
-    ...body,
+    error: session.credits > 0
+      ? `You need ${CREDIT_COST} credits for this. Top up to continue.`
+      : "AI features run on credits. Grab a pack to start — from ₹166, and they never expire.",
+    upgradeRequired: true,
     credits: session.credits,
-    trial: true,
-    trialsRemaining: Math.max(0, FREE_TRIAL_LIMIT - (trialToolsUsed.length + 1)),
-  });
+  }, { status: 402 });
 }
 
 // ─── checkEntitlement ─────────────────────────────────────────────────────────
@@ -337,50 +254,15 @@ export async function checkEntitlement(
     }, { status: 402 });
   }
 
-  // No credits left (or none ever bought). AI features have no free tier, so
-  // this is the end of the line until they buy a pack.
-  if (AI_TOOLS_PAID_ONLY) {
-    return NextResponse.json({
-      error: session.credits > 0
-        ? `You need ${CREDIT_COST} credits for this. Top up to continue.`
-        : "AI features run on credits. Grab a pack to start — from ₹166, and they never expire.",
-      upgradeRequired: true,
-      credits: session.credits,
-    }, { status: 402 });
-  }
-
-  if (!toolId) {
-    return NextResponse.json({
-      error: "This feature requires a paid plan. Upgrade to use AI transformations.",
-      upgradeRequired: true,
-      credits: session.credits,
-    }, { status: 403 });
-  }
-
-  const admin = createAdminSupabase();
-  const trialToolsUsed = await getTrialToolsUsed(admin, session.userId);
-
-  if (trialToolsUsed.includes(toolId)) {
-    return NextResponse.json({
-      error: "You've already used your free trial for this tool. Upgrade to keep using it.",
-      upgradeRequired: true,
-      trialUsed: true,
-      credits: session.credits,
-      trialsRemaining: Math.max(0, FREE_TRIAL_LIMIT - trialToolsUsed.length),
-    }, { status: 403 });
-  }
-
-  if (trialToolsUsed.length >= FREE_TRIAL_LIMIT) {
-    return NextResponse.json({
-      error: `You've used all ${FREE_TRIAL_LIMIT} free trials. Upgrade to a paid plan to keep creating.`,
-      upgradeRequired: true,
-      trialUsed: true,
-      credits: session.credits,
-      trialsRemaining: 0,
-    }, { status: 403 });
-  }
-
-  return null;
+  // No credits: the packs are the only way forward. See withCredits for why
+  // there is no trial branch here either.
+  return NextResponse.json({
+    error: session.credits > 0
+      ? `You need ${CREDIT_COST} credits for this. Top up to continue.`
+      : "AI features run on credits. Grab a pack to start — from ₹166, and they never expire.",
+    upgradeRequired: true,
+    credits: session.credits,
+  }, { status: 402 });
 }
 
 // ─── Legacy stubs ─────────────────────────────────────────────────────────────

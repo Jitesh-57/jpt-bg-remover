@@ -63,6 +63,9 @@ export async function POST(req: NextRequest) {
       id: data.user.id,
       email: data.user.email,
       name: displayName,
+      // No free AI credits — see FREE_CREDITS. This route granted 10, which
+      // is five free generations for anyone who signs up with an email
+      // address, while the Google path had already been set to zero.
       credits: FREE_CREDITS,
     }, { onConflict: "id", ignoreDuplicates: true });
   }

@@ -128,7 +128,7 @@ export default function NavBar() {
 
   const fetchUser = () =>
     fetch("/api/auth/google/me").then(r => r.json())
-      .then((d: { authenticated: boolean; userId?: string; email?: string; name?: string; picture?: string; credits?: number; plan?: string; trialToolsUsed?: string[]; trialsRemaining?: number }) => {
+      .then((d: { authenticated: boolean; userId?: string; email?: string; name?: string; picture?: string; credits?: number; plan?: string }) => {
         if (d.authenticated && d.email) {
           const plan = d.plan ?? "free";
           setUser({ userId: d.userId!, email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? 0, plan });
