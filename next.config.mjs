@@ -20,6 +20,26 @@ const nextConfig = {
     });
     return config;
   },
+  /*
+    Image optimisation for the Supabase bucket.
+
+    The generated creatives are full-size PNGs — 1 to 2 MB each — and the
+    homepage shows eleven of them, so a cold refresh was pulling something
+    like fifteen megabytes before a single card could paint. Routing them
+    through Next's optimiser resizes each one to the size it is actually
+    displayed at and re-encodes as AVIF or WebP, which is roughly a
+    twenty-to-fiftyfold reduction, and the result is cached at the edge.
+  */
+  images: {
+    remotePatterns: [
+      { protocol: 'https', hostname: 'lwworujvfttxkrjfrgav.supabase.co', pathname: '/storage/v1/object/public/**' },
+    ],
+    formats: ['image/avif', 'image/webp'],
+    // A year: these files are content-addressed by name and replaced wholesale
+    // rather than edited, so there is nothing to invalidate early.
+    minimumCacheTTL: 31536000,
+  },
+
   experimental: {
     serverActions: {
       bodySizeLimit: '20mb',

@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import SmartImage from "@/app/_components/SmartImage";
 import { CREATIVE_APPS, CREATIVE_BASE, previewUrl } from "@/lib/creative-apps";
 
 const BASE = "https://www.sjpt.io";
@@ -44,8 +45,20 @@ export default function CreativeHub() {
               {CREATIVE_APPS.map((a) => (
                 <a key={a.slug} href={`${CREATIVE_BASE}/${a.slug}`} style={{ display: "block", textDecoration: "none", borderRadius: 18, overflow: "hidden", border: "1px solid var(--border)", background: "var(--surface)", boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
                   <div style={{ aspectRatio: "16 / 10", background: `linear-gradient(135deg, ${a.gradient[0]}, ${a.gradient[1]})`, position: "relative" }}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={previewUrl(a.slug)} alt={`${a.h1} before and after example`} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                    {/*
+                      Two hundred cards on one page, each pointing at a
+                      full-size PNG. Through the optimiser a card costs tens of
+                      kilobytes instead of one to two megabytes, and a slug
+                      with no creative yet draws its own artwork rather than a
+                      bare gradient.
+                    */}
+                    <SmartImage
+                      src={previewUrl(a.slug)}
+                      alt={`${a.h1} before and after example`}
+                      fallback={`linear-gradient(135deg, ${a.gradient[0]}, ${a.gradient[1]})`}
+                      sizes="(max-width: 768px) 100vw, 260px"
+                      artwork={{ slug: a.slug, name: a.h1, emoji: a.emoji, gradient: [a.gradient[0], a.gradient[1]], note: "Example coming soon" }}
+                    />
                     <span style={{ position: "absolute", bottom: 10, right: 10, padding: "5px 12px", background: "rgba(11,11,14,0.82)", color: "var(--accent)", border: "1px solid var(--accent-border)", backdropFilter: "blur(6px)", fontSize: 11, fontWeight: 800, borderRadius: 8 }}>{a.emoji} {a.badge}</span>
                   </div>
                   <div style={{ padding: "18px 18px 20px" }}>
