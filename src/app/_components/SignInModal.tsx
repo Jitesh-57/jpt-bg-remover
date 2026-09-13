@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { persistAuthContext } from "@/lib/pending-image";
+import { beginGoogleSignIn } from "@/lib/auth-return";
 import BrandLogo from "./BrandLogo";
 
 interface Props {
@@ -32,10 +32,7 @@ export default function SignInModal({ onClose, reason = "default", onBeforeAuth,
 
   const google = async () => {
     onBeforeAuth?.();
-    const next = nextPath || (typeof window !== "undefined" ? window.location.pathname + window.location.search : "/");
-    // Keep any in-progress upload across the OAuth round-trip.
-    await persistAuthContext();
-    window.location.href = `/api/auth/google?next=${encodeURIComponent(next)}`;
+    await beginGoogleSignIn(nextPath);
   };
 
   const emailAuth = async () => {

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { trackBeginCheckout, trackPurchase, trackBuyButtonClicked, trackPaymentFailed } from "@/lib/analytics";
-import { persistAuthContext } from "@/lib/pending-image";
+import { beginGoogleSignIn } from "@/lib/auth-return";
 import { explainPaymentFailure } from "@/lib/pricing-modal";
 import { PACKS, CREDIT_COST, inrPerCredit, type Pack } from "@/lib/plans";
 import { landingImg } from "@/lib/landing-images";
@@ -46,10 +46,7 @@ export default function UnlimitedModal({ onClose, loggedIn, reason, prefillUser,
   const heroUrl = landingImg("pricing-hero.png");
 
   async function signInWithGoogle() {
-    const next = typeof window !== "undefined" ? window.location.pathname + window.location.search : "/editor";
-    // Keep any in-progress upload across the OAuth round-trip.
-    await persistAuthContext();
-    window.location.href = `/api/auth/google?next=${encodeURIComponent(next)}`;
+    await beginGoogleSignIn();
   }
 
   async function handleBuy(p: Pack) {

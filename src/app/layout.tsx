@@ -5,6 +5,8 @@ import NavBar from "./_components/NavBar";
 import Footer from "./_components/Footer";
 import PricingModalHost from "./_components/PricingModalHost";
 import Analytics from "./_components/Analytics";
+import SupportChat from "./_components/SupportChat";
+import AuthReturn from "./_components/AuthReturn";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 
 const BASE = "https://www.sjpt.io";
@@ -88,7 +90,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="dns-prefetch" href={SUPA_ORIGIN} />
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://images.pexels.com" />
-        <link rel="dns-prefetch" href="https://sjpt-chat.vercel.app" />
         <meta name="google-site-verification" content="oaUjZEOCATyjaE5OvAHr6gXTXGjt6wJnk436SYbf1O4" />
         <meta name="google-adsense-account" content="ca-pub-6299138657923728" />
         {/* Google AdSense loader — placed as a raw <script> in <head> exactly
@@ -123,18 +124,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </noscript>
         {/* End Google Tag Manager (noscript) */}
         <Analytics />
-        {/* Pixel Shine support chatbot widget — loaded lazily so it doesn't block render. */}
-        <Script
-          src="https://sjpt-chat.vercel.app/widget.js"
-          data-sjpt-key="site_fb7ccac3b50d44d0b6b4a063fae347b2"
-          strategy="lazyOnload"
-        />
+        {/* Support chatbot — signed-in users only; see SupportChat. */}
+        <SupportChat />
         <LanguageProvider>
           <NavBar />
           {children}
           <Footer />
           {/* Mounted once so any 402, anywhere, can raise the packs. */}
           <PricingModalHost />
+          {/* Returns the user to the page they signed in from, wherever the
+              OAuth round-trip happened to drop them. */}
+          <AuthReturn />
         </LanguageProvider>
       </body>
     </html>

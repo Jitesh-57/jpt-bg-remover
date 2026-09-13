@@ -4,6 +4,7 @@ import { useRef, useState, useEffect } from "react";
 import FAQAccordion from "@/app/_components/FAQAccordion";
 import { landingImg } from "@/lib/landing-images";
 import { savePendingContext } from "@/lib/pending-image";
+import { beginGoogleSignIn } from "@/lib/auth-return";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
 import BrandLogo from "@/app/_components/BrandLogo";
@@ -161,7 +162,7 @@ const COMPARISON = [
 const FAQS = [
   {
     q: "Is Pixel Shine free to use?",
-    a: "Yes — sign in with your Google account and get 10 free AI credits instantly. No credit card required. Free credits never expire.",
+    a: "The browser tools — crop, resize, compress, convert, watermark and the rest — are free and unlimited, and they run on your device. The AI apps run on credits, sold in one-off packs from \u20b9166; credits never expire and there is nothing recurring to cancel.",
   },
   {
     q: "Will my results have a watermark?",
@@ -310,8 +311,7 @@ export default function LandingPageClient() {
   const handleOAuthRedirect = async () => {
     await savePending();
     // Return to this page, not the editor — the upload is preserved either way.
-    const next = (window.location.pathname + window.location.search) || "/";
-    window.location.href = `/api/auth/google?next=${encodeURIComponent(next)}`;
+    await beginGoogleSignIn();
   };
 
   const handleEmailAuth = async () => {
@@ -708,7 +708,7 @@ export default function LandingPageClient() {
                 ? <div style={{ marginBottom: 12, borderRadius: 10, overflow: "hidden", maxHeight: 110 }}><img src={uploadImage.url} alt="preview" style={{ width: "100%", height: 110, objectFit: "cover" }} /></div>
                 : <div style={{ fontSize: 40, marginBottom: 8 }}>✨</div>}
               <div style={{ fontWeight: 900, fontSize: 20, color: "var(--text)" }}>Sign in to Pixel Shine</div>
-              <p style={{ fontSize: 13, color: "var(--text-muted)", margin: "4px 0 0" }}>Get <strong>10 free AI credits</strong> to start editing</p>
+              <p style={{ fontSize: 13, color: "var(--text-muted)", margin: "4px 0 0" }}><strong>Unlimited free tools</strong>, and your edits saved to your account</p>
             </div>
 
             {/* Tab switcher */}
