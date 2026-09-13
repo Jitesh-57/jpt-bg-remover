@@ -325,6 +325,10 @@ a { color: inherit; }
   /* Get Started opens the same modal as Sign in; on a phone it only cost the
      row its last 120px and pushed Sign in off the edge. */
   .jpt-nav-cta { display: none !important; }
+  /* The credit badge earns its place in the chip; the first name does not.
+     With both, the chip pushed the brand off the left edge — and the name is
+     the first line of the sheet the chip opens, so nothing is lost. */
+  .jpt-chip-name { display: none; }
 }
 
 /* ── Invoices ──────────────────────────────────────────────────────────────

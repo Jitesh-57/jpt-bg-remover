@@ -10,6 +10,7 @@ import {
 } from "@/lib/analytics";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
 import { CREDIT_COST, PACKS, inrPerCredit } from "@/lib/plans";
+import { publishCredits } from "@/lib/credits";
 import { parseJsonResponse } from "@/lib/upload-prep";
 import { explainPaymentFailure } from "@/lib/pricing-modal";
 import { savePendingContext, loadPendingContext, clearPendingContext } from "@/lib/pending-image";
@@ -623,6 +624,7 @@ export default function ImageEditorPage() {
             const data = await verifyRes.json() as { success?: boolean; credits?: number };
             if (data.success && data.credits) {
               setUser(u => u ? { ...u, credits: data.credits!, plan: planKey } : u);
+              publishCredits(data.credits);
               setShowUpgradeModal(false);
               setBlockedTool(null);
               trackPurchase(planKey, planValue, data.credits);
@@ -853,6 +855,8 @@ export default function ImageEditorPage() {
 
     if (typeof data.credits === "number") {
       setUser(u => u ? { ...u, credits: data.credits as number } : u);
+      // The header prints this number too; tell it what the route just said.
+      publishCredits(data.credits);
     }
 
     // If API returned a CDN URL, fetch it client-side

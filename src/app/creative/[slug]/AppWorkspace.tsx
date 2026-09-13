@@ -7,6 +7,7 @@ import {
   type PresetTab, type Preset, type AspectRatio,
 } from "@/lib/app-presets";
 import { CREDIT_COST } from "@/lib/plans";
+import { publishCredits } from "@/lib/credits";
 import { SHOW_PRESET_TABS, SHOW_STYLE_PICKER } from "@/lib/workspace-config";
 import { openPricing, needsCredits } from "@/lib/pricing-modal";
 import { trackEvent } from "@/lib/analytics";
@@ -159,7 +160,11 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
         data = { error: (e as Error).message };
       }
 
-      if (typeof data.credits === "number") setCredits(data.credits);
+      if (typeof data.credits === "number") {
+        setCredits(data.credits);
+        // The header shows this balance too — keep the two from disagreeing.
+        publishCredits(data.credits);
+      }
 
       if (res.status === 401) {
         await signIn();
