@@ -25,7 +25,7 @@ export const SEO_POSTS_6: BlogPost[] = [
     [
       { body: `The **square (1:1) crop** is one of the most useful shapes there is — Instagram posts, profile pictures, avatars, album art and thumbnails all love it. Cropping to a perfect square yourself means you control the framing instead of letting a platform chop it. Here's how, free.` },
       { heading: "Why square is so common", body: `A square looks balanced everywhere and fits the most surfaces — feeds, grids, avatars. Platforms often **auto-crop non-square images**, cutting off heads or edges. Cropping to 1:1 first puts you in control of what stays in frame.` },
-      { heading: "How to crop to a square (free)", body: `**Step 1 — Open the crop tool** at sjpt.io.\n\n**Step 2 — Upload your photo.**\n\n**Step 3 — Choose the 1:1 (square) preset** and position your subject.\n\n**Step 4 — Download** the square image.\n\nNo watermark, no sign-up.` },
+      { heading: "How to crop to a square (free)", body: `**Step 1 — Open the crop tool** at Pixel Shine.\n\n**Step 2 — Upload your photo.**\n\n**Step 3 — Choose the 1:1 (square) preset** and position your subject.\n\n**Step 4 — Download** the square image.\n\nNo watermark, no sign-up.` },
       { heading: "Frame it well", body: `Keep your **subject centred** with a little breathing room, since square crops are tight. For faces, leave space above the head. Upload at a good resolution (e.g. 1080×1080 for Instagram) so it stays sharp.` },
       { heading: "Common square sizes", body: `**Instagram post:** 1080×1080. **Profile picture:** often 400×400 (shown as a circle). **Album/track art:** 1400×1400+. **Thumbnails:** 500×500 works widely. Crop to 1:1, then export at the size you need.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -34,7 +34,7 @@ export const SEO_POSTS_6: BlogPost[] = [
         ["Why does the platform crop my photo?", "Non-square images get auto-cropped. Cropping to 1:1 first lets you control the framing."],
         ["Will it stay sharp?", "Yes — start from a good resolution and export at the size you need."],
       ]) },
-      { heading: "Key takeaways", body: `Crop to 1:1 to control the framing for Instagram, avatars and thumbnails — centre your subject and export at the right size. Free at sjpt.io. Crop to Square Free →` },
+      { heading: "Key takeaways", body: `Crop to 1:1 to control the framing for Instagram, avatars and thumbnails — centre your subject and export at the right size. Free at Pixel Shine. Crop to Square Free →` },
     ],
   ),
   P(
@@ -49,7 +49,7 @@ export const SEO_POSTS_6: BlogPost[] = [
     [
       { body: `A **screenshot** grabs the whole screen — status bar, tabs, whitespace and all — when you usually want just one part. Cropping it down keeps the focus on what matters and makes it look intentional. Here's how to crop a screenshot cleanly, free.` },
       { heading: "Why crop screenshots", body: `Cropping removes **distractions** (clock, battery, unrelated UI), highlights the relevant area, and produces a tidy image for docs, chats, tickets and social. A cropped screenshot reads as deliberate; a full-screen dump reads as lazy.` },
-      { heading: "How to crop a screenshot (free)", body: `**Step 1 — Open the crop tool** at sjpt.io.\n\n**Step 2 — Upload your screenshot.**\n\n**Step 3 — Drag the crop box** around the part you want (or pick a ratio).\n\n**Step 4 — Download** the trimmed image.\n\nNo watermark, no sign-up.` },
+      { heading: "How to crop a screenshot (free)", body: `**Step 1 — Open the crop tool** at Pixel Shine.\n\n**Step 2 — Upload your screenshot.**\n\n**Step 3 — Drag the crop box** around the part you want (or pick a ratio).\n\n**Step 4 — Download** the trimmed image.\n\nNo watermark, no sign-up.` },
       { heading: "Tips for clean crops", body: `Leave a **little margin** around the important content so it doesn't feel cramped. Crop out personal info (names, emails) you don't want to share. For a set of screenshots, crop them to the **same size** so they look consistent.` },
       { heading: "Common uses", body: `**Bug reports & tickets** — show just the error. **Tutorials & docs** — highlight one step. **Social posts** — trim to the relevant chat or stat. **Presentations** — crop to fit a slide neatly.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -58,7 +58,7 @@ export const SEO_POSTS_6: BlogPost[] = [
         ["Can I crop to an exact ratio?", "Yes — pick a preset ratio or drag a freeform box."],
         ["Does it reduce quality?", "No — cropping just removes pixels outside the box; the kept area is unchanged."],
       ]) },
-      { heading: "Key takeaways", body: `Crop a screenshot to remove clutter and personal info and focus on what matters — leave a small margin and keep a set consistent. Free at sjpt.io. Crop Screenshot Free →` },
+      { heading: "Key takeaways", body: `Crop a screenshot to remove clutter and personal info and focus on what matters — leave a small margin and keep a set consistent. Free at Pixel Shine. Crop Screenshot Free →` },
     ],
   ),
   P(
@@ -74,7 +74,7 @@ export const SEO_POSTS_6: BlogPost[] = [
       { body: `Your **Facebook cover photo** displays at different crops on desktop and mobile, so a design that looks right on your laptop can lose its edges on a phone. The fix is to use the correct size and keep key elements in the safe zone. Here's the Facebook cover size guide, plus how to crop yours free.` },
       { heading: "The correct size", body: `Upload your Facebook cover at **820 × 312 pixels** for desktop, but note it displays around **640 × 360 on mobile** — mobile shows a taller, narrower slice. Uploading larger (e.g. 1640 × 624, same ratio) keeps it crisp on high-resolution screens.` },
       { heading: "Mind the safe zone", body: `Because desktop and mobile crop differently, keep **text and logos centred**. The sides get trimmed on mobile and the top/bottom can be trimmed on desktop, so anything essential belongs in the middle. Treat the outer edges as decorative.` },
-      { heading: "How to crop your cover (free)", body: `**Step 1 — Open the crop tool** at sjpt.io.\n\n**Step 2 — Upload your artwork.**\n\n**Step 3 — Crop to the 820×312 ratio**, keeping key elements centred.\n\n**Step 4 — Download** and upload to Facebook.\n\nNo watermark, no sign-up.` },
+      { heading: "How to crop your cover (free)", body: `**Step 1 — Open the crop tool** at Pixel Shine.\n\n**Step 2 — Upload your artwork.**\n\n**Step 3 — Crop to the 820×312 ratio**, keeping key elements centred.\n\n**Step 4 — Download** and upload to Facebook.\n\nNo watermark, no sign-up.` },
       { heading: "Design tips", body: `Use a **simple, high-contrast** design that reads at small sizes. Centre your message. Preview on both desktop and mobile after uploading. Keep the file reasonably light so it loads fast.` },
       { heading: "Frequently asked questions", body: FAQ([
         ["What size is a Facebook cover photo?", "820×312 on desktop (about 640×360 on mobile). Upload at 1640×624 for a crisp high-res version."],
@@ -82,7 +82,7 @@ export const SEO_POSTS_6: BlogPost[] = [
         ["How do I crop a Facebook cover free?", "Use Pixel Shine's crop tool, crop to the 820×312 ratio, keep key elements centred, and download."],
         ["What file type should I use?", "A high-quality JPG or PNG; keep it reasonably light for fast loading."],
       ]) },
-      { heading: "Key takeaways", body: `Upload a Facebook cover at the 820×312 ratio (1640×624 for crispness) and keep text centred so mobile and desktop crops don't cut it off. Crop free at sjpt.io. Crop Cover Photo Free →` },
+      { heading: "Key takeaways", body: `Upload a Facebook cover at the 820×312 ratio (1640×624 for crispness) and keep text centred so mobile and desktop crops don't cut it off. Crop free at Pixel Shine. Crop Cover Photo Free →` },
     ],
   ),
   P(
@@ -98,7 +98,7 @@ export const SEO_POSTS_6: BlogPost[] = [
       { body: `Your **LinkedIn banner** is prime personal-branding space — but LinkedIn overlays your profile photo on the lower-left and crops the image differently across devices. Using the right size and safe area keeps your message clear. Here's the LinkedIn banner size guide, plus how to crop yours free.` },
       { heading: "The correct size", body: `Upload a **personal profile banner at 1584 × 396 pixels** (4:1). For a **company page**, use **1128 × 191**. Uploading at the exact ratio avoids awkward auto-cropping. Higher-resolution files at the same ratio stay crisp on retina screens.` },
       { heading: "Watch the profile-photo overlay", body: `On profiles, your **round profile photo sits over the lower-left** of the banner, and mobile crops the edges. Keep important text and logos in the **upper-right / centre**, away from that corner, so nothing gets covered or cut.` },
-      { heading: "How to crop your banner (free)", body: `**Step 1 — Open the crop tool** at sjpt.io.\n\n**Step 2 — Upload your artwork.**\n\n**Step 3 — Crop to 1584×396 (profile) or 1128×191 (company)**, keeping key elements clear of the lower-left.\n\n**Step 4 — Download** and upload to LinkedIn.\n\nNo watermark, no sign-up.` },
+      { heading: "How to crop your banner (free)", body: `**Step 1 — Open the crop tool** at Pixel Shine.\n\n**Step 2 — Upload your artwork.**\n\n**Step 3 — Crop to 1584×396 (profile) or 1128×191 (company)**, keeping key elements clear of the lower-left.\n\n**Step 4 — Download** and upload to LinkedIn.\n\nNo watermark, no sign-up.` },
       { heading: "Design tips", body: `Keep it **clean and professional** — a tagline, a brand colour, maybe a subtle pattern. High contrast so text reads small. Leave the lower-left clear. Preview on mobile after uploading.` },
       { heading: "Frequently asked questions", body: FAQ([
         ["What size is a LinkedIn banner?", "1584×396 for personal profiles; 1128×191 for company pages."],
@@ -106,7 +106,7 @@ export const SEO_POSTS_6: BlogPost[] = [
         ["How do I crop a LinkedIn banner free?", "Use Pixel Shine's crop tool, crop to the right ratio, keep key elements clear of the lower-left, and download."],
         ["Why does my banner look cut off?", "Mobile crops the edges. Keep important content centred/upper-right."],
       ]) },
-      { heading: "Key takeaways", body: `Use 1584×396 (profile) or 1128×191 (company) and keep text clear of the lower-left where your photo overlays. Crop free at sjpt.io. Crop LinkedIn Banner Free →` },
+      { heading: "Key takeaways", body: `Use 1584×396 (profile) or 1128×191 (company) and keep text clear of the lower-left where your photo overlays. Crop free at Pixel Shine. Crop LinkedIn Banner Free →` },
     ],
   ),
   P(
@@ -121,7 +121,7 @@ export const SEO_POSTS_6: BlogPost[] = [
     [
       { body: `Order a **4×6 print** from a typical camera photo and the lab crops it to fit — often cutting off heads or edges you didn't expect. That's because most cameras shoot a different shape than 4×6. Cropping to 4×6 yourself means clean prints with nothing important lost. Here's how, free.` },
       { heading: "Why prints get cropped", body: `A 4×6 print has a **3:2 aspect ratio**. Many phone cameras shoot **4:3**, so the lab has to trim to make it fit — and it doesn't know what matters in your shot. Cropping to 3:2 yourself puts you in control of the framing.` },
-      { heading: "How to crop to 4x6 (free)", body: `**Step 1 — Open the crop tool** at sjpt.io.\n\n**Step 2 — Upload your photo.**\n\n**Step 3 — Choose the 3:2 (4×6) ratio** and position your subject.\n\n**Step 4 — Download** and send to print.\n\nNo watermark, no sign-up.` },
+      { heading: "How to crop to 4x6 (free)", body: `**Step 1 — Open the crop tool** at Pixel Shine.\n\n**Step 2 — Upload your photo.**\n\n**Step 3 — Choose the 3:2 (4×6) ratio** and position your subject.\n\n**Step 4 — Download** and send to print.\n\nNo watermark, no sign-up.` },
       { heading: "Frame for the print", body: `Leave a **small margin** around faces and edges in case of slight over-trim at the lab. Keep the horizon level. For portrait 4×6, use 2:3 instead of 3:2. Export at a good resolution (at least ~1200×1800 for a sharp 4×6).` },
       { heading: "Resolution for 4x6", body: `For a sharp 4×6 at 300 DPI you want about **1800 × 1200 pixels**. If your cropped image is smaller than that, upscale it first so the print stays crisp rather than soft.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -130,7 +130,7 @@ export const SEO_POSTS_6: BlogPost[] = [
         ["Why do my prints cut off heads?", "Camera photos are often 4:3, so labs crop to 3:2. Cropping yourself controls the framing."],
         ["What resolution do I need?", "About 1800×1200 for a sharp 4×6 at 300 DPI — upscale first if smaller."],
       ]) },
-      { heading: "Key takeaways", body: `Crop to 3:2 for 4×6 prints so the lab doesn't chop your photo — leave a margin and export ~1800×1200 for sharpness. Free at sjpt.io. Crop to 4x6 Free →` },
+      { heading: "Key takeaways", body: `Crop to 3:2 for 4×6 prints so the lab doesn't chop your photo — leave a margin and export ~1800×1200 for sharpness. Free at Pixel Shine. Crop to 4x6 Free →` },
     ],
   ),
 
@@ -147,7 +147,7 @@ export const SEO_POSTS_6: BlogPost[] = [
     [
       { body: `A photo that opens **sideways** is one of the most common little annoyances — and one of the easiest fixes. Rotating it 90 degrees (left or right) sets it upright in a single click. Here's how to rotate a photo 90 degrees, free.` },
       { heading: "Why photos end up sideways", body: `Cameras store an **orientation tag**; some apps ignore it, so a photo that looked fine on your phone opens rotated elsewhere. Rotating the actual pixels 90° fixes it everywhere, regardless of which app opens it.` },
-      { heading: "How to rotate 90 degrees (free)", body: `**Step 1 — Open the rotate tool** at sjpt.io.\n\n**Step 2 — Upload your photo.**\n\n**Step 3 — Rotate 90° left or right** until it's upright (rotate again for 180°).\n\n**Step 4 — Download** the corrected image.\n\nNo watermark, no sign-up.` },
+      { heading: "How to rotate 90 degrees (free)", body: `**Step 1 — Open the rotate tool** at Pixel Shine.\n\n**Step 2 — Upload your photo.**\n\n**Step 3 — Rotate 90° left or right** until it's upright (rotate again for 180°).\n\n**Step 4 — Download** the corrected image.\n\nNo watermark, no sign-up.` },
       { heading: "Left, right or upside down", body: `**90° right (clockwise)** and **90° left (counter-clockwise)** handle most sideways shots; apply twice for **180°** if it's upside down. Rotation is lossless — you're just turning the pixels, so quality is unchanged.` },
       { heading: "Bonus: straighten too", body: `If the photo is also slightly tilted (a wonky horizon), straighten it after rotating for a polished result. A quick 90° turn plus a small straighten fixes most orientation problems.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -156,7 +156,7 @@ export const SEO_POSTS_6: BlogPost[] = [
         ["Does rotating lose quality?", "No — 90° rotation is lossless; you're just turning the pixels."],
         ["How do I flip it upside down?", "Rotate 90° twice for 180°."],
       ]) },
-      { heading: "Key takeaways", body: `Rotate 90° left or right to set a sideways photo upright (twice for 180°) — it's lossless and one click. Free at sjpt.io. Rotate Photo Free →` },
+      { heading: "Key takeaways", body: `Rotate 90° left or right to set a sideways photo upright (twice for 180°) — it's lossless and one click. Free at Pixel Shine. Rotate Photo Free →` },
     ],
   ),
   P(
@@ -171,7 +171,7 @@ export const SEO_POSTS_6: BlogPost[] = [
     [
       { body: `A **tilted horizon** or a slightly crooked angle can make an otherwise great photo feel off — our eyes notice a wonky waterline or a leaning building instantly. Straightening it is a small fix with a big payoff. Here's how to straighten a crooked photo, free.` },
       { heading: "Why straightening matters", body: `A **level horizon** reads as calm and professional; a tilt reads as accidental. Straightening also fixes leaning verticals (buildings, doorframes) that make a shot feel unstable. It's one of the quickest ways to make photos look more polished.` },
-      { heading: "How to straighten a photo (free)", body: `**Step 1 — Open the rotate tool** at sjpt.io.\n\n**Step 2 — Upload your photo.**\n\n**Step 3 — Rotate by a few degrees** until the horizon or verticals are level.\n\n**Step 4 — Crop** the small empty corners if needed, and download.\n\nNo watermark, no sign-up.` },
+      { heading: "How to straighten a photo (free)", body: `**Step 1 — Open the rotate tool** at Pixel Shine.\n\n**Step 2 — Upload your photo.**\n\n**Step 3 — Rotate by a few degrees** until the horizon or verticals are level.\n\n**Step 4 — Crop** the small empty corners if needed, and download.\n\nNo watermark, no sign-up.` },
       { heading: "Find your reference line", body: `Pick a line that **should be level** — the horizon, a wall edge, a table, a doorframe — and align it to horizontal or vertical. Even a 1–2° correction can transform how balanced the photo feels.` },
       { heading: "Crop the corners", body: `Rotating by a small angle leaves **tiny empty triangles** in the corners. A quick crop removes them, giving a clean rectangle. Straighten first, then crop — that order keeps the most of your image.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -180,7 +180,7 @@ export const SEO_POSTS_6: BlogPost[] = [
         ["Why crop after straightening?", "A small rotation leaves empty corner triangles; cropping removes them for a clean rectangle."],
         ["Does it reduce quality?", "Negligibly — a small rotate plus crop keeps the image essentially unchanged."],
       ]) },
-      { heading: "Key takeaways", body: `Straighten by aligning the horizon or verticals to level, then crop the corners — a 1–2° fix makes a photo look far more polished. Free at sjpt.io. Straighten Photo Free →` },
+      { heading: "Key takeaways", body: `Straighten by aligning the horizon or verticals to level, then crop the corners — a 1–2° fix makes a photo look far more polished. Free at Pixel Shine. Straighten Photo Free →` },
     ],
   ),
   P(
@@ -195,7 +195,7 @@ export const SEO_POSTS_6: BlogPost[] = [
     [
       { body: `**Flipping an image vertically** mirrors it top-to-bottom — like a reflection in water. It's different from rotating 180°, and it's handy for reflection effects, correcting a scanned/mirrored image, or creative compositions. Here's how to flip an image vertically, free.` },
       { heading: "Vertical flip vs. rotate 180°", body: `A **vertical flip** reflects the image across a horizontal axis — top and bottom swap, but left/right stay put. A **180° rotation** turns everything upside down *and* left-right. They look different: text stays left-to-right after a vertical flip but is mirrored top-to-bottom.` },
-      { heading: "How to flip vertically (free)", body: `**Step 1 — Open the rotate/flip tool** at sjpt.io.\n\n**Step 2 — Upload your image.**\n\n**Step 3 — Choose Flip Vertical.**\n\n**Step 4 — Download** the mirrored image.\n\nNo watermark, no sign-up.` },
+      { heading: "How to flip vertically (free)", body: `**Step 1 — Open the rotate/flip tool** at Pixel Shine.\n\n**Step 2 — Upload your image.**\n\n**Step 3 — Choose Flip Vertical.**\n\n**Step 4 — Download** the mirrored image.\n\nNo watermark, no sign-up.` },
       { heading: "When to use it", body: `**Reflection effects** — flip a copy to make a mirrored "water" reflection. **Fixing mirrored scans** — some scanners flip images. **Creative layouts** — symmetry and kaleidoscope looks. **Matching orientation** — flip one image to mirror another.` },
       { heading: "Vertical or horizontal?", body: `Use **vertical** to swap top and bottom (reflections in water). Use **horizontal** (mirror) to swap left and right (fixing selfies, facing a subject the other way). Pick whichever axis matches the effect you want.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -204,7 +204,7 @@ export const SEO_POSTS_6: BlogPost[] = [
         ["What's it used for?", "Reflection effects, fixing mirrored scans, and creative symmetrical layouts."],
         ["Horizontal or vertical flip?", "Horizontal swaps left/right (mirror); vertical swaps top/bottom (reflection)."],
       ]) },
-      { heading: "Key takeaways", body: `A vertical flip mirrors top-to-bottom (unlike a 180° rotate) — perfect for reflections and fixing mirrored scans. Free at sjpt.io. Flip Image Free →` },
+      { heading: "Key takeaways", body: `A vertical flip mirrors top-to-bottom (unlike a 180° rotate) — perfect for reflections and fixing mirrored scans. Free at Pixel Shine. Flip Image Free →` },
     ],
   ),
   P(
@@ -219,7 +219,7 @@ export const SEO_POSTS_6: BlogPost[] = [
     [
       { body: `A sideways photo on your phone is easy to fix — and you **don't need to install an app**. A browser-based rotate tool turns it upright in a couple of taps and saves it straight back to your camera roll. Here's how to rotate a picture on your phone, free, on iPhone or Android.` },
       { heading: "Why skip the app", body: `App-store photo editors often want permissions, accounts or payment for a basic rotate. A web tool needs none of that — it works the same in **Safari and Chrome**, on iPhone and Android, with nothing to install or delete later.` },
-      { heading: "How to rotate on your phone (free)", body: `**Step 1 — Open sjpt.io** and go to the rotate tool.\n\n**Step 2 — Tap to upload** the photo from your camera roll.\n\n**Step 3 — Rotate 90° left or right** (or flip) until it's right.\n\n**Step 4 — Download** it back to your phone.\n\nNo app, no sign-up.` },
+      { heading: "How to rotate on your phone (free)", body: `**Step 1 — Open Pixel Shine** and go to the rotate tool.\n\n**Step 2 — Tap to upload** the photo from your camera roll.\n\n**Step 3 — Rotate 90° left or right** (or flip) until it's right.\n\n**Step 4 — Download** it back to your phone.\n\nNo app, no sign-up.` },
       { heading: "Rotate, flip or straighten", body: `**Rotate 90°** for sideways shots, **twice** for upside-down. **Flip** to mirror a selfie so text reads correctly. **Straighten** by a few degrees for a tilted horizon. All in the same browser tool.` },
       { heading: "iPhone and Android", body: `The tool runs in your mobile browser, so it behaves identically on both. Your photo is processed on the device — quick, private and free — and the corrected image downloads straight to your gallery.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -228,7 +228,7 @@ export const SEO_POSTS_6: BlogPost[] = [
         ["Is it free?", "Yes — free, no sign-up, nothing to install."],
         ["Can I also flip or straighten?", "Yes — the same tool rotates, flips and straightens."],
       ]) },
-      { heading: "Key takeaways", body: `Rotate a phone photo in your browser — no app, works on iPhone and Android, saves straight to your gallery. Free at sjpt.io. Rotate Photo Free →` },
+      { heading: "Key takeaways", body: `Rotate a phone photo in your browser — no app, works on iPhone and Android, saves straight to your gallery. Free at Pixel Shine. Rotate Photo Free →` },
     ],
   ),
   P(
@@ -243,7 +243,7 @@ export const SEO_POSTS_6: BlogPost[] = [
     [
       { body: `You open a photo and it's **sideways or upside down**, even though it looked fine when you took it. It's a common orientation glitch — and a quick fix. Here's how to set a sideways photo upright so it looks right everywhere, free.` },
       { heading: "Why it happens", body: `Cameras save an **orientation tag** telling apps which way is up. Some apps and websites ignore that tag, so the photo displays rotated. **Physically rotating the pixels** fixes it for good — every app then shows it correctly.` },
-      { heading: "How to fix it (free)", body: `**Step 1 — Open the rotate tool** at sjpt.io.\n\n**Step 2 — Upload the photo.**\n\n**Step 3 — Rotate 90° until upright** (twice if it's upside down).\n\n**Step 4 — Download** the corrected image.\n\nNo watermark, no sign-up.` },
+      { heading: "How to fix it (free)", body: `**Step 1 — Open the rotate tool** at Pixel Shine.\n\n**Step 2 — Upload the photo.**\n\n**Step 3 — Rotate 90° until upright** (twice if it's upside down).\n\n**Step 4 — Download** the corrected image.\n\nNo watermark, no sign-up.` },
       { heading: "Sideways vs upside down", body: `**Sideways** needs a single 90° turn (left or right depending on which way it's lying). **Upside down** needs 180° — rotate 90° twice. If it's also mirrored, add a flip. All in one tool.` },
       { heading: "Make the fix stick", body: `Because you're rotating the actual pixels (not just a display tag), the corrected file looks right in **every** app, on every device, and when you upload or print it. No more "why is it sideways again?"` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -252,7 +252,7 @@ export const SEO_POSTS_6: BlogPost[] = [
         ["How do I fix an upside-down photo?", "Rotate 90° twice for 180°."],
         ["Will it look right everywhere?", "Yes — rotating the pixels corrects it in every app, upload and print."],
       ]) },
-      { heading: "Key takeaways", body: `Rotate the pixels 90° (or 180°) to fix a sideways or upside-down photo for good — it then looks right in every app. Free at sjpt.io. Fix Orientation Free →` },
+      { heading: "Key takeaways", body: `Rotate the pixels 90° (or 180°) to fix a sideways or upside-down photo for good — it then looks right in every app. Free at Pixel Shine. Fix Orientation Free →` },
     ],
   ),
 
@@ -269,7 +269,7 @@ export const SEO_POSTS_6: BlogPost[] = [
     [
       { body: `A **watermark** brands your photos and makes them harder to reuse without credit — essential for photographers, sellers and creators. Here's how to add a logo or text watermark to your photos in seconds, free, and how to make it look professional rather than distracting.` },
       { heading: "Why watermark your photos", body: `A watermark **credits you** wherever the image travels, **discourages theft**, and adds a **professional, branded** touch to portfolios and listings. It's the simplest way to keep your name on your work as it spreads online.` },
-      { heading: "How to add a watermark (free)", body: `**Step 1 — Open the watermark tool** at sjpt.io.\n\n**Step 2 — Upload your photo.**\n\n**Step 3 — Add your text** (name, brand or handle) and position it.\n\n**Step 4 — Download** the watermarked image.\n\nNo sign-up. Repeat for each photo, or use the batch editor for many at once.` },
+      { heading: "How to add a watermark (free)", body: `**Step 1 — Open the watermark tool** at Pixel Shine.\n\n**Step 2 — Upload your photo.**\n\n**Step 3 — Add your text** (name, brand or handle) and position it.\n\n**Step 4 — Download** the watermarked image.\n\nNo sign-up. Repeat for each photo, or use the batch editor for many at once.` },
       { heading: "Make it look professional", body: `Keep it **subtle** — a semi-transparent mark in a corner reads as branding, not vandalism. Use a **clean font**, consistent placement across your set, and a size that's visible but not dominating. A tasteful watermark protects without ruining the photo.` },
       { heading: "Placement tips", body: `A **corner** is unobtrusive and easy to crop-protect; **centred, low-opacity** is harder to remove but more intrusive. For theft-sensitive work, a larger centred mark deters reuse; for portfolios, a small corner mark keeps the focus on the image.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -278,7 +278,7 @@ export const SEO_POSTS_6: BlogPost[] = [
         ["Can I watermark many photos at once?", "Yes — use the batch editor to apply the same watermark to a whole set."],
         ["Will it ruin the photo?", "Not if it's subtle — semi-transparent, clean font, consistent placement reads as branding."],
       ]) },
-      { heading: "Key takeaways", body: `A subtle, consistent watermark brands and protects your photos — keep it semi-transparent and out of the way. Free at sjpt.io, or batch a whole set at once. Add Watermark Free →` },
+      { heading: "Key takeaways", body: `A subtle, consistent watermark brands and protects your photos — keep it semi-transparent and out of the way. Free at Pixel Shine, or batch a whole set at once. Add Watermark Free →` },
     ],
   ),
   P(
@@ -293,7 +293,7 @@ export const SEO_POSTS_6: BlogPost[] = [
     [
       { body: `For photographers, a **watermark** is a balance: enough to protect and credit your work, subtle enough not to spoil the image. Get it right and it quietly brands every shot that spreads online. Here's how to watermark your photography professionally, free.` },
       { heading: "What a good photo watermark does", body: `It **credits you** (name, studio or handle), **deters casual theft**, and **builds recognition** as your images circulate. The best watermarks are noticed only when someone looks for the source — present, but never fighting the photo.` },
-      { heading: "How to watermark your photos (free)", body: `**Step 1 — Open the watermark tool** at sjpt.io.\n\n**Step 2 — Upload your photo.**\n\n**Step 3 — Add your studio name or handle**, set opacity and position.\n\n**Step 4 — Download.**\n\nUse the batch editor to watermark a whole shoot at once.` },
+      { heading: "How to watermark your photos (free)", body: `**Step 1 — Open the watermark tool** at Pixel Shine.\n\n**Step 2 — Upload your photo.**\n\n**Step 3 — Add your studio name or handle**, set opacity and position.\n\n**Step 4 — Download.**\n\nUse the batch editor to watermark a whole shoot at once.` },
       { heading: "Design that protects without distracting", body: `Use **low opacity** (a soft grey/white), a **clean typeface**, and **consistent corner placement** across a gallery. Avoid huge centred stamps for client galleries — they cheapen the work; save stronger marks for previews you're actively protecting.` },
       { heading: "Previews vs. delivered work", body: `Watermark **preview/proof galleries** more assertively (larger, centred, lower opacity) to discourage screenshots. Deliver **paid, final images** clean or with only a discreet corner mark. Matching the watermark to its purpose keeps clients happy and your work safe.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -302,7 +302,7 @@ export const SEO_POSTS_6: BlogPost[] = [
         ["Can I watermark a whole shoot at once?", "Yes — the batch editor applies the same watermark to every image."],
         ["What opacity works best?", "Low — enough to read the credit, soft enough not to distract from the photo."],
       ]) },
-      { heading: "Key takeaways", body: `Watermark proofs assertively, finals discreetly — clean font, low opacity, consistent placement protects your photography without spoiling it. Free at sjpt.io. Watermark Photos Free →` },
+      { heading: "Key takeaways", body: `Watermark proofs assertively, finals discreetly — clean font, low opacity, consistent placement protects your photography without spoiling it. Free at Pixel Shine. Watermark Photos Free →` },
     ],
   ),
   P(
@@ -317,7 +317,7 @@ export const SEO_POSTS_6: BlogPost[] = [
     [
       { body: `A **transparent (semi-opaque) watermark** is the professional choice — you can see the photo *through* the mark, so it brands without hiding the image. The trick is dialling in the right opacity. Here's how to add a transparent watermark, free.` },
       { heading: "Why transparency matters", body: `A solid watermark blocks part of the photo and looks heavy-handed. A **see-through mark** credits you while letting the image shine — present enough to protect, light enough to respect the photo. It's the difference between branding and defacing.` },
-      { heading: "How to add a transparent watermark (free)", body: `**Step 1 — Open the watermark tool** at sjpt.io.\n\n**Step 2 — Upload your photo.**\n\n**Step 3 — Add your text and lower the opacity** until it's subtle but legible.\n\n**Step 4 — Download.**\n\nNo sign-up.` },
+      { heading: "How to add a transparent watermark (free)", body: `**Step 1 — Open the watermark tool** at Pixel Shine.\n\n**Step 2 — Upload your photo.**\n\n**Step 3 — Add your text and lower the opacity** until it's subtle but legible.\n\n**Step 4 — Download.**\n\nNo sign-up.` },
       { heading: "Finding the right opacity", body: `Aim for a mark that's **clearly readable up close but easy to ignore** at a glance — often somewhere around a light, soft appearance rather than bold. Test it over both bright and dark parts of your photo; add a subtle shadow or outline if it disappears on busy areas.` },
       { heading: "Placement and colour", body: `**White or light grey** at low opacity suits most photos; switch to dark on very light images. A **corner** is unobtrusive; a **tiled or centred** low-opacity mark is harder to crop out. Keep it consistent across your set.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -326,7 +326,7 @@ export const SEO_POSTS_6: BlogPost[] = [
         ["What colour works best?", "Light grey/white for most photos; dark for very bright images. Add an outline if it disappears on busy areas."],
         ["Corner or centre?", "Corner is subtle; centred/tiled low-opacity is harder to crop out."],
       ]) },
-      { heading: "Key takeaways", body: `A transparent watermark brands without hiding the photo — set low opacity, test over light and dark areas, and keep placement consistent. Free at sjpt.io. Add Watermark Free →` },
+      { heading: "Key takeaways", body: `A transparent watermark brands without hiding the photo — set low opacity, test over light and dark areas, and keep placement consistent. Free at Pixel Shine. Add Watermark Free →` },
     ],
   ),
   P(
@@ -341,7 +341,7 @@ export const SEO_POSTS_6: BlogPost[] = [
     [
       { body: `Adding a **copyright watermark** — the © symbol, your name and the year — signals ownership and deters casual reuse of your photos. Here's how to add one in seconds, free, plus a plain-English note on what a watermark does and doesn't do legally.` },
       { heading: "What a copyright watermark does", body: `It **publicly marks you as the owner**, makes the image less appealing to steal, and provides clear attribution wherever the photo travels. Format it simply: **© 2026 Your Name** (or studio). It's a visible claim, not a legal filing — but it strongly discourages misuse.` },
-      { heading: "How to add it (free)", body: `**Step 1 — Open the watermark tool** at sjpt.io.\n\n**Step 2 — Upload your photo.**\n\n**Step 3 — Add "© 2026 Your Name"**, set a subtle opacity and position.\n\n**Step 4 — Download.**\n\nUse the batch editor to stamp a whole set at once.` },
+      { heading: "How to add it (free)", body: `**Step 1 — Open the watermark tool** at Pixel Shine.\n\n**Step 2 — Upload your photo.**\n\n**Step 3 — Add "© 2026 Your Name"**, set a subtle opacity and position.\n\n**Step 4 — Download.**\n\nUse the batch editor to stamp a whole set at once.` },
       { heading: "The legal reality (plain English)", body: `In most countries you **own the copyright the moment you create** an original photo — a watermark doesn't grant it; it *advertises* it. For stronger legal protection (like statutory damages in the US) you may need to formally register with your copyright office. The watermark's job is deterrence and attribution.` },
       { heading: "Make it effective", body: `Keep it **legible but subtle**, place it where it's hard to crop out (or tile it faintly), and be **consistent**. Include the year and your name/handle so anyone who finds the image knows exactly who to contact and that reuse needs permission.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -350,7 +350,7 @@ export const SEO_POSTS_6: BlogPost[] = [
         ["Do I need to register my copyright?", "Not to own it, but formal registration can strengthen legal remedies in some countries."],
         ["Where should the © mark go?", "Somewhere legible but hard to crop out — a corner, or a faint tiled mark for extra protection."],
       ]) },
-      { heading: "Key takeaways", body: `A © watermark advertises ownership and deters theft (you usually own copyright on creation anyway) — keep it legible, consistent and hard to crop. Free at sjpt.io. Add Copyright Free →` },
+      { heading: "Key takeaways", body: `A © watermark advertises ownership and deters theft (you usually own copyright on creation anyway) — keep it legible, consistent and hard to crop. Free at Pixel Shine. Add Copyright Free →` },
     ],
   ),
   P(
@@ -365,7 +365,7 @@ export const SEO_POSTS_6: BlogPost[] = [
     [
       { body: `On Instagram, good images get **reposted, screenshotted and shared** — often without credit. A subtle watermark with your handle keeps your name attached wherever the photo lands, quietly growing your brand. Here's how to watermark Instagram photos, free.` },
       { heading: "Why watermark for Instagram", body: `When your post is re-shared, the caption and tag often vanish — but a watermark stays **baked into the image**. Adding your **@handle** means every repost is a tiny ad for your account, and helps people find you even from a screenshot.` },
-      { heading: "How to watermark for Instagram (free)", body: `**Step 1 — Open the watermark tool** at sjpt.io.\n\n**Step 2 — Upload your photo** (crop to 1:1 or 4:5 first for the feed).\n\n**Step 3 — Add your @handle**, subtle opacity, corner placement.\n\n**Step 4 — Download** and post.\n\nNo sign-up.` },
+      { heading: "How to watermark for Instagram (free)", body: `**Step 1 — Open the watermark tool** at Pixel Shine.\n\n**Step 2 — Upload your photo** (crop to 1:1 or 4:5 first for the feed).\n\n**Step 3 — Add your @handle**, subtle opacity, corner placement.\n\n**Step 4 — Download** and post.\n\nNo sign-up.` },
       { heading: "Keep it on-brand and subtle", body: `Use a **small, semi-transparent @handle** in a consistent corner so it brands without cluttering the shot. Match your brand colour or keep it clean white/grey. Consistency across posts makes your grid look intentional and your mark instantly recognisable.` },
       { heading: "Watermark a whole batch", body: `Posting a carousel or a week of content? Use the **batch editor** to apply the same handle watermark to every image at once — consistent placement, zero repetitive work. Then schedule and post.` },
       { heading: "Frequently asked questions", body: FAQ([
@@ -374,7 +374,7 @@ export const SEO_POSTS_6: BlogPost[] = [
         ["Where should the handle go?", "A consistent corner at low opacity — visible but not cluttering the photo."],
         ["Can I watermark a carousel at once?", "Yes — the batch editor applies the same handle to every image."],
       ]) },
-      { heading: "Key takeaways", body: `A subtle @handle watermark keeps crediting you on every repost and screenshot — keep it small, consistent and on-brand, and batch a set at once. Free at sjpt.io. Watermark for Instagram →` },
+      { heading: "Key takeaways", body: `A subtle @handle watermark keeps crediting you on every repost and screenshot — keep it small, consistent and on-brand, and batch a set at once. Free at Pixel Shine. Watermark for Instagram →` },
     ],
   ),
 ];

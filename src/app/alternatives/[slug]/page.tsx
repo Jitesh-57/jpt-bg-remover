@@ -22,8 +22,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     description: ct.metaDescription,
     keywords: ct.keywords,
     alternates: { canonical: url },
-    openGraph: { title: ct.title, description: ct.metaDescription, url, type: "website", siteName: "sjpt.io" },
-    twitter: { card: "summary_large_image", title: `Free ${ct.name} Alternative | sjpt.io`, description: ct.metaDescription },
+    openGraph: { title: ct.title, description: ct.metaDescription, url, type: "website", siteName: "Pixel Shine" },
+    twitter: { card: "summary_large_image", title: `Free ${ct.name} Alternative | Pixel Shine`, description: ct.metaDescription },
   };
 }
 
@@ -37,7 +37,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 
   const appLd = {
     "@context": "https://schema.org", "@type": "SoftwareApplication",
-    name: `sjpt.io ${ct.tool.label}`, applicationCategory: "MultimediaApplication", operatingSystem: "Web",
+    name: `Pixel Shine ${ct.tool.label}`, applicationCategory: "MultimediaApplication", operatingSystem: "Web",
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, url,
     aggregateRating: { "@type": "AggregateRating", ratingValue: "4.8", ratingCount: "1200" },
   };
@@ -109,14 +109,14 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         <section style={{ padding: "48px 24px", background: "var(--surface)" }}>
           <div style={{ maxWidth: 760, margin: "0 auto" }}>
             <h2 style={{ fontSize: "clamp(1.5rem,3vw,2rem)", fontWeight: 800, color: "var(--text)", margin: "0 0 24px", letterSpacing: "-0.02em", textAlign: "center" }}>
-              sjpt.io vs {ct.name}
+              Pixel Shine vs {ct.name}
             </h2>
             <div style={{ overflowX: "auto", border: "1px solid var(--border)", borderRadius: 16 }}>
               <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14.5, minWidth: 460 }}>
                 <thead>
                   <tr style={{ background: "var(--surface-2)" }}>
                     <th style={{ textAlign: "left", padding: "14px 16px", color: "var(--text-muted)", fontWeight: 700 }}> </th>
-                    <th style={{ textAlign: "left", padding: "14px 16px", color: "var(--text)", fontWeight: 900 }}>sjpt.io</th>
+                    <th style={{ textAlign: "left", padding: "14px 16px", color: "var(--text)", fontWeight: 900 }}>Pixel Shine</th>
                     <th style={{ textAlign: "left", padding: "14px 16px", color: "var(--text-muted)", fontWeight: 800 }}>{ct.name}</th>
                   </tr>
                 </thead>

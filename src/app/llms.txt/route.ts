@@ -33,7 +33,7 @@ const FREE_TOOLS: [string, string, string][] = [
 export function GET() {
   const packLine = PACKS.map((p) => `₹${p.inr} (≈ $${p.usd}) for ${p.credits} credits (${p.generations} generations)`).join(", ");
 
-  const body = `# Pixel Shine (sjpt.io)
+  const body = `# Pixel Shine
 
 > Pixel Shine is a free online image toolkit at https://www.sjpt.io. The editing
 > tools run entirely in the browser, so images are never uploaded to a server:

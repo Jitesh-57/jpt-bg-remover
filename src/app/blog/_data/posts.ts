@@ -53,7 +53,7 @@ const RAW_POSTS: BlogPost[] = [
       {
         body: `Learning how to remove background from image online should not require a design degree, expensive software, or a 30-minute YouTube tutorial. With the right free background remover, you can lift a subject cleanly off its backdrop in under 5 seconds and download a crisp transparent background PNG — no Photoshop, no watermark, no credit card. Whether you are prepping product shots for your Shopify store, cutting yourself out for a professional headshot, or making a sticker for a group chat, the ability to remove bg instantly has quietly become one of the most-used photo tricks on the internet.
 
-The problem? Most \"free\" tools slap a watermark across your image, force you to sign up, or downscale your export to a useless 500px thumbnail unless you pay. Pixel Shine (sjpt.io) takes a different approach — its AI background remover is genuinely free to try, requires no design skill, and delivers clean edges even on tricky subjects like hair, fur, and glass. In this guide, you will learn exactly how it works, how to get flawless results, and the mistakes that quietly ruin most cutouts.`,
+The problem? Most \"free\" tools slap a watermark across your image, force you to sign up, or downscale your export to a useless 500px thumbnail unless you pay. Pixel Shine takes a different approach — its AI background remover is genuinely free to try, requires no design skill, and delivers clean edges even on tricky subjects like hair, fur, and glass. In this guide, you will learn exactly how it works, how to get flawless results, and the mistakes that quietly ruin most cutouts.`,
       },
       {
         heading: "Why AI Background Removal Beats the Old Manual Way",
@@ -81,7 +81,7 @@ One important note: transparency only survives in the right format. If you expor
         heading: "Step-by-Step: How to Remove a Background for Free",
         body: `Here is the exact process using Pixel Shine's free background remover. The whole thing takes under a minute.
 
-**Step 1 — Open the tool.** Go to sjpt.io and open the Remove Background tool. You do not need to create an account to try it, which means zero friction to get started.
+**Step 1 — Open the tool.** Go to Pixel Shine and open the Remove Background tool. You do not need to create an account to try it, which means zero friction to get started.
 
 **Step 2 — Upload your image.** Drag and drop your photo directly onto the upload zone, or click to browse your files. Pixel Shine accepts common formats like JPG, PNG, and WebP. For best results, use the highest-resolution version of your photo you have.
 
@@ -181,7 +181,7 @@ Common web formats like JPG, PNG, and WebP all work. Upload the highest-resoluti
 
 Remember the essentials: start with a high-resolution, good-contrast source image, always export as PNG to keep the transparency, and do a quick edge check on hair and thin details before you finalize. Avoid the classic mistakes of exporting to JPG or paying for features that are already free.
 
-Ready to cut out your first image? Head to sjpt.io, open the Remove Background tool, and get a professional transparent cutout in seconds — no account, no watermark, no cost. Remove Background Free →`,
+Ready to cut out your first image? Head to Pixel Shine, open the Remove Background tool, and get a professional transparent cutout in seconds — no account, no watermark, no cost. Remove Background Free →`,
       },
     ],
   },
@@ -204,7 +204,7 @@ Ready to cut out your first image? Head to sjpt.io, open the Remove Background t
       {
         body: `An AI image upscaler is the closest thing photography has to a magic reset button. Feed it a small, soft, or pixelated photo, and it enhances photo quality by intelligently rebuilding detail — sharpening edges, recovering texture, and pushing the resolution up toward crisp 4K clarity. Unlike the old \"stretch and blur\" resizing you get in basic editors, an AI upscaler actually adds believable detail that wasn't visible before, which is why it has become the go-to tool for anyone who needs to upscale an image online without wrecking it.
 
-Maybe you're trying to rescue a great shot that came out too small. Maybe you need to increase image resolution for a print, a product listing, or a website banner. Maybe an old profile picture looks embarrassingly fuzzy on today's high-density screens. Whatever the reason, AI upscaling solves it in seconds. And with Pixel Shine (sjpt.io), the Normal upscale is completely free and unlimited — no sign-in required — so you can enhance as many photos as you want. This guide covers how it works, how to use it, and how to get the sharpest possible results.`,
+Maybe you're trying to rescue a great shot that came out too small. Maybe you need to increase image resolution for a print, a product listing, or a website banner. Maybe an old profile picture looks embarrassingly fuzzy on today's high-density screens. Whatever the reason, AI upscaling solves it in seconds. And with Pixel Shine, the Normal upscale is completely free and unlimited — no sign-in required — so you can enhance as many photos as you want. This guide covers how it works, how to use it, and how to get the sharpest possible results.`,
       },
       {
         heading: "How AI Upscaling Actually Works",
@@ -232,7 +232,7 @@ Most AI upscalers offer preset multipliers like 2x or 4x, meaning they double or
         heading: "Step-by-Step: How to Upscale an Image",
         body: `Here's exactly how to enhance and upscale a photo with Pixel Shine. The free Normal upscale takes seconds and needs no account.
 
-**Step 1 — Open the upscaler.** Go to sjpt.io and open the AI Upscaler tool. For Normal upscale, you can jump straight in without signing in.
+**Step 1 — Open the upscaler.** Go to Pixel Shine and open the AI Upscaler tool. For Normal upscale, you can jump straight in without signing in.
 
 **Step 2 — Upload your photo.** Drag and drop your image onto the upload area or click to browse. Use the best-quality source file you have — even AI works better with more to start from.
 
@@ -350,7 +350,7 @@ Use the highest-quality version you have. A less-compressed PNG or a high-qualit
 
 The smart workflow: start with the best source you have, edit first and upscale last, pick a multiplier that matches your target size, and check the result at 100% zoom. Use the free Normal upscale for everyday needs, and save Pro AI upscale for high-stakes prints and difficult images.
 
-Best of all, you don't have to pay to get started. Pixel Shine's Normal upscale is free and unlimited with no sign-in required. Head to sjpt.io, upload your photo, and see your image transformed to crisp, high-resolution quality in seconds. Upscale Your Image →`,
+Best of all, you don't have to pay to get started. Pixel Shine's Normal upscale is free and unlimited with no sign-in required. Head to Pixel Shine, upload your photo, and see your image transformed to crisp, high-resolution quality in seconds. Upscale Your Image →`,
       },
     ],
   },
@@ -373,7 +373,7 @@ Best of all, you don't have to pay to get started. Pixel Shine's Normal upscale 
       {
         body: `An AI headshot generator can turn an ordinary selfie into a polished, studio-quality LinkedIn headshot in seconds — no photographer, no studio booking, and no awkward posing in front of a stranger's camera. Just upload a clear photo of yourself, and AI produces a professional photo online with clean lighting, a neutral background, and a confident, corporate look. For anyone who needs to update their profile fast, it's the most affordable way to get an AI professional photo that actually looks the part.
 
-Here's why this matters: LinkedIn's own data has long shown that profiles with a professional photo get dramatically more views and connection requests than those without. Yet a proper studio headshot can cost $150 to $400 and take days to schedule and receive. An AI headshot generator collapses that into minutes and a fraction of the price. Pixel Shine (sjpt.io) makes it especially approachable — new users get free trials to generate headshots, and the whole platform runs online with no expensive software. This guide walks through how it works, how to get the best results, and how to look genuinely professional.`,
+Here's why this matters: LinkedIn's own data has long shown that profiles with a professional photo get dramatically more views and connection requests than those without. Yet a proper studio headshot can cost $150 to $400 and take days to schedule and receive. An AI headshot generator collapses that into minutes and a fraction of the price. Pixel Shine makes it especially approachable — new users get free trials to generate headshots, and the whole platform runs online with no expensive software. This guide walks through how it works, how to get the best results, and how to look genuinely professional.`,
       },
       {
         heading: "Why AI Headshots Are Replacing the Studio",
@@ -407,7 +407,7 @@ The result is a professional-looking headshot that rivals studio output for the 
         heading: "Step-by-Step: Generate Your Professional Headshot",
         body: `Here's how to create a LinkedIn-ready headshot with Pixel Shine. It takes just a few minutes.
 
-**Step 1 — Open the AI Headshot Generator.** Go to sjpt.io and open the AI Headshot tool. New users get free trials, so you can generate without committing anything upfront.
+**Step 1 — Open the AI Headshot Generator.** Go to Pixel Shine and open the AI Headshot tool. New users get free trials, so you can generate without committing anything upfront.
 
 **Step 2 — Choose a great source photo.** Pick a clear, well-lit photo where your face is fully visible, facing roughly forward, with no sunglasses or heavy shadows. A simple selfie in decent daylight works well. The clearer your input, the more accurate your headshot.
 
@@ -521,7 +521,7 @@ Yes. Run your final headshot through Pixel Shine's upscaler to increase resoluti
 
 For the best result, start with a sharp front-facing source photo, keep your expression natural, match the style to your field, generate a few variations, and upscale your final pick for maximum sharpness. Avoid low-quality inputs and styles that clash with your profession, and make sure the result still clearly looks like you.
 
-Ready for a headshot that gets your profile noticed? Head to sjpt.io, open the AI Headshot Generator, and create a professional photo in seconds — with free trials to get you started. Generate Your Headshot →`,
+Ready for a headshot that gets your profile noticed? Head to Pixel Shine, open the AI Headshot Generator, and create a professional photo in seconds — with free trials to get you started. Generate Your Headshot →`,
       },
     ],
   },
@@ -544,7 +544,7 @@ Ready for a headshot that gets your profile noticed? Head to sjpt.io, open the A
       {
         body: `Learning how to edit photos with AI text prompts is like gaining a personal photo editor who understands plain English. Instead of hunting through menus, masking layers, and watching Photoshop tutorials, you simply type what you want — \"remove the person in the background,\" \"change the sky to sunset,\" \"make it look like a professional studio shot\" — and the AI photo editor does it. This is text-to-image editing, and it has made sophisticated photo editing online accessible to absolutely everyone, no design experience required.
 
-The shift here is enormous. Traditional editing tools put a wall of technical skill between you and your idea. You had to know which tool did what, how layers and masks worked, and how to blend edits seamlessly. AI image editing online removes that wall entirely — you describe the outcome, and the model handles the how. Pixel Shine (sjpt.io) puts this power online with a free AI photo editor: new users get free trials, there's no watermark on the basics, and you don't need to install a thing. This guide shows you exactly how prompt-based editing works, how to write prompts that get great results, and what to try first.`,
+The shift here is enormous. Traditional editing tools put a wall of technical skill between you and your idea. You had to know which tool did what, how layers and masks worked, and how to blend edits seamlessly. AI image editing online removes that wall entirely — you describe the outcome, and the model handles the how. Pixel Shine puts this power online with a free AI photo editor: new users get free trials, there's no watermark on the basics, and you don't need to install a thing. This guide shows you exactly how prompt-based editing works, how to write prompts that get great results, and what to try first.`,
       },
       {
         heading: "How Text-Prompt Photo Editing Works",
@@ -580,7 +580,7 @@ Because Pixel Shine bundles this text-prompt editor alongside a background remov
         heading: "Step-by-Step: Edit a Photo With AI Prompts",
         body: `Here's how to make your first prompt-based edit with Pixel Shine. It's genuinely as easy as describing what you want.
 
-**Step 1 — Open the AI Photo Editor.** Go to sjpt.io and open the AI Editor tool. New users get free trials, so you can start experimenting right away.
+**Step 1 — Open the AI Photo Editor.** Go to Pixel Shine and open the AI Editor tool. New users get free trials, so you can start experimenting right away.
 
 **Step 2 — Upload your photo.** Drag and drop or browse to add the image you want to edit. Use a good-quality source for the cleanest results.
 
@@ -696,7 +696,7 @@ Yes. Run it through Pixel Shine's built-in upscaler to increase sharpness and re
 
 To get the best results, write specific prompts that name what and where, describe outcomes rather than techniques, make one change at a time, and iterate freely until it's right. Start from a good-quality source image and upscale the final result for maximum sharpness.
 
-No Photoshop, no subscription, no learning curve. Pixel Shine's editor is free to try, watermark-free on the basics, and sits alongside upscaling, background removal, headshots, and fun creative effects all in one place. Head to sjpt.io and describe your first edit — you'll be amazed how easy it is. Try the AI Editor Free →`,
+No Photoshop, no subscription, no learning curve. Pixel Shine's editor is free to try, watermark-free on the basics, and sits alongside upscaling, background removal, headshots, and fun creative effects all in one place. Head to Pixel Shine and describe your first edit — you'll be amazed how easy it is. Try the AI Editor Free →`,
       },
     ],
   },
@@ -718,7 +718,7 @@ No Photoshop, no subscription, no learning curve. Pixel Shine's editor is free t
       {
         body: `Figuring out how to upscale an image without losing quality used to be genuinely impossible — enlarging a photo always meant trading sharpness for size, ending up with a blurry, blocky mess. In 2025, AI changed that completely. A modern image upscaler online doesn't just stretch pixels; it intelligently reconstructs detail, so you can increase image resolution while the photo actually looks sharper, not softer. This guide explains exactly how to upscale a photo online free without the quality loss that plagued the old methods.
 
-The reason old upscaling failed comes down to math: basic resizing averages existing pixels to fill in new ones, which inevitably blurs the image. AI upscaling flips the approach — instead of averaging, it predicts what the missing high-resolution detail should be, based on training across millions of images. The result is a larger photo with crisp edges, recovered texture, and reduced noise. And you don't need to pay for it: Pixel Shine (sjpt.io) offers a free, unlimited Normal upscale with no sign-in required, so you can enlarge as many images as you want without quality loss or cost. Here's the complete 2025 playbook.`,
+The reason old upscaling failed comes down to math: basic resizing averages existing pixels to fill in new ones, which inevitably blurs the image. AI upscaling flips the approach — instead of averaging, it predicts what the missing high-resolution detail should be, based on training across millions of images. The result is a larger photo with crisp edges, recovered texture, and reduced noise. And you don't need to pay for it: Pixel Shine offers a free, unlimited Normal upscale with no sign-in required, so you can enlarge as many images as you want without quality loss or cost. Here's the complete 2025 playbook.`,
       },
       {
         heading: "Why Traditional Resizing Destroys Quality",
@@ -752,7 +752,7 @@ The practical upshot: with AI, \"upscaling without losing quality\" isn't just p
         heading: "Step-by-Step: Upscale Without Losing Quality",
         body: `Here's the exact process to enlarge a photo with zero quality loss using Pixel Shine's free upscaler.
 
-**Step 1 — Open the upscaler.** Go to sjpt.io and open the AI Upscaler tool. Normal upscale is free, unlimited, and needs no sign-in, so you can start immediately.
+**Step 1 — Open the upscaler.** Go to Pixel Shine and open the AI Upscaler tool. Normal upscale is free, unlimited, and needs no sign-in, so you can start immediately.
 
 **Step 2 — Upload the best version you have.** Drag and drop or browse to your image. Always start from the highest-quality source available — the more real detail the AI has to work with, the better the reconstruction.
 
@@ -868,7 +868,7 @@ Around 300 DPI. Multiply your target print size in inches by 300 to find the pix
 
 The winning workflow: start from the highest-quality source you have, edit first and upscale last, match the multiplier to your real target size, upscale in a single pass, and verify at 100% zoom. Reserve Pro AI upscale for faces, text, and large prints where every detail counts.
 
-And it doesn't have to cost a thing. Pixel Shine's Normal upscale is free, unlimited, and needs no sign-in. Head to sjpt.io, upload your photo, and enlarge it to crisp high resolution without the quality loss. Upscale Your Image Free →`,
+And it doesn't have to cost a thing. Pixel Shine's Normal upscale is free, unlimited, and needs no sign-in. Head to Pixel Shine, upload your photo, and enlarge it to crisp high resolution without the quality loss. Upscale Your Image Free →`,
       },
     ],
   },
@@ -889,7 +889,7 @@ And it doesn't have to cost a thing. Pixel Shine's Normal upscale is free, unlim
       {
         body: `Knowing how to upscale product photos for e-commerce is one of the highest-leverage skills an online seller can have — sharp, high-resolution images directly drive clicks, trust, and sales. Whether you sell on Amazon, Shopify, Etsy, or your own store, every platform rewards crisp, zoomable product images, and an ecommerce image upscaler lets you meet those resolution requirements without a professional photographer or expensive gear. This guide covers exactly how to upscale product photos to the right size for each marketplace, so your listings look professional and convert.
 
-The stakes are real: shoppers can't touch or hold your product, so the photo does all the selling. Studies consistently show that high-quality product images increase conversion rates, and marketplaces like Amazon actively require minimum image dimensions — often 1000px on the longest side just to enable zoom, with larger images strongly recommended. If your photos fall short or look soft when zoomed, you lose sales to competitors whose images look sharper. Pixel Shine (sjpt.io) fixes this fast: its Normal upscale is free and unlimited with no sign-in, and it includes a background remover for the clean white backdrops marketplaces love. Here's how to get every product photo listing-ready.`,
+The stakes are real: shoppers can't touch or hold your product, so the photo does all the selling. Studies consistently show that high-quality product images increase conversion rates, and marketplaces like Amazon actively require minimum image dimensions — often 1000px on the longest side just to enable zoom, with larger images strongly recommended. If your photos fall short or look soft when zoomed, you lose sales to competitors whose images look sharper. Pixel Shine fixes this fast: its Normal upscale is free and unlimited with no sign-in, and it includes a background remover for the clean white backdrops marketplaces love. Here's how to get every product photo listing-ready.`,
       },
       {
         heading: "Marketplace Image Requirements You Need to Know",
@@ -925,7 +925,7 @@ The math is simple: better product photos mean more zoom engagement, more trust,
 
 **Step 1 — Start with your best original.** Use the sharpest, highest-resolution product photo you have. Good, even lighting in the original makes every later step easier.
 
-**Step 2 — Remove the background (if needed).** For Amazon main images and clean catalog looks, open Pixel Shine's Background Remover at sjpt.io, upload your photo, and let the AI cut out the product in seconds. Download the transparent PNG.
+**Step 2 — Remove the background (if needed).** For Amazon main images and clean catalog looks, open Pixel Shine's Background Remover at Pixel Shine, upload your photo, and let the AI cut out the product in seconds. Download the transparent PNG.
 
 **Step 3 — Place on the required background.** For Amazon, put the cutout on a pure white background. For lifestyle or Shopify shots, use whatever backdrop fits your brand.
 
@@ -1033,7 +1033,7 @@ No. Your images download watermark-free, ready to list.`,
 
 The winning workflow: start with the best original, remove the background and place the product on a clean backdrop, upscale to your platform's target size, verify at full zoom, and export at high quality. Standardize dimensions across your catalog for a premium, consistent look, and reserve Pro AI upscale for your hero and bestseller images.
 
-Best of all, you don't need a studio or a photographer. Pixel Shine combines free, unlimited upscaling and a built-in background remover in one online platform. Head to sjpt.io and make your product photos listing-ready today. Upscale Product Photos →`,
+Best of all, you don't need a studio or a photographer. Pixel Shine combines free, unlimited upscaling and a built-in background remover in one online platform. Head to Pixel Shine and make your product photos listing-ready today. Upscale Product Photos →`,
       },
     ],
   },
@@ -1054,7 +1054,7 @@ Best of all, you don't need a studio or a photographer. Pixel Shine combines fre
       {
         body: `Learning how to restore and upscale old photos with AI is like giving your family memories a second life. Faded, scratched, low-resolution photos from decades past — or early digital snapshots that came out small and grainy — can be sharpened, cleaned, and enlarged in seconds using AI. If you've wanted to restore old photos with AI but assumed it required a professional service or hours in Photoshop, the truth is far simpler: modern tools do the heavy lifting automatically, and photo restoration online free is now genuinely within reach.
 
-This matters because old photos are irreplaceable. That scanned wedding portrait, the childhood snapshot, the faded picture of grandparents — these are memories you can't re-shoot. When they're small, soft, noisy, or damaged, AI upscaling and enhancement can recover detail, reduce grain, sharpen faces, and bring them up to a resolution you can reprint and frame. Pixel Shine (sjpt.io) makes this accessible to everyone: its Normal upscale is free and unlimited with no sign-in, and its Pro AI upscale delivers deeper reconstruction for the most degraded images, with free trials to start. Here's how to bring your old photos back to life.`,
+This matters because old photos are irreplaceable. That scanned wedding portrait, the childhood snapshot, the faded picture of grandparents — these are memories you can't re-shoot. When they're small, soft, noisy, or damaged, AI upscaling and enhancement can recover detail, reduce grain, sharpen faces, and bring them up to a resolution you can reprint and frame. Pixel Shine makes this accessible to everyone: its Normal upscale is free and unlimited with no sign-in, and its Pro AI upscale delivers deeper reconstruction for the most degraded images, with free trials to start. Here's how to bring your old photos back to life.`,
       },
       {
         heading: "What AI Can (and Can't) Restore in Old Photos",
@@ -1090,7 +1090,7 @@ Good preparation ensures the AI has the richest possible source to reconstruct f
 
 **Step 1 — Digitize your photo.** Scan the physical print at high resolution (600 DPI+), or locate the best existing digital version. Aim for the cleanest, largest source you can.
 
-**Step 2 — Open the upscaler.** Go to sjpt.io and open the AI Upscaler tool. Normal upscale is free, unlimited, and needs no sign-in, so you can start restoring immediately.
+**Step 2 — Open the upscaler.** Go to Pixel Shine and open the AI Upscaler tool. Normal upscale is free, unlimited, and needs no sign-in, so you can start restoring immediately.
 
 **Step 3 — Upload the photo.** Drag and drop or browse to add your scanned or digital image.
 
@@ -1196,7 +1196,7 @@ Seconds per photo. You can restore an entire box of family photos in a single si
 
 For the best results, scan physical prints at high resolution rather than photographing them, start from the largest source you have, match the upscale level to your reprint size, and reach for the Pro AI upscale on your most degraded or most cherished images. Set realistic expectations — AI enhances and reconstructs beautifully but can't invent detail that was never there.
 
-And it costs nothing to begin. Pixel Shine's Normal upscale is free, unlimited, and needs no sign-in. Head to sjpt.io, upload that old photo, and watch a fading memory come back to life. Restore & Upscale Photos →`,
+And it costs nothing to begin. Pixel Shine's Normal upscale is free, unlimited, and needs no sign-in. Head to Pixel Shine, upload that old photo, and watch a fading memory come back to life. Restore & Upscale Photos →`,
       },
     ],
   },
@@ -1217,7 +1217,7 @@ And it costs nothing to begin. Pixel Shine's Normal upscale is free, unlimited, 
       {
         body: `Knowing how to upscale an image for printing is the difference between a crisp, professional poster and a blurry, pixelated embarrassment. Large-format printing — posters, banners, canvas prints, and signage — demands far more resolution than screens do, and if your image doesn't have enough pixels, it'll look soft or blocky at size. An AI upscaler lets you increase image resolution for print without the quality loss of basic resizing, so you can take a photo that looks fine on screen and make it genuinely print-ready at large dimensions. This guide covers exactly how to hit the resolution large-format printing requires.
 
-The core issue is that print and screen live by different rules. A monitor might display an image at 72 to 96 pixels per inch and look perfectly sharp, but a quality print typically wants around 300 DPI up close — and large-format pieces viewed from a distance follow their own math. Get the pixel count wrong and your poster prints soft. Pixel Shine (sjpt.io) solves this with a free, unlimited Normal upscale (no sign-in) plus a Pro AI upscale for maximum detail on demanding prints. Here's how to calculate what you need and get every image ready for the printer.`,
+The core issue is that print and screen live by different rules. A monitor might display an image at 72 to 96 pixels per inch and look perfectly sharp, but a quality print typically wants around 300 DPI up close — and large-format pieces viewed from a distance follow their own math. Get the pixel count wrong and your poster prints soft. Pixel Shine solves this with a free, unlimited Normal upscale (no sign-in) plus a Pro AI upscale for maximum detail on demanding prints. Here's how to calculate what you need and get every image ready for the printer.`,
       },
       {
         heading: "Understanding Print Resolution and DPI",
@@ -1257,7 +1257,7 @@ The core issue is that print and screen live by different rules. A monitor might
 
 **Step 3 — Check your source dimensions.** Look at your image's current pixel size to see how far it falls short and what multiplier you'll need.
 
-**Step 4 — Open the upscaler.** Go to sjpt.io and open the AI Upscaler tool. Normal upscale is free, unlimited, and needs no sign-in.
+**Step 4 — Open the upscaler.** Go to Pixel Shine and open the AI Upscaler tool. Normal upscale is free, unlimited, and needs no sign-in.
 
 **Step 5 — Upload your best-quality source.** Start from the highest-resolution, sharpest original you have — the more real detail, the better the reconstruction.
 
@@ -1357,7 +1357,7 @@ No. Your upscaled images download watermark-free, ready for the printer.`,
 
 For the best prints, start from your sharpest source, crop to the correct aspect ratio, upscale as the final step, verify at 100% zoom, and confirm your print shop's specs. Use the free Normal upscale for forgiving, distant-viewed pieces, and Pro AI upscale for close-viewed, detail-critical prints like posters and fine art.
 
-You don't need expensive software to get print-ready resolution. Pixel Shine's Normal upscale is free, unlimited, and needs no sign-in. Head to sjpt.io, upscale your image to the resolution your printer needs, and turn any photo into a crisp large-format print. Get Print-Ready Resolution →`,
+You don't need expensive software to get print-ready resolution. Pixel Shine's Normal upscale is free, unlimited, and needs no sign-in. Head to Pixel Shine, upscale your image to the resolution your printer needs, and turn any photo into a crisp large-format print. Get Print-Ready Resolution →`,
       },
     ],
   },
@@ -1396,7 +1396,7 @@ In this comparison, we'll break down what actually separates a great free upscal
         heading: "The Top Free AI Upscalers Compared",
         body: `We tested the major players in the AI upscaler comparison 2025 landscape across image quality, speed, limits, and hidden costs. Here's how they stack up.
 
-**Pixel Shine (sjpt.io)** — The standout for accessibility. Normal Upscale is free, unlimited, and requires zero sign-in. No watermarks. A Pro AI mode using advanced diffusion models is available for credits when you need maximum detail recovery. New users also get 5 free trials across its other tools. Best all-around free option.
+**Pixel Shine** — The standout for accessibility. Normal Upscale is free, unlimited, and requires zero sign-in. No watermarks. A Pro AI mode using advanced diffusion models is available for credits when you need maximum detail recovery. New users also get 5 free trials across its other tools. Best all-around free option.
 
 **Upscale.media** — Solid results but caps free users and pushes hard toward paid plans after a few images.
 
@@ -1412,7 +1412,7 @@ In this comparison, we'll break down what actually separates a great free upscal
         heading: "Step-by-Step: How to Upscale an Image for Free",
         body: `Using a free image upscaler online should take under a minute. Here's exactly how to do it with Pixel Shine, no account required.
 
-**Step 1: Go to the upscaler.** Open sjpt.io and navigate to the Upscale tool at sjpt.io/upscale. You don't need to log in or create an account for the Normal Upscale.
+**Step 1: Go to the upscaler.** Open Pixel Shine and navigate to the Upscale tool. You don't need to log in or create an account for the Normal Upscale.
 
 **Step 2: Upload your image.** Drag and drop your photo directly into the upload box, or click to browse your files. Pixel Shine accepts common formats like JPG, PNG, and WebP. Even a small 400x400px image works fine.
 
@@ -1479,10 +1479,10 @@ The common thread: none of these people are professional retouchers, and none wa
       {
         heading: "Frequently Asked Questions",
         body: `**What is the best free AI image upscaler in 2025?**
-Pixel Shine (sjpt.io) leads for accessibility because its Normal Upscale is completely free, unlimited, and requires no sign-in or watermark. For maximum detail recovery, its Pro AI mode is available cheaply. Other strong options include Upscale.media and Let's Enhance, though both limit free usage more aggressively.
+Pixel Shine leads for accessibility because its Normal Upscale is completely free, unlimited, and requires no sign-in or watermark. For maximum detail recovery, its Pro AI mode is available cheaply. Other strong options include Upscale.media and Let's Enhance, though both limit free usage more aggressively.
 
 **Can I upscale an image online for free without signing up?**
-Yes. Pixel Shine's Normal Upscale requires no account at all — just visit sjpt.io/upscale, upload, and download. Many competitors force registration after one or two images.
+Yes. Pixel Shine's Normal Upscale requires no account at all — just visit the Pixel Shine upscaler, upload, and download. Many competitors force registration after one or two images.
 
 **How much can I enlarge an image with AI?**
 Most tools offer 2x and 4x. A 4x upscale quadruples both dimensions (a 500px image becomes 2000px). Beyond 4x, results depend heavily on the source quality — AI can enhance detail but can't fully invent what was never captured.
@@ -1506,7 +1506,7 @@ With Pixel Shine's Normal Upscale, no — it's unlimited and free. New users als
         heading: "Key Takeaways",
         body: `The best free AI image upscaler in 2025 is the one that delivers real detail reconstruction without watermarks, sign-up walls, or surprise limits. On those criteria, Pixel Shine's unlimited free Normal Upscale is the standout choice for everyday use, with an affordable Pro AI mode when you need to squeeze out maximum quality.
 
-Before you settle for a subscription or tolerate a watermark, try the free option first — you'll likely find it handles the vast majority of your images perfectly. Head to sjpt.io/upscale, drop in an image, and see the difference for yourself in seconds. No account, no cost, no catch.
+Before you settle for a subscription or tolerate a watermark, try the free option first — you'll likely find it handles the vast majority of your images perfectly. Head to the Pixel Shine upscaler, drop in an image, and see the difference for yourself in seconds. No account, no cost, no catch.
 
 Try Pixel Shine Upscaler Free →`,
       },
@@ -1563,7 +1563,7 @@ The key insight: if your source image is smaller than these targets, uploading i
 
 **Step 1: Identify your target size.** Decide where you're posting. For an Instagram portrait post, your target is 1080 x 1350px. Note the number before you start.
 
-**Step 2: Open the free upscaler.** Go to sjpt.io/upscale. The Normal Upscale is free and unlimited with no sign-in required.
+**Step 2: Open the free upscaler.** Open it on Pixel Shine. The Normal Upscale is free and unlimited with no sign-in required.
 
 **Step 3: Upload your original.** Drag your photo into the upload area. If your source is 540px wide, a 2x upscale gets you to 1080px — perfect for Instagram width.
 
@@ -1636,7 +1636,7 @@ For square posts, use 1080 x 1080px. For portrait posts (which get more screen s
 Two reasons: your original was below 1080px so Instagram upscaled it poorly, or the platform's compression damaged a low-detail image. Upscaling to 1080px before uploading fixes both.
 
 **How do I increase image quality for social media for free?**
-Upscale your image to the platform's target resolution using a free AI upscaler like Pixel Shine (sjpt.io/upscale). The Normal Upscale is free, unlimited, and needs no account or sign-in.
+Upscale your image to the platform's target resolution using a free AI upscaler like Pixel Shine. The Normal Upscale is free, unlimited, and needs no account or sign-in.
 
 **What size should a LinkedIn post image be?**
 Shared post images work best at 1200 x 627px. Your profile photo should be uploaded at 1080 x 1080px even though the minimum is 400px, and cover banners at 1584 x 396px.
@@ -1708,7 +1708,7 @@ This is the crux of super resolution vs bicubic: bicubic asks \"what's the mathe
 
 **Step 2: Do a traditional resize first.** In any basic editor (Paint, Preview, or Photoshop's Image Size with bicubic), enlarge it 4x. Save it. Notice how soft it looks up close.
 
-**Step 3: Open Pixel Shine's upscaler.** Go to sjpt.io/upscale. Normal Upscale is free, unlimited, and needs no sign-in.
+**Step 3: Open Pixel Shine's upscaler.** Open it. Normal Upscale is free, unlimited, and needs no sign-in.
 
 **Step 4: Upload the same original.** Drag your test image into the upload box — use the original, not your traditionally-resized version.
 
@@ -1792,13 +1792,13 @@ Modern AI upscalers process most images in seconds — comparable to traditional
 It creates a new, higher-resolution version while leaving your original file untouched. The process reconstructs detail but doesn't alter your source.
 
 **Can I try AI upscaling for free?**
-Yes. Pixel Shine (sjpt.io/upscale) offers free, unlimited Normal Upscale with no sign-in, so you can compare it against traditional methods yourself.`,
+Yes. Pixel Shine offers free, unlimited Normal Upscale with no sign-in, so you can compare it against traditional methods yourself.`,
       },
       {
         heading: "Key Takeaways",
         body: `The core difference in AI upscaling vs traditional upscaling is simple but profound: bicubic and its cousins stretch existing pixels, while AI reconstructs new detail using models trained on millions of images. That's why AI results look sharp and natural where traditional methods look soft and stretched.
 
-For virtually every photo you'll ever enlarge — portraits, products, screenshots, old scans — AI is the clear winner, and free tools have erased the old cost barrier. The best way to believe it is to see it. Upload a test image to sjpt.io/upscale, compare it against a bicubic resize at 100% zoom, and watch the difference for yourself.
+For virtually every photo you'll ever enlarge — portraits, products, screenshots, old scans — AI is the clear winner, and free tools have erased the old cost barrier. The best way to believe it is to see it. Upload a test image to the Pixel Shine upscaler, compare it against a bicubic resize at 100% zoom, and watch the difference for yourself.
 
 Try AI Upscaling →`,
       },
@@ -1853,7 +1853,7 @@ Always aim to *meet or slightly exceed* your target. A wallpaper that's marginal
 
 **Step 2: Find your source image's dimensions.** Right-click the file → Properties/Get Info. If it's 1920 x 1080, you need about 2x to hit 4K.
 
-**Step 3: Open the free upscaler.** Go to sjpt.io/upscale. Normal Upscale is free, unlimited, and requires no sign-in.
+**Step 3: Open the free upscaler.** Open it on Pixel Shine. Normal Upscale is free, unlimited, and requires no sign-in.
 
 **Step 4: Upload your image.** Drag the wallpaper file into the upload box. High-quality sources give the best 4K results.
 
@@ -1924,7 +1924,7 @@ What unites them is a mismatch between the images they love and the resolution t
       {
         heading: "Frequently Asked Questions",
         body: `**How do I upscale a wallpaper to 4K?**
-Upload your image to a free AI upscaler like Pixel Shine (sjpt.io/upscale), choose a 2x or 4x factor so the output reaches at least 3840 x 2160px, then crop to 16:9 and set it as your background. The Normal Upscale is free and unlimited.
+Upload your image to a free AI upscaler like Pixel Shine, choose a 2x or 4x factor so the output reaches at least 3840 x 2160px, then crop to 16:9 and set it as your background. The Normal Upscale is free and unlimited.
 
 **What resolution should a 4K wallpaper be?**
 Exactly 3840 x 2160px for a standard 4K (16:9) monitor. For ultrawide 4K, aim for 5120 x 1440px, and for 5K displays, 5120 x 2880px. Meeting or slightly exceeding native resolution keeps it sharp.
@@ -2012,7 +2012,7 @@ The common thread is volume plus shared settings. When every image needs roughly
 
 **Step 1: Organize your source files.** Put all the images you want to upscale into a single folder. Remove any you don't want processed. Consistency starts with a clean input set.
 
-**Step 2: Open the batch editor.** Go to sjpt.io/batch-editor. This is the tool designed specifically for processing multiple images at once.
+**Step 2: Open the batch editor.** Go to the Pixel Shine batch editor. This is the tool designed specifically for processing multiple images at once.
 
 **Step 3: Upload your batch.** Select all your images at once (Ctrl+A or Cmd+A in the file picker) or drag the entire folder's contents into the upload area. The tool queues them together.
 
@@ -2081,7 +2081,7 @@ For every one of these, the volume makes one-at-a-time processing impractical. A
       {
         heading: "Frequently Asked Questions",
         body: `**How do I batch upscale multiple images at once?**
-Use a dedicated batch tool like Pixel Shine's batch editor (sjpt.io/batch-editor). Upload all your images together, set one upscale factor and mode for the whole set, process, and download the entire batch at once.
+Use a dedicated batch tool like Pixel Shine's batch editor. Upload all your images together, set one upscale factor and mode for the whole set, process, and download the entire batch at once.
 
 **How many images can I upscale in one batch?**
 The practical limit depends on the tool and file sizes, but batch editors are designed to handle large sets — dozens to hundreds of images in a single run — far more efficiently than processing individually.
@@ -2163,7 +2163,7 @@ The recurring theme: minimums are low, but you should always upload well above t
 
 **Step 1: Choose your best available photo.** Pick the headshot with the best lighting, composition, and expression — even if it's low resolution. Upscaling improves sharpness, so start with the photo that's *right* in every other way.
 
-**Step 2: Open the upscaler.** Go to sjpt.io/upscale. The Normal Upscale is free, unlimited, and needs no sign-in.
+**Step 2: Open the upscaler.** Go to the Pixel Shine upscaler. The Normal Upscale is free, unlimited, and needs no sign-in.
 
 **Step 3: Upload your headshot.** Drag the photo into the upload box. If it's 400px, a 2x-4x upscale gets you comfortably into professional territory.
 
@@ -2232,7 +2232,7 @@ For all of them, the fix is the same: upscale the good photo you have to modern 
       {
         heading: "Frequently Asked Questions",
         body: `**How do I upscale my LinkedIn profile picture?**
-Upload your headshot to Pixel Shine (sjpt.io/upscale), use Pro AI mode for the most natural face detail, upscale to at least 1080px, crop to a 1:1 square, and set it as your LinkedIn photo. The Normal Upscale is free and unlimited.
+Upload your headshot to Pixel Shine, use Pro AI mode for the most natural face detail, upscale to at least 1080px, crop to a 1:1 square, and set it as your LinkedIn photo. The Normal Upscale is free and unlimited.
 
 **What resolution should a LinkedIn profile photo be?**
 The minimum is 400 x 400px, but upload at 1080 x 1080px for crispness across all the sizes LinkedIn displays your photo. A larger, sharper source always looks better on modern screens.
@@ -2247,7 +2247,7 @@ Yes. Upscaling is ideal for old photos that predate high-resolution screens. It 
 If you already have a good photo that's just low-resolution, upscaling is faster, free, and usually sufficient. Hire a photographer only if you lack any usable photo or need branded team headshots.
 
 **How do I remove a distracting background from my profile photo?**
-After upscaling, use Pixel Shine's background remover (sjpt.io/remove-bg) to replace a cluttered background with a clean, neutral one for a more professional look.
+After upscaling, use Pixel Shine's background remover to replace a cluttered background with a clean, neutral one for a more professional look.
 
 **Is upscaling my profile picture free?**
 Yes. Pixel Shine's Normal Upscale is free and unlimited with no sign-in, and new users get 5 free trials to test Pro AI mode, which is best for faces.
@@ -2259,7 +2259,7 @@ A head-and-shoulders framing in a 1:1 square, with your face occupying a comfort
         heading: "Key Takeaways",
         body: `A blurry profile picture quietly undermines every professional impression you make, and it's one of the easiest problems to fix. By upscaling your best available headshot to at least 1080px — using Pro AI mode for natural face detail — and cropping to a clean 1:1 square, you get a sharp, credible photo that looks great on every modern screen.
 
-Start with the free route: it costs nothing, takes about a minute, and usually solves the real issue, which is resolution rather than the photo itself. Head to sjpt.io/upscale, sharpen your headshot, and give recruiters and clients the polished first impression you deserve.
+Start with the free route: it costs nothing, takes about a minute, and usually solves the real issue, which is resolution rather than the photo itself. Head to the Pixel Shine upscaler, sharpen your headshot, and give recruiters and clients the polished first impression you deserve.
 
 Upscale Your Profile Photo →`,
       },
@@ -2314,7 +2314,7 @@ The practical rule: real estate images are viewed large and often printed, so ai
 
 **Step 1: Select your best shots.** Choose the photos with the best lighting and composition for each room. Upscaling improves sharpness, so start with well-exposed images.
 
-**Step 2: Open the upscaler.** Go to sjpt.io/upscale. The Normal Upscale is free, unlimited, and requires no sign-in.
+**Step 2: Open the upscaler.** Go to the Pixel Shine upscaler. The Normal Upscale is free, unlimited, and requires no sign-in.
 
 **Step 3: Upload your property photo.** Drag the image in. A 1024px phone photo, for example, can be upscaled 2x to reach ~2048px for premium listing display.
 
@@ -2324,7 +2324,7 @@ The practical rule: real estate images are viewed large and often printed, so ai
 
 **Step 6: Process and inspect.** Click Upscale and review at 100% zoom. Check that architectural lines stay clean and textures look natural, not over-smoothed.
 
-**Step 7: Batch the rest.** For a full listing of 20-30 photos, use the batch editor at sjpt.io/batch-editor to upscale them all at once with consistent settings.
+**Step 7: Batch the rest.** For a full listing of 20-30 photos, use the batch editor on Pixel Shine to upscale them all at once with consistent settings.
 
 **Step 8: Download and upload.** Save the watermark-free results and upload to your MLS and listing portals at the highest resolution they accept.`,
       },
@@ -2389,7 +2389,7 @@ For all of them, professional photography isn't always feasible for every shot, 
       {
         heading: "Frequently Asked Questions",
         body: `**How do I upscale real estate photos for listings?**
-Upload your property photos to Pixel Shine (sjpt.io/upscale), choose 2x for portals or 4x for print, and use Pro AI mode for hero shots. For full listings, batch process at sjpt.io/batch-editor. The Normal Upscale is free and unlimited.
+Upload your property photos to Pixel Shine, choose 2x for portals or 4x for print, and use Pro AI mode for hero shots. For full listings, batch process on Pixel Shine. The Normal Upscale is free and unlimited.
 
 **What resolution should real estate listing photos be?**
 Aim for at least 1024px on the long edge for most MLS systems, and up to 2048px for premium portals like Zillow. Print flyers need roughly 2550 x 3300px at 300 DPI, which usually requires upscaling.
@@ -2401,7 +2401,7 @@ Not if used correctly. Keep results natural and accurate — upscaling should sh
 Yes. Phone photos are a common source, and upscaling brings them up to portal and even print resolution. Start with well-lit, well-composed shots for the best results.
 
 **How do I upscale a whole listing's worth of photos at once?**
-Use Pixel Shine's batch editor (sjpt.io/batch-editor) to upload all 20-30 photos, apply consistent settings, and process them together, ensuring the entire gallery looks uniform.
+Use Pixel Shine's batch editor to upload all 20-30 photos, apply consistent settings, and process them together, ensuring the entire gallery looks uniform.
 
 **Is upscaling real estate photos free?**
 Yes. Pixel Shine's Normal Upscale is free and unlimited with no sign-in. Pro AI mode for hero shots uses cheap credits, and new users get 5 free trials.
@@ -2465,7 +2465,7 @@ The **Normal upscale mode is completely free, unlimited, and requires no sign-up
         heading: "Step-by-Step: How to Fix a Blurry Photo for Free",
         body: `Follow these steps to unblur and sharpen your image in about 60 seconds:
 
-**1. Open the tool.** Go to sjpt.io and open the AI Upscaler. You don't need to create an account to use the free Normal mode, so you can start immediately.
+**1. Open the tool.** Go to Pixel Shine and open the AI Upscaler. You don't need to create an account to use the free Normal mode, so you can start immediately.
 
 **2. Upload your blurry photo.** Click the upload area or drag your image directly onto it. Pixel Shine accepts standard formats including JPG, PNG, and WebP. For best results, upload the highest-quality version of the file you have — never a screenshot of a screenshot.
 
@@ -2563,7 +2563,7 @@ Simply re-upload and choose a lower scale factor, like 2x instead of 4x. A gentl
         heading: "Key Takeaways",
         body: `Fixing a blurry photo online no longer requires expensive software or technical skill. Modern AI can reconstruct lost detail, sharpen soft edges, and enlarge images all at once — turning a shot you thought was ruined into something clear and usable. Pixel Shine makes this genuinely free with its Normal upscale mode: no watermarks, no forced sign-up, and no usage caps, plus 5 free Pro trials for images that need extra muscle.
 
-The best part is how little effort it takes. Upload, choose your mode, and download a sharper result in about a minute. Whether it's a treasured memory or a product photo, your blurry image deserves a second chance. Try it free at sjpt.io and see how much detail AI can bring back.`,
+The best part is how little effort it takes. Upload, choose your mode, and download a sharper result in about a minute. Whether it's a treasured memory or a product photo, your blurry image deserves a second chance. Try it free at Pixel Shine and see how much detail AI can bring back.`,
       },
     ],
   },
@@ -2610,7 +2610,7 @@ The entire process runs online. You don't install software, and your workflow st
         heading: "Step-by-Step: How to Enhance Image Quality for Free",
         body: `Follow these steps to enhance any image using Pixel Shine:
 
-**1. Open the tool.** Navigate to sjpt.io and go to the Upscale / Enhance section. No download or installation is needed — it runs entirely online on desktop or mobile.
+**1. Open the tool.** Navigate to Pixel Shine and go to the Upscale / Enhance section. No download or installation is needed — it runs entirely online on desktop or mobile.
 
 **2. Upload your image.** Click the upload area or drag and drop your file directly. Pixel Shine supports common formats like JPG, PNG, and WebP. For the Normal Upscaler, there's no sign-up gate — you can start immediately.
 
@@ -2716,7 +2716,7 @@ Normal is free, unlimited, and great for everyday tasks. Pro AI applies more agg
         heading: "Key Takeaways",
         body: `Enhancing image quality online for free is now genuinely possible thanks to AI. Pixel Shine's Normal Upscaler sharpens, denoises, and upscales your photos in seconds — with no watermark, no forced sign-up, and no cost. For tougher jobs like portraits, fine text, or heavily degraded images, the Pro AI engine delivers even more detail, and new users get 5 free trials to test it.
 
-Start with the best source you have, match the scale to your use case, and review the before/after preview to lock in natural-looking results. Whether you're rescuing old memories or prepping product shots, you can go from blurry to crisp in under a minute. Ready to try it? Enhance your first image free at sjpt.io.`,
+Start with the best source you have, match the scale to your use case, and review the before/after preview to lock in natural-looking results. Whether you're rescuing old memories or prepping product shots, you can go from blurry to crisp in under a minute. Ready to try it? Enhance your first image free at Pixel Shine.`,
       },
     ],
   },
@@ -2765,7 +2765,7 @@ The result is that when you increase image resolution free through Pixel Shine, 
         heading: "Step-by-Step: How to Increase Image Resolution for Free",
         body: `Here's the complete process to enlarge your image using Pixel Shine, start to finish.
 
-**1. Open the upscaler.** Go to sjpt.io and navigate to the Upscale tool. You don't need to create an account or log in to use the Normal upscaler, so you can start immediately.
+**1. Open the upscaler.** Go to Pixel Shine and navigate to the Upscale tool. You don't need to create an account or log in to use the Normal upscaler, so you can start immediately.
 
 **2. Upload your image.** Click the upload area or drag and drop your file directly onto it. Pixel Shine accepts common formats like JPG, PNG, and WEBP. There's no need to convert your file first.
 
@@ -2853,7 +2853,7 @@ Most tasks use 2x or 4x, which doubles or quadruples the dimensions. A 4x upscal
 No — the opposite. Unlike basic resizing, which blurs images as it enlarges them, AI upscaling reconstructs detail, so results look sharper and clearer than a simple stretch.
 
 **Do I need to install any software?**
-No. Pixel Shine runs entirely online at sjpt.io. There's nothing to download or install, and it works on any device with an internet connection.
+No. Pixel Shine runs entirely online at Pixel Shine. There's nothing to download or install, and it works on any device with an internet connection.
 
 **Are there watermarks on the final image?**
 No. Pixel Shine never adds watermarks. Your downloaded file is clean and ready to use for personal or commercial projects.
@@ -2871,7 +2871,7 @@ Pixel Shine processes your image for upscaling and lets you download the result.
         heading: "Key Takeaways",
         body: `Increasing image resolution for free is no longer a compromise — thanks to AI super-resolution, you can enlarge photos while actually gaining sharpness and detail rather than losing it. The key is using a tool that reconstructs real detail instead of just stretching pixels, and Pixel Shine delivers exactly that with its free, unlimited Normal upscaler, watermark-free output, and no forced sign-up.
 
-Whether you're prepping product photos, restoring family memories, or sharpening images for print and social media, the workflow takes seconds and costs nothing. Ready to see the difference for yourself? Head to sjpt.io and upscale your first image free today.`,
+Whether you're prepping product photos, restoring family memories, or sharpening images for print and social media, the workflow takes seconds and costs nothing. Ready to see the difference for yourself? Head to Pixel Shine and upscale your first image free today.`,
       },
     ],
   },
@@ -2918,7 +2918,7 @@ Beyond enhancement, Pixel Shine is a broader free platform: background remover, 
         heading: "Step-by-Step: Using the Free AI Photo Enhancer",
         body: `Here's how to enhance a photo with Pixel Shine from start to finish:
 
-**1. Visit sjpt.io.** Open the site on your computer or phone. Navigate to the upscale / enhance tool.
+**1. Visit Pixel Shine.** Open the site on your computer or phone. Navigate to the upscale / enhance tool.
 
 **2. Upload your image.** Drag and drop it into the upload zone or click to browse. Supported formats include JPG, PNG, and WebP. For the Normal Upscaler, no account is needed — just start.
 
@@ -3028,7 +3028,7 @@ No. It also includes a free background remover, AI headshot generator, text-prom
         heading: "Key Takeaways",
         body: `A great free AI photo enhancer should combine strong AI, no watermark, no forced login, and unlimited use — and Pixel Shine's Normal Upscaler delivers exactly that. It reconstructs natural detail, sharpens edges, and reduces noise in seconds, then lets you download clean at full resolution. For demanding images like portraits and fine text, the Pro engine goes further, with 5 free trials to test it.
 
-Unlike many rivals that disappoint at the download button, Pixel Shine stays genuinely free where it counts, and bundles a whole toolkit alongside enhancement. Try the best free AI photo enhancer for yourself at sjpt.io and see the difference on your next photo.`,
+Unlike many rivals that disappoint at the download button, Pixel Shine stays genuinely free where it counts, and bundles a whole toolkit alongside enhancement. Try the best free AI photo enhancer for yourself at Pixel Shine and see the difference on your next photo.`,
       },
     ],
   },
@@ -3075,7 +3075,7 @@ The **Normal mode is free, unlimited, and requires no account**, which covers th
         heading: "Step-by-Step: Sharpen Your Image for Free",
         body: `Here's exactly how to sharpen a blurry image online in about a minute:
 
-**1. Open the AI Upscaler.** Head to sjpt.io and launch the upscaler tool. The free Normal mode needs no sign-up, so you can begin right away.
+**1. Open the AI Upscaler.** Head to Pixel Shine and launch the upscaler tool. The free Normal mode needs no sign-up, so you can begin right away.
 
 **2. Upload your soft image.** Drag and drop your file or click to browse. Pixel Shine supports common formats like JPG, PNG, and WebP. Use the best-quality source you have — a direct-from-camera file beats a re-shared copy every time.
 
@@ -3173,7 +3173,7 @@ Re-run the image at a lower scale, such as 2x instead of 4x. A gentler pass give
         heading: "Key Takeaways",
         body: `Sharpening a blurry image online is now fast, free, and genuinely effective thanks to AI. Instead of faking crispness by boosting edge contrast, modern tools reconstruct real detail — recovering texture, legibility, and clarity that older sharpening filters never could. Pixel Shine delivers this online with its free Normal mode: no watermark, no forced sign-up, and no usage caps, plus 5 free Pro trials for tougher images.
 
-The workflow couldn't be simpler — upload, pick your mode and scale, and download a crisp result in under a minute. Whether you're polishing a product shot, restoring an old photo, or salvaging a note, your soft image can look professional again. Try the free AI image sharpener at sjpt.io today.`,
+The workflow couldn't be simpler — upload, pick your mode and scale, and download a crisp result in under a minute. Whether you're polishing a product shot, restoring an old photo, or salvaging a note, your soft image can look professional again. Try the free AI image sharpener at Pixel Shine today.`,
       },
     ],
   },
@@ -3224,7 +3224,7 @@ The result is that when you place these images on a 4K display, print them large
         heading: "Step-by-Step: Upscaling an Image to 4K Free",
         body: `Here's how to take any image up to 4K resolution using Pixel Shine online.
 
-**1. Go to sjpt.io and open the Upscale tool.** The free Normal upscaler needs no account, so you can start immediately.
+**1. Go to Pixel Shine and open the Upscale tool.** The free Normal upscaler needs no account, so you can start immediately.
 
 **2. Check your source dimensions.** Note your image's current width and height. To reach 4K (3840x2160), you'll want your longest side to end up around 3840 pixels or more after upscaling.
 
@@ -3320,7 +3320,7 @@ A source around 1000 pixels wide reaches 4K at 4x, while a 1920-pixel source hit
 No. Every downloaded file is clean and watermark-free, ready for wallpapers, print, or commercial use.
 
 **Do I need to install software for 4K upscaling?**
-No. Pixel Shine runs entirely online at sjpt.io, on any device, with nothing to download.
+No. Pixel Shine runs entirely online at Pixel Shine, on any device, with nothing to download.
 
 **When should I use Pro AI mode for 4K?**
 Use Pro AI mode for large 4K prints, critical portraits, or heavily degraded sources where you need maximum detail recovery. New users get five free trials to test it.
@@ -3332,7 +3332,7 @@ Yes. With higher factors or additional passes from the source, you can push reso
         heading: "Key Takeaways",
         body: `Upscaling an image to 4K free online is entirely achievable when you use real AI super-resolution instead of a basic resizer. The difference matters: AI reconstructs genuine detail so your image is sharp at 4K, not just larger and blurrier. Pixel Shine makes this simple with a free, unlimited Normal upscaler, no watermarks, no mandatory sign-up, and a Pro AI mode for the most demanding ultra-HD jobs.
 
-Whether you're creating 4K wallpapers, prepping large prints, or filling ultra-HD displays, the process takes seconds. Try it now at sjpt.io and upscale your first image to 4K free.`,
+Whether you're creating 4K wallpapers, prepping large prints, or filling ultra-HD displays, the process takes seconds. Try it now at Pixel Shine and upscale your first image to 4K free.`,
       },
     ],
   },
@@ -3379,7 +3379,7 @@ Everything runs online on desktop or mobile, with no installation. Typical proce
         heading: "Step-by-Step: How to Improve Photo Quality Free",
         body: `Here's the exact workflow to make any photo look better:
 
-**1. Go to Pixel Shine.** Open sjpt.io and head to the photo enhancement / upscale tool. It works on any device — no app to install.
+**1. Go to Pixel Shine.** Open Pixel Shine and head to the photo enhancement / upscale tool. It works on any device — no app to install.
 
 **2. Upload your photo.** Drag and drop the image or click to browse your files. JPG, PNG, and WebP are all supported. With the Normal Upscaler, you can begin instantly without creating an account.
 
@@ -3487,7 +3487,7 @@ No. The AI handles sharpening, noise reduction, and upscaling automatically. You
         heading: "Key Takeaways",
         body: `Improving photo quality for free is no longer a compromise. With Pixel Shine's Normal Upscaler, you can sharpen, denoise, and upscale any photo in seconds — no cost, no watermark, and no forced sign-up. For portraits, fine text, or heavily degraded shots, the Pro AI engine delivers even stronger results, with 5 free trials for new users.
 
-Remember the essentials: work from the best original, enhance before editing, avoid over-scaling, and always check the before/after preview. Whether you're selling products, posting content, or preserving family memories, a better photo is now just one click away. Try it yourself and improve your first photo free at sjpt.io.`,
+Remember the essentials: work from the best original, enhance before editing, avoid over-scaling, and always check the before/after preview. Whether you're selling products, posting content, or preserving family memories, a better photo is now just one click away. Try it yourself and improve your first photo free at Pixel Shine.`,
       },
     ],
   },
@@ -3536,7 +3536,7 @@ The **Normal mode is free, unlimited, and requires no sign-up**, covering the ev
         heading: "Step-by-Step: How to Unblur a Photo Online",
         body: `Here's the full process to remove blur from your photo for free:
 
-**1. Launch the deblur tool.** Visit sjpt.io and open the AI Upscaler. Since the free Normal mode requires no account, you can start immediately with no barriers.
+**1. Launch the deblur tool.** Visit Pixel Shine and open the AI Upscaler. Since the free Normal mode requires no account, you can start immediately with no barriers.
 
 **2. Upload your blurry photo.** Drag it into the upload zone or click to browse. Pixel Shine supports JPG, PNG, WebP, and other common formats. Always upload the best-quality version you have rather than a re-shared or screenshotted copy.
 
@@ -3634,7 +3634,7 @@ Re-run at a lower scale, like 2x instead of 4x. A gentler pass produces the most
         heading: "Key Takeaways",
         body: `Unblurring a photo online is now quick, free, and remarkably effective. Rather than faking sharpness by boosting edge contrast, AI reconstructs the real detail that blur destroyed — recovering faces, textures, and legibility that old tools couldn't touch. Pixel Shine delivers this through its free Normal mode: no watermark, no forced sign-up, and no usage caps, plus 5 free Pro trials for tougher images.
 
-The process is effortless — upload, pick your mode and scale, and download a sharp result in about a minute. That soft photo you thought was ruined may be far more recoverable than you assumed. Give it a try free at sjpt.io and bring your blurry memories back to life.`,
+The process is effortless — upload, pick your mode and scale, and download a sharp result in about a minute. That soft photo you thought was ruined may be far more recoverable than you assumed. Give it a try free at Pixel Shine and bring your blurry memories back to life.`,
       },
     ],
   },
@@ -3677,7 +3677,7 @@ For images that need heavier reconstruction — badly degraded photos or profess
         heading: "Step-by-Step: Enhance an Image With No Watermark",
         body: `Here's exactly how to enhance an image for free without a watermark in about a minute:
 
-**1. Open the enhancer.** Go to sjpt.io and launch the AI Upscaler. The free Normal mode needs no sign-up, so there's no account wall to get past.
+**1. Open the enhancer.** Go to Pixel Shine and launch the AI Upscaler. The free Normal mode needs no sign-up, so there's no account wall to get past.
 
 **2. Upload your image.** Drag it into the upload area or click to browse. Pixel Shine supports JPG, PNG, WebP, and more. Use the highest-quality source you have for the best result.
 
@@ -3775,7 +3775,7 @@ No. The Normal mode is unlimited, so you can enhance as many images as you need 
         heading: "Key Takeaways",
         body: `A genuinely watermark-free AI image enhancer shouldn't be rare — but because most free tools use watermarks as leverage, it is. Pixel Shine breaks that pattern: its Normal mode enhances images for free, with no watermark, no resolution cap, no forced sign-up, and no usage limits. You download a clean, full-resolution result you fully own, and 5 free Pro trials let you test the heavier reconstruction model when you need it — still watermark-free.
 
-If you've been frustrated by logos stamped across your enhanced photos or paywalls blocking your downloads, this is the honest alternative. Enhance your images the way they should be — clean, professional, and truly yours. Try it free at sjpt.io today.`,
+If you've been frustrated by logos stamped across your enhanced photos or paywalls blocking your downloads, this is the honest alternative. Enhance your images the way they should be — clean, professional, and truly yours. Try it free at Pixel Shine today.`,
       },
     ],
   },
@@ -3820,7 +3820,7 @@ The tool typically supports upscaling factors like 2x and 4x, letting you multip
         heading: "Step-by-Step: Enhancing a Low-Resolution Image",
         body: `Follow this tutorial to turn low res into high res:
 
-**1. Open Pixel Shine.** Go to sjpt.io and navigate to the upscale tool. It runs online — no download needed.
+**1. Open Pixel Shine.** Go to Pixel Shine and navigate to the upscale tool. It runs online — no download needed.
 
 **2. Upload the low-res image.** Drag and drop your file or click to browse. JPG, PNG, and WebP are supported. The Normal Upscaler needs no account, so you can start right away.
 
@@ -3906,7 +3906,7 @@ The tool typically supports upscaling factors like 2x and 4x, letting you multip
 Yes. AI super-resolution reconstructs missing detail based on patterns learned from millions of high-res images, producing genuinely sharper, more detailed results than traditional enlargement — not just a bigger, blurrier version.
 
 **How do I enhance a low-resolution image for free?**
-Use Pixel Shine's Normal Upscaler at sjpt.io. It's free, unlimited, and needs no sign-up. Upload your image, choose a scale factor like 2x or 4x, run the upscale, and download the high-res result with no watermark.
+Use Pixel Shine's Normal Upscaler at Pixel Shine. It's free, unlimited, and needs no sign-up. Upload your image, choose a scale factor like 2x or 4x, run the upscale, and download the high-res result with no watermark.
 
 **How much can I upscale a low-res image?**
 Typically 2x or 4x. Larger sources handle higher factors well, while very tiny images look more natural at 2x. Over-upscaling minimal data can introduce artifacts.
@@ -3930,7 +3930,7 @@ Yes. AI upscaling sharpens pixelated text and logos, with the Pro engine handlin
         heading: "Key Takeaways",
         body: `Enhancing low-resolution images with AI turns pixelated, unusable photos into sharp, high-resolution results in seconds. Pixel Shine's free Normal Upscaler reconstructs real detail — not just bigger pixels — with no sign-up, no usage limit, and no watermark. For severely degraded images, the Pro engine adds stronger reconstruction, with 5 free trials for new users.
 
-Start from the largest source you have, match the scale factor to the image size, and reserve Pro mode for faces, text, and logos. With staged upscaling and the upscale-then-downsample trick, you can recover images that once seemed hopeless. Fix your first low-resolution image free at sjpt.io.`,
+Start from the largest source you have, match the scale factor to the image size, and reserve Pro mode for faces, text, and logos. With staged upscaling and the upscale-then-downsample trick, you can recover images that once seemed hopeless. Fix your first low-resolution image free at Pixel Shine.`,
       },
     ],
   },
@@ -3979,7 +3979,7 @@ Crucially, **Pixel Shine never watermarks your output.** Whether you use Normal 
         heading: "Step-by-Step: Increasing Your Photo Resolution",
         body: `Boosting your photo's resolution with Pixel Shine takes under a minute. Here's the full walkthrough.
 
-**1. Visit sjpt.io and open the Upscale tool.** No account is needed for the free Normal upscaler, so you can begin right away without any setup.
+**1. Visit Pixel Shine and open the Upscale tool.** No account is needed for the free Normal upscaler, so you can begin right away without any setup.
 
 **2. Upload your photo.** Drag your image into the upload zone or click to browse your files. JPG, PNG, and WEBP formats are all supported directly.
 
@@ -4085,7 +4085,7 @@ Use Pro AI mode for heavily degraded photos, important portraits, or demanding p
         heading: "Key Takeaways",
         body: `A photo resolution increaser is only useful if it's genuinely free, genuinely watermark-free, and genuinely powered by real AI — and that combination is rarer than the marketing suggests. Pixel Shine delivers on all three, with an unlimited Normal upscaler that needs no sign-up, clean output every time, and a Pro AI tier for the toughest jobs.
 
-Instead of stretching pixels into a blur, it reconstructs real detail so your photos come out sharp and print-ready in seconds. Stop wrestling with fake free tools and see the difference for yourself — head to sjpt.io and increase your photo's resolution free right now.`,
+Instead of stretching pixels into a blur, it reconstructs real detail so your photos come out sharp and print-ready in seconds. Stop wrestling with fake free tools and see the difference for yourself — head to Pixel Shine and increase your photo's resolution free right now.`,
       },
     ],
   },
@@ -4134,7 +4134,7 @@ The **Normal mode is completely free, unlimited, and requires no sign-up**, cove
         heading: "Step-by-Step: Make Your Image Clearer for Free",
         body: `Here's exactly how to increase image clarity online in about a minute:
 
-**1. Open the clarity tool.** Go to sjpt.io and launch the AI Upscaler. The free Normal mode needs no sign-up, so you can start right away.
+**1. Open the clarity tool.** Go to Pixel Shine and launch the AI Upscaler. The free Normal mode needs no sign-up, so you can start right away.
 
 **2. Upload your unclear image.** Drag it into the upload area or click to browse. Pixel Shine supports JPG, PNG, WebP, and more. Use the highest-quality source you have — the original, not a re-shared or screenshotted copy.
 
@@ -4232,7 +4232,7 @@ Re-run at a lower scale, like 2x instead of 4x. A gentler pass gives the most na
         heading: "Key Takeaways",
         body: `Making an image clearer online is now fast, free, and genuinely effective thanks to AI. Instead of faking clarity by boosting local contrast, modern tools reconstruct real detail and add resolution — recovering crispness and legibility that old sliders never could. Pixel Shine delivers this through its free Normal mode: no watermark, no forced sign-up, and no usage caps, plus 5 free Pro trials for tougher images.
 
-The process is effortless — upload, choose your mode and scale, and download a clearer result in about a minute. Whether it's a product photo, a screenshot, or a cherished old picture, your unclear image can look crisp and professional again. Try the free AI clarity tool at sjpt.io today.`,
+The process is effortless — upload, choose your mode and scale, and download a clearer result in about a minute. Whether it's a product photo, a screenshot, or a cherished old picture, your unclear image can look crisp and professional again. Try the free AI clarity tool at Pixel Shine today.`,
       },
     ],
   },
@@ -4253,7 +4253,7 @@ The process is effortless — upload, choose your mode and scale, and download a
       {
         body: `Learning to AI enhance old photos for free is one of the most rewarding things you can do with a rainy afternoon and a box of family pictures. If you've ever scanned a decades-old print and felt disappointed by how soft, grainy, and faded it looked on your screen, you're experiencing a universal problem: old photos simply weren't captured or stored to survive on today's high-resolution displays. The good news is that AI can now enhance, restore, and upscale those family memories automatically, and you don't need to pay a cent or install anything.
 
-Pixel Shine (sjpt.io) offers free AI enhancement that increases resolution, sharpens blurry faces, and cleans up scanning noise, all with no watermark and no mandatory account for its Normal mode. Whether you're working with a vintage portrait, a faded holiday snapshot, or a low-quality scanned photo, this guide walks you through exactly how to enhance old photos with AI, the settings that matter, and how to get results that rival paid restoration services. By the end, you'll be able to turn washed-out originals into crisp, vivid images ready to print, frame, or share with family.`,
+Pixel Shine offers free AI enhancement that increases resolution, sharpens blurry faces, and cleans up scanning noise, all with no watermark and no mandatory account for its Normal mode. Whether you're working with a vintage portrait, a faded holiday snapshot, or a low-quality scanned photo, this guide walks you through exactly how to enhance old photos with AI, the settings that matter, and how to get results that rival paid restoration services. By the end, you'll be able to turn washed-out originals into crisp, vivid images ready to print, frame, or share with family.`,
       },
       {
         heading: "Why Old Photos Look So Bad on Modern Screens",
@@ -4287,7 +4287,7 @@ Pixel Shine provides two modes. The Normal upscale is free, unlimited, and needs
 
 **1. Digitize the original well.** Scan prints at 600 DPI for the sharpest source. No scanner? Photograph the print flat in soft, even daylight, holding your phone directly overhead to avoid glare and keystone distortion.
 
-**2. Visit sjpt.io and open the Upscaler.** The Normal mode requires no account, so you can begin enhancing immediately.
+**2. Visit Pixel Shine and open the Upscaler.** The Normal mode requires no account, so you can begin enhancing immediately.
 
 **3. Upload your scanned photo.** Drag and drop or click to select. Supported formats include JPG, PNG, and WEBP.
 
@@ -4382,7 +4382,7 @@ It depends on the source. AI can dramatically sharpen soft, low-resolution scans
 Normal is free, unlimited, and handles most old photos well. Pro AI applies deeper generative reconstruction for severely damaged or very low-quality scans and uses credits, with 5 free trials for new users.
 
 **Do I need to download software to enhance my photos?**
-No. Everything runs online at sjpt.io on desktop or mobile. There's nothing to install.
+No. Everything runs online at Pixel Shine on desktop or mobile. There's nothing to install.
 
 **Will there be a watermark on my enhanced photos?**
 Never. Pixel Shine produces clean, watermark-free results ready to print, frame, or share.
@@ -4397,7 +4397,7 @@ Yes. Pixel Shine works on mobile, so you can upload, enhance, and download old p
         heading: "Key Takeaways",
         body: `Enhancing old photos for free has never been easier or more effective. With AI, you can boost resolution, sharpen faded faces, and clean up decades of grain and noise in seconds, turning washed-out originals into crisp, shareable memories. The recipe for great results is straightforward: start with a clean high-DPI scan, crop to your subject, match the upscale level to the source, and reserve Pro mode for your most precious images.
 
-Pixel Shine puts all of this within reach for free, with unlimited watermark-free enhancement and no mandatory sign-up. Your family memories deserve to look their best. Head to sjpt.io, upload an old photo, and see the transformation for yourself.`,
+Pixel Shine puts all of this within reach for free, with unlimited watermark-free enhancement and no mandatory sign-up. Your family memories deserve to look their best. Head to Pixel Shine, upload an old photo, and see the transformation for yourself.`,
       },
     ],
   },
@@ -4446,7 +4446,7 @@ In this guide, we'll explain exactly why old methods lost quality, how AI upscal
         heading: "Step-by-Step: Upscaling With Quality Preserved",
         body: `Follow these steps to enlarge your image while keeping it sharp using Pixel Shine.
 
-**1. Open sjpt.io and go to the Upscale tool.** The free Normal upscaler needs no account, so you can begin immediately.
+**1. Open Pixel Shine and go to the Upscale tool.** The free Normal upscaler needs no account, so you can begin immediately.
 
 **2. Start with your best-quality source.** Use the cleanest, largest version of your image available — the less prior compression, the better the AI can preserve and rebuild detail.
 
@@ -4554,7 +4554,7 @@ Export at high quality or as PNG. Saving your upscaled image at aggressive JPEG 
         heading: "Key Takeaways",
         body: `The old trade-off between size and quality is over. With AI super-resolution, you can upscale an image without losing quality for free — because the technology reconstructs real detail instead of smearing existing pixels the way traditional resizers do. Pixel Shine delivers this with a free, unlimited Normal upscaler, watermark-free output, no mandatory sign-up, and a Pro AI mode for the most quality-critical jobs.
 
-Whether you're preparing portraits, product photos, prints, or precious memories, your images can now get bigger without getting worse. See the difference for yourself — head to sjpt.io and upscale your first image with quality intact, free.`,
+Whether you're preparing portraits, product photos, prints, or precious memories, your images can now get bigger without getting worse. See the difference for yourself — head to Pixel Shine and upscale your first image with quality intact, free.`,
       },
     ],
   },
@@ -4601,7 +4601,7 @@ When you weigh quality, watermark policy, sign-up requirements, usage limits, ou
         heading: "Step-by-Step: Testing a Free AI Enhancer",
         body: `Here's how to evaluate and use a top free AI enhancer, using Pixel Shine as the example:
 
-**1. Open the tool.** Go to sjpt.io and find the upscale / enhance feature. Confirm it loads online with no installation.
+**1. Open the tool.** Go to Pixel Shine and find the upscale / enhance feature. Confirm it loads online with no installation.
 
 **2. Check for a sign-up wall.** With Pixel Shine's Normal Upscaler, you can start immediately — no account required. This is your first quality test; tools that block you here score lower.
 
@@ -4715,7 +4715,7 @@ Pixel Shine also offers a free background remover, AI headshot generator, text-p
         heading: "Key Takeaways",
         body: `In 2025, the best free AI photo enhancer is the one that pairs modern deep-learning quality with genuinely free, unrestricted access — and by that standard, Pixel Shine leads. Its Normal Upscaler is unlimited, needs no sign-up, and downloads watermark-free at full resolution, while the Pro engine handles demanding images with 5 free trials for new users.
 
-When you evaluate any enhancer, test the final download, not just the preview, and weigh quality, watermarks, limits, resolution, and sign-up friction together. For most users seeking professional results without cost or hassle, Pixel Shine checks every box. Try the top-ranked free AI enhancer of 2025 at sjpt.io.`,
+When you evaluate any enhancer, test the final download, not just the preview, and weigh quality, watermarks, limits, resolution, and sign-up friction together. For most users seeking professional results without cost or hassle, Pixel Shine checks every box. Try the top-ranked free AI enhancer of 2025 at Pixel Shine.`,
       },
     ],
   },
@@ -4764,7 +4764,7 @@ The **Normal mode is completely free, unlimited, and needs no account**, which i
         heading: "Step-by-Step: Enhance Your Wedding Photos for Free",
         body: `Here's how to restore a blurry wedding photo in about a minute:
 
-**1. Open the restoration tool.** Visit sjpt.io and launch the AI Upscaler. The free Normal mode requires no sign-up, so you can start restoring immediately.
+**1. Open the restoration tool.** Visit Pixel Shine and launch the AI Upscaler. The free Normal mode requires no sign-up, so you can start restoring immediately.
 
 **2. Upload your wedding photo.** Drag it in or click to browse. For old prints, scan or photograph them at the highest resolution you can first — 600 DPI or more for scans — then upload that. Pixel Shine supports JPG, PNG, WebP, and more.
 
@@ -4864,7 +4864,7 @@ Yes. Your images are processed to produce your result and aren't repurposed, and
         heading: "Key Takeaways",
         body: `Wedding photos capture moments you can never recreate, so when they come out blurry, restoring them matters. AI can now reconstruct the detail lost to dim reception lighting, motion, and decades of aging — sharpening faces, cleaning up grain, and enlarging images for print, all for free. Pixel Shine's Normal mode does this with no watermark, no forced sign-up, and no usage caps, while 5 free Pro trials let you give your most precious heirloom portraits the maximum reconstruction they deserve.
 
-Whether it's a soft first-dance shot or your grandparents' faded wedding portrait, those memories deserve to be seen clearly again. Try the free wedding photo restoration tool at sjpt.io and bring your most treasured moments back into focus.`,
+Whether it's a soft first-dance shot or your grandparents' faded wedding portrait, those memories deserve to be seen clearly again. Try the free wedding photo restoration tool at Pixel Shine and bring your most treasured moments back into focus.`,
       },
     ],
   },
@@ -4911,7 +4911,7 @@ Pixel Shine's broader platform adds real e-commerce value too. The **background 
         heading: "Step-by-Step: Enhancing Product Images for Free",
         body: `Here's the workflow to prepare conversion-ready product images:
 
-**1. Open Pixel Shine.** Go to sjpt.io and navigate to the upscale / enhance tool. It runs online — perfect for working through a catalog on desktop.
+**1. Open Pixel Shine.** Go to Pixel Shine and navigate to the upscale / enhance tool. It runs online — perfect for working through a catalog on desktop.
 
 **2. Upload your product photo.** Drag and drop or browse to your file (JPG, PNG, or WebP). The Normal Upscaler needs no account, so you can start immediately.
 
@@ -4994,7 +4994,7 @@ Pixel Shine's broader platform adds real e-commerce value too. The **background 
       {
         heading: "Frequently Asked Questions",
         body: `**How can I enhance product images for free?**
-Use Pixel Shine's Normal Upscaler at sjpt.io. It's free, unlimited, and needs no sign-up. Upload your product photo, choose a scale factor to meet your marketplace's resolution requirement, and download the sharper image with no watermark.
+Use Pixel Shine's Normal Upscaler at Pixel Shine. It's free, unlimited, and needs no sign-up. Upload your product photo, choose a scale factor to meet your marketplace's resolution requirement, and download the sharper image with no watermark.
 
 **Will enhanced product images meet Amazon's requirements?**
 Yes. AI upscaling lets you exceed Amazon's recommended 1000px-plus longest side to enable zoom. Pair it with the background remover to create the clean white background Amazon requires for main images.
@@ -5021,7 +5021,7 @@ Yes, and the Pro engine excels here, reconstructing fine detail like fabric weav
         heading: "Key Takeaways",
         body: `Enhancing product images for free is one of the smartest moves any online seller can make, because image quality directly drives clicks, trust, and sales. Pixel Shine's free Normal Upscaler lets you sharpen and upscale your entire catalog with no sign-up, no watermark, and no cost, while the Pro engine delivers maximum detail for hero shots, with 5 free trials for new users.
 
-Enhance above marketplace minimums, keep your catalog consistent, and pair enhancement with the free background remover for clean, listing-ready images. Whether you sell on Amazon, Etsy, or your own store, professional product imagery is now within reach without a studio budget. Enhance your first product image free at sjpt.io.`,
+Enhance above marketplace minimums, keep your catalog consistent, and pair enhancement with the free background remover for clean, listing-ready images. Whether you sell on Amazon, Etsy, or your own store, professional product imagery is now within reach without a studio budget. Enhance your first product image free at Pixel Shine.`,
       },
     ],
   },
@@ -5042,7 +5042,7 @@ Enhance above marketplace minimums, keep your catalog consistent, and pair enhan
       {
         body: `AI photo restoration free online has quietly become one of the most searched-for solutions among people trying to save fading family memories, and for good reason. Millions of printed photographs from the 1950s through the early 2000s are now sitting in shoeboxes, albums, and attics, slowly degrading from humidity, sunlight, and simple handling. When you scan one of these and look at it on a modern screen, the damage jumps out: faded color, deep scratches, torn corners, blurry faces, and that soft, washed-out quality that old prints tend to develop.
 
-Until recently, the only way to fix a badly damaged photo was to pay a professional retoucher $30 to $150 per image, or spend hours learning Photoshop clone-stamp techniques. Today, AI-powered restoration can repair much of that damage in seconds, entirely free and directly online. Pixel Shine (sjpt.io) offers exactly this kind of tool with no watermark and no mandatory sign-up for its Normal upscale mode. In this guide, you'll learn how to restore damaged photos with AI, what the technology can and cannot fix, and the exact step-by-step workflow to bring your old and damaged photos back to life.`,
+Until recently, the only way to fix a badly damaged photo was to pay a professional retoucher $30 to $150 per image, or spend hours learning Photoshop clone-stamp techniques. Today, AI-powered restoration can repair much of that damage in seconds, entirely free and directly online. Pixel Shine offers exactly this kind of tool with no watermark and no mandatory sign-up for its Normal upscale mode. In this guide, you'll learn how to restore damaged photos with AI, what the technology can and cannot fix, and the exact step-by-step workflow to bring your old and damaged photos back to life.`,
       },
       {
         heading: "Why Old Photos Degrade in the First Place",
@@ -5076,7 +5076,7 @@ Pixel Shine offers two modes. The Normal upscale is completely free, unlimited, 
 
 **1. Scan or photograph the original.** For best results, scan the print at 600 DPI on a flatbed scanner. If you don't have a scanner, lay the photo flat in bright, even daylight (avoid direct sun and flash glare) and shoot straight down with your phone. A better source scan means a dramatically better restoration.
 
-**2. Go to sjpt.io and open the Upscaler.** Navigate to the upscale tool. You do not need to create an account for the Normal mode, so you can start immediately.
+**2. Go to Pixel Shine and open the Upscaler.** Navigate to the upscale tool. You do not need to create an account for the Normal mode, so you can start immediately.
 
 **3. Upload your scanned image.** Drag and drop the file or click to browse. Pixel Shine accepts common formats like JPG, PNG, and WEBP.
 
@@ -5161,7 +5161,7 @@ Yes. Pixel Shine's Normal upscale and restoration mode is completely free, unlim
 AI restoration excellently handles scratches, noise, fading, and softness. For small tears and creases, it often reduces their visibility significantly. For large physically missing sections, AI enhances what remains but can't perfectly reconstruct content that no longer exists in the image.
 
 **Do I need to install any software?**
-No. Pixel Shine runs entirely online at sjpt.io. There's nothing to download or install, and it works on both desktop and mobile.
+No. Pixel Shine runs entirely online at Pixel Shine. There's nothing to download or install, and it works on both desktop and mobile.
 
 **Will restoration add a watermark to my photo?**
 No. Pixel Shine never adds watermarks, so your restored images are immediately ready to print, frame, or share.
@@ -5182,7 +5182,7 @@ Pixel Shine processes your images to deliver the restored result. As with any on
         heading: "Key Takeaways",
         body: `Restoring old and damaged photos no longer requires expensive professionals or advanced Photoshop skills. AI photo restoration free online can recover resolution, sharpen faces, reduce noise, and revive faded family memories in seconds. The keys to great results are simple: start from the best possible scan, crop tightly, choose the right upscale level, and reserve Pro mode for your most precious images.
 
-Pixel Shine makes this accessible to everyone with free, unlimited, watermark-free restoration and no mandatory sign-up. Whether you're digitizing an entire album or rescuing a single irreplaceable portrait, the tools are ready right now. Head to sjpt.io, upload your first damaged photo, and bring your memories back to life for free.`,
+Pixel Shine makes this accessible to everyone with free, unlimited, watermark-free restoration and no mandatory sign-up. Whether you're digitizing an entire album or rescuing a single irreplaceable portrait, the tools are ready right now. Head to Pixel Shine, upload your first damaged photo, and bring your memories back to life for free.`,
       },
     ],
   },
@@ -5231,7 +5231,7 @@ In this guide, we'll break down how a free 4K upscaler online should work, why P
         heading: "Step-by-Step: Using the Free 4K Upscaler",
         body: `Follow these steps to upscale any image to 4K with Pixel Shine.
 
-**1. Open sjpt.io and go to the Upscale tool.** The free Normal 4K upscaler requires no account, so you can begin instantly.
+**1. Open Pixel Shine and go to the Upscale tool.** The free Normal 4K upscaler requires no account, so you can begin instantly.
 
 **2. Note your image's current size.** Check the width and height. To reach 4K, aim for a final long side of about 3840 pixels or more.
 
@@ -5327,7 +5327,7 @@ No. Every downloaded 4K file is clean and watermark-free, ready for wallpapers, 
 A source near 1000 pixels wide hits 4K at 4x; a 1920-pixel source reaches exactly 3840 at 2x. Larger, cleaner sources yield the best ultra-HD results.
 
 **Do I need to download software?**
-No. Pixel Shine runs entirely online at sjpt.io on any device, with nothing to install.
+No. Pixel Shine runs entirely online at Pixel Shine on any device, with nothing to install.
 
 **When is Pro AI mode worth using for 4K?**
 Use it for large 4K prints, critical portraits, or heavily degraded sources needing maximum detail recovery. Five free trials let new users test it first.
@@ -5339,7 +5339,7 @@ Yes. Higher factors or additional passes from the source let you push resolution
         heading: "Key Takeaways",
         body: `A free 4K image upscaler is only worth using if it delivers real ultra-HD sharpness rather than a bigger, blurrier image — and that requires genuine AI super-resolution. Pixel Shine provides exactly that with an unlimited free Normal upscaler, clean watermark-free output, no mandatory sign-up, and a Pro AI mode for the most demanding 4K work.
 
-Whether you're crafting 4K wallpapers, prepping large prints, or filling ultra-HD displays, Pixel Shine reconstructs true detail so your images shine at full resolution. Experience it now at sjpt.io and upscale your first image to 4K free.`,
+Whether you're crafting 4K wallpapers, prepping large prints, or filling ultra-HD displays, Pixel Shine reconstructs true detail so your images shine at full resolution. Experience it now at Pixel Shine and upscale your first image to 4K free.`,
       },
     ],
   },
@@ -5386,7 +5386,7 @@ Beyond upscaling, Pixel Shine's broader platform includes an **AI Headshot Gener
         heading: "Step-by-Step: Enhancing a Portrait with AI",
         body: `Here's the workflow for sharper, natural-looking portraits:
 
-**1. Open Pixel Shine.** Go to sjpt.io and navigate to the upscale / enhance tool. It runs online on desktop or mobile.
+**1. Open Pixel Shine.** Go to Pixel Shine and navigate to the upscale / enhance tool. It runs online on desktop or mobile.
 
 **2. Upload your portrait.** Drag and drop or browse to your file (JPG, PNG, or WebP). The Normal Upscaler requires no account, so you can begin instantly.
 
@@ -5469,7 +5469,7 @@ Beyond upscaling, Pixel Shine's broader platform includes an **AI Headshot Gener
       {
         heading: "Frequently Asked Questions",
         body: `**How can I enhance portrait photos with AI for free?**
-Use Pixel Shine's Normal Upscaler at sjpt.io — it's free, unlimited, and needs no sign-up. Upload your portrait, choose a scale, and download the sharper result with no watermark. For maximum facial detail, try the Pro engine with one of your 5 free trials.
+Use Pixel Shine's Normal Upscaler at Pixel Shine — it's free, unlimited, and needs no sign-up. Upload your portrait, choose a scale, and download the sharper result with no watermark. For maximum facial detail, try the Pro engine with one of your 5 free trials.
 
 **Will AI enhancement make my portrait look fake?**
 Not if done right. Pixel Shine reconstructs natural facial detail rather than crudely smoothing. Avoid over-scaling and stacking filters, and preserve skin texture to keep results looking real.
@@ -5496,7 +5496,7 @@ Avoid over-scaling and don't add smoothing filters afterward. Preserve visible s
         heading: "Key Takeaways",
         body: `Enhancing portrait photos with AI for free is entirely possible when you use a tool built to reconstruct faces naturally. Pixel Shine's Normal Upscaler sharpens portraits with no sign-up, no watermark, and no cost, while the Pro engine delivers stronger facial detail for important headshots, with 5 free trials for new users.
 
-The secret to natural results is preserving skin texture, keeping eyes crisp, and avoiding over-processing. Combine enhancement with the AI Headshot Generator and background remover for a fully professional finish. Whether it's a LinkedIn photo, a selfie, or a family portrait, you can make faces sharper and more detailed while keeping them real. Enhance your first portrait free at sjpt.io.`,
+The secret to natural results is preserving skin texture, keeping eyes crisp, and avoiding over-processing. Combine enhancement with the AI Headshot Generator and background remover for a fully professional finish. Whether it's a LinkedIn photo, a selfie, or a family portrait, you can make faces sharper and more detailed while keeping them real. Enhance your first portrait free at Pixel Shine.`,
       },
     ],
   },
@@ -5541,7 +5541,7 @@ The AI is specifically strong on the things that trip up cheaper tools: it handl
 
 **1. Photograph your product well.** Before you even touch the tool, shoot in good, even lighting against a background that contrasts with your product. A dark product on a light surface (or vice versa) gives the AI clean edges to detect.
 
-**2. Open the Pixel Shine Background Remover.** Go to sjpt.io and select the Remove Background tool. No account or sign-in is required to start.
+**2. Open the Pixel Shine Background Remover.** Go to Pixel Shine and select the Remove Background tool. No account or sign-in is required to start.
 
 **3. Upload your product image.** Drag and drop the file or click to browse. JPG, PNG, and WEBP files all work. For best results, upload the highest-resolution version you have.
 
@@ -5649,7 +5649,7 @@ Run it through the Pixel Shine Upscaler first to add sharpness and resolution, t
         heading: "Key Takeaways",
         body: `Removing the background from a product photo for free is no longer a technical hurdle — AI does in five seconds what used to take 20 minutes or a paid clipping service. Shoot against a contrasting background, upscale low-res images first, drop in a pure white background for marketplace compliance, and always inspect your edges before downloading. With clean, consistent product images, your listings look professional, meet platform requirements, and convert more browsers into buyers.
 
-Ready to make your products look studio-perfect? Head to sjpt.io and try the free Background Remover — no watermark, no sign-in, unlimited standard use. Turn your next messy product snapshot into a clean, sales-ready image in seconds.`,
+Ready to make your products look studio-perfect? Head to Pixel Shine and try the free Background Remover — no watermark, no sign-in, unlimited standard use. Turn your next messy product snapshot into a clean, sales-ready image in seconds.`,
       },
     ],
   },
@@ -5702,7 +5702,7 @@ The result is an image that's simultaneously too small, too soft, too noisy, and
 
 **1. Scan or photograph the original at the best quality you can.** If working from a print, scan at a high setting or take a sharp, well-lit photo of it. A better capture gives the AI more to work with.
 
-**2. Go to sjpt.io and open the Upscale tool.** The free Normal upscaler needs no account, so you can start right away.
+**2. Go to Pixel Shine and open the Upscale tool.** The free Normal upscaler needs no account, so you can start right away.
 
 **3. Upload your old photo.** Drag and drop or click to browse. JPG, PNG, and WEBP are all supported directly.
 
@@ -5808,7 +5808,7 @@ JPG, PNG, and WEBP are all supported directly. Saving your restored result as PN
         heading: "Key Takeaways",
         body: `Restoring and upscaling old photos for free is now within everyone's reach thanks to AI that reconstructs detail, reduces grain, and enlarges images all at once — rather than simply magnifying the flaws the way basic resizers do. Pixel Shine makes reviving your family archive practical with a free, unlimited Normal upscaler, a powerful Pro AI mode built for degraded images, five free trials, and clean, watermark-free output.
 
-Those small, faded, precious photos can become clear, enlarged, and ready to print, frame, and share across generations. Don't let those memories fade any further — head to sjpt.io and restore your first old photo free today.`,
+Those small, faded, precious photos can become clear, enlarged, and ready to print, frame, and share across generations. Don't let those memories fade any further — head to Pixel Shine and restore your first old photo free today.`,
       },
     ],
   },
@@ -5857,7 +5857,7 @@ Several things make it especially handy for signatures. There's **no watermark**
 
 **3. Crop tightly.** Trim the image so it's mostly signature with a little white margin. This removes distracting page elements and helps the AI focus.
 
-**4. Open the Pixel Shine Background Remover.** Go to sjpt.io and select the Remove Background tool. No sign-in is needed to begin.
+**4. Open the Pixel Shine Background Remover.** Go to Pixel Shine and select the Remove Background tool. No sign-in is needed to begin.
 
 **5. Upload your signature image.** Drag and drop the JPG or PNG file, or click to browse and select it.
 
@@ -5936,7 +5936,7 @@ AI removal sidesteps all of this. It understands the difference between ink and 
       {
         heading: "Frequently Asked Questions",
         body: `**How do I make my signature transparent for free?**
-Photograph or scan your signature on white paper, upload it to Pixel Shine's free Background Remover at sjpt.io, let the AI remove the white paper in about five seconds, then download it as a transparent PNG.
+Photograph or scan your signature on white paper, upload it to Pixel Shine's free Background Remover at Pixel Shine, let the AI remove the white paper in about five seconds, then download it as a transparent PNG.
 
 **Why does my signature have a white box around it?**
 Because it was saved as a JPG or another format that can't store transparency, so the paper behind your ink stays as solid white pixels. Removing that background and saving as PNG eliminates the box.
@@ -5963,7 +5963,7 @@ No. Standard background removal on Pixel Shine requires no mandatory sign-in and
         heading: "Key Takeaways",
         body: `Making your signature transparent for free comes down to a few simple moves: sign with a dark pen on white paper, capture it in bright even light, remove the white background with AI, and save the result as a PNG. That transparent file drops cleanly onto contracts, PDFs, emails, and artwork with no ugly white box and no watermark. For faint scans, upscale first to keep the strokes crisp.
 
-Ready to sign documents like a pro? Head to sjpt.io, upload your signature to the free Background Remover, and download a clean transparent PNG in seconds — no sign-in, no watermark, unlimited standard use.`,
+Ready to sign documents like a pro? Head to Pixel Shine, upload your signature to the free Background Remover, and download a clean transparent PNG in seconds — no sign-in, no watermark, unlimited standard use.`,
       },
     ],
   },
@@ -6008,7 +6008,7 @@ The practical advantages matter for branding. There's **no watermark** on the do
 
 **1. Start with the highest-quality logo you have.** A crisp, high-resolution file gives the cleanest edges. If yours is small or blurry, upscale it first.
 
-**2. Open the Pixel Shine Background Remover.** Visit sjpt.io and select the Remove Background tool. No account is needed to start.
+**2. Open the Pixel Shine Background Remover.** Visit Pixel Shine and select the Remove Background tool. No account is needed to start.
 
 **3. Upload your logo file.** Drag and drop the JPG or PNG, or click to browse. Higher resolution inputs give sharper transparent edges.
 
@@ -6091,7 +6091,7 @@ AI removal handles all of this automatically. It reads the logo's shape, clears 
       {
         heading: "Frequently Asked Questions",
         body: `**How do I make my logo transparent for free?**
-Upload your logo to Pixel Shine's free Background Remover at sjpt.io, let the AI strip the white background in about five seconds, then download it as a transparent PNG — no sign-in and no watermark for standard use.
+Upload your logo to Pixel Shine's free Background Remover at Pixel Shine, let the AI strip the white background in about five seconds, then download it as a transparent PNG — no sign-in and no watermark for standard use.
 
 **Why does my logo have a white background even though it's a PNG?**
 Because the PNG was exported with the logo flattened onto white, so those white pixels are baked in. You need to actually remove the background and re-save with real transparency.
@@ -6118,7 +6118,7 @@ No. The process is upload, wait about five seconds, and download. There's nothin
         heading: "Key Takeaways",
         body: `Making a logo transparent for free is quick and skill-free with AI: upload your logo, let the tool remove the background in about five seconds, and download a clean transparent PNG. Start from the highest-resolution source you have, check the interior gaps and edges, and always test the result on a dark background to confirm true transparency. For small or blurry logos, upscale first so the final edges stay sharp.
 
-Ready to put your brand on anything? Visit sjpt.io, upload your logo to the free Background Remover, and get a watermark-free transparent PNG in seconds — no sign-in, unlimited standard use.`,
+Ready to put your brand on anything? Visit Pixel Shine, upload your logo to the free Background Remover, and get a watermark-free transparent PNG in seconds — no sign-in, unlimited standard use.`,
       },
     ],
   },
@@ -6167,7 +6167,7 @@ This guide walks you through the entire process of using Pixel Shine as a free 4
         heading: "Step-by-Step: Upscaling an Image to 4K",
         body: `Here's the complete process for taking any image to 4K with Pixel Shine.
 
-**1. Visit sjpt.io and open the Upscale tool.** The free Normal upscaler needs no account, so you can start right away.
+**1. Visit Pixel Shine and open the Upscale tool.** The free Normal upscaler needs no account, so you can start right away.
 
 **2. Check your current dimensions.** Note your image's width and height. To reach 4K, aim for a final long side around 3840 pixels or more.
 
@@ -6263,7 +6263,7 @@ A source near 1000 pixels wide reaches 4K at 4x; a 1920-pixel source hits exactl
 No. Every downloaded file is clean and watermark-free, ready for wallpapers, print, and commercial use.
 
 **Do I need to install anything?**
-No. Pixel Shine runs entirely online at sjpt.io on any device, with nothing to download or install.
+No. Pixel Shine runs entirely online at Pixel Shine on any device, with nothing to download or install.
 
 **When should I use Pro AI mode?**
 Use it for large 4K prints, critical portraits, or heavily degraded sources needing maximum detail recovery. New users get five free trials to test it.
@@ -6275,7 +6275,7 @@ Yes. With higher factors, staged passes, or additional runs from the source, you
         heading: "Key Takeaways",
         body: `Upscaling an image to 4K for free is fully achievable when you use real AI super-resolution instead of a basic resizer. The distinction is crucial: AI reconstructs genuine detail so your image is sharp at 4K, not just larger and softer. Pixel Shine makes it effortless with a free, unlimited Normal upscaler, watermark-free output, no mandatory sign-up, and a Pro AI mode for the most demanding ultra-HD jobs.
 
-Whether you're building 4K wallpapers, prepping large prints, or filling ultra-HD displays, the process takes only seconds. Try it now at sjpt.io and upscale your first image to 4K free.`,
+Whether you're building 4K wallpapers, prepping large prints, or filling ultra-HD displays, the process takes only seconds. Try it now at Pixel Shine and upscale your first image to 4K free.`,
       },
     ],
   },
@@ -6326,7 +6326,7 @@ The combination means that enlarging anime or AI art with generic tools produces
         heading: "Step-by-Step: Upscaling Anime Images and AI Art",
         body: `Here's how to enlarge your anime or AI art with Pixel Shine from start to finish.
 
-**1. Go to sjpt.io and open the Upscale tool.** The free Normal upscaler needs no account, so you can start immediately.
+**1. Go to Pixel Shine and open the Upscale tool.** The free Normal upscaler needs no account, so you can start immediately.
 
 **2. Prepare your source art.** Use the original, highest-quality export of your AI generation or the cleanest version of the anime image you have — avoid pre-compressed screenshots when a better source exists.
 
@@ -6434,7 +6434,7 @@ Yes, though results are best from clean sources. Manga panels and screenshots ca
         heading: "Key Takeaways",
         body: `Upscaling anime images and AI art for free is entirely possible when you use AI that reconstructs detail and preserves crisp lines rather than a basic resizer that smears them into a blur. Pixel Shine is built for exactly this, with a free, unlimited Normal upscaler, clean watermark-free output, no mandatory sign-up, and a Pro AI mode plus five free trials for the most detailed creative work.
 
-Whether you're making 4K wallpapers, printing posters, preparing merch, or sharpening your portfolio, your anime and AI art can stay crisp and vibrant at any size. Try it now at sjpt.io and upscale your first anime image or AI artwork free.`,
+Whether you're making 4K wallpapers, printing posters, preparing merch, or sharpening your portfolio, your anime and AI art can stay crisp and vibrant at any size. Try it now at Pixel Shine and upscale your first anime image or AI artwork free.`,
       },
     ],
   },
@@ -6455,7 +6455,7 @@ Whether you're making 4K wallpapers, printing posters, preparing merch, or sharp
       {
         body: `Creating a professional LinkedIn headshot from a selfie for free is now completely realistic, and it can genuinely transform how recruiters, clients, and colleagues perceive you. Your LinkedIn profile photo is the single most-viewed element of your entire profile, and research consistently shows that profiles with professional headshots receive up to 14 times more views and significantly more connection requests than those with casual or missing photos. Yet booking a professional photographer costs $150 to $400 and eats up half a day, which is exactly why so many people settle for a cropped vacation photo or an awkward webcam shot.
 
-AI changes this equation entirely. With Pixel Shine (sjpt.io), you can turn an ordinary selfie into a polished, studio-quality professional headshot in minutes, with no photographer, no expensive session, and no watermark. In this guide, you'll learn exactly how to convert a selfie into a LinkedIn-ready headshot, which selfies work best as input, the step-by-step process, and the pro tricks that make AI-generated headshots look natural rather than artificial. Whether you're job hunting, building a personal brand, or simply overdue for a profile refresh, this is the fastest, cheapest way to look your professional best.`,
+AI changes this equation entirely. With Pixel Shine, you can turn an ordinary selfie into a polished, studio-quality professional headshot in minutes, with no photographer, no expensive session, and no watermark. In this guide, you'll learn exactly how to convert a selfie into a LinkedIn-ready headshot, which selfies work best as input, the step-by-step process, and the pro tricks that make AI-generated headshots look natural rather than artificial. Whether you're job hunting, building a personal brand, or simply overdue for a profile refresh, this is the fastest, cheapest way to look your professional best.`,
       },
       {
         heading: "Why Your LinkedIn Photo Matters More Than You Think",
@@ -6491,7 +6491,7 @@ Pixel Shine makes this accessible without the traditional cost or complexity. Ne
 
 **1. Take a good source selfie.** Face a window in soft, natural daylight (not direct sun). Hold the phone at eye level, roughly arm's length away, and keep your head and shoulders in frame. Use a neutral expression or a genuine, relaxed smile. Avoid heavy filters, sunglasses, and hats.
 
-**2. Go to sjpt.io and open the AI Headshot Generator.** Navigate to the headshot tool to begin.
+**2. Go to Pixel Shine and open the AI Headshot Generator.** Navigate to the headshot tool to begin.
 
 **3. Upload your selfie.** Drag and drop or select your photo. A clear, well-lit, front-facing selfie gives the AI the best material to work with.
 
@@ -6587,7 +6587,7 @@ Yes, as long as it still genuinely represents your appearance so people recogniz
 Just a few minutes from upload to download, far faster than booking and attending a traditional photo shoot.
 
 **Do I need to install any app?**
-No. Pixel Shine runs online at sjpt.io, so you can create your headshot on desktop or mobile with nothing to install.
+No. Pixel Shine runs online at Pixel Shine, so you can create your headshot on desktop or mobile with nothing to install.
 
 **Can I choose the background and style?**
 Yes. You can select professional styles and backgrounds appropriate for your industry, from formal corporate looks to slightly more relaxed creative styles.
@@ -6599,7 +6599,7 @@ Absolutely, and you should. Using one consistent, professional headshot across L
         heading: "Key Takeaways",
         body: `A professional LinkedIn headshot is one of the highest-impact upgrades you can make to your professional presence, and you no longer need a photographer or a big budget to get one. By turning a good selfie into a polished, studio-quality portrait, AI lets you make a strong first impression on recruiters and clients in minutes. The keys are simple: start with a clear, well-lit, front-facing selfie, match the style to your industry, generate a few variations, and choose the one that looks most like you.
 
-Pixel Shine makes this fast, free, and watermark-free, with 5 free trials for new users. Ready to upgrade your first impression? Head to sjpt.io, upload a selfie, and get your professional LinkedIn headshot today.`,
+Pixel Shine makes this fast, free, and watermark-free, with 5 free trials for new users. Ready to upgrade your first impression? Head to Pixel Shine, upload a selfie, and get your professional LinkedIn headshot today.`,
       },
     ],
   },
@@ -6646,7 +6646,7 @@ The practical perks make experimenting easy. New users get **5 free trials** to 
 
 **2. Decide your approach.** For a solid color or simple backdrop, use the Background Remover. For a realistic new scene, use the AI Photo Editor with a text prompt.
 
-**3. Open Pixel Shine.** Go to sjpt.io and choose the tool that fits — Remove Background for simple swaps, or the AI Editor for prompt-based scenes.
+**3. Open Pixel Shine.** Go to Pixel Shine and choose the tool that fits — Remove Background for simple swaps, or the AI Editor for prompt-based scenes.
 
 **4. Upload your image.** Drag and drop or browse. Higher resolution means better edges and a more believable result.
 
@@ -6727,7 +6727,7 @@ The honest trade-off: for a high-stakes hero image demanding pixel-perfect contr
       {
         heading: "Frequently Asked Questions",
         body: `**How do I change a photo background with AI for free?**
-Upload your photo to Pixel Shine at sjpt.io. For a simple swap, use the free Background Remover to isolate your subject and add a new background. For a realistic new scene, use the AI Photo Editor and describe the background you want — new users get 5 free trials.
+Upload your photo to Pixel Shine at Pixel Shine. For a simple swap, use the free Background Remover to isolate your subject and add a new background. For a realistic new scene, use the AI Photo Editor and describe the background you want — new users get 5 free trials.
 
 **Is the AI background changer really free?**
 Standard background removal is free and unlimited with no watermark. The prompt-based AI Photo Editor gives new users 5 free trials to test creative background changes before using credits.
@@ -6754,7 +6754,7 @@ No. For simple swaps you just upload and pick a background; for scenes you descr
         heading: "Key Takeaways",
         body: `Changing a photo background with AI for free is fast, skill-free, and surprisingly convincing. Use the Background Remover for clean solid-color or simple swaps, and the AI Photo Editor's text prompts for realistic new scenes. The secrets to a believable result: match the lighting direction and color temperature, start with a high-resolution photo (upscale soft ones first), keep hair edges clean, and iterate with your 5 free trials to find the best fit.
 
-Ready to reinvent your photos' backgrounds? Head to sjpt.io, upload your image, and change the background in seconds — free, watermark-free, with 5 free trials on the AI editor to experiment.`,
+Ready to reinvent your photos' backgrounds? Head to Pixel Shine, upload your image, and change the background in seconds — free, watermark-free, with 5 free trials on the AI editor to experiment.`,
       },
     ],
   },
@@ -6801,7 +6801,7 @@ The platform makes it easy to experiment. New users get **5 free trials** on the
 
 **2. Upscale first if the photo is low-res.** More detail gives the AI better context to reconstruct the background. Run soft images through the AI Upscaler before editing.
 
-**3. Open the Pixel Shine Photo Editor.** Go to sjpt.io and select the AI Editor. New users have 5 free trials to work with.
+**3. Open the Pixel Shine Photo Editor.** Go to Pixel Shine and select the AI Editor. New users have 5 free trials to work with.
 
 **4. Upload your image.** Drag and drop or browse to select. Higher resolution yields a more convincing fill.
 
@@ -6882,7 +6882,7 @@ The trade-off: for a mission-critical edit against an extremely intricate backgr
       {
         heading: "Frequently Asked Questions",
         body: `**How do I remove an object or person from a photo for free?**
-Upload your photo to Pixel Shine's Photo Editor at sjpt.io, select or describe what you want removed, and let the AI erase it and inpaint the background. New users get 5 free trials, and downloads have no watermark.
+Upload your photo to Pixel Shine's Photo Editor at Pixel Shine, select or describe what you want removed, and let the AI erase it and inpaint the background. New users get 5 free trials, and downloads have no watermark.
 
 **How does the AI fill in the space behind the removed object?**
 It uses inpainting — analyzing the surrounding area and reconstructing the background that should be there, continuing textures, walls, skies, and patterns so the removal looks natural rather than leaving a hole.
@@ -6909,7 +6909,7 @@ People, photobombers, cars, signs, trash cans, wires, price tags, reflections, b
         heading: "Key Takeaways",
         body: `Removing an object or person from a photo for free is now genuinely easy thanks to AI inpainting, which reconstructs the background behind whatever you erase instead of leaving a hole. The keys to invisible removals: select tightly around your target, upscale low-resolution photos first, remove one element at a time in busy scenes, favor simpler backgrounds where you can, and inspect the fill at full zoom. With 5 free trials, you can rescue your most important shots at no cost.
 
-Ready to erase the distractions? Head to sjpt.io, open the AI Photo Editor, and remove unwanted objects or people in seconds — free trials for new users, and no watermark on your download.`,
+Ready to erase the distractions? Head to Pixel Shine, open the AI Photo Editor, and remove unwanted objects or people in seconds — free trials for new users, and no watermark on your download.`,
       },
     ],
   },
@@ -6930,7 +6930,7 @@ Ready to erase the distractions? Head to sjpt.io, open the AI Photo Editor, and 
       {
         body: `Learning how to enhance and unblur your profile picture for free can instantly upgrade how you appear across every platform you use. Your profile picture is your digital handshake, it's the first thing people see on LinkedIn, Instagram, dating apps, gaming profiles, work tools like Slack, and countless other services. Yet so many profile photos are let down by the same problems: they're blurry, low-resolution, pixelated after being cropped and re-uploaded, or simply soft because they were captured in poor lighting. A great photo of you can be ruined by the compression and resizing that happens every time an image gets uploaded and shared.
 
-Pixel Shine (sjpt.io) fixes this in seconds. Using its AI upscaler, you can sharpen, unblur, and enhance the quality of your profile picture for free, with no watermark and no sign-up required for the Normal mode. Whether your photo is blurry from a low-res source, pixelated from over-compression, or just not crisp enough to look professional, AI enhancement can recover detail and clarity that make you look your best. In this tutorial, you'll learn exactly how to enhance a profile picture, the settings that matter, and pro tips to get a sharp, high-quality result that stands out across every platform.`,
+Pixel Shine fixes this in seconds. Using its AI upscaler, you can sharpen, unblur, and enhance the quality of your profile picture for free, with no watermark and no sign-up required for the Normal mode. Whether your photo is blurry from a low-res source, pixelated from over-compression, or just not crisp enough to look professional, AI enhancement can recover detail and clarity that make you look your best. In this tutorial, you'll learn exactly how to enhance a profile picture, the settings that matter, and pro tips to get a sharp, high-quality result that stands out across every platform.`,
       },
       {
         heading: "Why Profile Pictures End Up Blurry",
@@ -6966,7 +6966,7 @@ Pixel Shine's Normal upscale mode is free, unlimited, and requires no sign-in, m
 
 **1. Choose the best available source photo.** Start with the highest-resolution version you have. If you're cropping from a larger image, crop before uploading so the AI enhances the exact area you'll use.
 
-**2. Go to sjpt.io and open the Upscaler.** The Normal mode needs no account, so you can begin right away.
+**2. Go to Pixel Shine and open the Upscaler.** The Normal mode needs no account, so you can begin right away.
 
 **3. Upload your profile picture.** Drag and drop or click to browse. JPG and PNG files work well.
 
@@ -7066,13 +7066,13 @@ Use 2x for slightly soft photos and 4x for small, blurry, or heavily pixelated o
 You can, but screenshots are lower quality than originals. For the best result, use the original high-resolution photo rather than a screenshot so the AI has more detail to work with.
 
 **Does it work on my phone?**
-Yes. Pixel Shine runs on your phone at sjpt.io, so you can enhance and download your profile picture directly from your phone.`,
+Yes. Pixel Shine runs on your phone at Pixel Shine, so you can enhance and download your profile picture directly from your phone.`,
       },
       {
         heading: "Key Takeaways",
         body: `A blurry profile picture can undercut a great photo of you, but fixing it takes just seconds. AI upscaling unblurs soft images, cleans up compression and pixelation, and sharpens your face, so you look crisp and professional everywhere online. The keys are simple: crop to your final composition first, match the upscale level to how soft the photo is, enhance as the last step, and upload at the platform's recommended size so your photo survives compression.
 
-Pixel Shine makes this free, fast, and watermark-free, with unlimited Normal enhancement and no sign-up required. Ready to upgrade your digital first impression? Head to sjpt.io, upload your profile picture, and get a sharper you in seconds.`,
+Pixel Shine makes this free, fast, and watermark-free, with unlimited Normal enhancement and no sign-up required. Ready to upgrade your digital first impression? Head to Pixel Shine, upload your profile picture, and get a sharper you in seconds.`,
       },
     ],
   },
@@ -7119,7 +7119,7 @@ Several features make it well-suited to official photos. It's **free** for stand
 
 **2. Frame your head correctly.** Position your head and shoulders centered in the frame with a little space above your head, matching passport composition. Shoot at eye level.
 
-**3. Open the Pixel Shine Background Remover.** Go to sjpt.io and select the Remove Background tool. No sign-in needed to start.
+**3. Open the Pixel Shine Background Remover.** Go to Pixel Shine and select the Remove Background tool. No sign-in needed to start.
 
 **4. Upload your photo.** Drag and drop or browse to select. A higher-resolution image gives a cleaner cutout and sharper final result.
 
@@ -7200,7 +7200,7 @@ The free AI approach lets you shoot as many attempts as you like at home, pick y
       {
         heading: "Frequently Asked Questions",
         body: `**How do I get a white background passport photo for free?**
-Take a straight-on photo of your face at home, upload it to Pixel Shine's free Background Remover at sjpt.io, let the AI remove the background in about five seconds, add a plain white background, then crop to your country's size and download — no watermark or sign-in for standard use.
+Take a straight-on photo of your face at home, upload it to Pixel Shine's free Background Remover at Pixel Shine, let the AI remove the background in about five seconds, add a plain white background, then crop to your country's size and download — no watermark or sign-in for standard use.
 
 **Will an AI white background be accepted for a passport?**
 A plain, uniform white background meets the background requirement of most authorities, including the U.S. State Department. You must also meet the pose, expression, sizing, and no-glasses rules — the background is one part of full compliance.
@@ -7227,7 +7227,7 @@ After downloading your compliant white-background image cropped to the correct d
         heading: "Key Takeaways",
         body: `Getting a white background passport photo for free is straightforward with AI: shoot a proper straight-on photo at home, remove the busy background, and drop in a plain, shadow-free white in about five seconds. Because the white is a uniform generated fill, it avoids the shadows and color casts that get real-wall photos rejected. Remember that the background is only part of compliance — nail the neutral expression, no glasses, even face lighting, and exact dimensions too, and upscale a soft photo first.
 
-Ready to skip the photo booth? Head to sjpt.io, upload your photo to the free Background Remover, add a plain white background, and download a compliant passport photo in seconds — no watermark, no sign-in.`,
+Ready to skip the photo booth? Head to Pixel Shine, upload your photo to the free Background Remover, add a plain white background, and download a compliant passport photo in seconds — no watermark, no sign-in.`,
       },
     ],
   },
@@ -7248,7 +7248,7 @@ Ready to skip the photo booth? Head to sjpt.io, upload your photo to the free Ba
       {
         body: `Getting consistent corporate team headshots for free used to be a logistical nightmare, but AI has completely changed the game. If you've ever tried to coordinate professional photos for an entire team, you know the pain: scheduling a photographer, herding remote employees, matching lighting and backgrounds across everyone, and paying $100 to $300 per person. For a 20-person company, that's easily $4,000 and weeks of coordination, and the moment someone new joins, your team page looks mismatched again. This is exactly why so many company About pages feature a jarring collage of selfies, cropped group photos, and headshots taken years apart.
 
-Pixel Shine (sjpt.io) offers a dramatically simpler path. Using its AI Headshot Generator, every team member can turn a simple selfie into a professional headshot, and by applying consistent style and background settings, you can achieve a unified, polished look across your entire team, with no photographer, no watermark, and no scheduling headaches. In this guide, you'll learn how to create consistent corporate team headshots for free, coordinate a distributed team, maintain visual consistency, and keep your look uniform even as your company grows. It's the modern, budget-friendly way to make your whole team look professional.`,
+Pixel Shine offers a dramatically simpler path. Using its AI Headshot Generator, every team member can turn a simple selfie into a professional headshot, and by applying consistent style and background settings, you can achieve a unified, polished look across your entire team, with no photographer, no watermark, and no scheduling headaches. In this guide, you'll learn how to create consistent corporate team headshots for free, coordinate a distributed team, maintain visual consistency, and keep your look uniform even as your company grows. It's the modern, budget-friendly way to make your whole team look professional.`,
       },
       {
         heading: "Why Consistent Team Headshots Are So Hard to Get",
@@ -7288,7 +7288,7 @@ Pixel Shine makes this affordable and fast: new users get 5 free trials, and out
 
 **2. Prepare a selfie guideline for the team.** Instruct everyone to take a sharp, front-facing selfie in soft natural light (facing a window), at eye level, head and shoulders in frame, no sunglasses or hats, and a neutral or relaxed expression.
 
-**3. Share the sjpt.io link and instructions.** Send the team the AI Headshot Generator link along with the exact style and background settings to select, so everyone uses identical options.
+**3. Share the Pixel Shine link and instructions.** Send the team the AI Headshot Generator link along with the exact style and background settings to select, so everyone uses identical options.
 
 **4. Each member uploads their selfie.** Every team member visits the tool, uploads their selfie, and applies the agreed-upon settings.
 
@@ -7394,7 +7394,7 @@ No. Pixel Shine produces watermark-free headshots ready to publish directly on y
         heading: "Key Takeaways",
         body: `Consistent corporate team headshots no longer require a photographer, a coordinated shoot day, or a four-figure budget. With AI, every team member can generate a professional headshot from a selfie, and by standardizing style and background settings, you achieve a unified, polished look across your entire team, even a fully remote one. The keys to success are defining a clear standard upfront, giving good selfie instructions, reviewing the full set for consistency, and documenting the process for future hires.
 
-Pixel Shine makes this free, fast, and watermark-free, with 5 free trials per user. Ready to give your team page a professional upgrade? Head to sjpt.io, share the style guide with your team, and build a consistent, credible team gallery today.`,
+Pixel Shine makes this free, fast, and watermark-free, with 5 free trials per user. Ready to give your team page a professional upgrade? Head to Pixel Shine, share the style guide with your team, and build a consistent, credible team gallery today.`,
       },
     ],
   },
@@ -7443,7 +7443,7 @@ The **Normal mode is completely free, unlimited, and needs no account**, handlin
         heading: "Step-by-Step: Unblur Your Image for Free",
         body: `Here's exactly how to remove blur from an image online in about a minute:
 
-**1. Open the tool.** Go to sjpt.io and launch the AI Upscaler. The free Normal mode needs no sign-up, so you can jump straight in.
+**1. Open the tool.** Go to Pixel Shine and launch the AI Upscaler. The free Normal mode needs no sign-up, so you can jump straight in.
 
 **2. Upload your blurry image.** Drag it onto the upload area or click to browse. Pixel Shine accepts JPG, PNG, WebP, and other common formats. Use the best-quality source you have — the original file, not a re-shared copy.
 
@@ -7541,7 +7541,7 @@ Re-run at a lower scale, such as 2x instead of 4x. A gentler pass produces the m
         heading: "Key Takeaways",
         body: `Unblurring an image online with AI is now fast, free, and genuinely effective. Rather than faking sharpness by boosting edge contrast, AI reconstructs the real detail that blur destroyed — recovering faces, textures, and legibility that traditional sharpening never could. Pixel Shine offers this through its free Normal mode: no watermark, no forced sign-up, and no usage caps, plus 5 free Pro trials for tougher images.
 
-The workflow is effortless — upload, choose your mode and scale, and download a clear result in about a minute. That blurry image cluttering your camera roll or downloads folder is likely far more recoverable than you think. Try the free AI deblur tool at sjpt.io and see the difference for yourself.`,
+The workflow is effortless — upload, choose your mode and scale, and download a clear result in about a minute. That blurry image cluttering your camera roll or downloads folder is likely far more recoverable than you think. Try the free AI deblur tool at Pixel Shine and see the difference for yourself.`,
       },
     ],
   },
@@ -7588,7 +7588,7 @@ Beyond prompt-based editing, Pixel Shine bundles a full suite of tools that each
         heading: "Step-by-Step: Edit a Photo Without Photoshop",
         body: `Here's how to edit a photo using Pixel Shine's free tools instead of Photoshop:
 
-**1. Open the editor.** Go to sjpt.io and launch the AI Photo Editor. Everything runs online, so there's nothing to install.
+**1. Open the editor.** Go to Pixel Shine and launch the AI Photo Editor. Everything runs online, so there's nothing to install.
 
 **2. Upload your photo.** Drag it into the upload area or click to browse. Pixel Shine supports JPG, PNG, WebP, and more. Use the best-quality source you have for the cleanest result.
 
@@ -7686,7 +7686,7 @@ No. That's the whole point. Because you describe what you want in plain language
         heading: "Key Takeaways",
         body: `Photoshop is powerful, but for most people it's expensive overkill — a steep learning curve and a recurring subscription to accomplish edits you could describe in one sentence. AI photo editors change the equation entirely: describe what you want in plain language, or use a one-click tool, and get a professional result online with no installation and no skill required.
 
-Pixel Shine delivers this as a genuine free Photoshop alternative — background removal, upscaling, headshots, effects, and prompt-based editing — with no watermark and 5 free trials for new users. Reserve Photoshop for the rare tasks that truly need manual precision, and let AI handle everything else. Try the free AI photo editor at sjpt.io and see how much you can do without ever opening Photoshop.`,
+Pixel Shine delivers this as a genuine free Photoshop alternative — background removal, upscaling, headshots, effects, and prompt-based editing — with no watermark and 5 free trials for new users. Reserve Photoshop for the rare tasks that truly need manual precision, and let AI handle everything else. Try the free AI photo editor at Pixel Shine and see how much you can do without ever opening Photoshop.`,
       },
     ],
   },
@@ -7731,7 +7731,7 @@ The practical benefits make it ideal for volume work. Standard removal is **free
 
 **1. Choose a well-lit photo.** Good lighting and a subject that contrasts with its surroundings give the cleanest cutout. If your image is soft or small, upscale it first.
 
-**2. Open the Pixel Shine Background Remover.** Go to sjpt.io and select the Remove Background tool. No sign-in is needed to begin.
+**2. Open the Pixel Shine Background Remover.** Go to Pixel Shine and select the Remove Background tool. No sign-in is needed to begin.
 
 **3. Upload your image.** Drag and drop or browse to select. JPG, PNG, and WEBP all work; higher resolution gives sharper edges against white.
 
@@ -7814,7 +7814,7 @@ AI removal collapses the whole workflow into seconds. It isolates the subject pr
       {
         heading: "Frequently Asked Questions",
         body: `**How do I put a white background on a photo for free?**
-Upload your photo to Pixel Shine's free Background Remover at sjpt.io, let the AI remove the original background in about five seconds, then choose the solid white background option and download — no watermark or sign-in for standard use.
+Upload your photo to Pixel Shine's free Background Remover at Pixel Shine, let the AI remove the original background in about five seconds, then choose the solid white background option and download — no watermark or sign-in for standard use.
 
 **Can I get pure white (255, 255, 255) for Amazon?**
 Yes. Because the white is a solid generated fill rather than a photographed wall, it can be set to true white that meets Amazon's main image requirement, then downloaded ready to upload.
@@ -7841,7 +7841,7 @@ No. The AI replaces both — it isolates your subject and fills perfect white au
         heading: "Key Takeaways",
         body: `Putting a white background on a photo for free is simple with AI: it removes the original background and fills clean, even white in about five seconds — no lightbox, no Photoshop, no skills required. For the best results, start with a sharp, well-lit, high-contrast photo, upscale soft images first, use true 255-white where marketplaces or ID standards require it, and always check the edges at full zoom since white hides nothing.
 
-Ready for clean, professional white-background photos? Visit sjpt.io, upload your image to the free Background Remover, and download a crisp white-background photo in seconds — no watermark, no sign-in, unlimited standard use.`,
+Ready for clean, professional white-background photos? Visit Pixel Shine, upload your image to the free Background Remover, and download a crisp white-background photo in seconds — no watermark, no sign-in, unlimited standard use.`,
       },
     ],
   },
@@ -7909,7 +7909,7 @@ Several things make it practical for everyday use. It's **free and unlimited** f
 
 **2. Favor a contrasting background if you can.** Hair separates most cleanly when it stands out from what's behind it — dark hair against a light background, or vice versa.
 
-**3. Open the Pixel Shine Background Remover.** Go to sjpt.io and select the Remove Background tool. No sign-in required to start.
+**3. Open the Pixel Shine Background Remover.** Go to Pixel Shine and select the Remove Background tool. No sign-in required to start.
 
 **4. Upload your portrait.** Drag and drop or browse to select. Higher-resolution images yield cleaner strand detail.
 
@@ -7990,7 +7990,7 @@ Pixel Shine's approach delivers the soft, per-strand result of expert masking au
       {
         heading: "Frequently Asked Questions",
         body: `**How do I remove a background around hair for free?**
-Upload your portrait to Pixel Shine's free Background Remover at sjpt.io. The AI preserves the soft hair edges and removes the background in about five seconds, and you download a clean cutout with no watermark or sign-in required.
+Upload your portrait to Pixel Shine's free Background Remover at Pixel Shine. The AI preserves the soft hair edges and removes the background in about five seconds, and you download a clean cutout with no watermark or sign-in required.
 
 **Why do most tools leave a halo or chop off the hair?**
 Because they make a hard keep-or-delete decision at the edge, which can't represent hair's soft, semi-transparent strands. AI trained on hair predicts a feathered mask instead, keeping strands while removing the background.
@@ -8017,7 +8017,7 @@ No. The AI does the strand-level work automatically that used to require expert 
         heading: "Key Takeaways",
         body: `Removing a background around hair for free is now genuinely easy thanks to AI that predicts soft, per-strand edges instead of hacking off the strands or leaving a halo. Start with a well-lit, high-contrast, high-resolution photo, upscale it first if it's soft, save the result as a PNG to keep the feathered edges, and check the flyaways at full zoom. The result is a natural cutout that used to take a Photoshop expert half an hour.
 
-Ready to cut out hair cleanly? Head to sjpt.io, upload your portrait to the free Background Remover, and get a natural, halo-free hair cutout in seconds — no watermark, no sign-in, unlimited standard use.`,
+Ready to cut out hair cleanly? Head to Pixel Shine, upload your portrait to the free Background Remover, and get a natural, halo-free hair cutout in seconds — no watermark, no sign-in, unlimited standard use.`,
       },
     ],
   },
@@ -8066,7 +8066,7 @@ Crucially, Pixel Shine is more than an upscaler. The **background remover** crea
         heading: "Step-by-Step: Enhancing Product Photos for Your Store",
         body: `Here's a repeatable process for store-ready product photos:
 
-**1. Open Pixel Shine.** Go to sjpt.io and open the upscale / enhance tool online. No installation needed.
+**1. Open Pixel Shine.** Go to Pixel Shine and open the upscale / enhance tool online. No installation needed.
 
 **2. Upload a product photo.** Drag and drop or browse to your image (JPG, PNG, or WebP). The Normal Upscaler requires no account, so you can start right away.
 
@@ -8149,7 +8149,7 @@ Crucially, Pixel Shine is more than an upscaler. The **background remover** crea
       {
         heading: "Frequently Asked Questions",
         body: `**How can I enhance product photos for free?**
-Use Pixel Shine's Normal Upscaler at sjpt.io — it's free, unlimited, and needs no sign-up. Upload your product photo, choose a scale factor to meet your marketplace's requirements, and download the sharper image with no watermark.
+Use Pixel Shine's Normal Upscaler at Pixel Shine — it's free, unlimited, and needs no sign-up. Upload your product photo, choose a scale factor to meet your marketplace's requirements, and download the sharper image with no watermark.
 
 **Will enhanced photos help my store convert better?**
 Yes. Sharper, higher-resolution product photos build trust and enable zoom, both of which increase buying confidence. Consistent, professional imagery across your catalog also strengthens your brand.
@@ -8176,7 +8176,7 @@ Most photos process in about 5–10 seconds. A full workflow including backgroun
         heading: "Key Takeaways",
         body: `Enhancing product photos for free is one of the highest-return improvements any store owner can make, because photo quality directly drives trust and conversions. Pixel Shine's free Normal Upscaler lets you sharpen and upscale your entire catalog with no sign-up, no watermark, and no cost, while the Pro engine delivers maximum detail for hero shots, with 5 free trials for new users.
 
-Build a consistent workflow, enhance above marketplace minimums, and pair enhancement with the free background remover for clean, store-ready images. Whether you sell on Shopify, Etsy, or Amazon, professional product photography is now free and within reach. Enhance your first product photo at sjpt.io and watch your listings look their best.`,
+Build a consistent workflow, enhance above marketplace minimums, and pair enhancement with the free background remover for clean, store-ready images. Whether you sell on Shopify, Etsy, or Amazon, professional product photography is now free and within reach. Enhance your first product photo at Pixel Shine and watch your listings look their best.`,
       },
     ],
   },
@@ -8197,7 +8197,7 @@ Build a consistent workflow, enhance above marketplace minimums, and pair enhanc
       {
         body: `Understanding compress vs. upscale image quality is one of those skills that quietly saves you hours of frustration and makes everything you publish online look and perform better. These two operations sound like opposites, and in a sense they are: compression makes a file smaller (often trading away some quality), while upscaling makes an image larger and sharper (often adding data). Knowing when to use each one is the difference between a website that loads fast and looks crisp, and one that's either slow and bloated or fast but blurry. Yet most people reach for the wrong tool, compressing an already-small blurry image (making it worse) or trying to upscale a huge file that just needed to be shrunk.
 
-This guide clears up the confusion around image quality, compression, and upscaling once and for all. You'll learn exactly what each operation does to your image, when to upscale versus when to compress, and how to use free tools to get the best result for your specific goal. Pixel Shine (sjpt.io) offers a free, unlimited AI upscaler with no watermark and no sign-up for its Normal mode, so whenever your answer is \"upscale,\" you have a powerful, cost-free option ready. Let's demystify image quality so you always pick the right tool for the job.`,
+This guide clears up the confusion around image quality, compression, and upscaling once and for all. You'll learn exactly what each operation does to your image, when to upscale versus when to compress, and how to use free tools to get the best result for your specific goal. Pixel Shine offers a free, unlimited AI upscaler with no watermark and no sign-up for its Normal mode, so whenever your answer is \"upscale,\" you have a powerful, cost-free option ready. Let's demystify image quality so you always pick the right tool for the job.`,
       },
       {
         heading: "Compression and Upscaling: What They Actually Do",
@@ -8231,7 +8231,7 @@ Pixel Shine's Normal upscale mode is free, unlimited, and requires no sign-in, i
 
 **1. Identify your actual problem.** Ask: is my image too big (slow to load, exceeds an upload limit) or too small/blurry (looks soft, pixelated, low-resolution)? This single question determines your path.
 
-**2. If the image is too small or blurry, upscale it.** Go to sjpt.io, open the Upscaler, and upload your image. No account is needed for Normal mode.
+**2. If the image is too small or blurry, upscale it.** Go to Pixel Shine, open the Upscaler, and upload your image. No account is needed for Normal mode.
 
 **3. Choose your scale.** Select 2x for a moderate boost or 4x for very small images. Run the enhancement, and in seconds you'll have a larger, sharper result.
 
@@ -8339,7 +8339,7 @@ Yes. The Normal upscale mode is free, unlimited, requires no sign-up, and adds n
         heading: "Key Takeaways",
         body: `The confusion between compressing and upscaling disappears once you ask one question: is my image too big, or too small and blurry? If it's too large, compress it, using lossy formats for photos and lossless for graphics. If it's too small or soft, upscale it with AI to add real detail and sharpness. When you need both, upscale first, then compress. Keep a high-quality master, target your actual display size, and match the format to your content.
 
-Whenever the answer is \"upscale,\" Pixel Shine has you covered for free, unlimited, watermark-free, and with no sign-up for the Normal mode. Head to sjpt.io, upscale your image, and get the sharp, right-sized result your project needs.`,
+Whenever the answer is \"upscale,\" Pixel Shine has you covered for free, unlimited, watermark-free, and with no sign-up for the Normal mode. Head to Pixel Shine, upscale your image, and get the sharp, right-sized result your project needs.`,
       },
     ],
   },
@@ -8360,7 +8360,7 @@ Whenever the answer is \"upscale,\" Pixel Shine has you covered for free, unlimi
       {
         body: `Knowing how to enhance real estate photos for free with AI is one of the highest-leverage skills an agent, landlord, or property marketer can have today, because listing photos directly drive how many buyers click, tour, and ultimately make offers. The data is striking: listings with high-quality photos sell faster and often for more money, and the very first photo determines whether a buyer scrolling through dozens of listings stops to look or keeps swiping. Yet many listings are still let down by dim, blurry, low-resolution, or dull images, phone snapshots taken in poor light that make even a great property look unappealing.
 
-Professional real estate photography costs $100 to $300 per shoot, which isn't always practical for every listing, rental, or last-minute update. That's where free AI enhancement comes in. With Pixel Shine (sjpt.io), you can enhance property photos, boosting resolution, sharpness, and clarity, for free, with no watermark and no sign-up required for the Normal mode. In this guide, you'll learn exactly how to enhance real estate photos with AI, the workflow that produces bright, crisp, professional-looking listing images, and the pro tips that help your properties stand out and sell faster. Whether you're a solo agent, a landlord, or a property manager, this is the fastest, most affordable way to upgrade your listing photos.`,
+Professional real estate photography costs $100 to $300 per shoot, which isn't always practical for every listing, rental, or last-minute update. That's where free AI enhancement comes in. With Pixel Shine, you can enhance property photos, boosting resolution, sharpness, and clarity, for free, with no watermark and no sign-up required for the Normal mode. In this guide, you'll learn exactly how to enhance real estate photos with AI, the workflow that produces bright, crisp, professional-looking listing images, and the pro tips that help your properties stand out and sell faster. Whether you're a solo agent, a landlord, or a property manager, this is the fastest, most affordable way to upgrade your listing photos.`,
       },
       {
         heading: "Why Real Estate Photos Matter So Much",
@@ -8398,7 +8398,7 @@ Pixel Shine's Normal upscale mode is free, unlimited, and requires no sign-in, p
 
 **1. Capture the best photos you can first.** Shoot during the day with curtains open and lights on to maximize brightness. Hold the phone level, shoot from corner angles to show room depth, and keep the camera steady to minimize blur. Better source photos enhance better.
 
-**2. Go to sjpt.io and open the Upscaler.** No account is needed for the Normal mode, so you can start immediately.
+**2. Go to Pixel Shine and open the Upscaler.** No account is needed for the Normal mode, so you can start immediately.
 
 **3. Upload your first property photo.** Drag and drop or browse to select. JPG files from your phone work perfectly.
 
@@ -8504,13 +8504,13 @@ For luxury and high-value properties, professional photography with proper equip
 Use 2x for reasonably sharp photos and 4x for smaller or softer images. Match the level to each photo so the whole gallery looks natural and consistent.
 
 **Can I do this from my phone?**
-Yes. Pixel Shine works on your phone at sjpt.io, so you can shoot, enhance, and upload listing photos directly from your phone on-site.`,
+Yes. Pixel Shine works on your phone at Pixel Shine, so you can shoot, enhance, and upload listing photos directly from your phone on-site.`,
       },
       {
         heading: "Key Takeaways",
         body: `In real estate, photo quality directly influences how many buyers click, tour, and make offers, and you no longer need an expensive shoot to make every listing look sharp and professional. AI enhancement boosts resolution, sharpens interior and exterior detail, and cleans up noise in seconds, letting agents, landlords, and property managers upgrade their entire photo galleries for free. The keys are capturing bright, well-lit source photos, enhancing the whole set for consistency, leading with your strongest image, and keeping enhancements honest.
 
-Pixel Shine makes this free, unlimited, and watermark-free, with no sign-up for the Normal mode. Ready to make your listings stand out and sell faster? Head to sjpt.io, enhance your property photos, and give every listing the professional presentation it deserves.`,
+Pixel Shine makes this free, unlimited, and watermark-free, with no sign-up for the Normal mode. Ready to make your listings stand out and sell faster? Head to Pixel Shine, enhance your property photos, and give every listing the professional presentation it deserves.`,
       },
     ],
   },
@@ -8562,7 +8562,7 @@ Because it's generative rather than a simple overlay filter, every render is sli
         heading: "Step-by-Step: Turn Your Photo into a Funko Pop",
         body: `Here's the exact process on Pixel Shine, start to finish:
 
-**1. Open the tool.** Head to sjpt.io and go to the Creative AI Photo Effects section, then select the Turn Photo into Funko Pop effect. No download or sign-up is required to start.
+**1. Open the tool.** Head to Pixel Shine and go to the Creative AI Photo Effects section, then select the Turn Photo into Funko Pop effect. No download or sign-up is required to start.
 
 **2. Pick the right photo.** Choose a clear, well-lit image where your face is visible and roughly front-facing. A photo from the chest up works best because the AI needs to see your face, hair, and a bit of your outfit to recreate them accurately.
 
@@ -8654,7 +8654,7 @@ Most figures render in 10 to 30 seconds.`,
         heading: "Key Takeaways",
         body: `Turning your photo into a Funko Pop used to mean an expensive commission and a long wait. With Pixel Shine's AI funko pop generator, you get the authentic boxed-figure look in under a minute — free, watermark-free, and with no mandatory sign-up. Use a clear front-facing photo, keep your signature features visible, regenerate a couple of times for options, and upscale before printing.
 
-Whether you want a fresh profile picture, a hilarious gift, or a whole shelf of your friend group in vinyl, the tool makes it effortless. Ready to see yourself as a collectible? Head to sjpt.io and turn your photo into a Funko Pop right now — your figure is only a few seconds away.`,
+Whether you want a fresh profile picture, a hilarious gift, or a whole shelf of your friend group in vinyl, the tool makes it effortless. Ready to see yourself as a collectible? Head to Pixel Shine and turn your photo into a Funko Pop right now — your figure is only a few seconds away.`,
       },
     ],
   },
@@ -8704,7 +8704,7 @@ The result is a photo that looks like the best version of a real moment — not 
       },
       {
         heading: "Step-by-Step: Glow Up Any Photo",
-        body: `**1. Go to Pixel Shine.** Open sjpt.io and navigate to the Creative AI Photo Effects section, then choose the AI Glow Up Filter. There's no download and no account needed to begin.
+        body: `**1. Go to Pixel Shine.** Open Pixel Shine and navigate to the Creative AI Photo Effects section, then choose the AI Glow Up Filter. There's no download and no account needed to begin.
 
 **2. Choose your best raw shot.** Pick a photo where your face is clearly visible and reasonably in focus. The AI can fix lighting and tone, but it can't invent detail that isn't there — so avoid extremely dark or heavily blurred images as your starting point.
 
@@ -8776,7 +8776,7 @@ Across all of them, the appeal is the same: studio-quality polish, zero skill re
 Yes. You can use Pixel Shine's glow up filter at no cost, and new users get free trials across the platform's tools. Credits are bought in one-off packs from \u20b9166 and never expire.
 
 **Do I need to download an app?**
-No. Pixel Shine runs online at sjpt.io. There's nothing to install and no account required to begin editing.
+No. Pixel Shine runs online at Pixel Shine. There's nothing to install and no account required to begin editing.
 
 **Will my glow up photo have a watermark?**
 No. Pixel Shine exports clean, watermark-free images ready to post or print.
@@ -8800,7 +8800,7 @@ Most glow ups process in 10 to 20 seconds.`,
         heading: "Key Takeaways",
         body: `An AI glow up filter gives you professional-grade polish — better lighting, refined skin, and crisp clarity — in a single click, without the skill or software real retouching demands. The key is starting with a decently lit, in-focus photo, avoiding stacked filters, and letting the AI do what it does best: enhance the real you naturally.
 
-Pixel Shine makes it genuinely free, with no download, no account, no watermark, and unlimited upscaling to sharpen your final image. Whether it's a dating profile, a LinkedIn headshot, or just your favorite selfie, you're one click away from your best-looking photo yet. Head to sjpt.io and try the AI Glow Up Filter now.`,
+Pixel Shine makes it genuinely free, with no download, no account, no watermark, and unlimited upscaling to sharpen your final image. Whether it's a dating profile, a LinkedIn headshot, or just your favorite selfie, you're one click away from your best-looking photo yet. Head to Pixel Shine and try the AI Glow Up Filter now.`,
       },
     ],
   },
@@ -8856,7 +8856,7 @@ Because Pixel Shine's effect is generative, you can regenerate to explore differ
       },
       {
         heading: "Step-by-Step: Turn Your Photo into a Comic Book Cover",
-        body: `**1. Open Pixel Shine.** Go to sjpt.io and find the Creative AI Photo Effects section, then select the Comic Book Cover effect. No download, no sign-up needed to start.
+        body: `**1. Open Pixel Shine.** Go to Pixel Shine and find the Creative AI Photo Effects section, then select the Comic Book Cover effect. No download, no sign-up needed to start.
 
 **2. Choose a dramatic photo.** Comic styling loves strong expressions and clear subjects. A confident pose, an intense look, or a dynamic angle translates into a far more compelling cover than a flat, neutral snapshot.
 
@@ -8926,7 +8926,7 @@ Across all of them, the draw is the same: a professional-looking comic cover wit
 The comic book effect runs on credits, like every AI app here \u2014 packs start at \u20b9166, each generation costs 2 credits, and they never expire. There is no subscription, and the browser tools (crop, resize, compress, convert) stay free and unlimited.
 
 **Do I need an account or an app?**
-No. Pixel Shine works online at sjpt.io with no download and no mandatory sign-up to begin creating.
+No. Pixel Shine works online at Pixel Shine with no download and no mandatory sign-up to begin creating.
 
 **Will my comic cover have a watermark?**
 No. Pixel Shine exports clean, watermark-free images ready to share or print.
@@ -8950,7 +8950,7 @@ Most comic covers render in 15 to 30 seconds.`,
         heading: "Key Takeaways",
         body: `Turning your photo into a comic book cover with AI puts you on the front of your own issue #1 — complete with bold ink outlines, halftone shading, and saturated cover-worthy color — in under a minute. The secret to a standout result is a sharp photo with a strong expression, bold outfit colors, and a little headroom for a title.
 
-Pixel Shine makes the whole thing free, with no account, no download, no watermark, and unlimited upscaling for poster-perfect prints. Whether you want a heroic avatar, a personalized invitation, or framed art for the wall, your comic cover is a click away. Head to sjpt.io and turn your photo into a comic book cover now.`,
+Pixel Shine makes the whole thing free, with no account, no download, no watermark, and unlimited upscaling for poster-perfect prints. Whether you want a heroic avatar, a personalized invitation, or framed art for the wall, your comic cover is a click away. Head to Pixel Shine and turn your photo into a comic book cover now.`,
       },
     ],
   },
@@ -8998,7 +8998,7 @@ This aesthetic exploded across TikTok and Pinterest, racking up hundreds of mill
       },
       {
         heading: "Step-by-Step: Get the Coastal Cowgirl Look",
-        body: `**1. Head to Pixel Shine.** Open sjpt.io and go to the Creative AI Photo Effects section, then select the Coastal Cowgirl filter. No download or account required to start.
+        body: `**1. Head to Pixel Shine.** Open Pixel Shine and go to the Creative AI Photo Effects section, then select the Coastal Cowgirl filter. No download or account required to start.
 
 **2. Pick a flattering source photo.** Choose a clear photo where your face and upper body are visible. A relaxed, natural pose suits the aesthetic best — coastal cowgirl is about effortless confidence, not stiff posing.
 
@@ -9070,7 +9070,7 @@ What unites them is the desire for a specific, trendy aesthetic without the logi
 Yes. Pixel Shine's coastal cowgirl filter is available at no cost, and new users get free trials across the platform's tools. Credits are bought in one-off packs from \u20b9166 and never expire.
 
 **Do I need to sign up or download anything?**
-No. Pixel Shine runs online at sjpt.io with no download and no mandatory account to begin.
+No. Pixel Shine runs online at Pixel Shine with no download and no mandatory account to begin.
 
 **Will there be a watermark on my photo?**
 No. Pixel Shine exports clean, watermark-free images ready to post or print.
@@ -9094,7 +9094,7 @@ Most photos render in 15 to 30 seconds.`,
         heading: "Key Takeaways",
         body: `The coastal cowgirl aesthetic blends sun-bleached beach softness with rustic Western charm, and Pixel Shine's filter lets you capture that dreamy, golden-hour vibe on any photo — no shoot, no location, no wardrobe budget. For the best results, start with a warmly lit photo, a relaxed pose, and neutral tones, then regenerate until the glow feels magical.
 
-The whole thing is free on Pixel Shine, with no account, no download, no watermark, and unlimited upscaling for crisp, share-ready images. Whether you're building a Pinterest board, elevating vacation photos, or just chasing a viral vibe, the coastal cowgirl look is a click away. Head to sjpt.io and try the Coastal Cowgirl filter now.`,
+The whole thing is free on Pixel Shine, with no account, no download, no watermark, and unlimited upscaling for crisp, share-ready images. Whether you're building a Pinterest board, elevating vacation photos, or just chasing a viral vibe, the coastal cowgirl look is a click away. Head to Pixel Shine and try the Coastal Cowgirl filter now.`,
       },
     ],
   },
@@ -9146,7 +9146,7 @@ Because it's generative, each render produces a slightly different space scene �
       },
       {
         heading: "Step-by-Step: Put Yourself in Space",
-        body: `**1. Open Pixel Shine.** Go to sjpt.io and navigate to the Creative AI Photo Effects section, then choose the Astronaut Photoshoot effect. No download or account is needed to begin.
+        body: `**1. Open Pixel Shine.** Go to Pixel Shine and navigate to the Creative AI Photo Effects section, then choose the Astronaut Photoshoot effect. No download or account is needed to begin.
 
 **2. Select a clear face photo.** Since the helmet frames your face, choose a photo where your face is well-lit and front-facing. A head-and-shoulders shot works best because the AI focuses on placing your face inside the helmet.
 
@@ -9222,7 +9222,7 @@ What they all have in common is wanting an epic, aspirational image without the 
 Yes. Pixel Shine's astronaut photo maker is available at no cost, and new users get free trials across the platform's tools. Credits are bought in one-off packs from \u20b9166 and never expire.
 
 **Do I need an account or an app?**
-No. Pixel Shine runs online at sjpt.io with no download and no mandatory sign-up to begin creating.
+No. Pixel Shine runs online at Pixel Shine with no download and no mandatory sign-up to begin creating.
 
 **Will my astronaut photo have a watermark?**
 No. Pixel Shine exports clean, watermark-free images ready to share or print.
@@ -9246,7 +9246,7 @@ Most astronaut photos render in 15 to 30 seconds.`,
         heading: "Key Takeaways",
         body: `An AI astronaut photo maker lets you put yourself — or your kids — in space in seconds, complete with a realistic spacesuit, helmet, and a cinematic cosmic backdrop. No studio, no green screen, no editing skills needed. For the best result, use a clear, front-facing, well-lit photo, regenerate to find the most stunning space scene, and upscale before printing.
 
-Pixel Shine makes the whole experience free, with no account, no download, no watermark, and unlimited upscaling for poster-perfect prints. Whether it's a bold profile picture, a magical kid's room decoration, or a gift for the space lover in your life, your cosmic portrait is a click away. Head to sjpt.io and put yourself in space now.`,
+Pixel Shine makes the whole experience free, with no account, no download, no watermark, and unlimited upscaling for poster-perfect prints. Whether it's a bold profile picture, a magical kid's room decoration, or a gift for the space lover in your life, your cosmic portrait is a click away. Head to Pixel Shine and put yourself in space now.`,
       },
     ],
   },
@@ -9298,7 +9298,7 @@ The AI filter layers all of these — the lighting, the tonal grade, the soft gl
       },
       {
         heading: "Step-by-Step: Create Your Golden Age Portrait",
-        body: `**1. Open Pixel Shine.** Go to sjpt.io and navigate to the Creative AI Photo Effects section, then select the Old Hollywood Glamour effect. No download or account needed to start.
+        body: `**1. Open Pixel Shine.** Go to Pixel Shine and navigate to the Creative AI Photo Effects section, then select the Old Hollywood Glamour effect. No download or account needed to start.
 
 **2. Choose an elegant photo.** Old Hollywood glamour rewards poise. Pick a clear, front-facing or slightly-angled portrait with a composed, confident expression. A head-and-shoulders shot suits the classic portrait framing best.
 
@@ -9370,7 +9370,7 @@ What unites them is the desire for that timeless, elegant drama without a costly
 Yes. Pixel Shine's old Hollywood glamour effect is available at no cost, and new users get free trials across the platform's tools. Credits are bought in one-off packs from \u20b9166 and never expire.
 
 **Do I need an account or an app?**
-No. Pixel Shine runs online at sjpt.io with no download and no mandatory sign-up to begin creating.
+No. Pixel Shine runs online at Pixel Shine with no download and no mandatory sign-up to begin creating.
 
 **Will my portrait have a watermark?**
 No. Pixel Shine exports clean, watermark-free images ready to frame, post, or print.
@@ -9394,7 +9394,7 @@ Most portraits render in 15 to 30 seconds.`,
         heading: "Key Takeaways",
         body: `The old Hollywood glamour filter turns any photo into a timeless golden age portrait — sculpted dramatic lighting, luminous tones, and silver-screen elegance — without a studio, vintage camera, or editing skills. For the most iconic result, start with a composed, well-lit, front-facing photo, regenerate to dial in the drama, and upscale before framing.
 
-Pixel Shine makes the whole experience free, with no account, no download, no watermark, and unlimited upscaling for gallery-quality prints. Whether you want a striking profile picture, elegant wall art, or a heartfelt vintage gift, your silver-screen portrait is a click away. Head to sjpt.io and get your old Hollywood glamour portrait now.`,
+Pixel Shine makes the whole experience free, with no account, no download, no watermark, and unlimited upscaling for gallery-quality prints. Whether you want a striking profile picture, elegant wall art, or a heartfelt vintage gift, your silver-screen portrait is a click away. Head to Pixel Shine and get your old Hollywood glamour portrait now.`,
       },
     ],
   },
@@ -9448,7 +9448,7 @@ Because the effect is generative, each render offers a slightly different take o
       },
       {
         heading: "Step-by-Step: Create Your Prom Portrait",
-        body: `**1. Open Pixel Shine.** Go to sjpt.io and navigate to the Creative AI Photo Effects section, then select the Prom Photoshoot effect. No download or account needed to start.
+        body: `**1. Open Pixel Shine.** Go to Pixel Shine and navigate to the Creative AI Photo Effects section, then select the Prom Photoshoot effect. No download or account needed to start.
 
 **2. Choose a flattering photo.** Pick a clear image where your face and outfit are visible. If you have a photo in your prom or formal attire, use it — the AI enhances what's there. A head-to-chest or upper-body framing works beautifully.
 
@@ -9518,7 +9518,7 @@ What they share is the desire for beautiful, special-occasion portraits without 
 Yes. Pixel Shine's prom photo effect is available at no cost, and new users get free trials across the platform's tools. Credits are bought in one-off packs from \u20b9166 and never expire.
 
 **Do I need an account or an app?**
-No. Pixel Shine runs online at sjpt.io with no download and no mandatory sign-up to begin creating.
+No. Pixel Shine runs online at Pixel Shine with no download and no mandatory sign-up to begin creating.
 
 **Will my prom portrait have a watermark?**
 No. Pixel Shine exports clean, watermark-free images ready to share, print, or frame.
@@ -9542,7 +9542,7 @@ Most prom portraits render in 15 to 30 seconds.`,
         heading: "Key Takeaways",
         body: `An AI prom photo maker gives you professional-grade prom portraits — flattering lighting, an elegant setting, and a special-occasion glow — without the studio cost or the scheduling hassle. For the best results, start with a clear photo in your formal attire, use soft lighting and a confident expression, regenerate to find your favorite mood, and upscale before printing keepsakes.
 
-Pixel Shine makes the whole experience free, with no account, no download, no watermark, and unlimited upscaling for frame-worthy prints. Whether you're on a budget, rescuing a flat photo, or creating matching portraits for the whole squad, your stunning prom portrait is a click away. Head to sjpt.io and create your prom portrait now.`,
+Pixel Shine makes the whole experience free, with no account, no download, no watermark, and unlimited upscaling for frame-worthy prints. Whether you're on a budget, rescuing a flat photo, or creating matching portraits for the whole squad, your stunning prom portrait is a click away. Head to Pixel Shine and create your prom portrait now.`,
       },
     ],
   },
@@ -9596,7 +9596,7 @@ Because it's generative rather than a fixed overlay, every render is a little un
       },
       {
         heading: "Step-by-Step: Make Your Claymation Portrait",
-        body: `**1. Open Pixel Shine.** Go to sjpt.io and navigate to the Creative AI Photo Effects section, then select the Claymation Portrait effect. No download or account needed to start.
+        body: `**1. Open Pixel Shine.** Go to Pixel Shine and navigate to the Creative AI Photo Effects section, then select the Claymation Portrait effect. No download or account needed to start.
 
 **2. Choose a clear photo.** Pick a well-lit image where your face is visible and roughly front-facing. A head-and-shoulders shot works best because the AI needs to see your face, hair, and expression to sculpt them into clay.
 
@@ -9668,7 +9668,7 @@ What unites them is the love of that cozy, handmade charm without needing any sc
 Yes. Pixel Shine's claymation effect is available at no cost, and new users get free trials across the platform's tools. Credits are bought in one-off packs from \u20b9166 and never expire.
 
 **Do I need an account or an app?**
-No. Pixel Shine runs online at sjpt.io with no download and no mandatory sign-up to begin creating.
+No. Pixel Shine runs online at Pixel Shine with no download and no mandatory sign-up to begin creating.
 
 **Will my clay portrait have a watermark?**
 No. Pixel Shine exports clean, watermark-free images ready to share or print.
@@ -9692,7 +9692,7 @@ Most clay portraits render in 15 to 30 seconds.`,
         heading: "Key Takeaways",
         body: `An AI claymation photo effect turns your photo into a charming, hand-sculpted clay animation portrait — complete with fingerprint textures, rounded features, and matte shading — in under a minute, no sculpting skill required. For the best result, use a clear, front-facing photo with a big expression, keep your signature features visible, regenerate for the most charming version, and upscale before printing.
 
-Pixel Shine makes the whole experience free, with no account, no download, no watermark, and unlimited upscaling for crisp stickers, cards, and prints. Whether you want a whimsical profile picture, kids' room art, or a heartfelt handmade-style gift, your clay portrait is a click away. Head to sjpt.io and make your claymation portrait now.`,
+Pixel Shine makes the whole experience free, with no account, no download, no watermark, and unlimited upscaling for crisp stickers, cards, and prints. Whether you want a whimsical profile picture, kids' room art, or a heartfelt handmade-style gift, your clay portrait is a click away. Head to Pixel Shine and make your claymation portrait now.`,
       },
     ],
   },
@@ -9714,7 +9714,7 @@ Pixel Shine makes the whole experience free, with no account, no download, no wa
     toolLabel: "Create Your Pixel Art Avatar →",
         sections: [
       {
-        body: `A **pixel art avatar maker AI** takes an ordinary photo and rebuilds it as crisp, blocky, retro-styled artwork in seconds — no drawing skills, no design software, no hours hunched over a grid painting one square at a time. If you've ever wanted to turn your photo into pixel art for a gaming profile, a Discord icon, a Twitch overlay, or just a nostalgic throwback to the 8-bit and 16-bit era, Pixel Shine does it free at sjpt.io.
+        body: `A **pixel art avatar maker AI** takes an ordinary photo and rebuilds it as crisp, blocky, retro-styled artwork in seconds — no drawing skills, no design software, no hours hunched over a grid painting one square at a time. If you've ever wanted to turn your photo into pixel art for a gaming profile, a Discord icon, a Twitch overlay, or just a nostalgic throwback to the 8-bit and 16-bit era, Pixel Shine does it free at Pixel Shine.
 
 Here's why this matters: hand-drawing a decent pixel portrait can take a skilled artist 3 to 8 hours, and commissioning one runs anywhere from $15 to $80. An AI pixel art generator from photo collapses that entire process into a single upload. You get a clean, game-ready avatar that actually looks like you — same haircut, same glasses, same vibe — just rendered in that beautiful chunky-pixel aesthetic.
 
@@ -9738,7 +9738,7 @@ The result is an avatar that keeps the essence of you — the shape of your smil
       },
       {
         heading: "Step-by-Step: Create Your Pixel Art Avatar in Under a Minute",
-        body: `**Step 1 — Go to the tool.** Open sjpt.io and head to the Pixel Art Avatar tool under Creative AI Photo Effects. You don't need to sign in to start experimenting.
+        body: `**Step 1 — Go to the tool.** Open Pixel Shine and head to the Pixel Art Avatar tool under Creative AI Photo Effects. You don't need to sign in to start experimenting.
 
 **Step 2 — Pick the right source photo.** Choose a well-lit, front-facing photo where your face fills a good portion of the frame. Selfies work great. Avoid busy backgrounds and group shots — the AI does best with one clear subject.
 
@@ -9832,7 +9832,7 @@ Usually 10 to 30 seconds per generation.`,
 
 The pixel style isn't just nostalgic; it's genuinely practical. It stays sharp at the tiny sizes profile pictures actually display at, it signals your gaming and creator identity instantly, and it gives you a distinctive look without exposing your full face. Whether you're building a Twitch brand, upgrading a Discord icon, or just chasing that retro-game feeling, it's the fastest path to a standout avatar.
 
-Ready to see yourself in glorious 8-bit? Upload a clear selfie, hit generate, and download your pixel avatar in seconds. Create Your Pixel Art Avatar → at sjpt.io.`,
+Ready to see yourself in glorious 8-bit? Upload a clear selfie, hit generate, and download your pixel avatar in seconds. Create Your Pixel Art Avatar → at Pixel Shine.`,
       },
     ],
   },
@@ -9854,7 +9854,7 @@ Ready to see yourself in glorious 8-bit? Upload a clear selfie, hit generate, an
     toolLabel: "Create Your Thanksgiving Portrait →",
         sections: [
       {
-        body: `An **AI Thanksgiving photo maker** turns any ordinary picture into a warm, festive holiday portrait — golden autumn light, cozy sweaters, pumpkins, fall foliage, and that unmistakable Thanksgiving glow — without a single reshoot. If you missed the family photoshoot, hate how your holiday selfie turned out, or just want a gorgeous seasonal portrait for your cards and socials, Pixel Shine creates a Thanksgiving portrait AI-free at sjpt.io.
+        body: `An **AI Thanksgiving photo maker** turns any ordinary picture into a warm, festive holiday portrait — golden autumn light, cozy sweaters, pumpkins, fall foliage, and that unmistakable Thanksgiving glow — without a single reshoot. If you missed the family photoshoot, hate how your holiday selfie turned out, or just want a gorgeous seasonal portrait for your cards and socials, Pixel Shine creates a Thanksgiving portrait AI-free at Pixel Shine.
 
 Here's the reality most people run into: professional fall family photoshoots cost $150 to $500 and have to be booked weeks in advance, usually before the leaves even turn. Meanwhile, the phone photos you actually take on Thanksgiving Day are lit by kitchen fluorescents and cluttered with dirty dishes in the background. An AI holiday photo generator fixes both problems — it transforms what you already have into something worthy of a framed print.
 
@@ -9882,7 +9882,7 @@ The cost difference is dramatic: hundreds of dollars versus free. And there's a 
       },
       {
         heading: "Step-by-Step: Create Your Thanksgiving Portrait",
-        body: `**Step 1 — Open the tool.** Go to sjpt.io and find the Thanksgiving Photoshoot tool under Creative AI Photo Effects. No sign-in needed to start.
+        body: `**Step 1 — Open the tool.** Go to Pixel Shine and find the Thanksgiving Photoshoot tool under Creative AI Photo Effects. No sign-in needed to start.
 
 **Step 2 — Choose your best photo.** Pick a clear shot where faces are visible and well-lit. It doesn't need to be fancy — a decent selfie or casual portrait is perfect. For couples or families, a photo where everyone's face is unobstructed works best.
 
@@ -9958,7 +9958,7 @@ One common thread: people who forgot, ran out of time, or couldn't afford a trad
 Yes. You can create Thanksgiving portraits on Pixel Shine for free, and new users get 5 free trials across the creative tools. Your downloads come without a watermark.
 
 **Do I need to sign up before trying it?**
-No mandatory account is required just to test it. You can start creating right away at sjpt.io.
+No mandatory account is required just to test it. You can start creating right away at Pixel Shine.
 
 **Can I make a family Thanksgiving portrait?**
 Yes. Group photos work, and for best results choose a shot where each person's face is clearly visible and well-lit. You can also combine separate individual photos into a coordinated set.
@@ -9984,7 +9984,7 @@ Yes — regenerate to get variations and pick the one you love most. This is the
 
 Whether you're making cards, refreshing your seasonal profile picture, surprising the family group chat, or creating coordinated portraits with relatives across the country, the process is the same: upload a clear photo, generate, pick your favorite, and download. New users get 5 free trials to experiment with different looks.
 
-This Thanksgiving, skip the stress and the studio fee. Create Your Thanksgiving Portrait → at sjpt.io and have a festive keepsake ready before dinner's served.`,
+This Thanksgiving, skip the stress and the studio fee. Create Your Thanksgiving Portrait → at Pixel Shine and have a festive keepsake ready before dinner's served.`,
       },
     ],
   },
@@ -10006,7 +10006,7 @@ This Thanksgiving, skip the stress and the studio fee. Create Your Thanksgiving 
     toolLabel: "Upscale Free — No Sign-in →",
         sections: [
       {
-        body: `If you want to **upscale images free and unlimited with no sign-in required**, you've hit the exact problem most 'free' upscalers pretend to solve and then don't. Pixel Shine at sjpt.io actually delivers it: its Normal Upscale is completely free, genuinely unlimited, and works without creating an account — no watermark, no daily cap, no email harvesting before you can even try it.
+        body: `If you want to **upscale images free and unlimited with no sign-in required**, you've hit the exact problem most 'free' upscalers pretend to solve and then don't. Pixel Shine at Pixel Shine actually delivers it: its Normal Upscale is completely free, genuinely unlimited, and works without creating an account — no watermark, no daily cap, no email harvesting before you can even try it.
 
 Here's why that's rare. Most 'free AI upscaler no watermark' tools give you two or three images, then throw up a paywall. Others let you upscale but stamp a logo across your result unless you subscribe. A lot of them demand your email and a password before you've seen a single output. It's frustrating, and it wastes your time.
 
@@ -10034,7 +10034,7 @@ And critically, there's no watermark on the output. What you download is clean a
       },
       {
         heading: "Step-by-Step: Upscale an Image Free with No Sign-In",
-        body: `**Step 1 — Go to the upscaler.** Open sjpt.io and click into the Upscale tool. You'll notice there's no login wall — you can start immediately.
+        body: `**Step 1 — Go to the upscaler.** Open Pixel Shine and click into the Upscale tool. You'll notice there's no login wall — you can start immediately.
 
 **Step 2 — Upload your image.** Drag and drop your file directly onto the page, or click to browse your device. JPG, PNG, and other common formats are supported. No account prompt appears.
 
@@ -10138,7 +10138,7 @@ For the everyday tasks that make up the vast majority of upscaling needs — enl
 
 No counter ticking down, no login wall, no logo across your work. Just upload, upscale, and download as many times as you like.
 
-Try it right now — Upscale Free, No Sign-in → at sjpt.io.`,
+Try it right now — Upscale Free, No Sign-in → at Pixel Shine.`,
       },
     ],
   },
@@ -10160,7 +10160,7 @@ Try it right now — Upscale Free, No Sign-in → at sjpt.io.`,
     toolLabel: "Try AI Upscale Free →",
         sections: [
       {
-        body: `Seeing an **AI upscale before and after** comparison on real photos is the fastest way to understand what modern upscaling actually does — because the difference is genuinely dramatic and, honestly, a little hard to believe until you watch it happen to your own image. In this guide we'll break down exactly what changes between the before and the after, using real-world photo examples, and show you how to run the comparison yourself free at Pixel Shine (sjpt.io).
+        body: `Seeing an **AI upscale before and after** comparison on real photos is the fastest way to understand what modern upscaling actually does — because the difference is genuinely dramatic and, honestly, a little hard to believe until you watch it happen to your own image. In this guide we'll break down exactly what changes between the before and the after, using real-world photo examples, and show you how to run the comparison yourself free at Pixel Shine.
 
 Here's the short version of what a good AI upscaler delivers: a blurry 500-pixel photo becomes a crisp 2000-pixel image with sharp edges, recovered texture, and clean detail — not just bigger, but visibly *better*. The before is soft and pixelated. The after looks like it was shot on a better camera.
 
@@ -10200,7 +10200,7 @@ The photos that show the *least* change are already-sharp, high-resolution image
         heading: "Step-by-Step: Run Your Own Before-and-After Comparison",
         body: `**Step 1 — Pick a revealing test image.** Choose a photo that's noticeably soft, small, or low-resolution — an old scan, a compressed social image, or a thumbnail. These show the most dramatic difference.
 
-**Step 2 — Go to sjpt.io and open the Upscale tool.** No sign-in is needed for the free Normal Upscale.
+**Step 2 — Go to Pixel Shine and open the Upscale tool.** No sign-in is needed for the free Normal Upscale.
 
 **Step 3 — Note the original dimensions.** Before uploading, check your image's current pixel size (right-click, properties, or your photo app's info). This is your 'before' benchmark.
 
@@ -10298,7 +10298,7 @@ It improves it significantly, but it can't invent detail that was never captured
 
 The best way to believe it is to see it on your own images. And you can, for free: Pixel Shine's Normal Upscale is free and unlimited with no sign-in and no watermark, so run before-and-after comparisons on as many photos as you like. For your toughest, most degraded images, spend one of your 5 free Pro AI trials and watch the deeper reconstruction go to work.
 
-Compare at 100% zoom, focus on faces and text, and judge for yourself. Try AI Upscale Free → at sjpt.io.`,
+Compare at 100% zoom, focus on faces and text, and judge for yourself. Try AI Upscale Free → at Pixel Shine.`,
       },
     ],
   },
@@ -10320,7 +10320,7 @@ Compare at 100% zoom, focus on faces and text, and judge for yourself. Try AI Up
     toolLabel: "Enhance Photo Free →",
         sections: [
       {
-        body: `You want to **enhance a photo free online with no download and no account needed** — and that specific combination is surprisingly hard to find. Pixel Shine at sjpt.io delivers all three: it runs entirely online, so there's nothing to install; the core enhancing and upscaling works without signing in; and there's no watermark on your results. Upload, enhance, download the clean image, done.
+        body: `You want to **enhance a photo free online with no download and no account needed** — and that specific combination is surprisingly hard to find. Pixel Shine at Pixel Shine delivers all three: it runs entirely online, so there's nothing to install; the core enhancing and upscaling works without signing in; and there's no watermark on your results. Upload, enhance, download the clean image, done.
 
 Why does 'no download, no account' matter so much? Because most people looking to sharpen a photo or improve its quality are doing it on a whim — a picture for a listing, a slightly blurry memory they want to clean up, a low-res image for a post. They don't want to install a 500MB desktop app, create yet another login, or hand over an email just to fix one image. Those hurdles kill the whole point of 'quick.'
 
@@ -10356,7 +10356,7 @@ On Pixel Shine, the free Normal Upscale handles this core enhancement beautifull
       },
       {
         heading: "Step-by-Step: Enhance a Photo Free with No Account",
-        body: `**Step 1 — Open sjpt.io online.** Any phone or computer works. There's nothing to download and no login wall.
+        body: `**Step 1 — Open Pixel Shine online.** Any phone or computer works. There's nothing to download and no login wall.
 
 **Step 2 — Go to the enhance/upscale tool.** Click into the Upscale tool, which handles sharpening and quality improvement.
 
@@ -10429,7 +10429,7 @@ The unifying theme is convenience under time pressure. These are people who need
       {
         heading: "Frequently Asked Questions",
         body: `**Can I enhance a photo online without downloading any software?**
-Yes. Pixel Shine runs entirely online at sjpt.io. There's nothing to install — just upload, enhance, and download.
+Yes. Pixel Shine runs entirely online at Pixel Shine. There's nothing to install — just upload, enhance, and download.
 
 **Do I need to create an account?**
 No. The core enhancing and Normal Upscale work without signing in. An account only matters if you choose to use Pro AI credits.
@@ -10460,7 +10460,7 @@ For the everyday task of sharpening a soft image, cleaning up compression, and i
 
 No installs, no logins, no logos across your image. Just a clearer, sharper, higher-quality photo in seconds.
 
-Try it now — Enhance Photo Free → at sjpt.io.`,
+Try it now — Enhance Photo Free → at Pixel Shine.`,
       },
     ],
   },
@@ -10482,7 +10482,7 @@ Try it now — Enhance Photo Free → at sjpt.io.`,
     toolLabel: "Upscale for Print Free →",
         sections: [
       {
-        body: `Learning how to **upscale a photo for printing for free** is the difference between a crisp, frame-worthy print and a blurry, pixelated disappointment taped to the wall. If your image looks great on screen but comes out soft or jagged when printed, the problem is resolution — and AI upscaling is the fix. Pixel Shine at sjpt.io lets you increase a photo's resolution for printing free, with no watermark and no mandatory account.
+        body: `Learning how to **upscale a photo for printing for free** is the difference between a crisp, frame-worthy print and a blurry, pixelated disappointment taped to the wall. If your image looks great on screen but comes out soft or jagged when printed, the problem is resolution — and AI upscaling is the fix. Pixel Shine at Pixel Shine lets you increase a photo's resolution for printing free, with no watermark and no mandatory account.
 
 Here's the core issue: screens and printers have completely different resolution needs. A photo that looks perfect on your phone at 72 pixels per inch (PPI) can look terrible printed, because quality printing generally wants around 300 PPI. That means a 1000x1000 pixel image, which fills your phone screen beautifully, only prints sharply at about 3.3 inches wide. Try to print it at 8x10 and you'll see every pixel.
 
@@ -10522,7 +10522,7 @@ The practical takeaway: pick the smallest scale that meets your target pixel cou
 
 **Step 4 — Determine your scale factor.** Divide target pixels by current pixels to see whether you need 2x or 4x.
 
-**Step 5 — Go to sjpt.io and open the Upscale tool.** No sign-in required for the free Normal model.
+**Step 5 — Go to Pixel Shine and open the Upscale tool.** No sign-in required for the free Normal model.
 
 **Step 6 — Upload your photo.** Drag and drop or browse to select it.
 
@@ -10622,7 +10622,7 @@ Because screens are ~72 PPI and prints need ~300. The image lacked enough pixels
 
 Pixel Shine makes this free and accessible: the Normal Upscale is free and unlimited with no sign-in and no watermark, handling most print sizes from wallets to 8x10s. For large-format and hero prints, the Pro AI model delivers deeper reconstruction with 5 free trials for new users.
 
-Calculate your target pixels, pick the right scale, inspect at 100% zoom, and print with confidence. Upscale for Print Free → at sjpt.io and turn your favorite low-res photos into frame-worthy prints.`,
+Calculate your target pixels, pick the right scale, inspect at 100% zoom, and print with confidence. Upscale for Print Free → at Pixel Shine and turn your favorite low-res photos into frame-worthy prints.`,
       },
     ],
   },
@@ -10644,7 +10644,7 @@ Calculate your target pixels, pick the right scale, inspect at 100% zoom, and pr
     toolLabel: "Try AI Saree Photoshoot →",
         sections: [
       {
-        body: `An **AI saree photoshoot** transforms any ordinary photo into a stunning traditional Indian portrait — draped in an elegant saree, complete with graceful styling and a beautiful setting — without owning a single yard of fabric or booking a studio. If you've ever wanted to see yourself in a gorgeous silk saree for a festival, a profile picture, or just for the joy of it, Pixel Shine's saree filter lets you turn a photo into a saree portrait free at sjpt.io.
+        body: `An **AI saree photoshoot** transforms any ordinary photo into a stunning traditional Indian portrait — draped in an elegant saree, complete with graceful styling and a beautiful setting — without owning a single yard of fabric or booking a studio. If you've ever wanted to see yourself in a gorgeous silk saree for a festival, a profile picture, or just for the joy of it, Pixel Shine's saree filter lets you turn a photo into a saree portrait free at Pixel Shine.
 
 Here's what makes this so appealing. A traditional saree photoshoot with a real photographer, wardrobe, and stylist can easily run into hundreds or thousands of rupees (or dollars), plus the time to shop for the outfit, get draped, do the makeup, and travel to a location. Beautiful sarees themselves are an investment. An AI saree photoshoot skips every one of those steps and delivers the finished portrait in under a minute.
 
@@ -10672,7 +10672,7 @@ The result is a portrait that feels authentic rather than gimmicky: the fabric f
       },
       {
         heading: "Step-by-Step: Create Your AI Saree Portrait",
-        body: `**Step 1 — Open the tool.** Go to sjpt.io and find the Saree Photoshoot tool under Creative AI Photo Effects. No sign-in is required to start.
+        body: `**Step 1 — Open the tool.** Go to Pixel Shine and find the Saree Photoshoot tool under Creative AI Photo Effects. No sign-in is required to start.
 
 **Step 2 — Choose your best photo.** Pick a clear, well-lit photo where your face is fully visible and your upper body is in frame. A front-facing portrait works best, since that's how a saree drapes most naturally.
 
@@ -10750,7 +10750,7 @@ What unites them is a shared desire to celebrate the elegance and meaning of the
 Yes. You can create saree portraits on Pixel Shine for free, and new users get 5 free trials across the creative tools, with no watermark on your downloads.
 
 **Do I need to sign up to try it?**
-No mandatory account is required to start. You can begin creating right away at sjpt.io.
+No mandatory account is required to start. You can begin creating right away at Pixel Shine.
 
 **Will the portrait still look like me?**
 Yes. The AI preserves your recognizable facial features while draping the saree and styling the scene, so the portrait genuinely looks like you in traditional attire.
@@ -10776,7 +10776,7 @@ Usually 15 to 40 seconds per generation, depending on demand.`,
 
 Whether you're celebrating Diwali, updating your profile for wedding season, connecting with cultural roots from abroad, or simply admiring the elegance of traditional Indian wear, the process is the same: upload a clear, front-facing photo, generate, explore a few variations, and download your favorite watermark-free. New users get 5 free trials to experiment with different saree styles and colors.
 
-See yourself draped in timeless elegance. Try AI Saree Photoshoot → at sjpt.io.`,
+See yourself draped in timeless elegance. Try AI Saree Photoshoot → at Pixel Shine.`,
       },
     ],
   },
@@ -10800,7 +10800,7 @@ See yourself draped in timeless elegance. Try AI Saree Photoshoot → at sjpt.io
       {
         body: `Ever looked at your favorite anime and wished you could step into that world? With an **anime style photo filter AI**, you actually can — and you don't need a single drawing skill or a pricey subscription. In seconds, you can turn any photo into anime art that looks like it was hand-drawn by a studio animator, complete with those big expressive eyes, soft cel-shading, and dreamy backgrounds.
 
-This isn't the clunky cartoon filter you remember from 2015 apps. Modern **AI anime filter online free** tools use deep-learning models trained on hundreds of thousands of anime frames, so they understand hair strands, lighting, and facial structure the way a real artist does. On Pixel Shine (sjpt.io), the whole thing runs online — upload a selfie, pick a style, and watch your photo become a character worthy of its own opening credits.
+This isn't the clunky cartoon filter you remember from 2015 apps. Modern **AI anime filter online free** tools use deep-learning models trained on hundreds of thousands of anime frames, so they understand hair strands, lighting, and facial structure the way a real artist does. On Pixel Shine, the whole thing runs online — upload a selfie, pick a style, and watch your photo become a character worthy of its own opening credits.
 
 In this guide, you'll learn exactly how **photo to anime AI free** conversion works, how to get results that actually look good, the mistakes that ruin most attempts, and why Pixel Shine's free tier makes it one of the easiest places to start.`,
       },
@@ -10832,7 +10832,7 @@ There's also **chibi**, the adorable super-deformed style with oversized heads a
         heading: "Step-by-Step: Turn Your Photo into Anime Art",
         body: `Here's exactly how to create your anime portrait on Pixel Shine, start to finish:
 
-**Step 1 — Go to sjpt.io** and open the Anime Style tool under Creative AI Photo Effects. No download, no software install — it runs online on desktop or phone.
+**Step 1 — Go to Pixel Shine** and open the Anime Style tool under Creative AI Photo Effects. No download, no software install — it runs online on desktop or phone.
 
 **Step 2 — Upload your photo.** Choose a clear, well-lit image where your face is visible and not blocked by sunglasses, hands, or heavy shadows. A front-facing or slight-angle shot works best. Pixel Shine accepts JPG, PNG, and most common formats.
 
@@ -10922,7 +10922,7 @@ For personal use, avatars, and social posts you're set. For commercial projects,
         heading: "Key Takeaways",
         body: `Turning a photo into anime art used to require drawing talent or expensive commissions. Today, an **AI anime filter online free** does it in under two minutes — no skills, no watermark, no mandatory account. The keys to great results are simple: use a clear, high-res, well-lit photo, match the anime style to your mood, and don't be afraid to regenerate a few times.
 
-Pixel Shine stands out because it's genuinely free to start, adds no watermarks, and packs anime conversion alongside upscaling, background removal, and more in one platform. Head to sjpt.io, upload your favorite selfie, and see yourself reimagined as an anime character. Your next profile picture — or framed poster — is just a couple of clicks away.`,
+Pixel Shine stands out because it's genuinely free to start, adds no watermarks, and packs anime conversion alongside upscaling, background removal, and more in one platform. Head to Pixel Shine, upload your favorite selfie, and see yourself reimagined as an anime character. Your next profile picture — or framed poster — is just a couple of clicks away.`,
       },
     ],
   },
@@ -10944,7 +10944,7 @@ Pixel Shine stands out because it's genuinely free to start, adds no watermarks,
     toolLabel: "Get Your AI Headshot Free →",
         sections: [
       {
-        body: `Getting a **professional headshot from a selfie for free** used to sound too good to be true — but AI has made it genuinely possible. With Pixel Shine's AI Headshot Generator at sjpt.io, you upload a normal selfie and get back a polished, professional-looking headshot: clean background, flattering light, business-appropriate framing — the kind of photo that costs $150 to $400 at a studio. And you can try it free.
+        body: `Getting a **professional headshot from a selfie for free** used to sound too good to be true — but AI has made it genuinely possible. With Pixel Shine's AI Headshot Generator at Pixel Shine, you upload a normal selfie and get back a polished, professional-looking headshot: clean background, flattering light, business-appropriate framing — the kind of photo that costs $150 to $400 at a studio. And you can try it free.
 
 Here's why this matters right now. Your LinkedIn profile photo, your company directory picture, your speaker bio, your email signature — all of these judge you in a fraction of a second. Studies consistently show that professional headshots dramatically increase profile views and perceived competence. Yet booking a photographer is expensive, time-consuming, and awkward for a lot of people.
 
@@ -10980,7 +10980,7 @@ When the AI applies all of these to your selfie simultaneously, the result cross
         heading: "Step-by-Step: Turn Your Selfie into a Professional Headshot",
         body: `**Step 1 — Take or choose a good selfie.** Use a clear, front-facing photo where your whole face is visible and evenly lit. Face a window for soft natural light. Look at the camera and keep a relaxed, natural expression.
 
-**Step 2 — Go to sjpt.io and open the AI Headshot Generator.** It's under the platform's tools. New users get 5 free trials to test it.
+**Step 2 — Go to Pixel Shine and open the AI Headshot Generator.** It's under the platform's tools. New users get 5 free trials to test it.
 
 **Step 3 — Upload your selfie.** Drag and drop or browse to select it. A higher-quality source gives the AI more to work with.
 
@@ -11082,7 +11082,7 @@ AI is far cheaper, faster, and more convenient. A studio offers more bespoke art
 
 The recipe for a great result is simple: start with a clear, well-lit, front-facing selfie, pick a style that matches your industry, generate a few variations, and choose the most natural one. New users get 5 free trials, downloads come watermark-free, and there's no studio session required.
 
-Whether you're job hunting, building a personal brand, or just tired of your outdated profile picture, this is the fastest path to looking your professional best. Get Your AI Headshot Free → at sjpt.io.`,
+Whether you're job hunting, building a personal brand, or just tired of your outdated profile picture, this is the fastest path to looking your professional best. Get Your AI Headshot Free → at Pixel Shine.`,
       },
     ],
   },
@@ -11108,7 +11108,7 @@ Whether you're job hunting, building a personal brand, or just tired of your out
 
 Whether you're in a long-distance relationship and never got that perfect photo together, or you simply want a **romantic couple portrait AI** for your anniversary, this technology has become genuinely impressive. Modern AI can blend two people into a single cohesive scene, match the lighting, and place you in dreamy backdrops from Parisian streets to golden-hour beaches.
 
-On Pixel Shine (sjpt.io), the **AI couple photo maker** runs online. In this guide, you'll learn how it works, how to get portraits that look natural rather than pasted-together, the mistakes that give away an obvious edit, and why Pixel Shine's free tier makes it the easiest place to create couple art without spending a cent.`,
+On Pixel Shine, the **AI couple photo maker** runs online. In this guide, you'll learn how it works, how to get portraits that look natural rather than pasted-together, the mistakes that give away an obvious edit, and why Pixel Shine's free tier makes it the easiest place to create couple art without spending a cent.`,
       },
       {
         heading: "How AI Couple Photoshoots Actually Work",
@@ -11140,7 +11140,7 @@ On Pixel Shine you can try several settings from the same uploaded photos, so yo
         heading: "Step-by-Step: Create Your AI Couple Portrait",
         body: `Here's the full process on Pixel Shine, from start to finished portrait:
 
-**Step 1 — Visit sjpt.io** and open the Couple Photoshoot tool in the Creative AI Photo Effects section. It works on desktop or mobile.
+**Step 1 — Visit Pixel Shine** and open the Couple Photoshoot tool in the Creative AI Photo Effects section. It works on desktop or mobile.
 
 **Step 2 — Upload your photos.** Depending on the tool mode, you'll either upload two clear individual photos (one of each person) or an existing photo of you both together. Use images where faces are visible, well-lit, and facing roughly forward.
 
@@ -11232,7 +11232,7 @@ Basic features don't require an account, and the free Normal Upscale needs no si
         heading: "Key Takeaways",
         body: `An **AI couple photoshoot online** gives you romantic, professional-looking portraits without the cost, scheduling, or geography of a traditional shoot. Whether you're long-distance, celebrating an anniversary, or just want a fun shared photo, uploading two clear, well-lit images and picking the right setting gets you there in minutes.
 
-The keys to natural results: match photo quality and lighting between both people, use front-facing shots, and regenerate a few times to find the best blend. Pixel Shine makes it genuinely free to start, adds no watermarks, and combines couple portraits with upscaling and background removal in one platform. Head to sjpt.io, upload your two favorite photos, and create a romantic portrait that looks like you both showed up for the shoot — even if you're oceans apart.`,
+The keys to natural results: match photo quality and lighting between both people, use front-facing shots, and regenerate a few times to find the best blend. Pixel Shine makes it genuinely free to start, adds no watermarks, and combines couple portraits with upscaling and background removal in one platform. Head to Pixel Shine, upload your two favorite photos, and create a romantic portrait that looks like you both showed up for the shoot — even if you're oceans apart.`,
       },
     ],
   },
@@ -11258,7 +11258,7 @@ The keys to natural results: match photo quality and lighting between both peopl
 
 This **vintage Bollywood photo effect** does more than slap a sepia tone on your picture. Modern AI understands the whole aesthetic: the warm color grading, the soft focus glow, the dramatic shadows, the ornate styling, even that unmistakable film-grain texture. The result feels like a still pulled from a beloved classic.
 
-On Pixel Shine (sjpt.io), the **Bollywood photo filter online free** tool runs online. In this guide, you'll learn what defines the retro Bollywood look, how to get authentic results, the mistakes that make it look cheap, and why Pixel Shine's free tier makes it the perfect place to give your photos that golden-era magic.`,
+On Pixel Shine, the **Bollywood photo filter online free** tool runs online. In this guide, you'll learn what defines the retro Bollywood look, how to get authentic results, the mistakes that make it look cheap, and why Pixel Shine's free tier makes it the perfect place to give your photos that golden-era magic.`,
       },
       {
         heading: "What Defines the Golden-Era Bollywood Look",
@@ -11288,7 +11288,7 @@ And it's dramatically faster. What would take a skilled editor 30 to 60 minutes,
         heading: "Step-by-Step: Get the Retro Bollywood Look",
         body: `Here's how to transform your photo on Pixel Shine:
 
-**Step 1 — Open sjpt.io** and navigate to the Retro Bollywood tool in the Creative AI Photo Effects section. It runs on desktop or phone — no app needed.
+**Step 1 — Open Pixel Shine** and navigate to the Retro Bollywood tool in the Creative AI Photo Effects section. It runs on desktop or phone — no app needed.
 
 **Step 2 — Upload your photo.** Pick a clear image where your face is well-lit and visible. Portrait-style shots work best for that movie-poster feel. JPG and PNG are both fine.
 
@@ -11384,7 +11384,7 @@ Yes. Downloads are full resolution, and you can even use Pixel Shine's free upsc
         heading: "Key Takeaways",
         body: `An **AI retro Bollywood filter** transports your photos to the golden era of Hindi cinema — warm grading, soft glow, dramatic lighting, and authentic film grain — without a costume, a studio, or a photographer. The secret to great results is starting with a clear, portrait-oriented photo, embracing classic styling, and keeping the effect balanced rather than overdone.
 
-Pixel Shine makes it genuinely free to start, adds no watermarks, and pairs the retro filter with upscaling for poster-quality prints, all in one online platform. Whether you're creating wedding content, festival posts, or a nostalgic gift for family, head to sjpt.io, upload your photo, and step into the timeless magic of classic Bollywood in under two minutes.`,
+Pixel Shine makes it genuinely free to start, adds no watermarks, and pairs the retro filter with upscaling for poster-quality prints, all in one online platform. Whether you're creating wedding content, festival posts, or a nostalgic gift for family, head to Pixel Shine, upload your photo, and step into the timeless magic of classic Bollywood in under two minutes.`,
       },
     ],
   },
@@ -11410,7 +11410,7 @@ Pixel Shine makes it genuinely free to start, adds no watermarks, and pairs the 
 
 This trend has exploded across social media, and for good reason. To **turn a photo into an action figure AI**-style, the model reimagines your face, outfit, and pose as molded plastic, adds realistic toy packaging with your \"name\" printed on it, and even throws in themed accessories. The result is playful, shareable, and honestly a little addictive to make.
 
-On Pixel Shine (sjpt.io), the **3D toy from photo AI** tool runs entirely online. In this guide, you'll learn exactly how it works, how to get a figurine that actually looks like you, the mistakes that ruin the effect, and why Pixel Shine's free tier makes it the best place to create your own collectible.`,
+On Pixel Shine, the **3D toy from photo AI** tool runs entirely online. In this guide, you'll learn exactly how it works, how to get a figurine that actually looks like you, the mistakes that ruin the effect, and why Pixel Shine's free tier makes it the best place to create your own collectible.`,
       },
       {
         heading: "What the AI Action Figure Effect Actually Does",
@@ -11438,7 +11438,7 @@ Finally, it renders realistic **studio lighting and shadows** so the whole thing
         heading: "Step-by-Step: Create Your 3D Action Figure",
         body: `Here's the complete process on Pixel Shine:
 
-**Step 1 — Go to sjpt.io** and open the 3D Figurine tool in the Creative AI Photo Effects section. It runs on desktop or mobile, with no download required.
+**Step 1 — Go to Pixel Shine** and open the 3D Figurine tool in the Creative AI Photo Effects section. It runs on desktop or mobile, with no download required.
 
 **Step 2 — Upload your photo.** For the best result, use a clear, well-lit full-body or three-quarter shot showing your outfit and pose. JPG and PNG both work.
 
@@ -11530,7 +11530,7 @@ Most figurines finish in 15 to 40 seconds depending on image size and current de
         heading: "Key Takeaways",
         body: `An **AI 3D figurine from photo** turns any picture into a collectible action figure — molded plastic, realistic packaging, themed accessories, and studio lighting — in under a minute, with no modeling skills or cost to start. The secret to a great result is using a clear, full-body photo with a distinctive outfit and a defined theme, then regenerating to find the best version.
 
-Pixel Shine makes it genuinely free to start, adds no watermarks, and pairs the figurine effect with a free unlimited upscaler for print-quality output — all in one online platform. Whether you're chasing the viral trend, making a gift, or building a team \"edition\" set, head to sjpt.io, upload your photo, and see yourself boxed up as the collectible you've always deserved to be.`,
+Pixel Shine makes it genuinely free to start, adds no watermarks, and pairs the figurine effect with a free unlimited upscaler for print-quality output — all in one online platform. Whether you're chasing the viral trend, making a gift, or building a team \"edition\" set, head to Pixel Shine, upload your photo, and see yourself boxed up as the collectible you've always deserved to be.`,
       },
     ],
   },
@@ -11556,7 +11556,7 @@ Pixel Shine makes it genuinely free to start, adds no watermarks, and pairs the 
 
 Whether you want a **Holi photo filter AI** effect drenched in flying colored powder, an **AI Diwali photo maker** portrait glowing with diyas and fairy lights, or an Eid, Christmas, or Navratri scene, modern AI recreates the entire festive atmosphere around you. It doesn't just add a background — it matches lighting, adds authentic festival elements, and styles the whole portrait to feel like a genuine celebration shoot.
 
-On Pixel Shine (sjpt.io), the **festival portrait AI free** tool runs online. In this guide, you'll learn how it works across different festivals, how to get portraits that look authentic, the mistakes to avoid, and why Pixel Shine's free tier makes it the easiest way to celebrate in style.`,
+On Pixel Shine, the **festival portrait AI free** tool runs online. In this guide, you'll learn how it works across different festivals, how to get portraits that look authentic, the mistakes to avoid, and why Pixel Shine's free tier makes it the easiest way to celebrate in style.`,
       },
       {
         heading: "How AI Recreates Festival Atmospheres",
@@ -11588,7 +11588,7 @@ It also adds **festive styling and elements** — traditional attire enhancement
         heading: "Step-by-Step: Create Your Festival Portrait",
         body: `Here's the full process on Pixel Shine:
 
-**Step 1 — Visit sjpt.io** and open the Festival Photoshoot tool in the Creative AI Photo Effects section. It works on desktop or mobile — no download needed.
+**Step 1 — Visit Pixel Shine** and open the Festival Photoshoot tool in the Creative AI Photo Effects section. It works on desktop or mobile — no download needed.
 
 **Step 2 — Upload your photo.** Choose a clear, well-lit image where your face is visible and unobstructed. A portrait or three-quarter shot works best for capturing festive styling. JPG and PNG are both accepted.
 
@@ -11680,7 +11680,7 @@ Yes. Downloads are full resolution, and you can use Pixel Shine's free upscaler 
         heading: "Key Takeaways",
         body: `An **AI festival photoshoot** turns any photo into a vibrant celebration portrait — Holi color bursts, Diwali diya glow, Eid lanterns, Christmas lights — with matched lighting and authentic festive elements, in minutes and free to start. The keys to great results are matching your outfit and energy to the festival, using a clear well-lit photo, and regenerating to find the most natural, vibrant version.
 
-Pixel Shine makes it genuinely free, adds no watermarks, and pairs festival portraits with a free unlimited upscaler for print-ready greetings — all in one online platform. Whether you're sending festive greetings, creating seasonal content, or feeling connected to home from far away, head to sjpt.io, upload your photo, and celebrate in vibrant style in under two minutes.`,
+Pixel Shine makes it genuinely free, adds no watermarks, and pairs festival portraits with a free unlimited upscaler for print-ready greetings — all in one online platform. Whether you're sending festive greetings, creating seasonal content, or feeling connected to home from far away, head to Pixel Shine, upload your photo, and celebrate in vibrant style in under two minutes.`,
       },
     ],
   },
@@ -11732,7 +11732,7 @@ Manual editing still has a niche for extremely complex subjects — wispy hair, 
 
 **Step 1: Photograph your product well.** Good lighting and clear separation between product and background make removal cleaner. Shoot against a plain, contrasting surface if you can, but the AI handles busier backgrounds too.
 
-**Step 2: Open the background remover.** Go to sjpt.io/remove-bg. The tool automatically detects and removes backgrounds.
+**Step 2: Open the background remover.** Go to the Pixel Shine background remover. The tool automatically detects and removes backgrounds.
 
 **Step 3: Upload your product photo.** Drag the image into the upload box. The AI processes it and isolates the product from its background in seconds.
 
@@ -11744,7 +11744,7 @@ Manual editing still has a niche for extremely complex subjects — wispy hair, 
 
 **Step 7: Download the final image.** Save the result — with no watermark — as a high-quality file ready to upload to Amazon or your store.
 
-**Step 8 (optional): Upscale if needed.** If your source was low-resolution, run the result through sjpt.io/upscale to meet Amazon's 1000px+ zoom-enabled requirement. Everything's on one platform, so it's seamless.`,
+**Step 8 (optional): Upscale if needed.** If your source was low-resolution, run the result through the Pixel Shine upscaler to meet Amazon's 1000px+ zoom-enabled requirement. Everything's on one platform, so it's seamless.`,
       },
       {
         heading: "Pro Tips for Flawless Product Cutouts",
@@ -11807,7 +11807,7 @@ For all of them, background removal is a daily task, and the volume makes free, 
       {
         heading: "Frequently Asked Questions",
         body: `**How do I remove the background from a product photo for Amazon?**
-Upload your photo to Pixel Shine's background remover (sjpt.io/remove-bg), let the AI isolate the product, set the background to pure white (255, 255, 255), size the product to fill at least 85% of the frame, and download. It's free to start.
+Upload your photo to Pixel Shine's background remover, let the AI isolate the product, set the background to pure white (255, 255, 255), size the product to fill at least 85% of the frame, and download. It's free to start.
 
 **What background does Amazon require for main product images?**
 Amazon requires a pure white background, technically RGB (255, 255, 255), with the product filling at least 85% of the image and no props, text, or logos in the main image slot.
@@ -11819,7 +11819,7 @@ For most products, yes — AI removal is faster and produces results indistingui
 Yes. Pixel Shine's background remover lets you start for free with no watermark, and new users get 5 free trials across tools. It's built for exactly this kind of e-commerce task.
 
 **What resolution should my Amazon product image be?**
-Amazon recommends images at least 1000px on the longest side to enable zoom, which improves conversions. If your cutout is smaller, upscale it at sjpt.io/upscale before uploading.
+Amazon recommends images at least 1000px on the longest side to enable zoom, which improves conversions. If your cutout is smaller, upscale it at the Pixel Shine upscaler before uploading.
 
 **Can I get a transparent PNG instead of white background?**
 Yes. Save your cutout as a transparent PNG so you can reuse it on any background — white for Amazon, brand colors for ads, or scenes for lifestyle imagery.
@@ -11834,7 +11834,7 @@ Absolutely. One clean cutout works for Amazon, Shopify, eBay, Etsy, ads, and you
         heading: "Key Takeaways",
         body: `A pure white background isn't just an Amazon rule — it's the foundation of professional, high-converting e-commerce imagery. Removing the background from your product photos keeps your main images compliant, makes your listings look premium, and creates a portable cutout you can reuse across every sales channel and ad campaign.
 
-AI background removal makes this effortless: no Photoshop skills, no studio, no per-image outsourcing fee. Upload your product to sjpt.io/remove-bg, get a clean cutout in seconds, place it on pure white (255, 255, 255) filling 85% of the frame, and upscale if needed to hit 1000px+. Start for free and give your products the professional presentation they deserve.
+AI background removal makes this effortless: no Photoshop skills, no studio, no per-image outsourcing fee. Upload your product to the Pixel Shine background remover, get a clean cutout in seconds, place it on pure white (255, 255, 255) filling 85% of the frame, and upscale if needed to hit 1000px+. Start for free and give your products the professional presentation they deserve.
 
 Remove Product BG Free →`,
       },
@@ -11889,7 +11889,7 @@ When you use Pixel Shine's Remove Background tool, it outputs a transparent PNG 
 
 **Step 1: Choose your source photo.** Pick the highest-resolution version you have. A photo where the person is reasonably separated from the background (even slightly) gives the AI the best shot, though it can handle busy backgrounds too. Avoid heavily compressed screenshots if you can.
 
-**Step 2: Go to sjpt.io and open the Remove Background tool.** No sign-in is required for basic background removal, so you can jump straight in. Navigate to the Remove Background feature from the homepage.
+**Step 2: Go to Pixel Shine and open the Remove Background tool.** No sign-in is required for basic background removal, so you can jump straight in. Navigate to the Remove Background feature from the homepage.
 
 **Step 3: Upload your portrait.** Drag and drop the image directly onto the upload area, or click to browse your files. Pixel Shine accepts standard formats like JPG, PNG, and WEBP.
 
@@ -11956,7 +11956,7 @@ The common thread: they all need a person separated from a background quickly, c
       {
         heading: "Frequently Asked Questions",
         body: `**How do I remove the background from a photo of a person for free?**
-Go to sjpt.io, open the Remove Background tool, upload your portrait, and the AI automatically cuts out the person in a few seconds. No account or payment is required for basic background removal, and there's no watermark on the result.
+Go to Pixel Shine, open the Remove Background tool, upload your portrait, and the AI automatically cuts out the person in a few seconds. No account or payment is required for basic background removal, and there's no watermark on the result.
 
 **Does the AI handle hair well?**
 Yes. Pixel Shine's model uses alpha matting specifically tuned for people, so it preserves soft hair edges and flyaway strands rather than producing a hard, cut-out silhouette. Extremely dark hair against a dark background is the hardest case, but most portraits come out clean.
@@ -11977,13 +11977,13 @@ Yes. After removing the background, you can add a solid white background, which 
 It works best on single-subject portraits. For groups, the AI treats everyone in the foreground as the subject, which is usually what you want, though very busy overlapping groups are trickier.
 
 **Do I need to install any software?**
-No. Everything runs online at sjpt.io. There's nothing to download or install.`,
+No. Everything runs online at Pixel Shine. There's nothing to download or install.`,
       },
       {
         heading: "Key Takeaways",
         body: `Removing the background from a portrait is no longer a technical chore reserved for Photoshop experts. With AI trained specifically on people, you can cut out a person from a photo in seconds while keeping natural hair edges, intact accessories, and clean, fringe-free borders. The keys to great results are starting with a high-resolution source, keeping a transparent PNG master copy, and matching lighting when you composite onto a new background.
 
-Best of all, you don't need to pay or sign up to get professional-quality cutouts. Pixel Shine's Remove Background tool is free, watermark-free, and runs entirely online. Head to sjpt.io, upload your portrait, and see how clean your cutout looks in about three seconds.`,
+Best of all, you don't need to pay or sign up to get professional-quality cutouts. Pixel Shine's Remove Background tool is free, watermark-free, and runs entirely online. Head to Pixel Shine, upload your portrait, and see how clean your cutout looks in about three seconds.`,
       },
     ],
   },
@@ -12038,7 +12038,7 @@ With Pixel Shine, you can try several backgrounds against the same cutout in one
 
 **Step 1: Pick your best source image.** Choose the highest-resolution photo you have where the subject is reasonably clear. Good, even lighting on the subject makes the cutout cleaner.
 
-**Step 2: Go to sjpt.io and open the Remove Background tool.** No sign-in is needed for basic background work, so you can start immediately from the homepage.
+**Step 2: Go to Pixel Shine and open the Remove Background tool.** No sign-in is needed for basic background work, so you can start immediately from the homepage.
 
 **Step 3: Upload your photo.** Drag and drop it onto the upload area or click to browse. JPG, PNG, and WEBP all work.
 
@@ -12107,7 +12107,7 @@ What unites them is the need for a quick, clean, free way to replace a backgroun
       {
         heading: "Frequently Asked Questions",
         body: `**How can I change a photo background online for free?**
-Go to sjpt.io, open the Remove Background tool, upload your photo, let the AI remove the existing background, then add a new solid color or scene. It's free, requires no account for basic use, and adds no watermark.
+Go to Pixel Shine, open the Remove Background tool, upload your photo, let the AI remove the existing background, then add a new solid color or scene. It's free, requires no account for basic use, and adds no watermark.
 
 **Can I replace a background without Photoshop?**
 Yes. AI tools like Pixel Shine handle both the cutout and the replacement automatically online. You don't need Photoshop or any editing skills.
@@ -12134,7 +12134,7 @@ Yes. You can process photos one after another in the same session, which is hand
         heading: "Key Takeaways",
         body: `Changing a photo background online is now a one-minute, no-cost task. The process is simple: remove the existing background with AI, then drop in a new one. The secret to a believable result is a clean cutout plus matched lighting — get those two right and even a real-scene swap looks convincing. For safe, professional results, white or blurred backgrounds are hard to beat.
 
-You don't need Photoshop, a subscription, or even an account. Pixel Shine lets you change photo backgrounds free, with no watermark and no sign-up for basic use. Head to sjpt.io, upload your photo, and try a few backgrounds to see how quickly a snapshot becomes something polished.`,
+You don't need Photoshop, a subscription, or even an account. Pixel Shine lets you change photo backgrounds free, with no watermark and no sign-up for basic use. Head to Pixel Shine, upload your photo, and try a few backgrounds to see how quickly a snapshot becomes something polished.`,
       },
     ],
   },
@@ -12289,7 +12289,7 @@ Most free web tools process one image at a time, which is fine for individuals a
         heading: "Key Takeaways",
         body: `The free vs paid background remover debate has largely been settled in favor of free — for most people. The AI quality gap has closed to the point where typical photos look identical, and the real differentiator among free tools is whether they trap you with watermarks and downscaled downloads. Paid tools still earn their keep for high-volume, automated, business-critical workflows, but that's a specific minority.
 
-If you're an individual, freelancer, or small business, there's little reason to pay. Pixel Shine gives you full-resolution, watermark-free background removal with no sign-up, plus upscaling, AI headshots, and photo effects in one free platform. Try it at sjpt.io before you ever consider a subscription — chances are, free is all you need.`,
+If you're an individual, freelancer, or small business, there's little reason to pay. Pixel Shine gives you full-resolution, watermark-free background removal with no sign-up, plus upscaling, AI headshots, and photo effects in one free platform. Try it at Pixel Shine before you ever consider a subscription — chances are, free is all you need.`,
       },
     ],
   },
@@ -12350,7 +12350,7 @@ The one thing AI doesn't do for you is the capture — you still need a well-lit
 
 **Step 2: Take the photo.** Stand or sit against any plain-ish background (it doesn't need to be white — the AI removes it). Face the camera straight on, neutral expression, eyes open, hair off your face. Have someone take it, or use a timer at eye level, not from below.
 
-**Step 3: Go to sjpt.io and open the Remove Background tool.** No sign-in is required for basic background removal, so you can start right away.
+**Step 3: Go to Pixel Shine and open the Remove Background tool.** No sign-in is required for basic background removal, so you can start right away.
 
 **Step 4: Upload your photo.** Drag and drop or browse to select it. The AI processes it in a few seconds.
 
@@ -12419,7 +12419,7 @@ The common benefit is control and cost: unlimited retakes until the photo is rig
       {
         heading: "Frequently Asked Questions",
         body: `**How do I make a passport photo with a white background for free?**
-Take a well-lit, front-facing photo, go to sjpt.io, open the Remove Background tool, upload the photo, let the AI remove the original background, add a white fill, and crop to your country's required dimensions. It's free with no watermark.
+Take a well-lit, front-facing photo, go to Pixel Shine, open the Remove Background tool, upload the photo, let the AI remove the original background, add a white fill, and crop to your country's required dimensions. It's free with no watermark.
 
 **Can I use my phone to take a passport photo?**
 Yes. A modern phone camera is more than enough resolution. Just ensure even lighting, a straight-on angle at eye level, and a neutral expression. The AI handles the background.
@@ -12446,7 +12446,7 @@ Wear a mid-tone or darker top that contrasts with the white background so your s
         heading: "Key Takeaways",
         body: `Creating a compliant passport photo with a white background at home is genuinely easy now. The hardest technical requirement — a clean, shadow-free white background — is exactly what AI background removal handles best. Your job is simply to capture a well-lit, front-facing photo with a neutral expression, then let the tool cut you out and drop you onto plain white before cropping to the right dimensions.
 
-Do it right and you'll save the booth fee, avoid the trip, and get unlimited retakes until the photo is perfect. Pixel Shine's Remove Background tool is free, watermark-free, and needs no sign-up for basic use. Head to sjpt.io, upload your photo, and make a passport-ready image in about a minute.`,
+Do it right and you'll save the booth fee, avoid the trip, and get unlimited retakes until the photo is perfect. Pixel Shine's Remove Background tool is free, watermark-free, and needs no sign-up for basic use. Head to Pixel Shine, upload your photo, and make a passport-ready image in about a minute.`,
       },
     ],
   },
@@ -12505,7 +12505,7 @@ The train-a-model camp wins on sheer volume and variety; the instant camp wins o
 
 **Step 2: Gather your source photos.** Collect several clear, well-lit photos of yourself from different angles with varied expressions. Even instant tools produce better results with good input. (Our companion guide on taking the perfect source photo covers this in depth.)
 
-**Step 3: Start with a free option first.** Before paying $40-60 for a train-a-model service, test a free-to-start tool. Go to sjpt.io and try the AI Headshot Generator — new users get free trials, so you can see the quality on your own face at zero cost.
+**Step 3: Start with a free option first.** Before paying $40-60 for a train-a-model service, test a free-to-start tool. Go to Pixel Shine and try the AI Headshot Generator — new users get free trials, so you can see the quality on your own face at zero cost.
 
 **Step 4: Evaluate the results on your scorecard.** Check realism (does the skin look natural?), likeness (does it actually look like you?), and whether the style fits your industry.
 
@@ -12597,7 +12597,7 @@ Instant tools deliver results in seconds to minutes. Train-a-model services can 
         heading: "Key Takeaways",
         body: `The best AI headshot generator in 2025 isn't a single winner — it's the one that fits your specific need. If you want a huge variety pack and don't mind paying $40-60 and waiting hours, train-a-model services like Aragon AI deliver volume. But most people just need one or two professional, recognizable headshots, and for them, a fast free-to-start tool is the smarter play.
 
-The golden rule: test free before you pay. Pixel Shine's AI Headshot Generator gives new users free trials, so you can see the quality on your own face at zero cost, then decide if you ever need more. Head to sjpt.io, try it, and let the results — not the marketing — make your decision.`,
+The golden rule: test free before you pay. Pixel Shine's AI Headshot Generator gives new users free trials, so you can see the quality on your own face at zero cost, then decide if you ever need more. Head to Pixel Shine, try it, and let the results — not the marketing — make your decision.`,
       },
     ],
   },
@@ -12668,7 +12668,7 @@ Get the angle, framing, and background right, and you've handed the AI a clean, 
 
 **Step 7: Review and pick the best.** Choose the sharpest, best-lit, most natural-looking shots. Delete any that are blurry, shadowed, or awkwardly angled.
 
-**Step 8: Upload to Pixel Shine.** Go to sjpt.io, open the AI Headshot Generator, and upload your best source photos. New users get free trials, so you can generate and evaluate your headshots at no cost.`,
+**Step 8: Upload to Pixel Shine.** Go to Pixel Shine, open the AI Headshot Generator, and upload your best source photos. New users get free trials, so you can generate and evaluate your headshots at no cost.`,
       },
       {
         heading: "Pro Tips for Standout Source Photos",
@@ -12750,7 +12750,7 @@ Yes, if it meets the fundamentals — well-lit, sharp, front-facing, eye-level, 
         heading: "Key Takeaways",
         body: `Great AI headshots start with a great source photo, and the fundamentals are simple: soft even lighting (window light is your best friend), eye-level angle, plain background, natural expression, and a little variety across a few shots. Nail these and even a phone photo taken in your living room gives the AI everything it needs to produce a studio-quality result. You don't need a photographer or expensive gear — you need five minutes and a window.
 
-Avoid the common traps of harsh lighting, shooting from below, heavy filters, and low resolution, and your results will look genuinely professional. Once your source photo is ready, head to sjpt.io and try the AI Headshot Generator — new users get free trials, so you can see your polished headshots at zero cost.`,
+Avoid the common traps of harsh lighting, shooting from below, heavy filters, and low resolution, and your results will look genuinely professional. Once your source photo is ready, head to Pixel Shine and try the AI Headshot Generator — new users get free trials, so you can see your polished headshots at zero cost.`,
       },
     ],
   },
@@ -12811,7 +12811,7 @@ Hit every item on this checklist and your headshot does its job: it makes recrui
 
 **Step 1: Take or select good source photos.** Use clear, well-lit, front-facing photos of yourself at eye level. If you're shooting fresh, face a window for soft light and capture a few angles and expressions.
 
-**Step 2: Go to sjpt.io and open the AI Headshot Generator.** New users get free trials, so you can create a headshot without paying upfront.
+**Step 2: Go to Pixel Shine and open the AI Headshot Generator.** New users get free trials, so you can create a headshot without paying upfront.
 
 **Step 3: Upload your source photos.** Provide your best, clearest shots. Better input produces better output — avoid dark, blurry, or heavily filtered images.
 
@@ -12911,7 +12911,7 @@ Every couple of years, or sooner if your appearance changes significantly, so th
         heading: "Key Takeaways",
         body: `Your professional headshot is one of the highest-return elements of your career presence — it drives profile views, shapes recruiter first impressions, and reinforces your personal brand across LinkedIn, resumes, and email signatures. A recruiter-ready headshot is clear, well-lit, appropriately styled for your industry, and, above all, genuinely recognizable as you. AI now delivers this from home in minutes, closing the gap that expensive photographer sessions once created.
 
-The practical path: use good source photos, pick a style that fits your field, choose the result that looks most like you, and upscale it for crisp quality everywhere. Pixel Shine's AI Headshot Generator is free to start, so head to sjpt.io, create your professional headshot at no upfront cost, and give your career presence the upgrade it deserves.`,
+The practical path: use good source photos, pick a style that fits your field, choose the result that looks most like you, and upscale it for crisp quality everywhere. Pixel Shine's AI Headshot Generator is free to start, so head to Pixel Shine, create your professional headshot at no upfront cost, and give your career presence the upgrade it deserves.`,
       },
     ],
   },
@@ -12974,7 +12974,7 @@ AI headshots address each of these: no scheduling, dramatically lower cost, nati
 
 **Step 2: Collect source photos from everyone.** Send employees your source-photo guidelines and have each person submit a few clear, well-lit, front-facing photos. Consistent guidelines here save work later.
 
-**Step 3: Go to sjpt.io and open the AI Headshot Generator.** New users get free trials, so you can start generating without upfront cost and evaluate quality before any spend.
+**Step 3: Go to Pixel Shine and open the AI Headshot Generator.** New users get free trials, so you can start generating without upfront cost and evaluate quality before any spend.
 
 **Step 4: Generate each person's headshot in the agreed style.** Upload each employee's source photos and apply the same style settings across the board for consistency.
 
@@ -13074,7 +13074,7 @@ Upscale the final images with Pixel Shine's upscaler so they're crisp on the web
         heading: "Key Takeaways",
         body: `AI headshots solve the real headaches of team photography: scheduling, cost, distributed staff, and constant re-shoots for new hires. By standardizing style, background, framing, and crop across everyone — and reviewing the results as a set — you get a corporate directory or About page where the whole team looks cohesive and professional, even though the source photos came from different cities and rooms. For remote and growing companies especially, it's far more practical than a traditional shoot.
 
-The workflow is straightforward: define a standard, collect source photos, generate in a consistent style, unify the background, crop uniformly, and upscale. Pixel Shine is free to start with free trials for new users, so head to sjpt.io, test the AI Headshot Generator on a few team members, and see how easily your whole team's imagery comes together.`,
+The workflow is straightforward: define a standard, collect source photos, generate in a consistent style, unify the background, crop uniformly, and upscale. Pixel Shine is free to start with free trials for new users, so head to Pixel Shine, test the AI Headshot Generator on a few team members, and see how easily your whole team's imagery comes together.`,
       },
     ],
   },
@@ -13131,7 +13131,7 @@ In this step-by-step guide, we'll walk through exactly how to replace a photo ba
         heading: "Step-by-Step: How to Change a Photo Background with AI",
         body: `Here's the exact process to replace a photo background online using Pixel Shine's free editor. The whole thing takes under a minute.
 
-**Step 1 — Open the editor.** Head to sjpt.io and click into the AI Photo Editor. You don't need to sign in for basic edits, so there's zero friction to get started.
+**Step 1 — Open the editor.** Head to Pixel Shine and click into the AI Photo Editor. You don't need to sign in for basic edits, so there's zero friction to get started.
 
 **Step 2 — Upload your image.** Drag and drop your photo, or click to browse your files. Pixel Shine accepts JPG, PNG, and WebP. For best results, use the highest-resolution version you have — more pixels give the AI more detail to work with around edges.
 
@@ -13227,7 +13227,7 @@ Yes, images you edit and download are yours to use for your business, listings, 
 
 Whether you're an e-commerce seller chasing higher conversions, a professional polishing a headshot, or just someone who wants a cleaner photo, an AI background changer puts studio-quality editing in your hands — for free.
 
-Ready to try it yourself? Open Pixel Shine's free editor at sjpt.io, upload any photo, and swap the background in seconds. No account, no watermark, no cost. Change your first background free and see the difference for yourself.`,
+Ready to try it yourself? Open Pixel Shine's free editor at Pixel Shine, upload any photo, and swap the background in seconds. No account, no watermark, no cost. Change your first background free and see the difference for yourself.`,
       },
     ],
   },
@@ -13282,7 +13282,7 @@ So which should you actually use? The honest answer is: it depends on what you'r
 
 **Step 4 — Check your budget.** No subscription budget? Start with a free AI editor like Pixel Shine. You'll cover 90% of common needs without spending anything.
 
-**Step 5 — Match the tool to the job.** For background removal, upscaling, headshots, and creative effects, open Pixel Shine at sjpt.io and get instant results. For pixel-precise compositing, custom brushwork, or print-production color management, use Photoshop.
+**Step 5 — Match the tool to the job.** For background removal, upscaling, headshots, and creative effects, open Pixel Shine at Pixel Shine and get instant results. For pixel-precise compositing, custom brushwork, or print-production color management, use Photoshop.
 
 **Step 6 — Consider using both.** Many pros now use AI editors for the heavy lifting (fast background removal, upscaling) and Photoshop only for the final 10% of fine detail. This hybrid workflow is faster and cheaper than Photoshop alone.
 
@@ -13377,7 +13377,7 @@ Reputable tools process your images securely. Always use trusted platforms and a
 
 In 2025, the smartest approach is to start with a free AI tool and only reach for Photoshop when the job genuinely requires manual precision. You'll save time, money, and a lot of frustration.
 
-Want to see how far free AI editing has come? Try Pixel Shine's editor at sjpt.io — no subscription, no watermark, no account needed for the basics. Test it on your next photo and see if you ever need Photoshop again.`,
+Want to see how far free AI editing has come? Try Pixel Shine's editor at Pixel Shine — no subscription, no watermark, no account needed for the basics. Test it on your next photo and see if you ever need Photoshop again.`,
       },
     ],
   },
@@ -13432,7 +13432,7 @@ That's exactly where AI changes the game. In this guide, you'll learn how to imp
 
 **Step 1 — Start with the best raw shot you can.** Even AI works better with good input. Shoot in bright, even, indirect light (a window on an overcast day is ideal), fill the frame with your product, and keep the camera steady. A cheap tripod or propping your phone against books helps.
 
-**Step 2 — Upload to Pixel Shine.** Go to sjpt.io and open the AI Photo Editor. No sign-in needed to start. Drag your image in.
+**Step 2 — Upload to Pixel Shine.** Go to Pixel Shine and open the AI Photo Editor. No sign-in needed to start. Drag your image in.
 
 **Step 3 — Remove the background.** The AI automatically isolates your product in 3 to 5 seconds. You'll see it on a transparent canvas, ready for a new background.
 
@@ -13532,7 +13532,7 @@ Absolutely, as long as they accurately represent the product. Editing for clarit
 
 The formula is simple: start with the best raw shot you can, standardize your backgrounds, correct your lighting and color accurately, add subtle shadows, and upscale for crisp detail. Do this consistently across your catalog and your store will look like an established brand — because visually, it will be.
 
-Ready to transform your product photos? Head to Pixel Shine at sjpt.io and perfect your first product image for free — no watermark, no account needed, no studio required. Better photos start selling more, starting today.`,
+Ready to transform your product photos? Head to Pixel Shine at Pixel Shine and perfect your first product image for free — no watermark, no account needed, no studio required. Better photos start selling more, starting today.`,
       },
     ],
   },
@@ -13621,7 +13621,7 @@ Each of these is available through Pixel Shine's Creative AI Photo Effects, and 
 
 **Step 1 — Pick the right source photo.** This matters more than anything. Use a clear, well-lit photo with your face and subject fully visible. For figure effects (Funko, action figure), a front-facing full or half-body shot works best. For portrait styles (anime, painting), a clear headshot shines.
 
-**Step 2 — Open Pixel Shine's Creative tools.** Go to sjpt.io and navigate to the Creative AI Photo Effects section. New users get free trials to experiment.
+**Step 2 — Open Pixel Shine's Creative tools.** Go to Pixel Shine and navigate to the Creative AI Photo Effects section. New users get free trials to experiment.
 
 **Step 3 — Choose your effect.** Browse the effect library — Funko Pop, anime, claymation, saree, and more — and select the transformation you want.
 
@@ -13721,7 +13721,7 @@ Yes. The creative effects library grows as new trends emerge, so there's always 
 
 From the 20 effects in this guide, there's something for every account — playful, artistic, cultural, or dramatic. And the best news is you don't need pricey apps to create them.
 
-Ready to transform your photos? Head to Pixel Shine's Creative AI Photo Effects at sjpt.io, grab your free trials, and turn your next selfie into scroll-stopping content — no watermark, no cost. The next viral post could be yours.`,
+Ready to transform your photos? Head to Pixel Shine's Creative AI Photo Effects at Pixel Shine, grab your free trials, and turn your next selfie into scroll-stopping content — no watermark, no cost. The next viral post could be yours.`,
       },
     ],
   },
@@ -13790,7 +13790,7 @@ All of these are available through Pixel Shine's Creative AI Photo Effects and A
 
 **Step 2 — Choose a strong source photo.** Use a clear, well-lit, front-facing image. For figure filters (Funko, action figure), a half or full-body shot works best; for portrait filters (anime, headshot), a crisp face shot wins.
 
-**Step 3 — Open Pixel Shine.** Head to sjpt.io and go to the Creative AI Photo Effects or AI Headshot Generator. New users get free trials to experiment.
+**Step 3 — Open Pixel Shine.** Head to Pixel Shine and go to the Creative AI Photo Effects or AI Headshot Generator. New users get free trials to experiment.
 
 **Step 4 — Select your filter and upload.** Pick the trending effect, drop in your photo, and let the AI work. Higher-resolution photos produce sharper, more believable results.
 
@@ -13882,7 +13882,7 @@ Traditional filters overlay effects on your photo; AI filters fully transform it
 
 Unlike the simple overlays of the past, today's AI filters create genuinely new content that stops scrolls and earns shares — and you don't need expensive apps to make them.
 
-Ready to ride the next trend? Head to Pixel Shine at sjpt.io, grab your free trials, and create trending AI filter content — watermark-free and free to start. The next viral post is one upload away.`,
+Ready to ride the next trend? Head to Pixel Shine at Pixel Shine, grab your free trials, and create trending AI filter content — watermark-free and free to start. The next viral post is one upload away.`,
       },
     ],
   },
@@ -13943,7 +13943,7 @@ By the end, you'll understand what resolution really is, the crucial difference 
 
 **Step 4 — Understand the limitation.** Traditional resizing can't truly add detail — stretching a small image just makes bigger, blurrier pixels. This is where AI comes in.
 
-**Step 5 — Upscale with AI.** Go to sjpt.io and open the AI Upscaler. Upload your low-resolution image. Unlike basic stretching, AI upscaling intelligently generates new detail, reconstructing edges and textures to increase resolution while staying sharp.
+**Step 5 — Upscale with AI.** Go to Pixel Shine and open the AI Upscaler. Upload your low-resolution image. Unlike basic stretching, AI upscaling intelligently generates new detail, reconstructing edges and textures to increase resolution while staying sharp.
 
 **Step 6 — Choose your upscale level.** Pixel Shine's Normal upscale is free and unlimited — perfect for most needs. For maximum detail on important images, Pro AI upscale delivers the highest quality.
 
@@ -14035,7 +14035,7 @@ Yes. Shrinking an image (reducing pixels) keeps it crisp. Only enlarging beyond 
 
 When an image is too low-resolution for what you need, you're no longer stuck — AI upscaling can intelligently add detail and rescue files that traditional resizing would ruin.
 
-Have a low-res image that needs more detail? Try Pixel Shine's AI Upscaler at sjpt.io — the Normal upscale is completely free and unlimited, no sign-in required. Turn your blurry, too-small images into crisp, high-resolution files in seconds.`,
+Have a low-res image that needs more detail? Try Pixel Shine's AI Upscaler at Pixel Shine — the Normal upscale is completely free and unlimited, no sign-in required. Turn your blurry, too-small images into crisp, high-resolution files in seconds.`,
       },
     ],
   },
@@ -14090,9 +14090,9 @@ In this guide, we'll walk through exactly how to make a logo transparent online,
 
 **Step 1 — Gather your best logo file.** Find the highest-resolution version of your logo you have. Bigger is better for crisp edges, especially around thin text and small details.
 
-**Step 2 — Upscale first if it's small (optional).** If your logo is low-resolution, run it through Pixel Shine's free Upscaler at sjpt.io before removing the background. This ensures sharp, clean edges in the final PNG.
+**Step 2 — Upscale first if it's small (optional).** If your logo is low-resolution, run it through Pixel Shine's free Upscaler at Pixel Shine before removing the background. This ensures sharp, clean edges in the final PNG.
 
-**Step 3 — Open the Background Remover.** Go to sjpt.io and open the Background Remover tool. No sign-in is required to start.
+**Step 3 — Open the Background Remover.** Go to Pixel Shine and open the Background Remover tool. No sign-in is required to start.
 
 **Step 4 — Upload your logo.** Drag and drop your logo image or click to browse. Accepted formats include JPG, PNG, and WebP.
 
@@ -14165,7 +14165,7 @@ A startup founder building a pitch deck needed the company logo to sit cleanly o
       {
         heading: "Frequently Asked Questions",
         body: `**How do I make my logo background transparent for free?**
-Upload your logo to Pixel Shine's Background Remover at sjpt.io. The AI removes the background in seconds, and you can download a transparent PNG with no watermark and no mandatory sign-in.
+Upload your logo to Pixel Shine's Background Remover at Pixel Shine. The AI removes the background in seconds, and you can download a transparent PNG with no watermark and no mandatory sign-in.
 
 **What file format should a transparent logo be?**
 PNG. It's the standard format that supports transparency. Never use JPG for transparent logos, as JPG fills transparent areas with white.
@@ -14194,7 +14194,7 @@ No. Removing the background only affects the background pixels; your logo itself
 
 Avoid the common pitfalls — saving as JPG, using low-res sources, and ignoring color fringing — and you'll have a versatile brand asset that works everywhere.
 
-Have a logo trapped on a background? Head to Pixel Shine's Background Remover at sjpt.io and create a clean transparent PNG for free — no watermark, no account needed to start. Turn your boxed-in logo into a professional, ready-for-anything brand mark in seconds.`,
+Have a logo trapped on a background? Head to Pixel Shine's Background Remover at Pixel Shine and create a clean transparent PNG for free — no watermark, no account needed to start. Turn your boxed-in logo into a professional, ready-for-anything brand mark in seconds.`,
       },
     ],
   },
@@ -14255,7 +14255,7 @@ In this guide, you'll learn how to use AI to brighten rooms, fix lighting, remov
 
 **Step 2 — Declutter physically first if possible.** Remove obvious personal items and mess before shooting. AI can handle the rest, but a tidy starting point yields the best results.
 
-**Step 3 — Open Pixel Shine's AI Editor.** Go to sjpt.io and open the AI Photo Editor. No sign-in needed to start.
+**Step 3 — Open Pixel Shine's AI Editor.** Go to Pixel Shine and open the AI Photo Editor. No sign-in needed to start.
 
 **Step 4 — Upload your room photo.** Drag and drop your image into the editor.
 
@@ -14325,7 +14325,7 @@ Across these cases, AI let agents and owners produce compelling, professional-lo
 Yes. Pixel Shine offers free photo enhancement, brightening, and unlimited Normal upscaling with no watermarks and no mandatory sign-in for basics, so you can produce professional-looking listing photos at no cost.
 
 **How do I brighten a dark room photo?**
-Upload it to Pixel Shine's AI Editor at sjpt.io and increase the brightness and adjust contrast. AI brightening lifts shadows and evens exposure, making dim rooms look open and inviting.
+Upload it to Pixel Shine's AI Editor at Pixel Shine and increase the brightness and adjust contrast. AI brightening lifts shadows and evens exposure, making dim rooms look open and inviting.
 
 **Is it ethical to edit real estate listing photos?**
 Enhancing photos — brightening, color-correcting, sharpening, and removing minor clutter — is standard and ethical. What's not acceptable is misrepresenting the property, like erasing permanent defects or making spaces look dramatically larger than they are. Enhance honestly.
@@ -14351,7 +14351,7 @@ Yes. Apply the same brightness, color, and style settings across all photos for 
 
 The keys are simple: shoot the best raw photo you can, brighten and color-correct honestly, remove distractions, keep your edits consistent across the listing, and always lead with your most impressive image. Just remember to enhance, not misrepresent — honest, appealing photos build trust and drive real showings.
 
-Ready to make your listings shine? Head to Pixel Shine's AI Editor at sjpt.io and enhance your first listing photo for free — no watermark, no account needed to start. Brighter rooms and cleaner spaces are just seconds away.`,
+Ready to make your listings shine? Head to Pixel Shine's AI Editor at Pixel Shine and enhance your first listing photo for free — no watermark, no account needed to start. Brighter rooms and cleaner spaces are just seconds away.`,
       },
     ],
   },
