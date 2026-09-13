@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { trackBeginCheckout, trackPurchase, trackBuyButtonClicked, trackPaymentFailed } from "@/lib/analytics";
+import { explainPaymentFailure } from "@/lib/pricing-modal";
 import { PACKS, CREDIT_COST, type Pack } from "@/lib/plans";
 
 /** The shape Razorpay hands to a "payment.failed" listener. */
@@ -145,7 +146,7 @@ export default function PricingPage() {
         reason never reached the page, the analytics, or anyone reading them.
       */
       rzp.on?.("payment.failed", (resp: { error?: { description?: string; reason?: string; step?: string } }) => {
-        const why = resp?.error?.description || resp?.error?.reason || "Payment failed";
+        const why = explainPaymentFailure(resp?.error?.description, resp?.error?.reason);
         trackPaymentFailed(p.id, resp?.error?.reason || "payment_failed");
         console.error("[pricing] razorpay payment.failed:", JSON.stringify(resp?.error || {}));
         setStatusMsg({ text: why, ok: false });

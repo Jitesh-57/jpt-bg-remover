@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { trackBeginCheckout, trackPurchase, trackBuyButtonClicked, trackPaymentFailed } from "@/lib/analytics";
 import { persistAuthContext } from "@/lib/pending-image";
+import { explainPaymentFailure } from "@/lib/pricing-modal";
 import { PACKS, CREDIT_COST, inrPerCredit, type Pack } from "@/lib/plans";
 import { landingImg } from "@/lib/landing-images";
 
@@ -129,7 +130,7 @@ export default function UnlimitedModal({ onClose, loggedIn, reason, prefillUser,
       // See the pricing page: a rejected payment arrives here, and ondismiss
       // would otherwise relabel it "Payment cancelled".
       rzp.on?.("payment.failed", (resp: RazorpayFailure) => {
-        const why = resp?.error?.description || resp?.error?.reason || "Payment failed";
+        const why = explainPaymentFailure(resp?.error?.description, resp?.error?.reason);
         trackPaymentFailed(p.id, resp?.error?.reason || "payment_failed");
         console.error("[pricing-modal] razorpay payment.failed:", JSON.stringify(resp?.error || {}));
         setStatusMsg({ text: why, ok: false });
