@@ -11,6 +11,8 @@ import { beginGoogleSignIn } from "@/lib/auth-return";
 import ToolIcon, { iconKeyForHref } from "@/app/editor/ToolIcon";
 import BrandLogo from "./BrandLogo";
 import { openPricing } from "@/lib/pricing-modal";
+import { CREDIT_COST } from "@/lib/plans";
+import { onCreditsChanged } from "@/lib/credits";
 
 const PricingModal = lazy(() => import("./PricingModal"));
 
@@ -78,6 +80,82 @@ const TOOLS = PAID_FEATURES_ENABLED
       },
     ];
 
+/**
+ * The panel at the top of the account menu.
+ *
+ * Two different things to say depending on whether the account has bought a
+ * pack. Someone who has not needs to know the browser tools cost nothing and
+ * the AI apps need credits. Someone who has needs their balance — which they
+ * paid for, so it belongs in the menu they opened to check it, not only in the
+ * small badge beside their name.
+ */
+function AccountPanel({
+  purchased,
+  credits,
+  onBuy,
+  mobile = false,
+}: {
+  purchased: boolean;
+  credits: number;
+  onBuy: () => void;
+  mobile?: boolean;
+}) {
+  const out = credits <= 0;
+  const box: React.CSSProperties = {
+    margin: mobile ? "12px 16px 4px" : "10px 12px 4px",
+    borderRadius: 10,
+    padding: "10px 12px",
+  };
+  const button: React.CSSProperties = {
+    marginTop: 8, width: "100%", border: "none", borderRadius: 8, cursor: "pointer",
+    background: "var(--accent-fill)", color: "#fff", fontWeight: 700, fontFamily: "inherit",
+    padding: mobile ? "10px 12px" : "7px 12px",
+    fontSize: mobile ? 13 : 12,
+  };
+  const label: React.CSSProperties = {
+    fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em",
+  };
+  const body: React.CSSProperties = {
+    fontSize: mobile ? 12.5 : 12, color: "var(--text-muted)", marginTop: 3, lineHeight: 1.5,
+  };
+
+  if (!purchased) {
+    return (
+      <div style={{ ...box, background: "var(--success-soft)", border: "1px solid var(--success-soft)" }}>
+        <div style={{ ...label, color: "var(--success)" }}>Free tools</div>
+        <div style={body}>Unlimited, no credits — they run in your browser. AI apps use credits.</div>
+        <button onClick={onBuy} style={button}>Get AI credits</button>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      style={{
+        ...box,
+        background: out ? "var(--danger-soft)" : "var(--accent-soft)",
+        border: `1px solid ${out ? "var(--danger-soft)" : "var(--accent-border)"}`,
+      }}
+    >
+      <div style={{ ...label, color: out ? "var(--danger)" : "var(--accent)" }}>AI credits</div>
+      <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginTop: 4 }}>
+        <span style={{ fontSize: mobile ? 26 : 23, fontWeight: 900, color: "var(--text)", lineHeight: 1 }}>
+          {credits}
+        </span>
+        <span style={{ fontSize: 12, color: "var(--text-muted)", fontWeight: 600 }}>
+          {credits === 1 ? "credit left" : "credits left"}
+        </span>
+      </div>
+      <div style={body}>
+        {out
+          ? "You have used every credit. Top up to keep generating — the browser tools stay free and unlimited."
+          : `About ${Math.floor(credits / CREDIT_COST)} more ${Math.floor(credits / CREDIT_COST) === 1 ? "generation" : "generations"} at ${CREDIT_COST} credits each. Credits never expire.`}
+      </div>
+      <button onClick={onBuy} style={button}>{out ? "Top up credits" : "Buy more credits"}</button>
+    </div>
+  );
+}
+
 export default function NavBar() {
   const { t } = useLanguage();
   const [user, setUser] = useState<User | null>(null);
@@ -124,7 +202,20 @@ export default function NavBar() {
         setShowToolsDropdown(false);
     };
     document.addEventListener("mousedown", onClickOutside);
-    return () => { subscription.unsubscribe(); document.removeEventListener("mousedown", onClickOutside); };
+    /*
+      The balance is printed beside the name, so it has to follow the spending.
+      Every AI route returns the new figure and the page that called it
+      announces it — without this the header would keep showing the balance as
+      it was when the page loaded, which is worse than showing nothing.
+    */
+    const stopCredits = onCreditsChanged((credits) =>
+      setUser(u => (u ? { ...u, credits } : u))
+    );
+    return () => {
+      subscription.unsubscribe();
+      document.removeEventListener("mousedown", onClickOutside);
+      stopCredits();
+    };
   }, []);
 
   const fetchUser = () =>
@@ -354,7 +445,7 @@ export default function NavBar() {
                 {user.picture
                   ? <img src={user.picture} alt="" style={{ width: 28, height: 28, borderRadius: "50%", flexShrink: 0 }} />
                   : <div style={{ width: 28, height: 28, borderRadius: "50%", background: "var(--accent-fill)", color: "#fff", fontSize: 13, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>{user.name[0]}</div>}
-                <span style={{ fontSize: 13, fontWeight: 600, color: "var(--text-muted)" }}>{user.name.split(" ")[0]}</span>
+                <span className="jpt-chip-name" style={{ fontSize: 13, fontWeight: 600, color: "var(--text-muted)" }}>{user.name.split(" ")[0]}</span>
                 {/*
                   Shown only once a pack has actually been bought. A balance is
                   meaningless to someone who has never paid — and "⚡ 0" reads
@@ -363,8 +454,17 @@ export default function NavBar() {
                   the header contradict the paywall. plan leaves "free" only in
                   verify-payment, so it is the honest signal for "has bought".
                 */}
-                {PAID_FEATURES_ENABLED && purchased && user.credits > 0 && (
-                  <span style={{ fontSize: 11, background: "var(--accent-fill)", color: "#fff", padding: "2px 8px", borderRadius: 12, fontWeight: 700 }}>
+                {PAID_FEATURES_ENABLED && purchased && (
+                  <span
+                    title={user.credits > 0
+                      ? `${user.credits} AI credits — about ${Math.floor(user.credits / CREDIT_COST)} generations`
+                      : "You are out of AI credits"}
+                    style={{
+                      fontSize: 11, color: "#fff", padding: "2px 8px", borderRadius: 12, fontWeight: 700,
+                      // Out of credits reads as a prompt to top up, not as a balance.
+                      background: user.credits > 0 ? "var(--accent-fill)" : "var(--danger)",
+                    }}
+                  >
                     {`⚡ ${user.credits}`}
                   </span>
                 )}
@@ -375,17 +475,16 @@ export default function NavBar() {
                     <div style={{ fontWeight: 700, fontSize: 14, color: "var(--text)" }}>{user.name}</div>
                     <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 2 }}>{user.email}</div>
                   </div>
-                  {PAID_FEATURES_ENABLED && !purchased && (
-                    <div style={{ margin: "10px 12px 4px", background: "var(--success-soft)", border: "1px solid var(--success-soft)", borderRadius: 10, padding: "10px 12px" }}>
-                      <div style={{ fontSize: 11, fontWeight: 700, color: "var(--success)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Free tools</div>
-                      <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 3, lineHeight: 1.5 }}>
-                        Unlimited, no credits — they run in your browser. AI apps use credits.
-                      </div>
-                      <button onClick={() => { trackPaymentPopupTriggered("account_menu"); openPricing("the AI apps"); setShowMenu(false); }}
-                        style={{ marginTop: 8, width: "100%", padding: "7px 12px", background: "var(--accent-fill)", color: "#fff", border: "none", borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
-                        Get AI credits
-                      </button>
-                    </div>
+                  {PAID_FEATURES_ENABLED && (
+                    <AccountPanel
+                      purchased={purchased}
+                      credits={user.credits}
+                      onBuy={() => {
+                        trackPaymentPopupTriggered("account_menu");
+                        openPricing(purchased ? "more AI credits" : "the AI apps");
+                        setShowMenu(false);
+                      }}
+                    />
                   )}
                   <div style={{ padding: "6px 0" }}>
                     {PAID_FEATURES_ENABLED && (
@@ -402,12 +501,6 @@ export default function NavBar() {
                           onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
                           🧾 Invoices
                         </a>
-                        <button onClick={() => { trackPaymentPopupTriggered("manual"); setShowPricing(true); setShowMenu(false); }}
-                          style={{ width: "100%", padding: "10px 16px", background: "none", border: "none", textAlign: "left", fontSize: 13, color: "var(--accent)", cursor: "pointer", fontWeight: 600 }}
-                          onMouseEnter={e => (e.currentTarget.style.background = "var(--surface-2)")}
-                          onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
-                          💳 Buy Credits
-                        </button>
                       </>
                     )}
                     <div style={{ borderTop: "1px solid var(--border)", margin: "4px 0" }} />
@@ -431,17 +524,17 @@ export default function NavBar() {
                   <div style={{ fontWeight: 700, fontSize: 15, color: "var(--text)" }}>{user.name}</div>
                   <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 2 }}>{user.email}</div>
                 </div>
-                {PAID_FEATURES_ENABLED && !purchased && (
-                  <div style={{ margin: "12px 16px 4px", background: "var(--success-soft)", border: "1px solid var(--success-soft)", borderRadius: 10, padding: "10px 12px" }}>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: "var(--success)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Free tools</div>
-                    <div style={{ fontSize: 12.5, color: "var(--text-muted)", marginTop: 3, lineHeight: 1.5 }}>
-                      Unlimited, no credits — they run in your browser. AI apps use credits.
-                    </div>
-                    <button onClick={() => { trackPaymentPopupTriggered("account_menu"); openPricing("the AI apps"); setShowMenu(false); }}
-                      style={{ marginTop: 8, width: "100%", padding: "10px 12px", background: "var(--accent-fill)", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
-                      Get AI credits
-                    </button>
-                  </div>
+                {PAID_FEATURES_ENABLED && (
+                  <AccountPanel
+                    mobile
+                    purchased={purchased}
+                    credits={user.credits}
+                    onBuy={() => {
+                      trackPaymentPopupTriggered("account_menu");
+                      openPricing(purchased ? "more AI credits" : "the AI apps");
+                      setShowMenu(false);
+                    }}
+                  />
                 )}
                 <div style={{ padding: "8px 0" }}>
                   {PAID_FEATURES_ENABLED && (
@@ -454,10 +547,6 @@ export default function NavBar() {
                         style={{ display: "block", padding: "14px 16px", fontSize: 14.5, color: "var(--text)", textDecoration: "none", fontWeight: 600 }}>
                         🧾 Invoices
                       </a>
-                      <button onClick={() => { trackPaymentPopupTriggered("manual"); setShowPricing(true); setShowMenu(false); }}
-                        style={{ width: "100%", padding: "14px 16px", background: "none", border: "none", textAlign: "left", fontSize: 14.5, color: "var(--accent)", cursor: "pointer", fontWeight: 700 }}>
-                        💳 Buy Credits
-                      </button>
                     </>
                   )}
                   <div style={{ borderTop: "1px solid var(--border)", margin: "4px 0" }} />
