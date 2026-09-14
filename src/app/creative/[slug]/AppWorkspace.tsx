@@ -9,6 +9,10 @@ import {
 import { CREDIT_COST } from "@/lib/plans";
 import { publishCredits } from "@/lib/credits";
 import { SHOW_PRESET_TABS, SHOW_STYLE_PICKER } from "@/lib/workspace-config";
+import {
+  optionsFor, defaultValues, optionPhrases, optionSummary, missingRequired,
+  type OptionValues,
+} from "@/lib/app-options";
 import { openPricing, needsCredits } from "@/lib/pricing-modal";
 import { trackEvent } from "@/lib/analytics";
 import { savePendingContext } from "@/lib/pending-image";
@@ -34,6 +38,18 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
   const [custom, setCustom] = useState("");
   const [model, setModel] = useState<string>(MODELS[0].id);
   const [ratio, setRatio] = useState<AspectRatio>("1:1");
+
+  /*
+    The app's own settings — the target age, the beard style, what to remove.
+
+    Several base prompts ask the model for "the specified age" or "the
+    specified style", and nothing in this panel used to specify one, so the
+    model guessed. Defaults are the first choice of each option, which for most
+    apps is "Auto" and generates exactly what the app generated before.
+  */
+  const options = useMemo(() => optionsFor(app), [app]);
+  const [optValues, setOptValues] = useState<OptionValues>(() => defaultValues(optionsFor(app)));
+  const setOpt = (id: string, value: string) => setOptValues((v) => ({ ...v, [id]: value }));
 
   const [original, setOriginal] = useState<string | null>(null);
   const [result, setResult] = useState<string | null>(null);
@@ -107,6 +123,14 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
       setErr("Describe the look you want, or pick a style.");
       return;
     }
+    // A couple of apps cannot guess: nobody can infer which colour you wanted
+    // something recoloured to. Caught here rather than spending a credit on a
+    // generation that was always going to come back wrong.
+    const missing = missingRequired(options, optValues);
+    if (missing) {
+      setErr(`Fill in "${missing}" first — this app needs it to know what to do.`);
+      return;
+    }
     // Short of credits: open the packs instead of spending a round-trip to be
     // told the same thing. The server still enforces it.
     if (credits !== null && needsCredits({ credits }, CREDIT_COST)) {
@@ -115,7 +139,7 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
     }
     setBusy(true);
     setErr(null);
-    trackEvent("app_generate", { app: app.slug, tab, preset: preset?.id, model, ratio });
+    trackEvent("app_generate", { app: app.slug, tab, preset: preset?.id, model, ratio, ...optValues });
 
     try {
       /*
@@ -144,12 +168,16 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...payload,
-          prompt: buildPrompt(app, tab, preset, custom),
+          prompt: buildPrompt(app, tab, preset, custom, optionPhrases(options, optValues)),
           slug: app.slug,
           model,
           aspectRatio: ratio,
           // Recorded with the generation, so a row says which style made it.
-          preset: tab === "custom" ? "custom" : preset?.id,
+          // The saved row should say what was actually asked for, so the
+          // options travel with it — a stored prompt with no "60s" in it is
+          // not reproducible.
+          preset: [tab === "custom" ? "custom" : preset?.id, optionSummary(options, optValues)]
+            .filter(Boolean).join(" · ") || undefined,
         }),
       });
       // A gateway timeout or a size rejection is not JSON, and res.json() on
@@ -201,7 +229,10 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
     border: "1px solid var(--border)", fontSize: 14, fontWeight: 600, cursor: "pointer",
   };
 
-  const canApply = !!original && !busy && (tab !== "custom" || !!custom.trim());
+  const canApply =
+    !!original && !busy &&
+    (tab !== "custom" || !!custom.trim()) &&
+    !missingRequired(options, optValues);
   /** Signed in, but the balance cannot cover a generation. */
   const short = loggedIn && credits !== null && needsCredits({ credits }, CREDIT_COST);
 
@@ -353,6 +384,48 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
           </div>
         )}
 
+        {/*
+          The app's own settings.
+
+          Shown above Model and Ratio because these are the ones that change
+          the picture: Model and Ratio decide how it is made and what shape it
+          comes out, and neither answers "how old?".
+        */}
+        {options.map((o) => (
+          <div key={o.id} style={{ marginBottom: 12 }}>
+            <label style={ctlLabel} htmlFor={`opt-${o.id}`}>
+              {o.label}
+              {o.required && <span style={{ color: "var(--accent)" }}> *</span>}
+            </label>
+            {o.kind === "text" ? (
+              <input
+                id={`opt-${o.id}`}
+                value={optValues[o.id] ?? ""}
+                onChange={(e) => setOpt(o.id, e.target.value)}
+                placeholder={o.placeholder}
+                maxLength={200}
+                style={{ ...select, cursor: "text", fontWeight: 500 }}
+              />
+            ) : (
+              <select
+                id={`opt-${o.id}`}
+                value={optValues[o.id] ?? ""}
+                onChange={(e) => setOpt(o.id, e.target.value)}
+                style={select}
+              >
+                {o.choices?.map((ch) => (
+                  <option key={ch.value} value={ch.value}>{ch.label}</option>
+                ))}
+              </select>
+            )}
+            {o.hint && (
+              <div style={{ fontSize: 11.5, color: "var(--text-faint)", marginTop: 5, lineHeight: 1.5 }}>
+                {o.hint}
+              </div>
+            )}
+          </div>
+        ))}
+
         {/* Model + ratio */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 92px", gap: 9, marginBottom: 14 }}>
           <div>
@@ -469,7 +542,7 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
                 {dragging ? "Drop your photo here" : "Upload a photo to start"}
               </div>
               <p style={{ fontSize: 14, color: "var(--text-muted)", margin: 0, maxWidth: 380, lineHeight: 1.65 }}>
-                Click anywhere in this box or drag a photo in. Pick a style on the left, then hit Generate — your
+                Click anywhere in this box or drag a photo in. Set the options on the left, then hit Generate — your
                 original stays untouched, you always see both.
               </p>
               <span

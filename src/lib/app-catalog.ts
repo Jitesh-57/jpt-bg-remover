@@ -58,7 +58,7 @@ function faqsFor(name: string, cat: AppCat, desc: string): PageFAQ[] {
       ? "A sharp, well-lit photo works best. Avoid heavy compression artefacts — the model can only work with the detail that is actually there."
       : "A clear, front-facing, well-lit photo gives the most faithful result. Heavy sunglasses, extreme angles and deep shadows all make the face harder to preserve.";
   return [
-    { q: `How does the ${name.toLowerCase()} work?`, a: `${desc} Upload your image, pick a style on the left, choose a model and aspect ratio, then hit Apply. You see the original and the result side by side, so you can always compare before downloading.` },
+    { q: `How does the ${name.toLowerCase()} work?`, a: `${desc} Upload your image, set the options on the left — they are written into the instruction the AI receives — then hit Generate. You see the original and the result side by side, so you can always compare before downloading.` },
     { q: "What photo should I upload?", a: photo },
     { q: `Is the ${name.toLowerCase()} free?`, a: `The free tools on this site are unlimited. This one is an AI app, so it uses credits. ${cost}` },
     ...(NON_PERSON.includes(cat) ? [] : [{ q: "Will it still look like me?", a: "That is the instruction the prompt leads with: keep the face, bone structure and skin tone exactly, and change only the styling. If a result drifts, run it again — generation is not deterministic, and a second pass usually lands." }]),
@@ -82,7 +82,7 @@ export function expand(row: Row): CreativeApp {
     h1: name,
     // These run server-side on credits — saying "in your browser" would be false;
     // that is only true of the free on-device tools.
-    tagline: `${desc} Pick a style, choose a model, and download the result at full resolution with no watermark.`,
+    tagline: `${desc} Set the options to suit you, and download the result at full resolution with no watermark.`,
     intro: desc,
     prompt: fullPrompt,
     badge: `${meta.emoji} ${meta.label}`,
@@ -211,7 +211,7 @@ export const CATALOG_ROWS: Row[] = [
   ["architecture-photo-editor", "Architecture Photo Editor", "🏛️", "background", "Straight lines and clean light.", "Enhance this architectural photograph: correct perspective so verticals are true, balance the exposure between sky and structure, and render materials crisply without over-sharpening."],
 
   // ── Clean up ──────────────────────────────────────────────────────────────
-  ["object-remover", "AI Object Remover", "🧽", "remove", "Erase anything and rebuild behind it.", "Remove the specified object and reconstruct what was behind it consistently with the surrounding texture, perspective and lighting, leaving no smear, ghost or repeated pattern."],
+  ["object-remover", "AI Object Remover", "🧽", "remove", "Erase anything and rebuild behind it.", "Remove the unwanted object — the one named below, or whatever is most obviously out of place if none is — and reconstruct what was behind it consistently with the surrounding texture, perspective and lighting, leaving no smear, ghost or repeated pattern."],
   ["remove-people-from-photo", "Remove People from Photos", "🚶", "remove", "Clear the background crowd.", "Remove the unwanted people and rebuild the scene behind them: continue the architecture, ground and background texture correctly through the gap, matching perspective and light."],
   ["watermark-remover-ai", "AI Watermark Remover", "🪄", "remove", "Clear marks from photos you own.", "Remove the watermark, logo or stamp and reconstruct the image underneath it at the pixel level, matching texture, colour and light so no blur, smear or outline remains. For images you own or are licensed to edit."],
   ["remove-text-from-image", "Text Remover", "🔤", "remove", "Take text off an image cleanly.", "Remove the text from this image and rebuild the surface beneath it, continuing the underlying pattern, texture and gradient so there is no trace of where it was."],
@@ -261,8 +261,8 @@ export const CATALOG_ROWS: Row[] = [
 
   // ── For fun ───────────────────────────────────────────────────────────────
   ["age-progression-tool", "AI Age Progression", "⏳", "fun", "See yourself older, believably.", "Age this person to the specified age: add age-appropriate skin texture, fine lines, hair greying and thinning, and subtle changes to facial volume — while keeping them unmistakably the same person."],
-  ["old-filter", "Old Age Filter", "👴", "fun", "The decades-older version of you.", "Age this person by several decades: deeper lines, softened jawline, thinner greyed hair, age spots and reduced skin elasticity, keeping their identity and bone structure clearly recognisable."],
-  ["baby-face-filter", "Baby Face Filter", "👶", "fun", "A younger, rounder version.", "De-age this person to early childhood: rounder cheeks, larger eyes relative to the face, smoother skin and softer features, while keeping the characteristic traits that make them recognisable."],
+  ["old-filter", "Old Age Filter", "👴", "fun", "The decades-older version of you.", "Age this person to the age given: deeper lines, a softened jawline, thinner greyed hair, age spots and reduced skin elasticity in the measure that age calls for, keeping their identity and bone structure clearly recognisable."],
+  ["baby-face-filter", "Baby Face Filter", "👶", "fun", "A younger, rounder version.", "De-age this person to the age given: rounder cheeks, larger eyes relative to the face, smoother skin and softer features, while keeping the characteristic traits that make them recognisable."],
   ["ai-time-machine", "AI Time Machine", "🕰️", "fun", "Drop yourself into another era.", "Restage this person in the specified historical period: period-accurate clothing, hair, grooming and accessories, an era-appropriate setting, and the photographic look of that decade's film and lenses."],
   ["ai-yearbook-generator", "AI Yearbook Generator", "🎓", "fun", "The 90s school-portrait treatment.", "Restage this as a 1990s school yearbook portrait: feathered period hair, a patterned knit or collared top, a mottled blue-grey studio backdrop, direct flash and the soft grain of 90s portrait film."],
   ["1980s-photo-trend", "1980s Photo Trend Maker", "📼", "fun", "The viral retro-portrait look.", "Restage this as an authentic 1980s photograph: voluminous period hair, era-accurate wardrobe, warm tungsten studio lighting with a soft-focus glow, and genuine 35mm film grain with slightly faded colour."],
