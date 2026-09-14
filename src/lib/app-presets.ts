@@ -154,12 +154,22 @@ export function presetsFor(app: CreativeApp, tab: PresetTab): Preset[] {
   return PRESET_OVERRIDES[app.slug] ?? (app.cat ? CATEGORY_PRESETS[app.cat] : undefined) ?? BASE_PRESETS;
 }
 
-/** The full prompt sent to the model for a given selection. */
+/**
+ * The full prompt sent to the model for a given selection.
+ *
+ * `extras` are the sentences the app's own options contribute — the target age
+ * on an ageing app, the beard style on the beard filter. They go in directly
+ * after the base prompt and before the identity and realism instructions,
+ * because several base prompts say "the specified age" or "the specified
+ * style" and the answer needs to arrive while the model is still reading about
+ * the thing it qualifies. See lib/app-options.ts.
+ */
 export function buildPrompt(
   app: CreativeApp,
   tab: PresetTab,
   preset: Preset | null,
-  customText: string
+  customText: string,
+  extras: string[] = []
 ): string {
   const parts: string[] = [];
 
@@ -169,6 +179,8 @@ export function buildPrompt(
     parts.push(app.prompt);
     if (preset) parts.push(preset.modifier);
   }
+
+  parts.push(...extras);
 
   parts.push(
     tab === "group"

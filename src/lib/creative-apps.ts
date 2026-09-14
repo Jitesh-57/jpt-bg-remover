@@ -557,7 +557,7 @@ export const CURATED_APPS: CreativeApp[] = [
     h1: "AI Age Progression Photo",
     tagline: "Upload a selfie and AI shows a realistic older (or younger) version of you — free, for fun.",
     intro: "A realistic, just-for-fun preview of an older you.",
-    prompt: "Realistically age this person by about 30 years: natural greying hair, age-appropriate skin texture and wrinkles, the same facial structure and expression, soft natural lighting. Keep the identity clearly recognisable — this is a fun, illustrative guess, not a medical prediction. This must look like a real photograph — natural skin texture, realistic lighting and shadows, sharp photographic detail — not a painting, illustration, or cartoon.",
+    prompt: "Realistically age this person to the age given: natural greying hair, age-appropriate skin texture and wrinkles, the same facial structure and expression, soft natural lighting. Keep the identity clearly recognisable — this is a fun, illustrative guess, not a medical prediction. This must look like a real photograph — natural skin texture, realistic lighting and shadows, sharp photographic detail — not a painting, illustration, or cartoon.",
     badge: "✨ Age Progression",
     faq: [
       { q: "How accurate is the AI age progression?", a: "It's a stylised, illustrative guess based on common ageing patterns — fun to look at, not a scientific or medical prediction." },
