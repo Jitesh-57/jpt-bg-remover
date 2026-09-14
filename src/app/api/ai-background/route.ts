@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkAuth, withCredits } from "@/lib/google-drive";
 import { checkEntitlement } from "@/lib/auth";
+import { userMessage } from "@/lib/user-message";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -82,7 +83,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const { prompt } = (await req.json()) as { prompt: string };
-    if (!prompt?.trim()) return NextResponse.json({ error: "prompt required" }, { status: 400 });
+    if (!prompt?.trim()) return NextResponse.json({ error: "Describe the background you want, then try again." }, { status: 400 });
 
     const enhancedPrompt = await enhancePrompt(prompt.trim());
     const fullPrompt = `${enhancedPrompt}. ${BG_SUFFIX}`;
@@ -122,7 +123,7 @@ export async function POST(req: NextRequest) {
     );
 
     if (!geminiRes.ok) {
-      return NextResponse.json({ error: "Image generation failed. Try a different prompt." }, { status: 500 });
+      return NextResponse.json({ error: "The AI could not make that background. Try describing it differently." }, { status: 500 });
     }
 
     const geminiData = (await geminiRes.json()) as {
@@ -130,11 +131,11 @@ export async function POST(req: NextRequest) {
     };
 
     const inlineData = geminiData.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData;
-    if (!inlineData) return NextResponse.json({ error: "No image in response. Try a different prompt." }, { status: 500 });
+    if (!inlineData) return NextResponse.json({ error: "The AI could not make that background. Try describing it differently." }, { status: 500 });
 
     return await withCredits({ data: inlineData.data, mimeType: inlineData.mimeType }, session!, "ai", req, "ai-background");
   } catch (err) {
     console.error("ai-background error:", err);
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    return NextResponse.json({ error: userMessage(err) }, { status: 500 });
   }
 }

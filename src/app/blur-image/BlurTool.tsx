@@ -208,7 +208,7 @@ export default function BlurTool() {
         >
           <div style={{ fontSize: 40, marginBottom: 12 }}>🫥</div>
           <div style={{ fontSize: 17, fontWeight: 800, color: "var(--text)", marginBottom: 6 }}>Drop an image or click to upload</div>
-          <div style={{ fontSize: 13.5, color: "var(--text-muted)" }}>Your image stays in your browser — nothing is uploaded.</div>
+          <div style={{ fontSize: 13.5, color: "var(--text-muted)" }}>Your image stays private — nothing is saved or shared.</div>
           <input ref={fileRef} type="file" accept="image/*" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) loadFile(f); }} />
         </div>
       ) : (

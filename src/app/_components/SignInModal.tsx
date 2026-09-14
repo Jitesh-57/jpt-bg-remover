@@ -52,7 +52,7 @@ export default function SignInModal({ onClose, reason = "default", onBeforeAuth,
       if (data.needsConfirmation) { setError("✅ Check your email for a confirmation link, then sign in."); return; }
       onBeforeAuth?.();
       window.location.reload();
-    } catch { setError("Network error. Please try again."); }
+    } catch { setError("Could not reach the server. Check your connection and try again."); }
     finally { setLoading(false); }
   };
 

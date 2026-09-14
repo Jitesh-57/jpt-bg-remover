@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
   if (error) return error;
 
   const { id } = await req.json() as { id?: string };
-  if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });
+  if (!id) return NextResponse.json({ error: "Nothing was selected to delete." }, { status: 400 });
 
   const admin = createAdmin();
   const { error: dbError } = await admin

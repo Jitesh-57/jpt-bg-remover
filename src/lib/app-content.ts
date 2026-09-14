@@ -154,12 +154,12 @@ export function categoryOf(app: CreativeApp): string {
  */
 
 const SHARED_BENEFITS: Item[] = [
-  { t: "Nothing to install", d: "It runs in the browser on a phone or a laptop. No desktop app, no plugin, no account needed to look around." },
+  { t: "Nothing to install", d: "It works on a phone or a laptop. No desktop app, no plugin, no account needed to look around." },
   { t: "No subscription", d: "Credits are a one-time purchase, they never expire, and nothing renews on its own. Buy once and use them whenever." },
   { t: "Two models to choose from", d: "Nano Banana and GPT Image handle the same job differently. If one result is not right, the other model often is." },
   { t: "Every aspect ratio", d: "Square, 4:5, 9:16, 16:9 and more, chosen before generating so nothing important gets cropped away afterwards." },
   { t: "Full resolution, no watermark", d: "The download is the full generated image with nothing overlaid — usable in print, in a listing or commercially." },
-  { t: "The free tools stay free", d: "Compress, convert, crop, resize, rotate and the rest run on your device, unlimited, with no account and no credit cost." },
+  { t: "The free tools stay free", d: "Compress, convert, crop, resize, rotate and the rest are unlimited, with no account and no credit cost." },
   { t: "Your original is never modified", d: "Every result is a new image. The file you uploaded stays exactly as it was on your device." },
   { t: "Cheap enough to iterate", d: "Packs start at $2. Generating the same image three ways and keeping the best is the intended workflow, not an expensive mistake." },
 ];
@@ -237,7 +237,7 @@ const headshot: Bank = {
     { t: "No photoshoot nerves", d: "Being photographed makes most people tense, and tension shows in the jaw and eyes. Working from a photo you already like sidesteps that completely." },
     { t: "Print-ready output", d: "The resolution holds up on a badge, a business card or a printed programme, not only on screen." },
     { t: "Try several directions", d: "Generate corporate, creative and outdoor versions of the same photo and pick per platform, instead of using one portrait everywhere because it is the only one you have." },
-    { t: "Nothing to install", d: "It runs in the browser on a phone or a laptop. No Lightroom, no plugins, no desktop app." },
+    { t: "Nothing to install", d: "It works on a phone or a laptop. No Lightroom, no plugins, no desktop app." },
     { t: "Your photo is not published anywhere", d: "The image is sent for generation and returned to you. It is not posted, shared or added to a gallery." },
   ],
   useCases: [
@@ -502,7 +502,7 @@ const retouch: Bank = {
     { t: "Seconds instead of a session in an editor", d: "The routine pass that makes a photo presentable, without the software or the hour." },
     { t: "No plastic-skin look", d: "The most common complaint about automatic retouching, and the specific thing the defaults are tuned against." },
     { t: "Cheap enough for a whole set", d: "A pack starts at $2, so fixing every photo from an event is realistic rather than something you do to one and give up on." },
-    { t: "Nothing to install", d: "Runs in the browser, on a phone as readily as a laptop." },
+    { t: "Nothing to install", d: "Works on a phone as readily as a laptop." },
     { t: "Predictable results", d: "A named fix does the named thing. There is no single mystery \"enhance\" button doing five things at once." },
     { t: "Print and marketplace ready", d: "Full resolution with no watermark, which is what a listing or a printer actually needs." },
     { t: "Credits never expire", d: "Buy once, use them whenever the next batch of photos turns up." },
@@ -771,7 +771,7 @@ const remove: Bank = {
     { t: "Cheap enough to iterate", d: "A pack starts at $2, so removing one object, checking, and removing the next is a sensible workflow." },
     { t: "Works on any subject", d: "Portraits, property, product, landscape and document photos all behave the same way." },
     { t: "Print-ready result", d: "Full resolution with no watermark, ready for a listing or a print." },
-    { t: "Nothing installed", d: "It runs in the browser on a phone or a laptop." },
+    { t: "Nothing installed", d: "It works on a phone or a laptop." },
     { t: "Credits do not expire", d: "One purchase, used whenever a photo needs it." },
   ],
   useCases: [
@@ -821,7 +821,7 @@ const enhance: Bank = {
   lead: [
     "Resolution is not a setting you can turn up. An image contains whatever detail the sensor recorded, and no more. What {n} does is different and more interesting: it reconstructs plausible detail at a larger size, informed by what images of that kind normally look like.",
     "That distinction matters because it sets expectations correctly. A slightly soft photo of a face at 800 pixels can become a convincing 3200-pixel photo, because the model has a strong prior for what skin, hair and eyes look like. A photo of text or a number plate cannot be recovered the same way — the model will produce confident, plausible, wrong characters. Enlarge photographs; do not enlarge evidence.",
-    "Each enhancement costs {cost} credits from a one-time pack. For simple, honest enlargement with no reconstruction, the free browser-based upscaler is still available and costs nothing.",
+    "Each enhancement costs {cost} credits from a one-time pack. For simple, honest enlargement with no reconstruction, the free upscaler is still available and costs nothing.",
   ],
   leadAlt: [
     "The word enhance has been ruined by television, where a technician types on a keyboard and a blurred reflection resolves into a face. {n} does something real but different: it reconstructs plausible detail at a larger size, using a strong sense of what images of that kind normally look like.",
@@ -842,7 +842,7 @@ const enhance: Bank = {
     { t: "Sharpening without halos", d: "Naive sharpening produces bright fringes along every edge. Reconstruction avoids the halo because it is not just raising local contrast." },
     { t: "Print sizes become possible", d: "A web-sized image enlarged enough to print at a useful size, which is the most common reason people need this." },
     { t: "Honest about limits", d: "Text, numbers and fine patterns are reconstructed as plausible rather than accurate. Knowing that is part of using the tool properly." },
-    { t: "A free tier still exists", d: "The browser-based upscaler runs on your device for straightforward enlargement and costs nothing." },
+    { t: "A free tier still exists", d: "The free upscaler handles straightforward enlargement and costs nothing." },
   ],
   builtHeading: "{n} for the images you actually need bigger",
   builtSub: "Softness, noise, compression and small size are four different problems. Treating them as one is why generic \"enhance\" buttons disappoint.",
@@ -902,7 +902,7 @@ const enhance: Bank = {
     { q: "Does it really add detail, or just make the file bigger?", a: "It reconstructs plausible detail at the larger size, which is genuinely different from interpolation — ordinary enlargement averages existing pixels and gets softer as it grows. The detail is inferred from what images of that kind normally look like, not recovered from the original, which is the right way to think about every result." },
     { q: "Can it recover text, a number plate or a small sign?", a: "No — and this is the one hard limit worth knowing. The model will produce confident, legible, plausible characters that are frequently wrong. Enhance photographs; never treat reconstructed text or numbers as a record of what was there." },
     { q: "How much larger can I go?", a: "It depends entirely on the original. A reasonably sharp image enlarges convincingly by 2× to 4×. A small, heavily compressed one starts inventing texture well before that. Judge it at 100% zoom rather than choosing a multiplier and trusting it." },
-    { q: "Is there a free option?", a: `Yes. The on-device upscaler runs in your browser at no cost and never uploads your image, which is the right choice for straightforward enlargement. The credit-based version is for the harder cases — heavy noise, compression damage, or reconstruction at larger factors — and costs ${CREDIT_COST} credits a run.` },
+    { q: "Is there a free option?", a: `Yes. The free upscaler costs nothing and never stores your image, which is the right choice for straightforward enlargement. The credit-based version is for the harder cases — heavy noise, compression damage, or reconstruction at larger factors — and costs ${CREDIT_COST} credits a run.` },
   ],
 };
 

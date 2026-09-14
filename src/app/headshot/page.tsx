@@ -7,6 +7,7 @@ import { useLanguage } from "@/lib/i18n/LanguageContext";
 import PricingModal from "@/app/_components/PricingModal";
 import { WOMEN_STYLES, MEN_STYLES } from "@/lib/headshot-prompts";
 import { headshotThumbUrl } from "@/lib/headshot-thumbs";
+import { userMessage } from "@/lib/user-message";
 
 const PRESET_COLORS = [
   { label: "White", color: "#FFFFFF" },
@@ -247,7 +248,7 @@ export default function HeadshotPage() {
       setStep("styles");
       // Persist so a refresh keeps the user on the styles step with their photo.
       try { localStorage.setItem("jpt_hs_session", JSON.stringify({ sourceUrl: data.url, gender })); } catch {}
-    } catch (e) { setError((e as Error).message); setSourcePreview(null); }
+    } catch (e) { setError(userMessage(e, "That photo could not be uploaded. Please try another.")); setSourcePreview(null); }
     finally { setUploading(false); }
   }, []);
 
@@ -295,7 +296,7 @@ export default function HeadshotPage() {
       data.images.forEach((img: GeneratedImage) => {
         saveToGenerations(img.url, String(img.id), "headshot", "generation", img.name || "Headshot");
       });
-    } catch (e) { setError((e as Error).message); }
+    } catch (e) { setError(userMessage(e)); }
     finally { setGenerating(false); setProgress(""); }
   };
 
@@ -351,7 +352,7 @@ export default function HeadshotPage() {
         if (!data.url) throw new Error("The edit did not return an image. Please try again.");
         setEditedUrl(data.url);
         persistEdit(data.url, `${selectedImage.name} · ${label}`, "Color Edit");
-      } catch (e) { setError((e as Error).message); }
+      } catch (e) { setError(userMessage(e)); }
     } else if (pendingBgFile) {
       const file = pendingBgFile;
       setPendingBgFile(null);
@@ -377,7 +378,7 @@ export default function HeadshotPage() {
         if (!data.url) throw new Error("The edit did not return an image. Please try again.");
         setEditedUrl(data.url);
         persistEdit(data.url, `${selectedImage.name} · Custom BG`, "Image Edit");
-      } catch (e) { setError((e as Error).message); }
+      } catch (e) { setError(userMessage(e)); }
     }
     setEditingBg(false);
   };
@@ -405,7 +406,7 @@ export default function HeadshotPage() {
       if (!data.url) throw new Error("The edit did not return an image. Please try again.");
       setEditedUrl(data.url);
       persistEdit(data.url, `${selectedImage.name} · AI Edit`, "Prompt Edit");
-    } catch (e) { setError((e as Error).message); }
+    } catch (e) { setError(userMessage(e)); }
     finally { setEditingBg(false); }
   };
 

@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
   const res = NextResponse.json({ ok: false });
   const s = getSession(req);
   const token = await getToken(req);
-  if (!token || !s) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+  if (!token || !s) return NextResponse.json({ error: "Please sign in to save to Google Drive." }, { status: 401 });
   // Drive token refresh removed
 
   const { dataUrl, name, meta } = (await req.json()) as {
@@ -17,10 +17,10 @@ export async function POST(req: NextRequest) {
     meta?: Record<string, string>;
   };
 
-  if (!dataUrl || !name) return NextResponse.json({ error: "dataUrl and name required" }, { status: 400 });
+  if (!dataUrl || !name) return NextResponse.json({ error: "There was nothing to save. Please try again." }, { status: 400 });
 
   const file = await saveToDrive(token, dataUrl, name, meta || {});
-  if (!file) return NextResponse.json({ error: "Drive save failed" }, { status: 500 });
+  if (!file) return NextResponse.json({ error: "The image could not be saved to Google Drive. Please try again." }, { status: 500 });
 
   const okRes = NextResponse.json({ ok: true, id: file.id, name: file.name });
   const s2 = getSession(req);

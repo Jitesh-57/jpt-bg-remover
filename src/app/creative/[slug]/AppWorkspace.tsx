@@ -15,6 +15,7 @@ import { savePendingContext } from "@/lib/pending-image";
 import { beginGoogleSignIn } from "@/lib/auth-return";
 import { prepareDataUrl, parseJsonResponse } from "@/lib/upload-prep";
 import Image from "next/image";
+import { userMessage } from "@/lib/user-message";
 
 const MAX_MB = 10;
 const ACCEPT = "image/jpeg,image/jpg,image/png,image/webp";
@@ -179,12 +180,12 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
         return;
       }
       if (!res.ok || !data.dataUrl) {
-        setErr(data.error || "That didn't work. Please try again.");
+        setErr(userMessage(data.error, "That didn't work. Please try again."));
         return;
       }
       setResult(data.dataUrl);
     } catch {
-      setErr("Network error. Please try again.");
+      setErr("Could not reach the server. Check your connection and try again.");
     } finally {
       setBusy(false);
     }

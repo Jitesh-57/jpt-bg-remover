@@ -34,7 +34,7 @@ const FAQS = [
   { q: "How do I remove a watermark from an image for free?", a: "Upload your image here, then click Remove Watermark. Our recommended AI watermark remover erases logos, text and stock watermarks automatically — no software to install and free to try." },
   { q: "What kinds of watermarks can it remove?", a: "It handles most common watermarks: semi-transparent logos, text overlays, date and time stamps, stock-photo watermarks, signatures and repeated tiled marks across a photo." },
   { q: "Is the watermark remover really free?", a: "Yes — you can upload and try it free with no sign-up. It's the fastest way to see your image cleaned up before you download." },
-  { q: "Does it work on my phone?", a: "Yes. It runs entirely in your browser, so it works on phones, tablets and computers — nothing to download." },
+  { q: "Does it work on my phone?", a: "Yes. It works on phones, tablets and computers — with nothing to download." },
   { q: "Will the quality of my photo drop?", a: "The AI fills in the area behind the watermark to match the surrounding image, so the result stays sharp and natural in most photos." },
   { q: "Should I only remove watermarks I own?", a: "Yes. Only remove watermarks from images you own or have permission to edit. Removing someone else's watermark from copyrighted work without permission may be against their rights." },
 ];
@@ -44,7 +44,7 @@ const FEATURES = [
   { t: "Any kind of watermark", d: "Logos, text, timestamps, signatures and stock-photo marks — cleared in a couple of clicks.", icon: "M4 7h16M4 12h10M4 17h7" },
   { t: "Photos, screenshots & more", d: "Works on JPG, PNG and WEBP — product shots, screenshots, downloads and social images.", icon: "M4 5h16v14H4zM4 15l4-4 4 4 3-3 5 5" },
   { t: "Free to try, no sign-up", d: "Upload and see your cleaned image before you commit — no account, no watermark of our own.", icon: "M12 3v18M5 12h14" },
-  { t: "Fast & online", d: "No installs, no waiting on heavy software — the whole thing runs right in your browser.", icon: "M13 3L4 14h7l-1 8 9-11h-7z" },
+  { t: "Fast & online", d: "No installs, no waiting on heavy software — it is ready the moment the page opens.", icon: "M13 3L4 14h7l-1 8 9-11h-7z" },
   { t: "Private & secure", d: "Your upload stays your own — a quick, hassle-free way to clean up an image.", icon: "M12 3l7 4v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V7z" },
 ];
 

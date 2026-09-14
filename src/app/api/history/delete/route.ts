@@ -5,13 +5,13 @@ export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
   const session = getSession(req);
-  if (!session) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+  if (!session) return NextResponse.json({ error: "Please sign in to manage your history." }, { status: 401 });
 
   const token = await getToken(req);
-  if (!token) return NextResponse.json({ error: "Token expired" }, { status: 401 });
+  if (!token) return NextResponse.json({ error: "Your session has expired. Please sign in again." }, { status: 401 });
 
   const { fileId } = (await req.json()) as { fileId: string };
-  if (!fileId) return NextResponse.json({ error: "fileId required" }, { status: 400 });
+  if (!fileId) return NextResponse.json({ error: "Nothing was selected to delete." }, { status: 400 });
 
   try {
     const res = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}`, {
@@ -20,12 +20,12 @@ export async function POST(req: NextRequest) {
     });
 
     if (!res.ok) {
-      return NextResponse.json({ error: "Delete failed" }, { status: res.status });
+      return NextResponse.json({ error: "That item could not be deleted. Please try again." }, { status: res.status });
     }
 
     return NextResponse.json({ ok: true });
   } catch (e) {
     console.error("History delete error:", e);
-    return NextResponse.json({ error: "Failed to delete" }, { status: 500 });
+    return NextResponse.json({ error: "That item could not be deleted. Please try again." }, { status: 500 });
   }
 }

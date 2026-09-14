@@ -162,7 +162,7 @@ export function buildContent(a: Alternative): AlternativeContent {
     { feature: "Watermark on free output", them: a.compare.watermark, us: "Never" },
     { feature: "Account / sign-up", them: a.compare.signup, us: "Not required" },
     { feature: "Free-tier limit", them: a.compare.limit, us: "Unlimited on free tools" },
-    { feature: "Works in the browser", them: "Varies", us: "Yes — nothing to install" },
+    { feature: "Works online", them: "Varies", us: "Yes — nothing to install" },
   ];
 
   const faqs = [
@@ -180,7 +180,7 @@ export function buildContent(a: Alternative): AlternativeContent {
     },
     {
       q: `Is my image kept private?`,
-      a: `Your image is used only to produce your result and isn't sold or shared. Many of the tools run right in your browser for extra privacy.`,
+      a: `Your image is used only to produce your result and isn't sold or shared, and the free tools never store it at all.`,
     },
     {
       q: `What else can ${BRAND} do besides being a ${a.name} alternative?`,
@@ -197,7 +197,7 @@ export function buildContent(a: Alternative): AlternativeContent {
     keywords: `${a.name} alternative, free ${a.name} alternative, ${a.name} alternative no watermark, ${a.category}, free ${a.category}, ${BRAND}`,
     h1: `The Free ${a.name} Alternative`,
     heroSub: `Get everything you need from ${a.name} — ${tool.verb} online — without the watermark, credits or sign-up. 100% free at ${BRAND}.`,
-    intro: `If you've hit ${a.name}'s paywall, watermark or sign-up wall, you're not alone. ${BRAND} is a genuinely free ${a.category} that ${tool.verb} in seconds, right in your browser. No account, no credits, no watermark — just upload, process and download.`,
+    intro: `If you've hit ${a.name}'s paywall, watermark or sign-up wall, you're not alone. ${BRAND} is a genuinely free ${a.category} that ${tool.verb} in seconds, online. No account, no credits, no watermark — just upload, process and download.`,
     whyHeading: `Why people switch from ${a.name}`,
     gripes: a.gripes,
     steps,

@@ -7,15 +7,15 @@ export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    return NextResponse.json({ error: "Auth not configured. Please use Google Sign-in." }, { status: 503 });
+    return NextResponse.json({ error: "Email sign-in is unavailable right now. Please continue with Google." }, { status: 503 });
   }
 
   const { email, password, name } = await req.json() as { email?: string; password?: string; name?: string };
   if (!email?.trim() || !password) {
-    return NextResponse.json({ error: "Email and password required" }, { status: 400 });
+    return NextResponse.json({ error: "Please enter your email address and password." }, { status: 400 });
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return NextResponse.json({ error: "Invalid email address" }, { status: 400 });
+    return NextResponse.json({ error: "Please enter a valid email address." }, { status: 400 });
   }
   if (password.length < 6) {
     return NextResponse.json({ error: "Password must be at least 6 characters" }, { status: 400 });
@@ -47,10 +47,21 @@ export async function POST(req: NextRequest) {
     if (error.message.toLowerCase().includes("already")) {
       return NextResponse.json({ error: "An account with this email already exists" }, { status: 409 });
     }
-    return NextResponse.json({ error: error.message }, { status: 400 });
+    /*
+      Supabase's own wording is fine for the handful of rules a person can act
+      on, and unhelpful for everything else ("Database error saving new user",
+      "Unable to validate email address: invalid format"). The first kind is
+      passed through; the rest becomes one sentence, with the real text logged.
+    */
+    const detail = error.message;
+    console.error("[signup]", detail);
+    const actionable = /password|email address|rate limit|already/i.test(detail) && !/database|internal|unexpected/i.test(detail);
+    return NextResponse.json({
+      error: actionable ? detail : "That account could not be created. Please check your details and try again.",
+    }, { status: 400 });
   }
   if (!data.user) {
-    return NextResponse.json({ error: "Signup failed" }, { status: 400 });
+    return NextResponse.json({ error: "That account could not be created. Please try again." }, { status: 400 });
   }
 
   if (process.env.SUPABASE_SERVICE_ROLE_KEY) {

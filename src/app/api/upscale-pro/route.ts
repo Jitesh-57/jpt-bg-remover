@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkAuth, checkEntitlement, withCredits } from "@/lib/auth";
 import { upscaleImage } from "@/lib/ai-image";
+import { userMessage } from "@/lib/user-message";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -11,7 +12,7 @@ export async function POST(req: NextRequest) {
 
   const { dataUrl, imageUrl } = await req.json() as { dataUrl?: string; imageUrl?: string };
   const src = imageUrl || dataUrl;
-  if (!src) return NextResponse.json({ error: "dataUrl or imageUrl required" }, { status: 400 });
+  if (!src) return NextResponse.json({ error: "No photo was received. Please pick an image and try again." }, { status: 400 });
 
   const blocked = await checkEntitlement(session!, "ai", "upscale-pro");
   if (blocked) return blocked;
@@ -21,6 +22,6 @@ export async function POST(req: NextRequest) {
     return withCredits({ dataUrl: resultDataUrl }, session!, "ai", req, "upscale-pro");
   } catch (e) {
     console.error("[upscale-pro]", e);
-    return NextResponse.json({ error: e instanceof Error ? e.message : "Couldn't process the image right now. Please try again." }, { status: 500 });
+    return NextResponse.json({ error: userMessage(e) }, { status: 500 });
   }
 }

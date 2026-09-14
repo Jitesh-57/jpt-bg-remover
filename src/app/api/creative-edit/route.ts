@@ -4,6 +4,7 @@ import { editImage } from "@/lib/ai-image";
 import { recordGeneration } from "@/lib/ledger";
 import { storeImage } from "@/lib/store-image";
 import { CREDIT_COST } from "@/lib/plans";
+import { userMessage } from "@/lib/user-message";
 
 export const runtime = "nodejs";
 /**
@@ -38,10 +39,10 @@ export async function POST(req: NextRequest) {
   };
   const src = imageUrl || dataUrl;
   if (!src || !prompt) {
-    return NextResponse.json({ error: "image and prompt required" }, { status: 400 });
+    return NextResponse.json({ error: "No photo was received. Please pick an image and try again." }, { status: 400 });
   }
   if (!slug) {
-    return NextResponse.json({ error: "slug required" }, { status: 400 });
+    return NextResponse.json({ error: "Something went wrong opening this app. Please reload the page and try again." }, { status: 400 });
   }
 
   const blocked = await checkEntitlement(session!, "ai", `creative:${slug}`);
@@ -108,6 +109,6 @@ export async function POST(req: NextRequest) {
     });
 
     console.error("[creative-edit]", e);
-    return NextResponse.json({ error: e instanceof Error ? e.message : "Couldn't process the image right now. Please try again." }, { status: 500 });
+    return NextResponse.json({ error: userMessage(e) }, { status: 500 });
   }
 }

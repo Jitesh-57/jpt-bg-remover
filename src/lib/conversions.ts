@@ -91,7 +91,7 @@ export function buildContent(c: Conversion): ConversionContent {
     title: `${fl} to ${tl} Converter — Convert ${fl} to ${tl} Online Free | Pixel Shine`,
     metaDescription: `Convert ${fl} to ${tl} online free. Upload a ${fl} image and download a ${tl} file in seconds — no watermark, no sign-up, no software. Fast, private, unlimited.`,
     keywords: `${c.from} to ${c.to}, convert ${c.from} to ${c.to}, ${c.from} to ${c.to} converter, ${c.from} to ${c.to} online, change ${c.from} to ${c.to}, ${c.from} to ${c.to} free`,
-    intro: `Need to convert ${fl} to ${tl}? This free online ${fl}-to-${tl} converter does it in seconds — right in your browser, with no watermark, no sign-up, and no software to install. ${fl} is ${f.blurb}; ${tl} is ${t.blurb}. ${sizeAngle}`,
+    intro: `Need to convert ${fl} to ${tl}? This free online ${fl}-to-${tl} converter does it in seconds — privately, with no watermark, no sign-up, and no software to install. ${fl} is ${f.blurb}; ${tl} is ${t.blurb}. ${sizeAngle}`,
     whyHeading: `Why convert ${fl} to ${tl}?`,
     why: `${sizeAngle} ${transparencyNote} Because everything happens instantly and the tool is completely free, you can convert as many ${fl} files to ${tl} as you like without limits or accounts.`,
     steps: [
@@ -105,7 +105,7 @@ export function buildContent(c: Conversion): ConversionContent {
       { q: `Will converting ${fl} to ${tl} reduce quality?`, a: t.lossy
           ? `${tl} uses compression, so there's a tiny quality trade-off in exchange for a much smaller file — in practice it's not visible for photos. For maximum quality, choose PNG instead.`
           : `${tl} is lossless, so no quality is lost in the conversion itself — your image stays crisp.` },
-      { q: `Is it safe to convert ${fl} images online?`, a: `Yes. The conversion runs in your browser, so your ${fl} image stays on your device. There's no account required and no watermark added.` },
+      { q: `Is it safe to convert ${fl} images online?`, a: `Yes. Your ${fl} image stays private and is never stored or shared. There's no account required and no watermark added.` },
       { q: `Can I convert ${fl} to ${tl} on my phone?`, a: `Yes. The converter works in any modern browser on iPhone, Android, Windows, and Mac — nothing to install.` },
     ],
   };

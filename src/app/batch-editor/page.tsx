@@ -8,6 +8,7 @@ import SharePrompt, { shouldShowSharePrompt } from "@/app/_components/SharePromp
 import BrandLogo from "@/app/_components/BrandLogo";
 import ToolIcon from "@/app/editor/ToolIcon";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
+import { userMessage } from "@/lib/user-message";
 import {
   cropToAspectRatio, rotateFlipImage, compressToJpeg, convertImageFormat,
   applyWatermark, type WatermarkPosition,
@@ -348,7 +349,7 @@ export default function BatchEditorPage() {
         }
         setItems(prev => prev.map(i => i.id === item.id ? { ...i, status: "done", resultDataUrl: src } : i));
       } catch (e) {
-        setItems(prev => prev.map(i => i.id === item.id ? { ...i, status: "error", error: (e as Error).message } : i));
+        setItems(prev => prev.map(i => i.id === item.id ? { ...i, status: "error", error: userMessage(e, "Failed") } : i));
       }
       setProcessedCount(c => c + 1);
     }

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { userMessage } from "@/lib/user-message";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -11,7 +12,7 @@ export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
-    if (!file) return NextResponse.json({ error: "No file provided" }, { status: 400 });
+    if (!file) return NextResponse.json({ error: "No photo was received. Please pick an image and try again." }, { status: 400 });
 
     const buffer = Buffer.from(await file.arrayBuffer());
     const mime = file.type || "image/jpeg";
@@ -40,6 +41,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ url: `data:${mime};base64,${base64}` });
   } catch (err) {
     console.error("Upload route error:", err);
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    return NextResponse.json({ error: userMessage(err, "That photo could not be uploaded. Please try again.") }, { status: 500 });
   }
 }
