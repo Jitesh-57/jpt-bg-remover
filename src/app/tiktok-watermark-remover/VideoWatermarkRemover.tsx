@@ -45,7 +45,7 @@ export default function VideoWatermarkRemover() {
       if (!data.noWatermark) { setError("No downloadable video found for this link."); return; }
       setResult(data as Resolved);
     } catch {
-      setError("Network error. Please try again.");
+      setError("Could not reach the server. Check your connection and try again.");
     } finally {
       setLoading(false);
     }

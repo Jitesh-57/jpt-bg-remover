@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
 
   if (dbError) {
     console.error("[generations/list]", dbError);
-    return NextResponse.json({ error: "Failed to fetch history" }, { status: 500 });
+    return NextResponse.json({ error: "Your generations could not be loaded. Please try again in a moment." }, { status: 500 });
   }
 
   const items = (data || []).map(r => ({

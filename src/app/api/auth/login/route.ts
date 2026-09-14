@@ -6,12 +6,12 @@ export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    return NextResponse.json({ error: "Auth not configured. Please use Google Sign-in." }, { status: 503 });
+    return NextResponse.json({ error: "Email sign-in is unavailable right now. Please continue with Google." }, { status: 503 });
   }
 
   const { email, password } = await req.json() as { email?: string; password?: string };
   if (!email?.trim() || !password) {
-    return NextResponse.json({ error: "Email and password required" }, { status: 400 });
+    return NextResponse.json({ error: "Please enter your email address and password." }, { status: 400 });
   }
 
   const cookiesToApply: { name: string; value: string; options?: Record<string, unknown> }[] = [];

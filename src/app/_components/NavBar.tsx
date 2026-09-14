@@ -123,7 +123,7 @@ function AccountPanel({
     return (
       <div style={{ ...box, background: "var(--success-soft)", border: "1px solid var(--success-soft)" }}>
         <div style={{ ...label, color: "var(--success)" }}>Free tools</div>
-        <div style={body}>Unlimited, no credits — they run in your browser. AI apps use credits.</div>
+        <div style={body}>Free and unlimited, no credits needed. AI apps use credits.</div>
         <button onClick={onBuy} style={button}>Get AI credits</button>
       </div>
     );
@@ -148,7 +148,7 @@ function AccountPanel({
       </div>
       <div style={body}>
         {out
-          ? "You have used every credit. Top up to keep generating — the browser tools stay free and unlimited."
+          ? "You have used every credit. Top up to keep generating — the free tools stay free and unlimited."
           : `About ${Math.floor(credits / CREDIT_COST)} more ${Math.floor(credits / CREDIT_COST) === 1 ? "generation" : "generations"} at ${CREDIT_COST} credits each. Credits never expire.`}
       </div>
       <button onClick={onBuy} style={button}>{out ? "Top up credits" : "Buy more credits"}</button>

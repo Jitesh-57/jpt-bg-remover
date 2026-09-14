@@ -61,7 +61,7 @@ export default function UnlimitedModal({ onClose, loggedIn, reason, prefillUser,
           const s = document.createElement("script");
           s.src = "https://checkout.razorpay.com/v1/checkout.js";
           s.onload = () => resolve();
-          s.onerror = () => reject(new Error("Failed to load Razorpay"));
+          s.onerror = () => reject(new Error("The payment window could not load. Check your connection and try again."));
           document.head.appendChild(s);
         });
       }
@@ -75,7 +75,7 @@ export default function UnlimitedModal({ onClose, loggedIn, reason, prefillUser,
 
       if (!orderRes.ok || !orderData.order_id) {
         trackPaymentFailed(p.id, orderData.error || "order_creation_failed");
-        setStatusMsg({ text: orderData.error || "Failed to start checkout", ok: false });
+        setStatusMsg({ text: orderData.error || "Checkout could not be started. Please try again.", ok: false });
         setLoadingPack(null);
         return;
       }
@@ -201,7 +201,7 @@ export default function UnlimitedModal({ onClose, loggedIn, reason, prefillUser,
                 "Nano Banana and GPT Image, both included",
                 "Full resolution, no watermark, yours to use commercially",
                 "Every free tool stays unlimited and free — no account needed",
-                "Runs in the browser — nothing to install",
+                "Nothing to install — works on phone and laptop",
               ].map((line) => (
                 <li key={line} style={{ display: "flex", gap: 9, alignItems: "flex-start", fontSize: 13.5, color: "rgba(255,255,255,0.94)", lineHeight: 1.5 }}>
                   <span aria-hidden style={{ color: "var(--accent)", fontWeight: 900, flexShrink: 0 }}>✓</span>

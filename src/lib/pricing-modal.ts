@@ -33,14 +33,16 @@ export function needsCredits(user: { credits?: number } | null | undefined, cost
 }
 
 /**
- * Turns a Razorpay failure into something the reader can act on.
+ * Turns a Razorpay failure into something the customer can act on.
  *
  * The website-mismatch rejection is the one worth special-casing: Razorpay
  * refuses it at payment_initiation with "Payment blocked as website does not
- * match registered website(s)", which tells a customer nothing and tells the
- * operator only half of what they need. The half that matters is the origin
- * the checkout actually ran on, because that is the exact string that has to
- * be registered — and it is not always the one in the address bar, since
+ * match registered website(s)". That is a configuration problem on our side —
+ * the customer did nothing wrong, cannot fix it, and should not be reading
+ * instructions about our payment account's settings. So they are told their
+ * card was not charged and to come back, and the part that names the exact
+ * origin to register is written to the console, where the operator will find
+ * it. The origin matters because it is not always the address in the bar:
  * Chrome hides "www." and a preview deployment has a different host entirely.
  */
 export function explainPaymentFailure(description?: string, reason?: string): string {
@@ -48,11 +50,27 @@ export function explainPaymentFailure(description?: string, reason?: string): st
   const origin = typeof window !== "undefined" ? window.location.origin : "";
 
   if (/website|risk_check_failed/i.test(text)) {
-    return (
-      `Payments are not enabled for ${origin || "this address"} yet. ` +
-      `This site's address has to be registered on the Razorpay account ` +
-      `(Account & Settings → Website and app details) before it can take payments.`
+    console.error(
+      `[payments] Razorpay refused the payment because ${origin || "this origin"} is not a registered website ` +
+      `on the account. Add it under Account & Settings → Website and app details.`
     );
+    return "Payments are temporarily unavailable. You have not been charged — please try again a little later.";
   }
-  return description || "Payment failed. Please try again.";
+  if (description) console.warn("[payments] Razorpay:", description, reason || "");
+
+  /*
+    Card declines are classified here rather than through userMessage(), which
+    reads "insufficient funds" as our own provider running out of credit — true
+    of an image API, exactly backwards for a customer's bank.
+  */
+  if (/insufficient/i.test(text)) {
+    return "The payment was declined for insufficient funds. Nothing was charged — try another card.";
+  }
+  if (/declin|denied|blocked|invalid card|expired/i.test(text)) {
+    return "Your bank declined the payment. Nothing was charged — try another card or payment method.";
+  }
+  if (/cancel|dismiss/i.test(text)) {
+    return "Payment cancelled. You have not been charged.";
+  }
+  return "The payment did not go through. You have not been charged — please try again.";
 }

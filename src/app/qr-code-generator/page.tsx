@@ -12,7 +12,7 @@ const GRAD = "linear-gradient(120deg,var(--accent),var(--accent-2))";
 export const metadata: Metadata = {
   title: { absolute: "Free QR Code Generator — Create a QR Code Online | Pixel Shine" },
   description:
-    "Free online QR code generator. Turn any link or text into a QR code and download it as a PNG or SVG — custom colours, no watermark, no sign-up, made in your browser.",
+    "Free online QR code generator. Turn any link or text into a QR code and download it as a PNG or SVG — custom colours, no watermark, no sign-up, completely private.",
   keywords:
     "qr code generator, free qr code generator, create qr code, qr code maker online, generate qr code free, qr code png svg, custom qr code",
   openGraph: {
@@ -36,7 +36,7 @@ const FAQS = [
   { q: "Can I download the QR code as an SVG?", a: "Yes. You can download a high-resolution PNG or a scalable SVG — SVG is ideal for print because it stays sharp at any size." },
   { q: "Can I change the colours?", a: "Yes — pick any foreground and background colour. Keep good contrast (dark code on a light background) so scanners read it reliably." },
   { q: "What can I put in a QR code?", a: "Any link (website, menu, form, social profile) or plain text — Wi-Fi details, contact info, a message, and more." },
-  { q: "Is my data private?", a: "Yes. The QR code is generated entirely in your browser, so whatever you encode never leaves your device." },
+  { q: "Is my data private?", a: "Yes. Whatever you encode is never saved or shared." },
 ];
 
 const appLd = {
@@ -76,7 +76,7 @@ export default function Page() {
                 Generator
               </h1>
               <p style={{ fontSize: "clamp(1rem,2vw,1.12rem)", color: "var(--text-muted)", lineHeight: 1.7, maxWidth: 620, margin: "0 auto" }}>
-                Turn any link or text into a QR code and download it as a PNG or SVG. Custom colours, made right in your browser — no watermark, no sign-up.
+                Turn any link or text into a QR code and download it as a PNG or SVG. Custom colours, made in seconds — no watermark, no sign-up.
               </p>
             </div>
             <QrGenerator />

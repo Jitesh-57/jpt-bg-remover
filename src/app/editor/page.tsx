@@ -19,6 +19,7 @@ import ToolIcon from "./ToolIcon";
 import UnlimitedModal from "@/app/_components/UnlimitedModal";
 import SignInModal from "@/app/_components/SignInModal";
 import SharePrompt, { shouldShowSharePrompt } from "@/app/_components/SharePrompt";
+import { userMessage } from "@/lib/user-message";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -585,7 +586,7 @@ export default function ImageEditorPage() {
           const s = document.createElement("script");
           s.src = "https://checkout.razorpay.com/v1/checkout.js";
           s.onload = () => resolve();
-          s.onerror = () => reject(new Error("Failed to load Razorpay"));
+          s.onerror = () => reject(new Error("The payment window could not load. Check your connection and try again."));
           document.head.appendChild(s);
         });
       }
@@ -851,7 +852,7 @@ export default function ImageEditorPage() {
     }
     if (res.status === 403) { onBlocked?.(); openUnlimited(); return null; }
     if (res.status === 429) { throw new Error("Too many requests. Please wait a minute and try again."); }
-    if (!res.ok) { throw new Error(data.error || "Request failed"); }
+    if (!res.ok) { throw new Error(userMessage(data.error, "That didn't work. Please try again.")); }
 
     if (typeof data.credits === "number") {
       setUser(u => u ? { ...u, credits: data.credits as number } : u);
@@ -956,7 +957,7 @@ export default function ImageEditorPage() {
     } catch (e) {
       setUser(u => u ? { ...u, credits: prevCreditsGBg } : u); // rollback on error
       trackImageGenerationFailed("generate-bg", (e as Error).message);
-      setError((e as Error).message);
+      setError(userMessage(e));
     }
     finally { setProcessing(false); setProcessingLabel(""); }
   };
@@ -1016,7 +1017,7 @@ export default function ImageEditorPage() {
         setUser(u => u ? { ...u, credits: prevCredits } : u);
         trackImageTransformedFailed("upscale-pro", (e as Error).message);
       }
-      setError((e as Error).message || "Upscale failed. Please try again.");
+      setError(userMessage(e, "The upscale did not finish. Please try again."));
     }
     finally { setProcessing(false); setProcessingLabel(""); }
   };
@@ -1078,7 +1079,7 @@ export default function ImageEditorPage() {
       recordAnonTransform();
       autoSaveToDrive(result, "resize", `${resizeW}×${resizeH}`);
     }
-    catch { setError("Resize failed."); }
+    catch { setError("That resize did not work. Please try again."); }
     finally { setProcessing(false); }
   };
 
@@ -1096,7 +1097,7 @@ export default function ImageEditorPage() {
       resetAdjust();
       autoSaveToDrive(result, "adjust", "Color Adjustments");
     }
-    catch { setError("Adjust failed."); }
+    catch { setError("Those adjustments could not be applied. Please try again."); }
     finally { setProcessing(false); }
   };
 
@@ -1115,7 +1116,7 @@ export default function ImageEditorPage() {
       recordAnonTransform();
       autoSaveToDrive(result, "crop", cropRatio);
     }
-    catch { setError("Crop failed."); }
+    catch { setError("That crop did not work. Please try again."); }
     finally { setProcessing(false); }
   };
 
@@ -1133,7 +1134,7 @@ export default function ImageEditorPage() {
       recordAnonTransform();
       autoSaveToDrive(result, "rotate", deg ? `${deg}°` : flipH ? "flip-h" : "flip-v");
     }
-    catch { setError("Rotate failed."); }
+    catch { setError("That rotation did not work. Please try again."); }
     finally { setProcessing(false); }
   };
 
@@ -1155,7 +1156,7 @@ export default function ImageEditorPage() {
       recordAnonTransform();
       autoSaveToDrive(result, "compress", compressTargetKb > 0 ? `${compressTargetKb}KB` : `${compressQuality}%`);
     }
-    catch { setError("Compress failed."); }
+    catch { setError("That image could not be compressed. Please try again."); }
     finally { setProcessing(false); }
   };
 
@@ -1173,7 +1174,7 @@ export default function ImageEditorPage() {
       recordAnonTransform();
       autoSaveToDrive(result, "convert", convertFormat.toUpperCase());
     }
-    catch { setError("Convert failed."); }
+    catch { setError("That image could not be converted. Please try again."); }
     finally { setProcessing(false); }
   };
 
@@ -1190,7 +1191,7 @@ export default function ImageEditorPage() {
       recordAnonTransform();
       trackDownloadButtonClicked("pdf");
     }
-    catch { setError("PDF export failed."); }
+    catch { setError("The PDF could not be created. Please try again."); }
     finally { setProcessing(false); setProcessingLabel(""); }
   };
 
@@ -1207,7 +1208,7 @@ export default function ImageEditorPage() {
       recordAnonTransform();
       autoSaveToDrive(result, "watermark", wmText);
     }
-    catch { setError("Watermark failed."); }
+    catch { setError("The watermark could not be added. Please try again."); }
     finally { setProcessing(false); }
   };
 
@@ -1225,7 +1226,7 @@ export default function ImageEditorPage() {
       recordAnonTransform();
       autoSaveToDrive(result, "meme", `${memeTop} / ${memeBottom}`.slice(0, 60));
     }
-    catch { setError("Meme failed."); }
+    catch { setError("The caption could not be added. Please try again."); }
     finally { setProcessing(false); }
   };
 
@@ -1308,7 +1309,7 @@ export default function ImageEditorPage() {
       setShowStickerStudio(false);
       setStickers([]);
     }
-    catch { setError("Adding stickers failed."); }
+    catch { setError("The stickers could not be added. Please try again."); }
     finally { setProcessing(false); }
   };
 
@@ -1340,7 +1341,7 @@ export default function ImageEditorPage() {
     } catch (e) {
       setUser(u => u ? { ...u, credits: prevCreditsAI } : u); // rollback on error
       trackImageTransformedFailed("ai-edit", (e as Error).message);
-      setError((e as Error).message);
+      setError(userMessage(e));
     }
     finally { setProcessing(false); setProcessingLabel(""); }
   };
@@ -1367,7 +1368,7 @@ export default function ImageEditorPage() {
       autoSaveToDrive(data.dataUrl, "remove-bg", "Background Removed");
     } catch (e) {
       trackImageTransformedFailed("remove-bg", (e as Error).message || "remove_bg_failed");
-      setError((e as Error).message || "Background removal failed");
+      setError(userMessage(e, "The background could not be removed. Please try again."));
     } finally {
       setProcessing(false); setProcessingLabel("");
     }
@@ -1529,10 +1530,10 @@ export default function ImageEditorPage() {
         setError(null);
         alert("✓ Saved to Google Drive!");
       } else {
-        setError(data.error || "Save failed");
+        setError(data.error || "The image could not be saved to Google Drive. Please try again.");
       }
     } catch (e) {
-      setError((e as Error).message);
+      setError(userMessage(e));
     } finally {
       setProcessing(false); setProcessingLabel("");
     }

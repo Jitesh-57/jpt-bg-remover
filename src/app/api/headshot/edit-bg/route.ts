@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkAuth, checkEntitlement, withCredits } from "@/lib/auth";
 import { editImage } from "@/lib/ai-image";
+import { userMessage } from "@/lib/user-message";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
@@ -27,7 +28,7 @@ export async function POST(req: NextRequest) {
   if (error) return error;
 
   const { imageUrl, bgType, bgColor, bgLabel, bgImageUrl, customPrompt } = await req.json();
-  if (!imageUrl) return NextResponse.json({ error: "imageUrl required" }, { status: 400 });
+  if (!imageUrl) return NextResponse.json({ error: "No photo was received. Please pick an image and try again." }, { status: 400 });
 
   try {
     let prompt: string;
@@ -36,15 +37,15 @@ export async function POST(req: NextRequest) {
       const colorName = bgLabel || COLOR_NAMES[bgColor?.toLowerCase()] || bgColor || "white";
       prompt = `Replace the background with a solid ${colorName} colored background. Keep the person exactly as-is — same face, hair, clothing, and pose. No shadows, no gradients, no vignette. Clean professional headshot.`;
     } else if (bgType === "prompt") {
-      if (!customPrompt) return NextResponse.json({ error: "customPrompt required" }, { status: 400 });
+      if (!customPrompt) return NextResponse.json({ error: "Describe the background you want, then try again." }, { status: 400 });
       prompt = `${customPrompt.trim()}. Keep the person's face, hair, clothing, and pose exactly the same. Professional headshot quality.`;
     } else if (bgType === "image") {
       // For uploaded background images: remove bg then composite via PixelBin erase
       // Fall back to a plain background generation
-      if (!bgImageUrl) return NextResponse.json({ error: "bgImageUrl required" }, { status: 400 });
+      if (!bgImageUrl) return NextResponse.json({ error: "Pick a background image, then try again." }, { status: 400 });
       prompt = `Place the person onto a clean professional background. Keep the person's face, hair, clothing, and pose exactly the same. No shadows or dark edges.`;
     } else {
-      return NextResponse.json({ error: "bgType must be 'color', 'image', or 'prompt'" }, { status: 400 });
+      return NextResponse.json({ error: "Pick a background option, then try again." }, { status: 400 });
     }
 
     const blocked = await checkEntitlement(session!, "ai", "headshot-edit-bg");
@@ -55,6 +56,6 @@ export async function POST(req: NextRequest) {
     return withCredits({ url: resultDataUrl }, session!, "ai", req, "headshot-edit-bg");
   } catch (e) {
     console.error("[headshot/edit-bg]", e);
-    return NextResponse.json({ error: e instanceof Error ? e.message : "Couldn't process the image right now. Please try again." }, { status: 500 });
+    return NextResponse.json({ error: userMessage(e) }, { status: 500 });
   }
 }

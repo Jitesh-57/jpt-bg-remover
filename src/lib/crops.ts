@@ -88,9 +88,9 @@ export function buildCropContent(c: CropPreset): CropContent {
     title: `${c.h1} — Free Online Crop Tool | Pixel Shine`,
     metaDescription: `${c.h1} free online. Upload a photo and crop it to a ${shape} in one click — no watermark, no sign-up. Perfect for ${c.context}.`,
     keywords: `${c.keyword}, ${c.keyword} online, ${c.keyword} free, crop image ${shape}, crop photo ${c.ratio === "circle" ? "circle" : c.ratio}`,
-    intro: `Need to ${c.keyword}? This free online crop tool trims your photo to a perfect ${shape} in one click — right in your browser, with no watermark and no sign-up. It center-crops your image so the important part stays in frame, ideal for ${c.context}.`,
+    intro: `Need to ${c.keyword}? This free online crop tool trims your photo to a perfect ${shape} in one click — privately, with no watermark and no sign-up. It center-crops your image so the important part stays in frame, ideal for ${c.context}.`,
     steps: [
-      { t: "Upload your photo", d: "Open the crop tool and drag in your image, or click to browse. It's processed privately in your browser." },
+      { t: "Upload your photo", d: "Open the crop tool and drag in your image, or click to browse. It is processed privately." },
       { t: `Crop to ${shape}`, d: `The ${shape} is preselected — just hit Crop and the tool center-crops your image to fit.` },
       { t: "Download", d: "Save your cropped image instantly. No watermark, no limits, completely free." },
     ],

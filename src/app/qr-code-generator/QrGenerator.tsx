@@ -166,7 +166,7 @@ export default function QrGenerator() {
           </button>
         </div>
         <p style={{ fontSize: 12, color: "var(--text-faint)", marginTop: 14, lineHeight: 1.5 }}>
-          Generated in your browser — nothing is uploaded.
+          Private — whatever you encode is never saved or shared.
         </p>
       </div>
 

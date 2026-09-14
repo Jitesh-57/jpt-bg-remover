@@ -60,7 +60,7 @@ function faqsFor(name: string, cat: AppCat, desc: string): PageFAQ[] {
   return [
     { q: `How does the ${name.toLowerCase()} work?`, a: `${desc} Upload your image, pick a style on the left, choose a model and aspect ratio, then hit Apply. You see the original and the result side by side, so you can always compare before downloading.` },
     { q: "What photo should I upload?", a: photo },
-    { q: `Is the ${name.toLowerCase()} free?`, a: `The browser-based tools on this site are free and unlimited. This one runs on a server, so it uses credits. ${cost}` },
+    { q: `Is the ${name.toLowerCase()} free?`, a: `The free tools on this site are unlimited. This one is an AI app, so it uses credits. ${cost}` },
     ...(NON_PERSON.includes(cat) ? [] : [{ q: "Will it still look like me?", a: "That is the instruction the prompt leads with: keep the face, bone structure and skin tone exactly, and change only the styling. If a result drifts, run it again — generation is not deterministic, and a second pass usually lands." }]),
     { q: "Do you watermark the download?", a: "No. Every export is full resolution with nothing added, on any pack." },
   ];

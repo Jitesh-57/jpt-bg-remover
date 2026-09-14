@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
   const res = NextResponse.json([]);
   const s = getSession(req);
   const token = await getToken(req);
-  if (!token || !s) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+  if (!token || !s) return NextResponse.json({ error: "Please sign in to see your saved images." }, { status: 401 });
 
   const folderId = await getDriveFolderId(token);
   const q = encodeURIComponent(`'${folderId}' in parents and trashed=false and mimeType!='application/vnd.google-apps.folder'`);
@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
     { headers: { Authorization: `Bearer ${token}` } }
   );
 
-  if (!listRes.ok) return NextResponse.json({ error: "Failed to list Drive files" }, { status: 500 });
+  if (!listRes.ok) return NextResponse.json({ error: "Google Drive could not be reached. Please try again in a moment." }, { status: 500 });
 
   const data = (await listRes.json()) as { files: DriveHistoryItem[] };
   const okRes = NextResponse.json(data.files || []);

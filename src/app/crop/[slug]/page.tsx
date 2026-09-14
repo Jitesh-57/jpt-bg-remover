@@ -64,7 +64,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             </div>
             <h1 style={{ fontSize: "clamp(1.9rem,4.6vw,2.9rem)", fontWeight: 900, lineHeight: 1.14, letterSpacing: "-0.03em", color: "var(--text)", margin: "0 0 16px" }}>{ct.h1}</h1>
             <p style={{ fontSize: "clamp(1rem,2vw,1.12rem)", color: "var(--text-muted)", lineHeight: 1.7, maxWidth: 580, margin: "0 auto 30px" }}>
-              Free online crop tool — no watermark, no sign-up. Crops in one click, right in your browser.
+              Free online crop tool — no watermark, no sign-up. Crops in one click, privately.
             </p>
             <Link href={toolHref} className="jpt-hover" style={{ display: "inline-block", background: GRAD, color: "#fff", borderRadius: 12, padding: "15px 34px", fontSize: 16, fontWeight: 800, textDecoration: "none", boxShadow: "0 8px 24px var(--accent-soft)" }}>
               Open the crop tool →

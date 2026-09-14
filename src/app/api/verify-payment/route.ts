@@ -23,11 +23,11 @@ export async function POST(req: NextRequest) {
     };
 
   if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !plan) {
-    return NextResponse.json({ error: "Missing payment fields" }, { status: 400 });
+    return NextResponse.json({ error: "The payment could not be confirmed. If money left your account, contact support and it will be sorted out." }, { status: 400 });
   }
 
   if (!PLAN_CREDITS[plan]) {
-    return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
+    return NextResponse.json({ error: "The payment could not be confirmed. If money left your account, contact support and it will be sorted out." }, { status: 400 });
   }
 
   // Verify HMAC-SHA256 signature
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
     .digest("hex");
 
   if (expectedSig !== razorpay_signature) {
-    return NextResponse.json({ error: "Payment verification failed" }, { status: 400 });
+    return NextResponse.json({ error: "The payment could not be confirmed. If money left your account, contact support and it will be sorted out." }, { status: 400 });
   }
 
   // Assign plan + add credits to user profile
@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
 
   if (dbErr) {
     console.error("[verify-payment] DB update failed:", dbErr.message);
-    return NextResponse.json({ error: "Failed to update credits" }, { status: 500 });
+    return NextResponse.json({ error: "Your payment went through, but the credits have not landed yet. Reload in a minute — if they are still missing, contact support." }, { status: 500 });
   }
 
   // Credits never expire, so nothing time-based is written here.

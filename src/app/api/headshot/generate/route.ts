@@ -18,12 +18,12 @@ export async function POST(req: NextRequest) {
       gender: string;
     });
   } catch {
-    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+    return NextResponse.json({ error: "Something went wrong sending your photo. Please reload the page and try again." }, { status: 400 });
   }
 
-  if (!imageUrl) return NextResponse.json({ error: "imageUrl required" }, { status: 400 });
+  if (!imageUrl) return NextResponse.json({ error: "No photo was received. Please upload a photo and try again." }, { status: 400 });
   if (!Array.isArray(styleIds) || styleIds.length === 0)
-    return NextResponse.json({ error: "styleIds required" }, { status: 400 });
+    return NextResponse.json({ error: "Pick at least one style, then try again." }, { status: 400 });
 
   const blocked = await checkEntitlement(session!, "ai", "ai-headshot");
   if (blocked) return blocked;

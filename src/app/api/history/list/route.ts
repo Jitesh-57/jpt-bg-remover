@@ -5,10 +5,10 @@ export const runtime = "nodejs";
 
 export async function GET(req: NextRequest) {
   const session = getSession(req);
-  if (!session) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+  if (!session) return NextResponse.json({ error: "Please sign in to see your history." }, { status: 401 });
 
   const token = await getToken(req);
-  if (!token) return NextResponse.json({ error: "Token expired" }, { status: 401 });
+  if (!token) return NextResponse.json({ error: "Your session has expired. Please sign in again." }, { status: 401 });
 
   try {
     // Query Google Drive for files in JPT folder
@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
       { headers: { Authorization: `Bearer ${token}` } }
     );
 
-    if (!res.ok) return NextResponse.json({ error: "Drive query failed" }, { status: 500 });
+    if (!res.ok) return NextResponse.json({ error: "Your history could not be loaded. Please try again in a moment." }, { status: 500 });
 
     const data = (await res.json()) as { files: Array<{ id: string; name: string; createdTime: string; webContentLink: string; webViewLink: string }> };
 
@@ -33,6 +33,6 @@ export async function GET(req: NextRequest) {
     });
   } catch (e) {
     console.error("History list error:", e);
-    return NextResponse.json({ error: "Failed to fetch history" }, { status: 500 });
+    return NextResponse.json({ error: "Your history could not be loaded. Please try again in a moment." }, { status: 500 });
   }
 }

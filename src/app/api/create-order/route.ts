@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import Razorpay from "razorpay";
 import { checkAuth } from "@/lib/auth";
 import { PACKS, inrPaise } from "@/lib/plans";
+import { operatorDetail } from "@/lib/user-message";
 
 export const runtime = "nodejs";
 
@@ -17,19 +18,19 @@ export async function POST(req: NextRequest) {
 
   const { plan } = await req.json() as { plan?: string };
   if (!plan || !PLANS[plan]) {
-    return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
+    return NextResponse.json({ error: "That credit pack is no longer available. Please reload the page and pick a pack." }, { status: 400 });
   }
 
   const { amountPaise, credits, planName } = PLANS[plan];
   if (amountPaise < 100) {
-    return NextResponse.json({ error: "Amount too low" }, { status: 400 });
+    return NextResponse.json({ error: "That credit pack is no longer available. Please reload the page and pick a pack." }, { status: 400 });
   }
 
   const keyId = process.env.RAZORPAY_KEY_ID;
   const keySecret = process.env.RAZORPAY_KEY_SECRET;
   if (!keyId || !keySecret) {
     console.error("[create-order] Razorpay keys missing", { hasId: !!keyId, hasSecret: !!keySecret });
-    return NextResponse.json({ error: "Payment gateway not configured" }, { status: 500 });
+    return NextResponse.json({ error: "Payments are temporarily unavailable. Please try again a little later." }, { status: 500 });
   }
 
   const rzp = new Razorpay({ key_id: keyId, key_secret: keySecret });
@@ -53,10 +54,15 @@ export async function POST(req: NextRequest) {
       credits,
     });
   } catch (e) {
-    // Razorpay errors carry a nested .error.description with the real reason
+    /*
+      Razorpay carries the real reason in a nested .error.description — an
+      unregistered website, a disabled account, a malformed amount. It is
+      logged, not returned: every one of those is something only we can fix,
+      and a customer reading "website does not match registered website(s)"
+      learns nothing except that we are broken.
+    */
     const err = e as { statusCode?: number; error?: { description?: string; code?: string } };
-    const detail = err?.error?.description || (e as Error).message || "Failed to create order";
-    console.error("[create-order]", JSON.stringify(err) || e);
-    return NextResponse.json({ error: `Failed to create order: ${detail}` }, { status: 500 });
+    console.error("[create-order]", err?.error?.description || operatorDetail(e), JSON.stringify(err ?? {}));
+    return NextResponse.json({ error: "Checkout could not be started. You have not been charged — please try again in a moment." }, { status: 500 });
   }
 }

@@ -13,17 +13,17 @@ export const dynamic = "force-static";
 export const revalidate = 86400;
 
 const FREE_TOOLS: [string, string, string][] = [
-  ["Image Upscaler", "/", "Enhance photo resolution up to 4× in the browser. Free and unlimited, no sign-up, no watermark."],
-  ["Image Compressor", "/compress-image", "Reduce image file size to an exact KB target without visible quality loss. Runs on your device."],
-  ["Image Converter", "/convert-image", "Convert between JPG, PNG and WebP in the browser. No upload, no account."],
+  ["Image Upscaler", "/", "Enhance photo resolution up to 4×. Free and unlimited, no sign-up, no watermark."],
+  ["Image Compressor", "/compress-image", "Reduce image file size to an exact KB target without visible quality loss. Free and unlimited."],
+  ["Image Converter", "/convert-image", "Convert between JPG, PNG and WebP. Private, and no account needed."],
   ["Crop Image", "/crop-image", "Crop to social presets or a circle. Exact pixel control, free and unlimited."],
   ["Resize Image", "/resize-image", "Resize to exact pixel dimensions or a percentage, with aspect ratio locked."],
   ["Rotate & Flip", "/rotate-image", "Rotate by any angle and mirror photos. Free, in-browser, no quality loss."],
   ["QR Code Generator", "/qr-code-generator", "Turn a link or text into a downloadable QR code. Free, no sign-up."],
-  ["Blur Image", "/blur-image", "Blur faces, plates and sensitive details before sharing. Processed on your device."],
+  ["Blur Image", "/blur-image", "Blur faces, plates and sensitive details before sharing. Private, and nothing is stored."],
   ["Add Watermark", "/watermark-image", "Add a text watermark with control over position, size and opacity."],
   ["Meme Generator", "/meme-generator", "Add top and bottom meme captions to any image. Free, no watermark."],
-  ["Image to PDF", "/image-to-pdf", "Combine JPG and PNG images into a single PDF, in the browser."],
+  ["Image to PDF", "/image-to-pdf", "Combine JPG and PNG images into a single PDF. Free and unlimited."],
   ["Watermark Remover", "/watermark-remover", "Remove watermarks, logos and text from photos you own."],
   ["TikTok Watermark Remover", "/tiktok-watermark-remover", "Download TikTok videos without the watermark."],
   ["Batch Editor", "/batch-editor", "Apply the same edit to up to 100 images at once."],
@@ -36,7 +36,7 @@ export function GET() {
   const body = `# Pixel Shine
 
 > Pixel Shine is a free online image toolkit at https://www.sjpt.io. The editing
-> tools run entirely in the browser, so images are never uploaded to a server:
+> tools are free and unlimited, and the images you edit with them are never stored:
 > they are free, unlimited, need no account, and add no watermark. Separate
 > AI features (AI editor, AI headshots, background generation, AI background
 > removal and 4× AI upscaling) run on a server and are paid with credits.

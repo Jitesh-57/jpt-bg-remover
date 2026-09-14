@@ -80,7 +80,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
               Convert {ct.fromLabel} to <span style={{ background: GRAD, WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", color: "transparent" }}>{ct.toLabel}</span>
             </h1>
             <p style={{ fontSize: "clamp(1rem,2vw,1.12rem)", color: "var(--text-muted)", lineHeight: 1.7, maxWidth: 580, margin: "0 auto 30px" }}>
-              Free online {ct.fromLabel}-to-{ct.toLabel} converter — no watermark, no sign-up, no software. Convert in seconds, right in your browser.
+              Free online {ct.fromLabel}-to-{ct.toLabel} converter — no watermark, no sign-up, no software. Convert in seconds, privately.
             </p>
             <Link href={toolHref} className="jpt-hover" style={{ display: "inline-block", background: GRAD, color: "#fff", borderRadius: 12, padding: "15px 34px", fontSize: 16, fontWeight: 800, textDecoration: "none", boxShadow: "0 8px 24px rgba(255,106,26,0.40)" }}>
               Convert {ct.fromLabel} to {ct.toLabel} →

@@ -34,7 +34,7 @@ const INCLUDED = [
 const FAQS = [
   { q: "Do my credits expire?", a: "No. Credits are yours permanently — there is no monthly reset and no expiry date. Buy once, use them whenever you like." },
   { q: "How many credits does one image cost?", a: `Every AI generation costs ${CREDIT_COST} credits. A $2 pack is ${PACKS[0].generations} generations, $5 is ${PACKS[1].generations}, and $10 is ${PACKS[2].generations}.` },
-  { q: "Is anything still free?", a: "Yes. Compress, convert, crop, resize, rotate, blur, watermark, meme text, image-to-PDF, the QR generator and normal upscaling all run in your browser and stay free and unlimited, with no account needed. Credits are only for the AI tools." },
+  { q: "Is anything still free?", a: "Yes. Compress, convert, crop, resize, rotate, blur, watermark, meme text, image-to-PDF, the QR generator and normal upscaling all stay free and unlimited, with no account needed. Credits are only for the AI tools." },
   { q: "Is this a subscription?", a: "No. Each pack is a single one-time payment. Nothing auto-renews and no card is stored for future charges." },
   { q: "What if I run out mid-project?", a: "Buy another pack at any time — credits stack onto your existing balance." },
 ];
@@ -75,7 +75,7 @@ export default function PricingPage() {
           const s = document.createElement("script");
           s.src = "https://checkout.razorpay.com/v1/checkout.js";
           s.onload = () => resolve();
-          s.onerror = () => reject(new Error("Failed to load Razorpay"));
+          s.onerror = () => reject(new Error("The payment window could not load. Check your connection and try again."));
           document.head.appendChild(s);
         });
       }
@@ -89,7 +89,7 @@ export default function PricingPage() {
 
       if (!orderRes.ok || !orderData.order_id) {
         trackPaymentFailed(p.id, orderData.error || "order_creation_failed");
-        setStatusMsg({ text: orderData.error || "Failed to start checkout", ok: false });
+        setStatusMsg({ text: orderData.error || "Checkout could not be started. Please try again.", ok: false });
         setLoadingPack(null);
         return;
       }
@@ -172,7 +172,7 @@ export default function PricingPage() {
         </h1>
         <p className="jpt-lead" style={{ maxWidth: 560, margin: "0 auto" }}>
           Pay once for the AI tools. {CREDIT_COST} credits per generation, no subscription, and
-          your credits never expire. The browser-based tools stay free forever.
+          your credits never expire. The free tools stay free forever.
         </p>
       </div>
 

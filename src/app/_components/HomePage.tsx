@@ -43,7 +43,7 @@ const PRO_TOOLS = [
 ];
 
 const STEPS = [
-  { n: "01", t: "Upload a photo",       d: "Drop any JPG, PNG or WebP. The browser tools never send it anywhere — they run on your device.",           img: landingImg("home-step-1.png") },
+  { n: "01", t: "Upload a photo",       d: "Drop any JPG, PNG or WebP. Your photo stays private, and your original is never changed.",           img: landingImg("home-step-1.png") },
   { n: "02", t: "Pick a tool or a look", d: "Choose a free tool, describe an edit in plain words, or tap one of the 40+ AI apps for an instant style.",   img: landingImg("home-step-2.png") },
   { n: "03", t: "Download in full res",  d: "Every export is full resolution with no watermark — free tools and AI results alike.",                    img: landingImg("home-step-3.png") },
 ];
@@ -134,7 +134,7 @@ export default function HomePage({
           <HomeHero />
           <div style={{ display: "flex", flexWrap: "wrap", gap: "10px 22px", justifyContent: "center", fontSize: 13.5, color: "var(--text-muted)", fontWeight: 600, marginTop: 22 }}>
             <span>✓ No sign-up for free tools</span>
-            <span>✓ Runs in your browser</span>
+            <span>✓ Nothing to install</span>
             <span>✓ Credits never expire</span>
           </div>
         </section>
@@ -198,7 +198,7 @@ export default function HomePage({
         {/* ── FREE TOOLS ───────────────────────────────────────────────────── */}
         <section style={{ padding: "80px 24px", background: "var(--surface)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
-            {sectionHead("Free tools", "Free, unlimited, on your device", "These never upload your image. That is why there is no limit, no account and no watermark.")}
+            {sectionHead("Free tools", "Free, unlimited, private", "No limit, no account and no watermark — use them as often as you like.")}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(200px, 100%), 1fr))", gap: 12 }}>
               {FREE_TOOLS.map((t) => (
                 <Link key={t.href} href={t.href} className="jpt-hover" style={{ textDecoration: "none", display: "flex", gap: 12, alignItems: "flex-start", background: "var(--surface-2)", border: "1px solid var(--border)", borderRadius: 14, padding: "14px 15px" }}>

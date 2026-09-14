@@ -19,7 +19,7 @@ import { createClient as createSupabaseAdmin } from "@supabase/supabase-js";
  * The AI tools have no free tier — they cost real money per generation and are
  * sold as credit packs. Granting 10 at signup handed every new account five
  * free generations billed to the fal balance, which is the opposite of the
- * pricing. The browser-based tools stay free and unlimited and never touch
+ * pricing. The free tools stay free and unlimited and never touch
  * this number.
  */
 export const FREE_CREDITS = 0;
@@ -118,7 +118,7 @@ export async function checkAuth(req: NextRequest): Promise<
   const supabase = createRequestSupabase(req);
   const { data: { user }, error: userError } = await supabase.auth.getUser();
   if (!user || userError) {
-    return { session: null, error: NextResponse.json({ error: "Sign in required" }, { status: 401 }) };
+    return { session: null, error: NextResponse.json({ error: "Please sign in to continue." }, { status: 401 }) };
   }
 
   const admin = createAdminSupabase();

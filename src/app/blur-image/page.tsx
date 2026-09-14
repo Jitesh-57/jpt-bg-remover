@@ -12,7 +12,7 @@ const GRAD = "linear-gradient(120deg,var(--accent),var(--accent-2))";
 export const metadata: Metadata = {
   title: { absolute: "Free Blur Image Tool — Blur or Pixelate Part of a Photo | Pixel Shine" },
   description:
-    "Blur or pixelate part of an image free online. Hide faces, licence plates, addresses and sensitive info — drag a box to censor it. No watermark, no sign-up, private in your browser.",
+    "Blur or pixelate part of an image free online. Hide faces, licence plates, addresses and sensitive info — drag a box to censor it. No watermark, no sign-up, completely private.",
   keywords:
     "blur image, blur part of image, blur face, pixelate image, censor image, blur image online free, hide sensitive information image, blur license plate",
   openGraph: {
@@ -35,7 +35,7 @@ const FAQS = [
   { q: "Can I pixelate instead of blur?", a: "Yes. Switch to Pixelate mode to censor an area with a mosaic effect instead of a soft blur — useful for a stronger, more obvious redaction." },
   { q: "Is it good for hiding faces or licence plates?", a: "Yes — it's ideal for hiding faces, licence plates, house numbers, addresses, screenshots and any other sensitive detail before you share a photo." },
   { q: "Does it add a watermark?", a: "No watermark, ever. Your edited image downloads clean at full resolution." },
-  { q: "Is my image uploaded to a server?", a: "No. The blur happens entirely in your browser, so your photo never leaves your device — important when you're hiding private information." },
+  { q: "Is my image uploaded to a server?", a: "No. Your photo is not stored or shared, and the original file on your device is never changed — which matters when you are hiding private information." },
   { q: "Is it free?", a: "Yes — completely free, with no sign-up and no limit on how many images you blur." },
 ];
 
@@ -76,7 +76,7 @@ export default function Page() {
                 Tool
               </h1>
               <p style={{ fontSize: "clamp(1rem,2vw,1.12rem)", color: "var(--text-muted)", lineHeight: 1.7, maxWidth: 620, margin: "0 auto" }}>
-                Blur or pixelate any part of a photo to hide faces, licence plates and sensitive info. Just drag a box — it all happens in your browser, so your image stays private.
+                Blur or pixelate any part of a photo to hide faces, licence plates and sensitive info. Just drag a box — your image stays private.
               </p>
             </div>
             <BlurTool />
@@ -101,7 +101,7 @@ export default function Page() {
             </h2>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(210px,1fr))", gap: 24 }}>
               {[
-                { t: "Upload your photo", d: "Drag and drop or pick an image. It's loaded straight into your browser — never uploaded." },
+                { t: "Upload your photo", d: "Drag and drop or pick an image. Nothing is saved or shared." },
                 { t: "Drag over the area", d: "Draw a box over each face or detail you want to hide. Choose blur or pixelate and set the strength." },
                 { t: "Download", d: "Save the censored image at full resolution — free, with no watermark." },
               ].map((s, i) => (

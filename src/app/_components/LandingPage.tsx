@@ -99,7 +99,7 @@ function readFileAsDataUrl(file: File): Promise<string> {
 
 const HOW_IT_WORKS = [
   { step: '01', title: 'Upload Your Photo', desc: 'Drag & drop or click to select any image from your device. JPG, PNG, WEBP supported.' },
-  { step: '02', title: 'Process Instantly', desc: 'Advanced online image processing transforms your photo in seconds — nothing is uploaded to a server.' },
+  { step: '02', title: 'Process Instantly', desc: 'Advanced image processing transforms your photo in seconds — private, and your original is never changed.' },
   { step: '03', title: 'Download Result', desc: 'Preview the result and download in full quality — PNG or JPEG, your choice.' },
 ]
 
@@ -255,28 +255,28 @@ const PAGE_SEO_CONTENT: Record<string, { heading: string; body: string }[]> = {
   ],
   'compress-image': [
     { heading: 'How to compress an image for free', body: 'Pixel Shine shrinks your image file size online — no upload, no sign-up, no watermark. Just drag the quality slider until the estimated size is where you want it, then download. Most photos drop to a fraction of their original size with quality loss that is almost impossible to see.' },
-    { heading: 'Reduce photo size to KB without losing quality', body: 'Need a photo under 100 KB or 200 KB for a form, website, or email? Lower the quality slider and the live size read-out shows you exactly where you land. Because compression happens on your device, it is instant and completely private.' },
+    { heading: 'Reduce photo size to KB without losing quality', body: 'Need a photo under 100 KB or 200 KB for a form, website, or email? Lower the quality slider and the live size read-out shows you exactly where you land. Compression is instant and completely private.' },
     { heading: 'Why compress images?', body: 'Smaller images load faster, improving your website speed and Google ranking, slip under email and upload limits, and save storage on your phone or drive. Pixel Shine makes it a one-slider, one-click job — free and unlimited.' },
   ],
   'convert-image': [
-    { heading: 'How to convert an image format for free', body: 'Upload your image, pick JPG, PNG, or WEBP, and click convert — Pixel Shine does it instantly online with no watermark and no sign-up. Your file never leaves your device, so conversion is private and fast.' },
+    { heading: 'How to convert an image format for free', body: 'Upload your image, pick JPG, PNG, or WEBP, and click convert — Pixel Shine does it instantly online with no watermark and no sign-up. Conversion is private and fast, and your original file is never changed.' },
     { heading: 'JPG to PNG, PNG to JPG, and WEBP explained', body: 'Choose PNG when you need transparency or the sharpest edges for logos and graphics. Choose JPG for the smallest photo files that every app accepts. Choose WEBP for the best of both — small size with transparency support — ideal for modern, fast-loading websites.' },
-    { heading: 'A free image converter that respects your privacy', body: 'Unlike many online converters, Pixel Shine processes everything privately on your device. No queue, no upload limits, no account — convert as many images as you like between JPG, PNG, and WEBP, completely free.' },
+    { heading: 'A free image converter that respects your privacy', body: 'Unlike many online converters, Pixel Shine keeps everything private. No queue, no upload limits, no account — convert as many images as you like between JPG, PNG, and WEBP, completely free.' },
   ],
   'crop-image': [
-    { heading: 'How to crop an image online for free', body: 'Upload your photo, choose a ready-made ratio — Square, Portrait, Story, Wide, Classic, or Circle — and Pixel Shine crops it instantly online. No watermark, no sign-up, and your image stays private on your device.' },
+    { heading: 'How to crop an image online for free', body: 'Upload your photo, choose a ready-made ratio — Square, Portrait, Story, Wide, Classic, or Circle — and Pixel Shine crops it instantly online. No watermark, no sign-up, and your image stays private.' },
     { heading: 'Crop photos for Instagram, YouTube, and profiles', body: 'Get the exact aspect ratios each platform wants: 1:1 for Instagram feed, 4:5 for tall posts, 9:16 for Stories and Reels, and 16:9 for YouTube thumbnails. The circle crop turns any photo into a clean round profile picture with a transparent background.' },
     { heading: 'Free, unlimited, and private', body: 'Cropping only trims edges, so your image keeps full quality. Because everything runs online, there are no upload limits and no waiting — crop as many photos as you like for free.' },
   ],
   'rotate-image': [
     { heading: 'How to rotate an image online for free', body: 'Upload your photo and tap Rotate Left, Rotate Right, or 180° — Pixel Shine turns it instantly online. Rotation is lossless, so your image keeps its full quality. No watermark, no sign-up.' },
     { heading: 'Flip and mirror images in one click', body: 'Use Flip Horizontal to mirror a photo left-to-right (great for selfies) or Flip Vertical to mirror top-to-bottom. Perfect for fixing orientation, correcting mirrored text, or creating reflection effects.' },
-    { heading: 'Fix sideways and upside-down photos', body: 'Phone photos and scanned documents often upload rotated. A quick 90° or 180° turn straightens them right away. Everything runs on your device, so it is fast, private, and free with no limits.' },
+    { heading: 'Fix sideways and upside-down photos', body: 'Phone photos and scanned documents often upload rotated. A quick 90° or 180° turn straightens them right away. It is fast, private, and free with no limits.' },
   ],
   'image-to-pdf': [
     { heading: 'How to convert an image to PDF for free', body: 'Upload a JPG, PNG, or WEBP and click Download as PDF — Pixel Shine builds the PDF online with no watermark and no sign-up. The page is sized to your image so it looks clean and professional.' },
     { heading: 'JPG to PDF and PNG to PDF, instantly', body: 'Turning photos into PDFs makes them easy to share, print, and archive. Forms, IDs, receipts, and notes all become tidy, universal PDF files that any device and office can open.' },
-    { heading: 'Private, unlimited, and watermark-free', body: 'Because the PDF is generated privately on your device, your image never leaves your device. Convert as many images to PDF as you like — completely free, with no watermark and no account required.' },
+    { heading: 'Private, unlimited, and watermark-free', body: 'The PDF is generated privately, and your original image is never changed. Convert as many images to PDF as you like — completely free, with no watermark and no account required.' },
   ],
   'watermark-image': [
     { heading: 'How to add a watermark to a photo for free', body: 'Upload your image, type your watermark text, and choose the position, size, color, and opacity. Apply and download — free, no sign-up, and the tool never stamps its own branding on your photo. Everything runs online, so your image stays private.' },
@@ -286,7 +286,7 @@ const PAGE_SEO_CONTENT: Record<string, { heading: string; body: string }[]> = {
   'meme-generator': [
     { heading: 'How to make a meme for free', body: 'Upload any image, type your top and bottom captions, and click Create Meme. Your text renders in the classic bold Impact style with a black outline, then downloads instantly — free, no sign-up, no watermark.' },
     { heading: 'The classic meme look, done right', body: 'Pixel Shine uses uppercase Impact with a heavy outline — the format everyone recognises. Long captions wrap automatically to fit the image, so your meme always looks clean on any picture.' },
-    { heading: 'Private and unlimited', body: 'Memes are generated entirely online, so your images never leave your device. Make as many as you like for Instagram, WhatsApp, X, Reddit, and group chats — completely free with no limits.' },
+    { heading: 'Private and unlimited', body: 'Memes are generated privately, and your original image is never changed. Make as many as you like for Instagram, WhatsApp, X, Reddit, and group chats — completely free with no limits.' },
   ],
 }
 

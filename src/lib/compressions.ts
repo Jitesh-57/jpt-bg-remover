@@ -53,10 +53,10 @@ export function buildCompressContent(c: CompressTarget): CompressContent {
     title: `Compress Image to ${L} — Free Online Image Compressor | Pixel Shine`,
     metaDescription: `Compress an image to ${L} or less online free. Upload a JPG or PNG and reduce it to exactly ${L} in seconds — no watermark, no sign-up. Perfect for forms, uploads, and email.`,
     keywords: `compress image to ${L.toLowerCase()}, reduce image size to ${L.toLowerCase()}, image compressor ${L.toLowerCase()}, compress photo to ${L.toLowerCase()}, resize image to ${L.toLowerCase()}`,
-    intro: `Need to compress an image to ${L}? This free online compressor reduces any JPG or PNG to ${L} or smaller in seconds — right in your browser, with no watermark, no sign-up, and no software. Just upload, and the tool automatically finds the right quality (and downscales if needed) to hit your target size while keeping the image as sharp as possible.`,
+    intro: `Need to compress an image to ${L}? This free online compressor reduces any JPG or PNG to ${L} or smaller in seconds — privately, with no watermark, no sign-up, and no software. Just upload, and the tool automatically finds the right quality (and downscales if needed) to hit your target size while keeping the image as sharp as possible.`,
     why: `Many websites and forms enforce a maximum file size, and a photo straight from a phone or camera is usually far too big. Compressing to ${L} is ideal for ${useCase}. Instead of guessing at a quality slider, you set the target and the tool does the math — binary-searching the compression level and, for very small targets, gently reducing the dimensions until the file fits under ${L}. It's free and unlimited, so you can compress as many images as you need.`,
     steps: [
-      { t: "Upload your image", d: "Open the compressor and drag in your JPG or PNG (or click to browse). Everything runs in your browser — your image never leaves your device." },
+      { t: "Upload your image", d: "Open the compressor and drag in your JPG or PNG (or click to browse). Your image stays private — it is never stored or shared." },
       { t: `Set the target to ${L}`, d: `The target size is preset to ${L}. You can fine-tune it or pick another size — the tool automatically compresses to hit it.` },
       { t: "Download the smaller file", d: `Save your compressed image at ${L} or under. No watermark, no quality-wrecking, and no limit on how many you compress.` },
     ],

@@ -162,7 +162,7 @@ const COMPARISON = [
 const FAQS = [
   {
     q: "Is Pixel Shine free to use?",
-    a: "The browser tools — crop, resize, compress, convert, watermark and the rest — are free and unlimited, and they run on your device. The AI apps run on credits, sold in one-off packs from \u20b9166; credits never expire and there is nothing recurring to cancel.",
+    a: "The free tools — crop, resize, compress, convert, watermark and the rest — are free and unlimited, with no account needed. The AI apps run on credits, sold in one-off packs from \u20b9166; credits never expire and there is nothing recurring to cancel.",
   },
   {
     q: "Will my results have a watermark?",
@@ -328,7 +328,7 @@ export default function LandingPageClient() {
       if (data.needsConfirmation) { setAuthError("✅ Check your email for a confirmation link, then sign in."); return; }
       await savePending();
       window.location.reload();
-    } catch { setAuthError("Network error. Please try again."); }
+    } catch { setAuthError("Could not reach the server. Check your connection and try again."); }
     finally { setAuthLoading(false); }
   };
 

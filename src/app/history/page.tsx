@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { userMessage } from "@/lib/user-message";
 
 interface HistoryItem {
   id: string;
@@ -32,7 +33,7 @@ export default function HistoryPage() {
       const data = (await res.json()) as { history: HistoryItem[] };
       setHistory(data.history || []);
     } catch (e) {
-      setError((e as Error).message);
+      setError(userMessage(e, "Your history could not be loaded. Please try again."));
     } finally {
       setLoading(false);
     }
@@ -50,10 +51,10 @@ export default function HistoryPage() {
       if (res.ok) {
         setHistory(history.filter(item => item.id !== fileId));
       } else {
-        setError("Failed to delete");
+        setError("That item could not be deleted. Please try again.");
       }
     } catch (e) {
-      setError((e as Error).message);
+      setError(userMessage(e, "Your history could not be loaded. Please try again."));
     } finally {
       setDeleting(null);
     }

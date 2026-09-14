@@ -62,7 +62,7 @@ export default function AlternativesIndex() {
               to the tools you know
             </h1>
             <p style={{ fontSize: "clamp(1rem,2vw,1.12rem)", color: "var(--text-muted)", lineHeight: 1.7, maxWidth: 600, margin: "0 auto" }}>
-              Hit a paywall, watermark or sign-up wall? Pixel Shine does the same core jobs — free, in your browser, with nothing to install.
+              Hit a paywall, watermark or sign-up wall? Pixel Shine does the same core jobs — free, with nothing to install.
             </p>
           </div>
         </section>

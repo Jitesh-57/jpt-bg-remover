@@ -85,9 +85,10 @@ export async function parseJsonResponse<T>(res: Response): Promise<T> {
       throw new Error("That image is too large to upload. Try one under 4MB.");
     }
     if (res.status === 504 || res.status === 408) {
-      throw new Error("That took longer than the server allows. Please try again.");
+      throw new Error("That took longer than expected and was stopped. Please try again.");
     }
-    throw new Error(`The server returned an unexpected response (${res.status}). Please try again.`);
+    console.error(`[parseJsonResponse] non-JSON ${res.status} response`);
+    throw new Error("Something went wrong. Please try again in a moment.");
   }
 }
 

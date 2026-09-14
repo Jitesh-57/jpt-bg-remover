@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef, useState, useCallback } from 'react'
+import { userMessage } from "@/lib/user-message";
 
 type Status = 'idle' | 'processing' | 'done' | 'error' | 'auth-required' | 'upgrade-required'
 
@@ -41,7 +42,7 @@ export default function BgRemoverPage() {
       if (!res.ok) {
         if (res.status === 401) { setStatus('auth-required'); return }
         if (res.status === 402 || res.status === 403) { setStatus('upgrade-required'); return }
-        setError(data.error || 'Background removal failed')
+        setError(data.error || 'The background could not be removed. Please try again.')
         setStatus('error')
         return
       }
@@ -49,7 +50,7 @@ export default function BgRemoverPage() {
       setResult(data.dataUrl)
       setStatus('done')
     } catch (e) {
-      setError(e instanceof Error ? e.message : String(e))
+      setError(userMessage(e, 'The background could not be removed. Please try again.'))
       setStatus('error')
     }
   }, [])
