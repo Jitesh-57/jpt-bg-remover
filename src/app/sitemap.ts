@@ -7,6 +7,7 @@ import { COMPRESSIONS } from "@/lib/compressions";
 import { CROPS } from "@/lib/crops";
 import { ALTERNATIVES } from "@/lib/alternatives";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
+import { PROMPTS as LIBRARY_PROMPTS } from "@/lib/prompt-library";
 
 const BASE = "https://www.sjpt.io";
 
@@ -40,6 +41,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/batch-editor`,     lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/alternatives`,     lastModified: now, changeFrequency: "monthly", priority: 0.85 },
     { url: `${BASE}/80s-ai-photo-prompts`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
+    { url: `${BASE}/prompts`,          lastModified: now, changeFrequency: "weekly",  priority: 0.9 },
     { url: `${BASE}/blog`,             lastModified: now, changeFrequency: "weekly",  priority: 0.8 },
     { url: `${BASE}/privacy`,          lastModified: now, changeFrequency: "yearly",  priority: 0.3 },
     { url: `${BASE}/terms`,            lastModified: now, changeFrequency: "yearly",  priority: 0.3 },
@@ -77,7 +79,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const alternativePages: MetadataRoute.Sitemap = ALTERNATIVES.map((a) => ({
     url: `${BASE}/alternatives/${a.slug}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.85,
   }));
-  const programmaticPages = [...conversionPages, ...compressPages, ...cropPages, ...alternativePages];
+  // One indexable page per prompt. They carry the long-tail queries the hub
+  // cannot ("ai prompt for a youtube thumbnail"), and they are built in both
+  // modes because copying a prompt costs nothing and needs no account.
+  const promptPages: MetadataRoute.Sitemap = LIBRARY_PROMPTS.map((p) => ({
+    url: `${BASE}/prompts/${p.slug}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.7,
+  }));
+
+  const programmaticPages = [...conversionPages, ...compressPages, ...cropPages, ...alternativePages, ...promptPages];
 
   if (!PAID_FEATURES_ENABLED) return dedupe([...freePages, ...freeVariantPages, ...programmaticPages, ...freeBlogPages]);
 

@@ -28,6 +28,7 @@ const FREE_TOOLS: [string, string, string][] = [
   ["TikTok Watermark Remover", "/tiktok-watermark-remover", "Download TikTok videos without the watermark."],
   ["Batch Editor", "/batch-editor", "Apply the same edit to up to 100 images at once."],
   ["80s AI Photo Prompts", "/80s-ai-photo-prompts", "100 free copy-paste prompts for the viral 80s AI photo trend, with a reference image for each. Works in ChatGPT and Gemini."],
+  ["Prompt library", "/prompts", "A library of free AI image prompts — portraits, film looks, YouTube thumbnails, social covers, product shots, ads and photo restoration — each written in full and composed for a stated aspect ratio. Every prompt has its own page."],
 ];
 
 export function GET() {
@@ -45,7 +46,7 @@ export function GET() {
 
 Credits are sold in one-time packs: ${packLine}. Credits never expire and there
 is no subscription. Each AI generation costs ${CREDIT_COST} credits. The
-browser-based tools listed below are free and unlimited regardless of credits.
+free tools listed below are unlimited regardless of credits.
 
 - [Pricing](${BASE}/pricing): One-time credit packs for the AI features. No subscription, no expiry.
 

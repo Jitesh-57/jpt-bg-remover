@@ -10,10 +10,10 @@ const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 const IMAGE_EXT = /\.(png|jpe?g|webp|avif|gif)$/i;
 
-export async function listBucketImagesServer(): Promise<string[]> {
+export async function listBucketImagesServer(bucket: string = BUCKET): Promise<string[]> {
   if (!SUPABASE_URL || !KEY) return [];
   try {
-    const res = await fetch(`${SUPABASE_URL}/storage/v1/object/list/${encodeURIComponent(BUCKET)}`, {
+    const res = await fetch(`${SUPABASE_URL}/storage/v1/object/list/${encodeURIComponent(bucket)}`, {
       method: "POST",
       headers: { apikey: KEY, Authorization: `Bearer ${KEY}`, "Content-Type": "application/json" },
       body: JSON.stringify({ prefix: "", limit: 1000, sortBy: { column: "name", order: "asc" } }),
