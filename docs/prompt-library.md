@@ -1,63 +1,94 @@
 # Prompt library
 
-`/prompts` — 122 prompts, one indexable page each at `/prompts/<slug>`.
+Two collections under one set of routes.
 
-| | |
-| --- | --- |
-| Content | `src/lib/prompt-library.ts` |
-| Example images | `src/lib/prompt-library-images.ts` (+ the bucket below) |
-| Hub page | `src/app/prompts/page.tsx` + `PromptLibrary.tsx` |
-| Detail page | `src/app/prompts/[slug]/page.tsx` |
-| Image generator | `GET /api/admin/prompt-images` |
+| | Count | Source | Licence |
+| --- | --- | --- | --- |
+| Licensed dataset | 871 (662 image, 209 video) | YouMind OpenLab, via `data/youmind-prompts.json` | CC BY 4.0 — **attribution required** |
+| Pixel Shine originals | 122 | Written in-house | ours |
 
-## Adding a prompt
+## Attribution is load-bearing
 
-One `P(...)` call in `PROMPTS`. The slug is derived from the title, so a title
-change changes the URL — pick it once. `app` links the prompt to a Creative
-App, which puts a "skip the prompt" card on the detail page.
+CC BY 4.0 permits commercial use on one condition: credit. So the author line
+and the link to their original post are part of `PromptCard` and
+`PromptCredit`, not decorations on them, and the footer carries the dataset
+credit site-wide. If those stop rendering the site is using the data outside
+its licence. Don't make a card variant without them.
 
-The prompts follow one order, because it is the order the models answer to:
-identity → scene → light → camera → finish. `KEEP_ME` is one shared constant
-rather than retyped, because a weaker paraphrase of that sentence is the
-difference between a photo of you and a photo of someone who looks like you.
-
-Nothing here is copied from another prompt site. That would be someone else's
-work and duplicate content besides, which defeats the point of the page.
-
-## Example images
-
-They live in a public Supabase bucket, **`Prompt library images`**, matched to
-prompts by filename at request time — `corporate-headshot-on-grey.png`, or
-`007.png` for the seventh. A prompt with no file gets a designed placeholder,
-which is the state the whole grid ships in.
-
-To fill them:
+## Routes
 
 ```
-GET /api/admin/prompt-images?token=<ADMIN_IMAGE_TOKEN>            # what's missing
-GET /api/admin/prompt-images?token=<ADMIN_IMAGE_TOKEN>&apply=1    # generate a batch of 4
-GET /api/admin/prompt-images?token=…&apply=1&slug=<slug>          # redo one
+/prompts                        hub
+/prompts/image | /video         media hubs
+/prompts/{image,video}/{facet}  category listings (use case / style / subject)
+/prompts/{slug}-{shortid}       image prompt detail   (dataset)
+/prompts/{slug}                 prompt detail         (originals — bare slug)
+/prompts/originals              the originals library
+/video-prompts/{slug}-{shortid} video prompt detail
+/{model}-prompts                model landing, one file per model
+/prompts-pack/{slug}            curated packs
 ```
 
-The first `apply=1` creates the bucket if it does not exist. Each call
-generates a small batch and reports what remains, so it is called repeatedly
-rather than run once; re-running never repeats work, and a credential or
-billing failure stops the batch instead of burning the rest of it.
+`/prompts/[slug]` serves both kinds: a `{slug}-{shortid}` hits the dataset, a
+bare slug hits the originals. That is what keeps the original URLs working —
+they were already indexed when the dataset landed.
 
-**Every generation costs money at the provider**, which is why this is guarded
-by `ADMIN_IMAGE_TOKEN`, batched, and never triggered by a page view. That last
-part is the difference between this and `/api/cron/blog-images`, which a
-visitor's browser can trigger and which therefore carries its token in the
-page — see the note in `lib/admin-token.ts`.
+Model pages are seven small route files rather than a root-level dynamic
+segment. `/{model}-prompts` is a suffix pattern, and the only way to match it
+dynamically is a catch-all at the root of the app, which would then sit in
+front of every future top-level path on the site.
 
-The generated example is not the library prompt verbatim: `examplePromptFor()`
-strips the first-person identity language, because a text-to-image model with
-no photo attached has no face to preserve, and adds an explicit instruction
-that the subject is an anonymous model — these are illustrations of a look on
-a public page and should not resemble a real person.
+## Rebuilding the dataset
 
-## Search and filters
+```
+node scripts/build-prompt-dataset.mjs     # data/youmind-prompts.json → src/lib/prompts/dataset.json
+```
 
-All client-side over an array that ships with the page: 122 rows is instant,
-needs no API, and means a filtered view is a shareable URL (`?c=`, `?p=`,
-`?q=`). The grid pages 24 at a time.
+Deterministic: same input, same slugs, same URLs. That matters more than it
+sounds — a transform that reshuffles ids on each run silently breaks every
+indexed page.
+
+It also does the tagging. 668 of the 871 records arrived with no category, so
+a keyword pass assigns a use case, up to three styles and up to three subjects
+from the spec's taxonomy. **This is not the model-driven tagging the spec asks
+for** — it is a deterministic offline approximation that runs for free and
+says nothing when it is unsure, which is why a facet page can be smaller than
+a model-tagged version would be. Re-running with a real tagger is a drop-in
+replacement for that one function.
+
+`hotScore` is likewise a stand-in. There is no views/copies telemetry, so it
+ranks on what the data knows: featured, how much there is to look at, recency.
+Replace it the day real counts exist.
+
+To refresh from upstream, `scripts/refresh-youmind-prompts.py` (shipped with
+the kit) rebuilds the source JSON from the GitHub READMEs.
+
+## Images
+
+Sources are on `cms-assets.youmind.com` and `pbs.twimg.com`. The site hotlinks
+them until a mirrored copy exists, then prefers ours:
+
+```
+GET /api/admin/prompt-mirror?token=<ADMIN_IMAGE_TOKEN>            # what's missing
+GET /api/admin/prompt-mirror?token=<ADMIN_IMAGE_TOKEN>&apply=1    # copy 25
+```
+
+Creates the `Prompt library mirror` bucket on the first apply, names each file
+for the sha1 of its source URL (the source filenames collide), pages the
+listing past 1000, and skips anything already copied. Costs bandwidth, not
+credits.
+
+## Variables
+
+344 dataset prompts carry `{argument name="x" default="y"}`. `PromptBlock`
+renders each as an input, substitutes live, and copies the filled-in text —
+the difference between a prompt you can use and one you have to hand-edit
+first. The parser lives in `lib/prompts/variables.ts`, apart from `data.ts`,
+because the editor is a client component and `data.ts` imports a 1.8MB JSON
+that must never follow it into the browser.
+
+## Not built
+
+- `/prompts/webpage` — no data for it.
+- `/landing/image-to-prompt`, `/landing/photo-prompt` — tools, not library pages.
+- Embedding search — the substring search covers this size fine.

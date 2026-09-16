@@ -8,6 +8,8 @@ import { CROPS } from "@/lib/crops";
 import { ALTERNATIVES } from "@/lib/alternatives";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
 import { PROMPTS as LIBRARY_PROMPTS } from "@/lib/prompt-library";
+import { ALL as DATASET_PROMPTS, MODELS as PROMPT_MODELS, allFacets } from "@/lib/prompts/data";
+import { PACKS } from "@/lib/prompts/packs";
 
 const BASE = "https://www.sjpt.io";
 
@@ -42,6 +44,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/alternatives`,     lastModified: now, changeFrequency: "monthly", priority: 0.85 },
     { url: `${BASE}/80s-ai-photo-prompts`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
     { url: `${BASE}/prompts`,          lastModified: now, changeFrequency: "weekly",  priority: 0.9 },
+    { url: `${BASE}/prompts/image`,    lastModified: now, changeFrequency: "weekly",  priority: 0.9 },
+    { url: `${BASE}/prompts/video`,    lastModified: now, changeFrequency: "weekly",  priority: 0.85 },
+    { url: `${BASE}/prompts/originals`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
     { url: `${BASE}/blog`,             lastModified: now, changeFrequency: "weekly",  priority: 0.8 },
     { url: `${BASE}/privacy`,          lastModified: now, changeFrequency: "yearly",  priority: 0.3 },
     { url: `${BASE}/terms`,            lastModified: now, changeFrequency: "yearly",  priority: 0.3 },
@@ -86,7 +91,35 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${BASE}/prompts/${p.slug}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.7,
   }));
 
-  const programmaticPages = [...conversionPages, ...compressPages, ...cropPages, ...alternativePages, ...promptPages];
+  /*
+    The licensed prompt library: a page per prompt, per model, per category and
+    per pack. These are the pages the long-tail queries land on — "nano banana
+    pro prompts", "watercolor image prompts" — and there is no point holding a
+    dataset this size if the individual records are not indexable.
+  */
+  const datasetPromptPages: MetadataRoute.Sitemap = DATASET_PROMPTS.map((p) => ({
+    url: `${BASE}${p.media === "video" ? "/video-prompts" : "/prompts"}/${p.uid}`,
+    lastModified: p.publishedAt ? new Date(p.publishedAt) : now,
+    changeFrequency: "monthly" as const,
+    priority: p.featured ? 0.8 : 0.65,
+  }));
+  const modelPages: MetadataRoute.Sitemap = PROMPT_MODELS.map((m) => ({
+    url: `${BASE}/${m.slug}-prompts`, lastModified: now, changeFrequency: "weekly" as const, priority: 0.9,
+  }));
+  const categoryPages: MetadataRoute.Sitemap = (["image", "video"] as const).flatMap((media) =>
+    allFacets(media).map((f) => ({
+      url: `${BASE}/prompts/${media}/${f.facet.slug}`,
+      lastModified: now, changeFrequency: "weekly" as const, priority: 0.75,
+    }))
+  );
+  const packPages: MetadataRoute.Sitemap = PACKS.map((p) => ({
+    url: `${BASE}/prompts-pack/${p.slug}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.75,
+  }));
+
+  const programmaticPages = [
+    ...conversionPages, ...compressPages, ...cropPages, ...alternativePages,
+    ...promptPages, ...datasetPromptPages, ...modelPages, ...categoryPages, ...packPages,
+  ];
 
   if (!PAID_FEATURES_ENABLED) return dedupe([...freePages, ...freeVariantPages, ...programmaticPages, ...freeBlogPages]);
 

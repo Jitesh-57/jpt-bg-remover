@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import PromptLibrary from "./PromptLibrary";
-import ScrollReveal from "@/app/_components/ScrollReveal";
+import PromptCard from "./_components/PromptCard";
+import SafeImage from "./_components/SafeImage";
+import { DatasetCredit } from "./_components/Attribution";
 import {
-  PROMPTS, PROMPT_COUNT, CATEGORIES, PLATFORMS, promptsInCategory,
-} from "@/lib/prompt-library";
-import { matchLibraryImages, LIBRARY_BUCKET } from "@/lib/prompt-library-images";
-import { listBucketImagesServer } from "@/lib/prompt-images.server";
+  COUNTS, MODELS, facetList, featured, hottest, toCards,
+} from "@/lib/prompts/data";
+import { mediaResolver } from "@/lib/prompts/media";
+import { PACKS, packPrompts } from "@/lib/prompts/packs";
+import { PROMPT_COUNT as ORIGINALS_COUNT } from "@/lib/prompt-library";
 import { BRAND } from "@/lib/brand";
 
 export const revalidate = 300;
@@ -14,221 +16,276 @@ export const revalidate = 300;
 const BASE = "https://www.sjpt.io";
 const URL = `${BASE}/prompts`;
 
+const TOTAL = COUNTS.total + ORIGINALS_COUNT;
+
 export const metadata: Metadata = {
-  title: { absolute: `${PROMPT_COUNT} Free AI Photo Prompts — Copy, Paste, Generate | ${BRAND}` },
+  title: { absolute: `${TOTAL} AI Prompts — Free Image & Video Prompt Library | ${BRAND}` },
   description:
-    `A library of ${PROMPT_COUNT} free AI image prompts you can copy: headshots, film looks, YouTube thumbnails, Instagram covers, product shots, ads and restoration. Sized for Instagram, TikTok, X, Facebook, LinkedIn, YouTube and Pinterest.`,
+    `A free library of ${TOTAL} AI prompts for ${MODELS.map((m) => m.name).join(", ")} and more. Browse by model, medium, use case or style. Every prompt credits the creator who wrote it.`,
   keywords:
-    "ai photo prompts, ai image prompts, free prompt library, chatgpt image prompts, gemini image prompts, instagram ai prompts, youtube thumbnail prompt, ai headshot prompt, product photography prompt, nano banana prompts",
+    "ai prompts, ai prompt library, image prompts, video prompts, nano banana pro prompts, gpt image 2 prompts, seedream prompts, seedance prompts, free ai prompts",
   alternates: { canonical: URL },
   openGraph: {
-    title: `${PROMPT_COUNT} free AI photo prompts`,
-    description:
-      "Copy-paste prompts for portraits, trends, thumbnails, covers, product shots and ads — each one sized for the platform it's meant for.",
-    url: URL,
-    type: "website",
-    siteName: BRAND,
+    title: `${TOTAL} free AI prompts`,
+    description: "Image and video prompts for every major model — free to copy, credited to their authors.",
+    url: URL, type: "website", siteName: BRAND,
   },
-  twitter: {
-    card: "summary_large_image",
-    title: `${PROMPT_COUNT} free AI photo prompts`,
-    description: "Portraits, film looks, thumbnails, covers, product shots and ads. Copy, paste, generate.",
-  },
+  twitter: { card: "summary_large_image", title: `${TOTAL} free AI prompts`, description: "Browse by model, medium, use case or style. Free to copy." },
 };
 
-const FAQS = [
-  {
-    q: "What is this prompt library?",
-    a: `${PROMPT_COUNT} prompts you can copy and paste into an AI image tool. Each one is written out in full — subject, wardrobe, setting, lighting, lens and finish — because that level of detail is what separates a result you can use from a result that looks generic. They are grouped by what you are making and tagged with the aspect ratio and the platform they are composed for.`,
-  },
-  {
-    q: "Where do I paste them?",
-    a: `Anywhere that takes an image prompt. "Use it" sends the prompt straight into the ${BRAND} editor with your photo, which is the fastest route. The same text also works in ChatGPT, Google Gemini, Midjourney and most other image models — the structure they respond to is the same.`,
-  },
-  {
-    q: "Are the prompts free?",
-    a: "Yes. Every prompt on this page is free to copy and use, with no account. Generating an image inside Pixel Shine uses credits; generating it in a tool you already pay for does not cost you anything here.",
-  },
-  {
-    q: "Will the result still look like me?",
-    a: "Every prompt involving a person leads with the instruction to keep your face, bone structure and skin tone exactly as they are. That instruction is what does the work, so keep it at the front if you edit the prompt. A sharp, front-facing, well-lit source photo helps more than any wording.",
-  },
-  {
-    q: "Why do the prompts mention an aspect ratio?",
-    a: "Because composition is platform-specific. A YouTube thumbnail needs the face large and the left side empty for a headline; an Instagram story has to keep the top and bottom clear of the app's own interface; a Pinterest pin is read at about 236 pixels wide. The ratio on each card is what that prompt is composed for.",
-  },
-  {
-    q: "Can I edit a prompt?",
-    a: "They are written to be edited. Swap the wardrobe, the setting, the colour or the decade and leave the structure alone — the identity instruction first, then the scene, then the light, then the finish. That order is what the models respond to most reliably.",
-  },
-  {
-    q: "Do you copy prompts from other sites?",
-    a: "No. Every prompt here is written for this product and tested against the models it actually runs. Copied prompt text would be someone else's work, and duplicate content besides.",
-  },
-];
+function H2({ children, sub, href, hrefLabel }: { children: React.ReactNode; sub?: string; href?: string; hrefLabel?: string }) {
+  return (
+    <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 16, flexWrap: "wrap", marginBottom: 16 }}>
+      <div>
+        <h2 style={{ fontSize: 22, fontWeight: 900, letterSpacing: "-0.025em", margin: 0 }}>{children}</h2>
+        {sub && <p style={{ margin: "5px 0 0", fontSize: 13.5, color: "var(--text-muted)" }}>{sub}</p>}
+      </div>
+      {href && (
+        <Link href={href} style={{ fontSize: 13.5, fontWeight: 800, color: "var(--accent-strong)", textDecoration: "none", whiteSpace: "nowrap" }}>
+          {hrefLabel || "View all"} →
+        </Link>
+      )}
+    </div>
+  );
+}
 
-export default async function PromptsPage() {
-  // Resolved server-side so the image URLs are in the HTML rather than
-  // arriving after a client fetch. An unreachable bucket yields {} and every
-  // card falls back to its designed placeholder.
-  const files = await listBucketImagesServer(LIBRARY_BUCKET);
-  const images = matchLibraryImages(PROMPTS, files);
+export default async function PromptsHub() {
+  const resolve = await mediaResolver();
+  const hot = toCards(hottest(8)).map((c) => ({ ...c, image: resolve(c.image) }));
+  const weekly = featured(1)[0];
+  const weeklyImage = weekly ? resolve(weekly.media === "video" ? weekly.videoThumbnail : weekly.images[0]) : null;
 
-  const itemListLd = {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    name: `${PROMPT_COUNT} free AI photo prompts`,
-    numberOfItems: PROMPT_COUNT,
-    itemListElement: PROMPTS.map((p, i) => ({
-      "@type": "ListItem",
-      position: i + 1,
-      name: p.title,
-      url: `${URL}/${p.slug}`,
-    })),
-  };
   const faqLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: FAQS.map((f) => ({
-      "@type": "Question", name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
+    "@context": "https://schema.org", "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: `What is the ${BRAND} prompt library?`,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: `A free, browsable collection of ${TOTAL} AI prompts — ${COUNTS.image} image prompts and ${COUNTS.video} video prompts drawn from open CC BY 4.0 collections, plus ${ORIGINALS_COUNT} written in-house. Every prompt has its own page, credits the person who wrote it, and can be copied without an account.`,
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Where do the prompts come from?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Most are adapted from YouMind OpenLab's open prompt collections on GitHub, published under CC BY 4.0. Each one was originally posted by an individual creator, and we credit them and link to their post on every card and every page. The rest are written by Pixel Shine.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Are the prompts free to use?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Yes. Copying is free and needs no account. The licence lets you use them commercially as long as the author is credited — we do that here, and you should keep the credit if you republish one.",
+        },
+      },
+    ],
+  };
+  const itemListLd = {
+    "@context": "https://schema.org", "@type": "ItemList",
+    name: "AI prompt models",
+    itemListElement: MODELS.map((m, i) => ({
+      "@type": "ListItem", position: i + 1, name: `${m.name} prompts`, url: `${BASE}/${m.slug}-prompts`,
     })),
   };
-  const breadcrumbLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: BASE },
-      { "@type": "ListItem", position: 2, name: "Prompts", item: URL },
-    ],
+
+  const tile: React.CSSProperties = {
+    display: "block", textDecoration: "none", background: "var(--surface)",
+    border: "1px solid var(--border)", borderRadius: 18, padding: "22px 22px 24px",
   };
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
-      <ScrollReveal />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }} />
 
       <div style={{ background: "var(--bg)", color: "var(--text)" }}>
-        {/* HERO */}
-        <section style={{ padding: "62px 24px 34px", textAlign: "center" }}>
-          <div style={{ maxWidth: 800, margin: "0 auto" }}>
-            <div className="jpt-pill" style={{ marginBottom: 18 }}>✨ Prompt library</div>
-            <h1 className="jpt-h1">
-              {PROMPT_COUNT} <span className="jpt-grad-text">AI photo prompts</span>, free to copy
-            </h1>
-            <p className="jpt-lead" style={{ maxWidth: 640, margin: "0 auto 24px" }}>
-              Written in full — wardrobe, set, lighting, lens and finish — and composed for the
-              platform each one is meant for. Copy it anywhere, or send it straight into the editor
-              with your own photo.
-            </p>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "10px 20px", justifyContent: "center", fontSize: 14, color: "var(--text-muted)", fontWeight: 600 }}>
-              <span>✓ {CATEGORIES.length} categories</span>
-              <span>✓ {PLATFORMS.length} platform sizes</span>
-              <span>✓ No sign-up to copy</span>
-              <span>✓ Keeps your real face</span>
+        <div style={{ maxWidth: 1180, margin: "0 auto", padding: "46px 24px 80px" }}>
+          {/* ── HERO ─────────────────────────────────────────────────────── */}
+          <section id="prompts-overview" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(320px, 100%), 1fr))", gap: 30, alignItems: "center" }}>
+            <div>
+              <div className="jpt-pill" style={{ marginBottom: 18 }}>
+                {TOTAL} PROMPTS · {COUNTS.authors}+ CREATORS · FREE TO COPY
+              </div>
+              <h1 style={{ fontSize: "clamp(2.2rem,6vw,4rem)", fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.02, margin: 0 }}>
+                Every prompt,<br />
+                <span className="jpt-grad-text">credited and free.</span>
+              </h1>
+              <p style={{ fontSize: 16.5, color: "var(--text-muted)", lineHeight: 1.7, margin: "18px 0 0", maxWidth: 520 }}>
+                {COUNTS.image} image prompts and {COUNTS.video} video prompts for {MODELS.length} models, plus{" "}
+                {ORIGINALS_COUNT} written here. Fill in the blanks, copy, and generate — with the author of every
+                prompt credited and linked.
+              </p>
+              <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 22 }}>
+                <Link href="/prompts/image" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "13px 22px", borderRadius: 999, background: "var(--grad-strong)", color: "#fff", fontWeight: 800, fontSize: 14.5, textDecoration: "none", boxShadow: "var(--glow)" }}>
+                  Browse image prompts →
+                </Link>
+                <Link href="/prompts/video" className="jpt-hover" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "13px 22px", borderRadius: 999, background: "var(--surface)", border: "1px solid var(--border-strong)", color: "var(--text)", fontWeight: 700, fontSize: 14.5, textDecoration: "none" }}>
+                  Video prompts
+                </Link>
+              </div>
             </div>
-          </div>
-        </section>
 
-        {/* CATEGORY OVERVIEW — also the internal-link surface for crawlers */}
-        <section style={{ padding: "0 24px 30px" }}>
-          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(250px, 100%), 1fr))", gap: 12 }}>
-            {CATEGORIES.map((c) => (
-              <Link
-                key={c.id}
-                href={`/prompts?c=${c.id}`}
-                className="jpt-hover"
-                style={{
-                  display: "flex", gap: 12, alignItems: "flex-start", textDecoration: "none",
-                  background: "var(--surface-2)", border: "1px solid var(--border)",
-                  borderRadius: 14, padding: "14px 15px",
-                }}
-              >
-                <span style={{ fontSize: 20, lineHeight: 1.2 }}>{c.emoji}</span>
-                <span style={{ minWidth: 0 }}>
-                  <span style={{ display: "block", fontSize: 14.5, fontWeight: 800, color: "var(--text)" }}>
-                    {c.name}
-                    <span style={{ color: "var(--text-faint)", fontWeight: 700 }}> · {promptsInCategory(c.id).length}</span>
+            {/* Weekly featured */}
+            {weekly && (
+              <Link href={weekly.media === "video" ? `/video-prompts/${weekly.uid}` : `/prompts/${weekly.uid}`} style={{ ...tile, padding: 0, overflow: "hidden" }} className="jpt-hover">
+                <div style={{ position: "relative", aspectRatio: "16 / 10", background: "var(--surface-2)" }}>
+                  <SafeImage src={weeklyImage} alt={weekly.title} />
+                  <span style={{ position: "absolute", left: 12, top: 12, background: "#F5B301", color: "#1a1a1a", fontSize: 10.5, fontWeight: 900, letterSpacing: "0.08em", padding: "4px 10px", borderRadius: 999 }}>
+                    WEEKLY FEATURED
                   </span>
-                  <span style={{ display: "block", fontSize: 12.5, color: "var(--text-muted)", marginTop: 3, lineHeight: 1.5 }}>
-                    {c.blurb}
-                  </span>
-                </span>
+                </div>
+                <div style={{ padding: "16px 18px 18px" }}>
+                  <div style={{ fontSize: 10.5, fontWeight: 800, letterSpacing: "0.07em", textTransform: "uppercase", color: "var(--accent-strong)" }}>{weekly.model}</div>
+                  <div style={{ fontSize: 17, fontWeight: 800, color: "var(--text)", marginTop: 5, lineHeight: 1.3 }}>{weekly.title}</div>
+                  <div style={{ fontSize: 12.5, color: "var(--text-faint)", marginTop: 7 }}>Prompt by @{weekly.author.name}</div>
+                </div>
               </Link>
-            ))}
-          </div>
-        </section>
+            )}
+          </section>
 
-        {/* THE LIBRARY */}
-        <PromptLibrary images={images} />
-
-        {/* HOW TO WRITE ONE */}
-        <section style={{ padding: "0 24px 58px" }}>
-          <div style={{ maxWidth: 820, margin: "0 auto" }}>
-            <h2 className="jpt-h2" style={{ textAlign: "center" }}>How these are built</h2>
-            <p style={{ textAlign: "center", color: "var(--text-muted)", margin: "0 0 26px", lineHeight: 1.7 }}>
-              Every prompt here follows the same order, because it is the order the models answer to.
-              Keep it when you edit one, and change only the middle.
-            </p>
-            <ol style={{ margin: 0, padding: 0, listStyle: "none", display: "grid", gap: 12 }}>
-              {[
-                ["Identity first", "Say what must not change before you say what should. If the face is mentioned last, it is the first thing to drift."],
-                ["Then the scene", "Wardrobe, setting, props. Be specific — \"a cream linen suit\" beats \"nice clothes\" every time."],
-                ["Then the light", "Direction, quality and colour. This is the single biggest difference between a snapshot and a photograph."],
-                ["Then the camera", "Lens, angle, depth of field, framing. A long lens from across the street looks nothing like a phone held at arm's length."],
-                ["Finish last", "Grade, grain, the print or film stock. Say \"real photograph, natural skin texture\" unless you want an illustration."],
-              ].map(([t, d], i) => (
-                <li key={t} style={{ display: "flex", gap: 14, background: "var(--surface-2)", border: "1px solid var(--border)", borderRadius: 14, padding: "15px 17px" }}>
-                  <span style={{ fontSize: 17, fontWeight: 900, color: "var(--accent-strong)", minWidth: 22 }}>{i + 1}</span>
-                  <span>
-                    <strong style={{ display: "block", fontSize: 15, color: "var(--text)", marginBottom: 3 }}>{t}</strong>
-                    <span style={{ fontSize: 14, color: "var(--text-muted)", lineHeight: 1.65 }}>{d}</span>
+          {/* ── PACKS ────────────────────────────────────────────────────── */}
+          <section id="prompts-packs" style={{ marginTop: 62 }}>
+            <H2 sub="Hand-picked collections for one job each.">Curated prompt packs</H2>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(280px, 100%), 1fr))", gap: 16 }}>
+              {PACKS.slice(0, 3).map((p) => (
+                <Link key={p.slug} href={`/prompts-pack/${p.slug}`} className="jpt-hover" style={tile}>
+                  <span style={{ display: "block", fontSize: 18, fontWeight: 900, color: "var(--text)", letterSpacing: "-0.02em" }}>{p.title}</span>
+                  <span style={{ display: "block", fontSize: 13.5, color: "var(--text-muted)", marginTop: 8, lineHeight: 1.6 }}>{p.subtitle}</span>
+                  <span style={{ display: "block", fontSize: 11.5, fontWeight: 900, color: "var(--accent-strong)", marginTop: 14, textTransform: "uppercase", letterSpacing: "0.09em" }}>
+                    {packPrompts(p).length} prompts →
                   </span>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </section>
-
-        {/* FAQ */}
-        <section style={{ padding: "0 24px 56px" }}>
-          <div style={{ maxWidth: 760, margin: "0 auto" }}>
-            <h2 className="jpt-h2" style={{ textAlign: "center" }}>Questions</h2>
-            <div style={{ marginTop: 26 }}>
-              {FAQS.map((f) => (
-                <details key={f.q} style={{ background: "var(--surface-2)", border: "1px solid var(--border)", borderRadius: 12, padding: "15px 18px", marginBottom: 10 }}>
-                  <summary style={{ fontSize: 15.5, fontWeight: 700, color: "var(--text)", cursor: "pointer" }}>{f.q}</summary>
-                  <p style={{ fontSize: 14.5, color: "var(--text-muted)", lineHeight: 1.7, margin: "10px 0 0" }}>{f.a}</p>
-                </details>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* RELATED */}
-        <section style={{ padding: "0 24px 80px" }}>
-          <div style={{ maxWidth: 900, margin: "0 auto" }}>
-            <h2 style={{ fontSize: 20, fontWeight: 800, color: "var(--text)", margin: "0 0 6px", letterSpacing: "-0.02em" }}>Keep going</h2>
-            <p style={{ fontSize: 14.5, color: "var(--text-muted)", margin: "0 0 18px" }}>
-              Prompts are one way in. These do the same jobs with the settings already chosen.
-            </p>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
-              {[
-                { icon: "✦", title: "All AI apps", href: "/creative" },
-                { icon: "🔥", title: "80s photo prompts", href: "/80s-ai-photo-prompts" },
-                { icon: "🧰", title: "Free tools", href: "/tools" },
-                { icon: "🔍", title: "Upscale a result", href: "/upscale" },
-                { icon: "✂️", title: "Crop for Instagram", href: "/crop-image" },
-              ].map((r) => (
-                <Link key={r.href} href={r.href} className="jpt-hover" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 999, padding: "10px 18px", fontSize: 14.5, fontWeight: 700, color: "var(--text)", textDecoration: "none" }}>
-                  <span>{r.icon}</span> {r.title}
                 </Link>
               ))}
             </div>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 14 }}>
+              {PACKS.slice(3).map((p) => (
+                <Link key={p.slug} href={`/prompts-pack/${p.slug}`} style={{ fontSize: 13, fontWeight: 700, color: "var(--text-muted)", background: "var(--surface-2)", border: "1px solid var(--border)", padding: "8px 14px", borderRadius: 999, textDecoration: "none" }}>
+                  {p.title}
+                </Link>
+              ))}
+            </div>
+          </section>
+
+          {/* ── HOTTEST ──────────────────────────────────────────────────── */}
+          <section id="prompts-weekly-highlights" style={{ marginTop: 62 }}>
+            <H2 sub="Featured by the curators, or newly added with the most to show." href="/prompts/image" hrefLabel="All image prompts">
+              🔥 Hottest this week
+            </H2>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(260px, 100%), 1fr))", gap: 16 }}>
+              {hot.map((c) => <PromptCard key={c.uid} p={c} />)}
+            </div>
+          </section>
+
+          {/* ── BROWSE BY MEDIA ──────────────────────────────────────────── */}
+          <section style={{ marginTop: 62 }}>
+            <H2>Browse by medium</H2>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(260px, 100%), 1fr))", gap: 16 }}>
+              {[
+                { href: "/prompts/image", title: "Image prompts", n: COUNTS.image, blurb: "Portraits, posters, product shots, infographics." },
+                { href: "/prompts/video", title: "Video prompts", n: COUNTS.video, blurb: "Timeline prompts, shot by shot, for video models." },
+                { href: "/prompts/originals", title: "Pixel Shine originals", n: ORIGINALS_COUNT, blurb: "Written here, sized for each platform's crop." },
+              ].map((t) => (
+                <Link key={t.href} href={t.href} className="jpt-hover" style={tile}>
+                  <span style={{ display: "block", fontSize: 11.5, fontWeight: 900, color: "var(--accent-strong)", textTransform: "uppercase", letterSpacing: "0.09em" }}>
+                    {t.n} prompts
+                  </span>
+                  <span style={{ display: "block", fontSize: 19, fontWeight: 900, color: "var(--text)", marginTop: 7, letterSpacing: "-0.02em" }}>{t.title}</span>
+                  <span style={{ display: "block", fontSize: 13.5, color: "var(--text-muted)", marginTop: 7, lineHeight: 1.6 }}>{t.blurb}</span>
+                </Link>
+              ))}
+            </div>
+          </section>
+
+          {/* ── BROWSE BY MODEL ──────────────────────────────────────────── */}
+          <section style={{ marginTop: 62 }}>
+            <H2 sub="Each model has its own page, with every prompt written for it.">Browse by model</H2>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(200px, 100%), 1fr))", gap: 12 }}>
+              {MODELS.map((m) => (
+                <Link key={m.slug} href={`/${m.slug}-prompts`} className="jpt-hover" style={{ ...tile, padding: "16px 18px" }}>
+                  <span style={{ display: "block", fontSize: 15.5, fontWeight: 800, color: "var(--text)" }}>{m.name}</span>
+                  <span style={{ display: "block", fontSize: 12.5, color: "var(--text-faint)", marginTop: 4 }}>
+                    {m.count} prompts · {m.media}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </section>
+
+          {/* ── BROWSE BY CATEGORY ───────────────────────────────────────── */}
+          <section style={{ marginTop: 62 }}>
+            <H2>Browse by category</H2>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(300px, 100%), 1fr))", gap: 20 }}>
+              {(["image", "video"] as const).map((media) => (
+                <div key={media} style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 18, padding: "20px 22px" }}>
+                  <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 12 }}>
+                    <h3 style={{ fontSize: 16, fontWeight: 900, margin: 0, letterSpacing: "-0.02em" }}>
+                      {media === "image" ? "Image" : "Video"} prompt index
+                    </h3>
+                    <Link href={`/prompts/${media}`} style={{ fontSize: 12.5, fontWeight: 800, color: "var(--accent-strong)", textDecoration: "none" }}>View all →</Link>
+                  </div>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
+                    {[...facetList(media, "use-cases"), ...facetList(media, "styles").slice(0, 6)].slice(0, 14).map((f) => (
+                      <Link key={f.slug} href={`/prompts/${media}/${f.slug}`} style={{ fontSize: 12.5, fontWeight: 600, color: "var(--text-muted)", background: "var(--surface-2)", border: "1px solid var(--border)", padding: "6px 12px", borderRadius: 999, textDecoration: "none" }}>
+                        {f.name} <span style={{ color: "var(--text-faint)" }}>{f.count}</span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* ── ABOUT ────────────────────────────────────────────────────── */}
+          <section id="prompts-about" style={{ marginTop: 66, maxWidth: 820 }}>
+            <h2 style={{ fontSize: 22, fontWeight: 900, letterSpacing: "-0.025em", margin: "0 0 14px" }}>
+              What is the {BRAND} prompt library?
+            </h2>
+            <div style={{ fontSize: 15.5, color: "var(--text-muted)", lineHeight: 1.8, display: "grid", gap: 14 }}>
+              <p style={{ margin: 0 }}>
+                {TOTAL} AI prompts you can read, copy and run — {COUNTS.image} for image models, {COUNTS.video} for
+                video models, and {ORIGINALS_COUNT} written in-house for the tools on this site. Every one has its own
+                page, so you can link to a single prompt rather than to a list.
+              </p>
+              <p style={{ margin: 0 }}>
+                {COUNTS.withVariables} of them carry editable fields — the subject, the colour, the text on the poster —
+                rendered here as input boxes rather than as placeholders you have to find and replace. Copy gives you
+                the filled-in version.
+              </p>
+              <p style={{ margin: 0 }}>
+                The collection comes from open, CC BY 4.0 licensed repositories published by YouMind OpenLab, written
+                originally by {COUNTS.authors} individual creators. That licence permits commercial use on one
+                condition — attribution — so every card and every page names the author and links to the post it came
+                from. If you republish one of these prompts, keep that credit with it.
+              </p>
+            </div>
+          </section>
+
+          {/* ── MORE FEATURES ────────────────────────────────────────────── */}
+          <section style={{ marginTop: 56 }}>
+            <H2>Then do something with it</H2>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(260px, 100%), 1fr))", gap: 16 }}>
+              {[
+                { href: "/editor?tool=ai-edit", title: "AI editor", blurb: "Paste a prompt, add your photo, generate." },
+                { href: "/creative", title: "200 AI apps", blurb: "The same looks with the settings already chosen." },
+                { href: "/tools", title: "Free tools", blurb: "Upscale, crop, compress — no account, no credits." },
+              ].map((t) => (
+                <Link key={t.href} href={t.href} className="jpt-hover" style={tile}>
+                  <span style={{ display: "block", fontSize: 17, fontWeight: 800, color: "var(--text)" }}>{t.title}</span>
+                  <span style={{ display: "block", fontSize: 13.5, color: "var(--text-muted)", marginTop: 7, lineHeight: 1.6 }}>{t.blurb}</span>
+                </Link>
+              ))}
+            </div>
+          </section>
+
+          {/* ── CREDIT ───────────────────────────────────────────────────── */}
+          <div style={{ marginTop: 56, paddingTop: 22, borderTop: "1px solid var(--border)" }}>
+            <DatasetCredit />
           </div>
-        </section>
+        </div>
       </div>
     </>
   );
