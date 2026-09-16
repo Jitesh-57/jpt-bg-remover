@@ -71,11 +71,9 @@ function VideoPlayer({ src, poster, title }: { src: string | null; poster: strin
 export default function DatasetDetail({
   p,
   resolve,
-  generateHref,
 }: {
   p: PromptRecord;
   resolve: MediaResolver;
-  generateHref: string;
 }) {
   const isVideo = p.media === "video";
   const images = p.images.map((i) => resolve(i)).filter((x): x is string => !!x);
@@ -138,7 +136,7 @@ export default function DatasetDetail({
         <h2 style={{ fontSize: 12.5, fontWeight: 800, color: "var(--text-faint)", textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 10px" }}>
           The prompt
         </h2>
-        <PromptBlock uid={p.uid} prompt={p.prompt} media={p.media} generateHref={generateHref} />
+        <PromptBlock uid={p.uid} prompt={p.prompt} media={p.media} needsPhoto={p.needsPhoto} />
       </div>
 
       {/* META */}

@@ -86,6 +86,7 @@ export function toCard(r: PromptRecord): PromptCardData {
     publishedAt: r.publishedAt,
     href: promptHref(r),
     useCase: r.useCase,
+    needsPhoto: r.needsPhoto,
   };
 }
 

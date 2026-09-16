@@ -33,6 +33,20 @@ const nextConfig = {
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'lwworujvfttxkrjfrgav.supabase.co', pathname: '/storage/v1/object/public/**' },
+      /*
+        The prompt library's result images.
+
+        They were rendered as plain <img> pointing straight at the source CDN
+        and arrived blank in production — every one of them. Going through the
+        optimiser fixes that as a side effect of how it works: the fetch happens
+        server-side, so nothing about the browser's referer or origin is
+        involved, and what reaches the page is a resized AVIF/WebP from our own
+        domain. These are 1-3MB press-quality JPEGs and a grid shows 24, so the
+        re-encode matters on its own terms too.
+      */
+      { protocol: 'https', hostname: 'cms-assets.youmind.com', pathname: '/**' },
+      { protocol: 'https', hostname: 'pbs.twimg.com', pathname: '/**' },
+      { protocol: 'https', hostname: 'customer-qs6wnyfuv0gcybzj.cloudflarestream.com', pathname: '/**' },
     ],
     formats: ['image/avif', 'image/webp'],
     // A year: these files are content-addressed by name and replaced wholesale

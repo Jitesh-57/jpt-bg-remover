@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { PromptVariable } from "@/lib/prompts/types";
 import { fillVariables, parseVariables } from "@/lib/prompts/variables";
+import GenerateButton from "./GenerateButton";
 import { trackEvent } from "@/lib/analytics";
 
 /**
@@ -54,13 +55,13 @@ export default function PromptBlock({
   uid,
   prompt,
   media,
-  generateHref,
+  needsPhoto,
 }: {
   uid: string;
   prompt: string;
   media: "image" | "video";
-  /** Where the primary CTA sends the reader, with the prompt handed over. */
-  generateHref: string;
+  /** True when the prompt edits a photo the reader supplies. */
+  needsPhoto: boolean;
 }) {
   const vars = useMemo<PromptVariable[]>(() => parseVariables(prompt), [prompt]);
   const [values, setValues] = useState<Record<string, string>>(() =>
@@ -82,12 +83,6 @@ export default function PromptBlock({
     } catch {
       /* clipboard blocked — the text below is selectable */
     }
-  };
-
-  const openInEditor = () => {
-    try { sessionStorage.setItem("jpt_pending_prompt", filled); } catch { /* private mode */ }
-    trackEvent("prompt_generate_click", { uid, media });
-    window.location.href = generateHref;
   };
 
   const selectAll = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -169,17 +164,29 @@ export default function PromptBlock({
         >
           {copied ? "✓ Copied" : vars.length ? "Copy filled-in prompt" : "Copy prompt"}
         </button>
-        <button
-          onClick={openInEditor}
-          style={{
-            flex: "1 1 200px", cursor: "pointer", fontFamily: "inherit", borderRadius: 11,
-            padding: "13px 18px", fontSize: 15, fontWeight: 700,
-            background: "var(--surface-2)", color: "var(--text)", border: "1px solid var(--border-strong)",
-          }}
-        >
-          {media === "video" ? "Open in the editor →" : "Generate this →"}
-        </button>
+
+        {/*
+          No Generate on a video prompt.
+
+          There is no video generation on this site, and a button that quietly
+          lands somewhere else is worse than no button — these are here to be
+          copied into whatever tool the reader already uses.
+        */}
+        {media === "image" && (
+          <div style={{ flex: "1 1 200px" }}>
+            <GenerateButton uid={uid} prompt={filled} needsPhoto={needsPhoto} full />
+          </div>
+        )}
       </div>
+
+      <p style={{ margin: "10px 0 0", fontSize: 12.5, color: "var(--text-faint)", lineHeight: 1.6 }}>
+        {media === "video"
+          ? "Copy this into the video model you use — Pixel Shine does not generate video yet."
+          : needsPhoto
+            ? "Generate asks for your photo, then opens the editor with the prompt already loaded."
+            : "Generate opens this prompt in the editor, ready to run."}
+      </p>
+
     </section>
   );
 }

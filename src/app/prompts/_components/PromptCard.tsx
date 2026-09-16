@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
+import SafeImage from "./SafeImage";
 import type { PromptCardData } from "@/lib/prompts/types";
 import { trackEvent } from "@/lib/analytics";
 
@@ -15,38 +15,29 @@ import { trackEvent } from "@/lib/analytics";
  */
 
 function Frame({ src, alt, media }: { src: string | null; alt: string; media: "image" | "video" }) {
-  const [failed, setFailed] = useState(false);
-  const [loaded, setLoaded] = useState(false);
-  const show = src && !failed;
   return (
     <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 10", overflow: "hidden", background: "var(--surface-2)" }}>
-      {!show || !loaded ? (
-        <div
-          aria-hidden
-          style={{
-            position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center",
-            background: "linear-gradient(140deg, var(--surface-3), var(--surface-2))",
-            color: "var(--text-faint)", fontSize: 22,
-          }}
-        >
-          {media === "video" ? "▶" : "◨"}
-        </div>
-      ) : null}
-      {show && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={src}
-          alt={alt}
-          loading="lazy"
-          decoding="async"
-          onLoad={() => setLoaded(true)}
-          onError={() => setFailed(true)}
-          style={{
-            position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover",
-            opacity: loaded ? 1 : 0, transition: "opacity .3s var(--ease)",
-          }}
-        />
-      )}
+      <SafeImage
+        src={src}
+        alt={alt}
+        // Cards sit in a min-270px auto-fill grid, so a card is never wider
+        // than about 400px on a phone and 340px in the grid. Telling the
+        // optimiser that is the difference between serving a 320px file and a
+        // 1920px one.
+        sizes="(max-width: 700px) 92vw, 340px"
+        placeholder={
+          <div
+            aria-hidden
+            style={{
+              position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center",
+              background: "linear-gradient(140deg, var(--surface-3), var(--surface-2))",
+              color: "var(--text-faint)", fontSize: 22,
+            }}
+          >
+            {media === "video" ? "▶" : "◨"}
+          </div>
+        }
+      />
       {media === "video" && (
         <span
           aria-hidden
@@ -114,6 +105,30 @@ export default function PromptCard({ p }: { p: PromptCardData }) {
         }}>
           {p.excerpt}
         </p>
+
+        {/*
+          Generate on the card routes to the prompt's own page with ?generate=1
+          rather than starting here.
+
+          The card has an excerpt, not the prompt — some of these are 22,000
+          characters and a grid of 254 would be a megabyte of invisible text.
+          The detour is also the better order: the reader sees the prompt and
+          fills in its placeholders before a credit is spent. Video prompts get
+          no button; there is no video generation on this site.
+        */}
+        {p.media === "image" && (
+          <Link
+            href={`${p.href}?generate=1`}
+            onClick={() => trackEvent("prompt_card_generate", { uid: p.uid })}
+            style={{
+              display: "block", textAlign: "center", marginTop: 11, padding: "8px 12px",
+              borderRadius: 9, fontSize: 13, fontWeight: 700, textDecoration: "none",
+              background: "var(--surface-2)", color: "var(--text)", border: "1px solid var(--border-strong)",
+            }}
+          >
+            Generate this →
+          </Link>
+        )}
 
         {/* CC BY 4.0: the credit and the link to the original post are required. */}
         <div style={{ marginTop: "auto", paddingTop: 11, fontSize: 11.5, color: "var(--text-faint)", display: "flex", flexWrap: "wrap", gap: 6, alignItems: "center" }}>

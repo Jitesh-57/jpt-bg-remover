@@ -144,6 +144,34 @@ const RULES = {
   ],
 };
 
+/**
+ * Does this prompt operate on a photo the reader supplies?
+ *
+ * It decides what the Generate button does: open an upload box first, or go
+ * straight to the editor with the prompt. Most of this dataset is
+ * text-to-image — posters, infographics, characters invented from nothing —
+ * so the default is no, and a prompt has to actually refer to a supplied
+ * image to flip it. A false positive is the expensive direction: it puts an
+ * upload box in front of someone who has nothing to upload.
+ */
+const WANTS_PHOTO = new RegExp(
+  [
+    "\\bmy (photo|picture|image|selfie|face)\\b",
+    "\\buploaded (photo|picture|image)\\b",
+    "\\b(the|this) (uploaded|reference|input|original|provided|attached|source) (photo|picture|image)\\b",
+    "\\breference image\\b",
+    "\\b(keep|preserve|retain|maintain) (my|the|his|her|their) (face|identity|likeness|facial)",
+    "\\bsame person\\b",
+    "\\bthe person in the (photo|image|picture)\\b",
+    "\\bbased on (the|this) (photo|image)\\b",
+    "\\bfrom (the|this) (uploaded|attached|provided) ",
+    "\\bturn (this|my) (photo|picture|image|selfie)\\b",
+    "\\bconvert (this|my) (photo|picture|image)\\b",
+    "上传的(照片|图片|图像)", "这张(照片|图片)", "参考图", "保持.{0,4}人物",
+  ].join("|"),
+  "i"
+);
+
 const slugify = (s) =>
   String(s).toLowerCase().normalize("NFKD")
     .replace(/[̀-ͯ]/g, "")
@@ -248,6 +276,7 @@ for (const r of raw) {
 
   records.push({
     uid,
+    needsPhoto: WANTS_PHOTO.test(`${r.title} ${r.description || ""} ${r.prompt.slice(0, 3000)}`),
     id: r.id,
     title: String(r.title || "").trim(),
     description: r.description ? String(r.description).trim() : null,
@@ -308,6 +337,7 @@ const dataset = {
     image: records.filter((r) => r.media === "image").length,
     video: records.filter((r) => r.media === "video").length,
     featured: records.filter((r) => r.featured).length,
+    needsPhoto: records.filter((r) => r.needsPhoto).length,
     withVariables: records.filter((r) => r.hasVariables).length,
     authors: new Set(records.map((r) => r.author.name)).size,
   },
@@ -332,6 +362,7 @@ const kb = Math.round(Buffer.byteLength(JSON.stringify(dataset)) / 1024);
 
 console.log(`wrote ${OUT} (${kb} KB)`);
 console.log(dataset.counts);
+console.log("needs a user photo:", records.filter((r) => r.needsPhoto).length, "of", records.length);
 console.log("models:", models.map((m) => `${m.name}=${m.count}`).join(", "));
 for (const media of ["image", "video"]) {
   for (const f of ["useCases", "styles", "subjects"]) {

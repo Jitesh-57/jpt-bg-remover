@@ -1,42 +1,70 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 
 /**
- * An image that degrades to a neutral block.
+ * SafeImage — every picture in the prompt library goes through here.
  *
- * These files are hotlinked from a third-party CDN until the mirror is filled,
- * so a dead URL is a real possibility rather than a theoretical one. The
- * browser's default for that is a broken-image icon with the alt text sprawled
- * across the layout, which looks worse than showing nothing.
+ * Two jobs.
+ *
+ * The first is that these files live on a third-party CDN and were arriving
+ * blank in production as plain <img> tags. `next/image` fetches them on the
+ * server instead, so what the browser requests is a resized AVIF or WebP from
+ * our own domain — which sidesteps whatever the source was refusing, and turns
+ * a 2MB press JPEG into something a grid of 24 can afford.
+ *
+ * The second is that a third-party URL can simply die. When one does the tile
+ * collapses to the neutral placeholder rather than showing a broken-image icon
+ * with the alt text sprawled across the layout.
  */
 export default function SafeImage({
-  src, alt, style, fill = true,
+  src,
+  alt,
+  /** CSS `sizes`. Getting this right is most of the saving. */
+  sizes = "(max-width: 700px) 100vw, 320px",
+  priority = false,
+  placeholder,
 }: {
   src: string | null;
   alt: string;
-  style?: React.CSSProperties;
-  /** Absolute-position to fill the parent (the default) or flow inline. */
-  fill?: boolean;
+  sizes?: string;
+  priority?: boolean;
+  /** Shown while loading and if the source fails. */
+  placeholder?: React.ReactNode;
 }) {
   const [failed, setFailed] = useState(false);
   const [loaded, setLoaded] = useState(false);
-  if (!src || failed) return null;
-  return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src={src}
-      alt={alt}
-      loading="lazy"
-      decoding="async"
-      onLoad={() => setLoaded(true)}
-      onError={() => setFailed(true)}
+
+  const fallback = placeholder ?? (
+    <div
+      aria-hidden
       style={{
-        ...(fill ? { position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" } : { width: "100%", display: "block" }),
-        opacity: loaded ? 1 : 0,
-        transition: "opacity .3s var(--ease)",
-        ...style,
+        position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center",
+        background: "linear-gradient(140deg, var(--surface-3), var(--surface-2))",
+        color: "var(--text-faint)", fontSize: 22,
       }}
-    />
+    >
+      ◨
+    </div>
+  );
+
+  return (
+    <>
+      {(!src || failed || !loaded) && fallback}
+      {src && !failed && (
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          sizes={sizes}
+          priority={priority}
+          unoptimized={src.startsWith("data:")}
+          onLoad={() => setLoaded(true)}
+          onError={() => setFailed(true)}
+          style={{ objectFit: "cover", opacity: loaded ? 1 : 0, transition: "opacity .3s var(--ease)" }}
+        />
+      )}
+    </>
   );
 }
