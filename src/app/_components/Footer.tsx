@@ -40,6 +40,7 @@ const FREE_TOOLS = [
 const ALL_COMPANY = [
   { labelKey: "All Tools", href: "/tools" },
   { labelKey: "Alternatives", href: "/alternatives" },
+  { labelKey: "Prompt Library", href: "/prompts" },
   { labelKey: "80s AI Prompts", href: "/80s-ai-photo-prompts" },
   { labelKey: "Pricing", href: "/pricing" },
   { labelKey: "Blog",    href: "/blog" },
@@ -163,6 +164,25 @@ export default function Footer() {
               )}
             </div>
           </div>
+        </div>
+
+        {/*
+          Attribution for the prompt library.
+
+          CC BY 4.0 permits commercial use on one condition: credit. This line
+          is that condition, which makes it part of the licence rather than a
+          footer nicety — it stays even if the footer is redesigned.
+        */}
+        <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 18, paddingBottom: 18, fontSize: 12.5, color: "var(--text-muted)", lineHeight: 1.6 }}>
+          Prompt data adapted from{" "}
+          <a href="https://github.com/YouMind-OpenLab" target="_blank" rel="noopener noreferrer nofollow" style={{ color: "var(--text-faint)", textDecoration: "underline" }}>
+            YouMind OpenLab
+          </a>
+          , licensed{" "}
+          <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer nofollow" style={{ color: "var(--text-faint)", textDecoration: "underline" }}>
+            CC BY 4.0
+          </a>
+          . Each prompt credits its original author.
         </div>
 
         {/* Bottom bar */}
