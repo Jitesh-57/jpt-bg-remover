@@ -18,8 +18,23 @@ const STORE = "ctx";
 const KEY = "pending";
 const SS_IMAGE = "jpt_pending_image";
 const SS_TOOL = "jpt_pending_tool";
+const SS_PROMPT = "jpt_pending_prompt";
+const SS_AUTORUN = "jpt_pending_autorun";
 
-export type PendingContext = { image?: string; tool?: string; prompt?: string; ts: number };
+export type PendingContext = {
+  image?: string;
+  tool?: string;
+  prompt?: string;
+  /**
+   * Start the generation as soon as the editor knows who the user is.
+   *
+   * Set by the prompt library's Generate button. The editor owns what happens
+   * next — signed out shows the sign-in modal, no credits opens the packs,
+   * credits runs it — so this is a request, not an instruction.
+   */
+  autoRun?: boolean;
+  ts: number;
+};
 
 function openDb(): Promise<IDBDatabase | null> {
   return new Promise((resolve) => {
@@ -95,6 +110,11 @@ export async function savePendingContext(ctx: Omit<PendingContext, "ts">): Promi
     try {
       if (full.image) sessionStorage.setItem(SS_IMAGE, full.image);
       if (full.tool) sessionStorage.setItem(SS_TOOL, full.tool);
+      // The prompt and the flag are a few hundred bytes and always fit, so
+      // they are written even when the image did not — a prompt that survives
+      // without its photo is still most of the handover.
+      if (full.prompt) sessionStorage.setItem(SS_PROMPT, full.prompt);
+      if (full.autoRun) sessionStorage.setItem(SS_AUTORUN, "1");
     } catch {
       /* too large for sessionStorage and IndexedDB unavailable — nothing to do */
     }
@@ -108,7 +128,9 @@ export async function loadPendingContext(): Promise<PendingContext | null> {
   try {
     const image = sessionStorage.getItem(SS_IMAGE) || undefined;
     const tool = sessionStorage.getItem(SS_TOOL) || undefined;
-    if (image || tool) return { image, tool, ts: Date.now() };
+    const prompt = sessionStorage.getItem(SS_PROMPT) || undefined;
+    const autoRun = sessionStorage.getItem(SS_AUTORUN) === "1";
+    if (image || tool || prompt) return { image, tool, prompt, autoRun, ts: Date.now() };
   } catch {}
   return null;
 }
@@ -118,6 +140,8 @@ export async function clearPendingContext(): Promise<void> {
   try {
     sessionStorage.removeItem(SS_IMAGE);
     sessionStorage.removeItem(SS_TOOL);
+    sessionStorage.removeItem(SS_PROMPT);
+    sessionStorage.removeItem(SS_AUTORUN);
   } catch {}
 }
 

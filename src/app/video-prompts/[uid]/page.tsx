@@ -79,12 +79,12 @@ export default async function VideoPromptDetail({ params }: { params: Promise<{ 
       <div style={{ background: "var(--bg)", color: "var(--text)" }}>
         <div style={{ maxWidth: 900, margin: "0 auto", padding: "26px 24px 70px" }}>
           {/*
-            The CTA sends video prompts to the editor rather than a video
-            generator, because there is no video backend here. Promising
-            "generate video" and landing on an image tool would be the kind of
+            No Generate button on this page at all — PromptBlock omits it for
+            video. There is no video generation here, and sending someone to an
+            image editor from a button labelled "generate video" is the kind of
             thing this codebase has had to unwind before.
           */}
-          <DatasetDetail p={p} resolve={resolve} generateHref="/editor?tool=ai-edit" />
+          <DatasetDetail p={p} resolve={resolve} />
         </div>
       </div>
     </>

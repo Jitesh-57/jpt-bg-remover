@@ -545,6 +545,8 @@ export default function ImageEditorPage() {
   const [anonUsed, setAnonUsed] = useState(0);   // free transforms a guest has used
   const [showAccountModal, setShowAccountModal] = useState(false);
   const [showNoCreditsModal, setShowNoCreditsModal] = useState(false);
+  /** A generation the prompt library asked for, waiting on the auth check. */
+  const [autoRun, setAutoRun] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   // Single "Unlimited" plan gate — used for 4× upscaling (a Pro feature).
   const [showUnlimitedModal, setShowUnlimitedModal] = useState(false);
@@ -1029,7 +1031,15 @@ export default function ImageEditorPage() {
     let alive = true;
     (async () => {
       const ctx = await loadPendingContext();
-      if (!alive || !ctx?.image) return;
+      if (!alive || !ctx) return;
+
+      // The prompt restores whether or not a photo came with it: a
+      // text-to-image prompt from the library arrives on its own and waits
+      // here for the reader to add something.
+      if (ctx.prompt) { setPrompt(ctx.prompt); setActiveTool("ai-edit"); }
+      if (ctx.autoRun) setAutoRun(true);
+
+      if (!ctx.image) { void clearPendingContext(); return; }
       const pi = ctx.image;
       const img = new Image();
       img.onload = () => {
@@ -1049,14 +1059,46 @@ export default function ImageEditorPage() {
     return () => { alive = false; };
   }, []);
 
+  /*
+    A generation handed over from the prompt library.
+
+    It waits for the photo, the prompt and — crucially — for the auth check to
+    finish, because firing before `user` is known would show the sign-in modal
+    to someone who is already signed in. What happens then is not decided here:
+    submitPromptBar already routes signed-out to the sign-in modal, no credits
+    to the packs, and everything else to the generation, and a second copy of
+    that decision would be one to keep in step.
+
+    Cleared either way, so a dismissed modal does not re-fire on every render.
+  */
+  useEffect(() => {
+    if (!autoRun || !authChecked || processing) return;
+    if (!original?.dataUrl || !prompt.trim()) return;
+    setAutoRun(false);
+    submitPromptBar();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoRun, authChecked, original, prompt, processing]);
+
   // Persist the current image + active tool so they survive the sign-in
   // round-trip (OAuth redirect or reload) and the editor reopens with context.
   const persistContextForAuth = async () => {
     const cur = working || original?.dataUrl;
-    if (!cur && !activeTool) return;
-    // Awaited: the caller navigates straight after, and a full-resolution data
-    // URL is too big for sessionStorage, so this has to reach IndexedDB first.
-    await savePendingContext({ image: cur || undefined, tool: activeTool || undefined });
+    const pendingPrompt = prompt.trim();
+    if (!cur && !activeTool && !pendingPrompt) return;
+    /*
+      The prompt goes with it.
+
+      Someone who pressed Generate on a prompt, was asked to sign in, and came
+      back to an empty editor would have to go and find the prompt again — and
+      the sign-in is exactly the moment the handover has to survive. `autoRun`
+      rides along so the generation continues on its own afterwards.
+    */
+    await savePendingContext({
+      image: cur || undefined,
+      tool: activeTool || undefined,
+      prompt: pendingPrompt || undefined,
+      autoRun: autoRun || (!!pendingPrompt && !!cur && !user),
+    });
   };
 
   // Expose the persist fn so the global NavBar's sign-in can preserve editor
@@ -1739,6 +1781,29 @@ export default function ImageEditorPage() {
                   Discard
                 </button>
               </div>
+            </div>
+          )}
+
+          {/*
+            A prompt arrived from the library with no photo to run it on.
+
+            Without this the prompt is in state but nowhere on screen — the
+            bar that shows it only renders once there is an image — so the
+            handover looked like it had silently dropped the thing the reader
+            came here for. Showing it here answers "did it come through?"
+            before they have to trust that it did.
+          */}
+          {!hasImage && prompt.trim() && (
+            <div style={{ maxWidth: 640, margin: "0 auto 14px", background: "var(--accent-soft)", border: "1px solid var(--accent-border)", borderRadius: 14, padding: "14px 16px" }}>
+              <div style={{ fontSize: 11, fontWeight: 800, color: "var(--accent-strong)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 7 }}>
+                Your prompt is loaded — add a photo to run it
+              </div>
+              <p style={{
+                margin: 0, fontSize: 13, lineHeight: 1.6, color: "var(--text)",
+                display: "-webkit-box", WebkitLineClamp: 4, WebkitBoxOrient: "vertical", overflow: "hidden",
+              }}>
+                {prompt}
+              </p>
             </div>
           )}
 

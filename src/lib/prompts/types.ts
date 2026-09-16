@@ -22,6 +22,13 @@ export interface PromptRecord {
   description: string | null;
   prompt: string;
   hasVariables: boolean;
+  /**
+   * The prompt edits a photo the reader supplies, rather than generating one.
+   *
+   * Decides what Generate does: ask for a photo first, or go straight to the
+   * editor. Computed when the dataset is built — see scripts/.
+   */
+  needsPhoto: boolean;
   model: string;
   modelSlug: string;
   media: Media;
@@ -65,6 +72,7 @@ export interface PromptCardData {
   href: string;
   /** Carried so the client grid can filter without a callback prop. */
   useCase: string | null;
+  needsPhoto: boolean;
 }
 
 export interface Facet {

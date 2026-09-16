@@ -7,6 +7,7 @@ import {
   searchPrompts, type LibraryPrompt, type CategoryId, type PlatformId,
 } from "@/lib/prompt-library";
 import { trackEvent } from "@/lib/analytics";
+import GenerateButton from "./_components/GenerateButton";
 
 /**
  * PromptLibrary — the browsing half of /prompts.
@@ -105,32 +106,22 @@ export function CopyPromptButton({
 }
 
 /**
- * Hands the prompt to the editor.
+ * The originals' Generate button.
  *
- * sessionStorage rather than a query string: these are several hundred
- * characters of prose, which makes for a hostile URL, and the editor already
- * reads `jpt_pending_prompt` on load for exactly this handover.
+ * Wraps the same component the licensed library uses, so a reader gets the
+ * same flow whichever collection they came from: a photo prompt asks for the
+ * photo first, a generation prompt goes straight through, and the editor picks
+ * up the sign-in and credit decisions at the other end.
  */
 export function UseInEditorButton({ prompt, full = false }: { prompt: LibraryPrompt; full?: boolean }) {
-  const open = () => {
-    try { sessionStorage.setItem("jpt_pending_prompt", prompt.text); } catch { /* private mode */ }
-    trackEvent("library_prompt_opened", { prompt: prompt.slug });
-    window.location.href = "/editor?tool=ai-edit";
-  };
   return (
-    <button
-      onClick={open}
-      style={{
-        cursor: "pointer", fontFamily: "inherit", borderRadius: 9,
-        width: full ? "100%" : undefined, flex: full ? undefined : 1,
-        padding: full ? "13px 16px" : "9px 12px",
-        fontSize: full ? 15 : 13, fontWeight: 700,
-        background: "var(--surface-2)", color: "var(--text)",
-        border: "1px solid var(--border-strong)",
-      }}
-    >
-      Use it →
-    </button>
+    <GenerateButton
+      uid={prompt.slug}
+      prompt={prompt.text}
+      needsPhoto={prompt.needsPhoto}
+      full={full}
+      label="Generate this →"
+    />
   );
 }
 

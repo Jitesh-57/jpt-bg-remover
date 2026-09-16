@@ -114,7 +114,7 @@ export default async function PromptDetail({ params }: { params: Promise<{ slug:
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(workLd) }} />
         <div style={{ background: "var(--bg)", color: "var(--text)" }}>
           <div style={{ maxWidth: 900, margin: "0 auto", padding: "26px 24px 70px" }}>
-            <DatasetDetail p={ds} resolve={resolve} generateHref="/editor?tool=ai-edit" />
+            <DatasetDetail p={ds} resolve={resolve} />
           </div>
         </div>
       </>
