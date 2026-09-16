@@ -44,6 +44,7 @@ const FAQS = [
 ];
 
 const RELATED = [
+  { icon: "✨", title: "The full prompt library", href: "/prompts" },
   { icon: "🔍", title: "Upscale your result to 4K", href: "/upscale" },
   { icon: "✂️", title: "Crop for Instagram", href: "/crop-image" },
   { icon: "🗜️", title: "Compress before sharing", href: "/compress-image" },

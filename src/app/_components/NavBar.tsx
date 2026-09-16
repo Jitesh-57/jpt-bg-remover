@@ -373,6 +373,7 @@ export default function NavBar() {
                     {[
                       { icon: "🧰", label: "All free tools", href: "/tools" },
                       { icon: "📝", label: "Blog", href: "/blog" },
+                      { icon: "✨", label: "Prompt library", href: "/prompts" },
                       { icon: "🔥", label: "80s AI Photo Prompts", href: "/80s-ai-photo-prompts" },
                       ...(PAID_FEATURES_ENABLED ? [{ icon: "✦", label: "Creative Apps", href: "/creative" }] : []),
                       { icon: "💎", label: "Pricing", href: "/pricing" },
@@ -398,6 +399,14 @@ export default function NavBar() {
             onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")}
             onMouseLeave={e => (e.currentTarget.style.color = "var(--text-muted)")}>
             Blog
+          </a>
+
+          {/* Prompt library */}
+          <a href="/prompts"
+            style={{ padding: "7px 14px", color: "var(--text-muted)", fontSize: 14, fontWeight: 600, textDecoration: "none", borderRadius: 8 }}
+            onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")}
+            onMouseLeave={e => (e.currentTarget.style.color = "var(--text-muted)")}>
+            Prompts
           </a>
 
           {/* 80s AI photo prompts — trending traffic page */}
