@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import SmartImage from "@/app/_components/SmartImage";
 import { CREATIVE_APPS, CREATIVE_BASE, previewUrl } from "@/lib/creative-apps";
+import { localAfter } from "@/lib/app-creatives";
 import { appsWithExamples } from "@/lib/creative-examples.server";
 import type { CreativeApp } from "@/lib/creative-apps";
 
@@ -39,7 +40,7 @@ function AppCard({ a }: { a: CreativeApp }) {
           rather than a bare gradient.
         */}
         <SmartImage
-          src={previewUrl(a.slug)}
+          src={localAfter(a.slug) ?? previewUrl(a.slug)}
           alt={`${a.h1} before and after example`}
           fallback={`linear-gradient(135deg, ${a.gradient[0]}, ${a.gradient[1]})`}
           sizes="(max-width: 768px) 100vw, 260px"

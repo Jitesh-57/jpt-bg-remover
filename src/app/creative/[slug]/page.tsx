@@ -8,6 +8,7 @@ import { CREATIVE_APPS, getCreativeApp, getCreativeContent, CREATIVE_BASE, previ
 import ExampleImage from "@/app/_components/ExampleImage";
 import { longContentFor } from "@/lib/app-content";
 import { sourceFor, sourceImageUrl } from "@/lib/image-jobs";
+import { localAfter, localBefore } from "@/lib/app-creatives";
 import { SHOW_PRESET_TABS } from "@/lib/workspace-config";
 
 export const revalidate = 300;
@@ -98,8 +99,8 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
     applicationCategory: "MultimediaApplication",
     operatingSystem: "Web",
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-    screenshot: previewUrl(a.slug),
-    image: previewUrl(a.slug),
+    screenshot: localAfter(a.slug) ?? previewUrl(a.slug),
+    image: localAfter(a.slug) ?? previewUrl(a.slug),
     aggregateRating: { "@type": "AggregateRating", ratingValue: "4.8", reviewCount: "1200" },
     url,
   };
@@ -179,8 +180,10 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
                 }}
               >
                 {[
-                  { label: "Before", src: sourceImageUrl(sourceFor(a)), alt: `The photo uploaded to ${a.h1}`, side: "left" as const, note: "Sample photo coming soon" },
-                  { label: "After", src: previewUrl(a.slug), alt: `The result from ${a.h1}`, side: "right" as const, note: "Example coming soon" },
+                  // A hand-made creative wins over the bulk-generated one:
+                  // somebody looked at it and decided it was good.
+                  { label: "Before", src: localBefore(a.slug) ?? sourceImageUrl(sourceFor(a)), alt: `The photo uploaded to ${a.h1}`, side: "left" as const, note: "Sample photo coming soon" },
+                  { label: "After", src: localAfter(a.slug) ?? previewUrl(a.slug), alt: `The result from ${a.h1}`, side: "right" as const, note: "Example coming soon" },
                 ].map((pane) => (
                   <div key={pane.label} style={{ position: "relative", aspectRatio: "4 / 5", minWidth: 0 }}>
                     <ExampleImage
@@ -303,7 +306,7 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
                   {/* position: relative — ExampleImage fills its container. */}
                   <div style={{ position: "relative", aspectRatio: "16 / 10", borderRadius: 14, overflow: "hidden", marginBottom: 8, background: `linear-gradient(135deg, ${r.gradient[0]}, ${r.gradient[1]})` }}>
                     <ExampleImage
-                      src={previewUrl(r.slug)}
+                      src={localAfter(r.slug) ?? previewUrl(r.slug)}
                       alt={`${r.h1} example`}
                       slug={r.slug}
                       name={r.h1}
