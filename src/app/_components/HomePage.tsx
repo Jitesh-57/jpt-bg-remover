@@ -5,6 +5,7 @@ import PricingSection from "@/app/_components/PricingSection";
 import FAQAccordion from "@/app/_components/FAQAccordion";
 import ScrollReveal from "@/app/_components/ScrollReveal";
 import { CREATIVE_APPS, CREATIVE_BASE, previewUrl } from "@/lib/creative-apps";
+import { localAfter } from "@/lib/app-creatives";
 import { landingImg } from "@/lib/landing-images";
 import { CREDIT_COST } from "@/lib/plans";
 import type { PageSEO } from "@/lib/page-config";
@@ -146,7 +147,7 @@ export default function HomePage({
               {showcase.map((a) => (
                 <Link key={a.slug} href={`${CREATIVE_BASE}/${a.slug}`} style={{ position: "relative", aspectRatio: "4 / 5", display: "block", textDecoration: "none", minWidth: 0 }}>
                   <SmartImage
-                    src={previewUrl(a.slug)}
+                    src={localAfter(a.slug) ?? previewUrl(a.slug)}
                     alt={`A photo turned into ${a.h1}`}
                     fallback={`linear-gradient(135deg, ${a.gradient[0]}, ${a.gradient[1]})`}
                     sizes="(max-width: 768px) 33vw, 393px"
@@ -174,7 +175,7 @@ export default function HomePage({
                 <Link key={a.slug} href={`${CREATIVE_BASE}/${a.slug}`} className="jpt-hover" style={{ textDecoration: "none", borderRadius: 18, overflow: "hidden", border: "1px solid var(--border)", background: "var(--surface)", display: "block" }}>
                   <div style={{ aspectRatio: "4 / 5", position: "relative" }}>
                     <SmartImage
-                      src={previewUrl(a.slug)}
+                      src={localAfter(a.slug) ?? previewUrl(a.slug)}
                       alt={`${a.h1} example`}
                       fallback={`linear-gradient(135deg, ${a.gradient[0]}, ${a.gradient[1]})`}
                       sizes="(max-width: 768px) 50vw, 280px"
