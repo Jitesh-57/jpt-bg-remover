@@ -9,12 +9,11 @@
  * the provider can be switched in one place.
  */
 
-import { falConfigured, falEditImage, falGenerateImage, falRemoveBackground, FalError, type FalModel } from "@/lib/fal";
+import { falConfigured, falEditImage, falGenerateImage, falGptImageEndpoints, falRemoveBackground, FalError, type FalModel } from "@/lib/fal";
 import {
   openaiConfigured,
   openaiEditImage,
   openaiImageModel,
-  OpenAIImageError,
   type OpenAISize,
 } from "@/lib/openai-image";
 import {
@@ -312,7 +311,7 @@ export function generateFromText(
 }
 
 /* ────────────────────────────────────────────────────────────────────────────
-   OpenAI-first editing, for the tools where the model is the product.
+   GPT Image editing, for the tools where the model is the product.
    ──────────────────────────────────────────────────────────────────────── */
 
 /** Which model actually produced an image. */
@@ -326,15 +325,20 @@ export interface EngineResult {
 }
 
 /**
- * Runs an edit on OpenAI's image model, and says which engine served it.
+ * Runs an edit on GPT Image, and says which engine served it.
  *
+ * fal is the route, because fal is where the account and its balance are.
  * Three rungs, in order:
  *
- *   1. Our own OpenAI key. Direct, and the only path that can ask for
- *      `input_fidelity: high` — the setting that keeps the reference face
- *      instead of inventing a similar-looking person.
- *   2. fal's BYOK GPT Image endpoints, for an account that has the key on fal
- *      rather than here.
+ *   1. fal's GPT Image endpoints. Overridable — see falGptImageEndpoints() —
+ *      because the defaults are fal's BYOK ones, which call OpenAI with a key
+ *      configured on the fal account.
+ *   2. A direct OpenAI key, if one is set here. Optional and normally unset;
+ *      it exists because it is the only path that can ask for
+ *      `input_fidelity: high`, which holds the reference face harder than
+ *      anything available through fal's wrapper. Worth having when identity
+ *      drift on a particular photo is the problem; not worth a second
+ *      supplier otherwise.
  *   3. Nano Banana (and then Gemini), so the tool still produces something.
  *
  * Rung 3 is the part that needs care. Silently serving a different model is
@@ -342,66 +346,78 @@ export interface EngineResult {
  * same and nobody can say why", so the result carries the engine and the
  * reason, the caller surfaces it, and the log states it plainly.
  */
-export async function editImageOpenAIFirst(
+export async function editImageGptFirst(
   src: string,
   prompt: string,
-  opts?: { size?: OpenAISize; budgetMs?: number; label?: string }
+  opts?: { aspectRatio?: string; size?: OpenAISize; budgetMs?: number; label?: string }
 ): Promise<EngineResult> {
   const label = opts?.label || "edit";
   const reasons: string[] = [];
 
-  if (openaiConfigured()) {
-    /*
-      Retry a throttle before dropping down a rung.
+  /*
+    Retry a throttle before dropping down a rung.
 
-      This is the lesson viaFal() records above, and it matters more here: a
-      burst of four headshots is four requests in the same second, and a 429
-      that clears in two is not a reason to serve the run on a different model
-      and put a notice on the page. Anything that is not transient — a bad
-      key, an exhausted quota, a rejected image — drops straight through,
-      because asking again will not change the answer.
-    */
+    This is the lesson viaFal() records above, and it matters more here: a
+    burst of four headshots is four requests in the same second, and a 429
+    that clears in two is not a reason to serve the run on a different model
+    and put a notice on the page. Anything that is not transient — a rejected
+    key, an exhausted balance, a refused image — drops straight through,
+    because asking again will not change the answer.
+  */
+  if (falConfigured()) {
     for (let attempt = 0; attempt < 3; attempt++) {
       try {
-        const dataUrl = await openaiEditImage(src, prompt, {
-          size: opts?.size,
-          budgetMs: opts?.budgetMs,
-        });
+        const dataUrl = await falEditImage(src, prompt, "gpt-image", opts?.aspectRatio, opts?.budgetMs);
         return { dataUrl, engine: "gpt-image" };
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
-        const transient = e instanceof OpenAIImageError && e.transient && !e.billingBlocked;
-        if (transient && attempt < 2) {
+        const fal = e instanceof FalError ? e : null;
+        if (fal?.transient && !fal.billingBlocked && attempt < 2) {
           const wait = 1500 * (attempt + 1);
-          console.warn(`[ai-image] ${label}: OpenAI throttled; retrying in ${wait}ms`);
+          console.warn(`[ai-image] ${label}: fal GPT Image throttled; retrying in ${wait}ms`);
           await sleep(wait);
           continue;
         }
-        reasons.push(`openai: ${msg}`);
-        console.error(`[ai-image] ${label}: OpenAI (${openaiImageModel()}) failed — ${msg}`);
+        /*
+          A 401/403 here is worth spelling out, because it is the likely one
+          and it does not mean what it looks like. fal's default GPT Image
+          endpoints are BYOK: fal authenticates us fine and then cannot reach
+          OpenAI, because no OpenAI key is set on the fal account. The same
+          status also covers a genuinely bad FAL_KEY, which is why the log
+          names both rather than guessing.
+        */
+        if (fal && (fal.status === 401 || fal.status === 403)) {
+          console.error(
+            `[ai-image] ${label}: fal refused GPT Image (${fal.status}). ` +
+            `Either FAL_KEY is wrong, or this is a BYOK endpoint and the fal account has no ` +
+            `OpenAI key on it (fal.ai → Settings → Integrations). Endpoint: ${falGptImageEndpoints().edit}`
+          );
+        }
+        reasons.push(`fal gpt-image: ${msg}`);
+        console.error(`[ai-image] ${label}: fal GPT Image failed — ${msg}`);
         break;
       }
     }
   } else {
-    reasons.push("openai: OPENAI_API_KEY is not set");
+    reasons.push("fal gpt-image: FAL_KEY is not set");
   }
 
-  // Rung 2 — the same model through fal, if the key lives there instead.
-  if (falConfigured()) {
+  // Rung 2 — a direct OpenAI key, only if one is configured here.
+  if (openaiConfigured()) {
     try {
-      const dataUrl = await falEditImage(src, prompt, "gpt-image", undefined, opts?.budgetMs);
+      const dataUrl = await openaiEditImage(src, prompt, { size: opts?.size, budgetMs: opts?.budgetMs });
       return { dataUrl, engine: "gpt-image" };
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
-      reasons.push(`fal byok: ${msg}`);
-      console.error(`[ai-image] ${label}: fal's BYOK GPT Image failed — ${msg}`);
+      reasons.push(`openai: ${msg}`);
+      console.error(`[ai-image] ${label}: direct OpenAI (${openaiImageModel()}) failed — ${msg}`);
     }
   }
 
   const why = reasons.join(" | ");
   console.warn(`[ai-image] ${label}: falling back to Nano Banana. ${why}`);
   const dataUrl = await viaFal(
-    () => falEditImage(src, prompt, "nano-banana", undefined, opts?.budgetMs),
+    () => falEditImage(src, prompt, "nano-banana", opts?.aspectRatio, opts?.budgetMs),
     () => geminiEditImage(src, prompt),
     label
   );

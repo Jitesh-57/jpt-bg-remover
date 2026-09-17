@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkAuth, checkEntitlement, withCredits } from "@/lib/auth";
-import { editImageOpenAIFirst, type Engine } from "@/lib/ai-image";
+import { editImageGptFirst, type Engine } from "@/lib/ai-image";
 import { WOMEN_STYLES, MEN_STYLES } from "@/lib/headshot-prompts";
 
 export const runtime = "nodejs";
@@ -59,12 +59,19 @@ export async function POST(req: NextRequest) {
 
   const results = await Promise.allSettled(
     selectedStyles.map(async (style) => {
-      const { dataUrl, engine, downgradeReason } = await editImageOpenAIFirst(
+      const { dataUrl, engine, downgradeReason } = await editImageGptFirst(
         imageUrl,
         framePrompt(style),
-        // Portrait, and a budget that fits maxDuration with room to spare —
-        // a high-quality GPT Image render is slow by design.
-        { size: "1024x1536", budgetMs: 240_000, label: `headshot ${style.id}` }
+        {
+          // Portrait. fal maps 3:4 to GPT Image's 1024x1536 and passes it to
+          // Nano Banana as an aspect ratio, so one value frames every rung.
+          aspectRatio: "3:4",
+          size: "1024x1536",
+          // A budget that fits maxDuration with room to spare — a
+          // high-quality GPT Image render is slow by design.
+          budgetMs: 240_000,
+          label: `headshot ${style.id}`,
+        }
       );
       console.log(
         `Style ${style.id} (${style.name}): OK via ${engine}` +
