@@ -13,20 +13,43 @@ asks for OpenAI's image model first.
 
 ## The three rungs
 
-`editImageOpenAIFirst()` in `src/lib/ai-image.ts`:
+`editImageGptFirst()` in `src/lib/ai-image.ts`. fal is the route, because fal is
+where the account and its balance are:
 
 | | Path | Needs |
 | - | --- | --- |
-| 1 | `openaiEditImage()` — our own key, direct | `OPENAI_API_KEY` |
-| 2 | fal's BYOK GPT Image endpoints | An OpenAI key on the **fal** account |
+| 1 | fal's GPT Image endpoints | `FAL_KEY` (+ see BYOK below) |
+| 2 | `openaiEditImage()` — a direct key | `OPENAI_API_KEY`, optional |
 | 3 | Nano Banana, then Gemini | `FAL_KEY` |
 
-Rung 1 exists because of one parameter. OpenAI's edit endpoint takes
-`input_fidelity: "high"`, which is the difference between a headshot of *this
-person* and a headshot of a plausible stranger who resembles them. fal's wrapper
-does not expose it.
+Rung 2 is optional and normally unset. It exists for one parameter: OpenAI's
+own edit endpoint takes `input_fidelity: "high"`, which holds the reference face
+harder than anything fal's wrapper exposes. Worth reaching for if identity drift
+on a particular photo is the problem; not worth standing up a second supplier
+otherwise.
 
-Rung 2 is for an account that keeps its OpenAI key on fal rather than here.
+### BYOK
+
+fal's default GPT Image endpoints end in `/byok` — *bring your own key*. fal
+authenticates us with `FAL_KEY` and then calls OpenAI with a key stored on the
+**fal account**, not with fal credit alone. So GPT Image through fal needs an
+OpenAI key at fal.ai → Settings → Integrations.
+
+If your fal account has a GPT Image endpoint it can serve directly, point at it
+without a code change:
+
+```
+FAL_GPT_IMAGE_EDIT=fal-ai/<path>
+FAL_GPT_IMAGE_GENERATE=fal-ai/<path>
+```
+
+A leading slash and a full `https://queue.fal.run/...` prefix are both accepted,
+because that is how fal writes them in its own docs and pasting one verbatim
+should not produce a 404.
+
+A 401 or 403 from a BYOK endpoint means one of two things — a bad `FAL_KEY`, or
+no OpenAI key on the fal account — and fal does not distinguish them, so the log
+names both rather than guessing.
 
 Rung 3 is the part that needed care. Serving a different model without saying so
 is how "we switched headshots to GPT Image" and "the headshots look exactly the
@@ -44,19 +67,22 @@ one sentence with no supplier in it.
 
 | Variable | Default | Notes |
 | --- | --- | --- |
-| `OPENAI_API_KEY` | — | Unset means every headshot is served by rung 2 or 3. |
-| `OPENAI_IMAGE_MODEL` | `gpt-image-1` | So a newer model is an environment change, not a deploy. |
-
-Check both without spending anything:
+| `FAL_KEY` | — | Required. Unset means every headshot falls to Gemini. |
+| `FAL_GPT_IMAGE_EDIT` | `fal-ai/gpt-image-1/edit-image/byok` | Point at a non-BYOK or newer endpoint. |
+| `FAL_GPT_IMAGE_GENERATE` | `fal-ai/gpt-image-1/text-to-image/byok` | As above, for text-to-image. |
+| `OPENAI_API_KEY` | — | Optional. Rung 2 only. |
+| `OPENAI_IMAGE_MODEL` | `gpt-image-1` | Applies to rung 2 only. |
 
 ```
-GET /api/admin/openai-check?token=<ADMIN_IMAGE_TOKEN>
+GET /api/admin/headshot-model?token=<ADMIN_IMAGE_TOKEN>
 ```
 
-It reports whether the key is accepted and whether the configured model is in
-the account's model list. Like the fal check, it authenticates only — an account
-with an exhausted quota still passes, and only fails on a request that costs
-money.
+reports which route is configured, which endpoint GPT Image resolves to, whether
+it is a BYOK one, and whether `FAL_KEY` is accepted.
+
+**What it cannot tell you:** whether the BYOK endpoint has a working OpenAI key
+behind it. fal only reveals that on a request that would actually cost money, so
+it is not worth probing — generate one headshot and read the notice.
 
 ## The prompt
 
@@ -74,8 +100,10 @@ style:
 3. **Camera** — 85mm at f/2, visible pores, catchlights, no illustration or
    3D-render look.
 
-Portrait framing (`1024x1536`) and `quality: high`, which is slow by design; the
-route's budget is 240s inside a 300s `maxDuration`.
+Portrait framing and `quality: high`, which is slow by design; the route's budget
+is 240s inside a 300s `maxDuration`. The aspect ratio is given once as `3:4` —
+fal maps that to GPT Image's `1024x1536` and passes it to Nano Banana as an
+aspect ratio, so one value frames every rung.
 
 ## What was deliberately left alone
 

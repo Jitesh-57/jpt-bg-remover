@@ -56,16 +56,51 @@ export async function falProbe(): Promise<{ status: number; body: string }> {
 
 export type FalModel = "nano-banana" | "gpt-image";
 
+/**
+ * The GPT Image endpoints are overridable.
+ *
+ * The defaults are fal's BYOK ones — `/byok` in the path, meaning fal calls
+ * OpenAI with a key configured on the fal account rather than one of its own.
+ * If your fal account has a different GPT Image endpoint (a hosted one that
+ * needs no OpenAI key, or a newer model id), name it here and it takes effect
+ * on the next deploy without a code change:
+ *
+ *   FAL_GPT_IMAGE_EDIT=fal-ai/<path>
+ *   FAL_GPT_IMAGE_GENERATE=fal-ai/<path>
+ *
+ * The leading slash and a full https:// prefix are both tolerated, because
+ * that is how these are written in fal's own documentation and pasting one
+ * verbatim should not produce a 404.
+ */
+function endpointEnv(name: string, fallback: string): string {
+  const raw = (process.env[name] || "").trim();
+  if (!raw) return fallback;
+  return raw.replace(/^https?:\/\/(queue\.)?fal\.run\//i, "").replace(/^\/+/, "");
+}
+
 const ENDPOINTS: Record<FalModel, { edit: string; generate: string }> = {
   "nano-banana": {
     edit: "fal-ai/nano-banana/edit",
     generate: "fal-ai/nano-banana",
   },
   "gpt-image": {
-    edit: "fal-ai/gpt-image-1/edit-image/byok",
-    generate: "fal-ai/gpt-image-1/text-to-image/byok",
+    get edit() {
+      return endpointEnv("FAL_GPT_IMAGE_EDIT", "fal-ai/gpt-image-1/edit-image/byok");
+    },
+    get generate() {
+      return endpointEnv("FAL_GPT_IMAGE_GENERATE", "fal-ai/gpt-image-1/text-to-image/byok");
+    },
   },
 };
+
+/** What the GPT Image endpoints resolve to right now, for the admin check. */
+export function falGptImageEndpoints(): { edit: string; generate: string; overridden: boolean } {
+  return {
+    edit: ENDPOINTS["gpt-image"].edit,
+    generate: ENDPOINTS["gpt-image"].generate,
+    overridden: !!(process.env.FAL_GPT_IMAGE_EDIT || process.env.FAL_GPT_IMAGE_GENERATE),
+  };
+}
 
 export const DEFAULT_MODEL: FalModel = "nano-banana";
 
