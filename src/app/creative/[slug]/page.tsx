@@ -8,7 +8,7 @@ import { CREATIVE_APPS, getCreativeApp, getCreativeContent, CREATIVE_BASE, previ
 import ExampleImage from "@/app/_components/ExampleImage";
 import { longContentFor } from "@/lib/app-content";
 import { sourceFor, sourceImageUrl } from "@/lib/image-jobs";
-import { localAfter, localBefore } from "@/lib/app-creatives";
+import { creativeSources, localAfter } from "@/lib/app-creatives";
 import { SHOW_PRESET_TABS } from "@/lib/workspace-config";
 
 export const revalidate = 300;
@@ -182,12 +182,12 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
                 {[
                   // A hand-made creative wins over the bulk-generated one:
                   // somebody looked at it and decided it was good.
-                  { label: "Before", src: localBefore(a.slug) ?? sourceImageUrl(sourceFor(a)), alt: `The photo uploaded to ${a.h1}`, side: "left" as const, note: "Sample photo coming soon" },
-                  { label: "After", src: localAfter(a.slug) ?? previewUrl(a.slug), alt: `The result from ${a.h1}`, side: "right" as const, note: "Example coming soon" },
+                  { label: "Before", sources: creativeSources(a.slug, "before", sourceImageUrl(sourceFor(a))), alt: `The photo uploaded to ${a.h1}`, side: "left" as const, note: "Sample photo coming soon" },
+                  { label: "After", sources: creativeSources(a.slug, "after", previewUrl(a.slug)), alt: `The result from ${a.h1}`, side: "right" as const, note: "Example coming soon" },
                 ].map((pane) => (
                   <div key={pane.label} style={{ position: "relative", aspectRatio: "4 / 5", minWidth: 0 }}>
                     <ExampleImage
-                      src={pane.src}
+                      sources={pane.sources}
                       alt={pane.alt}
                       slug={a.slug}
                       name={a.h1}
@@ -306,7 +306,7 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
                   {/* position: relative — ExampleImage fills its container. */}
                   <div style={{ position: "relative", aspectRatio: "16 / 10", borderRadius: 14, overflow: "hidden", marginBottom: 8, background: `linear-gradient(135deg, ${r.gradient[0]}, ${r.gradient[1]})` }}>
                     <ExampleImage
-                      src={localAfter(r.slug) ?? previewUrl(r.slug)}
+                      sources={creativeSources(r.slug, "after", previewUrl(r.slug))}
                       alt={`${r.h1} example`}
                       slug={r.slug}
                       name={r.h1}
