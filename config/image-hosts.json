@@ -1,0 +1,9 @@
+{
+  "_comment": "Hosts next/image is allowed to fetch from. Shared by next.config.mjs (which turns them into remotePatterns) and app-creatives.ts (which drops candidate URLs pointing anywhere else). One list, because a host in one place and not the other is how a page 500s over a picture.",
+  "hosts": [
+    { "hostname": "lwworujvfttxkrjfrgav.supabase.co", "pathname": "/storage/v1/object/public/**" },
+    { "hostname": "cms-assets.youmind.com", "pathname": "/**" },
+    { "hostname": "pbs.twimg.com", "pathname": "/**" },
+    { "hostname": "customer-qs6wnyfuv0gcybzj.cloudflarestream.com", "pathname": "/**" }
+  ]
+}

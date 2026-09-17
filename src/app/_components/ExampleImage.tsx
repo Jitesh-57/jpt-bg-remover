@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import ToolArtwork from "./ToolArtwork";
+import { isRenderable } from "@/lib/image-hosts";
 
 /**
  * An example image that draws the tool when the photo is missing.
@@ -57,7 +58,10 @@ export default function ExampleImage({
   sizes?: string;
   eager?: boolean;
 }) {
-  const candidates = (sources?.length ? sources : src ? [src] : []).filter(Boolean);
+  // isRenderable, not Boolean: a URL whose host next/image has not been
+  // told about throws during render rather than firing onError, so it has to
+  // be dropped before it gets there.
+  const candidates = (sources?.length ? sources : src ? [src] : []).filter(isRenderable);
   const [index, setIndex] = useState(0);
   const [loaded, setLoaded] = useState(false);
   const current = candidates[index];
