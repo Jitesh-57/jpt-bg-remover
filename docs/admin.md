@@ -5,20 +5,29 @@ repo**, so a deploy replaces the code and leaves your edits alone.
 
 ## Creatives
 
-Drop files, or paste a link.
+Paste a link or drop files. **Everything found arrives unassigned**, and you
+choose the section for each one:
 
-| Input | What happens |
+| Section | What happens to the image |
 | --- | --- |
-| A wide before/after | split down the middle into the two panes the page draws |
-| Several files | taken in order: before, after, extra-1… |
-| A direct image URL | fetched and treated as a file |
-| A ChatGPT share link | scraped for image URLs — see the caveat |
+| **Main · Before** | cropped to the 4:5 the left pane renders at |
+| **Main · After** | cropped to the 4:5 the right pane renders at |
+| **More examples · 1–6** | **published whole — no crop** |
 
-Everything found is laid out **before anything is published**, each tile showing
-the slot it will take and the exact filename it will get
-(`age-progression-tool-before.webp`). Remove or reorder, then press Apply. The
-failure mode of a one-click importer is a wrong image on a live page, and
-showing it first is the only cheap way to catch that.
+The main pair is cropped because those two panes are a fixed shape. The rest
+are not: they are finished creatives with their own before/after labels, and
+cropping one cuts the thing that makes it readable. They render at their own
+aspect ratio in a "More examples" section on the page.
+
+Nothing is assigned automatically. Guessing which of six images is the "after"
+is a guess that looks right until it is wrong on a live page, and the cost of
+being wrong is higher than the cost of two clicks.
+
+Each tile shows the exact filename it will get
+(`age-progression-tool-showcase-1.webp`) and its size before and after. Apply is
+a separate press, and it waits: an image still encoding is not publishable, and
+the button says how many are still being prepared. Publishing fewer images than
+are on screen while reporting success is the worst kind of wrong.
 
 Cropping and compression run in the browser, on the machine that has the file:
 3–8 MB in, 40–120 KB out.
@@ -36,14 +45,23 @@ download and drop the files in. Both always work.
 
 ## SEO
 
-Per page: title, meta description, keywords, H1, tagline, intro, badge.
+Grouped by where the text appears:
 
-- The **SERP preview** at the top is drawn at Google's widths, with live
-  character counts and a warning when a field will be cut off.
-- Each box's **placeholder is the built-in copy**, so an empty field reads as
-  "this page still says what the code says".
-- **Clearing a box resets it** to the built-in copy — the stored document simply
-  drops that key.
+| Section | Fields |
+| --- | --- |
+| **Search result** | title, meta description, keywords |
+| **Page header** | H1, tagline, badge |
+| **Hub card** | short intro |
+
+- Every box **loads with the page's current text**, so editing a sentence is
+  editing, not retyping it.
+- The **SERP preview** is drawn at Google's widths, with live character counts
+  and a warning when a field will be cut off.
+- A changed box is marked and outlined, with **"put the original text back"**
+  beside it.
+- **Only fields you actually changed are stored.** Saving all seven would freeze
+  the untouched ones too, and a later improvement to the built-in copy would
+  never reach the page. An override means "I decided something different here".
 
 Covers the 200 `/creative/*` pages today.
 

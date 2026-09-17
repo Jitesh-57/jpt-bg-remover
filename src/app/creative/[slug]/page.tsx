@@ -8,7 +8,7 @@ import { CREATIVE_APPS, getCreativeApp, getCreativeContent, CREATIVE_BASE, previ
 import ExampleImage from "@/app/_components/ExampleImage";
 import { longContentFor } from "@/lib/app-content";
 import { sourceFor, sourceImageUrl } from "@/lib/image-jobs";
-import { creativeSources, localAfter } from "@/lib/app-creatives";
+import { creativeSources, localAfter, uploadedCreative } from "@/lib/app-creatives";
 import { SHOW_PRESET_TABS } from "@/lib/workspace-config";
 import { applyOverride, creativeKey, readOverrides } from "@/lib/overrides";
 
@@ -77,7 +77,9 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
   // Same override as generateMetadata: the H1, tagline, intro and badge on the
   // page are the ones edited in /admin when there are any.
   const overrides = await readOverrides();
-  const a = applyOverride(found, overrides.pages[creativeKey(slug)]);
+  const pageOverride = overrides.pages[creativeKey(slug)];
+  const a = applyOverride(found, pageOverride);
+  const showcase = pageOverride?.showcase ?? [];
 
   const url = `${BASE}${CREATIVE_BASE}/${slug}`;
   const related = CREATIVE_APPS.filter((x) => x.slug !== a.slug).slice(0, 6);
@@ -223,6 +225,46 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
             </figure>
           </div>
         </section>
+
+        {/*
+          Extra examples, shown whole.
+
+          These are finished creatives with their own before/after labels, so
+          they are not cropped — cropping one cuts the thing that makes it
+          readable. The list and each image's shape come from the overrides
+          document the page already fetched, because nothing here can list a
+          storage bucket per render, and the shape is what lets the space be
+          reserved before the file arrives.
+        */}
+        {showcase.length > 0 && (
+          <section style={{ padding: "0 24px 76px", background: "var(--bg)" }}>
+            <div style={{ maxWidth: 1000, margin: "0 auto" }}>
+              <Head2>More examples</Head2>
+              <div style={{ display: "grid", gap: 20 }}>
+                {showcase.map((img) => (
+                  <div
+                    key={img.slot}
+                    style={{
+                      position: "relative", width: "100%", aspectRatio: `${img.w} / ${img.h}`,
+                      borderRadius: 18, overflow: "hidden", border: "1px solid var(--border)",
+                      background: "var(--surface-2)",
+                    }}
+                  >
+                    <ExampleImage
+                      sources={[uploadedCreative(a.slug, img.slot)]}
+                      alt={`${a.h1} — example`}
+                      slug={a.slug}
+                      name={a.h1}
+                      emoji={a.emoji}
+                      gradient={[a.gradient[0], a.gradient[1]]}
+                      sizes="(max-width: 768px) 100vw, 1000px"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Why use — composed per category, led by this app's own description */}
         <section style={{ padding: "76px 24px", background: "var(--bg)" }}>
