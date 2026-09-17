@@ -9,6 +9,7 @@ import BrandLogo from "@/app/_components/BrandLogo";
 import ToolIcon from "@/app/editor/ToolIcon";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
 import { userMessage } from "@/lib/user-message";
+import { MODELS } from "@/lib/app-presets";
 import {
   cropToAspectRatio, rotateFlipImage, compressToJpeg, convertImageFormat,
   applyWatermark, type WatermarkPosition,
@@ -47,7 +48,7 @@ const ALL_TRANSFORMS: { id: TransformType; label: string; icon: string; desc: st
   { id: "compress",    label: "Compress",     icon: "🗜️", desc: "Shrink file size (JPEG quality)",           creditsEach: 0 },
   { id: "convert",     label: "Convert",      icon: "🔀", desc: "JPG · PNG · WEBP",                          creditsEach: 0 },
   { id: "upscale",     label: "Upscale",      icon: "🔍", desc: "2× or 4× super-resolution",                 creditsEach: 1 },
-  { id: "ai-edit",     label: "AI Edit",      icon: "✨", desc: "Transform with text prompt via Gemini",     creditsEach: 2, aiOnly: true },
+  { id: "ai-edit",     label: "AI Edit",      icon: "✨", desc: "Transform with a text prompt — Nano Banana or ChatGPT",     creditsEach: 2, aiOnly: true },
   { id: "remove-bg",   label: "Remove BG",    icon: "🪄", desc: "Remove background via Gemini AI",           creditsEach: 2, aiOnly: true },
   { id: "generate-bg", label: "Generate BG",  icon: "🌅", desc: "Replace background with AI scene",          creditsEach: 2, aiOnly: true },
 ];
@@ -135,6 +136,9 @@ export default function BatchEditorPage() {
   const [wmColor, setWmColor] = useState("#ffffff");
   const [wmOpacity, setWmOpacity] = useState(70);
   const [aiPrompt, setAiPrompt] = useState("");
+  // Same choice as the editor and the creative apps, so a batch run is not the
+  // one place the picker is missing.
+  const [model, setModel] = useState<string>(MODELS[0].id);
   const [bgPrompt, setBgPrompt] = useState("Soft blurred white background, professional studio style");
   const [upscaleScale, setUpscaleScale] = useState<"2x" | "4x">("2x");
   const [upscaleMode, setUpscaleMode] = useState<"normal" | "pro">("normal");
@@ -277,7 +281,7 @@ export default function BatchEditorPage() {
       const imgPayload = await uploadOrFallback(src);
       const res = await fetch("/api/ai-edit", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...imgPayload, prompt: aiPrompt }),
+        body: JSON.stringify({ ...imgPayload, prompt: aiPrompt, model }),
       });
       const data = await res.json() as { dataUrl?: string; credits?: number; error?: string };
       if (!res.ok) throw new Error(data.error || "AI edit failed");
@@ -315,7 +319,7 @@ export default function BatchEditorPage() {
       const imgPayload = await uploadOrFallback(src);
       const res = await fetch("/api/ai-edit", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...imgPayload, prompt: `Replace the background with: ${bgPrompt}. Keep the subject exactly as-is.` }),
+        body: JSON.stringify({ ...imgPayload, prompt: `Replace the background with: ${bgPrompt}. Keep the subject exactly as-is.`, model }),
       });
       const data = await res.json() as { dataUrl?: string; credits?: number; error?: string };
       if (!res.ok) throw new Error(data.error || "Generate BG failed");
@@ -685,6 +689,13 @@ export default function BatchEditorPage() {
                   <textarea value={aiPrompt} onChange={e => setAiPrompt(e.target.value)}
                     placeholder="e.g. Make the background blurry, add cinematic lighting"
                     rows={4} style={{ ...inputStyle, resize: "vertical", lineHeight: 1.5 }} />
+                  <label style={optionLabel}>Model</label>
+                  <select value={model} onChange={e => setModel(e.target.value)} style={inputStyle}>
+                    {MODELS.map(m => <option key={m.id} value={m.id}>{m.label}</option>)}
+                  </select>
+                  <span style={{ fontSize: 11.5, color: "var(--text-faint)", lineHeight: 1.5 }}>
+                    {MODELS.find(m => m.id === model)?.hint}
+                  </span>
                 </div>
               )}
 
@@ -1012,6 +1023,13 @@ export default function BatchEditorPage() {
                   <textarea value={aiPrompt} onChange={e => setAiPrompt(e.target.value)}
                     placeholder="e.g. Make the background blurry, add cinematic lighting"
                     rows={4} style={{ ...inputStyle, resize: "vertical", lineHeight: 1.5 }} />
+                  <label style={optionLabel}>Model</label>
+                  <select value={model} onChange={e => setModel(e.target.value)} style={inputStyle}>
+                    {MODELS.map(m => <option key={m.id} value={m.id}>{m.label}</option>)}
+                  </select>
+                  <span style={{ fontSize: 11.5, color: "var(--text-faint)", lineHeight: 1.5 }}>
+                    {MODELS.find(m => m.id === model)?.hint}
+                  </span>
                 </div>
               )}
 

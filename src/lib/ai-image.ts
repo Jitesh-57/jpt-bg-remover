@@ -202,7 +202,7 @@ async function withModelFallback(
   }
 }
 
-export function editImage(
+export async function editImage(
   src: string,
   prompt: string,
   model?: string,
@@ -210,25 +210,39 @@ export function editImage(
   opts?: { strict?: boolean; budgetMs?: number; raw?: boolean }
 ): Promise<string> {
   const m = resolveModel(model);
+  // raw: send the caller's prompt as written. The editor prefix is right for
+  // a user typing "make the sky bluer" and wrong for an app's own tuned
+  // prompt, which is already a complete instruction.
+  const text = opts?.raw
+    ? prompt
+    : `You are a professional photo editor. Edit this image: ${prompt}. Return only the edited image.`;
+
+  /*
+    "ChatGPT" in the picker is a family, not an endpoint.
+
+    Someone choosing it wants OpenAI's model, not one particular hosted path,
+    and fal does not offer all of them to every account. Walking the same
+    cascade the headshot tool uses means the choice gets the best one
+    available instead of the picker quietly resolving to Nano Banana because
+    the first path happened to be unavailable.
+  */
+  if (isGpt(m)) {
+    const { dataUrl } = await editImageGptFirst(src, text, {
+      aspectRatio,
+      budgetMs: opts?.budgetMs,
+      label: "edit",
+      // Keep the visitor's pick at the front of the queue.
+      first: m,
+    });
+    return dataUrl;
+  }
+
   if (opts?.strict) {
     if (!falConfigured()) throw new Error("FAL_KEY is not configured.");
-    // raw: send the caller's prompt as written. The editor prefix below is
-    // right for a user typing "make the sky bluer" and wrong for an app's
-    // own tuned prompt, which is already a complete instruction.
-    return withModelFallback(m, (mm) =>
-      falEditImage(
-        src,
-        opts.raw ? prompt : `You are a professional photo editor. Edit this image: ${prompt}. Return only the edited image.`,
-        mm,
-        aspectRatio,
-        opts.budgetMs
-      )
-    );
+    return falEditImage(src, text, m, aspectRatio, opts.budgetMs);
   }
   return viaFal(
-    () => withModelFallback(m, (mm) =>
-      falEditImage(src, `You are a professional photo editor. Edit this image: ${prompt}. Return only the edited image.`, mm, aspectRatio, opts?.budgetMs)
-    ),
+    () => falEditImage(src, text, m, aspectRatio, opts?.budgetMs),
     () => geminiEditImage(src, prompt),
     "edit"
   );
@@ -386,17 +400,22 @@ export function gptCascade(): FalModel[] {
 export async function editImageGptFirst(
   src: string,
   prompt: string,
-  opts?: { aspectRatio?: string; budgetMs?: number; label?: string }
+  opts?: { aspectRatio?: string; budgetMs?: number; label?: string; first?: FalModel }
 ): Promise<EngineResult> {
   const label = opts?.label || "edit";
   const reasons: string[] = [];
+  // A visitor's pick goes to the front; the rest of the cascade stays behind
+  // it as the fallback, so choosing one model never means losing the others.
+  const order = opts?.first
+    ? [opts.first, ...gptCascade().filter((m) => m !== opts.first)]
+    : gptCascade();
 
   if (!falConfigured()) {
     const dataUrl = await geminiEditImage(src, prompt);
     return { dataUrl, engine: "nano-banana", downgradeReason: "FAL_KEY is not set" };
   }
 
-  for (const model of gptCascade()) {
+  for (const model of order) {
     /*
       Retry a throttle before moving down the cascade.
 

@@ -272,3 +272,34 @@ exactly what it generated before any of this existed.
 | **`funko-figure-maker`** | Presentation: In its box · On a display base · On a desk · In a scene |
 | `glow-up-editor` | Strength: Auto · Subtle · Strong |
 | **`old-filter`** | Age them to: 80s · 70s · 60s · 50s · 40s · 30s |
+
+
+## Numeric options (sliders)
+
+`kind: "number"` renders a slider with the value spelled out beside it. It
+carries `min`, `max`, `step`, `initial`, a `format(n)` for the readout and a
+`phraseFor(n)` that produces the sentence appended to the prompt.
+
+`phraseFor` is a function, not a `{value}` template, because a number on its own
+is a weak instruction. Asked to make someone "62", the model tends to return the
+same non-specific middle-aged face it returns for 48. `ageAppearance()` names
+what actually changes at that age, which is the whole point of having the
+control.
+
+The value arrives as a string from a form control and, server-side, from a
+request body — so `clampNumber()` rejects anything non-numeric and pins the rest
+inside the declared range. A stale or hand-edited value cannot put an arbitrary
+number, or arbitrary text, into a prompt.
+
+### Age progression
+
+The six fixed decades are gone. "What do I look like at 34?" used to be answered
+with "pick 30s or 40s". The slider runs **1 to 100**, so the app de-ages as
+readily as it ages — which meant the base prompt had to change too: it said
+"natural greying hair", which contradicts a target of eight. It now asks for
+whatever is appropriate to the age given, and the phrase says *"not older, not
+younger"* explicitly, because "age this person to 8" is a contradiction the
+model resolves by ignoring half of it.
+
+`old-filter` uses the same control with a 40–100 range: that app only ever ages
+upward, and offering to de-age there would contradict the page it sits on.

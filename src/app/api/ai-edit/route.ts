@@ -10,7 +10,11 @@ export async function POST(req: NextRequest) {
   const { session, error } = await checkAuth(req);
   if (error) return error;
 
-  const { dataUrl, imageUrl, prompt } = (await req.json()) as { dataUrl?: string; imageUrl?: string; prompt?: string };
+  const { dataUrl, imageUrl, prompt, model } = (await req.json()) as {
+    dataUrl?: string; imageUrl?: string; prompt?: string;
+    /** "nano-banana" or "gpt-image"; anything else falls to the default. */
+    model?: string;
+  };
   const src = imageUrl || dataUrl;
   if (!src || !prompt) return NextResponse.json({ error: "Pick a photo and describe the edit you want, then try again." }, { status: 400 });
 
@@ -18,7 +22,7 @@ export async function POST(req: NextRequest) {
   if (blocked) return blocked;
 
   try {
-    const resultDataUrl = await editImage(src, prompt);
+    const resultDataUrl = await editImage(src, prompt, model);
     return withCredits({ dataUrl: resultDataUrl }, session!, "ai", req, "ai-edit");
   } catch (e) {
     console.error("[ai-edit]", e);

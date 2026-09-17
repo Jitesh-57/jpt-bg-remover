@@ -10,6 +10,7 @@ import {
 } from "@/lib/analytics";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
 import { CREDIT_COST, PACKS, inrPerCredit } from "@/lib/plans";
+import { MODELS } from "@/lib/app-presets";
 import { publishCredits } from "@/lib/credits";
 import { parseJsonResponse } from "@/lib/upload-prep";
 import { explainPaymentFailure } from "@/lib/pricing-modal";
@@ -536,6 +537,24 @@ export default function ImageEditorPage() {
 
   // Prompt
   const [prompt, setPrompt] = useState("");
+  /*
+    Which model the AI edits run on.
+
+    Remembered per browser: someone who prefers one is going to prefer it on
+    the next photo too, and re-picking it on every visit is the kind of small
+    friction that makes a picker feel like an obstacle rather than a control.
+  */
+  const [model, setModel] = useState<string>(MODELS[0].id);
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("jpt-model");
+      if (saved && MODELS.some((m) => m.id === saved)) setModel(saved);
+    } catch { /* private mode, blocked storage — the default is fine */ }
+  }, []);
+  const pickModel = (id: string) => {
+    setModel(id);
+    try { localStorage.setItem("jpt-model", id); } catch { /* not worth failing over */ }
+  };
 
   // Auth / credits
   const [user, setUser] = useState<User | null>(null);
@@ -950,7 +969,7 @@ export default function ImageEditorPage() {
     try {
       // Use AI Edit to directly replace the background — keeps subject intact
       const aiPrompt = `Replace the background of this image with: ${templateOrPrompt}. Keep the person/subject exactly as they are — same pose, appearance, clothing. Only change the background behind them.`;
-      const data = await callApi<{ dataUrl: string }>("/api/ai-edit", { dataUrl: src, prompt: aiPrompt }, () => setUser(u => u ? { ...u, credits: prevCreditsGBg } : u));
+      const data = await callApi<{ dataUrl: string }>("/api/ai-edit", { dataUrl: src, prompt: aiPrompt, model }, () => setUser(u => u ? { ...u, credits: prevCreditsGBg } : u));
       if (!data?.dataUrl) throw new Error("Background generation failed");
       setEditHistory(prev => working ? [...prev, working] : prev);
       setWorking(data.dataUrl);
@@ -1372,7 +1391,7 @@ export default function ImageEditorPage() {
     const prevCreditsAI = user?.credits ?? 0;
     setUser(u => u ? { ...u, credits: Math.max(0, u.credits - CREDIT_COST) } : u);
     try {
-      const data = await callApi<{ dataUrl: string }>("/api/ai-edit", { dataUrl: src, prompt: prompt.trim() }, () => setUser(u => u ? { ...u, credits: prevCreditsAI } : u));
+      const data = await callApi<{ dataUrl: string }>("/api/ai-edit", { dataUrl: src, prompt: prompt.trim(), model }, () => setUser(u => u ? { ...u, credits: prevCreditsAI } : u));
       if (data?.dataUrl) {
         setEditHistory(prev => working ? [...prev, working] : prev);
         setWorking(data.dataUrl);
@@ -1746,7 +1765,22 @@ export default function ImageEditorPage() {
                 disabled={processing}
                 style={s.dockBarInput}
               />
-              <span style={s.dockBarMeta}>AI Edit · {CREDIT_COST} credits</span>
+              {/*
+                The model picker lives here rather than in a settings panel:
+                it is a property of the edit you are about to run, and it is
+                the question people ask right before they press go.
+              */}
+              <select
+                value={model}
+                onChange={(e) => pickModel(e.target.value)}
+                aria-label="Model"
+                title={MODELS.find((m) => m.id === model)?.hint}
+                disabled={processing}
+                style={s.dockBarModel}
+              >
+                {MODELS.map((m) => <option key={m.id} value={m.id}>{m.label}</option>)}
+              </select>
+              <span style={s.dockBarMeta}>{CREDIT_COST} credits</span>
               <button
                 onClick={submitPromptBar}
                 disabled={processing || !prompt.trim()}
@@ -2970,6 +3004,11 @@ const s: Record<string, React.CSSProperties> = {
   dockBarIcon: { fontSize: 16, flexShrink: 0 },
   dockBarInput: { flex: 1, minWidth: 0, border: "none", outline: "none", background: "transparent", color: "var(--text)", fontSize: 14.5, fontFamily: "inherit" },
   dockBarMeta: { fontSize: 11.5, fontWeight: 700, color: "var(--text-faint)", whiteSpace: "nowrap" as const, flexShrink: 0 },
+  dockBarModel: {
+    fontFamily: "inherit", fontSize: 12, fontWeight: 700, cursor: "pointer", flexShrink: 0,
+    background: "var(--surface-2)", color: "var(--text)", border: "1px solid var(--border-strong)",
+    borderRadius: 8, padding: "6px 8px",
+  },
   dockBarGo: { width: 38, height: 38, borderRadius: "50%", border: "none", background: "var(--grad-strong)", color: "#fff", fontWeight: 900, fontSize: 17, cursor: "pointer", flexShrink: 0, fontFamily: "inherit", boxShadow: "var(--glow)" },
   toolBtn: { position: "relative" as const, width: "100%", display: "flex", flexDirection: "column" as const, alignItems: "center", gap: 5, padding: "11px 4px 9px", borderRadius: 11, border: "1px solid transparent", background: "var(--surface-2)", cursor: "pointer", color: "var(--text-muted)", fontFamily: "inherit" },
   toolBtnActive: { background: "var(--accent-soft)", borderColor: "var(--accent)", color: "var(--accent)" },

@@ -397,7 +397,37 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
               {o.label}
               {o.required && <span style={{ color: "var(--accent)" }}> *</span>}
             </label>
-            {o.kind === "text" ? (
+            {o.kind === "number" ? (
+              /*
+                A slider, not a list of decades.
+
+                Six fixed choices meant the answer to "what do I look like at
+                34?" was "pick 30s or 40s". The range is continuous now, and
+                the number is spelled out beside it because a slider handle on
+                its own does not tell you where you are.
+              */
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <input
+                  id={`opt-${o.id}`}
+                  type="range"
+                  min={o.min}
+                  max={o.max}
+                  step={o.step}
+                  value={optValues[o.id] ?? String(o.initial ?? o.min ?? 0)}
+                  onChange={(e) => setOpt(o.id, e.target.value)}
+                  style={{ flex: 1, accentColor: "var(--accent)", cursor: "pointer" }}
+                />
+                <span style={{
+                  minWidth: 92, textAlign: "right", fontSize: 13.5, fontWeight: 800,
+                  color: "var(--accent-strong)", whiteSpace: "nowrap",
+                }}>
+                  {(() => {
+                    const n = Number(optValues[o.id] ?? o.initial ?? o.min ?? 0);
+                    return o.format ? o.format(n) : String(n);
+                  })()}
+                </span>
+              </div>
+            ) : o.kind === "text" ? (
               <input
                 id={`opt-${o.id}`}
                 value={optValues[o.id] ?? ""}
