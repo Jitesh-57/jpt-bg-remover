@@ -43,6 +43,40 @@ An exhausted fal balance ends the cascade immediately rather than walking it:
 every model is billed to the same account, so the rest cannot succeed, and
 trying them only buries the one message the account owner needs.
 
+### A 404 tries the other spellings
+
+The endpoint paths are transcribed from fal's model listing rather than fetched,
+so a wrong one is a real possibility — and a wrong path fails as 404, which from
+the outside is indistinguishable from "this account cannot use this model".
+Both end with the generation quietly served by Nano Banana.
+
+So a 404 tries the alternative spellings in `PATH_VARIANTS` before giving up on
+the model, and logs the one that answered. Pinning it with
+`FAL_ENDPOINT_<ID>_EDIT` then skips the extra round trip. Only a 404 does this:
+a 403 is an answer about the model, not its address, so it moves straight on.
+
+### Finding out what is actually reachable
+
+```
+GET /api/admin/model-probe?token=<ADMIN_IMAGE_TOKEN>
+```
+
+Probes every model and every alternative spelling and reports what each one
+answers. It generates nothing and costs nothing — each probe sends an empty
+body, which every image endpoint rejects before queueing work — so the status is
+free, and the status is the diagnosis:
+
+| | |
+| --- | --- |
+| 404 | the path is wrong |
+| 422 | the path is right; fal got as far as validating the input |
+| 403 | the path is right and this account may not use it |
+| 401 | `FAL_KEY` is wrong, and nothing on fal will work |
+
+Without that distinction, "the headshots came out on Nano Banana" could be a
+typo in a path, a model the account is not entitled to, or a key problem, with
+no way to tell them apart.
+
 ### A 422 does not lose the generation
 
 fal's models do not share one input schema. A field one endpoint takes
