@@ -1,40 +1,47 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import { label, input, chip, chipOn, primary, danger, success } from "./AdminShell";
 
 /**
- * Drop a before/after creative onto an app and it is live in a few seconds.
+ * Get a before/after onto an app page: drop files, or paste a link.
  *
- * The work happens here rather than on the server because the file is here.
- * A creative comes out of an image tool at 3–8 MB and the pane it lands in is
- * 410 CSS px wide; uploading the original would be slow, would cost storage,
- * and would still need cropping. A canvas does the whole job locally, and what
- * crosses the wire is the 40–120 KB that was actually needed.
+ * The cropping and compression run here, in the browser, on the machine that
+ * has the file. A creative comes out of an image tool at 3–8 MB and the pane
+ * it lands in is 410 CSS px wide, so uploading the original would be slow,
+ * cost storage, and still need cropping. What crosses the wire is the 40–120 KB
+ * that was actually needed.
  *
- * The token is kept in localStorage so this is a one-time step. It is the
- * admin token, so this page is noindex and the value never goes anywhere but
- * the API call it authorises.
+ * Nothing is published until it has been looked at. Everything found is laid
+ * out with the slot it will take and the name it will get, and Apply is a
+ * separate press — because the failure mode of a one-click importer is a
+ * wrong image on a live page, and the only cheap way to catch that is to show
+ * it first.
  */
 
-type App = { slug: string; name: string; emoji: string };
-type Half = "before" | "after";
-type Pane = { half: Half; dataUrl: string; bytes: number; w: number; h: number };
+export type App = {
+  slug: string; name: string; emoji: string;
+  title: string; metaDescription: string; keywords: string;
+  h1: string; tagline: string; intro: string; badge: string;
+};
+
+type Slot = "before" | "after" | `extra-${number}`;
+type Pane = { id: string; slot: Slot; dataUrl: string; bytes: number; w: number; h: number; from: string };
 
 const TARGET_W = 900;
 const ASPECT = 4 / 5;
 const QUALITY = 0.82;
 const SPLIT_RATIO = 1.4;
 
-function kb(n: number) {
-  return n >= 1024 * 1024 ? `${(n / 1048576).toFixed(1)} MB` : `${Math.round(n / 1024)} KB`;
-}
+const kb = (n: number) => (n >= 1048576 ? `${(n / 1048576).toFixed(1)} MB` : `${Math.round(n / 1024)} KB`);
 
-function loadImage(file: File | Blob): Promise<HTMLImageElement> {
+function loadImage(src: Blob | string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
-    const url = URL.createObjectURL(file);
+    const url = typeof src === "string" ? src : URL.createObjectURL(src);
     const img = new Image();
-    img.onload = () => { URL.revokeObjectURL(url); resolve(img); };
-    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("That file could not be read as an image.")); };
+    img.crossOrigin = "anonymous";
+    img.onload = () => { if (typeof src !== "string") URL.revokeObjectURL(url); resolve(img); };
+    img.onerror = () => reject(new Error("That image could not be read."));
     img.src = url;
   });
 }
@@ -42,259 +49,245 @@ function loadImage(file: File | Blob): Promise<HTMLImageElement> {
 /**
  * Crop to 4:5 and cap the width.
  *
- * The size is worked out from the source: the largest 4:5 window that fits,
- * then capped. Asking for 900×1125 flatly would upscale anything smaller,
- * which makes it blurrier *and* the file bigger — both halves of the job
- * backwards.
+ * The size comes from the source: the largest 4:5 window that fits, then
+ * capped. Asking for 900×1125 flatly upscales anything smaller, which makes it
+ * blurrier *and* the file bigger — both halves of the job backwards.
  */
-function toPane(img: HTMLImageElement, sx: number, sy: number, sw: number, sh: number, gravity: "centre" | "top" | "bottom"): Promise<{ dataUrl: string; bytes: number; w: number; h: number }> {
-  const srcRatio = sw / sh;
+async function toPane(img: HTMLImageElement, sx: number, sy: number, sw: number, sh: number, gravity: string) {
   let cw = sw, ch = sh;
-  if (srcRatio > ASPECT) cw = sh * ASPECT; else ch = sw / ASPECT;
+  if (sw / sh > ASPECT) cw = sh * ASPECT; else ch = sw / ASPECT;
   const cx = sx + (sw - cw) / 2;
   const cy = gravity === "top" ? sy : gravity === "bottom" ? sy + (sh - ch) : sy + (sh - ch) / 2;
-
   const outW = Math.round(Math.min(cw, TARGET_W));
   const outH = Math.round(outW / ASPECT);
 
   const canvas = document.createElement("canvas");
-  canvas.width = outW;
-  canvas.height = outH;
+  canvas.width = outW; canvas.height = outH;
   const ctx = canvas.getContext("2d");
-  if (!ctx) throw new Error("This browser would not give us a canvas to work on.");
+  if (!ctx) throw new Error("This browser would not give us a canvas.");
   ctx.imageSmoothingQuality = "high";
   ctx.drawImage(img, cx, cy, cw, ch, 0, 0, outW, outH);
 
-  return new Promise((resolve, reject) => {
-    canvas.toBlob(
-      (blob) => {
-        if (!blob) return reject(new Error("The browser could not encode a WebP."));
-        const r = new FileReader();
-        r.onload = () => resolve({ dataUrl: r.result as string, bytes: blob.size, w: outW, h: outH });
-        r.onerror = () => reject(new Error("The encoded image could not be read back."));
-        r.readAsDataURL(blob);
-      },
-      "image/webp",
-      QUALITY
-    );
+  const blob = await new Promise<Blob | null>((r) => canvas.toBlob(r, "image/webp", QUALITY));
+  if (!blob) throw new Error("The browser could not encode a WebP.");
+  const dataUrl = await new Promise<string>((res, rej) => {
+    const fr = new FileReader();
+    fr.onload = () => res(fr.result as string);
+    fr.onerror = () => rej(new Error("The encoded image could not be read back."));
+    fr.readAsDataURL(blob);
   });
+  return { dataUrl, bytes: blob.size, w: outW, h: outH };
 }
 
-export default function CreativeUploader({ apps }: { apps: App[] }) {
-  const [token, setToken] = useState("");
-  const [query, setQuery] = useState("");
-  const [slug, setSlug] = useState("");
+export default function CreativeUploader({ slug, token }: { apps: App[]; slug: string; token: string }) {
   const [panes, setPanes] = useState<Pane[]>([]);
-  const [source, setSource] = useState<{ name: string; bytes: number; w: number; h: number; split: boolean } | null>(null);
-  const [gravity, setGravity] = useState<"centre" | "top" | "bottom">("centre");
-  const [busy, setBusy] = useState(false);
+  const [gravity, setGravity] = useState("centre");
+  const [link, setLink] = useState("");
+  const [busy, setBusy] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
-  const [done, setDone] = useState<string | null>(null);
+  const [note, setNote] = useState<string | null>(null);
+  const [done, setDone] = useState(false);
   const [dragging, setDragging] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
-  const lastFile = useRef<File | null>(null);
 
-  useEffect(() => {
-    try {
-      const t = localStorage.getItem("jpt-admin-token");
-      if (t) setToken(t);
-    } catch { /* blocked storage — typing it each time still works */ }
-  }, []);
+  const nextSlot = (taken: Slot[]): Slot => {
+    if (!taken.includes("before")) return "before";
+    if (!taken.includes("after")) return "after";
+    for (let i = 1; i < 10; i++) if (!taken.includes(`extra-${i}` as Slot)) return `extra-${i}` as Slot;
+    return "extra-9";
+  };
 
-  const matches = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return apps.slice(0, 12);
-    return apps.filter((a) => a.slug.includes(q) || a.name.toLowerCase().includes(q)).slice(0, 12);
-  }, [apps, query]);
-
-  const selected = apps.find((a) => a.slug === slug) || null;
-
-  async function process(file: File, g = gravity) {
-    setErr(null);
-    setDone(null);
-    lastFile.current = file;
-    try {
-      const img = await loadImage(file);
-      const wide = img.width / img.height >= SPLIT_RATIO;
-      const out: Pane[] = [];
-      if (wide) {
-        // A side-by-side creative: the two halves land in the two panes the
-        // app page already draws, so the labels stay honest.
-        const half = Math.floor(img.width / 2);
-        const left = await toPane(img, 0, 0, half, img.height, g);
-        const right = await toPane(img, img.width - half, 0, half, img.height, g);
-        out.push({ half: "before", ...left }, { half: "after", ...right });
-      } else {
-        const one = await toPane(img, 0, 0, img.width, img.height, g);
-        out.push({ half: "after", ...one });
-      }
-      setPanes(out);
-      setSource({ name: file.name, bytes: file.size, w: img.width, h: img.height, split: wide });
-    } catch (e) {
-      setErr((e as Error).message);
+  async function ingest(img: HTMLImageElement, from: string, g = gravity) {
+    const wide = img.width / img.height >= SPLIT_RATIO;
+    const made: Pane[] = [];
+    const taken: Slot[] = [];
+    if (wide) {
+      // A side-by-side creative goes into the two panes the page already draws.
+      const half = Math.floor(img.width / 2);
+      const l = await toPane(img, 0, 0, half, img.height, g);
+      const r = await toPane(img, img.width - half, 0, half, img.height, g);
+      made.push({ id: crypto.randomUUID(), slot: "before", from, ...l });
+      made.push({ id: crypto.randomUUID(), slot: "after", from, ...r });
+      taken.push("before", "after");
+    } else {
+      const one = await toPane(img, 0, 0, img.width, img.height, g);
+      made.push({ id: crypto.randomUUID(), slot: nextSlot(taken), from, ...one });
     }
+    return made;
   }
 
-  function reGravity(g: "centre" | "top" | "bottom") {
-    setGravity(g);
-    if (lastFile.current) void process(lastFile.current, g);
+  async function onFiles(files: File[]) {
+    setErr(null); setDone(false);
+    setBusy("Preparing…");
+    try {
+      let acc: Pane[] = [];
+      for (const f of files) {
+        const img = await loadImage(f);
+        const made = await ingest(img, f.name);
+        acc = [...acc, ...made];
+      }
+      setPanes(reslot(acc));
+    } catch (e) { setErr((e as Error).message); }
+    finally { setBusy(null); }
   }
 
-  async function upload() {
-    if (!slug || !panes.length) return;
-    if (!token.trim()) { setErr("Paste the admin token first."); return; }
-    setBusy(true);
-    setErr(null);
+  /** Re-assign slots so the list reads before, after, extra-1, extra-2… */
+  function reslot(list: Pane[]): Pane[] {
+    const order: Slot[] = ["before", "after", ...Array.from({ length: 8 }, (_, i) => `extra-${i + 1}` as Slot)];
+    return list.map((p, i) => ({ ...p, slot: order[Math.min(i, order.length - 1)] }));
+  }
+
+  async function fromLink() {
+    if (!link.trim()) return;
+    if (!token.trim()) { setErr("Paste the admin token at the top first."); return; }
+    setErr(null); setNote(null); setDone(false);
+    setBusy("Reading the link…");
+    try {
+      const res = await fetch(`/api/admin/find-images?token=${encodeURIComponent(token.trim())}`, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: link.trim() }),
+      });
+      const data = (await res.json()) as { images?: string[]; source?: string; error?: string; why?: string; fix?: string };
+      if (!res.ok) throw new Error([data.error, data.why, data.fix].filter(Boolean).join(" "));
+      const urls = data.images || [];
+      setNote(`Found ${urls.length} image${urls.length === 1 ? "" : "s"} via ${data.source}.`);
+
+      setBusy("Fetching images…");
+      let acc: Pane[] = [];
+      for (const u of urls.slice(0, 8)) {
+        try {
+          const img = await loadImage(u);
+          acc = [...acc, ...(await ingest(img, u))];
+        } catch {
+          /*
+            A signed link that expired between finding it and fetching it, or
+            a host that refuses a cross-origin read. Skipping one is better
+            than losing the rest, and the count above already says how many
+            were found versus how many arrived.
+          */
+        }
+      }
+      if (!acc.length) throw new Error("Found links, but none of the images could actually be loaded — signed URLs from a share page expire quickly. Download them and drop the files in instead.");
+      setPanes(reslot(acc));
+    } catch (e) { setErr((e as Error).message); }
+    finally { setBusy(null); }
+  }
+
+  async function apply() {
+    if (!token.trim()) { setErr("Paste the admin token at the top first."); return; }
+    setBusy("Publishing…"); setErr(null);
     try {
       for (const p of panes) {
         const res = await fetch(`/api/admin/creative-upload?token=${encodeURIComponent(token.trim())}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ slug, half: p.half, dataUrl: p.dataUrl }),
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ slug, slot: p.slot, dataUrl: p.dataUrl }),
         });
-        const data = (await res.json().catch(() => ({}))) as { error?: string; fix?: string };
-        if (!res.ok) throw new Error([data.error, data.fix].filter(Boolean).join(" ") || `Upload failed (${res.status}).`);
+        const d = (await res.json()) as { error?: string; fix?: string };
+        if (!res.ok) throw new Error([d.error, d.fix].filter(Boolean).join(" ") || `Upload failed (${res.status}).`);
       }
-      try { localStorage.setItem("jpt-admin-token", token.trim()); } catch { /* fine */ }
-      setDone(`/creative/${slug}`);
-      setPanes([]);
-      setSource(null);
-      lastFile.current = null;
-    } catch (e) {
-      setErr((e as Error).message);
-    } finally {
-      setBusy(false);
-    }
+      setDone(true); setPanes([]);
+    } catch (e) { setErr((e as Error).message); }
+    finally { setBusy(null); }
   }
 
   const total = panes.reduce((n, p) => n + p.bytes, 0);
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text)", padding: "32px 24px 80px" }}>
-      <div style={{ maxWidth: 980, margin: "0 auto" }}>
-        <h1 style={{ fontSize: 26, fontWeight: 900, letterSpacing: "-0.02em", margin: "0 0 6px" }}>Creatives</h1>
-        <p style={{ margin: "0 0 26px", color: "var(--text-muted)", fontSize: 14.5, lineHeight: 1.6 }}>
-          Pick an app, drop a before/after image. It is cropped and compressed here in the browser, then
-          stored — live on the page within a few minutes, no deploy.
-        </p>
-
-        <label style={label}>Admin token</label>
+    <div>
+      <label style={label}>Paste a link</label>
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 8 }}>
         <input
-          type="password"
-          value={token}
-          onChange={(e) => setToken(e.target.value)}
-          placeholder="ADMIN_IMAGE_TOKEN"
-          style={{ ...input, maxWidth: 420, marginBottom: 22 }}
+          value={link}
+          onChange={(e) => setLink(e.target.value)}
+          onKeyDown={(e) => { if (e.key === "Enter") void fromLink(); }}
+          placeholder="https://chatgpt.com/share/… or a direct image URL"
+          style={{ ...input, flex: "1 1 340px" }}
         />
-
-        <label style={label}>App</label>
-        {selected ? (
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 22 }}>
-            <span style={{ fontSize: 20 }}>{selected.emoji}</span>
-            <strong style={{ fontSize: 15 }}>{selected.name}</strong>
-            <code style={{ fontSize: 12, color: "var(--text-faint)" }}>{selected.slug}</code>
-            <button onClick={() => { setSlug(""); setPanes([]); setSource(null); }} style={linkBtn}>change</button>
-          </div>
-        ) : (
-          <>
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder={`Search ${apps.length} apps — name or slug`}
-              style={{ ...input, maxWidth: 420 }}
-            />
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 8, margin: "12px 0 22px" }}>
-              {matches.map((a) => (
-                <button key={a.slug} onClick={() => setSlug(a.slug)} style={chip}>
-                  {a.emoji} {a.name}
-                </button>
-              ))}
-              {!matches.length && <span style={{ fontSize: 13, color: "var(--text-faint)" }}>Nothing matches “{query}”.</span>}
-            </div>
-          </>
-        )}
-
-        {slug && (
-          <>
-            <input ref={fileRef} type="file" accept="image/*" hidden
-              onChange={(e) => { const f = e.target.files?.[0]; if (f) void process(f); }} />
-            <div
-              onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
-              onDragLeave={() => setDragging(false)}
-              onDrop={(e) => { e.preventDefault(); setDragging(false); const f = e.dataTransfer.files?.[0]; if (f) void process(f); }}
-              onClick={() => fileRef.current?.click()}
-              style={{
-                border: `1.5px dashed ${dragging ? "var(--accent)" : "var(--border-strong)"}`,
-                background: dragging ? "var(--accent-soft)" : "var(--surface-2)",
-                borderRadius: 16, padding: "34px 20px", textAlign: "center", cursor: "pointer",
-              }}
-            >
-              <div style={{ fontSize: 26, marginBottom: 8 }}>🖼️</div>
-              <div style={{ fontSize: 15, fontWeight: 800 }}>Drop the creative here</div>
-              <div style={{ fontSize: 12.5, color: "var(--text-faint)", marginTop: 6 }}>
-                A wide before/after is split down the middle · anything else becomes the After pane
-              </div>
-            </div>
-          </>
-        )}
-
-        {source && (
-          <div style={{ marginTop: 22 }}>
-            <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 12 }}>
-              <strong style={{ color: "var(--text)" }}>{source.name}</strong> — {source.w}×{source.h}, {kb(source.bytes)}
-              {source.split ? " · split into two panes" : " · used as the After pane"}
-              {" → "}
-              <strong style={{ color: "var(--success)" }}>{kb(total)}</strong> total
-              {" "}({Math.round((1 - total / source.bytes) * 100)}% smaller)
-            </div>
-
-            <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 14, flexWrap: "wrap" }}>
-              <span style={{ ...label, margin: 0 }}>Crop</span>
-              {(["centre", "top", "bottom"] as const).map((g) => (
-                <button key={g} onClick={() => reGravity(g)} style={{ ...chip, ...(gravity === g ? chipOn : {}) }}>{g}</button>
-              ))}
-              <span style={{ fontSize: 12, color: "var(--text-faint)" }}>
-                — use “bottom” to keep a caption burned into the bottom of the frame
-              </span>
-            </div>
-
-            <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
-              {panes.map((p) => (
-                <figure key={p.half} style={{ margin: 0 }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={p.dataUrl} alt={p.half} style={{ width: 180, aspectRatio: "4 / 5", objectFit: "cover", borderRadius: 12, border: "1px solid var(--border)", display: "block" }} />
-                  <figcaption style={{ fontSize: 11.5, color: "var(--text-faint)", marginTop: 6, textTransform: "uppercase", letterSpacing: "0.07em", fontWeight: 800 }}>
-                    {p.half} · {p.w}×{p.h} · {kb(p.bytes)}
-                  </figcaption>
-                </figure>
-              ))}
-            </div>
-
-            <button onClick={() => void upload()} disabled={busy} style={{ ...primary, marginTop: 20, opacity: busy ? 0.6 : 1 }}>
-              {busy ? "Uploading…" : `Publish ${panes.length === 2 ? "both panes" : "the After pane"}`}
-            </button>
-          </div>
-        )}
-
-        {err && <div style={danger}>{err}</div>}
-        {done && (
-          <div style={success}>
-            Published. <a href={done} target="_blank" rel="noreferrer" style={{ color: "inherit", fontWeight: 800 }}>Open {done} →</a>
-            <div style={{ fontSize: 12.5, fontWeight: 500, marginTop: 6, opacity: 0.85 }}>
-              The page caches for five minutes, so give it a moment or hard-refresh.
-            </div>
-          </div>
-        )}
+        <button onClick={() => void fromLink()} disabled={!!busy} style={{ ...chip, padding: "10px 18px" }}>Fetch</button>
       </div>
+      <p style={{ fontSize: 11.5, color: "var(--text-faint)", margin: "0 0 20px", lineHeight: 1.55 }}>
+        A share page is drawn by JavaScript and its image URLs are signed links that expire, so this works sometimes and
+        fails clearly when it does not. A direct image URL, or dropping the files below, always works.
+      </p>
+
+      <input ref={fileRef} type="file" accept="image/*" hidden multiple
+        onChange={(e) => { const f = Array.from(e.target.files || []); if (f.length) void onFiles(f); }} />
+      <div
+        onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+        onDragLeave={() => setDragging(false)}
+        onDrop={(e) => { e.preventDefault(); setDragging(false); const f = Array.from(e.dataTransfer.files || []); if (f.length) void onFiles(f); }}
+        onClick={() => fileRef.current?.click()}
+        style={{
+          border: `1.5px dashed ${dragging ? "var(--accent)" : "var(--border-strong)"}`,
+          background: dragging ? "var(--accent-soft)" : "var(--surface-2)",
+          borderRadius: 16, padding: "32px 20px", textAlign: "center", cursor: "pointer",
+        }}
+      >
+        <div style={{ fontSize: 26, marginBottom: 8 }}>🖼️</div>
+        <div style={{ fontSize: 15, fontWeight: 800 }}>{busy || "Drop the creatives here"}</div>
+        <div style={{ fontSize: 12.5, color: "var(--text-faint)", marginTop: 6 }}>
+          A wide before/after is split down the middle · several files are fine
+        </div>
+      </div>
+
+      {panes.length > 0 && (
+        <div style={{ marginTop: 22 }}>
+          <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 14, flexWrap: "wrap" }}>
+            <span style={{ ...label, margin: 0 }}>Crop</span>
+            {["centre", "top", "bottom"].map((g) => (
+              <button key={g} onClick={() => setGravity(g)} style={{ ...chip, ...(gravity === g ? chipOn : {}) }}>{g}</button>
+            ))}
+            <span style={{ fontSize: 11.5, color: "var(--text-faint)" }}>
+              — “bottom” keeps a caption burned into the bottom of the frame. Re-drop to re-crop.
+            </span>
+          </div>
+
+          <div style={{ ...label, marginBottom: 10 }}>
+            This is what will be published — {panes.length} file{panes.length === 1 ? "" : "s"}, {kb(total)} total
+          </div>
+
+          <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
+            {panes.map((p, i) => (
+              <figure key={p.id} style={{ margin: 0, width: 180 }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={p.dataUrl} alt={p.slot} style={{ width: 180, aspectRatio: "4 / 5", objectFit: "cover", borderRadius: 12, border: "1px solid var(--border)", display: "block" }} />
+                <figcaption style={{ fontSize: 11, color: "var(--text-faint)", marginTop: 6, lineHeight: 1.5 }}>
+                  <code style={{ color: "var(--accent-strong)", fontWeight: 800 }}>{slug}-{p.slot}.webp</code>
+                  <br />{p.w}×{p.h} · {kb(p.bytes)}
+                  <br /><span style={{ opacity: 0.7 }}>from {p.from.length > 28 ? p.from.slice(0, 26) + "…" : p.from}</span>
+                </figcaption>
+                <div style={{ display: "flex", gap: 6, marginTop: 6 }}>
+                  <button
+                    onClick={() => setPanes((s) => reslot(s.filter((x) => x.id !== p.id)))}
+                    style={{ ...chip, padding: "4px 10px", fontSize: 11.5 }}
+                  >remove</button>
+                  {i > 0 && (
+                    <button
+                      onClick={() => setPanes((s) => { const n = [...s]; [n[i - 1], n[i]] = [n[i], n[i - 1]]; return reslot(n); })}
+                      style={{ ...chip, padding: "4px 10px", fontSize: 11.5 }}
+                    >← move</button>
+                  )}
+                </div>
+              </figure>
+            ))}
+          </div>
+
+          <button onClick={() => void apply()} disabled={!!busy} style={{ ...primary, marginTop: 20, opacity: busy ? 0.6 : 1 }}>
+            {busy === "Publishing…" ? "Publishing…" : `Apply — publish ${panes.length} file${panes.length === 1 ? "" : "s"}`}
+          </button>
+        </div>
+      )}
+
+      {note && !err && <div style={{ ...success, background: "var(--surface-2)", color: "var(--text-muted)", fontWeight: 600 }}>{note}</div>}
+      {err && <div style={danger}>{err}</div>}
+      {done && (
+        <div style={success}>
+          Published. <a href={`/creative/${slug}`} target="_blank" rel="noreferrer" style={{ color: "inherit", fontWeight: 800 }}>Open the page ↗</a>
+          <div style={{ fontSize: 12.5, fontWeight: 500, marginTop: 6, opacity: 0.85 }}>
+            Cached for five minutes. Stored outside the repo, so deploys leave it alone.
+          </div>
+        </div>
+      )}
     </div>
   );
 }
-
-const label: React.CSSProperties = { display: "block", fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--text-faint)", marginBottom: 7 };
-const input: React.CSSProperties = { width: "100%", padding: "10px 12px", borderRadius: 10, fontFamily: "inherit", fontSize: 14, background: "var(--surface-2)", color: "var(--text)", border: "1px solid var(--border-strong)" };
-const chip: React.CSSProperties = { cursor: "pointer", fontFamily: "inherit", fontSize: 13, fontWeight: 700, padding: "7px 12px", borderRadius: 999, background: "var(--surface-2)", color: "var(--text)", border: "1px solid var(--border-strong)" };
-const chipOn: React.CSSProperties = { background: "var(--accent-soft)", borderColor: "var(--accent-border)", color: "var(--accent-strong)" };
-const linkBtn: React.CSSProperties = { cursor: "pointer", fontFamily: "inherit", background: "none", border: "none", padding: 0, fontSize: 12.5, fontWeight: 700, color: "var(--accent-strong)", textDecoration: "underline" };
-const primary: React.CSSProperties = { cursor: "pointer", fontFamily: "inherit", border: "none", borderRadius: 12, padding: "13px 22px", fontSize: 15, fontWeight: 800, background: "var(--grad-strong)", color: "#fff", boxShadow: "var(--glow)" };
-const danger: React.CSSProperties = { marginTop: 18, background: "var(--danger-soft)", color: "var(--danger)", borderRadius: 10, padding: "11px 14px", fontSize: 13.5, fontWeight: 600, lineHeight: 1.55 };
-const success: React.CSSProperties = { marginTop: 18, background: "var(--success-soft)", color: "var(--success)", borderRadius: 10, padding: "12px 15px", fontSize: 14, fontWeight: 700, lineHeight: 1.5 };

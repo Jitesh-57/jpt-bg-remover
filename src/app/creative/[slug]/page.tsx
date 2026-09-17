@@ -10,6 +10,7 @@ import { longContentFor } from "@/lib/app-content";
 import { sourceFor, sourceImageUrl } from "@/lib/image-jobs";
 import { creativeSources, localAfter } from "@/lib/app-creatives";
 import { SHOW_PRESET_TABS } from "@/lib/workspace-config";
+import { applyOverride, creativeKey, readOverrides } from "@/lib/overrides";
 
 export const revalidate = 300;
 
@@ -21,8 +22,12 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const a = getCreativeApp(slug);
-  if (!a) return {};
+  const base = getCreativeApp(slug);
+  if (!base) return {};
+  // Copy edited in /admin wins over the copy in creative-apps.ts. It is stored
+  // outside the repo precisely so a deploy cannot quietly revert it.
+  const o = await readOverrides();
+  const a = applyOverride(base, o.pages[creativeKey(slug)]);
   const url = `${BASE}${CREATIVE_BASE}/${slug}`;
   return {
     title: { absolute: a.title },
@@ -66,8 +71,13 @@ function Head3({ children }: { children: React.ReactNode }) {
 
 export default async function CreativeAppPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const a = getCreativeApp(slug);
-  if (!a) notFound();
+  const found = getCreativeApp(slug);
+  if (!found) notFound();
+
+  // Same override as generateMetadata: the H1, tagline, intro and badge on the
+  // page are the ones edited in /admin when there are any.
+  const overrides = await readOverrides();
+  const a = applyOverride(found, overrides.pages[creativeKey(slug)]);
 
   const url = `${BASE}${CREATIVE_BASE}/${slug}`;
   const related = CREATIVE_APPS.filter((x) => x.slug !== a.slug).slice(0, 6);
