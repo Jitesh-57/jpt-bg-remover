@@ -301,20 +301,53 @@ function ageAppearance(n: number): string {
 }
 
 /**
+ * What a person of that age is wearing, and where they are.
+ *
+ * Ageing a face and leaving everything else alone produces a wrinkled adult
+ * in the same outfit in the same doorway — recognisably a retouch rather than
+ * a photograph of someone at that age. A one-year-old is not standing at a
+ * wedding reception in a lehenga; a schoolchild is in school clothes
+ * somewhere a schoolchild would be.
+ *
+ * Deliberately says "as someone of their culture would dress" rather than
+ * naming garments: the right clothes for a 70-year-old depend entirely on who
+ * she is, and a hard-coded answer would dress everyone the same way.
+ */
+function ageStaging(n: number): string {
+  const setting =
+    n <= 3 ? "held or seated as an infant is, in a home or nursery setting, in baby clothes"
+    : n <= 12 ? "dressed and groomed as a child of that age, somewhere a child would be — a home, a garden, a school"
+    : n <= 17 ? "dressed as a teenager of that age, in a setting that suits one"
+    : n <= 24 ? "dressed as a young adult of that age, in a casual everyday setting"
+    : n <= 44 ? "dressed as an adult of that age would dress day to day, in an ordinary everyday setting"
+    : n <= 64 ? "dressed as someone of that age would dress, in a calm domestic or everyday setting"
+    : "dressed as an older person of that age would dress, in a calm domestic setting";
+
+  return (
+    `Re-stage the whole photograph for that age: the person should be ${setting}, ` +
+    `with a hairstyle, posture and expression that belong to someone of that age. ` +
+    `Dress them as a person of their own culture and background would dress at that age — ` +
+    `do not keep the outfit, hairstyle, pose or background from the original photograph. ` +
+    `Light and frame it as an ordinary photograph taken of them at that age.`
+  );
+}
+
+function years(n: number): string {
+  return n === 1 ? "1 year old" : `${n} years old`;
+}
+
+/**
  * One sentence that works in both directions.
  *
  * The slider runs from 1, so it de-ages as readily as it ages, and the
  * instruction must not assume which. "Age this person to 8" is a contradiction
  * the model resolves by ignoring one half of it.
  */
-function years(n: number): string {
-  return n === 1 ? "1 year old" : `${n} years old`;
-}
-
 function agePhrase(n: number): string {
   return (
     `Show this exact person at ${years(n)} — not older, not younger. ` +
     `At this age they have ${ageAppearance(n)}. ` +
+    `${ageStaging(n)} ` +
     `Keep them unmistakably the same person: the same bone structure, eye shape, ` +
     `nose and mouth, changed only by age. Do not change their ethnicity, ` +
     `and do not substitute a different face.`
@@ -1011,6 +1044,16 @@ const BY_SLUG: Record<string, AppOption[]> = {
 // ── Public API ──────────────────────────────────────────────────────────────
 
 /** The options this app should show, most specific set first. */
+/**
+ * The category a curated app belongs to, for callers outside this file.
+ *
+ * The staging rules need it for the same reason the options do: the 42
+ * hand-written apps carry no `cat`, and they are the ones on the front page.
+ */
+export function curatedCategory(slug: string): string | undefined {
+  return CURATED_CAT[slug];
+}
+
 export function optionsFor(app: CreativeApp): AppOption[] {
   const bySlug = BY_SLUG[app.slug];
   if (bySlug) return bySlug;

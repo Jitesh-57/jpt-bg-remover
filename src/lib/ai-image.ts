@@ -20,6 +20,7 @@ import {
   geminiUpscale,
   geminiGenerateFromText,
 } from "@/lib/gemini";
+import { editorDirective } from "@/lib/staging";
 
 export type { FalModel };
 
@@ -210,12 +211,19 @@ export async function editImage(
   opts?: { strict?: boolean; budgetMs?: number; raw?: boolean }
 ): Promise<string> {
   const m = resolveModel(model);
-  // raw: send the caller's prompt as written. The editor prefix is right for
-  // a user typing "make the sky bluer" and wrong for an app's own tuned
-  // prompt, which is already a complete instruction.
-  const text = opts?.raw
-    ? prompt
-    : `You are a professional photo editor. Edit this image: ${prompt}. Return only the edited image.`;
+  /*
+    raw: send the caller's prompt as written.
+
+    The wrapper matters more than it looks. "You are a professional photo
+    editor. Edit this image: …" tells the model to *edit* — to change the
+    smallest thing that satisfies the words — and every one-click app was
+    going through it, which is half the reason an age app returned the same
+    photograph with a wrinkled face. An app prompt is already a complete
+    instruction that says how much of the frame to rebuild, so it goes
+    through untouched; the prompt bar's own text gets the directive that
+    makes "change only this" explicit rather than implied.
+  */
+  const text = opts?.raw ? prompt : editorDirective(prompt);
 
   /*
     "ChatGPT" in the picker is a family, not an endpoint.

@@ -50,7 +50,13 @@ export async function POST(req: NextRequest) {
 
   const startedAt = Date.now();
   try {
-    const result = await editImage(src, prompt, model, aspectRatio, { budgetMs: 240_000 });
+    /*
+      raw, because buildPrompt() already produced a complete instruction —
+      including how much of the frame this app is allowed to rebuild. Wrapping
+      it in "Edit this image: …" contradicted that, and told the model to do
+      the smallest thing instead.
+    */
+    const result = await editImage(src, prompt, model, aspectRatio, { budgetMs: 240_000, raw: true });
 
     /*
       Both ends of the generation are stored, not just the response.

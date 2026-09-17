@@ -164,6 +164,9 @@ export function presetsFor(app: CreativeApp, tab: PresetTab): Preset[] {
  * style" and the answer needs to arrive while the model is still reading about
  * the thing it qualifies. See lib/app-options.ts.
  */
+import { stagingDirective, stagingModeFor, photorealDirective, stripOwnPhotoreal } from "@/lib/staging";
+import { curatedCategory } from "@/lib/app-options";
+
 export function buildPrompt(
   app: CreativeApp,
   tab: PresetTab,
@@ -176,21 +179,37 @@ export function buildPrompt(
   if (tab === "custom" && customText.trim()) {
     parts.push(customText.trim());
   } else {
-    parts.push(app.prompt);
+    // The app's own closing "must look like a real photograph" line goes; the
+    // canonical one is appended below, and two of them dilute each other.
+    parts.push(stripOwnPhotoreal(app.prompt));
     if (preset) parts.push(preset.modifier);
   }
 
   parts.push(...extras);
 
-  parts.push(
-    tab === "group"
-      ? "There are multiple people in the photo. Preserve every person's own face, facial structure, identity and natural skin tone, and keep them in their existing positions relative to each other."
-      : "Preserve the person's face, facial structure, identity and natural skin tone exactly."
-  );
+  if (tab === "group") {
+    parts.push(
+      "There are multiple people in the photo. Keep every person's own face, facial " +
+      "structure, identity and natural skin tone, and keep them in their existing " +
+      "positions relative to each other."
+    );
+  }
 
-  parts.push(
-    "The result must look like a real photograph — natural skin texture, realistic lighting and shadows, believable anatomy and hands — not an illustration, painting or cartoon."
-  );
+  /*
+    How much of the frame this app is allowed to change.
+
+    This used to say only what to preserve, which is why a one-click app could
+    age someone thirty years and leave them in the same outfit in the same
+    doorway. What an app is *for* decides this, not the prompt's author — see
+    lib/staging.ts.
+
+    The custom tab is the exception: text someone typed themselves is an
+    instruction about this photograph, and rebuilding the scene around it is
+    not what they asked for.
+  */
+  const mode = tab === "custom" && customText.trim() ? "minimal" : stagingModeFor(app, curatedCategory(app.slug));
+  parts.push(stagingDirective(mode));
+  parts.push(photorealDirective());
 
   return parts.join(" ");
 }
