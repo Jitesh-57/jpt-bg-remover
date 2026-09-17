@@ -36,13 +36,24 @@ export async function POST(req: NextRequest) {
 
   let slug: string, half: string, dataUrl: string;
   try {
-    ({ slug, half, dataUrl } = (await req.json()) as { slug: string; half: string; dataUrl: string });
+    const body = (await req.json()) as { slug: string; half?: string; slot?: string; dataUrl: string };
+    slug = body.slug;
+    // "slot" is the name the editor uses; "half" is what this route shipped
+    // with. Accepting both means a tab left open over a deploy keeps working.
+    half = body.slot ?? body.half ?? "";
+    dataUrl = body.dataUrl;
   } catch {
     return NextResponse.json({ error: "Malformed request." }, { status: 400 });
   }
 
-  if (half !== "before" && half !== "after") {
-    return NextResponse.json({ error: 'half must be "before" or "after".' }, { status: 400 });
+  /*
+    The slot decides the filename, so it is matched against a pattern rather
+    than trusted: it becomes a storage path, and a name nothing reads is the
+    kind of mistake you find weeks later. "extra-1" and up exist for apps
+    whose page shows more than a pair.
+  */
+  if (!/^(before|after|extra-[1-9])$/.test(half)) {
+    return NextResponse.json({ error: 'slot must be "before", "after" or "extra-1".."extra-9".' }, { status: 400 });
   }
   /*
     The slug decides a storage path, so it is checked against the apps that

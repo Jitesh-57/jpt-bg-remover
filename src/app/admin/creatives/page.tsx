@@ -1,18 +1,29 @@
 import type { Metadata } from "next";
 import { CREATIVE_APPS } from "@/lib/creative-apps";
-import CreativeUploader from "./CreativeUploader";
+import AdminShell from "./AdminShell";
 
-export const metadata: Metadata = { title: "Creatives", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Admin", robots: { index: false, follow: false } };
+export const dynamic = "force-dynamic";
 
 /**
- * /admin/creatives — put a before/after on an app page, without a deploy.
+ * /admin/creatives — the console.
  *
- * The list of apps is passed from the server as plain data. Everything else
- * happens in the browser: the file never leaves the machine until it has been
- * cropped and compressed, which is what makes dropping a 6 MB PNG on it
- * reasonable.
+ * The app list is passed from the server as plain data; everything else runs
+ * in the browser. The route keeps its old name so the link already in use
+ * still works.
  */
-export default function AdminCreativesPage() {
-  const apps = CREATIVE_APPS.map((a) => ({ slug: a.slug, name: a.h1, emoji: a.emoji }));
-  return <CreativeUploader apps={apps} />;
+export default function AdminPage() {
+  const apps = CREATIVE_APPS.map((a) => ({
+    slug: a.slug,
+    name: a.h1,
+    emoji: a.emoji,
+    title: a.title,
+    metaDescription: a.metaDescription,
+    keywords: a.keywords,
+    h1: a.h1,
+    tagline: a.tagline,
+    intro: a.intro,
+    badge: a.badge,
+  }));
+  return <AdminShell apps={apps} />;
 }
