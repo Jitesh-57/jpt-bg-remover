@@ -75,3 +75,41 @@ way.
 
 The base prompt also lost *"the same expression and soft natural lighting"* —
 that is a re-staging instruction contradicting itself.
+
+
+## What shape the answer takes
+
+"Age her to 73" came back as a collectible doll in a blister pack, on a shop
+shelf, with a before-and-after inset and **73 YEARS LATER** printed on the box.
+
+Every instruction had been followed. It was photoreal, it was her, it was
+re-staged. Nothing had said the answer is *a photograph of a person* — and
+"rebuild the whole picture" is an invitation to invent a concept if the output
+format is left open. (The concept it borrowed is on the site: `barbie-box` puts
+someone in exactly that packaging.)
+
+So the output form is stated separately from the transformation, because it is
+true of every transformation:
+
+| Form | Apps | |
+| --- | --- | --- |
+| `photograph` | 165 | One image. A real person photographed directly — no doll, figurine or model of them, no photo-of-a-photo, no border, frame, screen or layout, no text anywhere |
+| `product` | 17 | As above, but the subject may be an object: "no packaging" is backwards for a product shot |
+| `artefact` | 18 | One image, and that is the only rule — a Polaroid needs its border, a comic cover its title type, a figurine its box |
+
+All three forbid a collage, grid, diptych, before-and-after or set of
+variations, and require that the person appear exactly once with no younger
+version of them anywhere in the frame.
+
+### The artefact list is a list on purpose
+
+It was inferred from each app's own prompt first, which read better and was
+wrong. *"A magazine cover shoot"* and *"comic-movie lighting"* describe
+lighting; *"remove the watermark, logo or stamp"* describes a removal. All
+three were read as permission to produce the thing. Five of twenty-five were
+wrong that way — including a watermark remover being told it could add a
+watermark.
+
+A list goes stale. An inference that confidently says yes to a watermark
+remover cannot be trusted at all, and a wrong exemption silently reopens the
+exact failure the contract exists to close.

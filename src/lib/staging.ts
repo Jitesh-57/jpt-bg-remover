@@ -37,6 +37,37 @@ const IDENTITY =
   "nose, mouth, natural skin tone and ethnicity. It must be obviously the same " +
   "person to someone who knows them.";
 
+/*
+  What shape the answer takes.
+
+  The one that prompted this: "age her to 73" came back as a collectible doll
+  in a blister pack, on a shop shelf, with a before-and-after inset and the
+  words "73 YEARS LATER" printed on the box. Every instruction had been
+  followed — it was photoreal, it was her, it was re-staged. Nothing had said
+  the answer is *a photograph of a person*, and "rebuild the whole picture"
+  is an invitation to invent a concept if the output format is left open.
+
+  So it is stated. Separately from the transformation, because it is true of
+  every transformation.
+*/
+const OUTPUT_ONE_IMAGE =
+  "Return exactly one finished image. Not a collage, grid, panel layout, diptych, " +
+  "triptych, before-and-after comparison, contact sheet or set of variations — the " +
+  "person appears once and once only, and no earlier or younger version of them " +
+  "appears anywhere in the frame. The image fills the whole canvas edge to edge.";
+
+/** True of every photograph, including a product shot. */
+const OUTPUT_NO_LAYOUT =
+  "Do not present it as a printed or displayed thing: no border, mount, frame, " +
+  "album page, screen, poster or magazine layout around the image. Add no text, " +
+  "caption, label, date, number, watermark, logo or signature anywhere in it.";
+
+const OUTPUT_PHOTOGRAPH =
+  OUTPUT_ONE_IMAGE +
+  " The subject is a real person photographed directly — not a doll, figurine, " +
+  "toy, statue or model of them, and not a photograph of a photograph. " +
+  OUTPUT_NO_LAYOUT;
+
 const PHOTOREAL =
   "The result must look like a real photograph — natural skin texture, realistic " +
   "lighting and shadows, believable anatomy and hands, correct perspective — not " +
@@ -51,7 +82,9 @@ const DIRECTIVE: Record<StagingMode, string> = {
     only what to keep will keep everything.
   */
   restage:
-    "This is a complete re-staging of the photograph, not a retouch. Rebuild the " +
+    "This is a complete re-staging of the photograph, not a retouch — but the result " +
+    "is still one ordinary photograph of this person, the kind someone would actually " +
+    "have taken of them. Rebuild the " +
     "whole picture around the transformation described above: the clothing and " +
     "accessories, the hairstyle, the background and location, the pose and body " +
     "language, the framing, and the lighting and colour grade must all belong to " +
@@ -136,6 +169,64 @@ export function photorealDirective(): string {
 }
 
 /**
+ * Apps whose deliverable really is a designed object.
+ *
+ * A Polaroid app must be allowed its white border, a comic-cover app its title
+ * type, a figurine app its box. Forbidding those would break the apps that
+ * work.
+ *
+ * This was inferred from each app's own prompt at first, which read better and
+ * was wrong: "a magazine cover shoot" and "comic-movie lighting" describe
+ * lighting, "remove the watermark, logo or stamp" describes a removal, and all
+ * three were being read as permission to produce the thing. Five of
+ * twenty-five were wrong that way — and a wrong exemption silently reopens the
+ * exact failure this contract exists to close. A list can go stale; an
+ * inference that confidently says yes to a watermark remover cannot be
+ * trusted at all.
+ */
+const ARTEFACT_SLUGS = new Set([
+  "3d-figurine",
+  "90s-yearbook-photo",
+  "action-figure-generator",
+  "ai-yearbook-generator",
+  "album-cover-generator",
+  "barbie-box",
+  "book-cover-generator",
+  "comic-book-cover",
+  "comic-generator",
+  "gaming-logo-maker",
+  "lego-minifigure",
+  "linkedin-banner",
+  "linkedin-banner-maker",
+  "logo-maker",
+  "movie-poster-generator",
+  "polaroid-photo",
+  "tarot-card-portrait",
+  "wedding-invite-photo",
+]);
+
+export type OutputForm = "photograph" | "product" | "artefact";
+
+export function outputFormFor(app: { slug: string; cat?: string }): OutputForm {
+  if (ARTEFACT_SLUGS.has(app.slug)) return "artefact";
+  // A product shot is a photograph *of an object*, so "no packaging, no box"
+  // is exactly backwards for it — the packaging is the subject.
+  if (app.cat === "product") return "product";
+  return "photograph";
+}
+
+export function outputDirective(form: OutputForm): string {
+  if (form === "artefact") return OUTPUT_ONE_IMAGE;
+  if (form === "product") return OUTPUT_ONE_IMAGE + " " + OUTPUT_NO_LAYOUT;
+  return OUTPUT_PHOTOGRAPH;
+}
+
+/** The strict form, for surfaces that are always editing someone's photo. */
+export function photographOutputDirective(): string {
+  return OUTPUT_PHOTOGRAPH;
+}
+
+/**
  * Removes an app's own "must look like a real photograph" sentence.
  *
  * Nearly every one of the 200 app prompts ends with a variant of it, written
@@ -169,6 +260,6 @@ export function stripOwnPhotoreal(prompt: string): string {
 export function editorDirective(instruction: string): string {
   return (
     `Apply this edit to the photograph: ${instruction.trim()}\n\n` +
-    DIRECTIVE.minimal + " " + PHOTOREAL + " Return only the edited image."
+    DIRECTIVE.minimal + " " + PHOTOREAL + " " + OUTPUT_PHOTOGRAPH
   );
 }

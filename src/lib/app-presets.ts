@@ -164,7 +164,7 @@ export function presetsFor(app: CreativeApp, tab: PresetTab): Preset[] {
  * style" and the answer needs to arrive while the model is still reading about
  * the thing it qualifies. See lib/app-options.ts.
  */
-import { stagingDirective, stagingModeFor, photorealDirective, stripOwnPhotoreal } from "@/lib/staging";
+import { stagingDirective, stagingModeFor, photorealDirective, stripOwnPhotoreal, outputDirective, outputFormFor } from "@/lib/staging";
 import { curatedCategory } from "@/lib/app-options";
 
 export function buildPrompt(
@@ -210,6 +210,15 @@ export function buildPrompt(
   const mode = tab === "custom" && customText.trim() ? "minimal" : stagingModeFor(app, curatedCategory(app.slug));
   parts.push(stagingDirective(mode));
   parts.push(photorealDirective());
+  /*
+    What shape the answer takes — one photograph, not a concept.
+
+    Apps that genuinely produce a designed object (a Polaroid's border, a
+    comic cover's title type, a figurine's box) keep the freedom to do it;
+    they are recognised from their own prompt rather than a list. Everything
+    else gets the strict form. See lib/staging.ts.
+  */
+  parts.push(outputDirective(outputFormFor(app)));
 
   return parts.join(" ");
 }
