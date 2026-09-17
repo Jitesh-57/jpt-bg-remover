@@ -11,6 +11,13 @@
 
 import { falConfigured, falEditImage, falGenerateImage, falRemoveBackground, FalError, type FalModel } from "@/lib/fal";
 import {
+  openaiConfigured,
+  openaiEditImage,
+  openaiImageModel,
+  OpenAIImageError,
+  type OpenAISize,
+} from "@/lib/openai-image";
+import {
   geminiEditImage,
   geminiGenerateBg,
   geminiRemoveBg,
@@ -302,4 +309,101 @@ export function generateFromText(
     return run();
   }
   return viaFal(run, () => geminiGenerateFromText(prompt, opts), "text-to-image");
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   OpenAI-first editing, for the tools where the model is the product.
+   ──────────────────────────────────────────────────────────────────────── */
+
+/** Which model actually produced an image. */
+export type Engine = "gpt-image" | "nano-banana";
+
+export interface EngineResult {
+  dataUrl: string;
+  engine: Engine;
+  /** Set only when the request could not be served by the model asked for. */
+  downgradeReason?: string;
+}
+
+/**
+ * Runs an edit on OpenAI's image model, and says which engine served it.
+ *
+ * Three rungs, in order:
+ *
+ *   1. Our own OpenAI key. Direct, and the only path that can ask for
+ *      `input_fidelity: high` — the setting that keeps the reference face
+ *      instead of inventing a similar-looking person.
+ *   2. fal's BYOK GPT Image endpoints, for an account that has the key on fal
+ *      rather than here.
+ *   3. Nano Banana (and then Gemini), so the tool still produces something.
+ *
+ * Rung 3 is the part that needs care. Silently serving a different model is
+ * how "use GPT Image for headshots" turns into "the headshots still look the
+ * same and nobody can say why", so the result carries the engine and the
+ * reason, the caller surfaces it, and the log states it plainly.
+ */
+export async function editImageOpenAIFirst(
+  src: string,
+  prompt: string,
+  opts?: { size?: OpenAISize; budgetMs?: number; label?: string }
+): Promise<EngineResult> {
+  const label = opts?.label || "edit";
+  const reasons: string[] = [];
+
+  if (openaiConfigured()) {
+    /*
+      Retry a throttle before dropping down a rung.
+
+      This is the lesson viaFal() records above, and it matters more here: a
+      burst of four headshots is four requests in the same second, and a 429
+      that clears in two is not a reason to serve the run on a different model
+      and put a notice on the page. Anything that is not transient — a bad
+      key, an exhausted quota, a rejected image — drops straight through,
+      because asking again will not change the answer.
+    */
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        const dataUrl = await openaiEditImage(src, prompt, {
+          size: opts?.size,
+          budgetMs: opts?.budgetMs,
+        });
+        return { dataUrl, engine: "gpt-image" };
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : String(e);
+        const transient = e instanceof OpenAIImageError && e.transient && !e.billingBlocked;
+        if (transient && attempt < 2) {
+          const wait = 1500 * (attempt + 1);
+          console.warn(`[ai-image] ${label}: OpenAI throttled; retrying in ${wait}ms`);
+          await sleep(wait);
+          continue;
+        }
+        reasons.push(`openai: ${msg}`);
+        console.error(`[ai-image] ${label}: OpenAI (${openaiImageModel()}) failed — ${msg}`);
+        break;
+      }
+    }
+  } else {
+    reasons.push("openai: OPENAI_API_KEY is not set");
+  }
+
+  // Rung 2 — the same model through fal, if the key lives there instead.
+  if (falConfigured()) {
+    try {
+      const dataUrl = await falEditImage(src, prompt, "gpt-image", undefined, opts?.budgetMs);
+      return { dataUrl, engine: "gpt-image" };
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e);
+      reasons.push(`fal byok: ${msg}`);
+      console.error(`[ai-image] ${label}: fal's BYOK GPT Image failed — ${msg}`);
+    }
+  }
+
+  const why = reasons.join(" | ");
+  console.warn(`[ai-image] ${label}: falling back to Nano Banana. ${why}`);
+  const dataUrl = await viaFal(
+    () => falEditImage(src, prompt, "nano-banana", undefined, opts?.budgetMs),
+    () => geminiEditImage(src, prompt),
+    label
+  );
+  return { dataUrl, engine: "nano-banana", downgradeReason: why };
 }

@@ -24,7 +24,7 @@ const PRESET_COLORS = [
   { label: "Black", color: "#000000" },
 ];
 
-interface GeneratedImage { id: number; name: string; tag: string; url: string; }
+interface GeneratedImage { id: number; name: string; tag: string; url: string; engine?: string; }
 interface LibraryItem { id: string; url: string; name: string; tag: string; type: "generated" | "edited"; savedAt: number; }
 interface LightboxItem { url: string; name: string; tag: string; onEdit?: () => void; onDelete?: () => void; }
 interface PendingColor { color: string; label: string; }
@@ -36,6 +36,11 @@ type HeadshotApiBody = {
   images?: GeneratedImage[];
   error?: string;
   errors?: string[];
+  /**
+   * Set only when the premium model could not serve the request. Shown as-is:
+   * the route has already stripped the part that names our providers.
+   */
+  engineNotice?: string;
 };
 
 type Gender = "women" | "men";
@@ -133,6 +138,7 @@ export default function HeadshotPage() {
   const [generating, setGenerating] = useState(false);
   const [progress, setProgress] = useState("");
   const [images, setImages] = useState<GeneratedImage[]>([]);
+  const [engineNotice, setEngineNotice] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<GeneratedImage | null>(null);
   const [editedUrl, setEditedUrl] = useState<string | null>(null);
   const [editingBg, setEditingBg] = useState(false);
@@ -273,6 +279,7 @@ export default function HeadshotPage() {
     setGenerating(true);
     setError(null);
     setImages([]);
+    setEngineNotice(null);
     setProgress(`Generating ${selectedStyleIds.length} headshot${selectedStyleIds.length > 1 ? "s" : ""}…`);
     try {
       const res = await fetch("/api/headshot/generate", {
@@ -287,6 +294,7 @@ export default function HeadshotPage() {
       }
       if (!data.images || data.images.length === 0) throw new Error(data.errors?.[0] || "No images generated");
       setImages(data.images);
+      setEngineNotice(data.engineNotice || null);
       setStep("gallery");
       const now = Date.now();
       addToLibrary(data.images.map((img: GeneratedImage, i: number) => ({
@@ -585,10 +593,10 @@ export default function HeadshotPage() {
                     <div style={s.cardMeta}>
                       <div style={{ display: "flex", flexDirection: "column" as const, gap: 2, minWidth: 0 }}>
                         <span style={{ ...s.cardName, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const }}>{item.name}</span>
-                        <span style={{ ...s.cardTag, alignSelf: "flex-start", background: item.type === "edited" ? "#FFF0E8" : "#EEEEF8", color: item.type === "edited" ? "#C05A00" : "var(--accent)" }}>{item.tag}</span>
+                        <span style={{ ...s.cardTag, alignSelf: "flex-start", background: "var(--surface-3)", color: item.type === "edited" ? "var(--accent-strong)" : "var(--accent)" }}>{item.tag}</span>
                       </div>
                       <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
-                        <button style={{ ...s.dlIconBtn, background: "var(--surface-2)", borderColor: "#C4C4F0", color: "var(--accent)" }} title="Edit" onClick={() => handleEditFromLibrary(item)}>✏️</button>
+                        <button style={{ ...s.dlIconBtn, background: "var(--surface-2)", borderColor: "var(--accent-border)", color: "var(--accent)" }} title="Edit" onClick={() => handleEditFromLibrary(item)}>✏️</button>
                         <button style={s.dlIconBtn} title="Download" onClick={() => handleDownload(item.url, item.name, item.id)} disabled={downloading === item.id}>
                           {downloading === item.id ? <span style={{ ...s.spin, width: 14, height: 14 }} /> : "⬇"}
                         </button>
@@ -709,6 +717,15 @@ export default function HeadshotPage() {
               <div><h2 style={s.h2}>Your Headshots</h2><p style={s.sub2}>Click any image to preview · use ✏️ to edit background</p></div>
               {sourcePreview && <img src={sourcePreview} alt="source" style={s.galleryThumb} />}
             </div>
+            {/*
+              Only shown when the premium model could not serve the run.
+              Normally there is nothing here — a banner naming the engine on
+              every successful generation is noise, but silence on a
+              substitution is how "why do these still look the same?" happens.
+            */}
+            {engineNotice && (
+              <div style={s.engineNotice} role="status">⚠️ {engineNotice}</div>
+            )}
             <div style={s.imageGrid}>
               {images.map((img, idx) => (
                 <div key={img.id} className="hs-card" style={s.imgCard}>
@@ -722,7 +739,7 @@ export default function HeadshotPage() {
                       <span style={{ ...s.cardTag, alignSelf: "flex-start" }}>{img.tag}</span>
                     </div>
                     <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
-                      <button style={{ ...s.dlIconBtn, background: "var(--surface-2)", borderColor: "#C4C4F0", color: "var(--accent)" }} title="Edit Background" onClick={() => handleSelectImage(img)}>✏️</button>
+                      <button style={{ ...s.dlIconBtn, background: "var(--surface-2)", borderColor: "var(--accent-border)", color: "var(--accent)" }} title="Edit Background" onClick={() => handleSelectImage(img)}>✏️</button>
                       <button style={s.dlIconBtn} title="Download" onClick={() => handleDownload(img.url, img.name, String(img.id))} disabled={downloading === String(img.id)}>
                         {downloading === String(img.id) ? <span style={{ ...s.spin, width: 14, height: 14 }} /> : "⬇"}
                       </button>
@@ -770,7 +787,7 @@ export default function HeadshotPage() {
                 </button>
               </div>
 
-              <div className="hs-divider" style={{ fontSize: 11, color: "#BBB", fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: 1 }}>or choose background</div>
+              <div className="hs-divider" style={{ fontSize: 11, color: "var(--text-faint)", fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: 1 }}>or choose background</div>
 
               <div style={s.section}>
                 <p style={s.sLabel}>Preset Colors</p>
@@ -784,7 +801,7 @@ export default function HeadshotPage() {
                       style={{
                         ...s.colorBtn,
                         background: c.color,
-                        border: c.color === "#FFFFFF" ? "2px solid #DDD" : `2px solid ${c.color}`,
+                        border: c.color === "#FFFFFF" ? "2px solid var(--border-strong)" : `2px solid ${c.color}`,
                         outline: pendingColor?.color === c.color ? "3px solid var(--accent)" : "none",
                         outlineOffset: 2,
                       }}
@@ -870,17 +887,25 @@ const steps: Step[] = ["upload", "styles", "gallery", "edit"];
 
 const s: Record<string, React.CSSProperties> = {
   root: { minHeight: "100vh", background: "var(--surface-2)", fontFamily: "system-ui, -apple-system, sans-serif", color: "var(--text)" },
-  header: { position: "sticky", top: 0, zIndex: 100, background: "rgba(255,255,255,0.92)", backdropFilter: "blur(10px)", borderBottom: "1px solid var(--border)" },
+  /*
+    This bar was never converted when the site went dark.
+
+    It was rgba(255,255,255,0.92) — a white strip across a near-black page —
+    and `logoText` inherited var(--text), which is #F4F4F7. Near-white on
+    white: the tool's own name was invisible. Everything here is a token now,
+    so the next theme change takes this page with it.
+  */
+  header: { position: "sticky", top: 0, zIndex: 100, background: "rgba(11,11,14,0.86)", backdropFilter: "blur(10px)", borderBottom: "1px solid var(--border)" },
   headerInner: { maxWidth: 1200, margin: "0 auto", padding: "12px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 },
   logo: { display: "flex", alignItems: "center", gap: 8, cursor: "pointer", flexShrink: 0 },
-  logoText: { fontSize: 17, fontWeight: 800, letterSpacing: "-0.4px" },
+  logoText: { fontSize: 17, fontWeight: 800, letterSpacing: "-0.4px", color: "var(--text)" },
   stepBar: { display: "flex", alignItems: "center", gap: 0 },
   stepItem: { display: "flex", alignItems: "center", gap: 6 },
-  stepDot: { width: 26, height: 26, borderRadius: "50%", background: "#E8E8F0", color: "var(--text-faint)", fontSize: 12, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 },
+  stepDot: { width: 26, height: 26, borderRadius: "50%", background: "var(--surface-3)", color: "var(--text-muted)", fontSize: 12, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 },
   stepDotActive: { background: "var(--accent-fill)", color: "#fff" },
   stepDotDone: { background: "var(--success)", color: "#fff" },
-  stepLabel: { fontSize: 12, color: "var(--text-faint)", whiteSpace: "nowrap" as const },
-  stepLine: { width: 32, height: 1, background: "var(--surface-2)", margin: "0 4px" },
+  stepLabel: { fontSize: 12, color: "var(--text-muted)", whiteSpace: "nowrap" as const },
+  stepLine: { width: 32, height: 1, background: "var(--border-strong)", margin: "0 4px" },
   headerActions: { display: "flex", gap: 8, alignItems: "center", flexShrink: 0 },
   ghostBtn: { background: "none", border: "1px solid var(--border)", borderRadius: 8, padding: "6px 14px", fontSize: 13, cursor: "pointer", color: "var(--text-muted)", display: "flex", alignItems: "center", gap: 6 },
   libBadge: { background: "var(--accent-fill)", color: "#fff", borderRadius: 10, padding: "1px 7px", fontSize: 11, fontWeight: 700 },
@@ -892,7 +917,7 @@ const s: Record<string, React.CSSProperties> = {
   card: { position: "relative", zIndex: 1, background: "var(--surface)", borderRadius: 20, padding: "40px 48px", maxWidth: 520, width: "100%", boxShadow: "0 4px 32px rgba(0,0,0,0.08)", display: "flex", flexDirection: "column" as const, gap: 20 },
   h1: { margin: 0, fontSize: 28, fontWeight: 800, letterSpacing: "-0.6px" },
   sub: { margin: 0, fontSize: 15, color: "var(--text-muted)", lineHeight: 1.5 },
-  dropzone: { border: "2px dashed #D0D0E0", borderRadius: 14, minHeight: 220, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", transition: "all 0.2s" },
+  dropzone: { border: "2px dashed var(--border-strong)", borderRadius: 14, minHeight: 220, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", transition: "all 0.2s" },
   dropActive: { borderColor: "var(--accent)", background: "var(--accent-soft)" },
   previewBox: { position: "relative", width: "100%", height: "100%" },
   previewImg: { width: "100%", maxHeight: 300, objectFit: "cover" as const, display: "block" },
@@ -901,7 +926,7 @@ const s: Record<string, React.CSSProperties> = {
   dropContent: { textAlign: "center" as const, padding: 32 },
   dropTitle: { margin: "0 0 6px", fontWeight: 700, fontSize: 15 },
   dropHint: { margin: 0, fontSize: 13, color: "var(--text-faint)" },
-  err: { background: "var(--danger-soft)", border: "1px solid var(--danger-soft)", borderRadius: 10, padding: "10px 14px", fontSize: 13, color: "#C00" },
+  err: { background: "var(--danger-soft)", border: "1px solid var(--danger-soft)", borderRadius: 10, padding: "10px 14px", fontSize: 13, color: "var(--danger)" },
   primaryBtn: { background: "linear-gradient(135deg, var(--accent), var(--accent-2))", color: "#fff", border: "none", borderRadius: 12, padding: "14px 24px", fontSize: 15, fontWeight: 700, cursor: "pointer", width: "100%" },
   btnOff: { opacity: 0.45, cursor: "not-allowed" as const },
   progressNote: { margin: 0, fontSize: 12, color: "var(--text-faint)", textAlign: "center" as const },
@@ -913,7 +938,7 @@ const s: Record<string, React.CSSProperties> = {
   stylesPanel: { flex: 1, background: "var(--surface)", borderRadius: 20, padding: "28px 32px", boxShadow: "0 4px 24px rgba(0,0,0,0.07)", display: "flex", flexDirection: "column" as const, gap: 20 },
   stylesPanelHeader: { display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 },
   h2: { margin: 0, fontSize: 20, fontWeight: 800, letterSpacing: "-0.3px" },
-  sub2: { margin: "4px 0 0", fontSize: 13, color: "#777" },
+  sub2: { margin: "4px 0 0", fontSize: 13, color: "var(--text-muted)" },
   quickBtns: { display: "flex", gap: 6, flexShrink: 0 },
   tinyBtn: { background: "var(--surface-2)", border: "1px solid var(--border)", borderRadius: 6, padding: "4px 12px", fontSize: 12, cursor: "pointer", color: "var(--text-muted)" },
   genderRow: { display: "flex", gap: 10 },
@@ -922,22 +947,23 @@ const s: Record<string, React.CSSProperties> = {
   styleGrid: { display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 10 },
   styleCard: { background: "var(--surface-2)", border: "2px solid transparent", borderRadius: 12, padding: "14px 10px", cursor: "pointer", display: "flex", flexDirection: "column" as const, alignItems: "center", gap: 6, transition: "all 0.15s", textAlign: "center" as const },
   styleCardSel: { background: "var(--surface-2)", border: "2px solid var(--accent)" },
-  styleNum: { width: 28, height: 28, borderRadius: "50%", background: "#E8E8F4", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, color: "var(--accent)" },
-  styleName: { fontSize: 12, fontWeight: 700, color: "#1A1A2E", lineHeight: 1.3 },
-  styleTag: { fontSize: 10, color: "var(--text-faint)", background: "#EEEEF8", borderRadius: 4, padding: "2px 6px", textTransform: "uppercase" as const, letterSpacing: 0.5 },
+  styleNum: { width: 28, height: 28, borderRadius: "50%", background: "var(--surface-3)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, color: "var(--accent)" },
+  styleName: { fontSize: 12, fontWeight: 700, color: "var(--text)", lineHeight: 1.3 },
+  styleTag: { fontSize: 10, color: "var(--text-muted)", background: "var(--surface-3)", borderRadius: 4, padding: "2px 6px", textTransform: "uppercase" as const, letterSpacing: 0.5 },
 
   galleryLayout: { position: "relative", zIndex: 1, display: "flex", flexDirection: "column" as const, gap: 20, maxWidth: 1100, width: "100%" },
+  engineNotice: { background: "var(--accent-soft)", border: "1px solid var(--accent-border)", color: "var(--accent-strong)", borderRadius: 12, padding: "11px 16px", fontSize: 13, fontWeight: 600, lineHeight: 1.5 },
   galleryHeader: { background: "var(--surface)", borderRadius: 16, padding: "20px 28px", boxShadow: "0 2px 12px rgba(0,0,0,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap" as const, gap: 12 },
-  galleryThumb: { width: 56, height: 72, objectFit: "cover" as const, borderRadius: 8, border: "2px solid #E8E8F0" },
+  galleryThumb: { width: 56, height: 72, objectFit: "cover" as const, borderRadius: 8, border: "2px solid var(--border-strong)" },
   imageGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 16 },
   imgCard: { position: "relative", borderRadius: 14, overflow: "hidden", background: "var(--surface)", boxShadow: "0 2px 12px rgba(0,0,0,0.09)", transition: "all 0.15s" },
   cardImg: { width: "100%", aspectRatio: "3/4", objectFit: "cover" as const, display: "block" },
   cardMeta: { padding: "10px 12px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8 },
   cardName: { fontSize: 12, fontWeight: 700, color: "var(--text)" },
-  cardTag: { fontSize: 10, background: "#EEEEF8", color: "var(--accent)", borderRadius: 4, padding: "2px 6px", fontWeight: 600 },
+  cardTag: { fontSize: 10, background: "var(--surface-3)", color: "var(--accent)", borderRadius: 4, padding: "2px 6px", fontWeight: 600 },
   cardHover: { position: "absolute", inset: 0, background: "var(--accent-soft)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 800, color: "#fff", opacity: 0, transition: "opacity 0.15s", backdropFilter: "blur(2px)", textShadow: "0 1px 4px rgba(0,0,0,0.4)" },
   dlIconBtn: { flexShrink: 0, width: 32, height: 32, borderRadius: 8, border: "1px solid var(--border)", background: "var(--surface-2)", cursor: "pointer", fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-muted)" },
-  dangerIconBtn: { flexShrink: 0, width: 32, height: 32, borderRadius: 8, border: "1px solid #FFD0D0", background: "var(--surface-3)", cursor: "pointer", fontSize: 20, lineHeight: 1, display: "flex", alignItems: "center", justifyContent: "center", color: "#C62828" },
+  dangerIconBtn: { flexShrink: 0, width: 32, height: 32, borderRadius: 8, border: "1px solid var(--danger-soft)", background: "var(--surface-3)", cursor: "pointer", fontSize: 20, lineHeight: 1, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--danger)" },
   emptyLib: { background: "var(--surface)", borderRadius: 20, padding: "60px 40px", textAlign: "center" as const, boxShadow: "0 2px 12px rgba(0,0,0,0.06)", display: "flex", flexDirection: "column" as const, alignItems: "center" },
 
   editLayout: { position: "relative", zIndex: 1, display: "flex", gap: 28, alignItems: "flex-start", maxWidth: 1000, width: "100%" },
@@ -958,7 +984,7 @@ const s: Record<string, React.CSSProperties> = {
   applyBtn: { background: "var(--accent-fill)", color: "#fff", border: "none", borderRadius: 8, padding: "9px 16px", fontSize: 13, fontWeight: 700, cursor: "pointer", marginLeft: "auto", transition: "background 0.2s" },
   uploadBgBtn: { background: "var(--surface-2)", border: "1px solid var(--border)", borderRadius: 10, padding: "12px 16px", fontSize: 13, fontWeight: 600, cursor: "pointer", color: "var(--text-muted)", textAlign: "left" as const, transition: "all 0.15s" },
   bgLockNote: { margin: "-2px 0 0", fontSize: 12, color: "var(--text-muted)", lineHeight: 1.45 },
-  pendingRow: { display: "flex", alignItems: "center", justifyContent: "space-between", background: "var(--accent-soft)", border: "1.5px solid #C4C4F0", borderRadius: 10, padding: "10px 14px", gap: 10 },
+  pendingRow: { display: "flex", alignItems: "center", justifyContent: "space-between", background: "var(--accent-soft)", border: "1.5px solid var(--accent-border)", borderRadius: 10, padding: "10px 14px", gap: 10 },
   clearBtn: { background: "none", border: "none", color: "var(--text-faint)", cursor: "pointer", fontSize: 14, padding: 4, flexShrink: 0 },
   thumbRow: { display: "flex", flexWrap: "wrap" as const, gap: 8 },
   thumb: { width: 60, height: 76, objectFit: "cover" as const, borderRadius: 8, cursor: "pointer", transition: "border-color 0.15s" },
