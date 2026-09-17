@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkAuth, checkEntitlement, withCredits } from "@/lib/auth";
 import { editImageGptFirst, type Engine } from "@/lib/ai-image";
+import { photographOutputDirective } from "@/lib/staging";
 import { WOMEN_STYLES, MEN_STYLES } from "@/lib/headshot-prompts";
 
 export const runtime = "nodejs";
@@ -55,7 +56,10 @@ export async function POST(req: NextRequest) {
     `CAMERA: shot on a full-frame camera with an 85mm lens at f/2, natural skin texture with ` +
     `visible pores, catchlights in the eyes, realistic fabric detail, soft studio-quality light. ` +
     `Sharp focus on the eyes. Vertical portrait framing. ` +
-    `No text, no watermark, no logo, no illustration or 3D-render look.`;
+    `No illustration or 3D-render look.\n\n` +
+    // One headshot, not a sheet of proofs — the same contract the creative
+    // apps get. A studio would hand you one photograph per style.
+    photographOutputDirective();
 
   const results = await Promise.allSettled(
     selectedStyles.map(async (style) => {
