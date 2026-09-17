@@ -9,13 +9,10 @@
  * the provider can be switched in one place.
  */
 
-import { falConfigured, falEditImage, falGenerateImage, falGptImageEndpoints, falRemoveBackground, FalError, type FalModel } from "@/lib/fal";
 import {
-  openaiConfigured,
-  openaiEditImage,
-  openaiImageModel,
-  type OpenAISize,
-} from "@/lib/openai-image";
+  falConfigured, falEditImage, falEndpoint, falGenerateImage, falModelIds, falModelSpec,
+  falRemoveBackground, FalError, type FalModel,
+} from "@/lib/fal";
 import {
   geminiEditImage,
   geminiGenerateBg,
@@ -26,9 +23,25 @@ import {
 
 export type { FalModel };
 
-/** Which model a request asked for; anything unrecognised falls to the default. */
+/**
+ * Which model a request asked for; anything unrecognised falls to the default.
+ *
+ * "gpt-image" is kept as an alias rather than a model. It is what every
+ * existing picker, saved preference and admin URL sends, and it used to mean
+ * the BYOK GPT Image 1 endpoint. Mapping it to the current default GPT model
+ * upgrades all of them at once instead of stranding them on a name.
+ */
+export const DEFAULT_GPT_MODEL: FalModel = "gpt-image-2.5-flare";
+
 export function resolveModel(requested?: string): FalModel {
-  return requested === "gpt-image" ? "gpt-image" : "nano-banana";
+  if (!requested) return "nano-banana";
+  if (requested === "gpt-image") return DEFAULT_GPT_MODEL;
+  return (falModelIds() as string[]).includes(requested) ? (requested as FalModel) : "nano-banana";
+}
+
+/** True for any of OpenAI's models, whichever one was picked. */
+function isGpt(m: FalModel): boolean {
+  return falModelSpec(m).family === "gpt";
 }
 
 /**
@@ -158,28 +171,30 @@ async function viaFal(
 
 
 /**
- * Runs a fal call, dropping to Nano Banana if GPT Image is not set up.
+ * Runs a fal call, dropping to Nano Banana if the chosen GPT model cannot
+ * serve it.
  *
- * The GPT Image endpoints are fal's BYOK ones — `/byok` in the path — which
- * need an OpenAI key configured on the fal account. Without it fal answers
- * 401/403, indistinguishable at a glance from a bad FAL_KEY, and the user
- * sees "the image service rejected our credentials" for a model sitting right
- * there in the picker. So picking it cannot dead-end: the request is served
- * by the default model instead, and the substitution is logged.
+ * A model in a picker must not dead-end. fal renames and retires endpoints,
+ * an account may not be entitled to every model, and the old BYOK endpoint
+ * additionally needs an OpenAI key on the fal account — all of which surface
+ * as 401/403/404, indistinguishable at a glance from a bad FAL_KEY. So the
+ * request is served by the default model instead, and the substitution is
+ * logged with the endpoint that refused it, which is the part that makes it
+ * diagnosable.
  */
 async function withModelFallback(
   m: FalModel,
   run: (model: FalModel) => Promise<string>
 ): Promise<string> {
-  if (m !== "gpt-image") return run(m);
+  if (!isGpt(m)) return run(m);
   try {
     return await run(m);
   } catch (e) {
     const fal = e instanceof FalError ? e : null;
-    if (fal && (fal.status === 401 || fal.status === 403)) {
+    if (fal && (fal.status === 401 || fal.status === 403 || fal.status === 404)) {
       console.warn(
-        "[ai-image] GPT Image needs an OpenAI key on the fal account (BYOK); " +
-        "serving this request with Nano Banana instead."
+        `[ai-image] ${m} (${falEndpoint(m, "edit")}) refused the request (${fal.status}); ` +
+        `serving it with Nano Banana instead. fal said: ${fal.message}`
       );
       return run("nano-banana");
     }
@@ -315,107 +330,118 @@ export function generateFromText(
    ──────────────────────────────────────────────────────────────────────── */
 
 /** Which model actually produced an image. */
-export type Engine = "gpt-image" | "nano-banana";
+export type Engine = FalModel;
 
 export interface EngineResult {
   dataUrl: string;
   engine: Engine;
-  /** Set only when the request could not be served by the model asked for. */
+  /** Set only when no GPT model could serve the request. Operator-facing. */
   downgradeReason?: string;
 }
 
 /**
- * Runs an edit on GPT Image, and says which engine served it.
+ * The GPT models to try, best first.
  *
- * fal is the route, because fal is where the account and its balance are.
- * Three rungs, in order:
+ * Sunburst leads because of what it is built for — edits scoped precisely to
+ * the instruction with the subject preserved — which is exactly a headshot:
+ * change the clothes, the setting and the light, change nothing about the
+ * face. Flare is next as the faster general-purpose one, then GPT Image 2.
  *
- *   1. fal's GPT Image endpoints. Overridable — see falGptImageEndpoints() —
- *      because the defaults are fal's BYOK ones, which call OpenAI with a key
- *      configured on the fal account.
- *   2. A direct OpenAI key, if one is set here. Optional and normally unset;
- *      it exists because it is the only path that can ask for
- *      `input_fidelity: high`, which holds the reference face harder than
- *      anything available through fal's wrapper. Worth having when identity
- *      drift on a particular photo is the problem; not worth a second
- *      supplier otherwise.
- *   3. Nano Banana (and then Gemini), so the tool still produces something.
+ * Overridable as a comma-separated list, because this is a judgement about
+ * which model looks best, and that is the kind of thing worth changing
+ * without a deploy:
  *
- * Rung 3 is the part that needs care. Silently serving a different model is
- * how "use GPT Image for headshots" turns into "the headshots still look the
- * same and nobody can say why", so the result carries the engine and the
- * reason, the caller surfaces it, and the log states it plainly.
+ *   HEADSHOT_MODELS=gpt-image-2.5-flare,gpt-image-2
+ */
+const DEFAULT_GPT_CASCADE: FalModel[] = [
+  "gpt-image-2.5-sunburst",
+  "gpt-image-2.5-flare",
+  "gpt-image-2",
+];
+
+export function gptCascade(): FalModel[] {
+  const raw = (process.env.HEADSHOT_MODELS || "").trim();
+  if (!raw) return DEFAULT_GPT_CASCADE;
+  const ids = falModelIds() as string[];
+  const picked = raw.split(",").map((x) => x.trim()).filter((x) => ids.includes(x)) as FalModel[];
+  return picked.length ? picked : DEFAULT_GPT_CASCADE;
+}
+
+/**
+ * Runs an edit on the best GPT model that will take it, and says which one did.
+ *
+ * Why a cascade rather than one model: fal hosts several of OpenAI's image
+ * models, they are not equally available to every account, and fal renames and
+ * retires endpoints. One hard-coded path turns any of that into "headshots
+ * stopped looking right" with no way to see why. Trying them in order costs a
+ * single rejected round trip per unavailable model — a 4xx comes back
+ * immediately — and means a rename takes out one rung instead of the feature.
+ *
+ * Nano Banana is the last rung, so the tool always produces something. That
+ * substitution is never silent in the log: the engine and the reason are both
+ * recorded, because "the headshots look the same as before" and "we switched
+ * models" being simultaneously true, with nothing connecting them, is the
+ * failure this function exists to prevent.
  */
 export async function editImageGptFirst(
   src: string,
   prompt: string,
-  opts?: { aspectRatio?: string; size?: OpenAISize; budgetMs?: number; label?: string }
+  opts?: { aspectRatio?: string; budgetMs?: number; label?: string }
 ): Promise<EngineResult> {
   const label = opts?.label || "edit";
   const reasons: string[] = [];
 
-  /*
-    Retry a throttle before dropping down a rung.
+  if (!falConfigured()) {
+    const dataUrl = await geminiEditImage(src, prompt);
+    return { dataUrl, engine: "nano-banana", downgradeReason: "FAL_KEY is not set" };
+  }
 
-    This is the lesson viaFal() records above, and it matters more here: a
-    burst of four headshots is four requests in the same second, and a 429
-    that clears in two is not a reason to serve the run on a different model
-    and put a notice on the page. Anything that is not transient — a rejected
-    key, an exhausted balance, a refused image — drops straight through,
-    because asking again will not change the answer.
-  */
-  if (falConfigured()) {
+  for (const model of gptCascade()) {
+    /*
+      Retry a throttle before moving down the cascade.
+
+      This is the lesson viaFal() records above. A burst of four headshots is
+      four requests in the same second, and a 429 that clears in two is not a
+      reason to finish the run on a different model. Anything that is not
+      transient — a rejected key, an exhausted balance, an endpoint this
+      account cannot reach — moves on immediately, because asking the same
+      endpoint again will not change the answer.
+    */
     for (let attempt = 0; attempt < 3; attempt++) {
       try {
-        const dataUrl = await falEditImage(src, prompt, "gpt-image", opts?.aspectRatio, opts?.budgetMs);
-        return { dataUrl, engine: "gpt-image" };
+        const dataUrl = await falEditImage(src, prompt, model, opts?.aspectRatio, opts?.budgetMs);
+        if (reasons.length) {
+          console.warn(`[ai-image] ${label}: served by ${model} after ${reasons.length} refused. ${reasons.join(" | ")}`);
+        }
+        return { dataUrl, engine: model };
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
         const fal = e instanceof FalError ? e : null;
         if (fal?.transient && !fal.billingBlocked && attempt < 2) {
           const wait = 1500 * (attempt + 1);
-          console.warn(`[ai-image] ${label}: fal GPT Image throttled; retrying in ${wait}ms`);
+          console.warn(`[ai-image] ${label}: ${model} throttled; retrying in ${wait}ms`);
           await sleep(wait);
           continue;
         }
         /*
-          A 401/403 here is worth spelling out, because it is the likely one
-          and it does not mean what it looks like. fal's default GPT Image
-          endpoints are BYOK: fal authenticates us fine and then cannot reach
-          OpenAI, because no OpenAI key is set on the fal account. The same
-          status also covers a genuinely bad FAL_KEY, which is why the log
-          names both rather than guessing.
+          An exhausted balance ends the whole cascade. Every model here is
+          billed to the same fal account, so the next one cannot succeed, and
+          trying it just spends time before the same failure — while hiding
+          the one message the account owner actually needs.
         */
-        if (fal && (fal.status === 401 || fal.status === 403)) {
-          console.error(
-            `[ai-image] ${label}: fal refused GPT Image (${fal.status}). ` +
-            `Either FAL_KEY is wrong, or this is a BYOK endpoint and the fal account has no ` +
-            `OpenAI key on it (fal.ai → Settings → Integrations). Endpoint: ${falGptImageEndpoints().edit}`
-          );
+        if (fal?.billingBlocked) {
+          console.error(`[ai-image] ${label}: fal will not serve this account — ${msg}`);
+          throw new ProviderUnavailableError(msg);
         }
-        reasons.push(`fal gpt-image: ${msg}`);
-        console.error(`[ai-image] ${label}: fal GPT Image failed — ${msg}`);
+        reasons.push(`${model}: ${msg}`);
+        console.error(`[ai-image] ${label}: ${model} (${falEndpoint(model, "edit")}) failed — ${msg}`);
         break;
       }
-    }
-  } else {
-    reasons.push("fal gpt-image: FAL_KEY is not set");
-  }
-
-  // Rung 2 — a direct OpenAI key, only if one is configured here.
-  if (openaiConfigured()) {
-    try {
-      const dataUrl = await openaiEditImage(src, prompt, { size: opts?.size, budgetMs: opts?.budgetMs });
-      return { dataUrl, engine: "gpt-image" };
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : String(e);
-      reasons.push(`openai: ${msg}`);
-      console.error(`[ai-image] ${label}: direct OpenAI (${openaiImageModel()}) failed — ${msg}`);
     }
   }
 
   const why = reasons.join(" | ");
-  console.warn(`[ai-image] ${label}: falling back to Nano Banana. ${why}`);
+  console.warn(`[ai-image] ${label}: no GPT model could serve this; falling back to Nano Banana. ${why}`);
   const dataUrl = await viaFal(
     () => falEditImage(src, prompt, "nano-banana", opts?.aspectRatio, opts?.budgetMs),
     () => geminiEditImage(src, prompt),

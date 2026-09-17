@@ -54,52 +54,123 @@ export async function falProbe(): Promise<{ status: number; body: string }> {
   return { status: res.status, body: (await res.text()).slice(0, 200) };
 }
 
-export type FalModel = "nano-banana" | "gpt-image";
-
 /**
- * The GPT Image endpoints are overridable.
+ * The models this app can call.
  *
- * The defaults are fal's BYOK ones — `/byok` in the path, meaning fal calls
- * OpenAI with a key configured on the fal account rather than one of its own.
- * If your fal account has a different GPT Image endpoint (a hosted one that
- * needs no OpenAI key, or a newer model id), name it here and it takes effect
- * on the next deploy without a code change:
+ * Two families, which differ in the input they take and in what they are good
+ * at, not merely in name:
  *
- *   FAL_GPT_IMAGE_EDIT=fal-ai/<path>
- *   FAL_GPT_IMAGE_GENERATE=fal-ai/<path>
+ *   nano-banana  → Google Gemini 2.5 Flash Image. Fast, cheap, very strong at
+ *                  identity-preserving edits. The default everywhere.
+ *   gpt-image-*  → OpenAI's image models, hosted by fal. Slower and pricier,
+ *                  better at text inside the image, at long literal
+ *                  instructions, and at photorealism.
  *
- * The leading slash and a full https:// prefix are both tolerated, because
- * that is how these are written in fal's own documentation and pasting one
- * verbatim should not produce a 404.
+ * The GPT entries are fal's `openai/...` endpoints, which fal serves on fal
+ * credit. The older `fal-ai/gpt-image-1/.../byok` pair is kept as
+ * `gpt-image-1-byok` only for an account that still routes through its own
+ * OpenAI key; nothing selects it by default.
  */
-function endpointEnv(name: string, fallback: string): string {
-  const raw = (process.env[name] || "").trim();
-  if (!raw) return fallback;
-  return raw.replace(/^https?:\/\/(queue\.)?fal\.run\//i, "").replace(/^\/+/, "");
+export type FalModel =
+  | "nano-banana"
+  | "gpt-image-2.5-sunburst"
+  | "gpt-image-2.5-flare"
+  | "gpt-image-2"
+  | "gpt-image-1-byok";
+
+/** Which input shape an endpoint expects. */
+type Family = "nano" | "gpt";
+
+interface ModelSpec {
+  edit: string;
+  generate: string;
+  family: Family;
+  label: string;
 }
 
-const ENDPOINTS: Record<FalModel, { edit: string; generate: string }> = {
+const MODEL_SPECS: Record<FalModel, ModelSpec> = {
   "nano-banana": {
     edit: "fal-ai/nano-banana/edit",
     generate: "fal-ai/nano-banana",
+    family: "nano",
+    label: "Nano Banana",
   },
-  "gpt-image": {
-    get edit() {
-      return endpointEnv("FAL_GPT_IMAGE_EDIT", "fal-ai/gpt-image-1/edit-image/byok");
-    },
-    get generate() {
-      return endpointEnv("FAL_GPT_IMAGE_GENERATE", "fal-ai/gpt-image-1/text-to-image/byok");
-    },
+  // "Editing built for the tightest control, edits scoped precisely to the
+  // instruction, with subject and composition preserved." Extra fidelity on
+  // intricate detail, in exchange for a longer render.
+  "gpt-image-2.5-sunburst": {
+    edit: "openai/gpt-image-2.5/sunburst/edit",
+    generate: "openai/gpt-image-2.5/sunburst/text-to-image",
+    family: "gpt",
+    label: "GPT Image 2.5 Sunburst",
+  },
+  // OpenAI's default for most applications: fast, high-quality, natural
+  // lighting and rich textures.
+  "gpt-image-2.5-flare": {
+    edit: "openai/gpt-image-2.5/flare/edit",
+    generate: "openai/gpt-image-2.5/flare/text-to-image",
+    family: "gpt",
+    label: "GPT Image 2.5 Flare",
+  },
+  "gpt-image-2": {
+    edit: "openai/gpt-image-2/edit",
+    generate: "openai/gpt-image-2",
+    family: "gpt",
+    label: "GPT Image 2",
+  },
+  "gpt-image-1-byok": {
+    edit: "fal-ai/gpt-image-1/edit-image/byok",
+    generate: "fal-ai/gpt-image-1/text-to-image/byok",
+    family: "gpt",
+    label: "GPT Image 1 (BYOK)",
   },
 };
 
-/** What the GPT Image endpoints resolve to right now, for the admin check. */
-export function falGptImageEndpoints(): { edit: string; generate: string; overridden: boolean } {
-  return {
-    edit: ENDPOINTS["gpt-image"].edit,
-    generate: ENDPOINTS["gpt-image"].generate,
-    overridden: !!(process.env.FAL_GPT_IMAGE_EDIT || process.env.FAL_GPT_IMAGE_GENERATE),
-  };
+export function falModelSpec(m: FalModel): ModelSpec {
+  return MODEL_SPECS[m];
+}
+
+export function falModelIds(): FalModel[] {
+  return Object.keys(MODEL_SPECS) as FalModel[];
+}
+
+/**
+ * Every model's endpoint can be overridden from the environment, keyed by id:
+ *
+ *   FAL_ENDPOINT_GPT_IMAGE_2_5_SUNBURST_EDIT=openai/<path>
+ *   FAL_ENDPOINT_GPT_IMAGE_2_EDIT=openai/<path>
+ *   …and _GENERATE for the text-to-image half.
+ *
+ * This exists because fal renames and reorganises model paths, and a renamed
+ * path should be a setting rather than a deploy. A leading slash and a full
+ * https:// prefix are both tolerated, because that is how fal writes them in
+ * its own model pages and pasting one verbatim should not produce a 404.
+ */
+function envKey(m: FalModel, half: "EDIT" | "GENERATE"): string {
+  return `FAL_ENDPOINT_${m.toUpperCase().replace(/[^A-Z0-9]+/g, "_")}_${half}`;
+}
+
+function normaliseEndpoint(raw: string): string {
+  return raw.trim().replace(/^https?:\/\/(queue\.)?fal\.run\//i, "").replace(/^\/+/, "");
+}
+
+export function falEndpoint(m: FalModel, half: "edit" | "generate"): string {
+  const override = process.env[envKey(m, half === "edit" ? "EDIT" : "GENERATE")];
+  if (override && override.trim()) return normaliseEndpoint(override);
+  return MODEL_SPECS[m][half];
+}
+
+/** Every model's resolved endpoints, for the admin check. */
+export function falEndpointTable(): Record<string, { edit: string; generate: string; overridden: boolean }> {
+  const out: Record<string, { edit: string; generate: string; overridden: boolean }> = {};
+  for (const m of falModelIds()) {
+    out[m] = {
+      edit: falEndpoint(m, "edit"),
+      generate: falEndpoint(m, "generate"),
+      overridden: !!(process.env[envKey(m, "EDIT")] || process.env[envKey(m, "GENERATE")]),
+    };
+  }
+  return out;
 }
 
 export const DEFAULT_MODEL: FalModel = "nano-banana";
@@ -164,17 +235,45 @@ type QueueSubmit = { request_id?: string; status_url?: string; response_url?: st
  * Submits to the queue and polls until the result is ready.
  * `budgetMs` keeps the poll loop inside the calling route's maxDuration.
  */
-async function runQueued(model: string, input: object, budgetMs = 55_000): Promise<unknown> {
+async function runQueued(
+  model: string,
+  input: object,
+  budgetMs = 55_000,
+  opts?: { minimalInput?: object }
+): Promise<unknown> {
   assertKey();
   const started = Date.now();
 
-  const submit = await fetch(`https://queue.fal.run/${model}`, {
-    method: "POST",
-    headers: authHeaders(),
-    body: JSON.stringify(input),
-  });
+  const post = (body: object) =>
+    fetch(`https://queue.fal.run/${model}`, {
+      method: "POST",
+      headers: authHeaders(),
+      body: JSON.stringify(body),
+    });
 
-  const submitBody = (await submit.json().catch(() => ({}))) as QueueSubmit;
+  let submit = await post(input);
+  let submitBody = (await submit.json().catch(() => ({}))) as QueueSubmit;
+
+  /*
+    422 means fal understood the request and rejected its shape.
+
+    fal's models do not share one input schema, and it renames and reorganises
+    them; a field one endpoint takes (`quality`, `image_size`, `output_format`)
+    another may not recognise. Those are all optional refinements, so losing a
+    generation over one is the wrong trade — the retry sends the prompt and the
+    image alone. It costs one round trip, only on an endpoint that has already
+    refused, and the discarded fields are logged so a real schema change is
+    visible rather than silently absorbed.
+  */
+  if (submit.status === 422 && opts?.minimalInput) {
+    console.warn(
+      `[fal] ${model} rejected the request shape (422): ${JSON.stringify(submitBody).slice(0, 200)}. ` +
+      `Retrying with prompt and image only.`
+    );
+    submit = await post(opts.minimalInput);
+    submitBody = (await submit.json().catch(() => ({}))) as QueueSubmit;
+  }
+
   if (!submit.ok) {
     throw new FalError(falError(submit.status, submitBody), submit.status, JSON.stringify(submitBody).slice(0, 400));
   }
@@ -381,18 +480,24 @@ export async function falEditImage(
 ): Promise<string> {
   const imageUrl = await toFalImageUrl(src);
   assertAspectRatio(aspectRatio);
-  const endpoint = ENDPOINTS[model].edit;
+  const endpoint = falEndpoint(model, "edit");
 
   // The two families name this differently: nano-banana takes aspect_ratio,
-  // gpt-image takes image_size. Omitted means "keep the source framing".
+  // the GPT models take image_size. Omitted means "keep the source framing".
   const input =
-    model === "nano-banana"
+    falModelSpec(model).family === "nano"
       ? { prompt, image_urls: [imageUrl], num_images: 1, output_format: "png",
           ...(aspectRatio ? { aspect_ratio: aspectRatio } : {}) }
       : { prompt, image_urls: [imageUrl], num_images: 1, quality: "high",
           image_size: gptImageSize(aspectRatio) };
 
-  const result = await runQueued(endpoint, input, budgetMs);
+  const result = await runQueued(endpoint, input, budgetMs, {
+    // The framing and quality fields are the optional part of the request.
+    // If an endpoint does not recognise one of them it answers 422, and a
+    // rejected *option* is a poor reason to lose the generation — so the
+    // retry drops to prompt and image alone. See runQueued.
+    minimalInput: { prompt, image_urls: [imageUrl], num_images: 1 },
+  });
   return urlToDataUrl(firstImageUrl(result));
 }
 
@@ -404,14 +509,16 @@ export async function falEditImages(
 ): Promise<string> {
   if (!srcs.length) throw new Error("At least one image is required");
   const imageUrls = await Promise.all(srcs.map(toFalImageUrl));
-  const endpoint = ENDPOINTS[model].edit;
+  const endpoint = falEndpoint(model, "edit");
 
   const input =
-    model === "nano-banana"
+    falModelSpec(model).family === "nano"
       ? { prompt, image_urls: imageUrls, num_images: 1, output_format: "png" }
       : { prompt, image_urls: imageUrls, num_images: 1, image_size: "auto", quality: "high" };
 
-  const result = await runQueued(endpoint, input);
+  const result = await runQueued(endpoint, input, undefined, {
+    minimalInput: { prompt, image_urls: imageUrls, num_images: 1 },
+  });
   return urlToDataUrl(firstImageUrl(result));
 }
 
@@ -435,14 +542,16 @@ export async function falGenerateImage(
   budgetMs?: number
 ): Promise<string> {
   assertAspectRatio(aspectRatio);
-  const endpoint = ENDPOINTS[model].generate;
+  const endpoint = falEndpoint(model, "generate");
 
   const input =
-    model === "nano-banana"
+    falModelSpec(model).family === "nano"
       ? { prompt, num_images: 1, output_format: "png",
           ...(aspectRatio ? { aspect_ratio: aspectRatio } : {}) }
       : { prompt, num_images: 1, image_size: aspectRatio ? gptImageSize(aspectRatio) : "1024x1024", quality: "high" };
 
-  const result = await runQueued(endpoint, input, budgetMs);
+  const result = await runQueued(endpoint, input, budgetMs, {
+    minimalInput: { prompt, num_images: 1 },
+  });
   return urlToDataUrl(firstImageUrl(result));
 }
