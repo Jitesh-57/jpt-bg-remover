@@ -25,7 +25,7 @@ import type { CreativeApp } from "@/lib/creative-apps";
  *      value, because leaving that one unset is the bug.
  */
 
-export type OptionKind = "select" | "text";
+export type OptionKind = "select" | "text" | "number";
 
 export interface AppChoice {
   value: string;
@@ -51,12 +51,44 @@ export interface AppOption {
   placeholder?: string;
   /** text only: `{value}` is replaced with what was typed. */
   template?: string;
+  /** number only: the slider's range and starting point. */
+  min?: number;
+  max?: number;
+  step?: number;
+  initial?: number;
+  /** number only: how the current value reads next to the slider. */
+  format?: (n: number) => string;
+  /**
+   * number only: the sentence appended to the prompt.
+   *
+   * A function rather than a `{value}` template because a number on its own
+   * is a weak instruction. "Make them 8 years old" and "make them 80 years
+   * old" need different descriptions of what changes, and the difference is
+   * what stops the model splitting the difference and returning a vaguely
+   * middle-aged face.
+   */
+  phraseFor?: (n: number) => string;
   /** Shown under the control when it needs a word of explanation. */
   hint?: string;
 }
 
 /** A selection map: option id → chosen value (or typed text). */
 export type OptionValues = Record<string, string>;
+
+/**
+ * A slider value we are willing to send, or null.
+ *
+ * The value arrives as a string from a form control and, on the API side,
+ * from a request body — so it is not necessarily a number at all, and not
+ * necessarily inside the range the slider offered.
+ */
+export function clampNumber(o: AppOption, raw: string): number | null {
+  const n = Number(raw);
+  if (!Number.isFinite(n)) return null;
+  const lo = o.min ?? Number.NEGATIVE_INFINITY;
+  const hi = o.max ?? Number.POSITIVE_INFINITY;
+  return Math.min(hi, Math.max(lo, Math.round(n)));
+}
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -74,6 +106,24 @@ function c(value: string, label: string, phrase: string): AppChoice {
 
 function text(id: string, label: string, placeholder: string, template: string, hint?: string): AppOption {
   return { id, label, kind: "text", placeholder, template, hint };
+}
+
+/** `num("age", "Age", { min: 1, max: 100, … })` — a slider. */
+function num(
+  id: string,
+  label: string,
+  o: {
+    min: number; max: number; step?: number; initial: number;
+    format: (n: number) => string;
+    phraseFor: (n: number) => string;
+    hint?: string;
+  }
+): AppOption {
+  return {
+    id, label, kind: "number",
+    min: o.min, max: o.max, step: o.step ?? 1, initial: o.initial,
+    format: o.format, phraseFor: o.phraseFor, hint: o.hint,
+  };
 }
 
 // ── Reusable option sets ────────────────────────────────────────────────────
@@ -226,14 +276,64 @@ const REMOVE_FILL = sel("fill", "Fill the gap with", [
   c("plain", "A clean surface", "Fill the removed area with a clean continuation of the nearest plain surface rather than inventing new detail."),
 ]);
 
-const AGE_CHOICES: AppChoice[] = [
-  c("30", "30s", "Age the person so they look to be in their early thirties."),
-  c("40", "40s", "Age the person so they look to be in their forties: the first fine lines, slightly softer facial volume, hair still largely its own colour."),
-  c("50", "50s", "Age the person so they look to be in their fifties: established lines around the eyes and mouth, greying at the temples, a softened jawline."),
-  c("60", "60s", "Age the person so they look to be in their sixties: deeper lines, mostly grey hair, thinner skin and reduced facial volume."),
-  c("70", "70s", "Age the person so they look to be in their seventies: pronounced wrinkles, white or thinning hair, age spots and clear loss of skin elasticity."),
-  c("80", "80s", "Age the person so they look to be in their eighties: deep-set wrinkles, sparse white hair, thin skin and a markedly changed facial structure — still unmistakably the same person."),
-];
+/**
+ * What a face at a given age actually looks like.
+ *
+ * A bare number is a weak instruction — asked to make someone "62", the model
+ * tends to produce the same non-specific middle-aged face it produces for 48.
+ * Naming what changes at that age is what makes the slider worth having, and
+ * it is the same information the six fixed choices used to carry, spread
+ * across the whole range instead of six points on it.
+ */
+function ageAppearance(n: number): string {
+  if (n <= 3) return "the rounded features, smooth skin and fine soft hair of a toddler";
+  if (n <= 9) return "the softer proportions and unlined skin of a young child, with a child's larger eyes relative to the face";
+  if (n <= 12) return "the lengthening face and unlined skin of a pre-teen, before adolescence changes the jaw";
+  if (n <= 17) return "the sharper adolescent bone structure of a teenager, with clear skin and a fuller hairline";
+  if (n <= 24) return "the taut skin, full facial volume and unlined features of a young adult in their early twenties";
+  if (n <= 34) return "the firm skin and full volume of someone in their thirties, with at most the faintest expression lines";
+  if (n <= 44) return "the first settled fine lines around the eyes and mouth, slightly softer facial volume, hair still largely its own colour";
+  if (n <= 54) return "established lines around the eyes and mouth, greying at the temples and a softening jawline";
+  if (n <= 64) return "deeper lines, substantially grey hair, thinner skin and a visible loss of facial volume";
+  if (n <= 74) return "pronounced wrinkles, white or thinning hair, age spots and a clear loss of skin elasticity";
+  if (n <= 84) return "deep-set wrinkles, sparse white hair, thin papery skin and a markedly changed facial structure";
+  return "the deep folds, very sparse white hair, translucent skin and pronounced bone structure of great age";
+}
+
+/**
+ * One sentence that works in both directions.
+ *
+ * The slider runs from 1, so it de-ages as readily as it ages, and the
+ * instruction must not assume which. "Age this person to 8" is a contradiction
+ * the model resolves by ignoring one half of it.
+ */
+function years(n: number): string {
+  return n === 1 ? "1 year old" : `${n} years old`;
+}
+
+function agePhrase(n: number): string {
+  return (
+    `Show this exact person at ${years(n)} — not older, not younger. ` +
+    `At this age they have ${ageAppearance(n)}. ` +
+    `Keep them unmistakably the same person: the same bone structure, eye shape, ` +
+    `nose and mouth, changed only by age. Do not change their ethnicity, ` +
+    `and do not substitute a different face.`
+  );
+}
+
+const AGE_SLIDER = num("age", "Age them to", {
+  min: 1, max: 100, initial: 65,
+  format: years,
+  phraseFor: agePhrase,
+  hint: "Drag anywhere from 1 to 100 — below their current age it de-ages instead.",
+});
+
+/** The same control, for the apps that only ever age upward. */
+const OLDER_SLIDER = num("age", "Age them to", {
+  min: 40, max: 100, initial: 75,
+  format: years,
+  phraseFor: agePhrase,
+});
 
 // ── Per-category defaults ───────────────────────────────────────────────────
 
@@ -305,7 +405,7 @@ const CURATED_CAT: Record<string, string> = {
 
 // ── Per-app overrides ───────────────────────────────────────────────────────
 
-const AGE = sel("age", "Age them to", AGE_CHOICES, "Pick the age you want to see.");
+const AGE = AGE_SLIDER;
 
 const FIGURE_PACKAGING = sel("packaging", "Presentation", [
   c("box", "In its box", "Show the figure inside printed retail packaging with a clear window, photographed as a product shot."),
@@ -767,7 +867,7 @@ const BY_SLUG: Record<string, AppOption[]> = {
   // ── Prompts that referred to a setting the UI never had ──────────────────
   "age-progression":      [AGE],
   "age-progression-tool": [AGE],
-  "old-filter":           [sel("age", "Age them to", [...AGE_CHOICES].reverse())],
+  "old-filter":           [OLDER_SLIDER],
   "ai-time-machine":      [DECADE],
   "baby-face-filter":     [YOUNGER_AGE],
   "long-hair-filter":     [HAIR_LENGTH],
@@ -922,7 +1022,10 @@ export function optionsFor(app: CreativeApp): AppOption[] {
 export function defaultValues(options: AppOption[]): OptionValues {
   const out: OptionValues = {};
   for (const o of options) {
-    out[o.id] = o.kind === "text" ? "" : o.choices?.[0]?.value ?? "";
+    out[o.id] =
+      o.kind === "text" ? ""
+      : o.kind === "number" ? String(o.initial ?? o.min ?? 0)
+      : o.choices?.[0]?.value ?? "";
   }
   return out;
 }
@@ -945,6 +1048,11 @@ export function optionPhrases(options: AppOption[], values: OptionValues): strin
       if (clean && o.template) out.push(o.template.replace("{value}", clean));
       continue;
     }
+    if (o.kind === "number") {
+      const n = clampNumber(o, v);
+      if (n !== null && o.phraseFor) out.push(o.phraseFor(n));
+      continue;
+    }
     const choice = o.choices?.find((x) => x.value === v);
     if (choice?.phrase) out.push(choice.phrase);
   }
@@ -965,7 +1073,10 @@ export function optionSummary(options: AppOption[], values: OptionValues): strin
   for (const o of options) {
     const v = values[o.id];
     if (!v) continue;
-    const label = o.kind === "text" ? v.trim().slice(0, 40) : o.choices?.find((x) => x.value === v)?.label;
+    const label =
+      o.kind === "text" ? v.trim().slice(0, 40)
+      : o.kind === "number" ? (() => { const n = clampNumber(o, v); return n === null ? null : o.format?.(n) ?? String(n); })()
+      : o.choices?.find((x) => x.value === v)?.label;
     if (label && v !== "auto") parts.push(`${o.label}: ${label}`);
   }
   return parts.join(" · ");

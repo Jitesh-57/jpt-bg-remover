@@ -555,14 +555,17 @@ export const CURATED_APPS: CreativeApp[] = [
       "See yourself older or younger with the AI age progression photo tool online. Upload a selfie and AI ages the photo on the page — no watermark.",
     keywords: "ai age progression photo, ai aging filter free, see myself older ai, ai younger photo generator, age my photo ai free",
     h1: "AI Age Progression Photo",
-    tagline: "Upload a selfie and AI shows a realistic older (or younger) version of you — free, for fun.",
+    tagline: "Upload a selfie, pick any age from 1 to 100, and AI shows you at it — free, for fun.",
     intro: "A realistic, just-for-fun preview of an older you.",
-    prompt: "Realistically age this person to the age given: natural greying hair, age-appropriate skin texture and wrinkles, the same facial structure and expression, soft natural lighting. Keep the identity clearly recognisable — this is a fun, illustrative guess, not a medical prediction. This must look like a real photograph — natural skin texture, realistic lighting and shadows, sharp photographic detail — not a painting, illustration, or cartoon.",
+    // Deliberately neutral about direction. The age control is a 1–100 slider,
+    // so it de-ages as readily as it ages, and a base prompt that says
+    // "greying hair" contradicts a target of eight.
+    prompt: "Show this person realistically at the age given, with skin texture, hair and facial structure appropriate to that exact age, the same expression and soft natural lighting. Keep the identity clearly recognisable — this is a fun, illustrative guess, not a medical prediction. This must look like a real photograph — natural skin texture, realistic lighting and shadows, sharp photographic detail — not a painting, illustration, or cartoon.",
     badge: "✨ Age Progression",
     faq: [
       { q: "How accurate is the AI age progression?", a: "It's a stylised, illustrative guess based on common ageing patterns — fun to look at, not a scientific or medical prediction." },
       { q: "Is it free?", a: "This app runs on credits — 2 per generation, with no watermark on the result. Credit packs start at $2 and never expire." },
-      { q: "Can it make me look younger instead?", a: "The default preset ages you up; try re-running with your own description in the full AI Editor for a de-aged look." },
+      { q: "Can it make me look younger instead?", a: "Yes — drag the age slider below your current age and it de-ages instead. It runs from 1 to 100, so you can see any age you like in either direction." },
     ],
   },
   {

@@ -201,20 +201,23 @@ export type AspectRatio = (typeof ASPECT_RATIOS)[number];
 /**
  * The models offered in the picker.
  *
- * All of these run on fal credit — no second account, no BYOK. If one is not
- * available to the account, the request is served by Nano Banana rather than
- * failing, and the substitution is logged with the endpoint that refused it
- * (see withModelFallback). So a model here can never dead-end a visitor.
+ * Two, because that is the choice people actually have an opinion about: the
+ * fast one that is best at holding a face, and OpenAI's. "ChatGPT" is the name
+ * to put in front of a visitor — "GPT Image 2.5 Sunburst" is a fal endpoint id,
+ * and nobody chose their photo tool on the strength of knowing one.
  *
- * The ids match src/lib/fal.ts. "gpt-image" is still accepted by the API as an
- * alias for the current default GPT model, so older saved preferences and
- * bookmarked admin URLs keep working.
+ * ChatGPT is a family rather than a single endpoint: picking it walks the
+ * cascade in src/lib/ai-image.ts, so it gets the best of OpenAI's models the
+ * account can actually reach rather than dead-ending on one path. Both run on
+ * fal credit.
+ *
+ * If one is unavailable the request is served by the other rather than
+ * failing, and the substitution is logged with the endpoint that refused it —
+ * so a model here can never dead-end a visitor.
  */
 export const MODELS = [
-  { id: "nano-banana",            label: "Nano Banana",    hint: "Fast, cheap, best at keeping your face" },
-  { id: "gpt-image-2.5-flare",    label: "GPT Image 2.5",  hint: "Natural light and rich texture — the best all-rounder" },
-  { id: "gpt-image-2.5-sunburst", label: "GPT Image 2.5 Pro", hint: "Tightest control and finest detail; slower" },
-  { id: "gpt-image-2",            label: "GPT Image 2",    hint: "Strong at fine-grained edits and text in the image" },
+  { id: "nano-banana", label: "Nano Banana", hint: "Fast and cheap — best at keeping your face exactly as it is" },
+  { id: "gpt-image",   label: "ChatGPT",     hint: "OpenAI's image model — richer light and texture, slower" },
 ] as const;
 
 /** Supabase bucket holding preset thumbnails, matched by name at runtime. */
