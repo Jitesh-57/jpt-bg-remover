@@ -43,6 +43,34 @@ An exhausted fal balance ends the cascade immediately rather than walking it:
 every model is billed to the same account, so the rest cannot succeed, and
 trying them only buries the one message the account owner needs.
 
+### image_size is an enum, not a pixel string
+
+The first live run failed on every GPT model with:
+
+```
+Input should be a valid dictionary or object to extract fields from,
+Input should be 'square_hd', 'square', 'portrait_4_3', 'portrait_16_9',
+'landscape_4_3', 'landscape_16_9' or 'auto'
+```
+
+We were sending `1024x1536`. fal's own models take the **named** sizes; the
+OpenAI BYOK wrapper passes OpenAI's **pixel** strings straight through. So each
+model carries a `sizeStyle` and `imageSizeFor()` picks the spelling — the model
+decides, not the caller.
+
+### A failed job is not a running job
+
+That failure took 240 seconds to surface, because the poll loop tested only for
+`COMPLETED` and treated everything else as "still working". The job had failed
+in under a second and fal knew exactly why; none of it reached the log, and what
+did reach it — a timeout — was not the problem.
+
+Terminal statuses (`FAILED`, `ERROR`, `CANCELLED`) are read now, and fal's own
+reason is fetched from the response URL and carried in the error. If that reason
+looks like input validation, the request is retried once with the prompt and the
+image alone: fal validates at execution time rather than at submit, so the 422
+path above never sees these.
+
 ### A 404 tries the other spellings
 
 The endpoint paths are transcribed from fal's model listing rather than fetched,

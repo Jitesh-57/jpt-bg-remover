@@ -108,11 +108,16 @@ export type FalModel =
 /** Which input shape an endpoint expects. */
 type Family = "nano" | "gpt";
 
+/** Which spelling of image_size the endpoint validates against. */
+type SizeStyle = "named" | "pixels";
+
 interface ModelSpec {
   edit: string;
   generate: string;
   family: Family;
   label: string;
+  /** Only read for the gpt family; nano-banana takes aspect_ratio instead. */
+  sizeStyle: SizeStyle;
 }
 
 const MODEL_SPECS: Record<FalModel, ModelSpec> = {
@@ -121,6 +126,7 @@ const MODEL_SPECS: Record<FalModel, ModelSpec> = {
     generate: "fal-ai/nano-banana",
     family: "nano",
     label: "Nano Banana",
+    sizeStyle: "named",
   },
   // "Editing built for the tightest control, edits scoped precisely to the
   // instruction, with subject and composition preserved." Extra fidelity on
@@ -130,6 +136,7 @@ const MODEL_SPECS: Record<FalModel, ModelSpec> = {
     generate: "openai/gpt-image-2.5/sunburst/text-to-image",
     family: "gpt",
     label: "GPT Image 2.5 Sunburst",
+    sizeStyle: "named",
   },
   // OpenAI's default for most applications: fast, high-quality, natural
   // lighting and rich textures.
@@ -138,18 +145,22 @@ const MODEL_SPECS: Record<FalModel, ModelSpec> = {
     generate: "openai/gpt-image-2.5/flare/text-to-image",
     family: "gpt",
     label: "GPT Image 2.5 Flare",
+    sizeStyle: "named",
   },
   "gpt-image-2": {
     edit: "openai/gpt-image-2/edit",
     generate: "openai/gpt-image-2",
     family: "gpt",
     label: "GPT Image 2",
+    sizeStyle: "named",
   },
   "gpt-image-1-byok": {
     edit: "fal-ai/gpt-image-1/edit-image/byok",
     generate: "fal-ai/gpt-image-1/text-to-image/byok",
     family: "gpt",
+    // The BYOK wrapper hands the value to OpenAI, which wants pixels.
     label: "GPT Image 1 (BYOK)",
+    sizeStyle: "pixels",
   },
 };
 
@@ -329,9 +340,12 @@ async function runQueued(
   const candidates = opts?.paths?.length ? opts.paths : [model];
   let submit!: Response;
   let submitBody!: QueueSubmit;
+  let usedPath = candidates[0];
+  let triedMinimal = false;
 
   for (let i = 0; i < candidates.length; i++) {
     const path = candidates[i];
+    usedPath = path;
     submit = await post(path, input);
     submitBody = (await submit.json().catch(() => ({}))) as QueueSubmit;
 
@@ -351,6 +365,7 @@ async function runQueued(
         `[fal] ${path} rejected the request shape (422): ${JSON.stringify(submitBody).slice(0, 200)}. ` +
         `Retrying with prompt and image only.`
       );
+      triedMinimal = true;
       submit = await post(path, opts.minimalInput);
       submitBody = (await submit.json().catch(() => ({}))) as QueueSubmit;
     }
@@ -391,6 +406,56 @@ async function runQueued(
       const body = await res.json().catch(() => ({}));
       if (!res.ok) throw new FalError(falError(res.status, body), res.status, JSON.stringify(body).slice(0, 400));
       return body;
+    }
+
+    /*
+      A job that has failed is not a job that is still running.
+
+      This loop used to test only for COMPLETED and treat everything else as
+      "keep waiting", so a job fal had already given up on sat here until the
+      whole budget expired — 240 seconds per model on the headshot path — and
+      then reported a timeout. The generation had failed in under a second,
+      and fal knew exactly why:
+
+        Input should be 'square_hd', 'square', 'portrait_4_3', …
+
+      None of that reached the log. "It timed out" and "our image_size was the
+      wrong spelling" are not the same problem, and only one of them is
+      actionable. So a terminal status is read now, and fal's own reason is
+      fetched from the response URL and carried in the error.
+    */
+    if (stBody.status === "FAILED" || stBody.status === "ERROR" || stBody.status === "CANCELLED") {
+      let detail = "";
+      try {
+        const res = await fetch(responseUrl, { headers: authHeaders() });
+        detail = (await res.text()).slice(0, 400);
+      } catch {
+        /* the status alone is still the answer */
+      }
+      const validation = /Input should be|valid dictionary|field required|validation/i.test(detail);
+      /*
+        A validation failure is worth one retry without the optional fields.
+
+        fal validates at execution time, not at submit, so the 422 path above
+        never sees these — the request is accepted, queued, and only then
+        rejected. Dropping to the prompt and the image is the same trade as
+        there: an unrecognised refinement should not cost the generation.
+      */
+      if (validation && opts?.minimalInput && !triedMinimal) {
+        console.warn(`[fal] ${usedPath} rejected the input during execution: ${detail.slice(0, 200)}. Retrying with prompt and image only.`);
+        return runQueued(usedPath, opts.minimalInput, Math.max(5_000, budgetMs - (Date.now() - started)), {
+          ...opts,
+          paths: undefined,
+          minimalInput: undefined,
+        });
+      }
+      throw new FalError(
+        validation
+          ? "The image service rejected the request for this model."
+          : "The image service could not generate this image. Please try again.",
+        422,
+        `${usedPath} ${stBody.status}: ${detail}`
+      );
     }
     // IN_QUEUE / IN_PROGRESS → keep waiting.
   }
@@ -546,22 +611,36 @@ async function urlToDataUrl(url: string): Promise<string> {
   return `data:${mime};base64,${buf.toString("base64")}`;
 }
 
-/** Maps an aspect ratio to the nearest size GPT Image accepts. */
-function gptImageSize(aspectRatio?: string): string {
+/**
+ * Maps an aspect ratio to an image_size the endpoint will accept.
+ *
+ * The two spellings are not interchangeable, and getting it wrong does not
+ * fail at submit — fal queues the job and rejects it during execution:
+ *
+ *   Input should be a valid dictionary or object to extract fields from,
+ *   Input should be 'square_hd', 'square', 'portrait_4_3', 'portrait_16_9',
+ *   'landscape_4_3', 'landscape_16_9' or 'auto'
+ *
+ * That is what every GPT Image headshot was dying on. fal's own models take
+ * the named sizes; the OpenAI BYOK wrapper passes OpenAI's pixel strings
+ * straight through. So the model decides, not the caller.
+ */
+function imageSizeFor(style: SizeStyle, aspectRatio?: string): string {
+  if (style === "pixels") {
+    switch (aspectRatio) {
+      case "16:9": case "3:2": case "21:9": case "16:10": return "1536x1024";
+      case "9:16": case "4:5": case "3:4": case "2:3":    return "1024x1536";
+      case "1:1":                                         return "1024x1024";
+      default:                                            return "auto";
+    }
+  }
   switch (aspectRatio) {
-    case "16:9":
-    case "3:2":
-    case "21:9":
-    case "16:10":
-      return "1536x1024";
-    case "9:16":
-    case "4:5":
-    case "3:4":
-      return "1024x1536";
-    case "1:1":
-      return "1024x1024";
-    default:
-      return "auto";
+    case "1:1":                          return "square_hd";
+    case "3:4": case "4:5": case "2:3":  return "portrait_4_3";
+    case "9:16":                         return "portrait_16_9";
+    case "4:3": case "3:2": case "5:4":  return "landscape_4_3";
+    case "16:9": case "21:9":            return "landscape_16_9";
+    default:                             return "auto";
   }
 }
 
@@ -584,7 +663,7 @@ export async function falEditImage(
       ? { prompt, image_urls: [imageUrl], num_images: 1, output_format: "png",
           ...(aspectRatio ? { aspect_ratio: aspectRatio } : {}) }
       : { prompt, image_urls: [imageUrl], num_images: 1, quality: "high",
-          image_size: gptImageSize(aspectRatio) };
+          image_size: imageSizeFor(falModelSpec(model).sizeStyle, aspectRatio) };
 
   const result = await runQueued(endpoint, input, budgetMs, {
     // The framing and quality fields are the optional part of the request.
@@ -645,7 +724,8 @@ export async function falGenerateImage(
     falModelSpec(model).family === "nano"
       ? { prompt, num_images: 1, output_format: "png",
           ...(aspectRatio ? { aspect_ratio: aspectRatio } : {}) }
-      : { prompt, num_images: 1, image_size: aspectRatio ? gptImageSize(aspectRatio) : "1024x1024", quality: "high" };
+      : { prompt, num_images: 1, quality: "high",
+          image_size: imageSizeFor(falModelSpec(model).sizeStyle, aspectRatio) };
 
   const result = await runQueued(endpoint, input, budgetMs, {
     minimalInput: { prompt, num_images: 1 },
