@@ -50,6 +50,16 @@ const W = 900;
 const H = Math.round((W * 5) / 4);
 const QUALITY = 80;
 
+/**
+ * Where the 4:5 window sits when the source is a different shape.
+ *
+ * "attention" finds the busiest region, which is usually the face. It is the
+ * right default and the wrong answer when a creative has a caption burned into
+ * the bottom of the frame — --gravity south keeps that, at the cost of the top
+ * of the head. Worth being able to choose rather than guess.
+ */
+let GRAVITY = "attention";
+
 function die(msg) {
   console.error(`\n  ✖ ${msg}\n`);
   process.exit(1);
@@ -84,7 +94,16 @@ async function knownSlugs() {
   return set;
 }
 
+/**
+ * Accepts a path or a URL.
+ *
+ * The URL case is the one that matters in practice: an image dropped into a
+ * GitHub issue or PR comment is reachable from a session like this, and a
+ * local path is not — the picture you can see in a chat window is not a file
+ * on this machine. Pasting the link is the shortest handoff there is.
+ */
 async function readImage(file) {
+  if (/^https?:\/\//i.test(file)) return readRemote(file);
   if (!existsSync(file)) die(`No such file: ${file}`);
   const buf = await readFile(file);
   const meta = await sharp(buf).metadata();
@@ -92,11 +111,31 @@ async function readImage(file) {
   return { buf, meta, bytes: buf.length };
 }
 
-/** Crop to 4:5, cap the width, encode WebP. */
+/**
+ * Crop to 4:5, cap the width, encode WebP.
+ *
+ * The size is worked out from the source rather than asked for flatly.
+ * `withoutEnlargement` looks like the way to avoid upscaling a small creative,
+ * but combined with `cover` it makes sharp give up on the aspect ratio instead
+ * of the scale — a 420×420 input came back 420×420, and the pane is 4:5. So
+ * the largest 4:5 window that fits inside the source is computed first, then
+ * capped at the width the pane can actually use.
+ */
+const ASPECT = 4 / 5;
+
+function targetSize(meta) {
+  const srcRatio = meta.width / meta.height;
+  let w = srcRatio > ASPECT ? meta.height * ASPECT : meta.width;
+  if (w > W) w = W;
+  return { width: Math.round(w), height: Math.round(w / ASPECT) };
+}
+
 async function pane(input) {
+  const meta = await sharp(input).metadata();
+  const { width, height } = targetSize(meta);
   return sharp(input)
     .rotate() // honour EXIF, or a phone photo lands on its side
-    .resize(W, H, { fit: "cover", position: "attention" })
+    .resize(width, height, { fit: "cover", position: GRAVITY })
     .webp({ quality: QUALITY })
     .toBuffer();
 }
@@ -109,7 +148,12 @@ async function writePane(slug, half, buf, sourceBytes) {
   await mkdir(OUT_DIR, { recursive: true });
   const out = path.join(OUT_DIR, `${slug}-${half}.webp`);
   await writeFile(out, buf);
-  const saved = sourceBytes ? ` (was ${kb(sourceBytes)}, −${Math.round((1 - buf.length / sourceBytes) * 100)}%)` : "";
+  const delta = sourceBytes ? Math.round((1 - buf.length / sourceBytes) * 100) : 0;
+  // A negative saving is a real outcome on a small source; say so plainly
+  // rather than printing "−-107%".
+  const saved = sourceBytes
+    ? ` (was ${kb(sourceBytes)}, ${delta >= 0 ? "−" + delta : "+" + -delta}%)`
+    : "";
   console.log(`  ✔ ${path.relative(ROOT, out).padEnd(44)} ${kb(buf.length).padStart(8)}${saved}`);
 }
 
@@ -150,6 +194,11 @@ async function main() {
     --after <file>   replace only the result pane
     --before <file>  replace only the source pane
     --no-split       use one wide image whole, as the after pane
+    --gravity <g>    where the 4:5 crop sits: attention (default), north,
+                     south, centre — use south to keep a caption at the bottom
+
+  An image may be a path or a URL. A URL is usually easier: drop the file into
+  a GitHub issue or PR comment and paste the link it gives you.
 `);
     process.exit(0);
   }
@@ -159,6 +208,7 @@ async function main() {
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === "--no-split") flags.noSplit = true;
+    else if (a === "--gravity") GRAVITY = argv[++i];
     else if (a === "--after" || a === "--before") flags[a.slice(2)] = argv[++i];
     else positional.push(a);
   }

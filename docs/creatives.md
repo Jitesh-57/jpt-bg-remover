@@ -19,9 +19,34 @@ npm run creative -- age-progression --after result.png
 | `--after <file>` | replaces only the result pane |
 | `--before <file>` | replaces only the source pane |
 | `--no-split` | uses one wide image whole, as the after pane |
+| `--gravity south` | keeps a caption burned into the bottom of the frame |
 
 A wide image (aspect 1.4 or more) is assumed to be a side-by-side pair, because
 that is what a before/after creative usually is. `--no-split` overrides it.
+
+## Getting the file here
+
+**An image may be a path or a URL**, and the URL is the one that matters: a
+picture in a chat window is not a file on the machine running this. Only GitHub
+is reachable from a session like this one — Supabase, imgur and the paste hosts
+are all blocked at the egress proxy — so the handoff is:
+
+1. Drag the image into a GitHub issue or PR comment.
+2. Paste the link it gives you (`github.com/user-attachments/assets/…`).
+
+Or upload it into the repo through GitHub's web UI and pass the path after a
+pull. Either works; the first is fewer clicks.
+
+## Sizing
+
+The largest 4:5 window that fits inside the source, capped at 900px wide. A
+smaller creative keeps its own size rather than being blown up — upscaling
+makes it blurrier *and* the file bigger, which is both halves of the job
+backwards.
+
+`withoutEnlargement` is the obvious way to express that and the wrong one:
+combined with `cover` it makes sharp give up on the aspect ratio instead of the
+scale, and a 420×420 input came back 420×420 for a 4:5 pane.
 
 ## What it writes
 
