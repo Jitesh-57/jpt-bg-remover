@@ -25,8 +25,38 @@ export type App = {
   h1: string; tagline: string; intro: string; badge: string;
 };
 
-type Slot = "before" | "after" | `extra-${number}`;
-type Pane = { id: string; slot: Slot; dataUrl: string; bytes: number; w: number; h: number; from: string };
+/**
+ * Where an image can go, and what happens to it there.
+ *
+ * The main pair is the two panes the page draws side by side, so those are
+ * cropped to the 4:5 they render at. Everything else is shown whole — those
+ * are finished creatives with their own before/after labels, and cropping one
+ * cuts the thing that makes it readable.
+ */
+const SECTIONS = [
+  { id: "before", label: "Main · Before", crop: true },
+  { id: "after", label: "Main · After", crop: true },
+  { id: "showcase-1", label: "More examples · 1", crop: false },
+  { id: "showcase-2", label: "More examples · 2", crop: false },
+  { id: "showcase-3", label: "More examples · 3", crop: false },
+  { id: "showcase-4", label: "More examples · 4", crop: false },
+  { id: "showcase-5", label: "More examples · 5", crop: false },
+  { id: "showcase-6", label: "More examples · 6", crop: false },
+] as const;
+
+type Slot = (typeof SECTIONS)[number]["id"] | "";
+const crops = (slot: Slot) => SECTIONS.find((x) => x.id === slot)?.crop ?? false;
+
+/** One image in the pool: the original, plus whatever section it is bound for. */
+type Item = {
+  id: string;
+  slot: Slot;
+  from: string;
+  img: HTMLImageElement;
+  /** What will actually be uploaded, recomputed whenever the section changes. */
+  out: { dataUrl: string; bytes: number; w: number; h: number } | null;
+  busy?: boolean;
+};
 
 const TARGET_W = 900;
 const ASPECT = 4 / 5;
@@ -79,68 +109,108 @@ async function toPane(img: HTMLImageElement, sx: number, sy: number, sw: number,
   return { dataUrl, bytes: blob.size, w: outW, h: outH };
 }
 
+/**
+ * The whole image, capped and re-encoded — no crop.
+ *
+ * A finished creative is often 1500px wide or more; the page shows it at about
+ * 1000. Capping and re-encoding is worth doing, reframing is not.
+ */
+async function toWhole(img: HTMLImageElement) {
+  const outW = Math.round(Math.min(img.width, 1400));
+  const outH = Math.round((outW / img.width) * img.height);
+  const canvas = document.createElement("canvas");
+  canvas.width = outW; canvas.height = outH;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("This browser would not give us a canvas.");
+  ctx.imageSmoothingQuality = "high";
+  ctx.drawImage(img, 0, 0, outW, outH);
+  const blob = await new Promise<Blob | null>((r) => canvas.toBlob(r, "image/webp", QUALITY));
+  if (!blob) throw new Error("The browser could not encode a WebP.");
+  const dataUrl = await new Promise<string>((res, rej) => {
+    const fr = new FileReader();
+    fr.onload = () => res(fr.result as string);
+    fr.onerror = () => rej(new Error("The encoded image could not be read back."));
+    fr.readAsDataURL(blob);
+  });
+  return { dataUrl, bytes: blob.size, w: outW, h: outH };
+}
+
 export default function CreativeUploader({ slug, token }: { apps: App[]; slug: string; token: string }) {
-  const [panes, setPanes] = useState<Pane[]>([]);
+  const [items, setItems] = useState<Item[]>([]);
   const [gravity, setGravity] = useState("centre");
   const [link, setLink] = useState("");
   const [busy, setBusy] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [note, setNote] = useState<string | null>(null);
-  const [done, setDone] = useState(false);
+  const [done, setDone] = useState<string[] | null>(null);
   const [dragging, setDragging] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const nextSlot = (taken: Slot[]): Slot => {
-    if (!taken.includes("before")) return "before";
-    if (!taken.includes("after")) return "after";
-    for (let i = 1; i < 10; i++) if (!taken.includes(`extra-${i}` as Slot)) return `extra-${i}` as Slot;
-    return "extra-9";
-  };
-
-  async function ingest(img: HTMLImageElement, from: string, g = gravity) {
-    const wide = img.width / img.height >= SPLIT_RATIO;
-    const made: Pane[] = [];
-    const taken: Slot[] = [];
-    if (wide) {
-      // A side-by-side creative goes into the two panes the page already draws.
-      const half = Math.floor(img.width / 2);
-      const l = await toPane(img, 0, 0, half, img.height, g);
-      const r = await toPane(img, img.width - half, 0, half, img.height, g);
-      made.push({ id: crypto.randomUUID(), slot: "before", from, ...l });
-      made.push({ id: crypto.randomUUID(), slot: "after", from, ...r });
-      taken.push("before", "after");
-    } else {
-      const one = await toPane(img, 0, 0, img.width, img.height, g);
-      made.push({ id: crypto.randomUUID(), slot: nextSlot(taken), from, ...one });
+  /** Recompute one item's output for whatever section it is now bound for. */
+  async function render(it: Item, g = gravity): Promise<Item> {
+    if (!it.slot) return { ...it, out: null };
+    try {
+      const out = crops(it.slot)
+        ? await toPane(it.img, 0, 0, it.img.width, it.img.height, g)
+        : await toWhole(it.img);
+      return { ...it, out };
+    } catch {
+      return { ...it, out: null };
     }
-    return made;
+  }
+
+  async function addImages(loaded: { img: HTMLImageElement; from: string }[]) {
+    /*
+      Nothing is assigned automatically.
+
+      Guessing which of six images is the "after" is a guess that looks right
+      until it is wrong on a live page, and the cost of being wrong is higher
+      than the cost of two clicks. Everything arrives unassigned and waits.
+    */
+    const fresh: Item[] = loaded.map(({ img, from }) => ({
+      id: crypto.randomUUID(), slot: "", from, img, out: null,
+    }));
+    setItems((s) => [...s, ...fresh]);
+  }
+
+  /*
+    The item is passed in, not looked up.
+
+    Finding it by id meant reading `items` — from the closure, which goes
+    stale when several selects change in quick succession, or from inside a
+    state updater, which is a side effect in a function React may call twice.
+    The select that fires this already has the item in scope, and that one is
+    always the current one.
+  */
+  async function setSlot(it: Item, slot: Slot) {
+    setItems((s) => s.map((x) => (x.id === it.id ? { ...x, slot, busy: true } : x)));
+    const next = await render({ ...it, slot });
+    setItems((s) => s.map((x) => (x.id === it.id ? { ...next, busy: false } : x)));
+    setDone(null);
+  }
+
+  async function reGravity(g: string) {
+    setGravity(g);
+    setBusy("Re-cropping…");
+    const next = await Promise.all(items.map((it) => (crops(it.slot) ? render(it, g) : Promise.resolve(it))));
+    setItems(next);
+    setBusy(null);
   }
 
   async function onFiles(files: File[]) {
-    setErr(null); setDone(false);
-    setBusy("Preparing…");
+    setErr(null); setDone(null); setBusy("Reading…");
     try {
-      let acc: Pane[] = [];
-      for (const f of files) {
-        const img = await loadImage(f);
-        const made = await ingest(img, f.name);
-        acc = [...acc, ...made];
-      }
-      setPanes(reslot(acc));
+      const loaded = [];
+      for (const f of files) loaded.push({ img: await loadImage(f), from: f.name });
+      await addImages(loaded);
     } catch (e) { setErr((e as Error).message); }
     finally { setBusy(null); }
-  }
-
-  /** Re-assign slots so the list reads before, after, extra-1, extra-2… */
-  function reslot(list: Pane[]): Pane[] {
-    const order: Slot[] = ["before", "after", ...Array.from({ length: 8 }, (_, i) => `extra-${i + 1}` as Slot)];
-    return list.map((p, i) => ({ ...p, slot: order[Math.min(i, order.length - 1)] }));
   }
 
   async function fromLink() {
     if (!link.trim()) return;
     if (!token.trim()) { setErr("Paste the admin token at the top first."); return; }
-    setErr(null); setNote(null); setDone(false);
+    setErr(null); setNote(null); setDone(null);
     setBusy("Reading the link…");
     try {
       const res = await fetch(`/api/admin/find-images?token=${encodeURIComponent(token.trim())}`, {
@@ -150,47 +220,64 @@ export default function CreativeUploader({ slug, token }: { apps: App[]; slug: s
       const data = (await res.json()) as { images?: string[]; source?: string; error?: string; why?: string; fix?: string };
       if (!res.ok) throw new Error([data.error, data.why, data.fix].filter(Boolean).join(" "));
       const urls = data.images || [];
-      setNote(`Found ${urls.length} image${urls.length === 1 ? "" : "s"} via ${data.source}.`);
 
-      setBusy("Fetching images…");
-      let acc: Pane[] = [];
-      for (const u of urls.slice(0, 8)) {
-        try {
-          const img = await loadImage(u);
-          acc = [...acc, ...(await ingest(img, u))];
-        } catch {
+      setBusy(`Fetching ${urls.length} image${urls.length === 1 ? "" : "s"}…`);
+      const loaded: { img: HTMLImageElement; from: string }[] = [];
+      for (const u of urls.slice(0, 12)) {
+        try { loaded.push({ img: await loadImage(u), from: u }); }
+        catch {
           /*
-            A signed link that expired between finding it and fetching it, or
-            a host that refuses a cross-origin read. Skipping one is better
-            than losing the rest, and the count above already says how many
-            were found versus how many arrived.
+            A signed URL that expired between being found and being fetched, or
+            a host refusing a cross-origin read. One failure should not lose the
+            rest — the count below says how many were found against how many
+            arrived, which is the number that matters.
           */
         }
       }
-      if (!acc.length) throw new Error("Found links, but none of the images could actually be loaded — signed URLs from a share page expire quickly. Download them and drop the files in instead.");
-      setPanes(reslot(acc));
+      setNote(`Found ${urls.length} via ${data.source}; ${loaded.length} loaded. Assign each one to a section below.`);
+      if (!loaded.length) throw new Error("None of those images could be loaded — share-page URLs are signed and expire quickly. Right-click the image in ChatGPT, copy its address, and paste that; or download and drop the files in.");
+      await addImages(loaded);
     } catch (e) { setErr((e as Error).message); }
     finally { setBusy(null); }
   }
 
   async function apply() {
     if (!token.trim()) { setErr("Paste the admin token at the top first."); return; }
+    const ready = items.filter((i) => i.slot && i.out);
+    const waiting = items.filter((i) => i.slot && !i.out).length;
+    if (waiting) { setErr(`${waiting} image${waiting === 1 ? " is" : "s are"} still being prepared — give it a moment.`); return; }
+    if (!ready.length) { setErr("Assign at least one image to a section first."); return; }
     setBusy("Publishing…"); setErr(null);
     try {
-      for (const p of panes) {
+      const names: string[] = [];
+      for (const it of ready) {
         const res = await fetch(`/api/admin/creative-upload?token=${encodeURIComponent(token.trim())}`, {
           method: "POST", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ slug, slot: p.slot, dataUrl: p.dataUrl }),
+          body: JSON.stringify({ slug, slot: it.slot, dataUrl: it.out!.dataUrl, w: it.out!.w, h: it.out!.h }),
         });
-        const d = (await res.json()) as { error?: string; fix?: string };
-        if (!res.ok) throw new Error([d.error, d.fix].filter(Boolean).join(" ") || `Upload failed (${res.status}).`);
+        const d = (await res.json()) as { error?: string; detail?: string };
+        if (!res.ok) throw new Error([d.error, d.detail].filter(Boolean).join(" ") || `Upload failed (${res.status}).`);
+        names.push(`${slug}-${it.slot}.webp`);
       }
-      setDone(true); setPanes([]);
+      setDone(names);
+      setItems((s) => s.filter((i) => !(i.slot && i.out)));
     } catch (e) { setErr((e as Error).message); }
     finally { setBusy(null); }
   }
 
-  const total = panes.reduce((n, p) => n + p.bytes, 0);
+  const taken = new Set(items.filter((i) => i.slot).map((i) => i.slot));
+  const ready = items.filter((i) => i.slot && i.out);
+  const total = ready.reduce((n, i) => n + (i.out?.bytes ?? 0), 0);
+  /*
+    An image still encoding is not publishable, and Apply must wait for it.
+
+    Pressing Apply a moment after assigning the last section published two of
+    three and reported success — the third was mid-encode, so it was simply
+    not in the list. Silently shipping fewer images than are on screen is the
+    worst kind of wrong, because nothing about the result says so.
+  */
+  const preparing = items.some((i) => i.busy);
+  const assigned = items.filter((i) => i.slot).length;
 
   return (
     <div>
@@ -203,11 +290,12 @@ export default function CreativeUploader({ slug, token }: { apps: App[]; slug: s
           placeholder="https://chatgpt.com/share/… or a direct image URL"
           style={{ ...input, flex: "1 1 340px" }}
         />
-        <button onClick={() => void fromLink()} disabled={!!busy} style={{ ...chip, padding: "10px 18px" }}>Fetch</button>
+        <button onClick={() => void fromLink()} disabled={!!busy} style={{ ...chip, padding: "10px 18px" }}>Fetch all images</button>
       </div>
       <p style={{ fontSize: 11.5, color: "var(--text-faint)", margin: "0 0 20px", lineHeight: 1.55 }}>
-        A share page is drawn by JavaScript and its image URLs are signed links that expire, so this works sometimes and
-        fails clearly when it does not. A direct image URL, or dropping the files below, always works.
+        Everything found is listed below, unassigned. A share page is drawn by JavaScript and its image URLs are signed
+        links that expire, so this works sometimes and says so clearly when it does not — a direct image URL, or dropping
+        files, always works.
       </p>
 
       <input ref={fileRef} type="file" accept="image/*" hidden multiple
@@ -220,60 +308,77 @@ export default function CreativeUploader({ slug, token }: { apps: App[]; slug: s
         style={{
           border: `1.5px dashed ${dragging ? "var(--accent)" : "var(--border-strong)"}`,
           background: dragging ? "var(--accent-soft)" : "var(--surface-2)",
-          borderRadius: 16, padding: "32px 20px", textAlign: "center", cursor: "pointer",
+          borderRadius: 16, padding: "30px 20px", textAlign: "center", cursor: "pointer",
         }}
       >
         <div style={{ fontSize: 26, marginBottom: 8 }}>🖼️</div>
-        <div style={{ fontSize: 15, fontWeight: 800 }}>{busy || "Drop the creatives here"}</div>
-        <div style={{ fontSize: 12.5, color: "var(--text-faint)", marginTop: 6 }}>
-          A wide before/after is split down the middle · several files are fine
-        </div>
+        <div style={{ fontSize: 15, fontWeight: 800 }}>{busy || "Drop images here"}</div>
+        <div style={{ fontSize: 12.5, color: "var(--text-faint)", marginTop: 6 }}>Several at once is fine</div>
       </div>
 
-      {panes.length > 0 && (
-        <div style={{ marginTop: 22 }}>
-          <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 14, flexWrap: "wrap" }}>
-            <span style={{ ...label, margin: 0 }}>Crop</span>
+      {items.length > 0 && (
+        <div style={{ marginTop: 24 }}>
+          <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 16, flexWrap: "wrap" }}>
+            <span style={{ ...label, margin: 0 }}>Crop for the main pair</span>
             {["centre", "top", "bottom"].map((g) => (
-              <button key={g} onClick={() => setGravity(g)} style={{ ...chip, ...(gravity === g ? chipOn : {}) }}>{g}</button>
+              <button key={g} onClick={() => void reGravity(g)} style={{ ...chip, ...(gravity === g ? chipOn : {}) }}>{g}</button>
             ))}
             <span style={{ fontSize: 11.5, color: "var(--text-faint)" }}>
-              — “bottom” keeps a caption burned into the bottom of the frame. Re-drop to re-crop.
+              — only Main · Before/After are cropped to 4:5. Everything else is published whole.
             </span>
           </div>
 
-          <div style={{ ...label, marginBottom: 10 }}>
-            This is what will be published — {panes.length} file{panes.length === 1 ? "" : "s"}, {kb(total)} total
-          </div>
-
-          <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
-            {panes.map((p, i) => (
-              <figure key={p.id} style={{ margin: 0, width: 180 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(210px, 100%), 1fr))", gap: 16 }}>
+            {items.map((it) => (
+              <div key={it.id} style={{ background: "var(--surface)", border: `1px solid ${it.slot ? "var(--accent-border)" : "var(--border)"}`, borderRadius: 14, padding: 12 }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={p.dataUrl} alt={p.slot} style={{ width: 180, aspectRatio: "4 / 5", objectFit: "cover", borderRadius: 12, border: "1px solid var(--border)", display: "block" }} />
-                <figcaption style={{ fontSize: 11, color: "var(--text-faint)", marginTop: 6, lineHeight: 1.5 }}>
-                  <code style={{ color: "var(--accent-strong)", fontWeight: 800 }}>{slug}-{p.slot}.webp</code>
-                  <br />{p.w}×{p.h} · {kb(p.bytes)}
-                  <br /><span style={{ opacity: 0.7 }}>from {p.from.length > 28 ? p.from.slice(0, 26) + "…" : p.from}</span>
-                </figcaption>
-                <div style={{ display: "flex", gap: 6, marginTop: 6 }}>
-                  <button
-                    onClick={() => setPanes((s) => reslot(s.filter((x) => x.id !== p.id)))}
-                    style={{ ...chip, padding: "4px 10px", fontSize: 11.5 }}
-                  >remove</button>
-                  {i > 0 && (
-                    <button
-                      onClick={() => setPanes((s) => { const n = [...s]; [n[i - 1], n[i]] = [n[i], n[i - 1]]; return reslot(n); })}
-                      style={{ ...chip, padding: "4px 10px", fontSize: 11.5 }}
-                    >← move</button>
+                <img
+                  src={it.out?.dataUrl || it.img.src}
+                  alt=""
+                  style={{
+                    width: "100%",
+                    aspectRatio: crops(it.slot) ? "4 / 5" : `${it.img.width} / ${it.img.height}`,
+                    objectFit: crops(it.slot) ? "cover" : "contain",
+                    borderRadius: 10, background: "var(--surface-2)", display: "block",
+                  }}
+                />
+                <select
+                  value={it.slot}
+                  onChange={(e) => void setSlot(it, e.target.value as Slot)}
+                  style={{ ...input, marginTop: 10, padding: "8px 10px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}
+                >
+                  <option value="">— choose a section —</option>
+                  {SECTIONS.map((sec) => (
+                    <option key={sec.id} value={sec.id} disabled={taken.has(sec.id) && it.slot !== sec.id}>
+                      {sec.label}{sec.crop ? " (cropped 4:5)" : " (whole image)"}
+                    </option>
+                  ))}
+                </select>
+                <div style={{ fontSize: 11, color: "var(--text-faint)", marginTop: 7, lineHeight: 1.5 }}>
+                  {it.busy ? "preparing…" : it.out ? (
+                    <>
+                      <code style={{ color: "var(--accent-strong)", fontWeight: 800 }}>{slug}-{it.slot}.webp</code>
+                      <br />{it.out.w}×{it.out.h} · {kb(it.out.bytes)}
+                    </>
+                  ) : (
+                    <>{it.img.width}×{it.img.height} · not assigned</>
                   )}
+                  <br /><span style={{ opacity: 0.7 }}>from {it.from.length > 26 ? it.from.slice(0, 24) + "…" : it.from}</span>
                 </div>
-              </figure>
+                <button onClick={() => setItems((s) => s.filter((x) => x.id !== it.id))} style={{ ...chip, padding: "4px 10px", fontSize: 11.5, marginTop: 8 }}>remove</button>
+              </div>
             ))}
           </div>
 
-          <button onClick={() => void apply()} disabled={!!busy} style={{ ...primary, marginTop: 20, opacity: busy ? 0.6 : 1 }}>
-            {busy === "Publishing…" ? "Publishing…" : `Apply — publish ${panes.length} file${panes.length === 1 ? "" : "s"}`}
+          <button
+            onClick={() => void apply()}
+            disabled={!!busy || preparing || !ready.length || ready.length !== assigned}
+            style={{ ...primary, marginTop: 22, opacity: busy || preparing || !ready.length ? 0.55 : 1 }}
+          >
+            {busy === "Publishing…" ? "Publishing…"
+              : preparing || ready.length !== assigned ? `Preparing ${assigned - ready.length} more…`
+              : ready.length ? `Apply — publish ${ready.length} image${ready.length === 1 ? "" : "s"} (${kb(total)})`
+              : "Assign a section to publish"}
           </button>
         </div>
       )}
@@ -282,9 +387,10 @@ export default function CreativeUploader({ slug, token }: { apps: App[]; slug: s
       {err && <div style={danger}>{err}</div>}
       {done && (
         <div style={success}>
-          Published. <a href={`/creative/${slug}`} target="_blank" rel="noreferrer" style={{ color: "inherit", fontWeight: 800 }}>Open the page ↗</a>
+          Published {done.length}: <code style={{ fontWeight: 700 }}>{done.join(", ")}</code>
           <div style={{ fontSize: 12.5, fontWeight: 500, marginTop: 6, opacity: 0.85 }}>
-            Cached for five minutes. Stored outside the repo, so deploys leave it alone.
+            <a href={`/creative/${slug}`} target="_blank" rel="noreferrer" style={{ color: "inherit", fontWeight: 800 }}>Open the page ↗</a>
+            {" "}— cached for five minutes. Stored outside the repo, so deploys leave it alone.
           </div>
         </div>
       )}

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin-token";
 import { CREATIVE_APPS } from "@/lib/creative-apps";
+import { creativeKey, readOverrides, writeOverrides } from "@/lib/overrides";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -34,10 +35,12 @@ export async function POST(req: NextRequest) {
     }, { status: 503 });
   }
 
-  let slug: string, half: string, dataUrl: string;
+  let slug: string, half: string, dataUrl: string, width = 0, height = 0;
   try {
-    const body = (await req.json()) as { slug: string; half?: string; slot?: string; dataUrl: string };
+    const body = (await req.json()) as { slug: string; half?: string; slot?: string; dataUrl: string; w?: number; h?: number };
     slug = body.slug;
+    width = Number(body.w) || 0;
+    height = Number(body.h) || 0;
     // "slot" is the name the editor uses; "half" is what this route shipped
     // with. Accepting both means a tab left open over a deploy keeps working.
     half = body.slot ?? body.half ?? "";
@@ -52,8 +55,8 @@ export async function POST(req: NextRequest) {
     kind of mistake you find weeks later. "extra-1" and up exist for apps
     whose page shows more than a pair.
   */
-  if (!/^(before|after|extra-[1-9])$/.test(half)) {
-    return NextResponse.json({ error: 'slot must be "before", "after" or "extra-1".."extra-9".' }, { status: 400 });
+  if (!/^(before|after|showcase-[1-9])$/.test(half)) {
+    return NextResponse.json({ error: 'slot must be "before", "after" or "showcase-1".."showcase-9".' }, { status: 400 });
   }
   /*
     The slug decides a storage path, so it is checked against the apps that
@@ -90,6 +93,34 @@ export async function POST(req: NextRequest) {
     const detail = (await res.text()).slice(0, 300);
     console.error(`[creative-upload] ${path} failed (${res.status}): ${detail}`);
     return NextResponse.json({ error: `Storage refused the upload (${res.status}).`, detail }, { status: 502 });
+  }
+
+  /*
+    A showcase image has to be discoverable by the page, and nothing on the
+    server can list a bucket per render. So the slot and its shape are recorded
+    in the overrides document the page already fetches — one read, and the page
+    can reserve the right space before the image loads.
+
+    Recorded here rather than by the browser afterwards: two requests mean a
+    window where the file exists and nothing points at it.
+  */
+  if (half.startsWith("showcase-") && width > 0 && height > 0) {
+    const current = await readOverrides();
+    const page = { ...(current.pages[creativeKey(slug)] || {}) };
+    const list = (page.showcase || []).filter((x) => x.slot !== half);
+    page.showcase = [...list, { slot: half, w: width, h: height }].sort((a, b) => a.slot.localeCompare(b.slot));
+    const saved = await writeOverrides({
+      ...current,
+      version: 1,
+      updatedAt: new Date().toISOString(),
+      pages: { ...current.pages, [creativeKey(slug)]: page },
+    });
+    if (!saved.ok) {
+      return NextResponse.json({
+        error: "The image uploaded but the page was not told about it.",
+        detail: saved.error,
+      }, { status: 502 });
+    }
   }
 
   return NextResponse.json({

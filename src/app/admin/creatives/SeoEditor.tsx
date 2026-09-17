@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { FIELDS, type FieldKey } from "@/lib/overrides";
+import { SECTIONS, FIELDS, type FieldKey } from "@/lib/overrides";
 import { label, input, primary, danger, success, linkBtn } from "./AdminShell";
 import type { App } from "./CreativeUploader";
 
@@ -23,6 +23,8 @@ const LIMITS: Partial<Record<FieldKey, number>> = { title: 60, metaDescription: 
 
 export default function SeoEditor({ app, token }: { app: App; token: string }) {
   const [values, setValues] = useState<Partial<Record<FieldKey, string>>>({});
+  /** What was loaded, so only genuine edits are written. */
+  const [original, setOriginal] = useState<Partial<Record<FieldKey, string>>>({});
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -42,7 +44,22 @@ export default function SeoEditor({ app, token }: { app: App; token: string }) {
         const data = (await res.json()) as { pages?: Record<string, Record<string, string>>; error?: string };
         if (cancelled) return;
         if (!res.ok) throw new Error(data.error || `Could not load (${res.status}).`);
-        setValues((data.pages?.[key] as Partial<Record<FieldKey, string>>) || {});
+        /*
+          The boxes start filled with what the page says today — the saved
+          override where there is one, the built-in copy otherwise.
+
+          Empty boxes with the text only as a placeholder meant editing a
+          sentence began by retyping it. Filling them means the screen shows
+          the page's current content, which is what you came to change.
+        */
+        const saved = (data.pages?.[key] as Partial<Record<FieldKey, string>>) || {};
+        const filled: Partial<Record<FieldKey, string>> = {};
+        for (const f of FIELDS) {
+          const k = f.key as FieldKey;
+          filled[k] = saved[k] ?? builtIn(k) ?? "";
+        }
+        setOriginal(filled);
+        setValues(filled);
       } catch (e) {
         if (!cancelled) setErr((e as Error).message);
       } finally {
@@ -52,17 +69,32 @@ export default function SeoEditor({ app, token }: { app: App; token: string }) {
     return () => { cancelled = true; };
   }, [key, token]);
 
+  const builtIn = (k: FieldKey) => (app as unknown as Record<string, string>)[k] || "";
   const shown = (k: FieldKey) => values[k] ?? "";
-  const effective = (k: FieldKey) => (values[k]?.trim() || (app as unknown as Record<string, string>)[k] || "");
+  const effective = (k: FieldKey) => (values[k]?.trim() || builtIn(k));
+  const edited = (k: FieldKey) => (values[k] ?? "").trim() !== (builtIn(k) || "").trim();
 
   async function save() {
     if (!token.trim()) { setErr("Paste the admin token at the top first."); return; }
     setBusy(true); setErr(null);
     try {
+      /*
+        Only fields that differ from the built-in copy are stored.
+
+        Every box is prefilled, so saving the lot would freeze all seven —
+        including the ones untouched — and a later improvement to the default
+        copy would never reach this page. An override should mean "I decided
+        something different here".
+      */
+      const changedOnly: Record<string, string> = {};
+      for (const f of FIELDS) {
+        const k = f.key as FieldKey;
+        if (edited(k)) changedOnly[k] = values[k] ?? "";
+      }
       const res = await fetch(`/api/admin/overrides?token=${encodeURIComponent(token.trim())}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ key, values }),
+        body: JSON.stringify({ key, values: changedOnly }),
       });
       const data = (await res.json()) as { error?: string };
       if (!res.ok) throw new Error(data.error || `Save failed (${res.status}).`);
@@ -74,9 +106,10 @@ export default function SeoEditor({ app, token }: { app: App; token: string }) {
     }
   }
 
-  const changed = Object.entries(values).filter(([, v]) => (v ?? "").trim()).length;
+  const changed = FIELDS.filter((f) => edited(f.key as FieldKey)).length;
 
   if (loading) return <p style={{ fontSize: 13.5, color: "var(--text-faint)" }}>Loading current copy…</p>;
+  void original;
 
   return (
     <div>
@@ -92,43 +125,53 @@ export default function SeoEditor({ app, token }: { app: App; token: string }) {
         </div>
       </div>
 
-      {FIELDS.map((f) => {
-        const k = f.key as FieldKey;
-        const v = shown(k);
-        const limit = LIMITS[k];
-        const len = effective(k).length;
-        const over = limit ? len > limit : false;
-        return (
-          <div key={k} style={{ marginBottom: 18 }}>
-            <label style={label} htmlFor={`f-${k}`}>
-              {f.label}
-              {limit && (
-                <span style={{ marginLeft: 8, color: over ? "var(--danger)" : "var(--text-faint)", fontWeight: 700 }}>
-                  {len}/{limit}{over ? " — will be cut off" : ""}
-                </span>
-              )}
-              {v.trim() && <span style={{ marginLeft: 8, color: "var(--accent-strong)" }}>edited</span>}
-            </label>
-            <textarea
-              id={`f-${k}`}
-              rows={f.lines}
-              value={v}
-              onChange={(e) => { setValues((s) => ({ ...s, [k]: e.target.value })); setSaved(false); }}
-              placeholder={(app as unknown as Record<string, string>)[k] || ""}
-              style={{ ...input, resize: "vertical", lineHeight: 1.5 }}
-            />
-            {f.hint && <div style={{ fontSize: 11.5, color: "var(--text-faint)", marginTop: 4 }}>{f.hint}</div>}
-            {v.trim() && (
-              <button onClick={() => { setValues((s) => ({ ...s, [k]: "" })); setSaved(false); }} style={{ ...linkBtn, marginTop: 5 }}>
-                reset to the built-in copy
-              </button>
-            )}
-          </div>
-        );
-      })}
+      {SECTIONS.map((sec) => (
+        <section key={sec.id} style={{ marginBottom: 30 }}>
+          <div style={{ fontSize: 15, fontWeight: 900, color: "var(--text)", marginBottom: 2 }}>{sec.label}</div>
+          <div style={{ fontSize: 12.5, color: "var(--text-faint)", marginBottom: 14 }}>{sec.blurb}</div>
 
-      <button onClick={() => void save()} disabled={busy} style={{ ...primary, opacity: busy ? 0.6 : 1 }}>
-        {busy ? "Saving…" : changed ? `Save ${changed} field${changed === 1 ? "" : "s"}` : "Save (clears all overrides for this page)"}
+          {sec.fields.map((f) => {
+            const k = f.key as FieldKey;
+            const v = shown(k);
+            const limit = LIMITS[k];
+            const len = effective(k).length;
+            const over = limit ? len > limit : false;
+            const isEdited = edited(k);
+            return (
+              <div key={k} style={{ marginBottom: 18 }}>
+                <label style={label} htmlFor={`f-${k}`}>
+                  {f.label}
+                  {limit && (
+                    <span style={{ marginLeft: 8, color: over ? "var(--danger)" : "var(--text-faint)", fontWeight: 700 }}>
+                      {len}/{limit}{over ? " — will be cut off" : ""}
+                    </span>
+                  )}
+                  {isEdited && <span style={{ marginLeft: 8, color: "var(--accent-strong)" }}>changed</span>}
+                </label>
+                <textarea
+                  id={`f-${k}`}
+                  rows={f.lines}
+                  value={v}
+                  onChange={(e) => { setValues((s) => ({ ...s, [k]: e.target.value })); setSaved(false); }}
+                  style={{ ...input, resize: "vertical", lineHeight: 1.5, ...(isEdited ? { borderColor: "var(--accent-border)" } : {}) }}
+                />
+                {f.hint && <div style={{ fontSize: 11.5, color: "var(--text-faint)", marginTop: 4 }}>{f.hint}</div>}
+                {isEdited && (
+                  <button
+                    onClick={() => { setValues((s) => ({ ...s, [k]: builtIn(k) })); setSaved(false); }}
+                    style={{ ...linkBtn, marginTop: 5 }}
+                  >
+                    put the original text back
+                  </button>
+                )}
+              </div>
+            );
+          })}
+        </section>
+      ))}
+
+      <button onClick={() => void save()} disabled={busy || !changed} style={{ ...primary, opacity: busy || !changed ? 0.55 : 1 }}>
+        {busy ? "Saving…" : changed ? `Save ${changed} change${changed === 1 ? "" : "s"}` : "Nothing changed yet"}
       </button>
 
       {err && <div style={danger}>{err}</div>}

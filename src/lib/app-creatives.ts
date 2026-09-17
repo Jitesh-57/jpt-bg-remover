@@ -60,7 +60,7 @@ const BUCKET = "landing";
  * images that arrive in a session, but it costs two minutes and a push, and
  * that is a bad trade when you are doing two hundred of them.
  */
-export function uploadedCreative(slug: string, half: "before" | "after"): string {
+export function uploadedCreative(slug: string, half: string): string {
   const base = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
   return `${base}/storage/v1/object/public/${BUCKET}/creatives/${slug}-${half}.webp`;
 }

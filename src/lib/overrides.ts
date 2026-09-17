@@ -20,7 +20,23 @@
 const BUCKET = "landing";
 const PATH = "overrides/site.json";
 
+/**
+ * An extra example image, shown whole.
+ *
+ * The main pair is cropped to the 4:5 the two panes render at. These are not:
+ * they are whole creatives — usually a finished before/after with its own
+ * labels — so cropping them would cut the thing that makes them readable. The
+ * page needs their shape to reserve the right space before they load, which is
+ * why the size is recorded rather than guessed.
+ */
+export interface ShowcaseImage {
+  slot: string;
+  w: number;
+  h: number;
+}
+
 export interface PageOverride {
+  showcase?: ShowcaseImage[];
   title?: string;
   metaDescription?: string;
   keywords?: string;
@@ -39,18 +55,56 @@ export interface Overrides {
 
 export const EMPTY: Overrides = { version: 1, updatedAt: "", pages: {} };
 
-/** The fields an editor may set, in the order they are shown. */
-export const FIELDS = [
-  { key: "title", label: "Browser / SERP title", hint: "Google shows roughly 60 characters.", lines: 2 },
-  { key: "metaDescription", label: "Meta description", hint: "Roughly 155 characters.", lines: 3 },
-  { key: "keywords", label: "Keywords", hint: "Comma separated. Carries little weight, but harmless.", lines: 2 },
-  { key: "h1", label: "H1 — the page's headline", hint: "", lines: 2 },
-  { key: "tagline", label: "Tagline under the H1", hint: "", lines: 3 },
-  { key: "intro", label: "Short intro (used on hub cards)", hint: "", lines: 2 },
-  { key: "badge", label: "Badge on the result image", hint: "", lines: 1 },
+/**
+ * The fields an editor may set, grouped by where they appear on the page.
+ *
+ * Grouped rather than one long list because they are edited for different
+ * reasons: the first three are what a search result looks like, the next three
+ * are what a visitor reads on arrival. A flat column of seven boxes gives no
+ * hint which is which.
+ */
+export const SECTIONS = [
+  {
+    id: "search",
+    label: "Search result",
+    blurb: "What Google shows. Nobody sees this on the page itself.",
+    fields: [
+      { key: "title", label: "Title", hint: "Google shows roughly 60 characters.", lines: 2 },
+      { key: "metaDescription", label: "Meta description", hint: "Roughly 155 characters.", lines: 3 },
+      { key: "keywords", label: "Keywords", hint: "Comma separated. Carries little weight, but harmless.", lines: 2 },
+    ],
+  },
+  {
+    id: "header",
+    label: "Page header",
+    blurb: "The first thing a visitor reads.",
+    fields: [
+      { key: "h1", label: "H1 — the headline", hint: "", lines: 2 },
+      { key: "tagline", label: "Tagline under the H1", hint: "", lines: 3 },
+      { key: "badge", label: "Badge on the result image", hint: "", lines: 1 },
+    ],
+  },
+  {
+    id: "card",
+    label: "Hub card",
+    blurb: "How this app reads on /creative and the homepage.",
+    fields: [
+      { key: "intro", label: "Short intro", hint: "One line. Shown under the app name on cards.", lines: 2 },
+    ],
+  },
 ] as const;
 
-export type FieldKey = (typeof FIELDS)[number]["key"];
+export interface Field {
+  key: FieldKey;
+  label: string;
+  hint: string;
+  lines: number;
+}
+
+/** Flat list, for anything that just needs every key. */
+export const FIELDS: Field[] = SECTIONS.flatMap((s) => s.fields.map((f) => ({ ...f })));
+
+export type FieldKey = (typeof SECTIONS)[number]["fields"][number]["key"];
 
 function publicUrl(): string {
   const base = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
@@ -98,7 +152,9 @@ export function applyOverride<T extends object>(base: T, o: PageOverride | undef
   const out = { ...(base as Record<string, unknown>) };
   for (const [k, v] of Object.entries(o)) {
     if (typeof v === "string" && v.trim()) out[k] = v.trim();
-    else if (Array.isArray(v) && v.length) out[k] = v;
+    // Arrays (faq, showcase) are not page fields to merge over — the caller
+    // reads them off the override directly.
+    else if (Array.isArray(v) && v.length && k === "faq") out[k] = v;
   }
   return out as T;
 }
