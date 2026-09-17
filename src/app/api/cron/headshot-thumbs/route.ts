@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/admin-token";
 import { createAdminSupabase } from "@/lib/auth";
 import { geminiGenerateFromText } from "@/lib/gemini";
 import { MEN_STYLES, WOMEN_STYLES } from "@/lib/headshot-prompts";
@@ -10,8 +11,15 @@ export const maxDuration = 60;
 /**
  * Generates a preview thumbnail for each AI Headshot style (men + women) with
  * Nano Banana Pro and uploads them to Supabase (landing/headshot/<gender>-<id>.png).
- * Small batches to stay under Hobby's 60s limit; idempotent (skips existing).
- * Triggered by the headshot page's filler or manually with ?token=jptblog2026.
+ * Run it with:
+ *
+ *   GET /api/cron/headshot-thumbs?token=<ADMIN_IMAGE_TOKEN>
+ *
+ * Idempotent — it skips thumbnails that already exist — and each call does one
+ * small batch and reports `remaining`, so call it again while that is above
+ * zero.
+ *
+ * Deliberately not self-chaining: see the note in blog-images.
  */
 const BUCKET = "landing";
 const BATCH = 2;
@@ -23,10 +31,22 @@ const ITEMS: Item[] = [
 ];
 
 export async function GET(req: NextRequest) {
-  const authed =
-    req.headers.get("x-vercel-cron") !== null ||
-    (req.nextUrl.searchParams.get("token") || "").trim() === "jptblog2026";
-  if (!authed) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  /*
+    ADMIN_IMAGE_TOKEN, not a token written in this file.
+
+    This was `?token=jptblog2026` — in a public repository, so the guard
+    protected nothing, on an endpoint that spends real money generating
+    images. Anyone who read the repo could run it in a loop.
+
+    A Vercel cron still passes on its own header, so adding a schedule later
+    needs no change here. There is no vercel.json today; the only thing that
+    ever called this was a browser loop, which is now gone (a browser cannot
+    hold a secret, so there is no safe version of that).
+  */
+  if (req.headers.get("x-vercel-cron") === null) {
+    const denied = requireAdmin(req);
+    if (denied) return denied;
+  }
 
   const supabase = createAdminSupabase();
   const { data: existing } = await supabase.storage.from(BUCKET).list("headshot", { limit: 1000 });

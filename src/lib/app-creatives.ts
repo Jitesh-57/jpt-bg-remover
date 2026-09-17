@@ -48,6 +48,8 @@ export function localCreativeCount(): { apps: number; before: number; after: num
    Uploaded creatives
    ──────────────────────────────────────────────────────────────────────── */
 
+import { isRenderable } from "@/lib/image-hosts";
+
 const BUCKET = "landing";
 
 /**
@@ -79,5 +81,5 @@ export function creativeSources(slug: string, half: "before" | "after", legacy?:
   if (local) out.push(local);
   out.push(uploadedCreative(slug, half));
   if (legacy) out.push(legacy);
-  return out;
+  return out.filter(isRenderable);
 }

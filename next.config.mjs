@@ -1,3 +1,8 @@
+import { createRequire } from 'node:module';
+
+/** Shared with app-creatives.ts so the allowed hosts cannot drift apart. */
+const { hosts: imageHosts } = createRequire(import.meta.url)('./config/image-hosts.json');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   async redirects() {
@@ -31,23 +36,21 @@ const nextConfig = {
     twenty-to-fiftyfold reduction, and the result is cached at the edge.
   */
   images: {
-    remotePatterns: [
-      { protocol: 'https', hostname: 'lwworujvfttxkrjfrgav.supabase.co', pathname: '/storage/v1/object/public/**' },
-      /*
-        The prompt library's result images.
+    /*
+      Built from config/image-hosts.json so this list and the runtime filter in
+      app-creatives.ts cannot drift apart. A URL next/image has not been told
+      about does not fail softly — it throws during render and takes the page
+      with it, which is a poor way to find out about a typo in an env var.
 
-        They were rendered as plain <img> pointing straight at the source CDN
-        and arrived blank in production — every one of them. Going through the
-        optimiser fixes that as a side effect of how it works: the fetch happens
-        server-side, so nothing about the browser's referer or origin is
-        involved, and what reaches the page is a resized AVIF/WebP from our own
-        domain. These are 1-3MB press-quality JPEGs and a grid shows 24, so the
-        re-encode matters on its own terms too.
-      */
-      { protocol: 'https', hostname: 'cms-assets.youmind.com', pathname: '/**' },
-      { protocol: 'https', hostname: 'pbs.twimg.com', pathname: '/**' },
-      { protocol: 'https', hostname: 'customer-qs6wnyfuv0gcybzj.cloudflarestream.com', pathname: '/**' },
-    ],
+      Why these are here at all: the prompt library's result images were plain
+      <img> pointing at the source CDN and arrived blank in production, every
+      one. Going through the optimiser fixes that as a side effect of how it
+      works — the fetch happens server-side, so nothing about the browser's
+      referer or origin is involved, and what reaches the page is a resized
+      AVIF/WebP from our own domain. They are 1-3MB press JPEGs and a grid
+      shows 24, so the re-encode earns its place regardless.
+    */
+    remotePatterns: imageHosts.map((h) => ({ protocol: 'https', ...h })),
     formats: ['image/avif', 'image/webp'],
     // A year: these files are content-addressed by name and replaced wholesale
     // rather than edited, so there is nothing to invalidate early.

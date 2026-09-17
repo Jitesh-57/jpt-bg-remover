@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import ToolArtwork from "./ToolArtwork";
+import { isRenderable } from "@/lib/image-hosts";
 
 /**
  * An image slot that degrades gracefully, and does not cost megabytes.
@@ -36,7 +37,10 @@ export default function SmartImage({
   /** Drawn instead of the bare gradient when the file is missing. */
   artwork?: { slug: string; name: string; emoji?: string; gradient: [string, string]; note?: string };
 }) {
-  const candidates = (sources?.length ? sources : src ? [src] : []).filter(Boolean);
+  // isRenderable, not Boolean: a URL whose host next/image has not been
+  // told about throws during render rather than firing onError, so it has to
+  // be dropped before it gets there.
+  const candidates = (sources?.length ? sources : src ? [src] : []).filter(isRenderable);
   const [index, setIndex] = useState(0);
   const current = candidates[index];
   const ok = !!current;
@@ -47,7 +51,16 @@ export default function SmartImage({
   return (
     <div style={{ position: "relative", width: "100%", height: "100%", background: fallback, overflow: "hidden", ...style }}>
       {showArtwork && <ToolArtwork {...artwork!} />}
-      {ok && src && (
+      {/*
+        `ok` alone, not `ok && src`.
+
+        When this component learned to take a list, every caller moved from
+        `src` to `sources` — and this guard still required `src`, so the image
+        never rendered and every card on the homepage fell through to a bare
+        gradient. The condition has to be about whether there is a candidate
+        left to try, which is exactly what `ok` means.
+      */}
+      {ok && (
         // Invisible until it has actually loaded: otherwise a pending or missing
         // file paints its alt text over the fallback instead of the fallback.
         <Image
