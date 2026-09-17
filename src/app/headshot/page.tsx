@@ -24,7 +24,7 @@ const PRESET_COLORS = [
   { label: "Black", color: "#000000" },
 ];
 
-interface GeneratedImage { id: number; name: string; tag: string; url: string; engine?: string; }
+interface GeneratedImage { id: number; name: string; tag: string; url: string; }
 interface LibraryItem { id: string; url: string; name: string; tag: string; type: "generated" | "edited"; savedAt: number; }
 interface LightboxItem { url: string; name: string; tag: string; onEdit?: () => void; onDelete?: () => void; }
 interface PendingColor { color: string; label: string; }
@@ -36,11 +36,6 @@ type HeadshotApiBody = {
   images?: GeneratedImage[];
   error?: string;
   errors?: string[];
-  /**
-   * Set only when the premium model could not serve the request. Shown as-is:
-   * the route has already stripped the part that names our providers.
-   */
-  engineNotice?: string;
 };
 
 type Gender = "women" | "men";
@@ -138,7 +133,6 @@ export default function HeadshotPage() {
   const [generating, setGenerating] = useState(false);
   const [progress, setProgress] = useState("");
   const [images, setImages] = useState<GeneratedImage[]>([]);
-  const [engineNotice, setEngineNotice] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<GeneratedImage | null>(null);
   const [editedUrl, setEditedUrl] = useState<string | null>(null);
   const [editingBg, setEditingBg] = useState(false);
@@ -279,7 +273,6 @@ export default function HeadshotPage() {
     setGenerating(true);
     setError(null);
     setImages([]);
-    setEngineNotice(null);
     setProgress(`Generating ${selectedStyleIds.length} headshot${selectedStyleIds.length > 1 ? "s" : ""}…`);
     try {
       const res = await fetch("/api/headshot/generate", {
@@ -294,7 +287,6 @@ export default function HeadshotPage() {
       }
       if (!data.images || data.images.length === 0) throw new Error(data.errors?.[0] || "No images generated");
       setImages(data.images);
-      setEngineNotice(data.engineNotice || null);
       setStep("gallery");
       const now = Date.now();
       addToLibrary(data.images.map((img: GeneratedImage, i: number) => ({
@@ -717,15 +709,6 @@ export default function HeadshotPage() {
               <div><h2 style={s.h2}>Your Headshots</h2><p style={s.sub2}>Click any image to preview · use ✏️ to edit background</p></div>
               {sourcePreview && <img src={sourcePreview} alt="source" style={s.galleryThumb} />}
             </div>
-            {/*
-              Only shown when the premium model could not serve the run.
-              Normally there is nothing here — a banner naming the engine on
-              every successful generation is noise, but silence on a
-              substitution is how "why do these still look the same?" happens.
-            */}
-            {engineNotice && (
-              <div style={s.engineNotice} role="status">⚠️ {engineNotice}</div>
-            )}
             <div style={s.imageGrid}>
               {images.map((img, idx) => (
                 <div key={img.id} className="hs-card" style={s.imgCard}>
@@ -952,7 +935,6 @@ const s: Record<string, React.CSSProperties> = {
   styleTag: { fontSize: 10, color: "var(--text-muted)", background: "var(--surface-3)", borderRadius: 4, padding: "2px 6px", textTransform: "uppercase" as const, letterSpacing: 0.5 },
 
   galleryLayout: { position: "relative", zIndex: 1, display: "flex", flexDirection: "column" as const, gap: 20, maxWidth: 1100, width: "100%" },
-  engineNotice: { background: "var(--accent-soft)", border: "1px solid var(--accent-border)", color: "var(--accent-strong)", borderRadius: 12, padding: "11px 16px", fontSize: 13, fontWeight: 600, lineHeight: 1.5 },
   galleryHeader: { background: "var(--surface)", borderRadius: 16, padding: "20px 28px", boxShadow: "0 2px 12px rgba(0,0,0,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap" as const, gap: 12 },
   galleryThumb: { width: 56, height: 72, objectFit: "cover" as const, borderRadius: 8, border: "2px solid var(--border-strong)" },
   imageGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 16 },

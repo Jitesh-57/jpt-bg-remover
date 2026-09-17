@@ -198,11 +198,23 @@ export function buildPrompt(
 export const ASPECT_RATIOS = ["1:1", "4:5", "3:4", "16:9", "9:16", "3:2"] as const;
 export type AspectRatio = (typeof ASPECT_RATIOS)[number];
 
+/**
+ * The models offered in the picker.
+ *
+ * All of these run on fal credit — no second account, no BYOK. If one is not
+ * available to the account, the request is served by Nano Banana rather than
+ * failing, and the substitution is logged with the endpoint that refused it
+ * (see withModelFallback). So a model here can never dead-end a visitor.
+ *
+ * The ids match src/lib/fal.ts. "gpt-image" is still accepted by the API as an
+ * alias for the current default GPT model, so older saved preferences and
+ * bookmarked admin URLs keep working.
+ */
 export const MODELS = [
-  { id: "nano-banana", label: "Nano Banana", hint: "Fast, best at keeping your face" },
-  // BYOK on fal: needs an OpenAI key on the fal account. Without one the
-  // request is served by Nano Banana instead of failing — see withModelFallback.
-  { id: "gpt-image",   label: "GPT Image",   hint: "Better at text in the image; needs an OpenAI key on the fal account" },
+  { id: "nano-banana",            label: "Nano Banana",    hint: "Fast, cheap, best at keeping your face" },
+  { id: "gpt-image-2.5-flare",    label: "GPT Image 2.5",  hint: "Natural light and rich texture — the best all-rounder" },
+  { id: "gpt-image-2.5-sunburst", label: "GPT Image 2.5 Pro", hint: "Tightest control and finest detail; slower" },
+  { id: "gpt-image-2",            label: "GPT Image 2",    hint: "Strong at fine-grained edits and text in the image" },
 ] as const;
 
 /** Supabase bucket holding preset thumbnails, matched by name at runtime. */

@@ -64,9 +64,8 @@ export async function POST(req: NextRequest) {
         framePrompt(style),
         {
           // Portrait. fal maps 3:4 to GPT Image's 1024x1536 and passes it to
-          // Nano Banana as an aspect ratio, so one value frames every rung.
+          // Nano Banana as an aspect ratio, so one value frames every model.
           aspectRatio: "3:4",
-          size: "1024x1536",
           // A budget that fits maxDuration with room to spare — a
           // high-quality GPT Image render is slow by design.
           budgetMs: 240_000,
@@ -97,18 +96,18 @@ export async function POST(req: NextRequest) {
   console.log(`Generate done: ${images.length} success, ${errors.length} failed`);
 
   /*
-    Tell the page when it did not get the model it asked for.
+    Which engine served the run is an operator's question, not a customer's.
 
-    The operator log above is the full story; this is the one sentence the
-    person looking at the pictures needs, and only when it applies. Without
-    it, "we switched the headshots to GPT Image" and "the headshots look
-    exactly as they did before" are both true and nobody can connect them.
+    It went to the page once, as "generated with the standard model … quality
+    may differ", and that was a mistake: someone who just spent credits and is
+    looking at four perfectly good headshots learns only that they might have
+    got something better, with nothing they can do about it. It is an apology
+    for a choice they never made. The log above carries the engine and the
+    reason for anyone who can act on it, and /api/admin/headshot-model answers
+    it on demand.
   */
-  const downgraded = images.some((i) => i.engine !== "gpt-image");
-  const engineNotice = downgraded
-    ? "These were generated with the standard model. The premium photorealistic model is not " +
-      "available right now, so quality may differ."
-    : undefined;
+  const engines = Array.from(new Set(images.map((i) => i.engine)));
+  console.log(`Headshot engines used: ${engines.join(", ")}`);
 
   // Charge credits for each successfully generated headshot (2 credits each like other AI tools)
   if (images.length === 0) {
@@ -117,11 +116,10 @@ export async function POST(req: NextRequest) {
 
   return withCredits(
     {
-      // downgradeReason names our providers, so it is listed out here rather
-      // than spread in: it belongs in the server log, not in a browser.
-      images: images.map((i) => ({ id: i.id, name: i.name, tag: i.tag, url: i.url, engine: i.engine })),
+      // Only what the page renders. The engine and the reason behind it name
+      // our suppliers and belong in the server log, not in a browser.
+      images: images.map((i) => ({ id: i.id, name: i.name, tag: i.tag, url: i.url })),
       errors,
-      ...(engineNotice ? { engineNotice } : {}),
     },
     session!,
     "ai",
