@@ -110,22 +110,19 @@ export default function HeadshotPage() {
   const [step, setStep] = useState<Step>("upload");
   const [gender, setGender] = useState<Gender>("women");
 
-  // One-time: drive generation of any missing style thumbnails (idempotent, self-terminating).
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      for (let i = 0; i < 24 && !cancelled; i++) {
-        try {
-          const r = await fetch("/api/cron/headshot-thumbs?token=jptblog2026", { cache: "no-store" });
-          const d = (await r.json()) as { done?: boolean; remaining?: number };
-          if (d.done || (d.remaining ?? 0) <= 0) break;
-        } catch {
-          await new Promise((res) => setTimeout(res, 2000));
-        }
-      }
-    })();
-    return () => { cancelled = true; };
-  }, []);
+  /*
+    The thumbnail generator is not triggered from here any more.
+
+    This effect called /api/cron/headshot-thumbs up to two dozen times per page
+    view, carrying `?token=jptblog2026` — a token written into a public
+    repository, on an endpoint that spends money generating images. A browser
+    cannot hold a secret, so there was no version of this that worked: the
+    trigger had to go, not the token.
+
+    Run it deliberately instead:
+      GET /api/cron/headshot-thumbs?token=<ADMIN_IMAGE_TOKEN>
+    Repeat while the response reports `remaining` above zero.
+  */
   const [sourcePreview, setSourcePreview] = useState<string | null>(null);
   const [sourceUrl, setSourceUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/admin-token";
 import { createAdminSupabase } from "@/lib/auth";
 import { geminiGenerateFromText } from "@/lib/gemini";
 import { deriveBlogPrompt } from "@/lib/blog-images";
@@ -8,24 +9,45 @@ export const runtime = "nodejs";
 export const maxDuration = 60;
 
 /**
- * Self-running blog-image generator (Hobby-plan friendly).
+ * Blog-image generator.
  *
- * Each invocation generates a small batch of missing images (under the 60s
- * function limit), then — if any remain — schedules the NEXT invocation via
- * after(), so a single trigger chains through all of them automatically.
+ * The comment here used to describe a daily Vercel cron and an after() chain,
+ * neither of which existed. What actually drove it was a browser loop holding
+ * a token published in this repository.
  *
- * Triggered by the daily Vercel cron (vercel.json) or manually with
- * ?token=jptblog2026. Idempotent: skips images that already exist and stops
- * once everything is generated.
+ * Run it with:
+ *
+ *   GET /api/cron/blog-images?token=<ADMIN_IMAGE_TOKEN>
+ *
+ * Idempotent — it skips images that already exist — and each call does one
+ * small batch and reports `remaining`, so call it again while that is above
+ * zero.
+ *
+ * Deliberately not self-chaining. site-images does chain, and needed a kill
+ * switch to go with it, because once a run is walking the queue spending money
+ * there is no way to stop it from outside. A generator you have to ask again
+ * is the safer shape for one nobody is watching.
  */
 const BUCKET = "landing";
 const BATCH = 2;
 
 export async function GET(req: NextRequest) {
-  const authed =
-    req.headers.get("x-vercel-cron") !== null ||
-    (req.nextUrl.searchParams.get("token") || "").trim() === "jptblog2026";
-  if (!authed) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  /*
+    ADMIN_IMAGE_TOKEN, not a token written in this file.
+
+    This was `?token=jptblog2026` — in a public repository, so the guard
+    protected nothing, on an endpoint that spends real money generating
+    images. Anyone who read the repo could run it in a loop.
+
+    A Vercel cron still passes on its own header, so adding a schedule later
+    needs no change here. There is no vercel.json today; the only thing that
+    ever called this was a browser loop, which is now gone (a browser cannot
+    hold a secret, so there is no safe version of that).
+  */
+  if (req.headers.get("x-vercel-cron") === null) {
+    const denied = requireAdmin(req);
+    if (denied) return denied;
+  }
 
   const supabase = createAdminSupabase();
   const { data: existing } = await supabase.storage.from(BUCKET).list("blog", { limit: 1000 });
