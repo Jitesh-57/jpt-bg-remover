@@ -22,6 +22,7 @@ import ToolArtwork from "./ToolArtwork";
  */
 export default function ExampleImage({
   src,
+  sources,
   alt,
   emoji,
   gradient,
@@ -31,7 +32,18 @@ export default function ExampleImage({
   sizes = "(max-width: 768px) 100vw, 420px",
   eager = false,
 }: {
-  src: string;
+  src?: string;
+  /**
+   * Candidate URLs, best first.
+   *
+   * Nothing on the server knows which of these exist — the bucket is not
+   * queried at build time, and a HEAD request per app per render would be
+   * absurd. So the browser finds out the only way it can: it tries one, and
+   * moves to the next when the load fails. Falling straight to the
+   * placeholder on the first miss is what made an uploaded creative
+   * invisible behind a stale path.
+   */
+  sources?: string[];
   alt: string;
   /** Shown in the placeholder — the app's own emoji. */
   emoji?: string;
@@ -45,8 +57,11 @@ export default function ExampleImage({
   sizes?: string;
   eager?: boolean;
 }) {
-  const [failed, setFailed] = useState(!src);
+  const candidates = (sources?.length ? sources : src ? [src] : []).filter(Boolean);
+  const [index, setIndex] = useState(0);
   const [loaded, setLoaded] = useState(false);
+  const current = candidates[index];
+  const failed = !current;
 
   const bg = gradient
     ? `linear-gradient(135deg, ${gradient[0]}, ${gradient[1]})`
@@ -78,14 +93,15 @@ export default function ExampleImage({
           an empty grey box mid-load. */}
       <div style={{ position: "absolute", inset: 0, background: bg, opacity: loaded ? 0 : 1, transition: "opacity .3s var(--ease)" }} />
       <Image
-        src={src}
+        key={current}
+        src={current}
         alt={alt}
         fill
         sizes={sizes}
         priority={eager}
         loading={eager ? undefined : "lazy"}
         onLoad={() => setLoaded(true)}
-        onError={() => setFailed(true)}
+        onError={() => setIndex((i) => i + 1)}
         style={{
           objectFit: "cover",
           opacity: loaded ? 1 : 0,

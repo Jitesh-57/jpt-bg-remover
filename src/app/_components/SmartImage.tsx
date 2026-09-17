@@ -21,9 +21,11 @@ import ToolArtwork from "./ToolArtwork";
  * now draws the tool's own placeholder instead.
  */
 export default function SmartImage({
-  src, alt, fallback, style, eager = false, sizes = "(max-width: 768px) 50vw, 300px", artwork,
+  src, sources, alt, fallback, style, eager = false, sizes = "(max-width: 768px) 50vw, 300px", artwork,
 }: {
-  src: string;
+  src?: string;
+  /** Candidate URLs, best first — tried in turn on load failure. */
+  sources?: string[];
   alt: string;
   /** CSS background shown while loading and when there is no artwork. */
   fallback: string;
@@ -34,7 +36,10 @@ export default function SmartImage({
   /** Drawn instead of the bare gradient when the file is missing. */
   artwork?: { slug: string; name: string; emoji?: string; gradient: [string, string]; note?: string };
 }) {
-  const [ok, setOk] = useState(true);
+  const candidates = (sources?.length ? sources : src ? [src] : []).filter(Boolean);
+  const [index, setIndex] = useState(0);
+  const current = candidates[index];
+  const ok = !!current;
   const [loaded, setLoaded] = useState(false);
 
   const showArtwork = !ok && !!artwork;
@@ -46,14 +51,15 @@ export default function SmartImage({
         // Invisible until it has actually loaded: otherwise a pending or missing
         // file paints its alt text over the fallback instead of the fallback.
         <Image
-          src={src}
+          key={current}
+          src={current}
           alt={alt}
           fill
           sizes={sizes}
           priority={eager}
           loading={eager ? undefined : "lazy"}
           onLoad={() => setLoaded(true)}
-          onError={() => setOk(false)}
+          onError={() => setIndex((i) => i + 1)}
           style={{
             objectFit: "cover",
             opacity: loaded ? 1 : 0,

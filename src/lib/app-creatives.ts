@@ -42,3 +42,42 @@ export function localCreativeCount(): { apps: number; before: number; after: num
     after: keys.filter((k) => MANIFEST[k].after).length,
   };
 }
+
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Uploaded creatives
+   ──────────────────────────────────────────────────────────────────────── */
+
+const BUCKET = "landing";
+
+/**
+ * Where /admin/creatives puts what you upload.
+ *
+ * Supabase rather than the repo, because this path has to work without a
+ * deploy: upload, reload, done. The repo path (npm run creative) stays for
+ * images that arrive in a session, but it costs two minutes and a push, and
+ * that is a bad trade when you are doing two hundred of them.
+ */
+export function uploadedCreative(slug: string, half: "before" | "after"): string {
+  const base = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+  return `${base}/storage/v1/object/public/${BUCKET}/creatives/${slug}-${half}.webp`;
+}
+
+/**
+ * Every place an example might live, best first.
+ *
+ * Returned as a list rather than resolved here because nothing on the server
+ * knows which of these exist — the bucket is not queried at build time and a
+ * HEAD request per app per render would be absurd. The browser finds out the
+ * only way it can: it tries one, and moves to the next when the load fails.
+ * The last rung is the app's own placeholder artwork, so the bottom of the
+ * list is never a broken image.
+ */
+export function creativeSources(slug: string, half: "before" | "after", legacy?: string | null): string[] {
+  const out: string[] = [];
+  const local = half === "before" ? localBefore(slug) : localAfter(slug);
+  if (local) out.push(local);
+  out.push(uploadedCreative(slug, half));
+  if (legacy) out.push(legacy);
+  return out;
+}

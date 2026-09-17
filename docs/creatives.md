@@ -1,6 +1,36 @@
-# Adding a hand-made before/after to an app page
+# Adding a before/after to an app page
 
-You generate the creative; this puts it on the site.
+## The easy way: /admin/creatives
+
+```
+https://www.sjpt.io/admin/creatives
+```
+
+Pick the app, drop the image, press publish. Paste the admin token once; the
+browser remembers it.
+
+- A **wide** image is split down the middle into the Before and After panes.
+- Anything else becomes the After pane.
+- **Crop: centre / top / bottom** — use *bottom* when the creative has a caption
+  burned into the bottom of the frame that a centre crop would trim.
+
+The cropping and compression happen **in the browser**, on the machine that has
+the file: a creative comes out of an image tool at 3–8 MB and the pane it lands
+in is 410 CSS px wide, so uploading the original would be slow, cost storage,
+and still need cropping. What crosses the wire is the 40–120 KB that was
+actually needed — typically **80% smaller**.
+
+It stores to Supabase, so it is live without a deploy. The page caches for five
+minutes.
+
+No deploy, no session, no waiting on anyone.
+
+---
+
+## The other way: the script
+
+For an image that arrives in a Claude session. Same processing, but it commits
+to the repo and therefore needs a deploy.
 
 ```
 npm run creative -- <page url or slug> <image> [image2]
@@ -19,9 +49,34 @@ npm run creative -- age-progression --after result.png
 | `--after <file>` | replaces only the result pane |
 | `--before <file>` | replaces only the source pane |
 | `--no-split` | uses one wide image whole, as the after pane |
+| `--gravity south` | keeps a caption burned into the bottom of the frame |
 
 A wide image (aspect 1.4 or more) is assumed to be a side-by-side pair, because
 that is what a before/after creative usually is. `--no-split` overrides it.
+
+## Getting the file here
+
+**An image may be a path or a URL**, and the URL is the one that matters: a
+picture in a chat window is not a file on the machine running this. Only GitHub
+is reachable from a session like this one — Supabase, imgur and the paste hosts
+are all blocked at the egress proxy — so the handoff is:
+
+1. Drag the image into a GitHub issue or PR comment.
+2. Paste the link it gives you (`github.com/user-attachments/assets/…`).
+
+Or upload it into the repo through GitHub's web UI and pass the path after a
+pull. Either works; the first is fewer clicks.
+
+## Sizing
+
+The largest 4:5 window that fits inside the source, capped at 900px wide. A
+smaller creative keeps its own size rather than being blown up — upscaling
+makes it blurrier *and* the file bigger, which is both halves of the job
+backwards.
+
+`withoutEnlargement` is the obvious way to express that and the wrong one:
+combined with `cover` it makes sharp give up on the aspect ratio instead of the
+scale, and a 420×420 input came back 420×420 for a 4:5 pane.
 
 ## What it writes
 
@@ -40,16 +95,20 @@ needs editing: the app page, the `/creative` hub and the homepage cards all
 prefer a local file over the bulk-generated Supabase one, and the social preview
 image for that page switches too.
 
-## Why the repo rather than the bucket
+## Which source wins
 
-The bulk-generated set lives in Supabase and is uploaded with a service key that
-only production has. Committing to `public/` is the path that works end to end
-from a session like this one: you paste a link and an image, and it ships.
+For each pane, in order:
 
-The trade is a deploy per batch — about two minutes — and some repo weight. At
-40–120 KB each that is a few megabytes across the whole catalogue, which is
-worth it for images that took real effort to make. Send several at once and
-they go out together.
+1. `public/creatives/<slug>-<half>.webp` — committed by the script
+2. `landing/creatives/<slug>-<half>.webp` — uploaded by /admin/creatives
+3. the bulk-generated Supabase image
+4. the app's own placeholder artwork
+
+Nothing on the server knows which of these exist — the bucket is not queried at
+build time, and a HEAD request per app per render would be absurd. So the
+browser finds out the only way it can: it tries one and moves to the next when
+the load fails. Falling straight to the placeholder on the first miss is what
+would make an uploaded creative invisible behind a stale path.
 
 ## Guards
 
