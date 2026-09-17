@@ -71,6 +71,33 @@ export async function falProbe(): Promise<{ status: number; body: string }> {
  * `gpt-image-1-byok` only for an account that still routes through its own
  * OpenAI key; nothing selects it by default.
  */
+/**
+ * Asks fal about one endpoint, without generating anything.
+ *
+ * The request body is empty on purpose. Every image endpoint requires a
+ * prompt, so fal rejects it before any work is queued — which makes this free
+ * to run as often as you like, while still distinguishing the four things that
+ * all look identical from the outside:
+ *
+ *   404  the path is wrong — this model is not at this address
+ *   422  the path is right; fal got as far as validating the input
+ *   403  the path is right and this account may not use it
+ *   401  FAL_KEY is wrong, and nothing on fal will work
+ *
+ * That distinction is the whole diagnosis. Without it, "the headshots came out
+ * on Nano Banana" could be a typo in a path, a model the account is not
+ * entitled to, or a key problem, and there is no way to tell them apart from
+ * the outside.
+ */
+export async function falEndpointProbe(path: string): Promise<{ status: number; body: string }> {
+  const res = await fetch(`https://queue.fal.run/${path}`, {
+    method: "POST",
+    headers: authHeaders(),
+    body: "{}",
+  });
+  return { status: res.status, body: (await res.text()).slice(0, 300) };
+}
+
 export type FalModel =
   | "nano-banana"
   | "gpt-image-2.5-sunburst"
@@ -125,6 +152,54 @@ const MODEL_SPECS: Record<FalModel, ModelSpec> = {
     label: "GPT Image 1 (BYOK)",
   },
 };
+
+/**
+ * Other spellings the same model might live at.
+ *
+ * These paths are transcribed from fal's model listing rather than fetched, so
+ * a wrong one is a real possibility — and a wrong path fails as 404, which from
+ * the outside is indistinguishable from "this account cannot use this model".
+ * Both end with the generation quietly served by Nano Banana.
+ *
+ * So a 404 tries the alternatives before giving up on the model. It costs one
+ * more rejected round trip, a 404 returns immediately, and the path that worked
+ * is logged so it can be pinned with FAL_ENDPOINT_<ID>_EDIT and the guessing
+ * stops. This is a recovery path, not a naming convention: nothing here is
+ * invented at runtime.
+ */
+const PATH_VARIANTS: Partial<Record<FalModel, { edit: string[]; generate: string[] }>> = {
+  "gpt-image-2.5-sunburst": {
+    edit: [
+      "fal-ai/gpt-image-2.5/sunburst/edit",
+      "openai/gpt-image-2.5/sunburst/edit-image",
+      "openai/gpt-image-2.5/sunburst/image-to-image",
+    ],
+    generate: ["fal-ai/gpt-image-2.5/sunburst/text-to-image"],
+  },
+  "gpt-image-2.5-flare": {
+    edit: [
+      "fal-ai/gpt-image-2.5/flare/edit",
+      "openai/gpt-image-2.5/flare/edit-image",
+      "openai/gpt-image-2.5/flare/image-to-image",
+    ],
+    generate: ["fal-ai/gpt-image-2.5/flare/text-to-image"],
+  },
+  "gpt-image-2": {
+    edit: [
+      "fal-ai/gpt-image-2/edit",
+      "openai/gpt-image-2/edit-image",
+      "openai/gpt-image-2/image-to-image",
+    ],
+    generate: ["fal-ai/gpt-image-2"],
+  },
+};
+
+/** The configured path first, then the alternatives worth trying on a 404. */
+export function falPathVariants(m: FalModel, half: "edit" | "generate"): string[] {
+  const configured = falEndpoint(m, half);
+  const alts = PATH_VARIANTS[m]?.[half] ?? [];
+  return [configured, ...alts.filter((p) => p !== configured)];
+}
 
 export function falModelSpec(m: FalModel): ModelSpec {
   return MODEL_SPECS[m];
@@ -239,39 +314,59 @@ async function runQueued(
   model: string,
   input: object,
   budgetMs = 55_000,
-  opts?: { minimalInput?: object }
+  opts?: { minimalInput?: object; paths?: string[] }
 ): Promise<unknown> {
   assertKey();
   const started = Date.now();
 
-  const post = (body: object) =>
-    fetch(`https://queue.fal.run/${model}`, {
+  const post = (path: string, body: object) =>
+    fetch(`https://queue.fal.run/${path}`, {
       method: "POST",
       headers: authHeaders(),
       body: JSON.stringify(body),
     });
 
-  let submit = await post(input);
-  let submitBody = (await submit.json().catch(() => ({}))) as QueueSubmit;
+  const candidates = opts?.paths?.length ? opts.paths : [model];
+  let submit!: Response;
+  let submitBody!: QueueSubmit;
 
-  /*
-    422 means fal understood the request and rejected its shape.
-
-    fal's models do not share one input schema, and it renames and reorganises
-    them; a field one endpoint takes (`quality`, `image_size`, `output_format`)
-    another may not recognise. Those are all optional refinements, so losing a
-    generation over one is the wrong trade — the retry sends the prompt and the
-    image alone. It costs one round trip, only on an endpoint that has already
-    refused, and the discarded fields are logged so a real schema change is
-    visible rather than silently absorbed.
-  */
-  if (submit.status === 422 && opts?.minimalInput) {
-    console.warn(
-      `[fal] ${model} rejected the request shape (422): ${JSON.stringify(submitBody).slice(0, 200)}. ` +
-      `Retrying with prompt and image only.`
-    );
-    submit = await post(opts.minimalInput);
+  for (let i = 0; i < candidates.length; i++) {
+    const path = candidates[i];
+    submit = await post(path, input);
     submitBody = (await submit.json().catch(() => ({}))) as QueueSubmit;
+
+    /*
+      422 means fal understood the request and rejected its shape.
+
+      fal's models do not share one input schema; a field one endpoint takes
+      (`quality`, `image_size`, `output_format`) another may not recognise.
+      Those are all optional refinements, so losing a generation over one is
+      the wrong trade — the retry sends the prompt and the image alone. It
+      costs one round trip, only on an endpoint that has already refused, and
+      the discarded fields are logged so a real schema change is visible
+      rather than silently absorbed.
+    */
+    if (submit.status === 422 && opts?.minimalInput) {
+      console.warn(
+        `[fal] ${path} rejected the request shape (422): ${JSON.stringify(submitBody).slice(0, 200)}. ` +
+        `Retrying with prompt and image only.`
+      );
+      submit = await post(path, opts.minimalInput);
+      submitBody = (await submit.json().catch(() => ({}))) as QueueSubmit;
+    }
+
+    // 404 is the only status worth trying another spelling for: the path is
+    // wrong. Anything else is an answer about this model, not its address.
+    if (submit.status !== 404 || i === candidates.length - 1) {
+      if (i > 0 && submit.ok) {
+        console.warn(
+          `[fal] ${candidates[0]} is a 404; this model answered at ${path} instead. ` +
+          `Pin it with the FAL_ENDPOINT_… variable for this model to skip the extra round trips.`
+        );
+      }
+      break;
+    }
+    console.warn(`[fal] ${path} does not exist (404); trying the next known spelling.`);
   }
 
   if (!submit.ok) {
@@ -497,6 +592,7 @@ export async function falEditImage(
     // rejected *option* is a poor reason to lose the generation — so the
     // retry drops to prompt and image alone. See runQueued.
     minimalInput: { prompt, image_urls: [imageUrl], num_images: 1 },
+    paths: falPathVariants(model, "edit"),
   });
   return urlToDataUrl(firstImageUrl(result));
 }
@@ -518,6 +614,7 @@ export async function falEditImages(
 
   const result = await runQueued(endpoint, input, undefined, {
     minimalInput: { prompt, image_urls: imageUrls, num_images: 1 },
+    paths: falPathVariants(model, "edit"),
   });
   return urlToDataUrl(firstImageUrl(result));
 }
@@ -552,6 +649,7 @@ export async function falGenerateImage(
 
   const result = await runQueued(endpoint, input, budgetMs, {
     minimalInput: { prompt, num_images: 1 },
+    paths: falPathVariants(model, "generate"),
   });
   return urlToDataUrl(firstImageUrl(result));
 }
