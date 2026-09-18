@@ -39,12 +39,26 @@ function maybeCleanup() {
 const CANONICAL_HOST = "www.sjpt.io";
 const REDIRECT_HOSTS = new Set(["sjpt.io"]);
 
+/*
+  Served on whichever host asks for it, never redirected.
+
+  Everything else on the apex 301s to www, which is right for pages. It is
+  wrong for ads.txt: ad-verification crawlers follow at most one redirect, and
+  the apex hop can already be the second one (http → https → www). AdSense
+  registered this site as "sjpt.io" and reported "no ads.txt file was found"
+  for a month while the file sat correctly at www.sjpt.io/ads.txt.
+
+  Safe to exempt, because it is a machine-read manifest rather than an
+  indexable page — there is no ranking signal here to consolidate.
+*/
+const HOST_NEUTRAL = new Set(["/ads.txt"]);
+
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   // Canonical-host redirect — consolidate duplicate domains onto www.sjpt.io.
   const host = request.headers.get("host")?.toLowerCase() ?? "";
-  if (REDIRECT_HOSTS.has(host)) {
+  if (REDIRECT_HOSTS.has(host) && !HOST_NEUTRAL.has(path)) {
     const url = new URL(request.url);
     url.host = CANONICAL_HOST;
     url.protocol = "https:";
