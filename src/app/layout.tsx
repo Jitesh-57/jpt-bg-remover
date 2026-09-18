@@ -7,7 +7,9 @@ import PricingModalHost from "./_components/PricingModalHost";
 import Analytics from "./_components/Analytics";
 import SupportChat from "./_components/SupportChat";
 import AuthReturn from "./_components/AuthReturn";
+import PageGallery from "./_components/PageGallery";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
+import { galleryIndex, galleryTitleFor, readOverrides } from "@/lib/overrides";
 
 const BASE = "https://www.sjpt.io";
 // Origin that serves all landing/blog/tool imagery — preconnected below so the
@@ -81,7 +83,24 @@ const softwareSchema = {
   aggregateRating: { "@type": "AggregateRating", ratingValue: "4.8", reviewCount: "1200" },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+/*
+  Read once, for every page.
+
+  Images added in /admin are addressed by URL, so any page can have them — and
+  a layout is the only place that covers "any page" without editing sixty route
+  files and still missing the next one. The document is one small JSON that
+  Next caches for five minutes, and `readOverrides` returns empty rather than
+  throwing, so a storage outage costs a gallery, not a page.
+
+  The cost is honest and worth naming: pages that were fully static now
+  revalidate on the same five-minute window the app pages already use. That is
+  what makes an upload appear without a deploy.
+*/
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const overrides = await readOverrides();
+  const galleries = galleryIndex(overrides);
+  const titles = Object.fromEntries(Object.keys(galleries).map((k) => [k, galleryTitleFor(overrides, k)]));
+
   return (
     <html lang="en">
       <head>
@@ -129,6 +148,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <LanguageProvider>
           <NavBar />
           {children}
+          <PageGallery galleries={galleries} titles={titles} />
           <Footer />
           {/* Mounted once so any 402, anywhere, can raise the packs. */}
           <PricingModalHost />
