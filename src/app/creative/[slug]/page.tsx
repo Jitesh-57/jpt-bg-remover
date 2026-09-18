@@ -80,6 +80,7 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
   const pageOverride = overrides.pages[creativeKey(slug)];
   const a = applyOverride(found, pageOverride);
   const showcase = pageOverride?.showcase ?? [];
+  const mainImage = pageOverride?.main;
 
   const url = `${BASE}${CREATIVE_BASE}/${slug}`;
   const related = CREATIVE_APPS.filter((x) => x.slug !== a.slug).slice(0, 6);
@@ -183,6 +184,50 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
               type is crisp instead of the mangled lettering image models make.
             */}
             <figure style={{ margin: 0 }}>
+              {/*
+                One uploaded creative wins over the pair.
+
+                A finished creative already is a before and after — it carries
+                its own labels and its own framing — so cutting it into two 4:5
+                windows and drawing BEFORE and AFTER over the halves destroys
+                the thing that made it worth making. When one has been
+                published for this page it is drawn whole, at the width chosen
+                for it, and the pair below is skipped entirely.
+              */}
+              {mainImage ? (
+                <div style={{ maxWidth: `${mainImage.width || 100}%`, margin: "0 auto" }}>
+                  <div
+                    style={{
+                      position: "relative", width: "100%",
+                      aspectRatio: `${mainImage.w} / ${mainImage.h}`,
+                      borderRadius: 18, overflow: "hidden",
+                      border: "1px solid var(--border)", background: "var(--surface-2)",
+                      boxShadow: "var(--shadow-sm)",
+                    }}
+                  >
+                    {/*
+                      A plain img, not ExampleImage.
+
+                      ExampleImage exists to find out which of several
+                      candidate files is actually there, which it can only do
+                      in the browser — so it paints a placeholder first. Here
+                      there is nothing to find out: the file is recorded in the
+                      overrides document this page just read, so it goes
+                      straight into the HTML and is the LCP image rather than
+                      something that replaces it.
+                    */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={uploadedCreative(a.slug, "main")}
+                      alt={`${a.h1} — before and after`}
+                      width={mainImage.w}
+                      height={mainImage.h}
+                      fetchPriority="high"
+                      style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+                    />
+                  </div>
+                </div>
+              ) : (
               <div
                 style={{
                   display: "grid", gridTemplateColumns: "1fr 1fr", gap: 0,
@@ -219,8 +264,11 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
                   </div>
                 ))}
               </div>
+              )}
               <figcaption style={{ fontSize: 12.5, color: "var(--text-faint)", marginTop: 12 }}>
-                The right-hand image is this app&apos;s own prompt run over the photo on the left — the same thing your upload goes through.
+                {mainImage
+                  ? <>Made with {a.h1} — the same thing your upload goes through.</>
+                  : <>The right-hand image is this app&apos;s own prompt run over the photo on the left — the same thing your upload goes through.</>}
               </figcaption>
             </figure>
           </div>
@@ -245,19 +293,22 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
                   <div
                     key={img.slot}
                     style={{
-                      position: "relative", width: "100%", aspectRatio: `${img.w} / ${img.h}`,
+                      position: "relative", width: "100%", maxWidth: `${img.width || 100}%`, margin: "0 auto",
+                      aspectRatio: `${img.w} / ${img.h}`,
                       borderRadius: 18, overflow: "hidden", border: "1px solid var(--border)",
                       background: "var(--surface-2)",
                     }}
                   >
-                    <ExampleImage
-                      sources={[uploadedCreative(a.slug, img.slot)]}
+                    {/* Recorded, so known to exist — straight into the HTML. */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={uploadedCreative(a.slug, img.slot)}
                       alt={`${a.h1} — example`}
-                      slug={a.slug}
-                      name={a.h1}
-                      emoji={a.emoji}
-                      gradient={[a.gradient[0], a.gradient[1]]}
-                      sizes="(max-width: 768px) 100vw, 1000px"
+                      width={img.w}
+                      height={img.h}
+                      loading="lazy"
+                      decoding="async"
+                      style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
                     />
                   </div>
                 ))}
