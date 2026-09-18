@@ -1,21 +1,27 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { parseTarget, type PageTarget } from "@/lib/page-target";
 import CreativeUploader, { type App } from "./CreativeUploader";
 import SeoEditor from "./SeoEditor";
 
 /**
- * The admin console: one token, one app picker, tabs for the rest.
+ * The admin console: one token, one target, tabs for the rest.
  *
- * Token and chosen app live here rather than in each panel, because moving
- * from a page's creative to its SEO copy and back is the normal way to work
- * on a page — and re-typing a token or re-finding the app each time is the
- * friction that stops a tool getting used.
+ * A target is a *page*, not an app. It used to be an app chosen from a list,
+ * which covered the 200 creative pages and left the other three hundred — the
+ * tool landing pages, the prompt pages, the blog, pricing, the homepage — with
+ * no way to receive an image at all. Paste a URL and that page is the target.
+ *
+ * Token and target live here rather than in each panel, because moving from a
+ * page's creative to its text and back is the normal way to work on a page, and
+ * re-typing a token or re-finding the page each time is the friction that stops
+ * a tool getting used.
  */
 export default function AdminShell({ apps }: { apps: App[] }) {
   const [tab, setTab] = useState<"creative" | "seo">("creative");
   const [token, setToken] = useState("");
-  const [slug, setSlug] = useState("");
+  const [target, setTarget] = useState<PageTarget | null>(null);
   const [query, setQuery] = useState("");
 
   useEffect(() => {
@@ -30,12 +36,32 @@ export default function AdminShell({ apps }: { apps: App[] }) {
     try { localStorage.setItem("jpt-admin-token", t.trim()); } catch { /* fine */ }
   };
 
-  const selected = apps.find((a) => a.slug === slug) || null;
-  const matches = (() => {
+  /** The app behind the target, when the target is a creative app page. */
+  const selected = target?.slug ? apps.find((a) => a.slug === target.slug) || null : null;
+
+  const matches = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return apps.slice(0, 12);
     return apps.filter((a) => a.slug.includes(q) || a.name.toLowerCase().includes(q)).slice(0, 12);
-  })();
+  }, [apps, query]);
+
+  /*
+    What the box is typed into means two things at once, so both are offered
+    rather than guessed at. "pricing" is a plausible app search *and* a real
+    page; picking one silently would be wrong half the time.
+  */
+  const typedPage = useMemo(() => {
+    const t = parseTarget(query);
+    if (!t || t.slug) return null;
+    return t;
+  }, [query]);
+
+  const choose = (t: PageTarget | null) => {
+    setTarget(t);
+    setQuery("");
+    // Only an app page has text to edit, so the SEO tab cannot stay selected.
+    if (t && !t.slug) setTab("creative");
+  };
 
   return (
     <div style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text)", padding: "30px 24px 90px" }}>
@@ -43,8 +69,8 @@ export default function AdminShell({ apps }: { apps: App[] }) {
         <h1 style={{ fontSize: 26, fontWeight: 900, letterSpacing: "-0.02em", margin: "0 0 18px" }}>Admin</h1>
 
         <div style={{ display: "flex", gap: 8, marginBottom: 26, flexWrap: "wrap" }}>
-          {([["creative", "🖼️ Creatives"], ["seo", "🔎 SEO"]] as const).map(([id, label]) => (
-            <button key={id} onClick={() => setTab(id)} style={{ ...tabBtn, ...(tab === id ? tabOn : {}) }}>{label}</button>
+          {([["creative", "🖼️ Creatives"], ["seo", "🔎 SEO"]] as const).map(([id, l]) => (
+            <button key={id} onClick={() => setTab(id)} style={{ ...tabBtn, ...(tab === id ? tabOn : {}) }}>{l}</button>
           ))}
         </div>
 
@@ -57,40 +83,67 @@ export default function AdminShell({ apps }: { apps: App[] }) {
           style={{ ...input, maxWidth: 420, marginBottom: 22 }}
         />
 
-        <label style={label}>App</label>
-        {selected ? (
+        <label style={label}>Page</label>
+        {target ? (
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 26, flexWrap: "wrap" }}>
-            <span style={{ fontSize: 20 }}>{selected.emoji}</span>
-            <strong style={{ fontSize: 15 }}>{selected.name}</strong>
-            <code style={{ fontSize: 12, color: "var(--text-faint)" }}>{selected.slug}</code>
-            <a href={`/creative/${selected.slug}`} target="_blank" rel="noreferrer" style={{ fontSize: 12.5, color: "var(--accent-strong)" }}>open page ↗</a>
-            <button onClick={() => setSlug("")} style={linkBtn}>change</button>
+            <span style={{ fontSize: 20 }}>{selected?.emoji ?? "🔗"}</span>
+            <strong style={{ fontSize: 15 }}>{selected?.name ?? target.path}</strong>
+            <code style={{ fontSize: 12, color: "var(--text-faint)" }}>{target.key}</code>
+            <a href={target.path} target="_blank" rel="noreferrer" style={{ fontSize: 12.5, color: "var(--accent-strong)" }}>open page ↗</a>
+            <button onClick={() => choose(null)} style={linkBtn}>change</button>
           </div>
         ) : (
           <>
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder={`Search ${apps.length} apps — name or slug, or paste a /creative/… URL`}
+              onKeyDown={(e) => { if (e.key === "Enter" && typedPage) choose(typedPage); }}
+              placeholder="Paste any page URL — or search the apps by name"
+              /*
+                A pasted URL is a decision already made, so it is taken as one.
+                Anything else stays typed, and the two lists below say what it
+                could mean.
+              */
               onPaste={(e) => {
-                const t = e.clipboardData.getData("text");
-                const m = /\/creative\/([a-z0-9-]+)/.exec(t);
-                if (m && apps.some((a) => a.slug === m[1])) { e.preventDefault(); setSlug(m[1]); setQuery(""); }
+                const t = parseTarget(e.clipboardData.getData("text"));
+                if (t) { e.preventDefault(); choose(t); }
               }}
-              style={{ ...input, maxWidth: 520 }}
+              style={{ ...input, maxWidth: 560 }}
             />
+            <p style={{ fontSize: 11.5, color: "var(--text-faint)", margin: "8px 0 0", lineHeight: 1.55 }}>
+              Any page on the site: <code>https://www.sjpt.io/pricing</code>, <code>/upscale</code>, <code>/blog/some-post</code>, or just <code>/</code> for the homepage.
+            </p>
+
+            {typedPage && (
+              <button onClick={() => choose(typedPage)} style={{ ...chip, ...chipOn, marginTop: 12, padding: "9px 16px" }}>
+                🔗 Use the page {typedPage.path}
+              </button>
+            )}
+
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8, margin: "12px 0 26px" }}>
               {matches.map((a) => (
-                <button key={a.slug} onClick={() => setSlug(a.slug)} style={chip}>{a.emoji} {a.name}</button>
+                <button key={a.slug} onClick={() => choose({ key: `creative/${a.slug}`, path: `/creative/${a.slug}`, slug: a.slug })} style={chip}>
+                  {a.emoji} {a.name}
+                </button>
               ))}
-              {!matches.length && <span style={{ fontSize: 13, color: "var(--text-faint)" }}>Nothing matches “{query}”.</span>}
+              {!matches.length && !typedPage && (
+                <span style={{ fontSize: 13, color: "var(--text-faint)" }}>No app matches “{query}”, and that is not a page path either.</span>
+              )}
             </div>
           </>
         )}
 
-        {slug && tab === "creative" && <CreativeUploader apps={apps} slug={slug} token={token} />}
-        {slug && tab === "seo" && selected && <SeoEditor app={selected} token={token} />}
-        {!slug && <p style={{ fontSize: 13.5, color: "var(--text-faint)" }}>Pick an app to start.</p>}
+        {target && tab === "creative" && <CreativeUploader target={target} token={token} />}
+        {target && tab === "seo" && (selected ? (
+          <SeoEditor app={selected} token={token} />
+        ) : (
+          <p style={{ fontSize: 13.5, color: "var(--text-faint)", lineHeight: 1.6, maxWidth: 620 }}>
+            Text editing is wired up for the creative app pages only — their copy all comes from one place, so the boxes
+            can be filled with what the page actually says. <strong style={{ color: "var(--text)" }}>{target.path}</strong>{" "}
+            writes its own copy, so there is nothing here to prefill yet. Images work on it: the Creatives tab.
+          </p>
+        ))}
+        {!target && <p style={{ fontSize: 13.5, color: "var(--text-faint)" }}>Pick a page to start.</p>}
       </div>
     </div>
   );

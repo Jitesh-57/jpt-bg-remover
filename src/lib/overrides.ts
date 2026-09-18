@@ -37,6 +37,8 @@ export interface ShowcaseImage {
 
 export interface PageOverride {
   showcase?: ShowcaseImage[];
+  /** Heading above the gallery. "Examples" reads oddly over a pricing page. */
+  galleryTitle?: string;
   title?: string;
   metaDescription?: string;
   keywords?: string;
@@ -120,12 +122,30 @@ function publicUrl(): string {
  * per page per five minutes rather than one per visitor.
  */
 export async function readOverrides(): Promise<Overrides> {
+  return read({ next: { revalidate: 300 } }, Math.floor(Date.now() / 300_000));
+}
+
+/**
+ * The document as it is *right now*, uncached.
+ *
+ * Every write is a read-modify-write, and reading through the cache made that
+ * quietly lossy: publishing three images in a row recorded the first and the
+ * third, because uploads two and three both read the same cached copy from
+ * before upload one had landed — and a text edit saved a minute earlier
+ * vanished the same way. A writer must see what is actually stored.
+ *
+ * `no-store` and a unique query string, because there are two caches in the
+ * way: Next's own, and whatever sits in front of the storage bucket.
+ */
+export async function readOverridesNow(): Promise<Overrides> {
+  return read({ cache: "no-store" }, Date.now());
+}
+
+async function read(init: RequestInit, stamp: number): Promise<Overrides> {
   const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
   if (!base) return EMPTY;
   try {
-    const res = await fetch(`${publicUrl()}?t=${Math.floor(Date.now() / 300_000)}`, {
-      next: { revalidate: 300 },
-    });
+    const res = await fetch(`${publicUrl()}?t=${stamp}`, init);
     if (!res.ok) return EMPTY;
     const json = (await res.json()) as Overrides;
     if (!json || typeof json !== "object" || !json.pages) return EMPTY;
@@ -138,6 +158,38 @@ export async function readOverrides(): Promise<Overrides> {
 /** The key a page is stored under. Stable, and readable in the JSON. */
 export function creativeKey(slug: string): string {
   return `creative/${slug}`;
+}
+
+/**
+ * Fields that are set by uploading an image, not by typing in a box.
+ *
+ * Named in one place because the text editor must merge *over* them rather
+ * than replace the entry: saving a page's title after adding three images used
+ * to drop the images, since the editor only ever sends the text it knows about.
+ */
+export const IMAGE_KEYS = ["showcase", "galleryTitle"] as const;
+
+/**
+ * Every page that has gallery images, as a path-keyed index.
+ *
+ * Only `page/...` keys: an app page draws its own "More examples" section
+ * server-side from the same data, and a second copy under the footer would be
+ * the same images twice. Reduced to slots and shapes because this crosses to
+ * the browser on every request — the text fields would be dead weight there.
+ */
+export function galleryIndex(o: Overrides): Record<string, { slot: string; w: number; h: number }[]> {
+  const out: Record<string, { slot: string; w: number; h: number }[]> = {};
+  for (const [key, page] of Object.entries(o.pages || {})) {
+    if (!key.startsWith("page/")) continue;
+    const list = (page.showcase || []).filter((x) => x && x.slot && x.w > 0 && x.h > 0);
+    if (list.length) out[key] = list.map((x) => ({ slot: x.slot, w: x.w, h: x.h }));
+  }
+  return out;
+}
+
+/** The gallery heading for a page, defaulted. */
+export function galleryTitleFor(o: Overrides, key: string): string {
+  return (o.pages?.[key]?.galleryTitle || "").trim() || "Examples";
 }
 
 /**
@@ -165,18 +217,24 @@ export async function writeOverrides(next: Overrides): Promise<{ ok: true } | { 
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!base || !key) return { ok: false, error: "Storage is not configured on this deployment." };
 
-  const res = await fetch(`${base}/storage/v1/object/${BUCKET}/${PATH}`, {
-    method: "POST",
-    headers: {
-      apikey: key,
-      Authorization: `Bearer ${key}`,
-      "Content-Type": "application/json",
-      "x-upsert": "true",
-      // Short, because an editor wants to see their own change land.
-      "Cache-Control": "public, max-age=60",
-    },
-    body: JSON.stringify(next, null, 2),
-  });
-  if (!res.ok) return { ok: false, error: `Storage refused the write (${res.status}).` };
-  return { ok: true };
+  // A fetch that cannot reach the host throws rather than returning a status,
+  // and the callers of this all have something useful to say about a failure.
+  try {
+    const res = await fetch(`${base}/storage/v1/object/${BUCKET}/${PATH}`, {
+      method: "POST",
+      headers: {
+        apikey: key,
+        Authorization: `Bearer ${key}`,
+        "Content-Type": "application/json",
+        "x-upsert": "true",
+        // Short, because an editor wants to see their own change land.
+        "Cache-Control": "public, max-age=60",
+      },
+      body: JSON.stringify(next, null, 2),
+    });
+    if (!res.ok) return { ok: false, error: `Storage refused the write (${res.status}).` };
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: `Storage could not be reached: ${(e as Error).message}` };
+  }
 }

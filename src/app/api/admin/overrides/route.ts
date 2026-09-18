@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin-token";
 import { CREATIVE_APPS } from "@/lib/creative-apps";
-import { EMPTY, readOverrides, writeOverrides, type Overrides, type PageOverride } from "@/lib/overrides";
+import { EMPTY, IMAGE_KEYS, readOverridesNow, writeOverrides, type Overrides, type PageOverride } from "@/lib/overrides";
+import { resolveTarget } from "@/lib/page-target";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -10,13 +11,19 @@ export const maxDuration = 30;
 const ALLOWED = new Set(["title", "metaDescription", "keywords", "h1", "tagline", "intro", "badge", "faq"]);
 const MAX_FIELD = 2000;
 
-/** Pages the editor may address: every app, plus the handful of key pages. */
-const STATIC_KEYS = new Set(["page/home", "page/pricing", "page/tools", "page/creative"]);
-
+/**
+ * Any page on the site, resolved the same way the uploader resolves one.
+ *
+ * It used to be four hard-coded keys plus the app list, which meant text could
+ * only be edited for pages someone had remembered to name here. A creative slug
+ * is still checked against the apps that exist, because that one is a claim
+ * about a page that may simply not be there.
+ */
 function validKey(key: string): boolean {
-  if (STATIC_KEYS.has(key)) return true;
-  const m = /^creative\/([a-z0-9-]+)$/.exec(key);
-  return !!m && CREATIVE_APPS.some((a) => a.slug === m[1]);
+  const target = resolveTarget(key);
+  if (!target) return false;
+  if (target.key !== key) return false;
+  return !target.slug || CREATIVE_APPS.some((a) => a.slug === target.slug);
 }
 
 /**
@@ -32,7 +39,9 @@ function validKey(key: string): boolean {
 export async function GET(req: NextRequest) {
   const denied = requireAdmin(req);
   if (denied) return denied;
-  return NextResponse.json(await readOverrides());
+  // Uncached: an editor opening a page wants what is stored, not what a
+  // five-minute cache remembers — they may have saved it a minute ago.
+  return NextResponse.json(await readOverridesNow());
 }
 
 function clean(values: Record<string, unknown>): PageOverride {
@@ -72,7 +81,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: `"${key}" is not a page on this site.` }, { status: 400 });
   }
 
-  const current = await readOverrides();
+  // Uncached: this is a read-modify-write, and a stale read silently drops
+  // whatever landed since it was cached.
+  const current = await readOverridesNow();
   const next: Overrides = {
     ...EMPTY,
     ...current,
@@ -81,8 +92,23 @@ export async function POST(req: NextRequest) {
     pages: { ...current.pages },
   };
 
+  /*
+    Merged over what is already stored, never assigned over it.
+
+    A page's entry holds two kinds of thing: text typed in the editor, and the
+    image list written by the uploader. The editor only ever knows about the
+    text, so assigning its payload straight in deleted the images — save a
+    title after adding three creatives and the gallery emptied itself.
+  */
   const cleaned = clean(values || {});
-  if (Object.keys(cleaned).length) next.pages[key] = cleaned;
+  const existing = current.pages[key] || {};
+  const kept: PageOverride = {};
+  for (const k of IMAGE_KEYS) {
+    const v = existing[k];
+    if (v !== undefined) (kept as Record<string, unknown>)[k] = v;
+  }
+  const merged = { ...kept, ...cleaned };
+  if (Object.keys(merged).length) next.pages[key] = merged;
   else delete next.pages[key];
 
   const res = await writeOverrides(next);

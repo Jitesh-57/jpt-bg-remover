@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import { fileNameFor, type PageTarget } from "@/lib/page-target";
 import { label, input, chip, chipOn, primary, danger, success } from "./AdminShell";
 
 /**
- * Get a before/after onto an app page: drop files, or paste a link.
+ * Get images onto a page: drop files, or paste a link.
  *
  * The cropping and compression run here, in the browser, on the machine that
  * has the file. A creative comes out of an image tool at 3–8 MB and the pane
@@ -25,27 +26,35 @@ export type App = {
   h1: string; tagline: string; intro: string; badge: string;
 };
 
-/**
- * Where an image can go, and what happens to it there.
- *
- * The main pair is the two panes the page draws side by side, so those are
- * cropped to the 4:5 they render at. Everything else is shown whole — those
- * are finished creatives with their own before/after labels, and cropping one
- * cuts the thing that makes it readable.
- */
-const SECTIONS = [
-  { id: "before", label: "Main · Before", crop: true },
-  { id: "after", label: "Main · After", crop: true },
-  { id: "showcase-1", label: "More examples · 1", crop: false },
-  { id: "showcase-2", label: "More examples · 2", crop: false },
-  { id: "showcase-3", label: "More examples · 3", crop: false },
-  { id: "showcase-4", label: "More examples · 4", crop: false },
-  { id: "showcase-5", label: "More examples · 5", crop: false },
-  { id: "showcase-6", label: "More examples · 6", crop: false },
-] as const;
+type Section = { id: string; label: string; crop: boolean };
+type Slot = string;
 
-type Slot = (typeof SECTIONS)[number]["id"] | "";
-const crops = (slot: Slot) => SECTIONS.find((x) => x.id === slot)?.crop ?? false;
+/**
+ * Where an image can go on this page, and what happens to it there.
+ *
+ * Which sections exist depends on the page, because the sections are real
+ * places in real templates. A creative app page draws two panes side by side,
+ * so those two are cropped to the 4:5 they render at. Every other page has the
+ * gallery and nothing else — offering it a "before" pane would store a file
+ * that page has no place to show.
+ *
+ * Gallery images are published whole: they are finished creatives with their
+ * own before/after labels, and cropping one cuts the thing that makes it
+ * readable.
+ */
+function sectionsFor(target: PageTarget): Section[] {
+  const gallery = Array.from({ length: 6 }, (_, i) => ({
+    id: `showcase-${i + 1}`,
+    label: target.slug ? `More examples · ${i + 1}` : `Gallery · ${i + 1}`,
+    crop: false,
+  }));
+  if (!target.slug) return gallery;
+  return [
+    { id: "before", label: "Main · Before", crop: true },
+    { id: "after", label: "Main · After", crop: true },
+    ...gallery,
+  ];
+}
 
 /** One image in the pool: the original, plus whatever section it is bound for. */
 type Item = {
@@ -61,16 +70,25 @@ type Item = {
 const TARGET_W = 900;
 const ASPECT = 4 / 5;
 const QUALITY = 0.82;
-const SPLIT_RATIO = 1.4;
 
 const kb = (n: number) => (n >= 1048576 ? `${(n / 1048576).toFixed(1)} MB` : `${Math.round(n / 1024)} KB`);
 
+/*
+  The object URL is deliberately not revoked.
+
+  It used to be released as soon as the image had decoded, which was fine when
+  every dropped file was cropped and previewed from its own data URL straight
+  away. Now files arrive unassigned and are previewed from `img.src` until a
+  section is chosen — so revoking it left a row of broken thumbnails at exactly
+  the moment someone is trying to tell one image from another. What it costs is
+  a handful of blobs held for the life of an admin tab.
+*/
 function loadImage(src: Blob | string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const url = typeof src === "string" ? src : URL.createObjectURL(src);
     const img = new Image();
     img.crossOrigin = "anonymous";
-    img.onload = () => { if (typeof src !== "string") URL.revokeObjectURL(url); resolve(img); };
+    img.onload = () => resolve(img);
     img.onerror = () => reject(new Error("That image could not be read."));
     img.src = url;
   });
@@ -135,16 +153,20 @@ async function toWhole(img: HTMLImageElement) {
   return { dataUrl, bytes: blob.size, w: outW, h: outH };
 }
 
-export default function CreativeUploader({ slug, token }: { apps: App[]; slug: string; token: string }) {
+export default function CreativeUploader({ target, token }: { target: PageTarget; token: string }) {
   const [items, setItems] = useState<Item[]>([]);
   const [gravity, setGravity] = useState("centre");
   const [link, setLink] = useState("");
+  const [heading, setHeading] = useState("");
   const [busy, setBusy] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [note, setNote] = useState<string | null>(null);
   const [done, setDone] = useState<string[] | null>(null);
   const [dragging, setDragging] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  const sections = useMemo(() => sectionsFor(target), [target]);
+  const crops = (slot: Slot) => sections.find((x) => x.id === slot)?.crop ?? false;
 
   /** Recompute one item's output for whatever section it is now bound for. */
   async function render(it: Item, g = gravity): Promise<Item> {
@@ -253,11 +275,15 @@ export default function CreativeUploader({ slug, token }: { apps: App[]; slug: s
       for (const it of ready) {
         const res = await fetch(`/api/admin/creative-upload?token=${encodeURIComponent(token.trim())}`, {
           method: "POST", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ slug, slot: it.slot, dataUrl: it.out!.dataUrl, w: it.out!.w, h: it.out!.h }),
+          body: JSON.stringify({
+            page: target.key, slot: it.slot,
+            dataUrl: it.out!.dataUrl, w: it.out!.w, h: it.out!.h,
+            galleryTitle: heading.trim() || undefined,
+          }),
         });
-        const d = (await res.json()) as { error?: string; detail?: string };
-        if (!res.ok) throw new Error([d.error, d.detail].filter(Boolean).join(" ") || `Upload failed (${res.status}).`);
-        names.push(`${slug}-${it.slot}.webp`);
+        const d = (await res.json()) as { error?: string; detail?: string; fix?: string };
+        if (!res.ok) throw new Error([d.error, d.detail, d.fix].filter(Boolean).join(" ") || `Upload failed (${res.status}).`);
+        names.push(fileNameFor(target.key, it.slot));
       }
       setDone(names);
       setItems((s) => s.filter((i) => !(i.slot && i.out)));
@@ -281,6 +307,16 @@ export default function CreativeUploader({ slug, token }: { apps: App[]; slug: s
 
   return (
     <div>
+      {/*
+        Said out loud, because the same panel now serves two different page
+        shapes and the sections on offer are the only other clue.
+      */}
+      <p style={{ fontSize: 12.5, color: "var(--text-muted)", margin: "0 0 18px", lineHeight: 1.6 }}>
+        {target.slug
+          ? <>Images go to <strong>{target.path}</strong>: the two panes at the top, plus a “More examples” row below them.</>
+          : <>Images go to <strong>{target.path}</strong>, in a row above the footer. Whole images, no cropping.</>}
+      </p>
+
       <label style={label}>Paste a link</label>
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 8 }}>
         <input
@@ -318,15 +354,21 @@ export default function CreativeUploader({ slug, token }: { apps: App[]; slug: s
 
       {items.length > 0 && (
         <div style={{ marginTop: 24 }}>
-          <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 16, flexWrap: "wrap" }}>
-            <span style={{ ...label, margin: 0 }}>Crop for the main pair</span>
-            {["centre", "top", "bottom"].map((g) => (
-              <button key={g} onClick={() => void reGravity(g)} style={{ ...chip, ...(gravity === g ? chipOn : {}) }}>{g}</button>
-            ))}
-            <span style={{ fontSize: 11.5, color: "var(--text-faint)" }}>
-              — only Main · Before/After are cropped to 4:5. Everything else is published whole.
-            </span>
-          </div>
+          {/*
+            Nothing on a non-app page is cropped, so there is no crop to aim.
+            A control that does nothing is worse than no control.
+          */}
+          {sections.some((x) => x.crop) && (
+            <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 16, flexWrap: "wrap" }}>
+              <span style={{ ...label, margin: 0 }}>Crop for the main pair</span>
+              {["centre", "top", "bottom"].map((g) => (
+                <button key={g} onClick={() => void reGravity(g)} style={{ ...chip, ...(gravity === g ? chipOn : {}) }}>{g}</button>
+              ))}
+              <span style={{ fontSize: 11.5, color: "var(--text-faint)" }}>
+                — only Main · Before/After are cropped to 4:5. Everything else is published whole.
+              </span>
+            </div>
+          )}
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(210px, 100%), 1fr))", gap: 16 }}>
             {items.map((it) => (
@@ -348,7 +390,7 @@ export default function CreativeUploader({ slug, token }: { apps: App[]; slug: s
                   style={{ ...input, marginTop: 10, padding: "8px 10px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}
                 >
                   <option value="">— choose a section —</option>
-                  {SECTIONS.map((sec) => (
+                  {sections.map((sec) => (
                     <option key={sec.id} value={sec.id} disabled={taken.has(sec.id) && it.slot !== sec.id}>
                       {sec.label}{sec.crop ? " (cropped 4:5)" : " (whole image)"}
                     </option>
@@ -357,7 +399,7 @@ export default function CreativeUploader({ slug, token }: { apps: App[]; slug: s
                 <div style={{ fontSize: 11, color: "var(--text-faint)", marginTop: 7, lineHeight: 1.5 }}>
                   {it.busy ? "preparing…" : it.out ? (
                     <>
-                      <code style={{ color: "var(--accent-strong)", fontWeight: 800 }}>{slug}-{it.slot}.webp</code>
+                      <code style={{ color: "var(--accent-strong)", fontWeight: 800 }}>{fileNameFor(target.key, it.slot)}</code>
                       <br />{it.out.w}×{it.out.h} · {kb(it.out.bytes)}
                     </>
                   ) : (
@@ -369,6 +411,26 @@ export default function CreativeUploader({ slug, token }: { apps: App[]; slug: s
               </div>
             ))}
           </div>
+
+          {/*
+            The app template already heads its row "More examples". Every other
+            page gets whatever this says, because "Examples" over a pricing page
+            reads like a mistake.
+          */}
+          {!target.slug && (
+            <div style={{ marginTop: 22, maxWidth: 420 }}>
+              <label style={label}>Heading above the images</label>
+              <input
+                value={heading}
+                onChange={(e) => setHeading(e.target.value)}
+                placeholder="Examples"
+                style={input}
+              />
+              <p style={{ fontSize: 11.5, color: "var(--text-faint)", margin: "7px 0 0" }}>
+                Left blank, the row is headed “Examples”. Saved with the images.
+              </p>
+            </div>
+          )}
 
           <button
             onClick={() => void apply()}
@@ -389,7 +451,7 @@ export default function CreativeUploader({ slug, token }: { apps: App[]; slug: s
         <div style={success}>
           Published {done.length}: <code style={{ fontWeight: 700 }}>{done.join(", ")}</code>
           <div style={{ fontSize: 12.5, fontWeight: 500, marginTop: 6, opacity: 0.85 }}>
-            <a href={`/creative/${slug}`} target="_blank" rel="noreferrer" style={{ color: "inherit", fontWeight: 800 }}>Open the page ↗</a>
+            <a href={target.path} target="_blank" rel="noreferrer" style={{ color: "inherit", fontWeight: 800 }}>Open {target.path} ↗</a>
             {" "}— cached for five minutes. Stored outside the repo, so deploys leave it alone.
           </div>
         </div>
