@@ -33,9 +33,27 @@ export interface ShowcaseImage {
   slot: string;
   w: number;
   h: number;
+  /**
+   * How wide to draw it, as a percentage of the column.
+   *
+   * A creative that reads well at 1000px can look shouty at the top of a page
+   * and lost at the bottom of one, and which it is depends on the image — so
+   * it is a setting rather than a constant. Absent means full width.
+   */
+  width?: number;
 }
 
 export interface PageOverride {
+  /**
+   * The single image at the top of a creative app page.
+   *
+   * The template's own version of that block is two cropped panes with BEFORE
+   * and AFTER drawn over them. A finished creative already *is* a before and
+   * after, with its own labels and its own framing, so cutting it into two 4:5
+   * windows destroys it. When this is set the page draws it whole and skips
+   * the pair.
+   */
+  main?: ShowcaseImage;
   showcase?: ShowcaseImage[];
   /** Heading above the gallery. "Examples" reads oddly over a pricing page. */
   galleryTitle?: string;
@@ -167,7 +185,7 @@ export function creativeKey(slug: string): string {
  * than replace the entry: saving a page's title after adding three images used
  * to drop the images, since the editor only ever sends the text it knows about.
  */
-export const IMAGE_KEYS = ["showcase", "galleryTitle"] as const;
+export const IMAGE_KEYS = ["main", "showcase", "galleryTitle"] as const;
 
 /**
  * Every page that has gallery images, as a path-keyed index.
@@ -177,12 +195,12 @@ export const IMAGE_KEYS = ["showcase", "galleryTitle"] as const;
  * the same images twice. Reduced to slots and shapes because this crosses to
  * the browser on every request — the text fields would be dead weight there.
  */
-export function galleryIndex(o: Overrides): Record<string, { slot: string; w: number; h: number }[]> {
-  const out: Record<string, { slot: string; w: number; h: number }[]> = {};
+export function galleryIndex(o: Overrides): Record<string, ShowcaseImage[]> {
+  const out: Record<string, ShowcaseImage[]> = {};
   for (const [key, page] of Object.entries(o.pages || {})) {
     if (!key.startsWith("page/")) continue;
     const list = (page.showcase || []).filter((x) => x && x.slot && x.w > 0 && x.h > 0);
-    if (list.length) out[key] = list.map((x) => ({ slot: x.slot, w: x.w, h: x.h }));
+    if (list.length) out[key] = list.map((x) => ({ slot: x.slot, w: x.w, h: x.h, ...(x.width ? { width: x.width } : {}) }));
   }
   return out;
 }

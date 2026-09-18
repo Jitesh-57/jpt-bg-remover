@@ -28,6 +28,7 @@ export interface GalleryEntry {
   slot: string;
   w: number;
   h: number;
+  width?: number;
 }
 
 export default function PageGallery({
@@ -67,6 +68,9 @@ export default function PageGallery({
               */
               style={{
                 display: "block", width: "100%", height: "auto",
+                // Chosen per image in /admin: what reads well at full width at
+                // the top of a page can look shouty at the bottom of one.
+                maxWidth: `${img.width || 100}%`, margin: "0 auto",
                 aspectRatio: `${img.w} / ${img.h}`,
                 borderRadius: 18, border: "1px solid var(--border)", background: "var(--surface-2)",
               }}

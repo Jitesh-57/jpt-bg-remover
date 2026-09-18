@@ -1,23 +1,29 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
-import { fileNameFor, type PageTarget } from "@/lib/page-target";
-import { label, input, chip, chipOn, primary, danger, success } from "./AdminShell";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { fileNameFor, imageUrlFor, type PageTarget } from "@/lib/page-target";
+import type { PageOverride, ShowcaseImage } from "@/lib/overrides";
+import { label, input, chip, chipOn, primary, danger, success, linkBtn } from "./AdminShell";
 
 /**
- * Get images onto a page: drop files, or paste a link.
+ * The images on one page: what is there now, and what is about to be.
  *
- * The cropping and compression run here, in the browser, on the machine that
- * has the file. A creative comes out of an image tool at 3–8 MB and the pane
- * it lands in is 410 CSS px wide, so uploading the original would be slow,
- * cost storage, and still need cropping. What crosses the wire is the 40–120 KB
- * that was actually needed.
+ * Built around the sections rather than around the files. A list of dropped
+ * images each carrying a dropdown answered "where does this go?" but never
+ * "what is on the page right now?" — so replacing one image meant remembering
+ * which slot it was in. Now every section is a card showing its current image,
+ * and putting a new one in is a choice made on that card.
  *
- * Nothing is published until it has been looked at. Everything found is laid
- * out with the slot it will take and the name it will get, and Apply is a
- * separate press — because the failure mode of a one-click importer is a
- * wrong image on a live page, and the only cheap way to catch that is to show
- * it first.
+ * Cropping and compression run here, in the browser, on the machine that has
+ * the file. A creative comes out of an image tool at 3–8 MB and the page draws
+ * it about 1000px wide, so what crosses the wire is the 40–120 KB that was
+ * actually needed.
+ *
+ * Nothing is published until it has been looked at: a pending image sits in its
+ * card until Apply, because the failure mode of a one-click importer is a wrong
+ * image on a live page and the only cheap way to catch that is to show it
+ * first. Removing is immediate, because it is one thing, it is reversible by
+ * uploading again, and it is asked for by name.
  */
 
 export type App = {
@@ -26,68 +32,57 @@ export type App = {
   h1: string; tagline: string; intro: string; badge: string;
 };
 
-type Section = { id: string; label: string; crop: boolean };
-type Slot = string;
+type Section = {
+  id: string;
+  label: string;
+  hint: string;
+  /** Legacy slots are shown when they hold a file, but nothing new goes in. */
+  legacy?: boolean;
+};
 
 /**
- * Where an image can go on this page, and what happens to it there.
+ * The sections of a page, in the order they appear on it.
  *
- * Which sections exist depends on the page, because the sections are real
- * places in real templates. A creative app page draws two panes side by side,
- * so those two are cropped to the 4:5 they render at. Every other page has the
- * gallery and nothing else — offering it a "before" pane would store a file
- * that page has no place to show.
- *
- * Gallery images are published whole: they are finished creatives with their
- * own before/after labels, and cropping one cuts the thing that makes it
- * readable.
+ * A creative app page leads with one image. It used to be two 4:5 panes with
+ * BEFORE and AFTER drawn over them, which cut a finished creative — already a
+ * before and after, with its own labels — into two windows that destroyed it.
+ * Those two are still listed when a page has them, so they can be seen and
+ * cleared, but nothing new is put in them.
  */
 function sectionsFor(target: PageTarget): Section[] {
   const gallery = Array.from({ length: 6 }, (_, i) => ({
     id: `showcase-${i + 1}`,
     label: target.slug ? `More examples · ${i + 1}` : `Gallery · ${i + 1}`,
-    crop: false,
+    hint: "Published whole",
   }));
   if (!target.slug) return gallery;
   return [
-    { id: "before", label: "Main · Before", crop: true },
-    { id: "after", label: "Main · After", crop: true },
+    { id: "main", label: "Main creative", hint: "One image, top of the page, published whole" },
     ...gallery,
+    { id: "before", label: "Old pane · Before", hint: "Replaced by the main creative", legacy: true },
+    { id: "after", label: "Old pane · After", hint: "Replaced by the main creative", legacy: true },
   ];
 }
 
-/** One image in the pool: the original, plus whatever section it is bound for. */
-type Item = {
-  id: string;
-  slot: Slot;
-  from: string;
-  img: HTMLImageElement;
-  /** What will actually be uploaded, recomputed whenever the section changes. */
-  out: { dataUrl: string; bytes: number; w: number; h: number } | null;
-  busy?: boolean;
-};
+/** An image waiting to be published into a section. */
+type Pending = { dataUrl: string; bytes: number; w: number; h: number; from: string };
 
-const TARGET_W = 900;
-const ASPECT = 4 / 5;
+/** What a section holds: what is live, and what is about to replace it. */
+type Live = { url: string; w: number; h: number; width?: number };
+
+const CAP = 1400;
 const QUALITY = 0.82;
+const WIDTHS = [100, 75, 50];
 
 const kb = (n: number) => (n >= 1048576 ? `${(n / 1048576).toFixed(1)} MB` : `${Math.round(n / 1024)} KB`);
 
-/*
-  The object URL is deliberately not revoked.
-
-  It used to be released as soon as the image had decoded, which was fine when
-  every dropped file was cropped and previewed from its own data URL straight
-  away. Now files arrive unassigned and are previewed from `img.src` until a
-  section is chosen — so revoking it left a row of broken thumbnails at exactly
-  the moment someone is trying to tell one image from another. What it costs is
-  a handful of blobs held for the life of an admin tab.
-*/
 function loadImage(src: Blob | string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const url = typeof src === "string" ? src : URL.createObjectURL(src);
     const img = new Image();
     img.crossOrigin = "anonymous";
+    // The object URL is not revoked: it is what the preview is drawn from
+    // until the file is published, and releasing it leaves a broken thumbnail.
     img.onload = () => resolve(img);
     img.onerror = () => reject(new Error("That image could not be read."));
     img.src = url;
@@ -95,27 +90,21 @@ function loadImage(src: Blob | string): Promise<HTMLImageElement> {
 }
 
 /**
- * Crop to 4:5 and cap the width.
+ * The whole image, capped and re-encoded — never cropped.
  *
- * The size comes from the source: the largest 4:5 window that fits, then
- * capped. Asking for 900×1125 flatly upscales anything smaller, which makes it
- * blurrier *and* the file bigger — both halves of the job backwards.
+ * Every section publishes whole now. A finished creative is often 1500px wide
+ * or more and the page draws it at about 1000, so capping and re-encoding is
+ * worth doing; reframing is not ours to do.
  */
-async function toPane(img: HTMLImageElement, sx: number, sy: number, sw: number, sh: number, gravity: string) {
-  let cw = sw, ch = sh;
-  if (sw / sh > ASPECT) cw = sh * ASPECT; else ch = sw / ASPECT;
-  const cx = sx + (sw - cw) / 2;
-  const cy = gravity === "top" ? sy : gravity === "bottom" ? sy + (sh - ch) : sy + (sh - ch) / 2;
-  const outW = Math.round(Math.min(cw, TARGET_W));
-  const outH = Math.round(outW / ASPECT);
-
+async function prepare(img: HTMLImageElement, from: string): Promise<Pending> {
+  const w = Math.round(Math.min(img.width, CAP));
+  const h = Math.round((w / img.width) * img.height);
   const canvas = document.createElement("canvas");
-  canvas.width = outW; canvas.height = outH;
+  canvas.width = w; canvas.height = h;
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("This browser would not give us a canvas.");
   ctx.imageSmoothingQuality = "high";
-  ctx.drawImage(img, cx, cy, cw, ch, 0, 0, outW, outH);
-
+  ctx.drawImage(img, 0, 0, w, h);
   const blob = await new Promise<Blob | null>((r) => canvas.toBlob(r, "image/webp", QUALITY));
   if (!blob) throw new Error("The browser could not encode a WebP.");
   const dataUrl = await new Promise<string>((res, rej) => {
@@ -124,107 +113,104 @@ async function toPane(img: HTMLImageElement, sx: number, sy: number, sw: number,
     fr.onerror = () => rej(new Error("The encoded image could not be read back."));
     fr.readAsDataURL(blob);
   });
-  return { dataUrl, bytes: blob.size, w: outW, h: outH };
+  return { dataUrl, bytes: blob.size, w, h, from };
 }
 
-/**
- * The whole image, capped and re-encoded — no crop.
- *
- * A finished creative is often 1500px wide or more; the page shows it at about
- * 1000. Capping and re-encoding is worth doing, reframing is not.
- */
-async function toWhole(img: HTMLImageElement) {
-  const outW = Math.round(Math.min(img.width, 1400));
-  const outH = Math.round((outW / img.width) * img.height);
-  const canvas = document.createElement("canvas");
-  canvas.width = outW; canvas.height = outH;
-  const ctx = canvas.getContext("2d");
-  if (!ctx) throw new Error("This browser would not give us a canvas.");
-  ctx.imageSmoothingQuality = "high";
-  ctx.drawImage(img, 0, 0, outW, outH);
-  const blob = await new Promise<Blob | null>((r) => canvas.toBlob(r, "image/webp", QUALITY));
-  if (!blob) throw new Error("The browser could not encode a WebP.");
-  const dataUrl = await new Promise<string>((res, rej) => {
-    const fr = new FileReader();
-    fr.onload = () => res(fr.result as string);
-    fr.onerror = () => rej(new Error("The encoded image could not be read back."));
-    fr.readAsDataURL(blob);
+/** Does a file exist at this URL? The only way to ask storage from here. */
+function probe(url: string): Promise<{ w: number; h: number } | null> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve({ w: img.naturalWidth, h: img.naturalHeight });
+    img.onerror = () => resolve(null);
+    img.src = url;
   });
-  return { dataUrl, bytes: blob.size, w: outW, h: outH };
 }
 
 export default function CreativeUploader({ target, token }: { target: PageTarget; token: string }) {
-  const [items, setItems] = useState<Item[]>([]);
-  const [gravity, setGravity] = useState("centre");
-  const [link, setLink] = useState("");
+  const sections = useMemo(() => sectionsFor(target), [target]);
+
+  const [live, setLive] = useState<Record<string, Live>>({});
+  const [pending, setPending] = useState<Record<string, Pending>>({});
+  const [pool, setPool] = useState<{ id: string; img: HTMLImageElement; from: string }[]>([]);
+  const [picking, setPicking] = useState<string | null>(null);
   const [heading, setHeading] = useState("");
+  const [link, setLink] = useState("");
   const [busy, setBusy] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [note, setNote] = useState<string | null>(null);
   const [done, setDone] = useState<string[] | null>(null);
-  const [dragging, setDragging] = useState(false);
+  const [loading, setLoading] = useState(true);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const sections = useMemo(() => sectionsFor(target), [target]);
-  const crops = (slot: Slot) => sections.find((x) => x.id === slot)?.crop ?? false;
-
-  /** Recompute one item's output for whatever section it is now bound for. */
-  async function render(it: Item, g = gravity): Promise<Item> {
-    if (!it.slot) return { ...it, out: null };
-    try {
-      const out = crops(it.slot)
-        ? await toPane(it.img, 0, 0, it.img.width, it.img.height, g)
-        : await toWhole(it.img);
-      return { ...it, out };
-    } catch {
-      return { ...it, out: null };
-    }
-  }
-
-  async function addImages(loaded: { img: HTMLImageElement; from: string }[]) {
-    /*
-      Nothing is assigned automatically.
-
-      Guessing which of six images is the "after" is a guess that looks right
-      until it is wrong on a live page, and the cost of being wrong is higher
-      than the cost of two clicks. Everything arrives unassigned and waits.
-    */
-    const fresh: Item[] = loaded.map(({ img, from }) => ({
-      id: crypto.randomUUID(), slot: "", from, img, out: null,
-    }));
-    setItems((s) => [...s, ...fresh]);
-  }
-
   /*
-    The item is passed in, not looked up.
+    What is on the page right now, asked the way the page itself asks.
 
-    Finding it by id meant reading `items` — from the closure, which goes
-    stale when several selects change in quick succession, or from inside a
-    state updater, which is a side effect in a function React may call twice.
-    The select that fires this already has the item in scope, and that one is
-    always the current one.
+    The main creative and the gallery are drawn from the overrides document, so
+    the document is what decides whether they are there — a file left behind by
+    a half-failed delete is not on the page, and showing it here as live would
+    be a lie the page disagrees with.
+
+    The old cropped pair predates that document and is only a file, so those
+    two are found the only way a browser can find them: try to load it and see.
   */
-  async function setSlot(it: Item, slot: Slot) {
-    setItems((s) => s.map((x) => (x.id === it.id ? { ...x, slot, busy: true } : x)));
-    const next = await render({ ...it, slot });
-    setItems((s) => s.map((x) => (x.id === it.id ? { ...next, busy: false } : x)));
-    setDone(null);
-  }
+  const refresh = useCallback(async () => {
+    setLoading(true);
+    const found: Record<string, Live> = {};
+    let entry: PageOverride | undefined;
+    if (token.trim()) {
+      try {
+        const res = await fetch(`/api/admin/overrides?token=${encodeURIComponent(token.trim())}`);
+        if (res.ok) {
+          const doc = (await res.json()) as { pages?: Record<string, PageOverride> };
+          entry = doc.pages?.[target.key];
+        }
+      } catch { /* the probe below still finds the files */ }
+    }
+    setHeading((entry?.galleryTitle || "").trim());
 
-  async function reGravity(g: string) {
-    setGravity(g);
-    setBusy("Re-cropping…");
-    const next = await Promise.all(items.map((it) => (crops(it.slot) ? render(it, g) : Promise.resolve(it))));
-    setItems(next);
-    setBusy(null);
-  }
+    // Cache-busted, so a replace or a removal shows here immediately rather
+    // than whenever the five-minute window happens to turn over.
+    const stamp = Date.now();
+    const record = (x: ShowcaseImage) => {
+      found[x.slot] = { url: `${imageUrlFor(target.key, x.slot)}?t=${stamp}`, w: x.w, h: x.h, width: x.width };
+    };
+    if (entry?.main) record(entry.main);
+    for (const x of entry?.showcase || []) record(x);
 
-  async function onFiles(files: File[]) {
+    await Promise.all(sectionsFor(target).filter((sec) => sec.legacy).map(async (sec) => {
+      const url = `${imageUrlFor(target.key, sec.id)}?t=${stamp}`;
+      const size = await probe(url);
+      if (size) found[sec.id] = { url, w: size.w, h: size.h };
+    }));
+    setLive(found);
+    setLoading(false);
+  }, [target, token]);
+
+  useEffect(() => { void refresh(); }, [refresh]);
+
+  async function addFiles(files: File[], slot?: string) {
     setErr(null); setDone(null); setBusy("Reading…");
     try {
-      const loaded = [];
-      for (const f of files) loaded.push({ img: await loadImage(f), from: f.name });
-      await addImages(loaded);
+      for (const f of files) {
+        const img = await loadImage(f);
+        if (slot) {
+          const ready = await prepare(img, f.name);
+          setPending((s) => ({ ...s, [slot]: ready }));
+          setPicking(null);
+          break; // one file per section
+        }
+        setPool((s) => [...s, { id: crypto.randomUUID(), img, from: f.name }]);
+      }
+    } catch (e) { setErr((e as Error).message); }
+    finally { setBusy(null); }
+  }
+
+  async function assign(slot: string, item: { img: HTMLImageElement; from: string }) {
+    setBusy("Preparing…"); setDone(null);
+    try {
+      const ready = await prepare(item.img, item.from);
+      setPending((s) => ({ ...s, [slot]: ready }));
+      setPicking(null);
     } catch (e) { setErr((e as Error).message); }
     finally { setBusy(null); }
   }
@@ -232,8 +218,7 @@ export default function CreativeUploader({ target, token }: { target: PageTarget
   async function fromLink() {
     if (!link.trim()) return;
     if (!token.trim()) { setErr("Paste the admin token at the top first."); return; }
-    setErr(null); setNote(null); setDone(null);
-    setBusy("Reading the link…");
+    setErr(null); setNote(null); setDone(null); setBusy("Reading the link…");
     try {
       const res = await fetch(`/api/admin/find-images?token=${encodeURIComponent(token.trim())}`, {
         method: "POST", headers: { "Content-Type": "application/json" },
@@ -242,79 +227,95 @@ export default function CreativeUploader({ target, token }: { target: PageTarget
       const data = (await res.json()) as { images?: string[]; source?: string; error?: string; why?: string; fix?: string };
       if (!res.ok) throw new Error([data.error, data.why, data.fix].filter(Boolean).join(" "));
       const urls = data.images || [];
-
       setBusy(`Fetching ${urls.length} image${urls.length === 1 ? "" : "s"}…`);
-      const loaded: { img: HTMLImageElement; from: string }[] = [];
+      const loaded: { id: string; img: HTMLImageElement; from: string }[] = [];
       for (const u of urls.slice(0, 12)) {
-        try { loaded.push({ img: await loadImage(u), from: u }); }
-        catch {
-          /*
-            A signed URL that expired between being found and being fetched, or
-            a host refusing a cross-origin read. One failure should not lose the
-            rest — the count below says how many were found against how many
-            arrived, which is the number that matters.
-          */
-        }
+        try { loaded.push({ id: crypto.randomUUID(), img: await loadImage(u), from: u }); }
+        catch { /* a signed URL that expired, or a host refusing a cross-origin read */ }
       }
-      setNote(`Found ${urls.length} via ${data.source}; ${loaded.length} loaded. Assign each one to a section below.`);
+      setNote(`Found ${urls.length} via ${data.source}; ${loaded.length} loaded. Put each one into a section below.`);
       if (!loaded.length) throw new Error("None of those images could be loaded — share-page URLs are signed and expire quickly. Right-click the image in ChatGPT, copy its address, and paste that; or download and drop the files in.");
-      await addImages(loaded);
+      setPool((s) => [...s, ...loaded]);
     } catch (e) { setErr((e as Error).message); }
     finally { setBusy(null); }
   }
 
   async function apply() {
     if (!token.trim()) { setErr("Paste the admin token at the top first."); return; }
-    const ready = items.filter((i) => i.slot && i.out);
-    const waiting = items.filter((i) => i.slot && !i.out).length;
-    if (waiting) { setErr(`${waiting} image${waiting === 1 ? " is" : "s are"} still being prepared — give it a moment.`); return; }
-    if (!ready.length) { setErr("Assign at least one image to a section first."); return; }
+    const slots = Object.keys(pending);
+    if (!slots.length) { setErr("Nothing to publish — put an image into a section first."); return; }
     setBusy("Publishing…"); setErr(null);
     try {
       const names: string[] = [];
-      for (const it of ready) {
+      for (const slot of slots) {
+        const p = pending[slot];
         const res = await fetch(`/api/admin/creative-upload?token=${encodeURIComponent(token.trim())}`, {
           method: "POST", headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            page: target.key, slot: it.slot,
-            dataUrl: it.out!.dataUrl, w: it.out!.w, h: it.out!.h,
+            page: target.key, slot, dataUrl: p.dataUrl, w: p.w, h: p.h,
             galleryTitle: heading.trim() || undefined,
           }),
         });
         const d = (await res.json()) as { error?: string; detail?: string; fix?: string };
         if (!res.ok) throw new Error([d.error, d.detail, d.fix].filter(Boolean).join(" ") || `Upload failed (${res.status}).`);
-        names.push(fileNameFor(target.key, it.slot));
+        names.push(fileNameFor(target.key, slot));
       }
       setDone(names);
-      setItems((s) => s.filter((i) => !(i.slot && i.out)));
+      setPending({});
+      setPool([]);
+      await refresh();
     } catch (e) { setErr((e as Error).message); }
     finally { setBusy(null); }
   }
 
-  const taken = new Set(items.filter((i) => i.slot).map((i) => i.slot));
-  const ready = items.filter((i) => i.slot && i.out);
-  const total = ready.reduce((n, i) => n + (i.out?.bytes ?? 0), 0);
-  /*
-    An image still encoding is not publishable, and Apply must wait for it.
+  async function remove(slot: string) {
+    const sec = sections.find((s) => s.id === slot);
+    if (!confirm(`Remove the image in “${sec?.label}”? The page falls back to its built-in artwork.`)) return;
+    setBusy("Removing…"); setErr(null); setDone(null);
+    try {
+      const res = await fetch(`/api/admin/creative-upload?token=${encodeURIComponent(token.trim())}`, {
+        method: "DELETE", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ page: target.key, slot }),
+      });
+      const d = (await res.json()) as { error?: string; detail?: string };
+      if (!res.ok) throw new Error([d.error, d.detail].filter(Boolean).join(" ") || `Remove failed (${res.status}).`);
+    } catch (e) { setErr((e as Error).message); }
+    finally {
+      setBusy(null);
+      // Re-read either way. A delete that half-succeeded — the record gone, the
+      // file still there — leaves the page and this panel disagreeing unless
+      // the panel goes and looks again.
+      await refresh();
+    }
+  }
 
-    Pressing Apply a moment after assigning the last section published two of
-    three and reported success — the third was mid-encode, so it was simply
-    not in the list. Silently shipping fewer images than are on screen is the
-    worst kind of wrong, because nothing about the result says so.
-  */
-  const preparing = items.some((i) => i.busy);
-  const assigned = items.filter((i) => i.slot).length;
+  async function resize(slot: string, width: number) {
+    setErr(null); setDone(null);
+    const before = live[slot];
+    setLive((s) => ({ ...s, [slot]: { ...s[slot], width } }));
+    try {
+      const res = await fetch(`/api/admin/creative-upload?token=${encodeURIComponent(token.trim())}`, {
+        method: "PATCH", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ page: target.key, slot, width }),
+      });
+      const d = (await res.json()) as { error?: string };
+      if (!res.ok) throw new Error(d.error || `Could not change the width (${res.status}).`);
+    } catch (e) {
+      setErr((e as Error).message);
+      setLive((s) => ({ ...s, [slot]: before }));
+    }
+  }
+
+  const pendingCount = Object.keys(pending).length;
+  const pendingBytes = Object.values(pending).reduce((n, p) => n + p.bytes, 0);
+  const shown = sections.filter((s) => !s.legacy || live[s.id] || pending[s.id]);
 
   return (
     <div>
-      {/*
-        Said out loud, because the same panel now serves two different page
-        shapes and the sections on offer are the only other clue.
-      */}
       <p style={{ fontSize: 12.5, color: "var(--text-muted)", margin: "0 0 18px", lineHeight: 1.6 }}>
         {target.slug
-          ? <>Images go to <strong>{target.path}</strong>: the two panes at the top, plus a “More examples” row below them.</>
-          : <>Images go to <strong>{target.path}</strong>, in a row above the footer. Whole images, no cropping.</>}
+          ? <>Sections of <strong>{target.path}</strong>. The main creative is one whole image — no before/after halves.</>
+          : <>Sections of <strong>{target.path}</strong>. Whole images, in a row above the footer.</>}
       </p>
 
       <label style={label}>Paste a link</label>
@@ -329,121 +330,142 @@ export default function CreativeUploader({ target, token }: { target: PageTarget
         <button onClick={() => void fromLink()} disabled={!!busy} style={{ ...chip, padding: "10px 18px" }}>Fetch all images</button>
       </div>
       <p style={{ fontSize: 11.5, color: "var(--text-faint)", margin: "0 0 20px", lineHeight: 1.55 }}>
-        Everything found is listed below, unassigned. A share page is drawn by JavaScript and its image URLs are signed
-        links that expire, so this works sometimes and says so clearly when it does not — a direct image URL, or dropping
-        files, always works.
+        Everything found lands in the tray below, then goes into whichever section you choose. A direct image URL, or
+        dropping files, always works; a share page is drawn by JavaScript and its image URLs expire.
       </p>
 
       <input ref={fileRef} type="file" accept="image/*" hidden multiple
-        onChange={(e) => { const f = Array.from(e.target.files || []); if (f.length) void onFiles(f); }} />
-      <div
-        onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
-        onDragLeave={() => setDragging(false)}
-        onDrop={(e) => { e.preventDefault(); setDragging(false); const f = Array.from(e.dataTransfer.files || []); if (f.length) void onFiles(f); }}
-        onClick={() => fileRef.current?.click()}
-        style={{
-          border: `1.5px dashed ${dragging ? "var(--accent)" : "var(--border-strong)"}`,
-          background: dragging ? "var(--accent-soft)" : "var(--surface-2)",
-          borderRadius: 16, padding: "30px 20px", textAlign: "center", cursor: "pointer",
-        }}
-      >
-        <div style={{ fontSize: 26, marginBottom: 8 }}>🖼️</div>
-        <div style={{ fontSize: 15, fontWeight: 800 }}>{busy || "Drop images here"}</div>
-        <div style={{ fontSize: 12.5, color: "var(--text-faint)", marginTop: 6 }}>Several at once is fine</div>
-      </div>
+        onChange={(e) => {
+          const f = Array.from(e.target.files || []);
+          const slot = fileRef.current?.dataset.slot || undefined;
+          if (f.length) void addFiles(f, slot);
+          e.target.value = "";
+        }} />
 
-      {items.length > 0 && (
-        <div style={{ marginTop: 24 }}>
-          {/*
-            Nothing on a non-app page is cropped, so there is no crop to aim.
-            A control that does nothing is worse than no control.
-          */}
-          {sections.some((x) => x.crop) && (
-            <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 16, flexWrap: "wrap" }}>
-              <span style={{ ...label, margin: 0 }}>Crop for the main pair</span>
-              {["centre", "top", "bottom"].map((g) => (
-                <button key={g} onClick={() => void reGravity(g)} style={{ ...chip, ...(gravity === g ? chipOn : {}) }}>{g}</button>
-              ))}
-              <span style={{ fontSize: 11.5, color: "var(--text-faint)" }}>
-                — only Main · Before/After are cropped to 4:5. Everything else is published whole.
-              </span>
-            </div>
-          )}
-
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(210px, 100%), 1fr))", gap: 16 }}>
-            {items.map((it) => (
-              <div key={it.id} style={{ background: "var(--surface)", border: `1px solid ${it.slot ? "var(--accent-border)" : "var(--border)"}`, borderRadius: 14, padding: 12 }}>
+      {pool.length > 0 && (
+        <div style={{ marginBottom: 22, padding: 14, border: "1px dashed var(--border-strong)", borderRadius: 14 }}>
+          <span style={{ ...label, marginBottom: 10 }}>Tray — {pool.length} image{pool.length === 1 ? "" : "s"} not placed yet</span>
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+            {pool.map((it) => (
+              <div key={it.id} style={{ width: 96 }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={it.out?.dataUrl || it.img.src}
-                  alt=""
-                  style={{
-                    width: "100%",
-                    aspectRatio: crops(it.slot) ? "4 / 5" : `${it.img.width} / ${it.img.height}`,
-                    objectFit: crops(it.slot) ? "cover" : "contain",
-                    borderRadius: 10, background: "var(--surface-2)", display: "block",
-                  }}
-                />
-                <select
-                  value={it.slot}
-                  onChange={(e) => void setSlot(it, e.target.value as Slot)}
-                  style={{ ...input, marginTop: 10, padding: "8px 10px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}
-                >
-                  <option value="">— choose a section —</option>
-                  {sections.map((sec) => (
-                    <option key={sec.id} value={sec.id} disabled={taken.has(sec.id) && it.slot !== sec.id}>
-                      {sec.label}{sec.crop ? " (cropped 4:5)" : " (whole image)"}
-                    </option>
-                  ))}
-                </select>
-                <div style={{ fontSize: 11, color: "var(--text-faint)", marginTop: 7, lineHeight: 1.5 }}>
-                  {it.busy ? "preparing…" : it.out ? (
-                    <>
-                      <code style={{ color: "var(--accent-strong)", fontWeight: 800 }}>{fileNameFor(target.key, it.slot)}</code>
-                      <br />{it.out.w}×{it.out.h} · {kb(it.out.bytes)}
-                    </>
-                  ) : (
-                    <>{it.img.width}×{it.img.height} · not assigned</>
-                  )}
-                  <br /><span style={{ opacity: 0.7 }}>from {it.from.length > 26 ? it.from.slice(0, 24) + "…" : it.from}</span>
-                </div>
-                <button onClick={() => setItems((s) => s.filter((x) => x.id !== it.id))} style={{ ...chip, padding: "4px 10px", fontSize: 11.5, marginTop: 8 }}>remove</button>
+                <img src={it.img.src} alt="" style={{ width: "100%", borderRadius: 8, display: "block", background: "var(--surface-2)" }} />
+                <button onClick={() => setPool((s) => s.filter((x) => x.id !== it.id))} style={{ ...linkBtn, fontSize: 11, marginTop: 4 }}>discard</button>
               </div>
             ))}
           </div>
-
-          {/*
-            The app template already heads its row "More examples". Every other
-            page gets whatever this says, because "Examples" over a pricing page
-            reads like a mistake.
-          */}
-          {!target.slug && (
-            <div style={{ marginTop: 22, maxWidth: 420 }}>
-              <label style={label}>Heading above the images</label>
-              <input
-                value={heading}
-                onChange={(e) => setHeading(e.target.value)}
-                placeholder="Examples"
-                style={input}
-              />
-              <p style={{ fontSize: 11.5, color: "var(--text-faint)", margin: "7px 0 0" }}>
-                Left blank, the row is headed “Examples”. Saved with the images.
-              </p>
-            </div>
-          )}
-
-          <button
-            onClick={() => void apply()}
-            disabled={!!busy || preparing || !ready.length || ready.length !== assigned}
-            style={{ ...primary, marginTop: 22, opacity: busy || preparing || !ready.length ? 0.55 : 1 }}
-          >
-            {busy === "Publishing…" ? "Publishing…"
-              : preparing || ready.length !== assigned ? `Preparing ${assigned - ready.length} more…`
-              : ready.length ? `Apply — publish ${ready.length} image${ready.length === 1 ? "" : "s"} (${kb(total)})`
-              : "Assign a section to publish"}
-          </button>
         </div>
       )}
+
+      <span style={{ ...label, marginBottom: 12 }}>
+        {/* Counted over what is on screen: the old panes are only listed when
+            they hold something, so counting all of them reads as wrong. */}
+        Sections {loading ? "— checking what is on the page…" : `— ${Object.keys(live).length} of ${shown.length} filled`}
+      </span>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(240px, 100%), 1fr))", gap: 16, alignItems: "start" }}>
+        {shown.map((sec) => {
+          const has = live[sec.id];
+          const next = pending[sec.id];
+          return (
+            <div
+              key={sec.id}
+              style={{
+                background: "var(--surface)", borderRadius: 14, padding: 13,
+                border: `1px solid ${next ? "var(--accent-border)" : has ? "var(--border-strong)" : "var(--border)"}`,
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 8 }}>
+                <strong style={{ fontSize: 13.5 }}>{sec.label}</strong>
+                {next && <span style={{ fontSize: 10.5, fontWeight: 900, color: "var(--accent-strong)", letterSpacing: "0.06em" }}>PENDING</span>}
+              </div>
+              <div style={{ fontSize: 11, color: "var(--text-faint)", margin: "3px 0 9px" }}>{sec.hint}</div>
+
+              <div style={{
+                position: "relative", borderRadius: 10, overflow: "hidden", background: "var(--surface-2)",
+                aspectRatio: next ? `${next.w} / ${next.h}` : has ? `${has.w} / ${has.h}` : "4 / 3",
+                display: "flex", alignItems: "center", justifyContent: "center",
+              }}>
+                {next || has ? (
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <img src={next ? next.dataUrl : has.url} alt="" style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }} />
+                ) : (
+                  <span style={{ fontSize: 12, color: "var(--text-faint)" }}>{loading ? "…" : "empty"}</span>
+                )}
+              </div>
+
+              <div style={{ fontSize: 11, color: "var(--text-faint)", margin: "8px 0 9px", lineHeight: 1.5 }}>
+                {next ? <>{next.w}×{next.h} · {kb(next.bytes)} · <code style={{ color: "var(--accent-strong)", fontWeight: 800 }}>{fileNameFor(target.key, sec.id)}</code></>
+                  : has ? <>{has.w}×{has.h} · live</>
+                  : <>nothing published</>}
+              </div>
+
+              {/* Replacing is a choice made here, on the section, not on the image. */}
+              {!sec.legacy && (
+                picking === sec.id ? (
+                  <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
+                    {pool.map((it) => (
+                      <button key={it.id} onClick={() => void assign(sec.id, it)} title={it.from}
+                        style={{ padding: 0, border: "1px solid var(--accent-border)", borderRadius: 6, background: "none", cursor: "pointer", lineHeight: 0 }}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={it.img.src} alt="" style={{ width: 44, height: 44, objectFit: "cover", borderRadius: 5, display: "block" }} />
+                      </button>
+                    ))}
+                    <button onClick={() => { if (fileRef.current) { fileRef.current.dataset.slot = sec.id; fileRef.current.click(); } }} style={{ ...chip, fontSize: 11.5, padding: "5px 10px" }}>
+                      choose a file…
+                    </button>
+                    <button onClick={() => setPicking(null)} style={linkBtn}>cancel</button>
+                  </div>
+                ) : (
+                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+                    <button onClick={() => { setPicking(sec.id); if (!pool.length && fileRef.current) { fileRef.current.dataset.slot = sec.id; fileRef.current.click(); } }}
+                      style={{ ...chip, fontSize: 12, padding: "6px 12px" }}>
+                      {has || next ? "Replace" : "Add image"}
+                    </button>
+                    {next && <button onClick={() => setPending((s) => { const n = { ...s }; delete n[sec.id]; return n; })} style={linkBtn}>undo</button>}
+                    {has && <button onClick={() => void remove(sec.id)} disabled={!!busy} style={{ ...linkBtn, color: "var(--danger)" }}>remove</button>}
+                  </div>
+                )
+              )}
+              {sec.legacy && has && (
+                <button onClick={() => void remove(sec.id)} disabled={!!busy} style={{ ...linkBtn, color: "var(--danger)" }}>remove</button>
+              )}
+
+              {/* Width is a property of what is live, so it is set on what is live. */}
+              {has && !sec.legacy && (
+                <div style={{ display: "flex", gap: 6, alignItems: "center", marginTop: 10 }}>
+                  <span style={{ fontSize: 10.5, color: "var(--text-faint)", fontWeight: 800, letterSpacing: "0.06em" }}>WIDTH</span>
+                  {WIDTHS.map((w) => (
+                    <button key={w} onClick={() => void resize(sec.id, w)}
+                      style={{ ...chip, fontSize: 11, padding: "3px 9px", ...((has.width || 100) === w ? chipOn : {}) }}>
+                      {w}%
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {!target.slug && (
+        <div style={{ marginTop: 22, maxWidth: 420 }}>
+          <label style={label}>Heading above the images</label>
+          <input value={heading} onChange={(e) => setHeading(e.target.value)} placeholder="Examples" style={input} />
+          <p style={{ fontSize: 11.5, color: "var(--text-faint)", margin: "7px 0 0" }}>
+            Left blank, the row is headed “Examples”. Saved with the images.
+          </p>
+        </div>
+      )}
+
+      <button
+        onClick={() => void apply()}
+        disabled={!!busy || !pendingCount}
+        style={{ ...primary, marginTop: 22, opacity: busy || !pendingCount ? 0.55 : 1 }}
+      >
+        {busy || (pendingCount
+          ? `Apply — publish ${pendingCount} image${pendingCount === 1 ? "" : "s"} (${kb(pendingBytes)})`
+          : "Nothing to publish")}
+      </button>
 
       {note && !err && <div style={{ ...success, background: "var(--surface-2)", color: "var(--text-muted)", fontWeight: 600 }}>{note}</div>}
       {err && <div style={danger}>{err}</div>}

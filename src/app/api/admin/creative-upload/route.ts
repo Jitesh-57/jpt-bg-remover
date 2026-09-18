@@ -15,8 +15,13 @@ export const maxDuration = 30;
  *
  *   page   a URL, a path, or an overrides key — "https://www.sjpt.io/pricing",
  *          "/pricing" and "page/pricing" all mean the same page
- *   slot   "before" | "after"   the two panes on a creative app page
+ *   slot   "main"   the single creative at the top of an app page
  *          "showcase-1".."showcase-9"   a whole image in the page's gallery
+ *          "before" | "after"   the template's old cropped pair, kept so the
+ *          pages that still have them can be read and cleared
+ *
+ * Also DELETE (remove an image) and PATCH (change how wide it is drawn), which
+ * live here because they act on the same object and the same record.
  *
  * The image arrives already cropped and compressed — the browser does that, on
  * the machine that has the file, which is both faster and the only way this
@@ -27,6 +32,141 @@ export const maxDuration = 30;
 
 const BUCKET = "landing";
 const MAX_BYTES = 2 * 1024 * 1024;
+
+const SLOT_ERROR = 'slot must be "main", "showcase-1".."showcase-9", "before" or "after".';
+const isSlot = (s: string) => /^(main|before|after|showcase-[1-9])$/.test(s);
+
+/** Resolves a request's page and slot, or the response explaining why not. */
+async function resolve(req: NextRequest): Promise<
+  { ok: true; key: string; path: string; slot: string; body: Record<string, unknown> } | { ok: false; res: NextResponse }
+> {
+  let body: Record<string, unknown>;
+  try {
+    body = (await req.json()) as Record<string, unknown>;
+  } catch {
+    return { ok: false, res: NextResponse.json({ error: "Malformed request." }, { status: 400 }) };
+  }
+  const page = String(body.page ?? (body.slug ? `creative/${body.slug}` : ""));
+  const slot = String(body.slot ?? body.half ?? "");
+  const target = resolveTarget(page);
+  if (!target) {
+    return { ok: false, res: NextResponse.json({ error: `"${page}" is not a page on this site.` }, { status: 400 }) };
+  }
+  if (target.slug && !CREATIVE_APPS.some((a) => a.slug === target.slug)) {
+    return { ok: false, res: NextResponse.json({ error: `"${target.slug}" is not an app on this site.` }, { status: 400 }) };
+  }
+  if (!isSlot(slot)) {
+    return { ok: false, res: NextResponse.json({ error: SLOT_ERROR }, { status: 400 }) };
+  }
+  const key = target.slug ? creativeKey(target.slug) : target.key;
+  return { ok: true, key, path: storagePathFor(key, slot), slot, body };
+}
+
+/** The storage credentials, or the response saying they are missing. */
+function storage(): { url: string; key: string } | null {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  return url && key ? { url, key } : null;
+}
+
+const notConfigured = () => NextResponse.json({
+  error: "Storage is not configured on this deployment.",
+  fix: "Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY, then redeploy.",
+}, { status: 503 });
+
+/**
+ * Removes one image: the file, and the record that points at it.
+ *
+ *   DELETE /api/admin/creative-upload?token=…   { page, slot }
+ *
+ * The record goes first. A record pointing at a file that is gone is a broken
+ * image on a live page; a file with nothing pointing at it is invisible and
+ * costs a few kilobytes — so if only one of the two can happen, it should be
+ * the second. The old cropped pair has no record, and deleting the file is
+ * what restores the page's built-in artwork.
+ */
+export async function DELETE(req: NextRequest) {
+  const denied = requireAdmin(req);
+  if (denied) return denied;
+  const store = storage();
+  if (!store) return notConfigured();
+
+  const r = await resolve(req);
+  if (!r.ok) return r.res;
+
+  if (r.slot === "main" || r.slot.startsWith("showcase-")) {
+    const current = await readOverridesNow();
+    const entry = { ...(current.pages[r.key] || {}) };
+    if (r.slot === "main") delete entry.main;
+    else entry.showcase = (entry.showcase || []).filter((x) => x.slot !== r.slot);
+    if (!entry.showcase?.length) delete entry.showcase;
+    const saved = await writeOverrides({
+      ...current, version: 1, updatedAt: new Date().toISOString(),
+      pages: { ...current.pages, [r.key]: entry },
+    });
+    if (!saved.ok) return NextResponse.json({ error: "The page could not be updated.", detail: saved.error }, { status: 502 });
+  }
+
+  try {
+    const res = await fetch(`${store.url}/storage/v1/object/${BUCKET}/${r.path}`, {
+      method: "DELETE",
+      headers: { apikey: store.key, Authorization: `Bearer ${store.key}` },
+    });
+    // A file that is already gone is the state being asked for, not a failure.
+    if (!res.ok && res.status !== 404 && res.status !== 400) {
+      const detail = (await res.text()).slice(0, 300);
+      return NextResponse.json({ error: `Storage refused the delete (${res.status}).`, detail }, { status: 502 });
+    }
+  } catch (e) {
+    return NextResponse.json({ error: "Storage could not be reached.", detail: (e as Error).message }, { status: 502 });
+  }
+
+  return NextResponse.json({ ok: true, slot: r.slot, removed: r.path });
+}
+
+/**
+ * Changes how wide an image is drawn.
+ *
+ *   PATCH /api/admin/creative-upload?token=…   { page, slot, width }
+ *
+ * Only the record changes — the file is already the right size, and
+ * re-encoding it to draw it smaller would cost a round trip and some quality
+ * to achieve what one CSS number does.
+ */
+export async function PATCH(req: NextRequest) {
+  const denied = requireAdmin(req);
+  if (denied) return denied;
+  if (!storage()) return notConfigured();
+
+  const r = await resolve(req);
+  if (!r.ok) return r.res;
+
+  const width = Math.round(Number(r.body.width));
+  if (!(width >= 25 && width <= 100)) {
+    return NextResponse.json({ error: "width must be a percentage between 25 and 100." }, { status: 400 });
+  }
+  if (r.slot !== "main" && !r.slot.startsWith("showcase-")) {
+    return NextResponse.json({ error: "Only the main creative and the gallery images have a width." }, { status: 400 });
+  }
+
+  const current = await readOverridesNow();
+  const entry = { ...(current.pages[r.key] || {}) };
+  if (r.slot === "main") {
+    if (!entry.main) return NextResponse.json({ error: "There is no main creative on this page yet." }, { status: 404 });
+    entry.main = { ...entry.main, width };
+  } else {
+    const list = entry.showcase || [];
+    const found = list.find((x) => x.slot === r.slot);
+    if (!found) return NextResponse.json({ error: `There is no image in ${r.slot} yet.` }, { status: 404 });
+    entry.showcase = list.map((x) => (x.slot === r.slot ? { ...x, width } : x));
+  }
+  const saved = await writeOverrides({
+    ...current, version: 1, updatedAt: new Date().toISOString(),
+    pages: { ...current.pages, [r.key]: entry },
+  });
+  if (!saved.ok) return NextResponse.json({ error: saved.error }, { status: 502 });
+  return NextResponse.json({ ok: true, slot: r.slot, width });
+}
 
 export async function POST(req: NextRequest) {
   const denied = requireAdmin(req);
@@ -78,18 +218,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: `"${target.slug}" is not an app on this site.` }, { status: 400 });
   }
 
-  if (!/^(before|after|showcase-[1-9])$/.test(slot)) {
-    return NextResponse.json({ error: 'slot must be "before", "after" or "showcase-1".."showcase-9".' }, { status: 400 });
+  if (!isSlot(slot)) {
+    return NextResponse.json({ error: SLOT_ERROR }, { status: 400 });
   }
   /*
-    Those two panes are drawn by the creative app template and nothing else.
-    Accepting "before" for /pricing would store a file that page has no place
-    to show, which is exactly the failure this route exists to prevent.
+    The hero and the old pair are drawn by the creative app template and
+    nothing else. Accepting "main" for /pricing would store a file that page
+    has no place to show, which is exactly the failure this route exists to
+    prevent.
   */
-  if (!target.slug && (slot === "before" || slot === "after")) {
+  if (!target.slug && !slot.startsWith("showcase-")) {
     return NextResponse.json({
-      error: `${target.path} has no before/after panes — those belong to the creative app pages.`,
-      fix: "Use one of the gallery slots instead; they publish the image whole.",
+      error: `${target.path} has no main creative — that belongs to the creative app pages.`,
+      fix: "Use one of the gallery slots instead.",
     }, { status: 400 });
   }
 
@@ -144,11 +285,19 @@ export async function POST(req: NextRequest) {
     Recorded here rather than by the browser afterwards: two requests mean a
     window where the file exists and nothing points at it.
   */
-  if (slot.startsWith("showcase-") && width > 0 && height > 0) {
+  if ((slot === "main" || slot.startsWith("showcase-")) && width > 0 && height > 0) {
     const current = await readOverridesNow();
     const entry = { ...(current.pages[key] || {}) };
-    const list = (entry.showcase || []).filter((x) => x.slot !== slot);
-    entry.showcase = [...list, { slot, w: width, h: height }].sort((a, b) => a.slot.localeCompare(b.slot));
+    if (slot === "main") {
+      // Keeping the chosen width across a re-upload: someone replacing the
+      // image has not asked for it to jump back to full width.
+      entry.main = { slot, w: width, h: height, ...(entry.main?.width ? { width: entry.main.width } : {}) };
+    } else {
+      const previous = (entry.showcase || []).find((x) => x.slot === slot);
+      const list = (entry.showcase || []).filter((x) => x.slot !== slot);
+      entry.showcase = [...list, { slot, w: width, h: height, ...(previous?.width ? { width: previous.width } : {}) }]
+        .sort((a, b) => a.slot.localeCompare(b.slot));
+    }
     if (galleryTitle.trim()) entry.galleryTitle = galleryTitle.trim();
     const saved = await writeOverrides({
       ...current,
