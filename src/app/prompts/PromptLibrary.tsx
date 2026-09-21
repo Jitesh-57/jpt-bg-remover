@@ -8,6 +8,10 @@ import {
 } from "@/lib/prompt-library";
 import { trackEvent } from "@/lib/analytics";
 import GenerateButton from "./_components/GenerateButton";
+import Pagination from "./_components/Pagination";
+
+/** Matches the dataset listings — one page size for every listing on the site. */
+export const LIBRARY_PAGE_SIZE = 48;
 
 /**
  * PromptLibrary — the browsing half of /prompts.
@@ -20,6 +24,8 @@ import GenerateButton from "./_components/GenerateButton";
 type Props = {
   /** prompt id → example image URL, resolved server-side from the bucket. */
   images: Record<string, string>;
+  /** The server-computed page for the default, untouched view. */
+  page?: number;
 };
 
 const ALL = "all" as const;
@@ -203,12 +209,12 @@ function PromptCard({ p, img }: { p: LibraryPrompt; img?: string }) {
   );
 }
 
-export default function PromptLibrary({ images }: Props) {
+export default function PromptLibrary({ images, page = 1 }: Props) {
   const [q, setQ] = useState("");
   const [cat, setCat] = useState<CategoryId | typeof ALL>(ALL);
   const [plat, setPlat] = useState<PlatformId | typeof ALL>(ALL);
-  /** Grows on "Show more" — 122 cards at once is a lot of images to mount. */
-  const [shown, setShown] = useState(24);
+  /** Grows on "Show more", once a filter is touched. */
+  const [shown, setShown] = useState(LIBRARY_PAGE_SIZE);
 
   // Read the filters back out of the URL so a filtered view can be shared.
   useEffect(() => {
@@ -230,16 +236,30 @@ export default function PromptLibrary({ images }: Props) {
     window.history.replaceState(null, "", qs ? `?${qs}` : window.location.pathname);
   }, []);
 
-  const results = useMemo(() => {
+  /*
+    Untouched search/filters means this is the default view, which is the one
+    that has to match what the server put at this URL — real pagination, real
+    hrefs. The moment a filter is touched it is a browse session with no URL
+    of its own, so it falls back to the growing "Show more" list over the
+    matches, same as it always did.
+  */
+  const touched = q.trim() !== "" || cat !== ALL || plat !== ALL;
+
+  const filtered = useMemo(() => {
+    if (!touched) return PROMPTS;
     let out = searchPrompts(q);
     if (cat !== ALL) out = out.filter((p) => p.category === cat);
     if (plat !== ALL) out = out.filter((p) => p.platforms.includes(plat));
     return out;
-  }, [q, cat, plat]);
+  }, [touched, q, cat, plat]);
 
-  useEffect(() => { setShown(24); }, [q, cat, plat]);
+  useEffect(() => { setShown(LIBRARY_PAGE_SIZE); }, [q, cat, plat]);
 
-  const visible = results.slice(0, shown);
+  const totalPages = Math.max(1, Math.ceil(PROMPTS.length / LIBRARY_PAGE_SIZE));
+  const visible = touched
+    ? filtered.slice(0, shown)
+    : PROMPTS.slice((page - 1) * LIBRARY_PAGE_SIZE, page * LIBRARY_PAGE_SIZE);
+  const results = touched ? filtered : PROMPTS;
 
   return (
     <>
@@ -314,19 +334,23 @@ export default function PromptLibrary({ images }: Props) {
               {visible.map((p) => <PromptCard key={p.id} p={p} img={images[p.id]} />)}
             </div>
 
-            {shown < results.length && (
-              <div style={{ textAlign: "center", marginTop: 28 }}>
-                <button
-                  onClick={() => setShown((n) => n + 24)}
-                  style={{
-                    cursor: "pointer", fontFamily: "inherit", padding: "13px 26px", borderRadius: 999,
-                    background: "var(--surface)", color: "var(--text)", border: "1px solid var(--border-strong)",
-                    fontWeight: 800, fontSize: 14.5,
-                  }}
-                >
-                  Show {Math.min(24, results.length - shown)} more
-                </button>
-              </div>
+            {touched ? (
+              shown < results.length && (
+                <div style={{ textAlign: "center", marginTop: 28 }}>
+                  <button
+                    onClick={() => setShown((n) => n + LIBRARY_PAGE_SIZE)}
+                    style={{
+                      cursor: "pointer", fontFamily: "inherit", padding: "13px 26px", borderRadius: 999,
+                      background: "var(--surface)", color: "var(--text)", border: "1px solid var(--border-strong)",
+                      fontWeight: 800, fontSize: 14.5,
+                    }}
+                  >
+                    Show {Math.min(LIBRARY_PAGE_SIZE, results.length - shown)} more
+                  </button>
+                </div>
+              )
+            ) : (
+              <Pagination basePath="/prompts/originals" page={page} totalPages={totalPages} totalItems={PROMPTS.length} itemLabel="prompts" />
             )}
           </>
         )}

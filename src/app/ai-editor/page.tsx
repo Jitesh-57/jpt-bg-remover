@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import { getPageConfig } from '@/lib/page-config'
 import LandingPage from '../_components/LandingPage'
+import { variantsFor, PARENT_META } from '@/lib/landing-variants'
 
 export async function generateMetadata(): Promise<Metadata> {
   const config = await getPageConfig('ai-editor')
@@ -26,6 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function AIEditorPage() {
   const config = await getPageConfig('ai-editor')
+  const relatedVariants = variantsFor('ai-editor').map(v => ({ slug: v.slug, h1: v.h1, href: `${PARENT_META['ai-editor'].base}/${v.slug}` }))
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
@@ -43,7 +45,7 @@ export default async function AIEditorPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <LandingPage config={config} toolHref="/editor" pageId="ai-editor" />
+      <LandingPage config={config} toolHref="/editor" pageId="ai-editor" relatedVariants={relatedVariants} />
     </>
   )
 }

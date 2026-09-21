@@ -12,6 +12,20 @@ interface LandingPageProps {
   toolHref: string
   pageId: string
   isHome?: boolean
+  /**
+   * The other use-case pages under this same tool, e.g. /remove-bg/signature
+   * next to /remove-bg/product-photos. Passed as plain {slug, h1} rather than
+   * the full variant record — this is a client component, and the record
+   * carries a full FAQ and meta description per variant that nothing here
+   * reads.
+   *
+   * Without this, a use-case page had no link pointing at it from anywhere
+   * on the site except the sitemap — reachable only by a crawler that already
+   * knew the URL, never by someone browsing.
+   */
+  relatedVariants?: { slug: string; h1: string; href: string }[]
+  /** This page's own slug, so it can leave itself out of that list. */
+  currentSlug?: string
 }
 
 const SITE_BASE = 'https://www.sjpt.io'
@@ -349,7 +363,7 @@ const PAGE_VISUALS: Record<string, { before: string; after: string; label: strin
   },
 }
 
-export default function LandingPage({ config, toolHref, pageId, isHome }: LandingPageProps) {
+export default function LandingPage({ config, toolHref, pageId, isHome, relatedVariants, currentSlug }: LandingPageProps) {
   // ── Structured data (rich results) ──────────────────────────────────────────
   // FAQ schema → the "People also ask"-style expandable answers in Google.
   const faqLd = config.faq?.length
@@ -953,6 +967,26 @@ export default function LandingPage({ config, toolHref, pageId, isHome }: Landin
       )}
 
       {/* ── More Free Tools (cross-link hub) ─────────────────────────────── */}
+      {/* ── RELATED USE CASES ──────────────────────────────────────────────
+          Every use-case page under this tool, linked from every other one —
+          the base tool page included. A visitor arriving on any one of them
+          is now one click from the rest, and so is a crawler. */}
+      {relatedVariants && relatedVariants.filter(v => v.slug !== currentSlug).length > 0 && (
+        <section style={{ padding: '56px 24px 0', background: 'var(--surface)' }}>
+          <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 14 }}>More use cases</div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+              {relatedVariants.filter(v => v.slug !== currentSlug).map(v => (
+                <a key={v.slug} href={v.href}
+                  style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 999, padding: '10px 18px', textDecoration: 'none' }}>
+                  {v.h1}
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {FREE_TOOL_LINKS.some(l => l.id === pageId) && (
         <section style={{ padding: '72px 24px', background: 'linear-gradient(160deg, var(--surface-2) 0%, var(--accent-soft) 100%)' }}>
           <div style={{ maxWidth: 1000, margin: '0 auto' }}>

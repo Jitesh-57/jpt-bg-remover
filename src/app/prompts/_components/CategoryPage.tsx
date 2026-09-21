@@ -13,7 +13,7 @@ import { notFound } from "next/navigation";
  * URL like /prompts/image/youtube-thumbnail is the thing people search for and
  * the thing other sites link to. A filter state is neither.
  */
-export default async function CategoryPage({ media, facetSlug }: { media: Media; facetSlug: string }) {
+export default async function CategoryPage({ media, facetSlug, page = 1 }: { media: Media; facetSlug: string; page?: number }) {
   const found = findFacet(media, facetSlug);
   if (!found) notFound();
 
@@ -21,6 +21,14 @@ export default async function CategoryPage({ media, facetSlug }: { media: Media;
   const resolve = await mediaResolver();
   const records = byFacet(media, kind, facet.name);
   const cards = toCards(records).map((c) => ({ ...c, image: resolve(c.image) }));
+
+  // An out-of-range page is a request for content that does not exist at that
+  // URL — a 404, not a silent fallback to page 1 at a different address. The
+  // fallback would be the exact duplicate-content problem pagination canonicals
+  // exist to avoid, just moved from the <link> tag into the response itself.
+  const PAGE_SIZE = 48;
+  const totalPages = Math.max(1, Math.ceil(cards.length / PAGE_SIZE));
+  if (page < 1 || page > totalPages) notFound();
 
   const kindLabel = kind === "use-cases" ? "Use case" : kind === "styles" ? "Style" : "Subject";
   const siblings = facetList(media, kind).filter((f) => f.slug !== facet.slug);
@@ -52,7 +60,7 @@ export default async function CategoryPage({ media, facetSlug }: { media: Media;
         </div>
 
         <div style={{ marginTop: 28 }}>
-          <PromptGrid cards={cards} pageSize={24} showSort />
+          <PromptGrid cards={cards} page={page} pageSize={PAGE_SIZE} basePath={`/prompts/${media}/${facetSlug}`} showSort />
         </div>
 
         {siblings.length > 0 && (

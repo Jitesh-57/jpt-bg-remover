@@ -2,25 +2,38 @@
 
 import { useEffect, useMemo, useState } from "react";
 import PromptCard from "./PromptCard";
+import Pagination from "./Pagination";
 import type { PromptCardData } from "@/lib/prompts/types";
 
 /**
- * A filterable grid over a page's cards.
+ * A listing of cards: crawlable by default, filterable once someone touches it.
  *
- * Everything runs in the browser over the cards already rendered into the
- * page: at this size it is instant, needs no API, and the filter state is a
- * shareable URL. The full dataset never reaches the client — only the cards
- * the server chose for this page.
+ * Two different things were being asked of one piece of client state.
+ * "Show more" grew the number of cards mounted in the browser, which is a fine
+ * answer to "don't render 850 DOM nodes at once" and a bad answer to "let a
+ * crawler reach card 49" — the button has no href, so a request for this page
+ * with JavaScript off, which is what a crawler's fetch is, only ever sees the
+ * first `pageSize`. That gap is why roughly a thousand pages sat in Search
+ * Console as "discovered — currently not indexed": found via the sitemap,
+ * never reached by a link.
+ *
+ * So there are two rendering modes, and which one is showing depends on
+ * whether anyone has touched the controls:
+ *
+ *   default   — untouched search/filter/sort. Shows exactly the slice the
+ *               server put on this URL (`page`, out of `basePath`), with real
+ *               `<a href>` pagination below it. This is what a fresh request
+ *               for `?page=N` renders, with or without JavaScript, which is
+ *               the thing `curl` and a crawler both see.
+ *   filtered  — the moment a search term, a chip or a sort order is touched.
+ *               Runs over the full set already sitting in this client
+ *               component's props (unchanged from before — filtering an array
+ *               already in memory needs no request) with the old "Show more"
+ *               button. Filtered results have no stable URL of their own and
+ *               were never the thing that needed to be crawlable; the
+ *               unfiltered pages already cover every card at least once.
  */
 
-/**
- * A filter is data, never a callback.
- *
- * This component is a client boundary, and a server component cannot hand a
- * function across it — Next fails the export with a serialization error, which
- * is exactly how the model pages broke the first time. Describing the match
- * declaratively keeps the whole thing serialisable.
- */
 export interface GridFilter {
   id: string;
   label: string;
@@ -44,15 +57,26 @@ const SORTS: { id: Sort; label: string }[] = [
 
 export default function PromptGrid({
   cards,
+  page = 1,
+  pageSize = 48,
+  basePath,
+  itemLabel = "prompts",
   filters = [],
-  pageSize = 24,
   showSearch = true,
   showSort = true,
   emptyNote = "Nothing matches that.",
 }: {
+  /** The full, unfiltered set — already shipped to this client component so
+   *  the search/filter/sort below can run without another request. */
   cards: PromptCardData[];
-  filters?: GridFilter[];
+  /** Which server-computed page this request is for. Ignored once a filter,
+   *  search or sort other than the default is touched. */
+  page?: number;
   pageSize?: number;
+  /** The path pagination links are built from, e.g. "/nano-banana-pro-prompts". */
+  basePath: string;
+  itemLabel?: string;
+  filters?: GridFilter[];
   showSearch?: boolean;
   showSort?: boolean;
   emptyNote?: string;
@@ -62,7 +86,10 @@ export default function PromptGrid({
   const [sort, setSort] = useState<Sort>("hot");
   const [shown, setShown] = useState(pageSize);
 
-  const results = useMemo(() => {
+  const touched = q.trim() !== "" || active !== "all" || sort !== "hot";
+
+  const filtered = useMemo(() => {
+    if (!touched) return cards;
     let out = cards;
     const f = filters.find((x) => x.id === active);
     if (f?.match) out = out.filter((p) => matches(p, f));
@@ -79,11 +106,16 @@ export default function PromptGrid({
     } else if (sort === "az") {
       out = [...out].sort((a, b) => a.title.localeCompare(b.title));
     }
-    // "hot" is the order the server sent, which is already hotScore order.
     return out;
-  }, [cards, filters, active, q, sort]);
+  }, [cards, touched, filters, active, q, sort]);
 
   useEffect(() => { setShown(pageSize); }, [q, active, sort, pageSize]);
+
+  // Default mode: the server's slice for this page. Filtered mode: everything
+  // that matches, grown by "Show more" — there is no page N of a search.
+  const totalPages = Math.max(1, Math.ceil(cards.length / pageSize));
+  const visible = touched ? filtered.slice(0, shown) : cards.slice((page - 1) * pageSize, page * pageSize);
+  const resultCount = touched ? filtered.length : cards.length;
 
   const chip = (on: boolean): React.CSSProperties => ({
     cursor: "pointer", fontFamily: "inherit", whiteSpace: "nowrap",
@@ -102,8 +134,8 @@ export default function PromptGrid({
               type="search"
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              aria-label="Search these prompts"
-              placeholder={`Search ${cards.length} prompts…`}
+              aria-label={`Search these ${itemLabel}`}
+              placeholder={`Search ${cards.length} ${itemLabel}…`}
               style={{
                 width: "100%", padding: "11px 14px", borderRadius: 11, fontFamily: "inherit",
                 fontSize: 14.5, fontWeight: 600, background: "var(--surface)", color: "var(--text)",
@@ -137,31 +169,36 @@ export default function PromptGrid({
       )}
 
       <div style={{ fontSize: 13, color: "var(--text-muted)", fontWeight: 600, marginBottom: 14 }}>
-        {results.length === cards.length ? `${cards.length} prompts` : `${results.length} of ${cards.length} prompts`}
+        {touched && resultCount !== cards.length ? `${resultCount} of ${cards.length} ${itemLabel}` : `${cards.length} ${itemLabel}`}
       </div>
 
-      {results.length === 0 ? (
+      {visible.length === 0 ? (
         <div style={{ textAlign: "center", padding: "48px 20px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 16, color: "var(--text-muted)", fontSize: 14.5 }}>
           {emptyNote}
         </div>
       ) : (
         <>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(270px, 100%), 1fr))", gap: 16 }}>
-            {results.slice(0, shown).map((p) => <PromptCard key={p.uid} p={p} />)}
+            {visible.map((p) => <PromptCard key={p.uid} p={p} />)}
           </div>
-          {shown < results.length && (
-            <div style={{ textAlign: "center", marginTop: 26 }}>
-              <button
-                onClick={() => setShown((n) => n + pageSize)}
-                style={{
-                  cursor: "pointer", fontFamily: "inherit", padding: "12px 24px", borderRadius: 999,
-                  background: "var(--surface)", color: "var(--text)", border: "1px solid var(--border-strong)",
-                  fontWeight: 800, fontSize: 14,
-                }}
-              >
-                Show {Math.min(pageSize, results.length - shown)} more
-              </button>
-            </div>
+
+          {touched ? (
+            shown < filtered.length && (
+              <div style={{ textAlign: "center", marginTop: 26 }}>
+                <button
+                  onClick={() => setShown((n) => n + pageSize)}
+                  style={{
+                    cursor: "pointer", fontFamily: "inherit", padding: "12px 24px", borderRadius: 999,
+                    background: "var(--surface)", color: "var(--text)", border: "1px solid var(--border-strong)",
+                    fontWeight: 800, fontSize: 14,
+                  }}
+                >
+                  Show {Math.min(pageSize, filtered.length - shown)} more
+                </button>
+              </div>
+            )
+          ) : (
+            <Pagination basePath={basePath} page={page} totalPages={totalPages} totalItems={cards.length} itemLabel={itemLabel} />
           )}
         </>
       )}
