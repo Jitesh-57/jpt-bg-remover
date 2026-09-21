@@ -10,6 +10,9 @@ import {
 import { mediaResolver } from "@/lib/prompts/media";
 import { BRAND } from "@/lib/brand";
 
+/** Same size as the facet listing pages — one number, one place. */
+export const MODEL_PAGE_SIZE = 48;
+
 /**
  * ModelLanding — /{model}-prompts (spec §5.3).
  *
@@ -70,13 +73,19 @@ function Band({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default async function ModelLanding({ slug }: { slug: string }) {
+export default async function ModelLanding({ slug, page = 1 }: { slug: string; page?: number }) {
   const model = getModel(slug);
   if (!model) notFound();
 
   const resolve = await mediaResolver();
   const records = byModel(slug);
   const cards = toCards(records).map((c) => ({ ...c, image: resolve(c.image) }));
+
+  // Same reasoning as the facet pages: an out-of-range page is a 404, not a
+  // quiet redraw of page 1 under a URL that claims to be something else.
+  const totalPages = Math.max(1, Math.ceil(cards.length / MODEL_PAGE_SIZE));
+  if (page < 1 || page > totalPages) notFound();
+
   const trending = cards.slice(0, 8);
   const about = ABOUT[slug] || {
     blurb: `${model.count} prompts written for ${model.name}, collected from the people who published them.`,
@@ -177,7 +186,7 @@ export default async function ModelLanding({ slug }: { slug: string }) {
             <h2 style={{ fontSize: 21, fontWeight: 900, letterSpacing: "-0.02em", margin: "0 0 16px" }}>
               All {model.count} {model.name} prompts
             </h2>
-            <PromptGrid cards={cards} filters={filters} pageSize={24} />
+            <PromptGrid cards={cards} filters={filters} page={page} pageSize={MODEL_PAGE_SIZE} basePath={`/${slug}-prompts`} />
           </section>
 
           {/* ABOUT */}

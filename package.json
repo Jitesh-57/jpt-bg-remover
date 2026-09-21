@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "creative": "node scripts/add-creative.mjs"
+    "creative": "node scripts/add-creative.mjs",
+    "seo-audit": "node scripts/seo-audit.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.55.0",

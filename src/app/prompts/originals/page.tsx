@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import PromptLibrary from "../PromptLibrary";
+import { notFound } from "next/navigation";
+import PromptLibrary, { LIBRARY_PAGE_SIZE } from "../PromptLibrary";
 import ScrollReveal from "@/app/_components/ScrollReveal";
 import {
   PROMPTS, PROMPT_COUNT, CATEGORIES, PLATFORMS, promptsInCategory,
 } from "@/lib/prompt-library";
 import { matchLibraryImages, LIBRARY_BUCKET } from "@/lib/prompt-library-images";
 import { listBucketImagesServer } from "@/lib/prompt-images.server";
+import { canonicalFor, pageSuffix, parsePage } from "@/lib/prompts/pagination";
 import { BRAND } from "@/lib/brand";
 
 export const revalidate = 300;
@@ -14,27 +16,33 @@ export const revalidate = 300;
 const BASE = "https://www.sjpt.io";
 const URL = `${BASE}/prompts/originals`;
 
-export const metadata: Metadata = {
-  title: { absolute: `${PROMPT_COUNT} Pixel Shine Photo Prompts — Written In-House | ${BRAND}` },
-  description:
-    `A library of ${PROMPT_COUNT} free AI image prompts you can copy: headshots, film looks, YouTube thumbnails, Instagram covers, product shots, ads and restoration. Sized for Instagram, TikTok, X, Facebook, LinkedIn, YouTube and Pinterest.`,
-  keywords:
-    "ai photo prompts, ai image prompts, free prompt library, chatgpt image prompts, gemini image prompts, instagram ai prompts, youtube thumbnail prompt, ai headshot prompt, product photography prompt, nano banana prompts",
-  alternates: { canonical: URL },
-  openGraph: {
-    title: `${PROMPT_COUNT} free AI photo prompts`,
+export async function generateMetadata(
+  { searchParams }: { searchParams: Promise<{ page?: string }> }
+): Promise<Metadata> {
+  const page = parsePage(await searchParams);
+  const canonical = canonicalFor(URL, page);
+  return {
+    title: { absolute: `${PROMPT_COUNT} Pixel Shine Photo Prompts — Written In-House${pageSuffix(page)} | ${BRAND}` },
     description:
-      "Copy-paste prompts for portraits, trends, thumbnails, covers, product shots and ads — each one sized for the platform it's meant for.",
-    url: URL,
-    type: "website",
-    siteName: BRAND,
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: `${PROMPT_COUNT} free AI photo prompts`,
-    description: "Portraits, film looks, thumbnails, covers, product shots and ads. Copy, paste, generate.",
-  },
-};
+      `A library of ${PROMPT_COUNT} free AI image prompts you can copy: headshots, film looks, YouTube thumbnails, Instagram covers, product shots, ads and restoration. Sized for Instagram, TikTok, X, Facebook, LinkedIn, YouTube and Pinterest.`,
+    keywords:
+      "ai photo prompts, ai image prompts, free prompt library, chatgpt image prompts, gemini image prompts, instagram ai prompts, youtube thumbnail prompt, ai headshot prompt, product photography prompt, nano banana prompts",
+    alternates: { canonical },
+    openGraph: {
+      title: `${PROMPT_COUNT} free AI photo prompts`,
+      description:
+        "Copy-paste prompts for portraits, trends, thumbnails, covers, product shots and ads — each one sized for the platform it's meant for.",
+      url: canonical,
+      type: "website",
+      siteName: BRAND,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${PROMPT_COUNT} free AI photo prompts`,
+      description: "Portraits, film looks, thumbnails, covers, product shots and ads. Copy, paste, generate.",
+    },
+  };
+}
 
 const FAQS = [
   {
@@ -67,7 +75,13 @@ const FAQS = [
   },
 ];
 
-export default async function OriginalsPage() {
+export default async function OriginalsPage(
+  { searchParams }: { searchParams: Promise<{ page?: string }> }
+) {
+  const page = parsePage(await searchParams);
+  const totalPages = Math.max(1, Math.ceil(PROMPT_COUNT / LIBRARY_PAGE_SIZE));
+  if (page < 1 || page > totalPages) notFound();
+
   // Resolved server-side so the image URLs are in the HTML rather than
   // arriving after a client fetch. An unreachable bucket yields {} and every
   // card falls back to its designed placeholder.
@@ -162,7 +176,7 @@ export default async function OriginalsPage() {
         </section>
 
         {/* THE LIBRARY */}
-        <PromptLibrary images={images} />
+        <PromptLibrary images={images} page={page} />
 
         {/* HOW TO WRITE ONE */}
         <section style={{ padding: "0 24px 58px" }}>

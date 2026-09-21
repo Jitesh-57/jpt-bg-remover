@@ -37,6 +37,7 @@ export default async function VariantPage({ params }: { params: Promise<{ slug: 
   if (!v) notFound();
 
   const config = variantToConfig(v);
+  const relatedVariants = variantsFor(PARENT).map((x) => ({ slug: x.slug, h1: x.h1, href: `${PARENT_META[PARENT].base}/${x.slug}` }));
   const url = `${BASE}${PARENT_META[PARENT].base}/${slug}`;
 
   const jsonLd = {
@@ -63,7 +64,7 @@ export default async function VariantPage({ params }: { params: Promise<{ slug: 
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
-      <LandingPage config={config} toolHref={PARENT_META[PARENT].toolHref} pageId={PARENT_PAGE_ID[PARENT]} />
+      <LandingPage config={config} toolHref={PARENT_META[PARENT].toolHref} pageId={PARENT_PAGE_ID[PARENT]} relatedVariants={relatedVariants} currentSlug={slug} />
     </>
   );
 }
