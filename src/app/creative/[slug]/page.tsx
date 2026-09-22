@@ -171,26 +171,17 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
           <AppWorkspace app={a} presetImages={presetImages} samples={samples} />
         </section>
 
-        {/* How it works */}
+        {/*
+          "How to use" and "see it in action" merged into one section, image
+          first and the steps below it — the image is what someone actually
+          wants to see before reading three numbered steps about how to get
+          it, and having it answer "does this look real" up front makes the
+          steps worth reading rather than a leap of faith.
+        */}
         <section style={{ padding: "72px 24px", background: "linear-gradient(160deg,var(--surface-2) 0%,var(--accent-soft) 100%)" }}>
           <div style={{ maxWidth: 960, margin: "0 auto" }}>
-            <h2 style={{ fontSize: "clamp(1.6rem,3vw,2.2rem)", fontWeight: 900, color: "var(--text)", textAlign: "center", margin: "0 0 48px", letterSpacing: "-0.02em" }}>How to use {a.h1}</h2>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 28 }}>
-              {lc.howTo.map((step, i) => (
-                <div key={step.t} style={{ textAlign: "center" }}>
-                  <div style={{ width: 64, height: 64, background: "var(--surface)", border: "2px solid var(--accent-soft)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px", fontWeight: 900, color: "var(--accent)", fontSize: 20 }}>{`0${i + 1}`}</div>
-                  <h3 style={{ fontSize: 16, fontWeight: 800, color: "var(--text)", margin: "0 0 8px" }}>{step.t}</h3>
-                  <p style={{ fontSize: 14, color: "var(--text-muted)", lineHeight: 1.6, margin: 0 }}>{step.d}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Real AI before/after example */}
-        <section style={{ padding: "72px 24px", background: "var(--surface)" }}>
-          <div style={{ maxWidth: 820, margin: "0 auto", textAlign: "center" }}>
-            <h2 style={{ fontSize: "clamp(1.5rem,3vw,2rem)", fontWeight: 900, color: "var(--text)", margin: "0 0 28px", letterSpacing: "-0.02em" }}>See it in action — real before &amp; after</h2>
+            <div style={{ maxWidth: 820, margin: "0 auto 56px", textAlign: "center" }}>
+              <h2 style={{ fontSize: "clamp(1.5rem,3vw,2rem)", fontWeight: 900, color: "var(--text)", margin: "0 0 28px", letterSpacing: "-0.02em" }}>See it in action — real before &amp; after</h2>
             {/*
               One frame, two flush halves — the layout the comparison actually
               wants. It used to be two separate cards with a gap between them,
@@ -292,6 +283,18 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
                   : <>The right-hand image is this app&apos;s own prompt run over the photo on the left — the same thing your upload goes through.</>}
               </figcaption>
             </figure>
+            </div>
+
+            <h2 style={{ fontSize: "clamp(1.6rem,3vw,2.2rem)", fontWeight: 900, color: "var(--text)", textAlign: "center", margin: "0 0 48px", letterSpacing: "-0.02em" }}>How to use {a.h1}</h2>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 28 }}>
+              {lc.howTo.map((step, i) => (
+                <div key={step.t} style={{ textAlign: "center" }}>
+                  <div style={{ width: 64, height: 64, background: "var(--surface)", border: "2px solid var(--accent-soft)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px", fontWeight: 900, color: "var(--accent)", fontSize: 20 }}>{`0${i + 1}`}</div>
+                  <h3 style={{ fontSize: 16, fontWeight: 800, color: "var(--text)", margin: "0 0 8px" }}>{step.t}</h3>
+                  <p style={{ fontSize: 14, color: "var(--text-muted)", lineHeight: 1.6, margin: 0 }}>{step.d}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
