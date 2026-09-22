@@ -48,7 +48,10 @@ export default function DashboardHome() {
   const [category, setCategory] = useState<CategoryId | "popular">("popular");
 
   useEffect(() => {
-    fetch("/api/dashboard").then((r) => r.json()).then(setData).catch(() => setData(null));
+    fetch("/api/dashboard")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: DashboardPayload | null) => setData(d && Array.isArray(d.recentCreations) ? d : null))
+      .catch(() => setData(null));
   }, []);
 
   const categories = aiCategories();
