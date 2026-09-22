@@ -30,21 +30,16 @@ const itemListLd = (apps: CreativeApp[]) => ({
   itemListElement: apps.map((a, i) => ({ "@type": "ListItem", position: i + 1, name: a.h1, url: `${URL}/${a.slug}` })),
 });
 
-const PILL: React.CSSProperties = {
-  position: "absolute", top: 12, fontSize: 11, fontWeight: 900, letterSpacing: "0.08em",
-  borderRadius: 999, padding: "5px 12px", color: "#fff",
-  background: "rgba(24,24,28,0.86)", backdropFilter: "blur(6px)",
-};
-
 /**
  * One app card.
  *
  * Two image treatments. An app with a "main" creative uploaded in /admin — a
  * single image that already is a before and after — is shown whole, at its
- * own shape, with BEFORE/AFTER pills drawn over it: the same treatment the
- * app's own page gives that image, so a card and the page it leads to agree
- * about what the example looks like. An app without one falls back to the
- * "after" result on a 16:10 frame, exactly as before.
+ * own shape. No BEFORE/AFTER pills drawn over it: that image is a finished
+ * creative made outside this codebase, and the label is baked into the
+ * picture itself. Drawing our own on top of someone else's duplicated it,
+ * usually misaligned with theirs. An app without a main image falls back to
+ * the "after" result on a 16:10 frame, exactly as before.
  */
 function AppCard({ a, main }: { a: CreativeApp; main?: ShowcaseImage }) {
   return (
@@ -61,8 +56,6 @@ function AppCard({ a, main }: { a: CreativeApp; main?: ShowcaseImage }) {
             decoding="async"
             style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
           />
-          <span style={{ ...PILL, left: 12 }}>BEFORE</span>
-          <span style={{ ...PILL, right: 12 }}>AFTER</span>
         </div>
       ) : (
         <div style={{ aspectRatio: "16 / 10", background: `linear-gradient(135deg, ${a.gradient[0]}, ${a.gradient[1]})`, position: "relative" }}>
