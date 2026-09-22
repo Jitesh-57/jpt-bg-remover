@@ -174,7 +174,7 @@ export default function HomePage({
             {sectionHead("AI apps", "Turn one photo into any look", "Each app carries a tuned prompt, so you upload and tap. No prompt writing, no settings to learn.")}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(250px, 100%), 1fr))", gap: 18 }}>
               {apps.map((a) => (
-                <Link key={a.slug} href={`${CREATIVE_BASE}/${a.slug}`} className="jpt-hover" style={{ textDecoration: "none", borderRadius: 18, overflow: "hidden", border: "1px solid var(--border)", background: "var(--surface)", display: "block" }}>
+                <Link key={a.slug} href={`${CREATIVE_BASE}/${a.slug}`} className="jpt-hover" draggable={false} style={{ textDecoration: "none", borderRadius: 18, overflow: "hidden", border: "1px solid var(--border)", background: "var(--surface)", display: "block" }}>
                   <div style={{ aspectRatio: "4 / 5", position: "relative" }}>
                     <CompareCard
                       slug={a.slug}
