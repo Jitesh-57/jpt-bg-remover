@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Icon from "../_components/Icon";
 import { useDashboardUser } from "../_components/DashboardUser";
 import { takeCreatePrompt } from "../_components/handoff";
-import { StudioPage, Dropdown, GenerateButton, PreviewPanel, SessionStrip, ErrorNote, runGeneration, labelStyle, actionBtn, type StudioResult } from "../_components/studio";
+import { StudioPage, Dropdown, GenerateButton, PreviewPanel, SessionStrip, ErrorNote, runGeneration, toSendable, acceptImageFile, labelStyle, actionBtn, type StudioResult } from "../_components/studio";
 import { ASPECT_RATIOS, MODELS, type AspectRatio } from "@/lib/app-presets";
 import { CREDIT_COST } from "@/lib/plans";
 import { onCreditsChanged } from "@/lib/credits";
@@ -29,14 +29,24 @@ export default function CreateStudio({ inspirations }: { inspirations: FeedItem[
   const [results, setResults] = useState<StudioResult[]>([]);
   const [current, setCurrent] = useState<StudioResult | null>(null);
   const [copied, setCopied] = useState(false);
+  const [photo, setPhoto] = useState<string | null>(null);
+  const [needsPhoto, setNeedsPhoto] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
   const textRef = useRef<HTMLTextAreaElement>(null);
+  const photoInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => onCreditsChanged(setCredits), []);
   useEffect(() => {
-    const p = takeCreatePrompt();
-    if (p) setPrompt(p.slice(0, MAX_PROMPT));
+    const h = takeCreatePrompt();
+    if (h) { setPrompt(h.prompt.slice(0, MAX_PROMPT)); setNeedsPhoto(!!h.needsPhoto); }
     textRef.current?.focus();
   }, []);
+
+  const takePhoto = async (f: File | undefined) => {
+    setErr(null);
+    if (!f) return;
+    try { setPhoto(await acceptImageFile(f)); } catch (e) { setErr((e as Error).message); }
+  };
 
   const applyPrompt = (p: string) => {
     setPrompt(p.slice(0, MAX_PROMPT));
@@ -52,10 +62,15 @@ export default function CreateStudio({ inspirations }: { inspirations: FeedItem[
   const generate = async () => {
     const text = prompt.trim();
     if (!text || busy) return;
+    if (needsPhoto && !photo) { setErr("This prompt is made for your own photo — add Your image first."); return; }
     if (credits < CREDIT_COST) { openPricing("Create Image"); return; }
     setBusy(true);
     setErr(null);
-    const out = await runGeneration("/api/create-image", { prompt: text, model, aspectRatio: ratio }, { returnTo: "/app/create", reason: "Create Image", onCredits: setCredits });
+    let image: string | undefined;
+    if (photo) {
+      try { const s = await toSendable(photo); image = s.imageUrl || s.dataUrl; } catch { setBusy(false); setErr("Your image couldn't be prepared. Try adding it again."); return; }
+    }
+    const out = await runGeneration("/api/create-image", { prompt: text, model, aspectRatio: ratio, image }, { returnTo: "/app/create", reason: "Create Image", onCredits: setCredits });
     setBusy(false);
     if (out.error) { setErr(out.error); return; }
     if (!out.image) return;
@@ -74,23 +89,53 @@ export default function CreateStudio({ inspirations }: { inspirations: FeedItem[
       <div>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
           <span style={{ ...labelStyle, margin: 0 }}>Prompt</span>
+          <span style={{ flex: 1 }} />
+          <button onClick={() => photoInput.current?.click()} className="jpt-nav-item" style={{ display: "inline-flex", alignItems: "center", gap: 5, padding: "4px 9px", borderRadius: 8, border: "none", background: "transparent", color: needsPhoto && !photo ? "var(--accent)" : "var(--text-muted)", fontWeight: 700, fontSize: 12.5, fontFamily: "inherit", cursor: "pointer" }}>
+            <Icon name="upload" size={14} /> Your image
+          </button>
           <button onClick={surprise} disabled={!inspirations.length} className="jpt-nav-item" style={{ display: "inline-flex", alignItems: "center", gap: 5, padding: "4px 9px", borderRadius: 8, border: "none", background: "transparent", color: "var(--accent)", fontWeight: 700, fontSize: 12.5, fontFamily: "inherit", cursor: "pointer" }}>
             <Icon name="wand" size={14} /> Surprise me
           </button>
         </div>
-        <div style={{ position: "relative" }}>
+        <div
+          className="jpt-fieldbox"
+          onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+          onDragLeave={() => setDragOver(false)}
+          onDrop={(e) => { e.preventDefault(); setDragOver(false); void takePhoto(e.dataTransfer.files?.[0]); }}
+          style={{ position: "relative", borderRadius: 14, border: `1px solid ${dragOver ? "var(--accent)" : "var(--border)"}`, background: dragOver ? "var(--accent-soft)" : "var(--surface)", padding: photo ? "10px 10px 0" : 0 }}
+        >
+          {photo && (
+            <div className="jpt-a-pop" style={{ position: "relative", width: 76, height: 76, borderRadius: 12, overflow: "hidden", border: "1px solid var(--border-strong)", background: "var(--surface-2)" }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={photo} alt="Your image" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              <span style={{ position: "absolute", left: 4, bottom: 4, fontSize: 9.5, fontWeight: 800, color: "#fff", background: "rgba(8,8,10,.75)", borderRadius: 6, padding: "2px 6px" }}>You</span>
+              <button onClick={() => setPhoto(null)} aria-label="Remove your image" style={{ position: "absolute", top: 4, right: 4, width: 22, height: 22, borderRadius: "50%", border: "none", background: "rgba(8,8,10,.75)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", padding: 0 }}>
+                <Icon name="close" size={12} />
+              </button>
+            </div>
+          )}
           <textarea
             ref={textRef}
             value={prompt}
             onChange={(e) => setPrompt(e.target.value.slice(0, MAX_PROMPT))}
+            onPaste={(e) => { const f = Array.from(e.clipboardData.files).find((x) => x.type.startsWith("image/")); if (f) { e.preventDefault(); void takePhoto(f); } }}
             onKeyDown={(e) => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) { e.preventDefault(); void generate(); } }}
-            rows={8}
-            placeholder="A cozy Kyoto café at golden hour, rain on the window, soft film grain, 35mm photo…"
-            className="jpt-field"
-            style={{ width: "100%", resize: "vertical", minHeight: 170, padding: "13px 14px 28px", borderRadius: 14, background: "var(--surface)", border: "1px solid var(--border)", color: "var(--text)", fontSize: 14.5, lineHeight: 1.55, fontFamily: "inherit", outline: "none" }}
+            rows={photo ? 6 : 8}
+            placeholder={photo ? "Describe the scene to put your image in…" : "A cozy Kyoto café at golden hour, rain on the window, soft film grain, 35mm photo…"}
+            style={{ width: "100%", resize: "vertical", minHeight: photo ? 120 : 170, padding: "13px 14px 28px", borderRadius: 14, background: "transparent", border: "none", color: "var(--text)", fontSize: 14.5, lineHeight: 1.55, fontFamily: "inherit", outline: "none" }}
           />
           <span style={{ position: "absolute", right: 12, bottom: 10, fontSize: 11, color: "var(--text-faint)" }}>{prompt.length}/{MAX_PROMPT}</span>
         </div>
+        <input ref={photoInput} type="file" accept="image/jpeg,image/png,image/webp" hidden onChange={(e) => { void takePhoto(e.target.files?.[0]); e.target.value = ""; }} />
+        {needsPhoto && !photo ? (
+          <button onClick={() => photoInput.current?.click()} className="jpt-a-pop" style={{ marginTop: 8, width: "100%", display: "flex", alignItems: "center", gap: 8, padding: "10px 12px", borderRadius: 11, border: "1px solid var(--accent-border)", background: "var(--accent-soft)", color: "var(--accent)", fontSize: 12.5, fontWeight: 700, fontFamily: "inherit", cursor: "pointer", textAlign: "left" }}>
+            <Icon name="upload" size={15} /> This prompt is made for your own photo — add Your image
+          </button>
+        ) : (
+          <div style={{ fontSize: 11.5, color: "var(--text-faint)", marginTop: 6 }}>
+            {photo ? "Your image will be the subject — a person keeps their face, a product keeps its look." : "Optional: add Your image to put yourself or your product in the picture."}
+          </div>
+        )}
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>

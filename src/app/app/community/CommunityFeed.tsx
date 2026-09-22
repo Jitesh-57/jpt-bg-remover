@@ -4,12 +4,12 @@ import { useEffect, useMemo, useState } from "react";
 import Icon from "../_components/Icon";
 import FeedCard, { useRecreate } from "../_components/FeedCard";
 import type { FeedItem } from "@/lib/dashboard-feed.server";
-import { DATASET_CREDIT, LICENSE_URL } from "@/lib/prompts/types";
+import { LICENSE_URL } from "@/lib/prompts/types";
 
 const PAGE = 40;
 
-export default function CommunityFeed({ items, topics }: { items: FeedItem[]; topics: string[] }) {
-  const [topic, setTopic] = useState<string | "all">("all");
+export default function CommunityFeed({ items, topics, initialTopic = "all" }: { items: FeedItem[]; topics: string[]; initialTopic?: string }) {
+  const [topic, setTopic] = useState<string | "all">(initialTopic);
   const [q, setQ] = useState("");
   const [shown, setShown] = useState(PAGE);
   const [open, setOpen] = useState<FeedItem | null>(null);
@@ -37,8 +37,9 @@ export default function CommunityFeed({ items, topics }: { items: FeedItem[]; to
         </div>
 
         <div className="jpt-tabs jpt-a-up" style={{ ["--d" as string]: "60ms", borderBottom: "1px solid var(--border)", marginBottom: 18 }}>
+          {topics.slice(0, initialTopic === "all" ? 0 : 1).map((t) => <button key={t} className="jpt-tab" data-active={topic === t} onClick={() => setTopic(t)}>{t}</button>)}
           <button className="jpt-tab" data-active={topic === "all"} onClick={() => setTopic("all")}>Trending</button>
-          {topics.map((t) => <button key={t} className="jpt-tab" data-active={topic === t} onClick={() => setTopic(t)}>{t}</button>)}
+          {topics.slice(initialTopic === "all" ? 0 : 1).map((t) => <button key={t} className="jpt-tab" data-active={topic === t} onClick={() => setTopic(t)}>{t}</button>)}
         </div>
 
         {filtered.length === 0 ? (
@@ -57,9 +58,6 @@ export default function CommunityFeed({ items, topics }: { items: FeedItem[]; to
           </div>
         )}
 
-        <p style={{ marginTop: 32, fontSize: 12, color: "var(--text-faint)", textAlign: "center" }}>
-          {DATASET_CREDIT} · <a href={LICENSE_URL} target="_blank" rel="noopener noreferrer" style={{ color: "var(--text-muted)" }}>License</a>. Each image belongs to the creator credited on it.
-        </p>
       </div>
 
       {open && <Detail item={open} onClose={() => setOpen(null)} />}
@@ -97,7 +95,7 @@ function Detail({ item, onClose }: { item: FeedItem; onClose: () => void }) {
             <button onClick={onClose} aria-label="Close" className="jpt-nav-item" style={{ display: "flex", padding: 6, borderRadius: 8, border: "none", background: "transparent", color: "var(--text-muted)", cursor: "pointer" }}><Icon name="close" size={18} /></button>
           </div>
           <div style={{ fontSize: 13, color: "var(--text-muted)" }}>
-            by {item.authorUrl ? <a href={item.authorUrl} target="_blank" rel="noopener noreferrer nofollow" style={{ color: "var(--accent)", fontWeight: 700 }}>{item.author}</a> : <strong>{item.author}</strong>} · {item.model}
+            by {item.authorUrl ? <a href={item.authorUrl} target="_blank" rel="noopener noreferrer nofollow" style={{ color: "var(--accent)", fontWeight: 700 }}>{item.author}</a> : <strong>{item.author}</strong>} · {item.model} · <a href={LICENSE_URL} target="_blank" rel="noopener noreferrer" style={{ color: "var(--text-faint)" }}>CC BY 4.0</a>
           </div>
           {item.prompt ? (
             <div style={{ position: "relative", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 12, padding: "12px 14px", fontSize: 13, lineHeight: 1.6, color: "var(--text-muted)", maxHeight: 260, overflowY: "auto", whiteSpace: "pre-wrap" }}>{item.prompt}</div>

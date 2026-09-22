@@ -23,12 +23,20 @@ export interface FeedItem {
 }
 
 const RUNNABLE_PROMPT = 3500;
+const CJK = /[\u3040-\u30ff\u3400-\u9fff\uac00-\ud7af]/;
+
+/** English-language prompts only: the dashboard audience can't read or edit the Chinese and Japanese ones. */
+function isEnglish(r: { languages?: string[]; title: string; prompt: string }): boolean {
+  if (r.languages?.some((l) => l === "zh" || l === "ja")) return false;
+  return !CJK.test(r.title) && !CJK.test(r.prompt);
+}
 
 export async function communityFeed(limit: number, opts?: { textOnly?: boolean }): Promise<FeedItem[]> {
   const resolve = await mediaResolver();
   const out: FeedItem[] = [];
   for (const r of byMedia("image")) {
     if (out.length >= limit) break;
+    if (!isEnglish(r)) continue;
     if (opts?.textOnly && (r.needsPhoto || r.hasVariables || r.prompt.length > RUNNABLE_PROMPT)) continue;
     const image = resolve(cardImage(r));
     if (!image) continue;
@@ -63,9 +71,10 @@ export interface AppCardData {
 }
 
 function toAppCard(a: CreativeApp, hasMain: boolean, hasExample: boolean): AppCardData {
-  const sources = hasMain
-    ? [uploadedCreative(a.slug, "main"), ...creativeSources(a.slug, "after", previewUrl(a.slug))]
-    : creativeSources(a.slug, "after", previewUrl(a.slug));
+  // The finished "after" result first — a clean single photo reads better on a
+  // card than the side-by-side main creative, which is kept only as a fallback.
+  const after = creativeSources(a.slug, "after", previewUrl(a.slug));
+  const sources = hasMain ? [...after, uploadedCreative(a.slug, "main")] : after;
   return {
     slug: a.slug,
     name: a.h1,
