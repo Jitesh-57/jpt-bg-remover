@@ -3,13 +3,28 @@ import { createServerClient } from "@supabase/ssr";
 
 export const runtime = "nodejs";
 
+/**
+ * Only rewrites to the canonical domain when the request is already on a
+ * variant of it (www vs apex) — that's the one case where Supabase's
+ * allowlist needs the un-ambiguous form. Any other host (a Vercel preview,
+ * localhost) keeps its own origin, or the OAuth round-trip would always
+ * land on production and a preview build could never be signed into.
+ */
+function resolveAuthOrigin(url: URL): string {
+  const canonical = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "");
+  if (!canonical) return url.origin;
+  try {
+    const canonicalHost = new URL(canonical).hostname.replace(/^www\./, "");
+    const requestHost = url.hostname.replace(/^www\./, "");
+    return requestHost === canonicalHost ? canonical : url.origin;
+  } catch {
+    return url.origin;
+  }
+}
+
 export async function GET(req: NextRequest) {
   const url = new URL(req.url);
-  // Always use the actual request origin so the PKCE verifier cookie and the
-  // OAuth redirect target live on the same domain (preview vs production safe).
-  // Always use the canonical domain for OAuth redirectTo so the callback URL
-  // matches the Supabase allowlist regardless of www vs non-www.
-  const origin = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") || url.origin;
+  const origin = resolveAuthOrigin(url);
   const next = url.searchParams.get("next") || "/app";
 
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
