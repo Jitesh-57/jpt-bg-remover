@@ -1,6 +1,7 @@
 import Link from "next/link";
 import HomeHero from "@/app/_components/HomeHero";
 import SmartImage from "@/app/_components/SmartImage";
+import CompareCard from "@/app/_components/CompareCard";
 import PricingSection from "@/app/_components/PricingSection";
 import FAQAccordion from "@/app/_components/FAQAccordion";
 import ScrollReveal from "@/app/_components/ScrollReveal";
@@ -145,19 +146,19 @@ export default function HomePage({
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 0, borderRadius: 24, overflow: "hidden", border: "1px solid var(--border)", boxShadow: "var(--shadow-lg)" }}>
               {showcase.map((a) => (
-                <Link key={a.slug} href={`${CREATIVE_BASE}/${a.slug}`} style={{ position: "relative", aspectRatio: "4 / 5", display: "block", textDecoration: "none", minWidth: 0 }}>
-                  <SmartImage
-                    sources={creativeSources(a.slug, "after", previewUrl(a.slug))}
-                    alt={`A photo turned into ${a.h1}`}
-                    fallback={`linear-gradient(135deg, ${a.gradient[0]}, ${a.gradient[1]})`}
-                    sizes="(max-width: 768px) 33vw, 393px"
-                    artwork={{ slug: a.slug, name: a.h1, emoji: a.emoji, gradient: [a.gradient[0], a.gradient[1]] }}
-                    eager
-                  />
-                  <span style={{ position: "absolute", left: 12, bottom: 12, right: 12, background: "rgba(11,11,14,0.78)", backdropFilter: "blur(6px)", color: "#fff", fontSize: 12.5, fontWeight: 800, borderRadius: 10, padding: "8px 11px", lineHeight: 1.35 }}>
-                    {a.emoji} {a.h1}
-                  </span>
-                </Link>
+                <CompareCard
+                  key={a.slug}
+                  slug={a.slug}
+                  href={`${CREATIVE_BASE}/${a.slug}`}
+                  before={creativeSources(a.slug, "before")}
+                  after={creativeSources(a.slug, "after", previewUrl(a.slug))}
+                  alt={`A photo turned into ${a.h1}`}
+                  name={a.h1}
+                  emoji={a.emoji}
+                  gradient={a.gradient}
+                  mode="drag"
+                  caption={<>{a.emoji} {a.h1}</>}
+                />
               ))}
             </div>
             <p style={{ textAlign: "center", fontSize: 12.5, color: "var(--text-faint)", marginTop: 12 }}>
@@ -174,14 +175,20 @@ export default function HomePage({
               {apps.map((a) => (
                 <Link key={a.slug} href={`${CREATIVE_BASE}/${a.slug}`} className="jpt-hover" style={{ textDecoration: "none", borderRadius: 18, overflow: "hidden", border: "1px solid var(--border)", background: "var(--surface)", display: "block" }}>
                   <div style={{ aspectRatio: "4 / 5", position: "relative" }}>
-                    <SmartImage
-                      sources={creativeSources(a.slug, "after", previewUrl(a.slug))}
+                    <CompareCard
+                      slug={a.slug}
+                      href={`${CREATIVE_BASE}/${a.slug}`}
+                      before={creativeSources(a.slug, "before")}
+                      after={creativeSources(a.slug, "after", previewUrl(a.slug))}
                       alt={`${a.h1} example`}
-                      fallback={`linear-gradient(135deg, ${a.gradient[0]}, ${a.gradient[1]})`}
-                      sizes="(max-width: 768px) 50vw, 280px"
-                      artwork={{ slug: a.slug, name: a.h1, emoji: a.emoji, gradient: [a.gradient[0], a.gradient[1]], note: "Example coming soon" }}
+                      name={a.h1}
+                      emoji={a.emoji}
+                      gradient={a.gradient}
+                      mode="drag"
+                      tag={false}
+                      linkWrapper={false}
                     />
-                    <span style={{ position: "absolute", top: 10, left: 10, background: "rgba(11,11,14,0.8)", color: "var(--accent)", border: "1px solid var(--accent-border)", backdropFilter: "blur(6px)", fontSize: 11, fontWeight: 800, borderRadius: 999, padding: "4px 10px" }}>{a.emoji} {a.badge}</span>
+                    <span style={{ position: "absolute", top: 10, left: 10, background: "rgba(11,11,14,0.8)", color: "var(--accent)", border: "1px solid var(--accent-border)", backdropFilter: "blur(6px)", fontSize: 11, fontWeight: 800, borderRadius: 999, padding: "4px 10px", pointerEvents: "none" }}>{a.emoji} {a.badge}</span>
                   </div>
                   <div style={{ padding: "14px 15px 16px" }}>
                     <div style={{ fontSize: 15.5, fontWeight: 800, color: "var(--text)", lineHeight: 1.3 }}>{a.h1}</div>

@@ -37,7 +37,7 @@ function preload(sources: string[]): Promise<string | null> {
 
 export default function CompareCard({
   slug, href, before, after, alt, name, emoji, gradient, mode, aspectRatio = "4 / 5",
-  duration = 5, tag = true,
+  duration = 5, tag = true, caption, linkWrapper = true, className,
 }: {
   slug: string;
   href: string;
@@ -53,6 +53,18 @@ export default function CompareCard({
   duration?: number;
   /** Small "Before"/"After" pills pinned to the corners — skipped for "fade", where there's no left/right to label. */
   tag?: boolean;
+  /** A pill pinned to the bottom of the frame, e.g. the app's own name — for callers that don't add their own caption below. */
+  caption?: React.ReactNode;
+  /**
+   * false when the caller already wraps this in its own `<Link>` (e.g. a
+   * grid card with text below the image) — an `<a>` cannot nest inside
+   * another `<a>`. The drag-vs-navigate guard still works either way: it
+   * calls `preventDefault()` on the click, which suppresses whichever
+   * anchor the event bubbles into, not just one rendered here.
+   */
+  linkWrapper?: boolean;
+  /** Extra class names, appended after jpt-hover, when linkWrapper is true. */
+  className?: string;
 }) {
   const [beforeUrl, setBeforeUrl] = useState<string | null>(null);
   const [afterUrl, setAfterUrl] = useState<string | null>(null);
@@ -104,41 +116,42 @@ export default function CompareCard({
     },
   } : {};
 
-  // Not ready yet, or no "before" ever loaded: the plain single-image card —
-  // exactly what this slot showed before the compare view existed.
+  const frameStyle: React.CSSProperties = { position: "relative", width: "100%", height: "100%" };
+
+  let inner: React.ReactNode;
   if (!ready || !beforeUrl || !afterUrl) {
-    return (
-      <Link href={href} className="jpt-hover" style={{ display: "block", position: "relative", aspectRatio, textDecoration: "none", overflow: "hidden" }}>
-        <div className="cmp-frame">
-          {ready && afterUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={afterUrl} alt={alt} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-          ) : ready ? (
-            <ToolArtwork slug={slug} name={name} emoji={emoji} gradient={gradient} note="Example coming soon" />
-          ) : null}
-        </div>
-      </Link>
+    // Not ready yet, or no "before" ever loaded: the plain single-image card
+    // — exactly what this slot showed before the compare view existed.
+    inner = (
+      <div className="cmp-frame" style={frameStyle}>
+        {ready && afterUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={afterUrl} alt={alt} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        ) : ready ? (
+          <ToolArtwork slug={slug} name={name} emoji={emoji} gradient={gradient} note="Example coming soon" />
+        ) : null}
+        {caption && <div className="cmp-caption">{caption}</div>}
+      </div>
     );
-  }
+  } else {
+    // Animated (wipe/fade) unless a drag has started a manual position; the
+    // manual mode's own CSS animation is dropped the instant a value is set
+    // so a drag reads as taking over, not fighting the loop.
+    const usingDrag = mode === "drag" && dragPct !== null;
+    const wipeStyle: React.CSSProperties = usingDrag
+      ? { animation: "none", clipPath: `inset(0 ${100 - dragPct!}% 0 0)` }
+      : { ["--cmp-duration" as string]: `${duration}s` };
+    const handleStyle: React.CSSProperties = usingDrag
+      ? { animation: "none", left: `${dragPct}%` }
+      : { ["--cmp-duration" as string]: `${duration}s` };
 
-  // Animated (wipe/fade) unless a drag has started a manual position; the
-  // manual mode's own CSS animation is dropped the instant a value is set so
-  // a drag reads as taking over, not fighting the loop.
-  const usingDrag = mode === "drag" && dragPct !== null;
-  const wipeStyle: React.CSSProperties = usingDrag
-    ? { animation: "none", clipPath: `inset(0 ${100 - dragPct!}% 0 0)` }
-    : { ["--cmp-duration" as string]: `${duration}s` };
-  const handleStyle: React.CSSProperties = usingDrag
-    ? { animation: "none", left: `${dragPct}%` }
-    : { ["--cmp-duration" as string]: `${duration}s` };
-
-  return (
-    <Link
-      href={href}
-      className="jpt-hover"
-      style={{ display: "block", position: "relative", aspectRatio, textDecoration: "none", overflow: "hidden", cursor: mode === "drag" ? "ew-resize" : undefined }}
-    >
-      <div className="cmp-frame" ref={frameRef} {...dragHandlers}>
+    inner = (
+      <div
+        className="cmp-frame"
+        style={{ ...frameStyle, cursor: mode === "drag" ? "ew-resize" : undefined }}
+        ref={frameRef}
+        {...dragHandlers}
+      >
         <div className="cmp-layer">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={afterUrl} alt={alt} draggable={false} />
@@ -157,7 +170,20 @@ export default function CompareCard({
             <span className="cmp-tag cmp-tag-after">After</span>
           </>
         )}
+        {caption && <div className="cmp-caption">{caption}</div>}
       </div>
+    );
+  }
+
+  if (!linkWrapper) return inner;
+
+  return (
+    <Link
+      href={href}
+      className={className ? `jpt-hover ${className}` : "jpt-hover"}
+      style={{ display: "block", position: "relative", aspectRatio, textDecoration: "none", overflow: "hidden" }}
+    >
+      {inner}
     </Link>
   );
 }
