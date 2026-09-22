@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { CREATIVE_APPS, CREATIVE_BASE, previewUrl } from "@/lib/creative-apps";
-import { creativeSources } from "@/lib/app-creatives";
-import { sourceFor, sourceImageUrl } from "@/lib/image-jobs";
+import { creativeSources, mainSources } from "@/lib/app-creatives";
 import CompareCard, { type CompareMode } from "@/app/_components/CompareCard";
 
 /**
@@ -32,7 +31,8 @@ function cardsFor(mode: CompareMode) {
         key={`${mode}-${slug}`}
         slug={a.slug}
         href={`${CREATIVE_BASE}/${a.slug}`}
-        before={creativeSources(a.slug, "before", sourceImageUrl(sourceFor(a)))}
+        before={creativeSources(a.slug, "before")}
+        main={mainSources(a.slug)}
         after={creativeSources(a.slug, "after", previewUrl(a.slug))}
         alt={`A photo turned into ${a.h1}`}
         name={a.h1}
@@ -69,7 +69,8 @@ export default function PreviewHeroCompare() {
                     <CompareCard
                       slug={sareeApp.slug}
                       href={`${CREATIVE_BASE}/${sareeApp.slug}`}
-                      before={creativeSources(sareeApp.slug, "before", sourceImageUrl(sourceFor(sareeApp)))}
+                      before={creativeSources(sareeApp.slug, "before")}
+                      main={mainSources(sareeApp.slug)}
                       after={creativeSources(sareeApp.slug, "after", previewUrl(sareeApp.slug))}
                       alt={`A photo turned into ${sareeApp.h1}`}
                       name={sareeApp.h1}

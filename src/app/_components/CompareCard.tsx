@@ -9,15 +9,31 @@ export type CompareMode = "wipe" | "fade" | "drag";
 /**
  * CompareCard — an animated before/after, in one of three modes.
  *
- * Needs two separate photos, not the single flattened "main" image the
- * /creative pages use — a flattened image has no seam a program can find, so
- * there is nothing to animate between. `before`/`after` are each a list of
- * candidate URLs (mirroring SmartImage's own fallback chain); nothing on the
- * server knows which of them actually exist, so this tries them in the
- * browser and, when no "before" ever loads, quietly falls back to a plain
- * static "after" card — the same thing a slug with no animation today shows.
- * A slug that only got one photo is never worse off for having this
- * component instead of a plain one.
+ * Two ways to get the two halves it needs:
+ *
+ *   1. `main` — the app's own admin-uploaded creative: one image that is
+ *      already a before-and-after, side by side (left half before, right
+ *      half after — the same layout the reference cards this was designed
+ *      from used, before/after pills baked into the corners of each half).
+ *      Cropped in half with `object-fit: cover; object-position: left|right`
+ *      — the same trick a normal thumbnail uses to crop a photo into a
+ *      shape it wasn't taken in, just pinned to an edge instead of centred.
+ *      No pixel measuring needed: cover-fit scales the whole composite to
+ *      fill this card's own height, which — since each half was itself the
+ *      same aspect as the other — makes the scaled composite exactly twice
+ *      the card's width, so "leftmost card-width of it" and "rightmost
+ *      card-width of it" land exactly on the two original photos. The
+ *      before photo here is the one that actually produced this after, not
+ *      a generic stand-in.
+ *   2. `before`/`after` — two genuinely separate uploads, for the handful of
+ *      apps that have them. Used first when both are there: two full-frame
+ *      photos beat two crops of one.
+ *
+ * Nothing on the server knows which of these exist, so this tries them in
+ * the browser, in that order, and — when nothing loads — quietly falls back
+ * to a plain static card, the same thing this slot showed before any of this
+ * existed. A slug with only one photo, or none, is never worse off for
+ * having this component instead of a plain one.
  */
 
 function preload(sources: string[]): Promise<string | null> {
@@ -35,14 +51,24 @@ function preload(sources: string[]): Promise<string | null> {
   });
 }
 
+type Resolved =
+  | { kind: "separate"; before: string; after: string }
+  | { kind: "split"; src: string }
+  | { kind: "after-only"; after: string }
+  | { kind: "none" };
+
 export default function CompareCard({
-  slug, href, before, after, alt, name, emoji, gradient, mode, aspectRatio = "4 / 5",
-  duration = 5, tag = true, caption, linkWrapper = true, className,
+  slug, href, before = [], after = [], main = [], alt, name, emoji, gradient, mode,
+  aspectRatio = "4 / 5", duration = 5, tag = true, caption, linkWrapper = true, className,
 }: {
   slug: string;
   href: string;
-  before: string[];
-  after: string[];
+  /** A genuinely separate "before" photo, best first. Optional — most apps only have `main`. */
+  before?: string[];
+  /** A genuinely separate "after" photo, best first, and the plain-card fallback's own image. */
+  after?: string[];
+  /** The app's single before+after composite, best first — see the file comment. */
+  main?: string[];
   alt: string;
   name: string;
   emoji: string;
@@ -66,9 +92,7 @@ export default function CompareCard({
   /** Extra class names, appended after jpt-hover, when linkWrapper is true. */
   className?: string;
 }) {
-  const [beforeUrl, setBeforeUrl] = useState<string | null>(null);
-  const [afterUrl, setAfterUrl] = useState<string | null>(null);
-  const [ready, setReady] = useState(false);
+  const [resolved, setResolved] = useState<Resolved | null>(null);
   const frameRef = useRef<HTMLDivElement>(null);
 
   // Manual drag state — only ever touched in "drag" mode.
@@ -81,14 +105,16 @@ export default function CompareCard({
 
   useEffect(() => {
     let live = true;
-    Promise.all([preload(before), preload(after)]).then(([b, a]) => {
+    Promise.all([preload(before), preload(after), preload(main)]).then(([b, a, m]) => {
       if (!live) return;
-      setBeforeUrl(b);
-      setAfterUrl(a);
-      setReady(true);
+      if (b && a) setResolved({ kind: "separate", before: b, after: a });
+      else if (m) setResolved({ kind: "split", src: m });
+      else if (a) setResolved({ kind: "after-only", after: a });
+      else setResolved({ kind: "none" });
     });
     return () => { live = false; };
-  }, [before, after]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [before.join("|"), after.join("|"), main.join("|")]);
 
   const setFromPointer = (clientX: number) => {
     const rect = frameRef.current?.getBoundingClientRect();
@@ -117,17 +143,17 @@ export default function CompareCard({
   } : {};
 
   const frameStyle: React.CSSProperties = { position: "relative", width: "100%", height: "100%" };
-
   let inner: React.ReactNode;
-  if (!ready || !beforeUrl || !afterUrl) {
-    // Not ready yet, or no "before" ever loaded: the plain single-image card
-    // — exactly what this slot showed before the compare view existed.
+
+  if (!resolved || resolved.kind === "none" || resolved.kind === "after-only") {
+    // Not ready yet, nothing loaded, or only a plain "after": the same
+    // single-image card this slot showed before the compare view existed.
     inner = (
       <div className="cmp-frame" style={frameStyle}>
-        {ready && afterUrl ? (
+        {resolved?.kind === "after-only" ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={afterUrl} alt={alt} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-        ) : ready ? (
+          <img src={resolved.after} alt={alt} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        ) : resolved?.kind === "none" ? (
           <ToolArtwork slug={slug} name={name} emoji={emoji} gradient={gradient} note="Example coming soon" />
         ) : null}
         {caption && <div className="cmp-caption">{caption}</div>}
@@ -138,12 +164,23 @@ export default function CompareCard({
     // manual mode's own CSS animation is dropped the instant a value is set
     // so a drag reads as taking over, not fighting the loop.
     const usingDrag = mode === "drag" && dragPct !== null;
-    const wipeStyle: React.CSSProperties = usingDrag
+    const wipeVars: React.CSSProperties = usingDrag
       ? { animation: "none", clipPath: `inset(0 ${100 - dragPct!}% 0 0)` }
       : { ["--cmp-duration" as string]: `${duration}s` };
     const handleStyle: React.CSSProperties = usingDrag
       ? { animation: "none", left: `${dragPct}%` }
       : { ["--cmp-duration" as string]: `${duration}s` };
+
+    const afterImg = resolved.kind === "split"
+      // eslint-disable-next-line @next/next/no-img-element
+      ? <img src={resolved.src} alt={alt} draggable={false} style={{ objectPosition: "right center" }} />
+      // eslint-disable-next-line @next/next/no-img-element
+      : <img src={resolved.after} alt={alt} draggable={false} />;
+    const beforeImg = resolved.kind === "split"
+      // eslint-disable-next-line @next/next/no-img-element
+      ? <img src={resolved.src} alt="" draggable={false} style={{ objectPosition: "left center" }} />
+      // eslint-disable-next-line @next/next/no-img-element
+      : <img src={resolved.before} alt="" draggable={false} />;
 
     inner = (
       <div
@@ -152,16 +189,12 @@ export default function CompareCard({
         ref={frameRef}
         {...dragHandlers}
       >
-        <div className="cmp-layer">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={afterUrl} alt={alt} draggable={false} />
-        </div>
+        <div className="cmp-layer">{afterImg}</div>
         <div
           className={`cmp-layer ${mode === "fade" ? "cmp-fade-before" : "cmp-wipe-before"}`}
-          style={wipeStyle}
+          style={wipeVars}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={beforeUrl} alt="" draggable={false} />
+          {beforeImg}
         </div>
         {mode !== "fade" && <div className="cmp-handle" style={handleStyle} />}
         {tag && mode !== "fade" && (

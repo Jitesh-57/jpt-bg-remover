@@ -83,3 +83,14 @@ export function creativeSources(slug: string, half: "before" | "after", legacy?:
   if (legacy) out.push(legacy);
   return out.filter(isRenderable);
 }
+
+/**
+ * The single admin-uploaded "main" creative: one image that is already a
+ * before and after, side by side, made specifically for this app — the
+ * before is the actual photo that produced this exact after, not a generic
+ * stand-in. Unlike `creativeSources`, this has no legacy fallback of its own;
+ * a caller that wants one composes it with `creativeSources` separately.
+ */
+export function mainSources(slug: string): string[] {
+  return [uploadedCreative(slug, "main")].filter(isRenderable);
+}

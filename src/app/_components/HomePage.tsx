@@ -6,8 +6,7 @@ import PricingSection from "@/app/_components/PricingSection";
 import FAQAccordion from "@/app/_components/FAQAccordion";
 import ScrollReveal from "@/app/_components/ScrollReveal";
 import { CREATIVE_APPS, CREATIVE_BASE, previewUrl } from "@/lib/creative-apps";
-import { creativeSources } from "@/lib/app-creatives";
-import { sourceFor, sourceImageUrl } from "@/lib/image-jobs";
+import { creativeSources, mainSources } from "@/lib/app-creatives";
 import { landingImg } from "@/lib/landing-images";
 import { CREDIT_COST } from "@/lib/plans";
 import type { PageSEO } from "@/lib/page-config";
@@ -151,7 +150,8 @@ export default function HomePage({
                   key={a.slug}
                   slug={a.slug}
                   href={`${CREATIVE_BASE}/${a.slug}`}
-                  before={creativeSources(a.slug, "before", sourceImageUrl(sourceFor(a)))}
+                  before={creativeSources(a.slug, "before")}
+                  main={mainSources(a.slug)}
                   after={creativeSources(a.slug, "after", previewUrl(a.slug))}
                   alt={`A photo turned into ${a.h1}`}
                   name={a.h1}
@@ -179,7 +179,8 @@ export default function HomePage({
                     <CompareCard
                       slug={a.slug}
                       href={`${CREATIVE_BASE}/${a.slug}`}
-                      before={creativeSources(a.slug, "before", sourceImageUrl(sourceFor(a)))}
+                      before={creativeSources(a.slug, "before")}
+                      main={mainSources(a.slug)}
                       after={creativeSources(a.slug, "after", previewUrl(a.slug))}
                       alt={`${a.h1} example`}
                       name={a.h1}
