@@ -1054,6 +1054,39 @@ export function curatedCategory(slug: string): string | undefined {
   return CURATED_CAT[slug];
 }
 
+/**
+ * Apps whose base prompt never refers to an existing photo — a logo, an
+ * emoji, an icon, a banner, all built from a description alone. Everything
+ * else in the catalogue edits a photo the visitor uploads, and cannot run
+ * without one.
+ *
+ * Small and explicit rather than inferred from the prompt text at runtime:
+ * a slug lands here only after its prompt was read in full and confirmed to
+ * describe pure generated artwork, never "this photo" or an implied selfie.
+ */
+const TEXT_ONLY_SLUGS = new Set<string>([
+  "text-to-emoji",
+  "logo-maker",
+  "gaming-logo-maker",
+  "icon-generator",
+  "linkedin-banner-maker",
+]);
+
+/** True when this app generates from a text description alone — no photo upload. */
+export function isTextOnlyApp(slug: string): boolean {
+  return TEXT_ONLY_SLUGS.has(slug);
+}
+
+/**
+ * The one option a text-only app cannot run without — its `text()` control,
+ * the same one `BY_SLUG` gives it (`SUBJECT_TEXT`, `NAME_TEXT`, …). Not
+ * `required: true` on the shared const, because the same const is reused by
+ * apps that edit a photo and can fall back to one when the field is empty.
+ */
+export function primaryTextOption(options: AppOption[]): AppOption | undefined {
+  return options.find((o) => o.kind === "text");
+}
+
 export function optionsFor(app: CreativeApp): AppOption[] {
   const bySlug = BY_SLUG[app.slug];
   if (bySlug) return bySlug;
