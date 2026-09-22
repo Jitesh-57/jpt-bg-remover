@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useDashboardUser } from "../_components/DashboardUser";
-import { createSupabaseClient } from "@/lib/supabase";
+import { signOut } from "../_components/UserMenu";
 import { CREDIT_COST } from "@/lib/plans";
 
 export default function SettingsPage() {
@@ -11,14 +11,12 @@ export default function SettingsPage() {
 
   const handleSignOut = async () => {
     setSigningOut(true);
-    try { await createSupabaseClient().auth.signOut(); } catch {}
-    try { await fetch("/api/auth/google/logout", { method: "POST" }); } catch {}
-    window.location.href = "/";
+    await signOut();
   };
 
   return (
     <div style={{ padding: "28px 24px 60px" }}>
-      <div style={{ maxWidth: 640, margin: "0 auto" }}>
+      <div className="jpt-a-up" style={{ maxWidth: 640, margin: "0 auto" }}>
         <h1 style={{ fontSize: "clamp(1.4rem,2.6vw,1.8rem)", fontWeight: 900, margin: "0 0 24px", color: "var(--text)" }}>Settings</h1>
 
         <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 18, padding: "24px 26px", marginBottom: 20, display: "flex", alignItems: "center", gap: 16 }}>

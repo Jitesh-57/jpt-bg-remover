@@ -390,9 +390,70 @@ a { color: inherit; }
 @media (max-width: 767px) {
   .jpt-app-sidebar { display: none !important; }
   .jpt-app-tabbar { display: flex !important; }
+  .jpt-app-hide-sm { display: none !important; }
+  .jpt-app-brand-sm { display: flex !important; }
 }
 @media (min-width: 768px) {
   .jpt-app-tabbar { display: none !important; }
+  .jpt-app-brand-sm { display: none !important; }
+}
+
+@keyframes jptAppUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes jptAppPop { from { opacity: 0; transform: translateY(-6px) scale(.97); } to { opacity: 1; transform: none; } }
+@keyframes jptAppShimmer { 0% { background-position: -400px 0; } 100% { background-position: 400px 0; } }
+@keyframes jptAppGlow { 0%, 100% { opacity: .55; transform: scale(1); } 50% { opacity: .85; transform: scale(1.06); } }
+@keyframes jptAppSheen { 0% { transform: translateX(-120%); } 60%, 100% { transform: translateX(220%); } }
+
+.jpt-a-up { animation: jptAppUp .55s var(--ease) both; animation-delay: var(--d, 0ms); }
+.jpt-a-pop { animation: jptAppPop .18s var(--ease) both; }
+.jpt-a-glow { animation: jptAppGlow 8s ease-in-out infinite; }
+.jpt-skel {
+  background: linear-gradient(90deg, var(--surface-2) 0px, var(--surface-3) 120px, var(--surface-2) 240px);
+  background-size: 800px 100%;
+  animation: jptAppShimmer 1.3s linear infinite;
+}
+
+.jpt-nav-item { transition: background-color .15s ease, color .15s ease; }
+.jpt-nav-item:hover { background: var(--surface-2); color: var(--text); }
+.jpt-nav-item[data-active="true"], .jpt-nav-item[data-active="true"]:hover { background: var(--accent-soft); color: var(--accent); }
+
+.jpt-zoom { overflow: hidden; }
+.jpt-zoom .jpt-zoom-media { transition: transform .6s var(--ease); }
+.jpt-zoom:hover .jpt-zoom-media { transform: scale(1.06); }
+.jpt-zoom .jpt-zoom-reveal { opacity: 0; transform: translateY(6px); transition: opacity .2s ease, transform .2s var(--ease); }
+.jpt-zoom:hover .jpt-zoom-reveal, .jpt-zoom:focus-within .jpt-zoom-reveal { opacity: 1; transform: none; }
+@media (hover: none) { .jpt-zoom .jpt-zoom-reveal { opacity: 1; transform: none; } }
+
+.jpt-lift { transition: transform .2s var(--ease), border-color .2s ease, box-shadow .2s ease; }
+.jpt-lift:hover { transform: translateY(-3px); border-color: var(--border-strong); box-shadow: var(--shadow-md); }
+
+.jpt-sheen { position: relative; overflow: hidden; }
+.jpt-sheen::after {
+  content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 40%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.28), transparent);
+  animation: jptAppSheen 3.6s ease-in-out infinite;
+}
+
+.jpt-tabs { display: flex; gap: 22px; overflow-x: auto; scrollbar-width: none; }
+.jpt-tabs::-webkit-scrollbar { display: none; }
+.jpt-tab { position: relative; background: none; border: none; padding: 10px 0; font: inherit; font-size: 14.5px; font-weight: 600; color: var(--text-muted); cursor: pointer; white-space: nowrap; transition: color .15s ease; }
+.jpt-tab:hover { color: var(--text); }
+.jpt-tab[data-active="true"] { color: var(--accent); }
+.jpt-tab::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; border-radius: 2px; background: var(--accent); transform: scaleX(0); transition: transform .22s var(--ease); }
+.jpt-tab[data-active="true"]::after { transform: scaleX(1); }
+
+.jpt-masonry { column-count: 4; column-gap: 14px; }
+.jpt-masonry > * { break-inside: avoid; margin-bottom: 14px; }
+@media (max-width: 1200px) { .jpt-masonry { column-count: 3; } }
+@media (max-width: 800px) { .jpt-masonry { column-count: 2; } }
+
+.jpt-create-grid { display: grid; grid-template-columns: minmax(300px, 380px) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 900px) { .jpt-create-grid { grid-template-columns: 1fr; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .jpt-a-up, .jpt-a-pop, .jpt-a-glow, .jpt-skel, .jpt-sheen::after { animation: none !important; }
+  .jpt-zoom .jpt-zoom-media, .jpt-lift { transition: none; }
+  .jpt-zoom:hover .jpt-zoom-media, .jpt-lift:hover { transform: none; }
 }
 
 /* ── Invoices ──────────────────────────────────────────────────────────────

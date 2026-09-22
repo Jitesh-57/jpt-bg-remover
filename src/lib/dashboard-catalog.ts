@@ -57,21 +57,6 @@ export const UTILITY_TOOLS: DashboardTool[] = [
   { slug: "batch-editor",     name: "Batch Editor",      blurb: "Same edit, 100 images",           href: "/batch-editor",     emoji: "⚡", credits: 0, category: "utility" },
 ];
 
-/**
- * The four flagship tiles on the dashboard home — the highest-intent credit
- * tools, always shown, cost never hidden.
- *
- * "4× Upscale" points at /editor?tool=upscale (the AI super-resolution pass),
- * not /upscale — that route is the free on-device upscaler already listed
- * above under Free tools, a different tool from the one this tile promises.
- */
-export const FLAGSHIP_TOOLS: (DashboardTool & { sub: string })[] = [
-  { slug: "ai-editor", name: "AI Photo Editor", blurb: "Edit anything with a sentence", sub: "Describe your edit in plain English", href: "/ai-editor", emoji: "✨", credits: CREDIT_COST, category: "utility" },
-  { slug: "ai-headshot", name: "AI Headshot", blurb: "Studio-quality portraits from a selfie", sub: "Studio-quality portraits from a selfie", href: "/ai-headshot", emoji: "🎯", credits: CREDIT_COST, category: "headshot" },
-  { slug: "remove-bg", name: "Remove Background", blurb: "One-click cutouts, no watermark", sub: "One-click cutouts, no watermark", href: "/remove-bg", emoji: "🪄", credits: CREDIT_COST, category: "background" },
-  { slug: "editor-upscale", name: "4× Upscale", blurb: "Sharpen and enlarge without losing detail", sub: "Sharpen and enlarge without losing detail", href: "/editor?tool=upscale", emoji: "🔬", credits: CREDIT_COST, category: "enhance" },
-];
-
 let _aiTools: DashboardTool[] | null = null;
 
 /** Every /creative/* app, normalized. Computed once and cached — CREATIVE_APPS is static. */
@@ -92,27 +77,6 @@ export function aiTools(): DashboardTool[] {
 /** Every tool the dashboard knows about — AI apps plus the free utilities. Used by search/⌘K. */
 export function allTools(): DashboardTool[] {
   return [...aiTools(), ...UTILITY_TOOLS];
-}
-
-export interface CategoryGroup {
-  id: CategoryId;
-  label: string;
-  emoji: string;
-  blurb: string;
-  tools: DashboardTool[];
-}
-
-/** AI-app categories only (not "utility"), each with its tools, in CAT_META's declared order. */
-export function aiCategories(): CategoryGroup[] {
-  const buckets = new Map<AppCat, DashboardTool[]>();
-  for (const t of aiTools()) {
-    const cat = t.category as AppCat;
-    if (!buckets.has(cat)) buckets.set(cat, []);
-    buckets.get(cat)!.push(t);
-  }
-  return (Object.keys(CAT_META) as AppCat[])
-    .filter((id) => buckets.has(id))
-    .map((id) => ({ id, ...CAT_META[id], tools: buckets.get(id)! }));
 }
 
 export function categoryMeta(id: CategoryId): { label: string; emoji: string; blurb: string } {

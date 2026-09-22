@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import AppShell from "./_components/AppShell";
 
 export const metadata: Metadata = {
-  title: "Dashboard | Pixel Shine",
+  title: "Dashboard",
   robots: { index: false, follow: false },
 };
 

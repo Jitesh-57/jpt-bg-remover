@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkAuth } from "@/lib/auth";
 import { createClient } from "@supabase/supabase-js";
-import { aiCategories, popularTools } from "@/lib/dashboard-catalog";
 
 export const runtime = "nodejs";
 
@@ -14,9 +13,9 @@ function createAdmin() {
 }
 
 /**
- * One call for the whole /app home page — C10's explicit requirement.
- * Recent creations, category summary and the popular shortlist together, so
- * the dashboard never waterfalls a screen out of five separate requests.
+ * The per-user half of the /app home page: recent creations and their count.
+ * Everything else on that page is the same for every visitor and is rendered
+ * on the server.
  */
 export async function GET(req: NextRequest) {
   const { session, error } = await checkAuth(req);
@@ -66,7 +65,5 @@ export async function GET(req: NextRequest) {
     },
     recentCreations,
     creationsCount: totalCreations ?? 0,
-    categories: aiCategories().map((c) => ({ id: c.id, label: c.label, emoji: c.emoji, count: c.tools.length })),
-    popularTools: popularTools(),
   });
 }

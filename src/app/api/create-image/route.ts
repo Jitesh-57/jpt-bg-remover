@@ -1,0 +1,76 @@
+import { NextRequest, NextResponse } from "next/server";
+import { checkAuth, checkEntitlement, withCredits } from "@/lib/auth";
+import { generateFromText } from "@/lib/ai-image";
+import { recordGeneration } from "@/lib/ledger";
+import { storeImage } from "@/lib/store-image";
+import { CREDIT_COST } from "@/lib/plans";
+import { userMessage } from "@/lib/user-message";
+import { ASPECT_RATIOS, MODELS } from "@/lib/app-presets";
+
+export const runtime = "nodejs";
+export const maxDuration = 300;
+
+const MAX_PROMPT = 4000;
+const MODEL_IDS = new Set<string>(MODELS.map((m) => m.id));
+const RATIOS = new Set<string>(ASPECT_RATIOS);
+
+/** Text-to-image for /app/create. Same credit rules as every other AI generation. */
+export async function POST(req: NextRequest) {
+  const { session, error } = await checkAuth(req);
+  if (error) return error;
+
+  let body: { prompt?: unknown; model?: unknown; aspectRatio?: unknown };
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Something went wrong sending your request. Please try again." }, { status: 400 });
+  }
+
+  const prompt = typeof body.prompt === "string" ? body.prompt.trim() : "";
+  if (!prompt) return NextResponse.json({ error: "Describe the image you want to create." }, { status: 400 });
+  if (prompt.length > MAX_PROMPT) {
+    return NextResponse.json({ error: `That description is too long — keep it under ${MAX_PROMPT} characters.` }, { status: 400 });
+  }
+  const model = typeof body.model === "string" && MODEL_IDS.has(body.model) ? body.model : MODELS[0].id;
+  const aspectRatio = typeof body.aspectRatio === "string" && RATIOS.has(body.aspectRatio) ? body.aspectRatio : "1:1";
+
+  const blocked = await checkEntitlement(session!, "ai", "create-image");
+  if (blocked) return blocked;
+
+  const startedAt = Date.now();
+  const label = prompt.length > 60 ? `${prompt.slice(0, 57)}…` : prompt;
+  try {
+    const result = await generateFromText(prompt, { model, aspect_ratio: aspectRatio, budgetMs: 240_000 });
+    const resultUrl = await storeImage(result, "create-image-result", session!.userId);
+
+    await recordGeneration({
+      userId: session!.userId,
+      tool: "create-image",
+      label,
+      resultUrl,
+      model,
+      prompt,
+      aspectRatio,
+      creditsSpent: CREDIT_COST,
+      status: "succeeded",
+      durationMs: Date.now() - startedAt,
+    });
+
+    return withCredits({ dataUrl: result, resultUrl }, session!, "ai", req, "create-image");
+  } catch (e) {
+    await recordGeneration({
+      userId: session!.userId,
+      tool: "create-image",
+      label,
+      model,
+      prompt,
+      aspectRatio,
+      creditsSpent: 0,
+      status: "failed",
+      error: e instanceof Error ? e.message : String(e),
+      durationMs: Date.now() - startedAt,
+    });
+    console.error("[create-image]", e);
+    return NextResponse.json({ error: userMessage(e) }, { status: 500 });
+  }
+}

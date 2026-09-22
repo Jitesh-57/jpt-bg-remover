@@ -114,7 +114,7 @@ export default function LibraryPage() {
             <div style={{ fontSize: 34, marginBottom: 10 }}>🖼️</div>
             <div style={{ fontSize: 15, fontWeight: 700, color: "var(--text)", marginBottom: 6 }}>No creations yet</div>
             <p style={{ fontSize: 13.5, color: "var(--text-muted)", margin: "0 0 18px" }}>Pick a tool and your results will appear here.</p>
-            <a href="/app/tools" style={{ display: "inline-block", padding: "10px 20px", borderRadius: 999, background: "var(--grad-strong)", color: "#fff", fontWeight: 800, fontSize: 13.5, textDecoration: "none" }}>Browse AI tools</a>
+            <a href="/app/apps" style={{ display: "inline-block", padding: "10px 20px", borderRadius: 999, background: "var(--grad-strong)", color: "#fff", fontWeight: 800, fontSize: 13.5, textDecoration: "none" }}>Browse AI apps</a>
           </div>
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(200px, 100%), 1fr))", gap: 16 }}>
