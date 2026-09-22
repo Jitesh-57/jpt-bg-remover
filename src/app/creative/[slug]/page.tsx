@@ -5,6 +5,8 @@ import AppWorkspace from "./AppWorkspace";
 import { presetsFor } from "@/lib/app-presets";
 import { presetImagesFor, sampleImages } from "@/lib/preset-images.server";
 import { CREATIVE_APPS, getCreativeApp, getCreativeContent, CREATIVE_BASE, previewUrl } from "@/lib/creative-apps";
+import { categoryOf, categoryAnchor, relatedApps } from "@/lib/creative-categories";
+import { CAT_META } from "@/lib/app-catalog";
 import ExampleImage from "@/app/_components/ExampleImage";
 import { longContentFor } from "@/lib/app-content";
 import { sourceFor, sourceImageUrl } from "@/lib/image-jobs";
@@ -83,7 +85,12 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
   const mainImage = pageOverride?.main;
 
   const url = `${BASE}${CREATIVE_BASE}/${slug}`;
-  const related = CREATIVE_APPS.filter((x) => x.slug !== a.slug).slice(0, 6);
+  // Same category first — a link here is a claim "does a similar job", not
+  // "exists", and the category is the thing a visitor can check that claim
+  // against by looking at the two pages.
+  const related = relatedApps(a, 6);
+  const cat = categoryOf(a);
+  const catMeta = cat ? CAT_META[cat] : null;
 
   // Preset thumbnails and sample photos are resolved from Supabase at ISR time,
   // so they appear as soon as they're uploaded — no redeploy needed.
@@ -128,7 +135,8 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: BASE },
       { "@type": "ListItem", position: 2, name: "Creative Apps", item: `${BASE}${CREATIVE_BASE}` },
-      { "@type": "ListItem", position: 3, name: a.h1, item: url },
+      ...(catMeta ? [{ "@type": "ListItem", position: 3, name: catMeta.label, item: `${BASE}${CREATIVE_BASE}#${categoryAnchor(cat!)}` }] : []),
+      { "@type": "ListItem", position: catMeta ? 4 : 3, name: a.h1, item: url },
     ],
   };
 
@@ -142,9 +150,22 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
         {/* HERO + on-page generator */}
         <section style={{ background: "var(--bg)", padding: "34px 24px 64px" }}>
           <div style={{ maxWidth: 1240, margin: "0 auto" }}>
-            <a href={CREATIVE_BASE} style={{ display: "inline-flex", alignItems: "center", gap: 6, color: "var(--text-muted)", fontWeight: 700, fontSize: 12.5, marginBottom: 22, textDecoration: "none" }}>
-              ← All AI apps
-            </a>
+            {/* Visible, matching the BreadcrumbList above — the "← All AI apps"
+                link this replaced only ever said where "back" was, not where
+                this page actually sits in the site. */}
+            <nav aria-label="Breadcrumb" style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8, marginBottom: 22, fontSize: 12.5, fontWeight: 700 }}>
+              <a href="/" style={{ color: "var(--text-muted)", textDecoration: "none" }}>Home</a>
+              <span aria-hidden style={{ color: "var(--text-faint)" }}>›</span>
+              <a href={CREATIVE_BASE} style={{ color: "var(--text-muted)", textDecoration: "none" }}>Creative Apps</a>
+              {catMeta && (
+                <>
+                  <span aria-hidden style={{ color: "var(--text-faint)" }}>›</span>
+                  <a href={`${CREATIVE_BASE}#${categoryAnchor(cat!)}`} style={{ color: "var(--text-muted)", textDecoration: "none" }}>{catMeta.emoji} {catMeta.label}</a>
+                </>
+              )}
+              <span aria-hidden style={{ color: "var(--text-faint)" }}>›</span>
+              <span style={{ color: "var(--accent-strong)" }}>{a.h1}</span>
+            </nav>
           </div>
 
           <AppWorkspace app={a} presetImages={presetImages} samples={samples} />
