@@ -1,8 +1,9 @@
 "use client";
 
-import { savePendingContext } from "@/lib/pending-image";
+import { savePendingContext, loadPendingContext, clearPendingContext } from "@/lib/pending-image";
 
 export const CREATE_PROMPT_KEY = "jpt_create_prompt";
+const EDITOR_TOOL = "app-editor";
 
 /** Opens Create Image with a prompt filled in. sessionStorage, because prompts can be thousands of characters. */
 export function sendToCreate(prompt: string, navigate: (href: string) => void): void {
@@ -20,8 +21,16 @@ export function takeCreatePrompt(): string | null {
   }
 }
 
-/** Opens the Image Editor's AI-edit tool with an image loaded and nothing run yet. */
-export async function openInEditor(image: string, prompt = ""): Promise<void> {
-  await savePendingContext({ image, prompt, tool: "ai-edit", autoRun: false });
-  window.location.href = "/editor?tool=ai-edit";
+/** Opens the dashboard's AI Image Editor with an image (and optionally a prompt) loaded. IndexedDB, because images are large. */
+export async function openInEditor(image?: string, prompt = ""): Promise<void> {
+  await savePendingContext({ image, prompt, tool: EDITOR_TOOL, autoRun: false });
+  window.location.href = "/app/editor";
+}
+
+/** What openInEditor left for the editor, consumed once. */
+export async function takeEditorHandoff(): Promise<{ image?: string; prompt?: string } | null> {
+  const ctx = await loadPendingContext();
+  if (!ctx || ctx.tool !== EDITOR_TOOL) return null;
+  await clearPendingContext();
+  return { image: ctx.image, prompt: ctx.prompt };
 }

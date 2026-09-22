@@ -3,15 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Icon from "./Icon";
-import { sendToCreate } from "./handoff";
-import { sendToEditor } from "@/lib/prompts/handoff";
+import { sendToCreate, openInEditor } from "./handoff";
 import type { FeedItem } from "@/lib/dashboard-feed.server";
 
 export function useRecreate() {
   const router = useRouter();
   return (item: FeedItem) => {
     if (!item.prompt) { window.open(item.href, "_blank", "noopener"); return; }
-    if (item.needsPhoto) { void sendToEditor({ prompt: item.prompt, source: "app-community" }); return; }
+    if (item.needsPhoto) { void openInEditor(undefined, item.prompt); return; }
     sendToCreate(item.prompt, (href) => router.push(href));
   };
 }

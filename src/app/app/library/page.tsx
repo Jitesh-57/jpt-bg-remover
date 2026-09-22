@@ -24,6 +24,8 @@ const TOOL_META: Record<string, { icon: string; label: string }> = {
   "resize": { icon: "↔️", label: "Resize" },
   "adjust": { icon: "🎨", label: "Adjust" },
   "creative": { icon: "🪄", label: "Creative App" },
+  "create-image": { icon: "✨", label: "Create Image" },
+  "recreate": { icon: "🔁", label: "Recreate" },
 };
 const metaFor = (tool: string) => TOOL_META[tool] ?? { icon: "🖼️", label: tool };
 

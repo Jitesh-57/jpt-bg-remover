@@ -8,7 +8,8 @@ import Icon, { type IconName } from "./Icon";
 const STATIC_LINKS: { name: string; blurb: string; href: string; icon: IconName }[] = [
   { name: "Home", blurb: "Your studio dashboard", href: "/app", icon: "home" },
   { name: "Create Image", blurb: "Generate an image from a description", href: "/app/create", icon: "sparkle" },
-  { name: "Image Editor", blurb: "Edit, retouch, remove backgrounds, upscale", href: "/editor", icon: "editor" },
+  { name: "Recreate", blurb: "Copy any photo's look with your face", href: "/app/recreate", icon: "copy" },
+  { name: "AI Image Editor", blurb: "Upload a photo and describe the change", href: "/app/editor", icon: "editor" },
   { name: "AI Apps", blurb: "200+ one-tap photo apps", href: "/app/apps", icon: "apps" },
   { name: "Community", blurb: "Prompts and images from creators", href: "/app/community", icon: "community" },
   { name: "My Creations", blurb: "Everything you've generated", href: "/app/library", icon: "folder" },

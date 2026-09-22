@@ -11,7 +11,6 @@ import type { AppCat } from "@/lib/app-catalog";
 import FeedCard from "./_components/FeedCard";
 import { useDashboardUser } from "./_components/DashboardUser";
 import { sendToCreate, openInEditor } from "./_components/handoff";
-import { sendToEditor } from "@/lib/prompts/handoff";
 import { openPricing } from "@/lib/pricing-modal";
 import { CREDIT_COST } from "@/lib/plans";
 import type { AppCardData, FeedItem } from "@/lib/dashboard-feed.server";
@@ -119,8 +118,7 @@ export default function HomeView({ features, popular, showcase, categories, comm
     if (!photo) { fileRef.current?.click(); return; }
     setSending(true);
     const text = prompt.trim();
-    if (text) await sendToEditor({ prompt: text, image: photo.url, source: "app-home" });
-    else await openInEditor(photo.url);
+    await openInEditor(photo.url, text);
   };
 
   const onKeyDown = (e: React.KeyboardEvent) => {

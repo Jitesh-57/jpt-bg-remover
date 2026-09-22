@@ -21,9 +21,9 @@ export default async function DashboardHome() {
   const sourcesOf = (slug: string) => bySlug.get(slug)?.sources ?? [];
   const features: Feature[] = [
     { title: "Create Image", sub: "Turn words into a photo", href: "/app/create", icon: "sparkle", sources: community[0] ? [community[0].image] : [], external: true, gradient: ["#7C3AED", "#DB2777"] },
-    { title: "Image Editor", sub: "Retouch, erase, restyle", href: "/editor", icon: "editor", sources: sourcesOf("object-remover"), gradient: ["#0EA5E9", "#6366F1"] },
-    { title: "AI Headshot", sub: "Studio portraits from a selfie", href: "/ai-headshot", icon: "community", sources: sourcesOf("professional-headshot"), gradient: ["#F97316", "#DB2777"] },
-    { title: "Remove Background", sub: "Clean cut-outs in one click", href: "/remove-bg", icon: "wand", sources: sourcesOf("background-remover"), gradient: ["#10B981", "#0EA5E9"] },
+    { title: "Recreate", sub: "Any photo's look, with your face", href: "/app/recreate", icon: "copy", sources: sourcesOf("saree-photoshoot"), gradient: ["#F97316", "#DB2777"] },
+    { title: "AI Image Editor", sub: "Describe the change, get the edit", href: "/app/editor", icon: "editor", sources: sourcesOf("object-remover"), gradient: ["#0EA5E9", "#6366F1"] },
+    { title: "AI Headshot", sub: "Studio portraits from a selfie", href: "/ai-headshot", icon: "community", sources: sourcesOf("professional-headshot"), gradient: ["#10B981", "#0EA5E9"] },
   ];
 
   const showcase = apps.filter((a) => a.hasExample).length >= 12 ? apps.filter((a) => a.hasExample) : apps;
