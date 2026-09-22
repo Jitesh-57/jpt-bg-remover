@@ -19,7 +19,7 @@ const BASE = "https://www.sjpt.io";
 // there's no need to top this up from whatever else happens to have one.
 const FEATURED_APPS = [
   "aesthetic-photo-editor", "baby-photoshoot", "ghibli-style", "professional-headshot",
-  "ai-photoshoot", "birthday-photo-editor", "age-progression", "doctor-headshot",
+  "ai-photoshoot", "birthday-photo-editor", "real-estate-headshot", "doctor-headshot",
 ];
 
 // The three big panels under the hero — a separate, smaller pick from the
