@@ -255,7 +255,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               </h2>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 18 }}>
                 {related.map((r) => (
-                  <Link key={r.slug} href={`/blog/${r.slug}`} style={{ textDecoration: "none", display: "block", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 14, overflow: "hidden" }}>
+                  <Link key={r.slug} href={`/blog/${r.slug}`} className="jpt-hover" style={{ textDecoration: "none", display: "block", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 14, overflow: "hidden" }}>
                     {r.image && (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img src={r.image} alt={r.title} style={{ width: "100%", height: 120, objectFit: "cover", display: "block" }} loading="lazy" />

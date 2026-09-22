@@ -56,6 +56,7 @@ function Frame({ src, alt, media }: { src: string | null; alt: string; media: "i
 export default function PromptCard({ p }: { p: PromptCardData }) {
   return (
     <article
+      className="jpt-hover"
       style={{
         display: "flex", flexDirection: "column", overflow: "hidden", minWidth: 0,
         background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 16,

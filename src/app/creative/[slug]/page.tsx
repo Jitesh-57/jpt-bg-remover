@@ -429,7 +429,7 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
             <h2 style={{ fontSize: "clamp(1.4rem,3vw,2rem)", fontWeight: 900, color: "var(--text)", textAlign: "center", margin: "0 0 32px", letterSpacing: "-0.02em" }}>More Creative Apps</h2>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 14 }}>
               {related.map((r) => (
-                <a key={r.slug} href={`${CREATIVE_BASE}/${r.slug}`} style={{ textDecoration: "none" }}>
+                <a key={r.slug} href={`${CREATIVE_BASE}/${r.slug}`} className="jpt-hover" style={{ textDecoration: "none", display: "block", borderRadius: 14, padding: 8 }}>
                   {/* position: relative — ExampleImage fills its container. */}
                   <div style={{ position: "relative", aspectRatio: "16 / 10", borderRadius: 14, overflow: "hidden", marginBottom: 8, background: `linear-gradient(135deg, ${r.gradient[0]}, ${r.gradient[1]})` }}>
                     <ExampleImage

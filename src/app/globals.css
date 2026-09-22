@@ -203,10 +203,17 @@ a { color: inherit; }
 .jpt-reveal { opacity: 0; transform: translateY(28px); transition: opacity .8s var(--ease), transform .8s var(--ease); will-change: opacity, transform; }
 .jpt-reveal.jpt-in { opacity: 1; transform: none; }
 
-/* Hover feedback for cards, chips and buttons (opt-in via .jpt-hover). */
+/*
+  Hover feedback for cards, chips and buttons (opt-in via .jpt-hover).
+
+  !important on every declaration below: almost every card this is applied to
+  already sets its own resting border/background/shadow inline (React's style
+  prop), which otherwise wins over a same-importance class rule regardless of
+  specificity. Without it, only the transform ever visibly changed.
+*/
 .jpt-hover { transition: transform .18s var(--ease), box-shadow .2s ease, border-color .18s ease, background-color .18s ease; }
-.jpt-hover:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--accent-border); background-color: var(--surface-2); }
-.jpt-hover:active { transform: translateY(-1px); }
+.jpt-hover:hover { transform: translateY(-4px) !important; box-shadow: var(--shadow-md) !important; border-color: var(--accent-border) !important; background-color: var(--surface-2) !important; }
+.jpt-hover:active { transform: translateY(-1px) !important; }
 
 /* Legacy hooks kept so existing components keep working. */
 .card-hover:hover { transform: translateY(-3px); box-shadow: var(--shadow-md) !important; }
