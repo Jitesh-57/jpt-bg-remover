@@ -13,12 +13,18 @@ import type { PageSEO } from "@/lib/page-config";
 
 const BASE = "https://www.sjpt.io";
 
-// Which of the 42 apps front the homepage gallery. Order is deliberate: the
-// viral ones first, then the utilitarian ones people search for by name.
+// Which of the 42 apps front the homepage gallery, in this exact order.
+// A deliberate, fixed list — CompareCard already falls back to a plain
+// static (or placeholder) card on its own when a slug has no photo, so
+// there's no need to top this up from whatever else happens to have one.
 const FEATURED_APPS = [
-  "saree-photoshoot", "3d-figurine", "retro-bollywood", "ghibli-style",
-  "professional-headshot", "polaroid-photo", "restore-old-photos", "passport-photo",
+  "aesthetic-photo-editor", "baby-photoshoot", "ghibli-style", "professional-headshot",
+  "ai-photoshoot", "birthday-photo-editor", "age-progression", "doctor-headshot",
 ];
+
+// The three big panels under the hero — a separate, smaller pick from the
+// gallery below it, not derived from it.
+const SHOWCASE_APPS = ["dress-photo-editor", "outfit-generator", "fashion-photo-editor"];
 
 const FREE_TOOLS = [
   { icon: "🔍", name: "Image Upscaler",     desc: "Sharpen and enlarge up to 4×",   href: "/upscale" },
@@ -52,52 +58,12 @@ const STEPS = [
 
 export default function HomePage({
   config,
-  withExamples = new Set<string>(),
 }: {
   config: PageSEO;
-  /** Slugs whose example image exists. Empty means "unknown" — see below. */
-  withExamples?: Set<string>;
 }) {
-  /*
-    Front apps that have a picture.
-
-    The eight below are the deliberate picks, but the creatives are generated
-    in batches, so featuring a slug whose file does not exist yet put a flat
-    gradient tile on the homepage. Now the picks are filtered to the ones that
-    have an image and the row is topped back up to eight from whatever else
-    does — order still favours the deliberate list.
-
-    An empty `withExamples` means the bucket could not be listed rather than
-    "nothing exists", so the original picks are kept in that case.
-  */
   const bySlug = (slug: string) => CREATIVE_APPS.find((a) => a.slug === slug);
-  const featured = FEATURED_APPS.map(bySlug).filter((a): a is NonNullable<typeof a> => !!a);
-
-  const apps = withExamples.size === 0
-    ? featured
-    : [
-        ...featured.filter((a) => withExamples.has(a.slug)),
-        ...CREATIVE_APPS.filter(
-          (a) => withExamples.has(a.slug) && !FEATURED_APPS.includes(a.slug)
-        ),
-      ].slice(0, 8);
-
-  /*
-    The showcase under the hero.
-
-    It was a single 21:9 frame holding home-hero.png. That file was never
-    generated, so the frame rendered its gradient fallback: a large empty dark
-    box across the top of the homepage.
-
-    Three app panels replace it. Each is a real creative where one exists, and
-    the app's own gradient plus its name where it does not — so the block is
-    populated and self-explanatory either way, which the single empty frame
-    could not manage. Three 4:5 panels come to roughly the same 21:9.
-  */
-  const showcase = [
-    ...apps.filter((a) => withExamples.has(a.slug)),
-    ...apps,
-  ].filter((a, i, all) => all.findIndex((x) => x.slug === a.slug) === i).slice(0, 3);
+  const apps = FEATURED_APPS.map(bySlug).filter((a): a is NonNullable<typeof a> => !!a);
+  const showcase = SHOWCASE_APPS.map(bySlug).filter((a): a is NonNullable<typeof a> => !!a);
 
   const faqLd = {
     "@context": "https://schema.org", "@type": "FAQPage",
@@ -158,6 +124,7 @@ export default function HomePage({
                   emoji={a.emoji}
                   gradient={a.gradient}
                   mode="drag"
+                  tag={false}
                   caption={<>{a.emoji} {a.h1}</>}
                 />
               ))}
@@ -190,7 +157,6 @@ export default function HomePage({
                       tag={false}
                       linkWrapper={false}
                     />
-                    <span style={{ position: "absolute", top: 10, left: 10, background: "rgba(11,11,14,0.8)", color: "var(--accent)", border: "1px solid var(--accent-border)", backdropFilter: "blur(6px)", fontSize: 11, fontWeight: 800, borderRadius: 999, padding: "4px 10px", pointerEvents: "none" }}>{a.emoji} {a.badge}</span>
                   </div>
                   <div style={{ padding: "14px 15px 16px" }}>
                     <div style={{ fontSize: 15.5, fontWeight: 800, color: "var(--text)", lineHeight: 1.3 }}>{a.h1}</div>
