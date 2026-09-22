@@ -1,23 +1,30 @@
 import Link from "next/link";
 import HomeHero from "@/app/_components/HomeHero";
 import SmartImage from "@/app/_components/SmartImage";
+import CompareCard from "@/app/_components/CompareCard";
 import PricingSection from "@/app/_components/PricingSection";
 import FAQAccordion from "@/app/_components/FAQAccordion";
 import ScrollReveal from "@/app/_components/ScrollReveal";
 import { CREATIVE_APPS, CREATIVE_BASE, previewUrl } from "@/lib/creative-apps";
-import { creativeSources } from "@/lib/app-creatives";
+import { creativeSources, mainSources } from "@/lib/app-creatives";
 import { landingImg } from "@/lib/landing-images";
 import { CREDIT_COST } from "@/lib/plans";
 import type { PageSEO } from "@/lib/page-config";
 
 const BASE = "https://www.sjpt.io";
 
-// Which of the 42 apps front the homepage gallery. Order is deliberate: the
-// viral ones first, then the utilitarian ones people search for by name.
+// Which of the 42 apps front the homepage gallery, in this exact order.
+// A deliberate, fixed list — CompareCard already falls back to a plain
+// static (or placeholder) card on its own when a slug has no photo, so
+// there's no need to top this up from whatever else happens to have one.
 const FEATURED_APPS = [
-  "saree-photoshoot", "3d-figurine", "retro-bollywood", "ghibli-style",
-  "professional-headshot", "polaroid-photo", "restore-old-photos", "passport-photo",
+  "aesthetic-photo-editor", "baby-photoshoot", "ghibli-style", "professional-headshot",
+  "ai-photoshoot", "birthday-photo-editor", "age-progression", "doctor-headshot",
 ];
+
+// The three big panels under the hero — a separate, smaller pick from the
+// gallery below it, not derived from it.
+const SHOWCASE_APPS = ["dress-photo-editor", "outfit-generator", "fashion-photo-editor"];
 
 const FREE_TOOLS = [
   { icon: "🔍", name: "Image Upscaler",     desc: "Sharpen and enlarge up to 4×",   href: "/upscale" },
@@ -51,52 +58,12 @@ const STEPS = [
 
 export default function HomePage({
   config,
-  withExamples = new Set<string>(),
 }: {
   config: PageSEO;
-  /** Slugs whose example image exists. Empty means "unknown" — see below. */
-  withExamples?: Set<string>;
 }) {
-  /*
-    Front apps that have a picture.
-
-    The eight below are the deliberate picks, but the creatives are generated
-    in batches, so featuring a slug whose file does not exist yet put a flat
-    gradient tile on the homepage. Now the picks are filtered to the ones that
-    have an image and the row is topped back up to eight from whatever else
-    does — order still favours the deliberate list.
-
-    An empty `withExamples` means the bucket could not be listed rather than
-    "nothing exists", so the original picks are kept in that case.
-  */
   const bySlug = (slug: string) => CREATIVE_APPS.find((a) => a.slug === slug);
-  const featured = FEATURED_APPS.map(bySlug).filter((a): a is NonNullable<typeof a> => !!a);
-
-  const apps = withExamples.size === 0
-    ? featured
-    : [
-        ...featured.filter((a) => withExamples.has(a.slug)),
-        ...CREATIVE_APPS.filter(
-          (a) => withExamples.has(a.slug) && !FEATURED_APPS.includes(a.slug)
-        ),
-      ].slice(0, 8);
-
-  /*
-    The showcase under the hero.
-
-    It was a single 21:9 frame holding home-hero.png. That file was never
-    generated, so the frame rendered its gradient fallback: a large empty dark
-    box across the top of the homepage.
-
-    Three app panels replace it. Each is a real creative where one exists, and
-    the app's own gradient plus its name where it does not — so the block is
-    populated and self-explanatory either way, which the single empty frame
-    could not manage. Three 4:5 panels come to roughly the same 21:9.
-  */
-  const showcase = [
-    ...apps.filter((a) => withExamples.has(a.slug)),
-    ...apps,
-  ].filter((a, i, all) => all.findIndex((x) => x.slug === a.slug) === i).slice(0, 3);
+  const apps = FEATURED_APPS.map(bySlug).filter((a): a is NonNullable<typeof a> => !!a);
+  const showcase = SHOWCASE_APPS.map(bySlug).filter((a): a is NonNullable<typeof a> => !!a);
 
   const faqLd = {
     "@context": "https://schema.org", "@type": "FAQPage",
@@ -145,19 +112,21 @@ export default function HomePage({
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 0, borderRadius: 24, overflow: "hidden", border: "1px solid var(--border)", boxShadow: "var(--shadow-lg)" }}>
               {showcase.map((a) => (
-                <Link key={a.slug} href={`${CREATIVE_BASE}/${a.slug}`} style={{ position: "relative", aspectRatio: "4 / 5", display: "block", textDecoration: "none", minWidth: 0 }}>
-                  <SmartImage
-                    sources={creativeSources(a.slug, "after", previewUrl(a.slug))}
-                    alt={`A photo turned into ${a.h1}`}
-                    fallback={`linear-gradient(135deg, ${a.gradient[0]}, ${a.gradient[1]})`}
-                    sizes="(max-width: 768px) 33vw, 393px"
-                    artwork={{ slug: a.slug, name: a.h1, emoji: a.emoji, gradient: [a.gradient[0], a.gradient[1]] }}
-                    eager
-                  />
-                  <span style={{ position: "absolute", left: 12, bottom: 12, right: 12, background: "rgba(11,11,14,0.78)", backdropFilter: "blur(6px)", color: "#fff", fontSize: 12.5, fontWeight: 800, borderRadius: 10, padding: "8px 11px", lineHeight: 1.35 }}>
-                    {a.emoji} {a.h1}
-                  </span>
-                </Link>
+                <CompareCard
+                  key={a.slug}
+                  slug={a.slug}
+                  href={`${CREATIVE_BASE}/${a.slug}`}
+                  before={creativeSources(a.slug, "before")}
+                  main={mainSources(a.slug)}
+                  after={creativeSources(a.slug, "after", previewUrl(a.slug))}
+                  alt={`A photo turned into ${a.h1}`}
+                  name={a.h1}
+                  emoji={a.emoji}
+                  gradient={a.gradient}
+                  mode="drag"
+                  tag={false}
+                  caption={<>{a.emoji} {a.h1}</>}
+                />
               ))}
             </div>
             <p style={{ textAlign: "center", fontSize: 12.5, color: "var(--text-faint)", marginTop: 12 }}>
@@ -172,16 +141,22 @@ export default function HomePage({
             {sectionHead("AI apps", "Turn one photo into any look", "Each app carries a tuned prompt, so you upload and tap. No prompt writing, no settings to learn.")}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(250px, 100%), 1fr))", gap: 18 }}>
               {apps.map((a) => (
-                <Link key={a.slug} href={`${CREATIVE_BASE}/${a.slug}`} className="jpt-hover" style={{ textDecoration: "none", borderRadius: 18, overflow: "hidden", border: "1px solid var(--border)", background: "var(--surface)", display: "block" }}>
+                <Link key={a.slug} href={`${CREATIVE_BASE}/${a.slug}`} className="jpt-hover" draggable={false} style={{ textDecoration: "none", borderRadius: 18, overflow: "hidden", border: "1px solid var(--border)", background: "var(--surface)", display: "block" }}>
                   <div style={{ aspectRatio: "4 / 5", position: "relative" }}>
-                    <SmartImage
-                      sources={creativeSources(a.slug, "after", previewUrl(a.slug))}
+                    <CompareCard
+                      slug={a.slug}
+                      href={`${CREATIVE_BASE}/${a.slug}`}
+                      before={creativeSources(a.slug, "before")}
+                      main={mainSources(a.slug)}
+                      after={creativeSources(a.slug, "after", previewUrl(a.slug))}
                       alt={`${a.h1} example`}
-                      fallback={`linear-gradient(135deg, ${a.gradient[0]}, ${a.gradient[1]})`}
-                      sizes="(max-width: 768px) 50vw, 280px"
-                      artwork={{ slug: a.slug, name: a.h1, emoji: a.emoji, gradient: [a.gradient[0], a.gradient[1]], note: "Example coming soon" }}
+                      name={a.h1}
+                      emoji={a.emoji}
+                      gradient={a.gradient}
+                      mode="drag"
+                      tag={false}
+                      linkWrapper={false}
                     />
-                    <span style={{ position: "absolute", top: 10, left: 10, background: "rgba(11,11,14,0.8)", color: "var(--accent)", border: "1px solid var(--accent-border)", backdropFilter: "blur(6px)", fontSize: 11, fontWeight: 800, borderRadius: 999, padding: "4px 10px" }}>{a.emoji} {a.badge}</span>
                   </div>
                   <div style={{ padding: "14px 15px 16px" }}>
                     <div style={{ fontSize: 15.5, fontWeight: 800, color: "var(--text)", lineHeight: 1.3 }}>{a.h1}</div>

@@ -11,6 +11,7 @@ import { publishCredits } from "@/lib/credits";
 import { SHOW_PRESET_TABS, SHOW_STYLE_PICKER } from "@/lib/workspace-config";
 import {
   optionsFor, defaultValues, optionPhrases, optionSummary, missingRequired,
+  isTextOnlyApp, primaryTextOption,
   type OptionValues,
 } from "@/lib/app-options";
 import { openPricing, needsCredits } from "@/lib/pricing-modal";
@@ -51,6 +52,18 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
   const [optValues, setOptValues] = useState<OptionValues>(() => defaultValues(optionsFor(app)));
   const setOpt = (id: string, value: string) => setOptValues((v) => ({ ...v, [id]: value }));
 
+  /*
+    A handful of apps (logos, emoji, icons, banners) never touch an uploaded
+    photo — the whole app is the text box. For those, the description is the
+    only required input, so the upload rail disappears and the field it
+    replaces is what gets focus, cursor and all, the moment the page is
+    ready to type into.
+  */
+  const textOnly = isTextOnlyApp(app.slug);
+  const primaryOpt = useMemo(() => primaryTextOption(options), [options]);
+  const primaryInputRef = useRef<HTMLInputElement>(null);
+  const missingPrimary = textOnly && !(optValues[primaryOpt?.id ?? ""] || "").trim();
+
   const [original, setOriginal] = useState<string | null>(null);
   const [result, setResult] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -83,6 +96,11 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
   useEffect(() => {
     if (tab !== "custom" && !preset && presets.length) setPreset(presets[0]);
   }, [tab, preset, presets]);
+
+  // No photo to reach for — put the cursor straight in the description field.
+  useEffect(() => {
+    if (textOnly) primaryInputRef.current?.focus();
+  }, [textOnly, app.slug]);
 
   const readFile = (file: File) =>
     new Promise<string>((resolve, reject) => {
@@ -118,9 +136,15 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
   };
 
   const apply = async () => {
-    if (!original || busy) return;
+    if ((!textOnly && !original) || busy) return;
     if (tab === "custom" && !custom.trim()) {
       setErr("Describe the look you want, or pick a style.");
+      return;
+    }
+    // The text-only apps have no photo to fall back on, so their description
+    // is the one thing that must be filled in before spending a credit.
+    if (missingPrimary) {
+      setErr(`Fill in "${primaryOpt?.label ?? "what you want"}" first — this app needs it to know what to do.`);
       return;
     }
     // A couple of apps cannot guess: nobody can infer which colour you wanted
@@ -151,16 +175,19 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
         small; if the upload fails the data URL still goes, which is why this
         is a try and not a requirement.
       */
-      let payload: { dataUrl?: string; imageUrl?: string } = { dataUrl: original };
-      if (!original.startsWith("http")) {
-        try {
-          const { uploadDataUrlToSupabase } = await import("@/lib/supabase-upload");
-          payload = { imageUrl: await uploadDataUrlToSupabase(original) };
-        } catch {
-          // Keep the data URL.
+      let payload: { dataUrl?: string; imageUrl?: string } = {};
+      if (original) {
+        payload = { dataUrl: original };
+        if (!original.startsWith("http")) {
+          try {
+            const { uploadDataUrlToSupabase } = await import("@/lib/supabase-upload");
+            payload = { imageUrl: await uploadDataUrlToSupabase(original) };
+          } catch {
+            // Keep the data URL.
+          }
+        } else {
+          payload = { imageUrl: original };
         }
-      } else {
-        payload = { imageUrl: original };
       }
 
       const res = await fetch("/api/creative-edit", {
@@ -230,7 +257,7 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
   };
 
   const canApply =
-    !!original && !busy &&
+    (textOnly ? !missingPrimary : !!original) && !busy &&
     (tab !== "custom" || !!custom.trim()) &&
     !missingRequired(options, optValues);
   /** Signed in, but the balance cannot cover a generation. */
@@ -248,7 +275,8 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
           onChange={(e) => { const f = e.target.files?.[0]; if (f) void onFile(f); }}
         />
 
-        {/* Upload */}
+        {/* Upload — text-only apps never take a photo, so there's nothing to drop here. */}
+        {!textOnly && (
         <div
           onDragOver={(e) => e.preventDefault()}
           onDrop={(e) => { e.preventDefault(); const f = e.dataTransfer.files?.[0]; if (f) void onFile(f); }}
@@ -272,9 +300,10 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
             JPG · PNG · WEBP, up to {MAX_MB}MB
           </div>
         </div>
+        )}
 
         {/* Samples */}
-        {samples.length > 0 && (
+        {!textOnly && samples.length > 0 && (
           <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 18, flexWrap: "wrap" }}>
             <span style={{ fontSize: 12.5, color: "var(--text-muted)", fontWeight: 600 }}>Try one of these:</span>
             {samples.slice(0, 3).map((src, i) => (
@@ -391,11 +420,13 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
           the picture: Model and Ratio decide how it is made and what shape it
           comes out, and neither answers "how old?".
         */}
-        {options.map((o) => (
+        {options.map((o) => {
+          const isPrimary = textOnly && o.id === primaryOpt?.id;
+          return (
           <div key={o.id} style={{ marginBottom: 12 }}>
             <label style={ctlLabel} htmlFor={`opt-${o.id}`}>
               {o.label}
-              {o.required && <span style={{ color: "var(--accent)" }}> *</span>}
+              {(o.required || isPrimary) && <span style={{ color: "var(--accent)" }}> *</span>}
             </label>
             {o.kind === "number" ? (
               /*
@@ -430,11 +461,17 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
             ) : o.kind === "text" ? (
               <input
                 id={`opt-${o.id}`}
+                ref={isPrimary ? primaryInputRef : undefined}
                 value={optValues[o.id] ?? ""}
                 onChange={(e) => setOpt(o.id, e.target.value)}
                 placeholder={o.placeholder}
                 maxLength={200}
-                style={{ ...select, cursor: "text", fontWeight: 500 }}
+                autoFocus={isPrimary}
+                style={
+                  isPrimary
+                    ? { ...select, cursor: "text", fontWeight: 500, padding: "13px 14px", fontSize: 15, border: "1.5px solid var(--accent-border)", background: "var(--surface)" }
+                    : { ...select, cursor: "text", fontWeight: 500 }
+                }
               />
             ) : (
               <select
@@ -454,7 +491,8 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
               </div>
             )}
           </div>
-        ))}
+          );
+        })}
 
         {/* Model + ratio */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 92px", gap: 9, marginBottom: 14 }}>
@@ -498,7 +536,7 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
               {!loggedIn ? "Sign in to generate"
                 : short ? "Get credits to generate"
                 : busy ? "Generating…"
-                : original ? "Generate"
+                : textOnly || original ? "Generate"
                 : "Upload a photo first"}
             </button>
           );
@@ -531,64 +569,96 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
             borderRadius: 20, padding: 12, minHeight: 340,
           }}
         >
-          {!original ? (
-            /*
-              The panel is the upload control, not a caption for one.
-
-              It is the largest thing on the page and it said "Upload a photo to
-              start", so first-time visitors clicked it — and nothing happened,
-              because the only way in was the button over in the left rail. It
-              now takes a click, a drop and a keypress, through the same handler
-              that button uses, so wherever someone aims they get the picker.
-            */
-            <div
-              role="button"
-              tabIndex={0}
-              aria-label="Upload a photo"
-              onClick={() => fileRef.current?.click()}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") { e.preventDefault(); fileRef.current?.click(); }
-              }}
-              onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
-              onDragEnter={(e) => { e.preventDefault(); setDragging(true); }}
-              onDragLeave={() => setDragging(false)}
-              onDrop={(e) => {
-                e.preventDefault();
-                setDragging(false);
-                const f = e.dataTransfer.files?.[0];
-                if (f) void onFile(f);
-              }}
-              style={{
-                display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-                minHeight: 320, textAlign: "center", padding: 24, cursor: "pointer",
-                borderRadius: 16,
-                border: `1.5px dashed ${dragging ? "var(--accent)" : "var(--border-strong)"}`,
-                background: dragging ? "var(--accent-soft)" : "transparent",
-                transition: "background 120ms ease, border-color 120ms ease",
-              }}
-            >
-              <div style={{ fontSize: 42, marginBottom: 12 }}>{app.emoji}</div>
-              <div style={{ fontSize: 16.5, fontWeight: 800, color: "var(--text)", marginBottom: 6 }}>
-                {dragging ? "Drop your photo here" : "Upload a photo to start"}
-              </div>
-              <p style={{ fontSize: 14, color: "var(--text-muted)", margin: 0, maxWidth: 380, lineHeight: 1.65 }}>
-                Click anywhere in this box or drag a photo in. Set the options on the left, then hit Generate — your
-                original stays untouched, you always see both.
-              </p>
-              <span
+          {!original && !result ? (
+            textOnly ? (
+              /*
+                Nothing to drop in here — the whole app runs off the
+                description on the left, which already has the cursor in it.
+                This panel just says so, and gives that field a second way in.
+              */
+              <div
                 style={{
-                  marginTop: 18, padding: "11px 22px", borderRadius: 999,
-                  background: "var(--grad-strong)", color: "#fff", fontWeight: 800, fontSize: 14.5,
-                  boxShadow: "var(--glow)",
+                  display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+                  minHeight: 320, textAlign: "center", padding: 24, borderRadius: 16,
                 }}
               >
-                + Choose a photo
-              </span>
-              <div style={{ fontSize: 12, color: "var(--text-faint)", marginTop: 10 }}>
-                JPG · PNG · WEBP, up to {MAX_MB}MB
+                <div style={{ fontSize: 42, marginBottom: 12 }}>{app.emoji}</div>
+                <div style={{ fontSize: 16.5, fontWeight: 800, color: "var(--text)", marginBottom: 6 }}>
+                  No photo needed
+                </div>
+                <p style={{ fontSize: 14, color: "var(--text-muted)", margin: 0, maxWidth: 380, lineHeight: 1.65 }}>
+                  Type what you want in {primaryOpt?.label.toLowerCase() ?? "the box"} on the left, then hit Generate.
+                </p>
+                <button
+                  onClick={() => primaryInputRef.current?.focus()}
+                  style={{
+                    marginTop: 18, padding: "11px 22px", borderRadius: 999, border: "none",
+                    background: "var(--grad-strong)", color: "#fff", fontWeight: 800, fontSize: 14.5,
+                    boxShadow: "var(--glow)", cursor: "pointer", fontFamily: "inherit",
+                  }}
+                >
+                  Start typing →
+                </button>
               </div>
-            </div>
-          ) : (
+            ) : (
+              /*
+                The panel is the upload control, not a caption for one.
+
+                It is the largest thing on the page and it said "Upload a photo to
+                start", so first-time visitors clicked it — and nothing happened,
+                because the only way in was the button over in the left rail. It
+                now takes a click, a drop and a keypress, through the same handler
+                that button uses, so wherever someone aims they get the picker.
+              */
+              <div
+                role="button"
+                tabIndex={0}
+                aria-label="Upload a photo"
+                onClick={() => fileRef.current?.click()}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") { e.preventDefault(); fileRef.current?.click(); }
+                }}
+                onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+                onDragEnter={(e) => { e.preventDefault(); setDragging(true); }}
+                onDragLeave={() => setDragging(false)}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  setDragging(false);
+                  const f = e.dataTransfer.files?.[0];
+                  if (f) void onFile(f);
+                }}
+                style={{
+                  display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+                  minHeight: 320, textAlign: "center", padding: 24, cursor: "pointer",
+                  borderRadius: 16,
+                  border: `1.5px dashed ${dragging ? "var(--accent)" : "var(--border-strong)"}`,
+                  background: dragging ? "var(--accent-soft)" : "transparent",
+                  transition: "background 120ms ease, border-color 120ms ease",
+                }}
+              >
+                <div style={{ fontSize: 42, marginBottom: 12 }}>{app.emoji}</div>
+                <div style={{ fontSize: 16.5, fontWeight: 800, color: "var(--text)", marginBottom: 6 }}>
+                  {dragging ? "Drop your photo here" : "Upload a photo to start"}
+                </div>
+                <p style={{ fontSize: 14, color: "var(--text-muted)", margin: 0, maxWidth: 380, lineHeight: 1.65 }}>
+                  Click anywhere in this box or drag a photo in. Set the options on the left, then hit Generate — your
+                  original stays untouched, you always see both.
+                </p>
+                <span
+                  style={{
+                    marginTop: 18, padding: "11px 22px", borderRadius: 999,
+                    background: "var(--grad-strong)", color: "#fff", fontWeight: 800, fontSize: 14.5,
+                    boxShadow: "var(--glow)",
+                  }}
+                >
+                  + Choose a photo
+                </span>
+                <div style={{ fontSize: 12, color: "var(--text-faint)", marginTop: 10 }}>
+                  JPG · PNG · WEBP, up to {MAX_MB}MB
+                </div>
+              </div>
+            )
+          ) : original ? (
             <div className="jpt-compare">
               <Pane label="Original" src={original} />
               <Pane
@@ -597,6 +667,11 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
                 busy={busy}
                 emptyText={busy ? "Generating…" : "Hit Generate to see the result"}
               />
+            </div>
+          ) : (
+            // Text-only app with a result (or mid-generation) but no photo to compare against.
+            <div style={{ maxWidth: 420, margin: "0 auto" }}>
+              <Pane label="Result" src={result} busy={busy} emptyText={busy ? "Generating…" : ""} />
             </div>
           )}
         </div>

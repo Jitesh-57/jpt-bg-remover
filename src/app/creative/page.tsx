@@ -43,7 +43,7 @@ const itemListLd = (apps: CreativeApp[]) => ({
  */
 function AppCard({ a, main }: { a: CreativeApp; main?: ShowcaseImage }) {
   return (
-    <a href={`${CREATIVE_BASE}/${a.slug}`} style={{ display: "block", textDecoration: "none", borderRadius: 18, overflow: "hidden", border: "1px solid var(--border)", background: "var(--surface)", boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
+    <a href={`${CREATIVE_BASE}/${a.slug}`} className="jpt-hover" style={{ display: "block", textDecoration: "none", borderRadius: 18, overflow: "hidden", border: "1px solid var(--border)", background: "var(--surface)", boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
       {main ? (
         <div style={{ position: "relative", aspectRatio: `${main.w} / ${main.h}`, background: "var(--surface-2)" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}

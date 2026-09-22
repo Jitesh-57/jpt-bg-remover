@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkAuth, checkEntitlement, withCredits } from "@/lib/auth";
-import { editImage } from "@/lib/ai-image";
+import { editImage, generateFromText } from "@/lib/ai-image";
 import { recordGeneration } from "@/lib/ledger";
 import { storeImage } from "@/lib/store-image";
 import { CREDIT_COST } from "@/lib/plans";
 import { userMessage } from "@/lib/user-message";
+import { isTextOnlyApp } from "@/lib/app-options";
 
 export const runtime = "nodejs";
 /**
@@ -38,11 +39,16 @@ export async function POST(req: NextRequest) {
     preset?: string;
   };
   const src = imageUrl || dataUrl;
-  if (!src || !prompt) {
+  if (!prompt) {
     return NextResponse.json({ error: "No photo was received. Please pick an image and try again." }, { status: 400 });
   }
   if (!slug) {
     return NextResponse.json({ error: "Something went wrong opening this app. Please reload the page and try again." }, { status: 400 });
+  }
+  // Every app but the handful that generate from a description alone needs a
+  // photo to work on — those still get the original message.
+  if (!src && !isTextOnlyApp(slug)) {
+    return NextResponse.json({ error: "No photo was received. Please pick an image and try again." }, { status: 400 });
   }
 
   const blocked = await checkEntitlement(session!, "ai", `creative:${slug}`);
@@ -55,8 +61,13 @@ export async function POST(req: NextRequest) {
       including how much of the frame this app is allowed to rebuild. Wrapping
       it in "Edit this image: …" contradicted that, and told the model to do
       the smallest thing instead.
+
+      No `src` only happens for the text-only apps (enforced above) — those
+      have nothing to edit, so this generates from the description alone.
     */
-    const result = await editImage(src, prompt, model, aspectRatio, { budgetMs: 240_000, raw: true });
+    const result = src
+      ? await editImage(src, prompt, model, aspectRatio, { budgetMs: 240_000, raw: true })
+      : await generateFromText(prompt, { model, aspect_ratio: aspectRatio, budgetMs: 240_000 });
 
     /*
       Both ends of the generation are stored, not just the response.
@@ -65,7 +76,8 @@ export async function POST(req: NextRequest) {
       "generated URL" to record and the original was never linked to its result.
       Storing the output gives the row something to point at; the input is
       already a URL when the client uploaded it first, and is stored here when
-      it arrived as bytes.
+      it arrived as bytes. A text-only app never had an input photo, so there
+      is nothing to store on that side.
 
       Sequential rather than parallel with the response on purpose: these are
       awaited so the row exists before the browser is told the generation
@@ -73,7 +85,7 @@ export async function POST(req: NextRequest) {
     */
     const [resultUrl, sourceUrl] = await Promise.all([
       storeImage(result, `${slug}-result`, session!.userId),
-      storeImage(src, `${slug}-source`, session!.userId),
+      src ? storeImage(src, `${slug}-source`, session!.userId) : Promise.resolve(null),
     ]);
 
     await recordGeneration({
@@ -103,7 +115,7 @@ export async function POST(req: NextRequest) {
       userId: session!.userId,
       tool: "creative",
       appSlug: slug,
-      sourceUrl: src.startsWith("http") ? src : null,
+      sourceUrl: src?.startsWith("http") ? src : null,
       model: model || null,
       prompt,
       preset: preset || null,

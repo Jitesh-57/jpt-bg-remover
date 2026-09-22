@@ -977,7 +977,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome, relatedV
             <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 14 }}>More use cases</div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
               {relatedVariants.filter(v => v.slug !== currentSlug).map(v => (
-                <a key={v.slug} href={v.href}
+                <a key={v.slug} href={v.href} className="jpt-hover"
                   style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 999, padding: '10px 18px', textDecoration: 'none' }}>
                   {v.h1}
                 </a>
