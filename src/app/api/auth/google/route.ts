@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
   // Always use the canonical domain for OAuth redirectTo so the callback URL
   // matches the Supabase allowlist regardless of www vs non-www.
   const origin = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") || url.origin;
-  const next = url.searchParams.get("next") || "/editor";
+  const next = url.searchParams.get("next") || "/app";
 
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     return NextResponse.redirect(`${origin}/?error=auth_not_configured`);

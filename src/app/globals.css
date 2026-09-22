@@ -384,6 +384,17 @@ a { color: inherit; }
   .jpt-chip-name { display: none; }
 }
 
+/* ── Dashboard app shell ──────────────────────────────────────────────────
+   Sidebar for desktop/tablet, bottom tab bar under 768px — the two never
+   show at once. See src/app/app/_components/AppShell.tsx. */
+@media (max-width: 767px) {
+  .jpt-app-sidebar { display: none !important; }
+  .jpt-app-tabbar { display: flex !important; }
+}
+@media (min-width: 768px) {
+  .jpt-app-tabbar { display: none !important; }
+}
+
 /* ── Invoices ──────────────────────────────────────────────────────────────
    The invoice is printed and filed, so the printed sheet drops the site
    furniture and the page's own background: only the document survives. */
