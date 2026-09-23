@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkAuth, checkEntitlement, withCredits } from "@/lib/auth";
 import { editImage, generateFromText } from "@/lib/ai-image";
+import { editWithImages } from "@/lib/multi-edit.server";
 import { recordGeneration } from "@/lib/ledger";
 import { storeImage } from "@/lib/store-image";
 import { CREDIT_COST } from "@/lib/plans";
@@ -14,6 +15,12 @@ const MAX_PROMPT = 4000;
 const MODEL_IDS = new Set<string>(MODELS.map((m) => m.id));
 const RATIOS = new Set<string>(ASPECT_RATIOS);
 
+const REFERENCE_AND_SUBJECT_NOTE =
+  "You are given two images. IMAGE 1 is the REFERENCE: match its composition, pose, framing, camera angle, styling, setting, lighting and colour grade, following the prompt above. IMAGE 2 is the SUBJECT: the result must show this exact subject. If it is a person, keep their face, facial features, skin tone, hair and identity exactly the same. If it is a product or object, keep its shape, colours, materials, text and branding exactly the same. Do not reuse the person or product from image 1. The result must look like a real photograph.";
+
+const REFERENCE_NOTE =
+  "The provided image is a visual REFERENCE: match its composition, styling, lighting and mood while following the prompt above. Produce a new, realistic photograph.";
+
 const SUBJECT_NOTE =
   "Use the subject of the provided photo as the subject of this image. If it is a person, keep their face, facial features, skin tone, hair and identity exactly the same. If it is a product or object, keep its shape, colours, materials, text and branding exactly the same. The result must look like a real photograph.";
 
@@ -26,7 +33,7 @@ export async function POST(req: NextRequest) {
   const { session, error } = await checkAuth(req);
   if (error) return error;
 
-  let body: { prompt?: unknown; model?: unknown; aspectRatio?: unknown; image?: unknown };
+  let body: { prompt?: unknown; model?: unknown; aspectRatio?: unknown; image?: unknown; reference?: unknown };
   try {
     body = await req.json();
   } catch {
@@ -40,8 +47,12 @@ export async function POST(req: NextRequest) {
   }
   const model = typeof body.model === "string" && MODEL_IDS.has(body.model) ? body.model : MODELS[0].id;
   const aspectRatio = typeof body.aspectRatio === "string" && RATIOS.has(body.aspectRatio) ? body.aspectRatio : "1:1";
-  const image = typeof body.image === "string" && (/^https:\/\//.test(body.image) || /^data:image\/(png|jpeg|webp);base64,/.test(body.image)) ? body.image : null;
+  const isImage = (v: unknown): v is string => typeof v === "string" && (/^https:\/\//.test(v) || /^data:image\/(png|jpeg|webp);base64,/.test(v));
+  const image = isImage(body.image) ? body.image : null;
   if (body.image && !image) return NextResponse.json({ error: "Your image couldn't be read. Try adding it again." }, { status: 400 });
+  // Passed to the image provider as-is and never fetched by this server.
+  const reference = isImage(body.reference) ? body.reference : null;
+  if (body.reference && !reference) return NextResponse.json({ error: "The reference image couldn't be read. Remove it and try again." }, { status: 400 });
 
   const blocked = await checkEntitlement(session!, "ai", "create-image");
   if (blocked) return blocked;
@@ -49,8 +60,10 @@ export async function POST(req: NextRequest) {
   const startedAt = Date.now();
   const label = prompt.length > 60 ? `${prompt.slice(0, 57)}…` : prompt;
   try {
-    const result = image
-      ? await editImage(image, `${prompt}\n\n${SUBJECT_NOTE}`, model, aspectRatio, { budgetMs: 240_000, raw: true })
+    const result =
+      reference && image ? (await editWithImages([reference, image], `${prompt}\n\n${REFERENCE_AND_SUBJECT_NOTE}`, model)).dataUrl
+      : reference ? (await editWithImages([reference], `${prompt}\n\n${REFERENCE_NOTE}`, model)).dataUrl
+      : image ? await editImage(image, `${prompt}\n\n${SUBJECT_NOTE}`, model, aspectRatio, { budgetMs: 240_000, raw: true })
       : await generateFromText(prompt, { model, aspect_ratio: aspectRatio, budgetMs: 240_000 });
     const [resultUrl, sourceUrl] = await Promise.all([
       storeImage(result, "create-image-result", session!.userId),

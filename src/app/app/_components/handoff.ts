@@ -5,15 +5,15 @@ import { savePendingContext, loadPendingContext, clearPendingContext } from "@/l
 export const CREATE_PROMPT_KEY = "jpt_create_prompt";
 const EDITOR_TOOL = "app-editor";
 
-export interface CreateHandoff { prompt: string; needsPhoto?: boolean }
+export interface CreateHandoff { prompt: string; needsPhoto?: boolean; reference?: string | null }
 
 /**
  * Opens Create Image with a prompt filled in. sessionStorage, because prompts
  * can be thousands of characters. `needsPhoto` marks a prompt written to edit
  * the reader's own photo, so the page can ask for one.
  */
-export function sendToCreate(prompt: string, navigate: (href: string) => void, opts?: { needsPhoto?: boolean }): void {
-  try { sessionStorage.setItem(CREATE_PROMPT_KEY, JSON.stringify({ prompt, needsPhoto: !!opts?.needsPhoto } satisfies CreateHandoff)); } catch {}
+export function sendToCreate(prompt: string, navigate: (href: string) => void, opts?: { needsPhoto?: boolean; reference?: string | null }): void {
+  try { sessionStorage.setItem(CREATE_PROMPT_KEY, JSON.stringify({ prompt, needsPhoto: !!opts?.needsPhoto, reference: opts?.reference ?? null } satisfies CreateHandoff)); } catch {}
   navigate("/app/create");
 }
 

@@ -10,7 +10,7 @@ export function useRecreate() {
   const router = useRouter();
   return (item: FeedItem) => {
     if (!item.prompt) { window.open(item.href, "_blank", "noopener"); return; }
-    sendToCreate(item.prompt, (href) => router.push(href), { needsPhoto: item.needsPhoto });
+    sendToCreate(item.prompt, (href) => router.push(href), { needsPhoto: item.needsPhoto, reference: item.image });
   };
 }
 

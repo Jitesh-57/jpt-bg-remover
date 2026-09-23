@@ -1,4 +1,4 @@
-import { byMedia, cardImage, promptHref } from "@/lib/prompts/data";
+import { byMedia, cardImage, promptHref, fillVariables } from "@/lib/prompts/data";
 import { mediaResolver } from "@/lib/prompts/media";
 import { CREATIVE_APPS, previewUrl, type CreativeApp } from "@/lib/creative-apps";
 import { creativeSources, uploadedCreative } from "@/lib/app-creatives";
@@ -37,13 +37,16 @@ export async function communityFeed(limit: number, opts?: { textOnly?: boolean }
   for (const r of byMedia("image")) {
     if (out.length >= limit) break;
     if (!isEnglish(r)) continue;
-    if (opts?.textOnly && (r.needsPhoto || r.hasVariables || r.prompt.length > RUNNABLE_PROMPT)) continue;
+    // Placeholders like {argument name="hair color" default="dark brown"} are
+    // filled with their defaults: the prompt box shows ready-to-run text.
+    const text = r.hasVariables ? fillVariables(r.prompt, {}) : r.prompt;
+    if (opts?.textOnly && (r.needsPhoto || text.length > RUNNABLE_PROMPT)) continue;
     const image = resolve(cardImage(r));
     if (!image) continue;
     out.push({
       uid: r.uid,
       title: r.title,
-      prompt: r.prompt.length <= RUNNABLE_PROMPT ? r.prompt : null,
+      prompt: text.length <= RUNNABLE_PROMPT ? text : null,
       image,
       author: r.author.name,
       authorUrl: r.author.url,
@@ -65,16 +68,18 @@ export interface AppCardData {
   gradient: [string, string];
   category: AppCat | null;
   href: string;
-  /** Candidate image URLs, best first — tried in turn by the client. */
+  /** Candidate image URLs for the "after" photo, best first — tried in turn by the client. */
   sources: string[];
+  /**
+   * The creative the live app page shows, when one is published: a single
+   * image with the before on the left and the after on the right. Cards draw
+   * only its after half.
+   */
+  main: { url: string; w: number; h: number } | null;
   hasExample: boolean;
 }
 
-function toAppCard(a: CreativeApp, hasMain: boolean, hasExample: boolean): AppCardData {
-  // The finished "after" result first — a clean single photo reads better on a
-  // card than the side-by-side main creative, which is kept only as a fallback.
-  const after = creativeSources(a.slug, "after", previewUrl(a.slug));
-  const sources = hasMain ? [...after, uploadedCreative(a.slug, "main")] : after;
+function toAppCard(a: CreativeApp, main: { w: number; h: number } | undefined, hasExample: boolean): AppCardData {
   return {
     slug: a.slug,
     name: a.h1,
@@ -83,8 +88,9 @@ function toAppCard(a: CreativeApp, hasMain: boolean, hasExample: boolean): AppCa
     gradient: [a.gradient[0], a.gradient[1]],
     category: categoryOf(a) ?? null,
     href: `/creative/${a.slug}`,
-    sources,
-    hasExample: hasMain || hasExample,
+    sources: creativeSources(a.slug, "after", previewUrl(a.slug)),
+    main: main && main.w > 0 && main.h > 0 ? { url: uploadedCreative(a.slug, "main"), w: main.w, h: main.h } : null,
+    hasExample: !!main || hasExample,
   };
 }
 
@@ -92,13 +98,13 @@ function toAppCard(a: CreativeApp, hasMain: boolean, hasExample: boolean): AppCa
 export async function appCards(): Promise<AppCardData[]> {
   const [withExamples, overrides] = await Promise.all([
     appsWithExamples().catch(() => new Set<string>()),
-    readOverrides().catch(() => ({ pages: {} as Record<string, { main?: unknown }> })),
+    readOverrides().catch(() => ({ pages: {} as Record<string, { main?: { w: number; h: number } }> })),
   ]);
-  const mains = new Set<string>();
+  const mains = new Map<string, { w: number; h: number }>();
   for (const [key, page] of Object.entries(overrides.pages)) {
-    if (page.main && key.startsWith("creative/")) mains.add(key.slice("creative/".length));
+    if (page.main && key.startsWith("creative/")) mains.set(key.slice("creative/".length), page.main);
   }
-  const cards = CREATIVE_APPS.map((a) => toAppCard(a, mains.has(a.slug), withExamples.has(a.slug)));
+  const cards = CREATIVE_APPS.map((a) => toAppCard(a, mains.get(a.slug), withExamples.has(a.slug)));
   return [...cards.filter((c) => c.hasExample), ...cards.filter((c) => !c.hasExample)];
 }
 

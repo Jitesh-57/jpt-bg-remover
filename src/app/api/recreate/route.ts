@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkAuth, checkEntitlement, withCredits } from "@/lib/auth";
-import { gptCascade, ProviderUnavailableError } from "@/lib/ai-image";
-import { falConfigured, falEditImages, FalError, type FalModel } from "@/lib/fal";
+import { editWithImages } from "@/lib/multi-edit.server";
 import { recordGeneration } from "@/lib/ledger";
 import { storeImage } from "@/lib/store-image";
 import { CREDIT_COST } from "@/lib/plans";
@@ -21,22 +20,6 @@ function buildPrompt(note: string): string {
     "The result must look like a real photograph: natural skin texture, realistic light and shadow, sharp photographic detail — not a painting, illustration or composite.",
     note ? `Additional instructions from the user: ${note}` : "",
   ].filter(Boolean).join(" ");
-}
-
-/** ChatGPT's image models first, in cascade order; Nano Banana only if none of them can take it. */
-async function recreate(reference: string, person: string, prompt: string): Promise<{ dataUrl: string; engine: FalModel }> {
-  if (!falConfigured()) throw new Error("FAL_KEY is not configured.");
-  const errors: string[] = [];
-  for (const model of [...gptCascade(), "nano-banana" as FalModel]) {
-    try {
-      return { dataUrl: await falEditImages([reference, person], prompt, model, 240_000), engine: model };
-    } catch (e) {
-      if (e instanceof FalError && e.billingBlocked) throw new ProviderUnavailableError(e.message);
-      errors.push(`${model}: ${e instanceof Error ? e.message : String(e)}`);
-      console.error(`[recreate] ${model} failed`, e);
-    }
-  }
-  throw new Error(errors.join(" | ") || "No image model could take this request.");
 }
 
 /** Recreate a reference photo with the user's own face. Costs the same as any AI generation. */
@@ -60,7 +43,7 @@ export async function POST(req: NextRequest) {
   const prompt = buildPrompt(note);
   const startedAt = Date.now();
   try {
-    const { dataUrl, engine } = await recreate(reference, person, prompt);
+    const { dataUrl, engine } = await editWithImages([reference, person], prompt, "gpt-image");
     const [resultUrl, sourceUrl] = await Promise.all([
       storeImage(dataUrl, "recreate-result", session!.userId),
       person.startsWith("http") ? Promise.resolve(person) : storeImage(person, "recreate-source", session!.userId),
