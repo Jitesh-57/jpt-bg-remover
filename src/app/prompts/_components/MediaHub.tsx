@@ -76,7 +76,7 @@ export default async function MediaHub({ media }: { media: Media }) {
             </p>
           </div>
           <Link
-            href={isVideo ? "/creative" : "/editor?tool=ai-edit"}
+            href={isVideo ? "/creative" : "/app/create"}
             style={{
               display: "inline-flex", alignItems: "center", gap: 8, padding: "13px 22px", borderRadius: 999,
               background: "var(--grad-strong)", color: "#fff", fontWeight: 800, fontSize: 14.5,

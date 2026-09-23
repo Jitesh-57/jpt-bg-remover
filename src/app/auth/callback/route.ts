@@ -8,10 +8,10 @@ export async function GET(request: NextRequest) {
   const code = url.searchParams.get("code");
   // `next` is carried in a cookie (set in /api/auth/google) so the OAuth
   // redirect URL stays clean and matches Supabase's allow-list. Fall back to
-  // the query param for backwards-compat, then /editor.
+  // the query param for backwards-compat, then the dashboard.
   const raw = request.cookies.get("jpt_auth_next")?.value
     || url.searchParams.get("next")
-    || "/editor";
+    || "/app";
   const origin = url.origin;
   /*
     `next` can arrive in the query string, so it is attacker-controllable, and
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
     single-slash absolute path — another origin, a protocol-relative "//host" —
     would turn the sign-in link into an open redirect, so it is discarded.
   */
-  const next = /^\/(?!\/)/.test(raw) ? raw : "/editor";
+  const next = /^\/(?!\/)/.test(raw) ? raw : "/app";
 
   /*
     Failures land on the page they came from, not on the home page.

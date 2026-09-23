@@ -2,14 +2,14 @@
 
 import { useState } from "react";
 import { trackEvent } from "@/lib/analytics";
+import { sendToCreate } from "@/lib/prompts/handoff";
 
 /**
  * The inline prompt bar on a model landing page.
  *
  * The conversion hook: someone who came for "nano banana pro prompts" can type
- * their own and land in the editor with it loaded, without hunting for the
- * tool. Handover is the same sessionStorage channel the editor already reads,
- * because a prompt of this length in a query string is a hostile URL.
+ * their own and land in Create Image with it loaded, without hunting for the
+ * tool. Handover goes through the shared prompt handoff.
  */
 export default function GeneratorBar({ model }: { model: string }) {
   const [value, setValue] = useState("");
@@ -17,9 +17,8 @@ export default function GeneratorBar({ model }: { model: string }) {
   const go = () => {
     const text = value.trim();
     if (!text) return;
-    try { sessionStorage.setItem("jpt_pending_prompt", text); } catch { /* private mode */ }
     trackEvent("model_page_generate", { model });
-    window.location.href = "/editor?tool=ai-edit";
+    void sendToCreate({ prompt: text, source: "model-page" });
   };
 
   return (

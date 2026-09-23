@@ -680,7 +680,8 @@ export async function falEditImage(
 export async function falEditImages(
   srcs: string[],
   prompt: string,
-  model: FalModel = DEFAULT_MODEL
+  model: FalModel = DEFAULT_MODEL,
+  budgetMs?: number
 ): Promise<string> {
   if (!srcs.length) throw new Error("At least one image is required");
   const imageUrls = await Promise.all(srcs.map(toFalImageUrl));
@@ -691,7 +692,7 @@ export async function falEditImages(
       ? { prompt, image_urls: imageUrls, num_images: 1, output_format: "png" }
       : { prompt, image_urls: imageUrls, num_images: 1, image_size: "auto", quality: "high" };
 
-  const result = await runQueued(endpoint, input, undefined, {
+  const result = await runQueued(endpoint, input, budgetMs, {
     minimalInput: { prompt, image_urls: imageUrls, num_images: 1 },
     paths: falPathVariants(model, "edit"),
   });

@@ -90,7 +90,7 @@ export default function DatasetDetail({
       ]
     : [
         "Copy the prompt — fill in any placeholders first and the copy takes your version.",
-        "Paste it into your image model, or press Generate to open it here with your own photo.",
+        "Paste it into your image model, or press Generate to recreate it here with your own photo.",
         "Run it twice. Generation is not deterministic and the second pass is often the keeper.",
         "Finish it with the free tools: upscale, crop to the platform you need, compress before sharing.",
       ];
@@ -136,7 +136,7 @@ export default function DatasetDetail({
         <h2 style={{ fontSize: 12.5, fontWeight: 800, color: "var(--text-faint)", textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 10px" }}>
           The prompt
         </h2>
-        <PromptBlock uid={p.uid} prompt={p.prompt} media={p.media} needsPhoto={p.needsPhoto} />
+        <PromptBlock uid={p.uid} prompt={p.prompt} media={p.media} needsPhoto={p.needsPhoto} reference={images[0] ?? null} />
       </div>
 
       {/* META */}

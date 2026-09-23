@@ -1,26 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { trackBeginCheckout, trackPurchase, trackBuyButtonClicked, trackPaymentFailed } from "@/lib/analytics";
-import { explainPaymentFailure } from "@/lib/pricing-modal";
 import { PACKS, CREDIT_COST, type Pack } from "@/lib/plans";
 import { beginGoogleSignIn } from "@/lib/auth-return";
-
-/** The shape Razorpay hands to a "payment.failed" listener. */
-interface RazorpayFailure {
-  error?: { description?: string; reason?: string; step?: string; code?: string };
-}
-
-declare global {
-  interface Window {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Razorpay: new (opts: Record<string, unknown>) => {
-      open(): void;
-      /** Razorpay reports a rejected payment here, not through ondismiss. */
-      on?(event: "payment.failed", cb: (resp: RazorpayFailure) => void): void;
-    };
-  }
-}
+import { buyPack } from "@/lib/checkout";
 
 const GRAD = "linear-gradient(135deg,var(--accent),var(--accent-2))";
 
@@ -66,100 +49,10 @@ export default function PricingPage() {
   async function handleBuy(p: Pack) {
     setLoadingPack(p.id);
     setStatusMsg(null);
-    trackBuyButtonClicked(p.id, p.usd);
-    trackBeginCheckout(p.id, p.usd);
-
-    try {
-      if (!window.Razorpay) {
-        await new Promise<void>((resolve, reject) => {
-          const s = document.createElement("script");
-          s.src = "https://checkout.razorpay.com/v1/checkout.js";
-          s.onload = () => resolve();
-          s.onerror = () => reject(new Error("The payment window could not load. Check your connection and try again."));
-          document.head.appendChild(s);
-        });
-      }
-
-      const orderRes = await fetch("/api/create-order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan: p.id }),
-      });
-      const orderData = (await orderRes.json()) as { order_id?: string; amount?: number; currency?: string; error?: string };
-
-      if (!orderRes.ok || !orderData.order_id) {
-        trackPaymentFailed(p.id, orderData.error || "order_creation_failed");
-        setStatusMsg({ text: orderData.error || "Checkout could not be started. Please try again.", ok: false });
-        setLoadingPack(null);
-        return;
-      }
-
-      const rzp = new window.Razorpay({
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-        order_id: orderData.order_id,
-        amount: orderData.amount,
-        currency: orderData.currency || "INR",
-        name: "Pixel Shine",
-        description: `${p.credits} credits — ${p.label} pack`,
-        // A literal hex, not var(--accent): Razorpay's checkout renders in its
-        // own document and cannot resolve our CSS custom properties, so the
-        // variable was silently ignored and checkout fell back to its default
-        // blue.
-        theme: { color: "#FF7A2F" },
-        modal: {
-          ondismiss() {
-            trackPaymentFailed(p.id, "cancelled_by_user");
-            // Only if nothing more specific has already been reported —
-            // payment.failed fires first and its reason is the useful one.
-            setStatusMsg((prev) => prev && !prev.ok ? prev : { text: "Payment cancelled", ok: false });
-            setLoadingPack(null);
-          },
-        },
-        handler: async (response: { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string }) => {
-          try {
-            const verifyRes = await fetch("/api/verify-payment", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ ...response, plan: p.id }),
-            });
-            const data = (await verifyRes.json()) as { success?: boolean; error?: string; credits?: number };
-            if (data.success) {
-              if (typeof data.credits === "number") setCredits(data.credits);
-              setStatusMsg({ text: `🎉 ${p.credits} credits added. They're yours for good.`, ok: true });
-              trackPurchase(p.id, p.usd, 0);
-            } else {
-              trackPaymentFailed(p.id, data.error || "verification_failed");
-              setStatusMsg({ text: data.error || "Verification failed", ok: false });
-            }
-          } catch {
-            setStatusMsg({ text: "Verification request failed", ok: false });
-          }
-          setLoadingPack(null);
-        },
-        prefill: { name: prefillUser?.name || "", email: prefillUser?.email || "" },
-      });
-
-      /*
-        Razorpay reports a rejected payment through this event, not through
-        the dismiss handler. Without it, "Payment blocked as website does not
-        match registered website(s)" was shown by Razorpay's own modal and
-        then replaced by our "Payment cancelled" the moment it closed — so the
-        reason never reached the page, the analytics, or anyone reading them.
-      */
-      rzp.on?.("payment.failed", (resp: { error?: { description?: string; reason?: string; step?: string } }) => {
-        const why = explainPaymentFailure(resp?.error?.description, resp?.error?.reason);
-        trackPaymentFailed(p.id, resp?.error?.reason || "payment_failed");
-        console.error("[pricing] razorpay payment.failed:", JSON.stringify(resp?.error || {}));
-        setStatusMsg({ text: why, ok: false });
-        setLoadingPack(null);
-      });
-
-      rzp.open();
-    } catch (e) {
-      trackPaymentFailed(p.id, String(e));
-      setStatusMsg({ text: String(e), ok: false });
-      setLoadingPack(null);
-    }
+    const result = await buyPack(p, prefillUser ?? undefined);
+    if (result.ok && typeof result.credits === "number") setCredits(result.credits);
+    setStatusMsg({ text: result.text, ok: result.ok });
+    setLoadingPack(null);
   }
 
   return (

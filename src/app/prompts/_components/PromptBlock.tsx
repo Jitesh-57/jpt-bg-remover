@@ -56,12 +56,15 @@ export default function PromptBlock({
   prompt,
   media,
   needsPhoto,
+  reference,
 }: {
   uid: string;
   prompt: string;
   media: "image" | "video";
   /** True when the prompt edits a photo the reader supplies. */
   needsPhoto: boolean;
+  /** The prompt's example image, handed to Create Image as the reference. */
+  reference?: string | null;
 }) {
   const vars = useMemo<PromptVariable[]>(() => parseVariables(prompt), [prompt]);
   const [values, setValues] = useState<Record<string, string>>(() =>
@@ -174,7 +177,7 @@ export default function PromptBlock({
         */}
         {media === "image" && (
           <div style={{ flex: "1 1 200px" }}>
-            <GenerateButton uid={uid} prompt={filled} needsPhoto={needsPhoto} full />
+            <GenerateButton uid={uid} prompt={filled} needsPhoto={needsPhoto} reference={reference} full />
           </div>
         )}
       </div>
