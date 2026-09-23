@@ -29,10 +29,53 @@ interface Dataset {
 
 const DB = dataset as unknown as Dataset;
 
-export const ALL: PromptRecord[] = DB.records;
-export const COUNTS = DB.counts;
-export const MODELS = DB.models;
-export const FACETS = DB.facets;
+/*
+  English only: prompts written in Chinese, Japanese or Korean are dropped at
+  the source, so no page, sitemap, feed or count ever sees them.
+*/
+const CJK = /[\u3040-\u30ff\u3400-\u9fff\uac00-\ud7af\uff00-\uffef]/;
+function isEnglish(r: PromptRecord): boolean {
+  if (r.languages?.some((l) => /^(zh|ja|ko)/i.test(l))) return false;
+  return !CJK.test(r.title) && !CJK.test(r.prompt) && !CJK.test(r.description || "");
+}
+
+/*
+  Visual first: the upstream order (hotScore) is kept, but prompts that have
+  a picture to show come before the ones that don't, so every list and grid
+  opens on real results.
+*/
+const hasVisual = (r: PromptRecord) => !!(r.media === "video" ? r.videoThumbnail || r.images[0] : r.images[0]);
+const english = DB.records.filter(isEnglish);
+export const ALL: PromptRecord[] = [...english.filter(hasVisual), ...english.filter((r) => !hasVisual(r))];
+
+const countWhere = (pred: (r: PromptRecord) => boolean) => ALL.reduce((n, r) => n + (pred(r) ? 1 : 0), 0);
+
+export const COUNTS: Dataset["counts"] = {
+  ...DB.counts,
+  total: ALL.length,
+  image: countWhere((r) => r.media === "image"),
+  video: countWhere((r) => r.media === "video"),
+  featured: countWhere((r) => r.featured),
+  withVariables: countWhere((r) => r.hasVariables),
+  authors: new Set(ALL.map((r) => r.author.name)).size,
+};
+
+export const MODELS: ModelInfo[] = DB.models
+  .map((m) => ({ ...m, count: countWhere((r) => r.modelSlug === m.slug) }))
+  .filter((m) => m.count > 0);
+
+function recount(media: Media, list: Facet[], has: (r: PromptRecord, name: string) => boolean): Facet[] {
+  return list
+    .map((f) => ({ ...f, count: countWhere((r) => r.media === media && has(r, f.name)) }))
+    .filter((f) => f.count > 0);
+}
+export const FACETS: Dataset["facets"] = Object.fromEntries(
+  (Object.keys(DB.facets) as Media[]).map((media) => [media, {
+    useCases: recount(media, DB.facets[media].useCases, (r, n) => r.useCase === n),
+    styles: recount(media, DB.facets[media].styles, (r, n) => r.styles.includes(n)),
+    subjects: recount(media, DB.facets[media].subjects, (r, n) => r.subjects.includes(n)),
+  }]),
+) as Dataset["facets"];
 export const GENERATED_AT = DB.generatedAt;
 
 const BY_UID = new Map(ALL.map((r) => [r.uid, r]));
