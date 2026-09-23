@@ -143,6 +143,18 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     return () => { live = false; };
   }, []);
 
+  // A free trial granted at signup is announced once, then forgotten.
+  const [trialToast, setTrialToast] = useState(0);
+  useEffect(() => {
+    if (auth.status !== "signed-in") return;
+    const m = document.cookie.match(/(?:^|; )jpt_trial=(\d+)/);
+    if (!m) return;
+    document.cookie = "jpt_trial=; path=/; max-age=0";
+    setTrialToast(Number(m[1]));
+    const t = setTimeout(() => setTrialToast(0), 9000);
+    return () => clearTimeout(t);
+  }, [auth.status]);
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); setPaletteOpen(true); }
@@ -264,6 +276,15 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       </div>
 
       <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} />
+      {trialToast > 0 && (
+        <div style={{ position: "fixed", left: 16, right: 16, bottom: 24, zIndex: 1200, display: "flex", justifyContent: "center", pointerEvents: "none" }}>
+          <div role="status" className="jpt-a-pop" onClick={() => setTrialToast(0)}
+            style={{ pointerEvents: "auto", background: "var(--grad-strong)", color: "#fff", fontWeight: 800, fontSize: 14.5, padding: "13px 20px", borderRadius: 14, boxShadow: "var(--glow)", cursor: "pointer", textAlign: "center" }}>
+            🎁 Welcome! You got {trialToast} free credits. Try your first AI creation.
+          </div>
+        </div>
+      )}
+
     </DashboardUserProvider>
   );
 }

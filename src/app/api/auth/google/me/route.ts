@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { resolveUnlimited } from "@/lib/auth";
+import { claimSignupTrial, isFreshSignup } from "@/lib/free-trial.server";
 
 export const runtime = "nodejs";
 
@@ -29,11 +30,17 @@ export async function GET(req: NextRequest) {
     .eq("id", user.id)
     .single() as { data: { name?: string; picture?: string; credits?: number; plan?: string } | null };
 
-  const credits = profile ? (profile.credits ?? 0) : 0;
+  /*
+    Email sign-ups confirm by link and may never pass through /auth/callback,
+    so a brand-new account is also offered its free trial here. Only for the
+    first hour of an account's life; the claim itself is once-only.
+  */
+  const trial = isFreshSignup(user) ? await claimSignupTrial(user, req) : 0;
+  const credits = (profile ? (profile.credits ?? 0) : 0) + trial;
   // Honour "unlimited" only while its 30-day window is open, else fall to free.
   const { plan, expiresAt: planExpiresAt } = resolveUnlimited(profile?.plan, user.user_metadata);
 
-  return NextResponse.json({
+  const res = NextResponse.json({
     authenticated: true,
     userId: user.id,
     email: user.email,
@@ -42,5 +49,8 @@ export async function GET(req: NextRequest) {
     credits,
     plan,
     planExpiresAt,
+    ...(trial > 0 ? { trialGranted: trial } : {}),
   });
+  if (trial > 0) res.cookies.set("jpt_trial", String(trial), { path: "/", maxAge: 600, httpOnly: false, sameSite: "lax" });
+  return res;
 }

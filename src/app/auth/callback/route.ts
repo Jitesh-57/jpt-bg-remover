@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
+import { claimSignupTrial } from "@/lib/free-trial.server";
 
 export const runtime = "nodejs";
 
@@ -86,6 +87,10 @@ export async function GET(request: NextRequest) {
         picture: user.user_metadata?.avatar_url,
       }).eq("id", user.id);
     }
+    // A new account from a country with a live free trial gets its one-time credits.
+    const granted = await claimSignupTrial(user, request);
+    // Read once by the dashboard to say "you got N free credits".
+    if (granted > 0) response.cookies.set("jpt_trial", String(granted), { path: "/", maxAge: 600, httpOnly: false, sameSite: "lax" });
   }
 
   return response;
