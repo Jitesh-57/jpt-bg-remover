@@ -110,7 +110,7 @@ export default function HomeHero() {
             fontFamily: "inherit", cursor: "pointer", boxShadow: "var(--glow)",
           }}
         >
-          {file ? "Open in editor →" : "Start free →"}
+          Generate Now →
         </button>
       </div>
     </div>

@@ -9,6 +9,12 @@ import { CREATIVE_APPS, CREATIVE_BASE, previewUrl } from "@/lib/creative-apps";
 import { creativeSources, mainSources } from "@/lib/app-creatives";
 import { landingImg } from "@/lib/landing-images";
 import { CREDIT_COST } from "@/lib/plans";
+
+/* The hero copy is set here rather than read from the page-SEO row, so an old
+   admin override cannot put a retired headline back on the homepage. */
+const HERO_H1 = "Your Own AI Creative Studio";
+const HERO_SUB =
+  "Create, edit, transform, and reimagine your photos with PixelShine AI. From powerful AI apps to free creative tools, everything you need to turn your ideas into stunning visuals is in one place.";
 import type { PageSEO } from "@/lib/page-config";
 
 const BASE = "https://www.sjpt.io";
@@ -92,12 +98,12 @@ export default function HomePage({
         {/* ── HERO ─────────────────────────────────────────────────────────── */}
         <section style={{ padding: "72px 24px 56px", textAlign: "center", position: "relative", overflow: "hidden" }}>
           <div style={{ maxWidth: 900, margin: "0 auto" }}>
-            <div className="jpt-pill" style={{ marginBottom: 20 }}>✦ 40+ AI apps · a dozen free tools · no watermark</div>
+            <div className="jpt-pill" style={{ marginBottom: 20 }}>✦ PixelShine AI</div>
             <h1 className="jpt-h1" style={{ marginBottom: 18 }}>
-              {config.h1.split(" ").slice(0, -2).join(" ")}{" "}
-              <span className="jpt-grad-text">{config.h1.split(" ").slice(-2).join(" ")}</span>
+              {HERO_H1.split(" ").slice(0, -2).join(" ")}{" "}
+              <span className="jpt-grad-text">{HERO_H1.split(" ").slice(-2).join(" ")}</span>
             </h1>
-            <p className="jpt-lead" style={{ maxWidth: 640, margin: "0 auto 34px" }}>{config.subtitle}</p>
+            <p className="jpt-lead" style={{ maxWidth: 700, margin: "0 auto 34px" }}>{HERO_SUB}</p>
           </div>
           <HomeHero />
           <div style={{ display: "flex", flexWrap: "wrap", gap: "10px 22px", justifyContent: "center", fontSize: 13.5, color: "var(--text-muted)", fontWeight: 600, marginTop: 22 }}>
@@ -110,7 +116,7 @@ export default function HomePage({
         {/* ── SHOWCASE ─────────────────────────────────────────────────────── */}
         <section style={{ padding: "0 24px 72px" }}>
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 0, borderRadius: 24, overflow: "hidden", border: "1px solid var(--border)", boxShadow: "var(--shadow-lg)" }}>
+            <div className="jpt-showcase" style={{ gap: 0, borderRadius: 24, overflow: "hidden", border: "1px solid var(--border)", boxShadow: "var(--shadow-lg)" }}>
               {showcase.map((a) => (
                 <CompareCard
                   key={a.slug}

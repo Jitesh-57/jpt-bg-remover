@@ -280,7 +280,7 @@ export default function NavBar() {
 
           {/*
             Phones get one control instead of five. Everything that used to sit
-            inline in the bar — Tools, Blog, 80s Prompts, Creative Apps — was
+            inline in the bar — Tools, Blog, Prompts, Creative Apps — was
             still rendered at 390px, so the row overflowed, the brand was
             clipped off the left edge and the header read as a wall of chips.
             The sheet below already held the tools tree; the rest of the links
@@ -371,11 +371,11 @@ export default function NavBar() {
                   <div style={{ fontSize: 11, fontWeight: 700, color: "var(--text-faint)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Browse</div>
                   <div style={{ display: "flex", flexDirection: "column" }}>
                     {[
+                      ...(user ? [{ icon: "▦", label: "Dashboard", href: "/app" }] : []),
                       { icon: "🧰", label: "All free tools", href: "/tools" },
                       { icon: "📝", label: "Blog", href: "/blog" },
                       { icon: "✨", label: "Prompt library", href: "/prompts" },
                       { icon: "🎬", label: "Video prompts", href: "/prompts/video" },
-                      { icon: "🔥", label: "80s AI Photo Prompts", href: "/80s-ai-photo-prompts" },
                       ...(PAID_FEATURES_ENABLED ? [{ icon: "✦", label: "Creative Apps", href: "/creative" }] : []),
                       { icon: "💎", label: "Pricing", href: "/pricing" },
                     ].map(link => (
@@ -410,15 +410,6 @@ export default function NavBar() {
             Prompts
           </a>
 
-          {/* 80s AI photo prompts — trending traffic page */}
-          <a href="/80s-ai-photo-prompts"
-            style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", color: "var(--accent-strong)", fontSize: 14, fontWeight: 700, textDecoration: "none", borderRadius: 999, background: "var(--accent-soft)", border: "1px solid var(--accent-border)", whiteSpace: "nowrap" }}
-            onMouseEnter={e => (e.currentTarget.style.opacity = "0.85")}
-            onMouseLeave={e => (e.currentTarget.style.opacity = "1")}>
-            <span style={{ fontSize: 13 }}>🔥</span>
-            80s Prompts
-          </a>
-
           {/* Creative Apps — standalone navbar link (hidden in free-only mode) */}
           {PAID_FEATURES_ENABLED && (
             <a href="/creative"
@@ -427,6 +418,19 @@ export default function NavBar() {
               onMouseLeave={e => { e.currentTarget.style.background = "var(--accent-soft)"; e.currentTarget.style.borderColor = "var(--accent-border)"; }}>
               <span style={{ fontSize: 13 }}>✦</span>
               Creative Apps
+            </a>
+          )}
+
+          {/* Dashboard — signed-in only; the logged-in studio at /app */}
+          {user && (
+            <a href="/app"
+              style={{ display: "flex", alignItems: "center", gap: 7, padding: "7px 14px", color: "var(--accent-strong)", fontSize: 14, fontWeight: 700, textDecoration: "none", borderRadius: 999, background: "var(--accent-soft)", border: "1px solid var(--accent-border)", whiteSpace: "nowrap" }}
+              onMouseEnter={e => (e.currentTarget.style.opacity = "0.85")}
+              onMouseLeave={e => (e.currentTarget.style.opacity = "1")}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <rect x="3" y="3" width="7" height="9" rx="1.5" /><rect x="14" y="3" width="7" height="5" rx="1.5" /><rect x="14" y="12" width="7" height="9" rx="1.5" /><rect x="3" y="16" width="7" height="5" rx="1.5" />
+              </svg>
+              Dashboard
             </a>
           )}
 
@@ -497,6 +501,12 @@ export default function NavBar() {
                     />
                   )}
                   <div style={{ padding: "6px 0" }}>
+                    <a href="/app" onClick={() => setShowMenu(false)}
+                      style={{ display: "block", padding: "10px 16px", fontSize: 13, color: "var(--accent-strong)", textDecoration: "none", fontWeight: 700 }}
+                      onMouseEnter={e => (e.currentTarget.style.background = "var(--surface-2)")}
+                      onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
+                      ▦ Dashboard
+                    </a>
                     {PAID_FEATURES_ENABLED && (
                       <>
                         <a href="/generations" onClick={() => setShowMenu(false)}
@@ -547,6 +557,10 @@ export default function NavBar() {
                   />
                 )}
                 <div style={{ padding: "8px 0" }}>
+                  <a href="/app" onClick={() => setShowMenu(false)}
+                    style={{ display: "block", padding: "14px 16px", fontSize: 14.5, color: "var(--accent-strong)", textDecoration: "none", fontWeight: 700 }}>
+                    ▦ Dashboard
+                  </a>
                   {PAID_FEATURES_ENABLED && (
                     <>
                       <a href="/generations" onClick={() => setShowMenu(false)}
