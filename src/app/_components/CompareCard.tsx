@@ -177,22 +177,32 @@ export default function CompareCard({
     setDragPct(Math.max(0, Math.min(100, pct)));
   };
 
+  // Kept in a ref as well as state: pointermove can fire before React has
+  // re-rendered with dragging=true, and those first moves must not be lost.
+  const draggingRef = useRef(false);
+  const startXRef = useRef(0);
+  const endDrag = () => { draggingRef.current = false; setDragging(false); };
+
   const dragHandlers = mode === "drag" ? {
-    onPointerDown: (e: React.PointerEvent) => {
-      (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    onPointerDown: (e: React.PointerEvent<HTMLDivElement>) => {
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      try { e.currentTarget.setPointerCapture(e.pointerId); } catch {}
+      draggingRef.current = true;
       setDragging(true);
       draggedRef.current = false;
+      startXRef.current = e.clientX;
       setFromPointer(e.clientX);
     },
     onPointerMove: (e: React.PointerEvent) => {
-      if (!dragging) return;
-      draggedRef.current = true;
+      if (!draggingRef.current) return;
+      if (Math.abs(e.clientX - startXRef.current) > 4) draggedRef.current = true;
       setFromPointer(e.clientX);
     },
-    onPointerUp: () => setDragging(false),
-    onPointerCancel: () => setDragging(false),
+    onPointerUp: endDrag,
+    onPointerCancel: endDrag,
+    onLostPointerCapture: endDrag,
     onClickCapture: (e: React.MouseEvent) => {
-      if (draggedRef.current) { e.preventDefault(); draggedRef.current = false; }
+      if (draggedRef.current) { e.preventDefault(); e.stopPropagation(); draggedRef.current = false; }
     },
     onDragStart: (e: React.DragEvent) => e.preventDefault(),
   } : { onDragStart: (e: React.DragEvent) => e.preventDefault() };
@@ -240,8 +250,9 @@ export default function CompareCard({
 
     inner = (
       <div
-        className="cmp-frame"
-        style={{ ...frameStyle, cursor: mode === "drag" ? "ew-resize" : undefined }}
+        className={usingDrag ? "cmp-frame cmp-manual" : "cmp-frame"}
+        // pan-y: a sideways swipe moves the slider, a vertical one still scrolls the page.
+        style={{ ...frameStyle, cursor: mode === "drag" ? "ew-resize" : undefined, touchAction: mode === "drag" ? "pan-y" : undefined, userSelect: "none", WebkitUserSelect: "none" }}
         ref={frameRef}
         draggable={false}
         {...dragHandlers}
@@ -253,7 +264,7 @@ export default function CompareCard({
         >
           {beforeLayer}
         </div>
-        {mode !== "fade" && <div className="cmp-handle" style={handleStyle} />}
+        {mode !== "fade" && <div className={mode === "drag" ? "cmp-handle cmp-handle-knob" : "cmp-handle"} style={handleStyle} />}
         {tag && mode !== "fade" && (
           <>
             <span className="cmp-tag cmp-tag-before">Before</span>

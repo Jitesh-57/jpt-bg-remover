@@ -10,6 +10,9 @@ import { mediaResolver } from "@/lib/prompts/media";
 import { PACKS, packPrompts } from "@/lib/prompts/packs";
 import { PROMPT_COUNT as ORIGINALS_COUNT } from "@/lib/prompt-library";
 import { BRAND } from "@/lib/brand";
+import { PROMPTS as PROMPTS_80S, PROMPT_COUNT as COUNT_80S } from "@/lib/prompts-80s";
+import { matchImages } from "@/lib/prompt-images";
+import { listBucketImagesServer } from "@/lib/prompt-images.server";
 
 export const revalidate = 300;
 
@@ -50,7 +53,10 @@ function H2({ children, sub, href, hrefLabel }: { children: React.ReactNode; sub
 }
 
 export default async function PromptsHub() {
-  const resolve = await mediaResolver();
+  const [resolve, files80s] = await Promise.all([mediaResolver(), listBucketImagesServer().catch(() => [] as string[])]);
+  // The 80s collection lives on its own page; this is its shelf in the library.
+  const images80s = matchImages(PROMPTS_80S, files80s);
+  const shelf80s = PROMPTS_80S.filter((p) => images80s[p.id]).slice(0, 6);
   const hot = toCards(hottest(8)).map((c) => ({ ...c, image: resolve(c.image) }));
   const weekly = featured(1)[0];
   const weeklyImage = weekly ? resolve(weekly.media === "video" ? weekly.videoThumbnail : weekly.images[0]) : null;
@@ -147,6 +153,30 @@ export default async function PromptsHub() {
             )}
           </section>
 
+          {/* ── 80s PROMPTS ──────────────────────────────────────────────── */}
+          <section id="prompts-80s" style={{ marginTop: 62 }}>
+            <H2 sub="The viral retro trend: copy a prompt, add your photo, keep your face." href="/80s-ai-photo-prompts" hrefLabel={`All ${COUNT_80S} prompts`}>
+              🔥 80s AI photo prompts
+            </H2>
+            <Link href="/80s-ai-photo-prompts" className="jpt-hover" style={{ ...tile, display: "block", padding: 14 }}>
+              {shelf80s.length > 0 && (
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(140px, 44%), 1fr))", gap: 10 }}>
+                  {shelf80s.map((p) => (
+                    <div key={p.id} style={{ position: "relative", aspectRatio: "4 / 5", borderRadius: 12, overflow: "hidden", background: "var(--surface-2)" }}>
+                      <SafeImage src={images80s[p.id]} alt={p.title} />
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap", padding: shelf80s.length ? "14px 4px 2px" : 4 }}>
+                <span style={{ fontSize: 14, color: "var(--text-muted)", lineHeight: 1.55 }}>
+                  {COUNT_80S} copy-paste prompts: bikes and classic cars, rainy streets, weddings, disco nights and family albums.
+                </span>
+                <span style={{ fontSize: 13.5, fontWeight: 800, color: "var(--accent-strong)", whiteSpace: "nowrap" }}>Browse 80s prompts →</span>
+              </div>
+            </Link>
+          </section>
+
           {/* ── PACKS ────────────────────────────────────────────────────── */}
           <section id="prompts-packs" style={{ marginTop: 62 }}>
             <H2 sub="Hand-picked collections for one job each.">Curated prompt packs</H2>
@@ -188,6 +218,7 @@ export default async function PromptsHub() {
                 { href: "/prompts/image", title: "Image prompts", n: COUNTS.image, blurb: "Portraits, posters, product shots, infographics." },
                 { href: "/prompts/video", title: "Video prompts", n: COUNTS.video, blurb: "Timeline prompts, shot by shot, for video models." },
                 { href: "/prompts/originals", title: "Pixel Shine originals", n: ORIGINALS_COUNT, blurb: "Written here, sized for each platform's crop." },
+                { href: "/80s-ai-photo-prompts", title: "80s AI photo prompts", n: COUNT_80S, blurb: "The viral retro trend, with a reference for each." },
               ].map((t) => (
                 <Link key={t.href} href={t.href} className="jpt-hover" style={tile}>
                   <span style={{ display: "block", fontSize: 11.5, fontWeight: 900, color: "var(--accent-strong)", textTransform: "uppercase", letterSpacing: "0.09em" }}>

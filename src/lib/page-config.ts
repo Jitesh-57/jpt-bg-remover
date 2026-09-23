@@ -41,9 +41,9 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
       'Upscale, compress, crop, convert and restyle photos free online. Plus 40+ AI photo apps — saree portraits, 3D figurines, Ghibli, headshots and more.',
     og_image: '',
     keywords: 'ai photo editor, free ai photo editor, ai image editor online, ai photo app, ai headshot generator, ai background remover, image upscaler, free online photo tools',
-    h1: 'The AI Photo Studio',
+    h1: 'Your Own AI Creative Studio',
     subtitle:
-      'Edit, upscale and restyle any photo in seconds. A dozen browser tools that are free and unlimited, plus 40+ AI apps that turn one photo into a whole new look.',
+      'Create, edit, transform, and reimagine your photos with PixelShine AI. From powerful AI apps to free creative tools, everything you need to turn your ideas into stunning visuals is in one place.',
     cta_text: 'Start Editing Free',
     features: [
       { icon: '🎨', title: '40+ AI photo apps', desc: 'Saree portraits, 3D figurines, Ghibli style, retro Bollywood, pro headshots — one tap each, no prompt writing.' },

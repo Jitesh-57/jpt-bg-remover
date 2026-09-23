@@ -10,6 +10,7 @@ import Icon, { type IconName } from "./Icon";
 import { DashboardUserProvider, type DashboardUser } from "./DashboardUser";
 import { beginGoogleSignIn } from "@/lib/auth-return";
 import { openPricing } from "@/lib/pricing-modal";
+import BrandLogo from "@/app/_components/BrandLogo";
 
 interface NavItem { label: string; href: string; icon: IconName; badge?: string }
 
@@ -59,12 +60,7 @@ type AuthState =
 function Brand({ collapsed }: { collapsed?: boolean }) {
   return (
     <Link href="/" title="Go to Pixel Shine homepage" style={{ display: "flex", alignItems: "center", gap: 9, textDecoration: "none", minWidth: 0 }}>
-      <span style={{ width: 30, height: 30, borderRadius: 9, background: "var(--grad-strong)", display: "inline-flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 900, fontSize: 15, flexShrink: 0, boxShadow: "var(--glow)" }}>✦</span>
-      {!collapsed && (
-        <span style={{ fontWeight: 900, fontSize: 18, letterSpacing: "-0.03em", color: "var(--text)", whiteSpace: "nowrap" }}>
-          Pixel<span style={{ color: "var(--accent)" }}>Shine</span>
-        </span>
-      )}
+      <BrandLogo height={32} variant={collapsed ? "mark" : "wordmark"} />
     </Link>
   );
 }
