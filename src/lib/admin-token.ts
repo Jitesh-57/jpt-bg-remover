@@ -38,8 +38,8 @@ export function requireAdmin(req: NextRequest): NextResponse | null {
   const expected = adminToken();
   if (!expected) {
     return NextResponse.json({
-      error: "This endpoint is disabled because ADMIN_IMAGE_TOKEN is not set.",
-      fix: "Set ADMIN_IMAGE_TOKEN to a private value in the Vercel project's environment variables, redeploy, and call this with ?token=<that value>.",
+      error: `This endpoint is disabled because ADMIN_IMAGE_TOKEN is not set for this deployment (Vercel environment: ${process.env.VERCEL_ENV || "unknown"}${process.env.VERCEL_GIT_COMMIT_REF ? `, branch: ${process.env.VERCEL_GIT_COMMIT_REF}` : ""}).`,
+      fix: "In Vercel → Settings → Environment Variables, make sure ADMIN_IMAGE_TOKEN is ticked for the environment named above (Preview for branch links, with no branch filter), then redeploy that same deployment.",
       why: "It used to fall back to a token written in this repository, which is public — so the guard protected nothing.",
     }, { status: 503 });
   }
