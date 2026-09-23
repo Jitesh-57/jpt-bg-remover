@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Icon from "../_components/Icon";
 import { useDashboardUser } from "../_components/DashboardUser";
-import { takeCreatePrompt } from "../_components/handoff";
+import { takeCreatePrompt, takeCreatePhoto } from "../_components/handoff";
 import { StudioPage, Dropdown, GenerateButton, PreviewPanel, SessionStrip, ErrorNote, runGeneration, toSendable, acceptImageFile, labelStyle, actionBtn, type StudioResult } from "../_components/studio";
 import { ASPECT_RATIOS, MODELS, type AspectRatio } from "@/lib/app-presets";
 import { CREDIT_COST } from "@/lib/plans";
@@ -41,6 +41,7 @@ export default function CreateStudio({ inspirations }: { inspirations: FeedItem[
   useEffect(() => {
     const h = takeCreatePrompt();
     if (h) { setPrompt(h.prompt.slice(0, MAX_PROMPT)); setNeedsPhoto(!!h.needsPhoto); setReference(h.reference || null); }
+    void takeCreatePhoto().then((img) => { if (img) setPhoto(img); });
     textRef.current?.focus();
   }, []);
 

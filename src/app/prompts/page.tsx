@@ -269,7 +269,7 @@ export default async function PromptsHub() {
             <H2>Then do something with it</H2>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(260px, 100%), 1fr))", gap: 16 }}>
               {[
-                { href: "/editor?tool=ai-edit", title: "AI editor", blurb: "Paste a prompt, add your photo, generate." },
+                { href: "/app/create", title: "Create Image", blurb: "Paste a prompt, add your photo, generate." },
                 { href: "/creative", title: "200 AI apps", blurb: "The same looks with the settings already chosen." },
                 { href: "/tools", title: "Free tools", blurb: "Upscale, crop, compress — no account, no credits." },
               ].map((t) => (

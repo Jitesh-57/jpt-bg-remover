@@ -31,7 +31,7 @@ function afterHalfStyle(w: number, h: number, box: number): React.CSSProperties 
 }
 
 /** The app's live after image: the after half of its published creative, else its own "after" file. */
-function AfterImage({ a, box, sizes, eager }: { a: AppCardData; box: number; sizes: string; eager?: boolean }) {
+export function AfterImage({ a, box, sizes, eager }: { a: AppCardData; box: number; sizes: string; eager?: boolean }) {
   const [mainFailed, setMainFailed] = useState(false);
   if (a.main && !mainFailed) {
     return (

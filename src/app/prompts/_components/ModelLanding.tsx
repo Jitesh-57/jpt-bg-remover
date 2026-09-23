@@ -197,7 +197,7 @@ export default async function ModelLanding({ slug, page = 1 }: { slug: string; p
               <p style={{ fontSize: 14, color: "var(--text-faint)", lineHeight: 1.7, margin: "10px 0 0", maxWidth: 760 }}>{about.note}</p>
             )}
             <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 18 }}>
-              <Link href="/editor?tool=ai-edit" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "11px 20px", borderRadius: 999, background: "var(--grad-strong)", color: "#fff", fontWeight: 800, fontSize: 14, textDecoration: "none", boxShadow: "var(--glow)" }}>
+              <Link href="/app/create" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "11px 20px", borderRadius: 999, background: "var(--grad-strong)", color: "#fff", fontWeight: 800, fontSize: 14, textDecoration: "none", boxShadow: "var(--glow)" }}>
                 Use a prompt in {BRAND} →
               </Link>
               <Link href="/creative" className="jpt-hover" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "11px 20px", borderRadius: 999, background: "var(--surface)", border: "1px solid var(--border-strong)", color: "var(--text)", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>
@@ -245,7 +245,7 @@ export default async function ModelLanding({ slug, page = 1 }: { slug: string; p
               <div>
                 <div style={{ fontSize: 11, fontWeight: 800, color: "var(--text-faint)", textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 9 }}>Tools</div>
                 <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "grid", gap: 6 }}>
-                  {[["AI editor", "/editor?tool=ai-edit"], ["AI apps", "/creative"], ["Upscale", "/upscale"], ["Free tools", "/tools"], ["Pixel Shine originals", "/prompts/originals"]].map(([label, href]) => (
+                  {[["Create Image", "/app/create"], ["AI apps", "/creative"], ["Upscale", "/upscale"], ["Free tools", "/tools"], ["Pixel Shine originals", "/prompts/originals"]].map(([label, href]) => (
                     <li key={href}>
                       <Link href={href} style={{ fontSize: 13.5, color: "var(--text-muted)", textDecoration: "none" }}>{label}</Link>
                     </li>

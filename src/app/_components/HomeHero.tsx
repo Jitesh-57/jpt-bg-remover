@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { savePendingContext } from "@/lib/pending-image";
+import { sendToCreate } from "@/lib/prompts/handoff";
 import { MODELS, ASPECT_RATIOS } from "@/lib/app-presets";
 import { trackEvent } from "@/lib/analytics";
 
@@ -33,11 +33,7 @@ export default function HomeHero() {
 
   const go = async () => {
     trackEvent("home_hero_start", { hasImage: !!file, hasPrompt: !!prompt.trim(), model, ratio });
-    if (file) {
-      await savePendingContext({ image: file.url, tool: prompt.trim() ? "ai-edit" : undefined, prompt: prompt.trim() || undefined });
-    }
-    try { if (prompt.trim()) sessionStorage.setItem("jpt_pending_prompt", prompt.trim()); } catch {}
-    window.location.href = prompt.trim() ? "/editor?tool=ai-edit" : "/editor";
+    await sendToCreate({ prompt: prompt.trim(), image: file?.url, source: "home-hero" });
   };
 
   const chip = (on: boolean): React.CSSProperties => ({

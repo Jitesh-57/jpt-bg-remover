@@ -1,8 +1,9 @@
 "use client";
 
 import { savePendingContext, loadPendingContext, clearPendingContext } from "@/lib/pending-image";
+import { CREATE_PROMPT_KEY, CREATE_PHOTO_TOOL } from "@/lib/prompts/handoff";
 
-export const CREATE_PROMPT_KEY = "jpt_create_prompt";
+export { CREATE_PROMPT_KEY };
 const EDITOR_TOOL = "app-editor";
 
 export interface CreateHandoff { prompt: string; needsPhoto?: boolean; reference?: string | null }
@@ -27,6 +28,14 @@ export function takeCreatePrompt(): CreateHandoff | null {
   } catch {
     return null;
   }
+}
+
+/** The reader's own photo, when a prompt handoff brought one along. Consumed once. */
+export async function takeCreatePhoto(): Promise<string | null> {
+  const ctx = await loadPendingContext();
+  if (!ctx || ctx.tool !== CREATE_PHOTO_TOOL || !ctx.image) return null;
+  await clearPendingContext();
+  return ctx.image;
 }
 
 /** Opens the dashboard's AI Image Editor with an image (and optionally a prompt) loaded. IndexedDB, because images are large. */
