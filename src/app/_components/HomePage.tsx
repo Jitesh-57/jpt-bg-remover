@@ -54,12 +54,12 @@ const PRO_TOOLS = [
   { name: "AI Headshot",        desc: "Studio headshots from a selfie",            href: "/ai-headshot" },
   { name: "Generate Background",desc: "A new scene behind your subject",           href: "/editor?tool=generate-bg" },
   { name: "4× AI Upscale",      desc: "Super-resolution with real detail",         href: "/editor?tool=upscale" },
-  { name: "40+ AI Apps",        desc: "One-tap looks, no prompt writing",          href: CREATIVE_BASE },
+  { name: "200+ AI Apps",        desc: "One-tap looks, no prompt writing",          href: CREATIVE_BASE },
 ];
 
 const STEPS = [
   { n: "01", t: "Upload a photo",       d: "Drop any JPG, PNG or WebP. Your photo stays private, and your original is never changed.",           img: landingImg("home-step-1.png") },
-  { n: "02", t: "Pick a tool or a look", d: "Choose a free tool, describe an edit in plain words, or tap one of the 40+ AI apps for an instant style.",   img: landingImg("home-step-2.png") },
+  { n: "02", t: "Pick a tool or a look", d: "Choose a free tool, describe an edit in plain words, or tap one of the 200+ AI apps for an instant style.",   img: landingImg("home-step-2.png") },
   { n: "03", t: "Download in full res",  d: "Every export is full resolution with no watermark — free tools and AI results alike.",                    img: landingImg("home-step-3.png") },
 ];
 
