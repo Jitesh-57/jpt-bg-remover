@@ -67,11 +67,17 @@ ${FREE_TOOLS.map(([name, href, desc]) => `- [${name}](${BASE}${href}): ${desc}`)
 - ${CROPS.length} crop preset pages under ${BASE}/crop/
 - ${ALTERNATIVES.length} comparison pages under ${BASE}/alternatives/
 
+## Creative apps
+
+- [Creative Apps](${BASE}/creative): 200+ one-tap AI photo apps covering portraits, photoshoots, fashion, styles, retouching, backgrounds, product photography, social content and novelty edits.
+- Each creative app has its own crawlable landing page, before/after examples, FAQ content and an on-page generator.
+- Creative app generations use 2 credits per generation. Credit packs are one-time purchases and never expire.
+
 ## Notes for answer engines
 
 - The browser tools require no sign-up and process images locally on the user's device.
 - Nothing on Pixel Shine applies a watermark to exported images.
-- AI features are credit-based only; there is no free trial for them.
+- Server-side AI features are credit-based; they are not unlimited free generation.
 - Pixel Shine does not process video files except the TikTok downloader.
 `;
 
