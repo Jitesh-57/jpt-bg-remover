@@ -2,6 +2,7 @@ import Link from "next/link";
 import HomeHero from "@/app/_components/HomeHero";
 import SmartImage from "@/app/_components/SmartImage";
 import CompareCard from "@/app/_components/CompareCard";
+import ToolIcon, { iconKeyForHref } from "@/app/editor/ToolIcon";
 import PricingSection from "@/app/_components/PricingSection";
 import FAQAccordion from "@/app/_components/FAQAccordion";
 import ScrollReveal from "@/app/_components/ScrollReveal";
@@ -33,27 +34,27 @@ const FEATURED_APPS = [
 const SHOWCASE_APPS = ["dress-photo-editor", "outfit-generator", "fashion-photo-editor"];
 
 const FREE_TOOLS = [
-  { icon: "🔍", name: "Image Upscaler",     desc: "Sharpen and enlarge up to 4×",   href: "/upscale" },
-  { icon: "🗜️", name: "Compress Image",     desc: "Hit an exact KB target",         href: "/compress-image" },
-  { icon: "🔀", name: "Convert Format",     desc: "JPG · PNG · WebP",               href: "/convert-image" },
-  { icon: "✂️", name: "Crop Image",         desc: "Social presets and circle crop", href: "/crop-image" },
-  { icon: "↔️", name: "Resize Image",       desc: "Exact pixels or percent",        href: "/resize-image" },
-  { icon: "🔄", name: "Rotate & Flip",      desc: "Any angle, mirror either way",   href: "/rotate-image" },
-  { icon: "🫥", name: "Blur Image",         desc: "Hide faces and details",         href: "/blur-image" },
-  { icon: "🔖", name: "Add Watermark",      desc: "Text watermark, any position",   href: "/watermark-image" },
-  { icon: "😂", name: "Meme Generator",     desc: "Top and bottom captions",        href: "/meme-generator" },
-  { icon: "📄", name: "Image to PDF",       desc: "Combine images into one PDF",    href: "/image-to-pdf" },
-  { icon: "🔳", name: "QR Code Generator",  desc: "Link or text to QR",             href: "/qr-code-generator" },
-  { icon: "⚡", name: "Batch Editor",       desc: "Same edit, 100 images",          href: "/batch-editor" },
+  { name: "Image Upscaler",     desc: "Sharpen and enlarge up to 4×",   href: "/upscale" },
+  { name: "Compress Image",     desc: "Hit an exact KB target",         href: "/compress-image" },
+  { name: "Convert Format",     desc: "JPG · PNG · WebP",               href: "/convert-image" },
+  { name: "Crop Image",         desc: "Social presets and circle crop", href: "/crop-image" },
+  { name: "Resize Image",       desc: "Exact pixels or percent",        href: "/resize-image" },
+  { name: "Rotate & Flip",      desc: "Any angle, mirror either way",   href: "/rotate-image" },
+  { name: "Blur Image",         desc: "Hide faces and details",         href: "/blur-image" },
+  { name: "Add Watermark",      desc: "Text watermark, any position",   href: "/watermark-image" },
+  { name: "Meme Generator",     desc: "Top and bottom captions",        href: "/meme-generator" },
+  { name: "Image to PDF",       desc: "Combine images into one PDF",    href: "/image-to-pdf" },
+  { name: "QR Code Generator",  desc: "Link or text to QR",             href: "/qr-code-generator" },
+  { name: "Batch Editor",       desc: "Same edit, 100 images",          href: "/batch-editor" },
 ];
 
 const PRO_TOOLS = [
-  { icon: "✨", name: "AI Editor",          desc: "Edit anything with a sentence",             href: "/ai-editor" },
-  { icon: "🪄", name: "Remove Background",  desc: "Clean cutouts, hair and all",               href: "/remove-bg" },
-  { icon: "🎯", name: "AI Headshot",        desc: "Studio headshots from a selfie",            href: "/ai-headshot" },
-  { icon: "🌅", name: "Generate Background",desc: "A new scene behind your subject",           href: "/editor?tool=generate-bg" },
-  { icon: "🔬", name: "4× AI Upscale",      desc: "Super-resolution with real detail",         href: "/editor?tool=upscale" },
-  { icon: "🎨", name: "40+ AI Apps",        desc: "One-tap looks, no prompt writing",          href: CREATIVE_BASE },
+  { name: "AI Editor",          desc: "Edit anything with a sentence",             href: "/ai-editor" },
+  { name: "Remove Background",  desc: "Clean cutouts, hair and all",               href: "/remove-bg" },
+  { name: "AI Headshot",        desc: "Studio headshots from a selfie",            href: "/ai-headshot" },
+  { name: "Generate Background",desc: "A new scene behind your subject",           href: "/editor?tool=generate-bg" },
+  { name: "4× AI Upscale",      desc: "Super-resolution with real detail",         href: "/editor?tool=upscale" },
+  { name: "40+ AI Apps",        desc: "One-tap looks, no prompt writing",          href: CREATIVE_BASE },
 ];
 
 const STEPS = [
@@ -183,8 +184,8 @@ export default function HomePage({
             {sectionHead("Free tools", "Free, unlimited, private", "No limit, no account and no watermark — use them as often as you like.")}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(200px, 100%), 1fr))", gap: 12 }}>
               {FREE_TOOLS.map((t) => (
-                <Link key={t.href} href={t.href} className="jpt-hover" style={{ textDecoration: "none", display: "flex", gap: 12, alignItems: "flex-start", background: "var(--surface-2)", border: "1px solid var(--border)", borderRadius: 14, padding: "14px 15px" }}>
-                  <span style={{ fontSize: 22, lineHeight: 1, flexShrink: 0 }}>{t.icon}</span>
+                <Link key={t.href} href={t.href} className="jpt-hover" style={{ textDecoration: "none", display: "flex", gap: 13, alignItems: "center", background: "var(--surface-2)", border: "1px solid var(--border)", borderRadius: 14, padding: "14px 15px" }}>
+                  <ToolIcon id={iconKeyForHref(t.href)} size={40} />
                   <span style={{ minWidth: 0 }}>
                     <span style={{ display: "block", fontSize: 14.5, fontWeight: 800, color: "var(--text)" }}>{t.name}</span>
                     <span style={{ display: "block", fontSize: 12.5, color: "var(--text-muted)", marginTop: 2 }}>{t.desc}</span>
@@ -201,8 +202,8 @@ export default function HomePage({
             {sectionHead("Pro tools", "The AI tools, on credits", `Server-side AI at ${CREDIT_COST} credits a generation. Buy a pack once from $2 — it never expires and nothing auto-renews.`)}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(300px, 100%), 1fr))", gap: 16 }}>
               {PRO_TOOLS.map((t) => (
-                <Link key={t.href} href={t.href} className="jpt-hover" style={{ textDecoration: "none", position: "relative", display: "flex", gap: 14, alignItems: "flex-start", background: "var(--surface)", border: "1px solid var(--accent-border)", borderRadius: 16, padding: "18px 18px" }}>
-                  <span style={{ width: 44, height: 44, borderRadius: 12, background: "var(--accent-soft)", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 22, flexShrink: 0 }}>{t.icon}</span>
+                <Link key={t.href} href={t.href} className="jpt-hover" style={{ textDecoration: "none", position: "relative", display: "flex", gap: 14, alignItems: "center", background: "var(--surface)", border: "1px solid var(--accent-border)", borderRadius: 16, padding: "18px 18px" }}>
+                  <ToolIcon id={iconKeyForHref(t.href)} size={46} />
                   <span style={{ minWidth: 0 }}>
                     <span style={{ display: "block", fontSize: 16, fontWeight: 800, color: "var(--text)" }}>{t.name}</span>
                     <span style={{ display: "block", fontSize: 13.5, color: "var(--text-muted)", marginTop: 3, lineHeight: 1.5 }}>{t.desc}</span>

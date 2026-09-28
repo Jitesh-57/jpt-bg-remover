@@ -1,5 +1,6 @@
 "use client";
 
+import ToolIcon, { iconKeyForHref } from "@/app/editor/ToolIcon";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Icon from "../_components/Icon";
@@ -107,7 +108,9 @@ export default function AppsGallery({ apps, categories, tools }: { apps: AppCard
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(240px, 100%), 1fr))", gap: 12, marginTop: 6 }}>
               {filteredTools.map((t, i) => (
                 <Link key={t.slug} href={t.href} className="jpt-lift jpt-a-up" style={{ ["--d" as string]: `${i * 30}ms`, display: "flex", alignItems: "center", gap: 14, padding: 16, borderRadius: 16, border: "1px solid var(--border)", background: "var(--surface)", textDecoration: "none" }}>
-                  <span style={{ width: 46, height: 46, borderRadius: 13, background: "var(--surface-2)", border: "1px solid var(--border)", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 22, flexShrink: 0 }}>{t.emoji}</span>
+                  {iconKeyForHref(t.href) !== "default"
+                    ? <ToolIcon id={iconKeyForHref(t.href)} size={46} />
+                    : <span style={{ width: 46, height: 46, borderRadius: 13, background: "var(--surface-2)", border: "1px solid var(--border)", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 22, flexShrink: 0 }}>{t.emoji}</span>}
                   <span style={{ minWidth: 0, flex: 1 }}>
                     <span style={{ display: "block", fontSize: 14.5, fontWeight: 800, color: "var(--text)" }}>{t.name}</span>
                     <span style={{ display: "block", fontSize: 12.5, color: "var(--text-muted)", marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.blurb}</span>
