@@ -80,50 +80,148 @@ const GLYPHS: Record<string, React.ReactNode> = {
     <path d="M4 20l1-4L15 6l3 3L8 19z" />
     <path d="M13.5 7.5l3 3" />
   </>),
+  blur: (<>
+    <circle cx="12" cy="12" r="8" />
+    <circle cx="9" cy="10" r=".9" fill="currentColor" /><circle cx="14.5" cy="9" r=".9" fill="currentColor" />
+    <circle cx="12" cy="14" r=".9" fill="currentColor" /><circle cx="15.5" cy="13.5" r=".9" fill="currentColor" /><circle cx="8.5" cy="14.5" r=".9" fill="currentColor" />
+  </>),
+  qr: (<>
+    <rect x="3.5" y="3.5" width="7" height="7" rx="1.5" /><rect x="13.5" y="3.5" width="7" height="7" rx="1.5" /><rect x="3.5" y="13.5" width="7" height="7" rx="1.5" />
+    <path d="M14 14h2.5v2.5M20 14v.01M14 20h.01M17.5 17.5H20V20h-2.5" />
+  </>),
+  headshot: (<>
+    <circle cx="12" cy="9" r="3.6" />
+    <path d="M5 20.5c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5" />
+    <path d="M3.5 7V5a1.5 1.5 0 0 1 1.5-1.5h2M20.5 7V5A1.5 1.5 0 0 0 19 3.5h-2" />
+  </>),
+  "upscale-ai": (<>
+    <circle cx="10.5" cy="10.5" r="6.5" />
+    <path d="M20.5 20.5l-5.4-5.4" />
+    <path d="M10.5 7.5v6M7.5 10.5h6" />
+  </>),
+  apps: (<>
+    <rect x="3.5" y="3.5" width="7" height="7" rx="2" /><rect x="3.5" y="13.5" width="7" height="7" rx="2" /><rect x="13.5" y="13.5" width="7" height="7" rx="2" />
+    <path d="M17 3.5l1 2.5 2.5 1-2.5 1-1 2.5-1-2.5-2.5-1 2.5-1z" />
+  </>),
+  eraser: (<>
+    <path d="M16 3.5l4.5 4.5L10 18.5H5.5L3.5 16.5 16 3.5z" />
+    <path d="M9.5 10l4.5 4.5M10 18.5h10.5" />
+  </>),
+  generations: (<>
+    <rect x="3.5" y="5.5" width="13" height="13" rx="2" />
+    <path d="M7.5 2.5h11a3 3 0 0 1 3 3v11" />
+    <path d="M3.5 15l3.5-3 3 2.5 2-1.5 4.5 3.5" />
+  </>),
+  dashboard: (<>
+    <rect x="3.5" y="3.5" width="7" height="9" rx="1.5" /><rect x="13.5" y="3.5" width="7" height="5" rx="1.5" />
+    <rect x="13.5" y="11.5" width="7" height="9" rx="1.5" /><rect x="3.5" y="15.5" width="7" height="5" rx="1.5" />
+  </>),
+  tools: (<>
+    <path d="M14.5 6.5a4 4 0 0 0-5.3 5.3L3.5 17.5l3 3 5.7-5.7a4 4 0 0 0 5.3-5.3l-2.5 2.5-2.5-.5-.5-2.5z" />
+  </>),
+  blog: (<>
+    <path d="M5 3.5h10l4 4v13H5z" /><path d="M15 3.5v4h4" /><path d="M8.5 12h7M8.5 15.5h7M8.5 8.5h3" />
+  </>),
+  prompts: (<>
+    <path d="M4 5.5A2 2 0 0 1 6 3.5h12a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H10l-4.5 4v-4H6a2 2 0 0 1-2-2z" />
+    <path d="M12 7l.9 2.1L15 10l-2.1.9L12 13l-.9-2.1L9 10l2.1-.9z" />
+  </>),
+  video: (<>
+    <rect x="3" y="5.5" width="13" height="13" rx="2.5" /><path d="M16 10.5l5-3v9l-5-3" />
+  </>),
+  pricing: (<>
+    <path d="M6.5 3.5h11l3 5-8.5 12-8.5-12z" /><path d="M3.5 8.5h17M9.5 8.5l2.5 12 2.5-12M9 3.5l.5 5M15 3.5l-.5 5" />
+  </>),
   default: (<><rect x="4" y="4" width="16" height="16" rx="3" /><path d="M8 12h8" /></>),
 };
 
-// Map a tool page href to an icon key (for the nav + /tools hub).
+// Map a tool page href to an icon key (for the nav, homepage and /tools hub).
 export function iconKeyForHref(href: string): string {
   const map: Record<string, string> = {
     "/upscale": "upscale",
     "/compress-image": "compress",
     "/convert-image": "convert",
     "/crop-image": "crop",
+    "/resize-image": "resize",
     "/rotate-image": "rotate",
+    "/blur-image": "blur",
+    "/qr-code-generator": "qr",
     "/watermark-image": "watermark",
     "/meme-generator": "meme",
     "/image-to-pdf": "pdf",
     "/tiktok-watermark-remover": "tiktok",
-    "/watermark-remover": "remove-bg",
+    "/watermark-remover": "eraser",
     "/editor": "editor",
     "/batch-editor": "batch",
+    "/ai-editor": "ai-edit",
+    "/remove-bg": "remove-bg",
+    "/ai-headshot": "headshot",
+    "/editor?tool=generate-bg": "generate-bg",
+    "/editor?tool=upscale": "upscale-ai",
+    "/creative": "apps",
+    "/generations": "generations",
+    "/app": "dashboard",
+    "/tools": "tools",
+    "/blog": "blog",
+    "/prompts": "prompts",
+    "/prompts/video": "video",
+    "/pricing": "pricing",
   };
-  return map[href] || "default";
+  return map[href] || map[href.split("?")[0]] || "default";
 }
 
+/*
+  One gradient per tool, all drawn from the brand's warm range (amber, orange,
+  coral, rose, magenta, violet) so the set reads as one family while each tool
+  is still recognisable at a glance.
+*/
+const PALETTE: [string, string][] = [
+  ["#FF9F43", "#FF5A1F"], // amber → orange
+  ["#FF7A45", "#E11D48"], // orange → rose
+  ["#FB7185", "#DB2777"], // coral → pink
+  ["#F472B6", "#C026D3"], // pink → magenta
+  ["#C084FC", "#9333EA"], // lilac → violet
+  ["#F97316", "#BE123C"], // orange → crimson
+];
+const TONE: Record<string, number> = {
+  upscale: 0, "upscale-ai": 4, compress: 2, convert: 3, crop: 1, resize: 5, rotate: 4, blur: 3,
+  qr: 5, watermark: 1, meme: 0, pdf: 2, tiktok: 3, eraser: 4, editor: 1, batch: 0, "ai-edit": 4,
+  "remove-bg": 1, headshot: 2, "generate-bg": 0, apps: 3, generations: 5, adjust: 2, stickers: 3,
+  dashboard: 1, tools: 0, blog: 2, prompts: 4, video: 3, pricing: 5,
+};
+
+/**
+ * A tool's icon: a white line glyph on its own gradient tile.
+ *
+ * Pass `active` only where the icon sits in a picker (the editor sidebars):
+ * there an unselected tool shows a quiet tinted tile and the selected one
+ * lights up. Everywhere else the full gradient tile is the default.
+ */
 export default function ToolIcon({ id, active, size = 40 }: { id: string; active?: boolean; size?: number }) {
-  const gid = `tgrad-${id}`;
   const glyph = GLYPHS[id] || GLYPHS.default;
-  const inner = Math.round(size * 0.56);
+  const [from, to] = PALETTE[TONE[id] ?? 1];
+  const solid = active === undefined || active;
+  const inner = Math.round(size * 0.54);
+  const radius = Math.round(size * 0.3);
   return (
     <span
       aria-hidden
       style={{
-        width: size, height: size, borderRadius: size * 0.28,
+        position: "relative",
+        width: size, height: size, borderRadius: radius,
         display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
-        background: active ? "linear-gradient(135deg,var(--accent),var(--accent-2))" : "var(--accent-soft)",
-        boxShadow: active ? "0 6px 16px rgba(255,106,26,0.40)" : "none",
-        transition: "background .15s",
+        color: solid ? "#fff" : from,
+        background: solid
+          ? `linear-gradient(180deg, rgba(255,255,255,.26), rgba(255,255,255,0) 55%), linear-gradient(135deg, ${from}, ${to})`
+          : `linear-gradient(135deg, ${from}22, ${to}22)`,
+        boxShadow: solid
+          ? `inset 0 0 0 1px rgba(255,255,255,.18), 0 ${Math.round(size * 0.12)}px ${Math.round(size * 0.35)}px -${Math.round(size * 0.12)}px ${to}AA`
+          : `inset 0 0 0 1px ${from}33`,
+        transition: "background .15s, box-shadow .15s",
       }}
     >
-      <svg width={inner} height={inner} viewBox="0 0 24 24" fill="none"
-        stroke={active ? "#fff" : `url(#${gid})`} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-        <defs>
-          <linearGradient id={gid} x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-            <stop stopColor="var(--accent)" /><stop offset="1" stopColor="var(--accent-2)" />
-          </linearGradient>
-        </defs>
+      <svg width={inner} height={inner} viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" style={{ filter: solid ? "drop-shadow(0 1px 1px rgba(0,0,0,.18))" : undefined }}>
         {glyph}
       </svg>
     </span>

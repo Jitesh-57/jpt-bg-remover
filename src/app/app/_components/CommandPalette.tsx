@@ -1,5 +1,6 @@
 "use client";
 
+import ToolIcon, { iconKeyForHref } from "@/app/editor/ToolIcon";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { allTools, categoryMeta, type DashboardTool } from "@/lib/dashboard-catalog";
@@ -118,7 +119,9 @@ export default function CommandPalette({ open, onClose }: { open: boolean; onClo
                 return (
                   <button key={t.slug} onClick={() => go(t.href)} onMouseEnter={() => setActive(idx)}
                     style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "9px 10px", borderRadius: 9, border: "none", cursor: "pointer", textAlign: "left", background: active === idx ? "var(--accent-soft)" : "transparent", fontFamily: "inherit" }}>
-                    <span style={{ width: 30, height: 30, borderRadius: 8, background: "var(--surface-2)", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 15 }}>{t.emoji}</span>
+                    {iconKeyForHref(t.href) !== "default"
+                      ? <ToolIcon id={iconKeyForHref(t.href)} size={30} />
+                      : <span style={{ width: 30, height: 30, borderRadius: 8, background: "var(--surface-2)", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 15 }}>{t.emoji}</span>}
                     <span style={{ minWidth: 0, flex: 1 }}>
                       <div style={{ fontSize: 13.5, fontWeight: 700, color: "var(--text)" }}>{t.name}</div>
                       <div style={{ fontSize: 11.5, color: "var(--text-faint)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.blurb}</div>

@@ -382,7 +382,7 @@ export default function NavBar() {
                       <a key={link.href} href={link.href} onClick={() => setShowToolsDropdown(false)}
                         style={{ display: "flex", alignItems: "center", gap: 12, padding: "13px 10px", borderRadius: 10, textDecoration: "none", color: "var(--text)", fontSize: 14.5, fontWeight: 700 }}
                       >
-                        <span style={{ fontSize: 17, width: 22, textAlign: "center" }}>{link.icon}</span>
+                        <ToolIcon id={iconKeyForHref(link.href)} size={30} />
                         {link.label}
                       </a>
                     ))}
