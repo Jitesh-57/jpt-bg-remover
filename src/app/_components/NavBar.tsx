@@ -9,6 +9,7 @@ import { PAID_FEATURES_ENABLED } from "@/lib/features";
 import { persistAuthContext } from "@/lib/pending-image";
 import { beginGoogleSignIn } from "@/lib/auth-return";
 import ToolIcon, { iconKeyForHref } from "@/app/editor/ToolIcon";
+import MegaMenu from "./MegaMenu";
 import BrandLogo from "./BrandLogo";
 import { openPricing } from "@/lib/pricing-modal";
 import { CREDIT_COST } from "@/lib/plans";
@@ -313,7 +314,10 @@ export default function NavBar() {
               </svg>
             </button>
 
-            {showToolsDropdown && !isMobile && (
+            {showToolsDropdown && !isMobile && PAID_FEATURES_ENABLED && (
+              <MegaMenu onClose={() => setShowToolsDropdown(false)} />
+            )}
+            {showToolsDropdown && !isMobile && !PAID_FEATURES_ENABLED && (
               <div style={{ position: "absolute", top: "calc(100% + 12px)", left: 0, background: "var(--surface)", borderRadius: 16, boxShadow: "0 20px 60px rgba(0,0,0,0.18)", border: "1px solid var(--border)", padding: "20px", minWidth: 580, zIndex: 1000, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 0 }}>
                 {TOOLS.map((group, gi) => (
                   <div key={gi} style={{ padding: gi === 0 ? "0 20px 0 0" : "0 0 0 20px", borderRight: gi === 0 ? "1px solid var(--surface-2)" : "none" }}>
