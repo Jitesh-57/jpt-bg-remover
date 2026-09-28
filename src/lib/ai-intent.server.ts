@@ -1,4 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
+import { falChat, falConfigured } from "@/lib/fal";
 
 /**
  * ai-intent.server.ts — turns what someone types into an edit Pixel Shine can run.
@@ -11,8 +12,8 @@ import Anthropic from "@anthropic-ai/sdk";
  *   · question     — set only when the request is too vague to act on
  *   · suggestions  — what to try next, specific to this image and tool
  *
- * Claude does the reading when ANTHROPIC_API_KEY is set; otherwise a small
- * keyword fallback keeps the studio working.
+ * GPT on fal.ai does the reading (same FAL_KEY and balance as the image
+ * models); a small keyword fallback keeps the studio working if it can't.
  */
 
 export interface IntentInput {
@@ -78,7 +79,20 @@ function parseJson(text: string): Record<string, unknown> | null {
 const strs = (v: unknown, max: number, len = 80): string[] =>
   Array.isArray(v) ? v.filter((x): x is string => typeof x === "string" && !!x.trim()).map((x) => x.trim().slice(0, len)).slice(0, max) : [];
 
+/**
+ * Asks an LLM for JSON. Uses GPT through fal.ai first (the same key and balance
+ * as the image models); Claude only if ANTHROPIC_API_KEY happens to be set and
+ * fal isn't configured.
+ */
 async function askClaude(system: string, content: Anthropic.MessageParam["content"]): Promise<Record<string, unknown> | null> {
+  if (falConfigured()) {
+    const blocks = Array.isArray(content) ? content : [{ type: "text" as const, text: String(content) }];
+    const text = blocks.map((b) => (b.type === "text" ? b.text : "")).filter(Boolean).join("\n\n");
+    const imgBlock = blocks.find((b) => b.type === "image") as ImageBlock | undefined;
+    const imageUrl = imgBlock ? (imgBlock.source.type === "url" ? imgBlock.source.url : `data:${imgBlock.source.media_type};base64,${imgBlock.source.data}`) : null;
+    const out = await falChat(system, text, imageUrl);
+    return parseJson(out);
+  }
   const c = client();
   if (!c) return null;
   // Fields newer than this SDK version's types are passed through as-is.
@@ -101,7 +115,7 @@ export async function readIntent(input: IntentInput): Promise<IntentResult> {
   const request = input.request.trim().slice(0, 2000);
   const history = (input.history || []).slice(-8);
   const img = imageBlock(input.image);
-  let why = client() ? "" : "ANTHROPIC_API_KEY is not set on this deployment";
+  let why = falConfigured() || client() ? "" : "FAL_KEY is not set on this deployment";
 
   try {
     if (input.mode === "analyze") {
