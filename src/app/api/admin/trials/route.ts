@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminSupabase } from "@/lib/auth";
 import { requireAdmin } from "@/lib/admin-token";
+import { readTrialLog } from "@/lib/free-trial.server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -46,7 +47,13 @@ export async function GET(req: NextRequest) {
   }
   const recent = (grants ?? []).slice(0, 15).map((g) => ({ ...g, email: g.email ? g.email.replace(/^(.{2}).*(@.*)$/, "$1…$2") : null }));
 
-  return NextResponse.json({ rules: rules ?? [], stats, recent });
+  const log = await readTrialLog();
+  const warnings: string[] = [];
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) warnings.push("SUPABASE_SERVICE_ROLE_KEY is not set on this deployment, so no grant can be written.");
+  const { error: gErr } = await db.from("trial_grants").select("user_id", { head: true, count: "exact" });
+  if (gErr) warnings.push(`The trial_grants table can't be read: ${gErr.message}`);
+
+  return NextResponse.json({ rules: rules ?? [], stats, recent, log, warnings });
 }
 
 export async function POST(req: NextRequest) {

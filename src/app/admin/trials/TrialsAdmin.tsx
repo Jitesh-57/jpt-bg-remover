@@ -16,6 +16,8 @@ interface Payload {
   rules?: Rule[];
   stats?: Record<string, { users: number; credits: number }>;
   recent?: { country: string; email: string | null; credits: number; granted_at: string }[];
+  log?: { at: string; why: string; country: string; email: string; credits?: number; detail?: string }[];
+  warnings?: string[];
   needsSetup?: boolean;
   error?: string;
   fix?: string;
@@ -24,9 +26,6 @@ interface Payload {
 // ISO 3166-1 alpha-2. Names come from the browser (Intl.DisplayNames).
 const CODES = "AD AE AF AG AL AM AO AR AT AU AZ BA BB BD BE BF BG BH BI BJ BN BO BR BS BT BW BY BZ CA CD CF CG CH CI CL CM CN CO CR CU CV CY CZ DE DJ DK DM DO DZ EC EE EG ER ES ET FI FJ FM FR GA GB GD GE GH GM GN GQ GR GT GW GY HK HN HR HT HU ID IE IL IN IQ IR IS IT JM JO JP KE KG KH KI KM KN KR KW KZ LA LB LC LI LK LR LS LT LU LV LY MA MC MD ME MG MH MK ML MM MN MO MR MT MU MV MW MX MY MZ NA NE NG NI NL NO NP NR NZ OM PA PE PG PH PK PL PR PS PT PW PY QA RO RS RU RW SA SB SC SD SE SG SI SK SL SM SN SO SR SS ST SV SY SZ TD TG TH TJ TL TM TN TO TR TT TV TW TZ UA UG US UY UZ VA VC VE VN VU WS YE ZA ZM ZW".split(" ");
 
-function flag(code: string): string {
-  return String.fromCodePoint(...code.split("").map((c) => 0x1f1e6 + c.charCodeAt(0) - 65));
-}
 
 export default function TrialsAdmin() {
   const [token, setToken] = useState("");
@@ -155,7 +154,7 @@ export default function TrialsAdmin() {
                 return (
                   <div key={r.country} style={{ display: "flex", alignItems: "center", gap: 12, padding: "14px 16px", borderBottom: "1px solid var(--border)", flexWrap: "wrap" }}>
                     <div style={{ flex: "1 1 180px", minWidth: 0 }}>
-                      <div style={{ fontSize: 15.5, fontWeight: 800 }}>{flag(r.country)} {names(r.country)} <span style={{ color: "var(--text-faint)", fontWeight: 600, fontSize: 12.5 }}>{r.country}</span></div>
+                      <div style={{ fontSize: 15.5, fontWeight: 800 }}>{names(r.country)} <span style={{ color: "var(--text-faint)", fontWeight: 600, fontSize: 12.5 }}>{r.country}</span></div>
                       <div style={{ fontSize: 12.5, color: "var(--text-faint)", marginTop: 3 }}>
                         {st ? `${st.users} ${st.users === 1 ? "user" : "users"} got a trial · ${st.credits} credits given` : "No trials given yet"}
                       </div>
@@ -181,7 +180,7 @@ export default function TrialsAdmin() {
               <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "14px 16px", background: "var(--surface-2)", flexWrap: "wrap", borderRadius: rules.length ? "0 0 16px 16px" : 16 }}>
                 <div style={{ position: "relative", flex: "1 1 220px" }}>
                   <input
-                    value={newCountry ? `${flag(newCountry)} ${names(newCountry)}` : query}
+                    value={newCountry ? names(newCountry) : query}
                     onChange={(e) => { setNewCountry(""); setQuery(e.target.value); setOpen(true); }}
                     onFocus={() => setOpen(true)}
                     onBlur={() => setTimeout(() => setOpen(false), 150)}
@@ -196,7 +195,7 @@ export default function TrialsAdmin() {
                       {matches.map((c) => (
                         <button key={c} type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => { setNewCountry(c); setQuery(""); setOpen(false); }}
                           style={{ display: "flex", width: "100%", alignItems: "center", gap: 8, padding: "9px 12px", background: "none", border: "none", color: "var(--text)", fontSize: 14, cursor: "pointer", textAlign: "left", fontFamily: "inherit" }}>
-                          <span>{flag(c)}</span><span style={{ flex: 1 }}>{names(c)}</span><span style={{ color: "var(--text-faint)", fontSize: 12 }}>{c}</span>
+                          <span style={{ flex: 1 }}>{names(c)}</span><span style={{ color: "var(--text-faint)", fontSize: 12 }}>{c}</span>
                         </button>
                       ))}
                     </div>
@@ -216,13 +215,37 @@ export default function TrialsAdmin() {
               </div>
             </div>
 
+            {/* Setup problems that would stop every grant */}
+            {!!data.warnings?.length && (
+              <div style={{ ...card, borderColor: "var(--danger)" }}>
+                <div style={{ fontWeight: 800, color: "var(--danger)", marginBottom: 6 }}>Trials can't be given right now</div>
+                {data.warnings.map((w, i) => <div key={i} style={{ fontSize: 13.5, color: "var(--text-muted)", lineHeight: 1.6 }}>• {w}</div>)}
+              </div>
+            )}
+
+            {/* Why each new sign-up did or didn't get a trial */}
+            <div style={card}>
+              <div style={{ fontSize: 12, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--text-faint)", marginBottom: 4 }}>Recent sign-up checks</div>
+              <div style={{ fontSize: 12.5, color: "var(--text-faint)", marginBottom: 10 }}>Every new account is checked once when it signs in. This shows the result, so a missing trial always has a reason.</div>
+              {!data.log?.length && <div style={{ fontSize: 13.5, color: "var(--text-muted)" }}>No new sign-ups checked yet. Sign up with a brand-new account to test.</div>}
+              {data.log?.map((l, i) => {
+                const [label, color] = WHY[l.why] ?? [l.why, "var(--text-muted)"];
+                return (
+                  <div key={i} style={{ display: "flex", justifyContent: "space-between", gap: 10, flexWrap: "wrap", fontSize: 13, padding: "7px 0", borderTop: i ? "1px solid var(--border)" : "none" }}>
+                    <span><strong style={{ color }}>{label}</strong> · {l.email} · {l.country === "?" ? "country unknown" : names(l.country)}{l.detail ? <span style={{ color: "var(--text-faint)" }}> · {l.detail}</span> : null}</span>
+                    <span style={{ color: "var(--text-faint)" }}>{new Date(l.at).toLocaleString()}</span>
+                  </div>
+                );
+              })}
+            </div>
+
             {/* Recent */}
             {!!data.recent?.length && (
               <div style={card}>
                 <div style={{ fontSize: 12, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--text-faint)", marginBottom: 10 }}>Latest trials given</div>
                 {data.recent.map((g, i) => (
                   <div key={i} style={{ display: "flex", justifyContent: "space-between", gap: 10, fontSize: 13, padding: "6px 0", borderTop: i ? "1px solid var(--border)" : "none" }}>
-                    <span>{flag(g.country)} {g.email ?? "—"}</span>
+                    <span>{names(g.country)} · {g.email ?? "—"}</span>
                     <span style={{ color: "var(--text-faint)" }}>+{g.credits} · {new Date(g.granted_at).toLocaleString()}</span>
                   </div>
                 ))}
@@ -238,6 +261,16 @@ export default function TrialsAdmin() {
     </div>
   );
 }
+
+const WHY: Record<string, [string, string]> = {
+  granted: ["✓ Trial given", "var(--success)"],
+  "no-live-rule": ["No live trial for this country", "var(--text-muted)"],
+  "already-claimed": ["Already had a trial", "var(--text-muted)"],
+  "no-country": ["Country not detected", "var(--danger)"],
+  "email-unconfirmed": ["Email not confirmed yet", "var(--text-muted)"],
+  "no-email": ["Account has no email", "var(--text-muted)"],
+  error: ["Failed", "var(--danger)"],
+};
 
 const card: React.CSSProperties = { background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 16, padding: 18, marginBottom: 16 };
 const on: React.CSSProperties = { background: "var(--accent-soft)", borderColor: "var(--accent-border)", color: "var(--accent-strong)" };
