@@ -8,6 +8,8 @@ import Analytics from "./_components/Analytics";
 import SupportChat from "./_components/SupportChat";
 import AuthReturn from "./_components/AuthReturn";
 import PageGallery from "./_components/PageGallery";
+import SiteEdits from "./_components/SiteEdits";
+import { readEdits } from "@/lib/page-edits.server";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import { galleryIndex, galleryTitleFor, readOverrides } from "@/lib/overrides";
 
@@ -97,7 +99,7 @@ const softwareSchema = {
   what makes an upload appear without a deploy.
 */
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const overrides = await readOverrides();
+  const [overrides, edits] = await Promise.all([readOverrides(), readEdits()]);
   const galleries = galleryIndex(overrides);
   const titles = Object.fromEntries(Object.keys(galleries).map((k) => [k, galleryTitleFor(overrides, k)]));
 
@@ -155,6 +157,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           {/* Returns the user to the page they signed in from, wherever the
               OAuth round-trip happened to drop them. */}
           <AuthReturn />
+          {/* Copy and image changes from the visual page editor. */}
+          <SiteEdits initial={edits} />
         </LanguageProvider>
       </body>
     </html>

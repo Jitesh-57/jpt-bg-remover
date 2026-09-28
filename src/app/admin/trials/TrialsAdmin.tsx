@@ -36,6 +36,8 @@ export default function TrialsAdmin() {
   const [newCountry, setNewCountry] = useState("");
   const [newCredits, setNewCredits] = useState(2);
   const [drafts, setDrafts] = useState<Record<string, number>>({});
+  const [query, setQuery] = useState("");
+  const [open, setOpen] = useState(false);
 
   const names = useMemo(() => {
     try {
@@ -94,6 +96,10 @@ export default function TrialsAdmin() {
   const rules = data?.rules ?? [];
   const liveCount = rules.filter((r) => r.live).length;
   const available = CODES.filter((c) => !rules.some((r) => r.country === c)).sort((a, b) => names(a).localeCompare(names(b)));
+  // Matches the country's name or its code: "united", "ger", "us" all work.
+  const q = query.trim().toLowerCase();
+  const matches = (q ? available.filter((c) => names(c).toLowerCase().includes(q) || c.toLowerCase() === q) : available)
+    .sort((a, b) => Number(names(b).toLowerCase().startsWith(q)) - Number(names(a).toLowerCase().startsWith(q)) || Number(b.toLowerCase() === q) - Number(a.toLowerCase() === q));
 
   return (
     <div style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text)", padding: "30px 20px 90px" }}>
@@ -140,7 +146,7 @@ export default function TrialsAdmin() {
             </div>
 
             {/* Countries */}
-            <div style={{ ...card, padding: 0, overflow: "hidden" }}>
+            <div style={{ ...card, padding: 0 }}>
               {rules.length === 0 && <div style={{ padding: 18, fontSize: 14, color: "var(--text-muted)" }}>No countries yet. Add one below.</div>}
               {rules.map((r) => {
                 const credits = drafts[r.country] ?? r.credits;
@@ -172,20 +178,39 @@ export default function TrialsAdmin() {
               })}
 
               {/* Add */}
-              <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "14px 16px", background: "var(--surface-2)", flexWrap: "wrap" }}>
-                <select value={newCountry} onChange={(e) => setNewCountry(e.target.value)} style={{ ...input, flex: "1 1 200px", width: "auto" }}>
-                  <option value="">Add a country…</option>
-                  {available.map((c) => <option key={c} value={c}>{flag(c)} {names(c)}</option>)}
-                </select>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "14px 16px", background: "var(--surface-2)", flexWrap: "wrap", borderRadius: rules.length ? "0 0 16px 16px" : 16 }}>
+                <div style={{ position: "relative", flex: "1 1 220px" }}>
+                  <input
+                    value={newCountry ? `${flag(newCountry)} ${names(newCountry)}` : query}
+                    onChange={(e) => { setNewCountry(""); setQuery(e.target.value); setOpen(true); }}
+                    onFocus={() => setOpen(true)}
+                    onBlur={() => setTimeout(() => setOpen(false), 150)}
+                    onKeyDown={(e) => { if (e.key === "Enter" && matches[0]) { e.preventDefault(); setNewCountry(matches[0]); setQuery(""); setOpen(false); } }}
+                    placeholder="🔍 Search a country…"
+                    style={{ ...input, width: "100%" }}
+                    aria-label="Search a country"
+                  />
+                  {open && !newCountry && (
+                    <div style={{ position: "absolute", left: 0, right: 0, top: "calc(100% + 4px)", zIndex: 20, background: "var(--surface)", border: "1px solid var(--border-strong)", borderRadius: 12, boxShadow: "var(--shadow-lg)", maxHeight: 260, overflowY: "auto" }}>
+                      {matches.length === 0 && <div style={{ padding: "10px 12px", fontSize: 13, color: "var(--text-muted)" }}>No country matches “{query}”.</div>}
+                      {matches.map((c) => (
+                        <button key={c} type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => { setNewCountry(c); setQuery(""); setOpen(false); }}
+                          style={{ display: "flex", width: "100%", alignItems: "center", gap: 8, padding: "9px 12px", background: "none", border: "none", color: "var(--text)", fontSize: 14, cursor: "pointer", textAlign: "left", fontFamily: "inherit" }}>
+                          <span>{flag(c)}</span><span style={{ flex: 1 }}>{names(c)}</span><span style={{ color: "var(--text-faint)", fontSize: 12 }}>{c}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
                 <input type="number" min={1} max={100} value={newCredits} onChange={(e) => setNewCredits(Math.max(1, Math.min(100, Number(e.target.value) || 1)))}
                   style={{ ...input, width: 74, padding: "10px" }} aria-label="Credits" />
                 <span style={{ fontSize: 12.5, color: "var(--text-muted)" }}>credits</span>
                 <button style={{ ...chip, ...on }} disabled={busy || !newCountry}
-                  onClick={() => { void save(newCountry, newCredits, true, `${names(newCountry)} is live with ${newCredits} credits.`); setNewCountry(""); }}>
+                  onClick={() => { void save(newCountry, newCredits, true, `${names(newCountry)} is live with ${newCredits} credits.`); setNewCountry(""); setQuery(""); }}>
                   Add &amp; go live
                 </button>
                 <button style={chip} disabled={busy || !newCountry}
-                  onClick={() => { void save(newCountry, newCredits, false, `${names(newCountry)} added (stopped).`); setNewCountry(""); }}>
+                  onClick={() => { void save(newCountry, newCredits, false, `${names(newCountry)} added (stopped).`); setNewCountry(""); setQuery(""); }}>
                   Add stopped
                 </button>
               </div>
