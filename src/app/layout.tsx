@@ -79,10 +79,9 @@ const softwareSchema = {
   name: "Pixel Shine — Free AI Image Editor",
   applicationCategory: "MultimediaApplication",
   operatingSystem: "Web",
-  offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: "Free plan with 5 free trials plus unlimited free basic upscale" },
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: "Free browser tools with no sign-up, plus paid server-side AI features sold as one-time credit packs" },
   url: BASE,
   description: "Free AI image editor. Remove backgrounds, upscale photos to 4K, generate AI backgrounds, and edit images with text prompts.",
-  aggregateRating: { "@type": "AggregateRating", ratingValue: "4.8", reviewCount: "1200" },
 };
 
 /*

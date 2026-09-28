@@ -19,5 +19,6 @@ export async function GET() {
     `${BASE}/sitemap-prompts.xml`,
     `${BASE}/sitemap-video-prompts.xml`,
     `${BASE}/sitemap-creative.xml`,
+    `${BASE}/sitemap-growth.xml`,
   ]));
 }

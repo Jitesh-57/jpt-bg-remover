@@ -16,6 +16,7 @@
 import { POSTS } from "@/app/blog/_data/posts";
 import { VARIANTS, PARENT_META, type ParentTool } from "@/lib/landing-variants";
 import { CREATIVE_APPS, CREATIVE_BASE } from "@/lib/creative-apps";
+import { USE_CASES, ANSWER_PAGES } from "@/lib/growth-pages";
 import { CONVERSIONS } from "@/lib/conversions";
 import { COMPRESSIONS } from "@/lib/compressions";
 import { CROPS } from "@/lib/crops";
@@ -67,6 +68,8 @@ export function pagesUrls(): SitemapUrl[] {
     { url: `${BASE}/terms` },
     { url: `${BASE}/80s-ai-photo-prompts` },
     { url: `${BASE}/batch-editor` },
+    { url: `${BASE}/use-cases` },
+    { url: `${BASE}/ai` },
   ];
   if (PAID_FEATURES_ENABLED) out.push({ url: `${BASE}/pricing` });
   return dedupe(out);
@@ -159,6 +162,15 @@ export function videoPromptsUrls(): SitemapUrl[] {
 
 // ── creative ─────────────────────────────────────────────────────────────
 
+export function growthUrls(): SitemapUrl[] {
+  return dedupe([
+    { url: `${BASE}/use-cases` },
+    ...USE_CASES.map((p) => ({ url: `${BASE}/use-cases/${p.slug}` })),
+    { url: `${BASE}/ai` },
+    ...ANSWER_PAGES.map((p) => ({ url: `${BASE}/ai/${p.slug}` })),
+  ]);
+}
+
 export function creativeUrls(): SitemapUrl[] {
   if (!PAID_FEATURES_ENABLED) return [];
   return dedupe([
@@ -174,6 +186,7 @@ export const SECTIONS = {
   prompts: promptsUrls,
   "video-prompts": videoPromptsUrls,
   creative: creativeUrls,
+  growth: growthUrls,
 } as const;
 
 export type SectionName = keyof typeof SECTIONS;

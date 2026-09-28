@@ -121,7 +121,6 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
     screenshot: localAfter(a.slug) ?? previewUrl(a.slug),
     image: localAfter(a.slug) ?? previewUrl(a.slug),
-    aggregateRating: { "@type": "AggregateRating", ratingValue: "4.8", reviewCount: "1200" },
     url,
   };
   const faqLd = {
@@ -420,6 +419,20 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
           <div style={{ maxWidth: 720, margin: "0 auto" }}>
             <h2 style={{ fontSize: "clamp(1.6rem,3vw,2.2rem)", fontWeight: 900, color: "var(--text)", textAlign: "center", margin: "0 0 40px", letterSpacing: "-0.02em" }}>Frequently Asked Questions</h2>
             <FAQAccordion faqs={lc.faq} />
+          </div>
+        </section>
+
+        <section style={{ padding: "0 24px 72px", background: "var(--surface)" }}>
+          <div style={{ maxWidth: 1000, margin: "0 auto", textAlign: "center" }}>
+            <h2 style={{ fontSize: "clamp(1.4rem,3vw,2rem)", fontWeight: 900, margin: "0 0 12px" }}>Find another way to use Pixel Shine</h2>
+            <p style={{ color: "var(--text-muted)", lineHeight: 1.7, maxWidth: 700, margin: "0 auto 24px" }}>Explore tools grouped by the outcome you want, including social media, LinkedIn, ecommerce, real estate, photography, creators and weddings.</p>
+            <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 10 }}>
+              <a href="/use-cases/social-media" style={{ color: "var(--accent)", fontWeight: 800, textDecoration: "none" }}>Social media</a>
+              <a href="/use-cases/linkedin" style={{ color: "var(--accent)", fontWeight: 800, textDecoration: "none" }}>LinkedIn</a>
+              <a href="/use-cases/ecommerce" style={{ color: "var(--accent)", fontWeight: 800, textDecoration: "none" }}>Ecommerce</a>
+              <a href="/use-cases/real-estate" style={{ color: "var(--accent)", fontWeight: 800, textDecoration: "none" }}>Real estate</a>
+              <a href="/use-cases/photography" style={{ color: "var(--accent)", fontWeight: 800, textDecoration: "none" }}>Photography</a>
+            </div>
           </div>
         </section>
 

@@ -11,12 +11,12 @@ const BASE = "https://www.sjpt.io";
 const URL = `${BASE}${CREATIVE_BASE}`;
 
 export const metadata: Metadata = {
-  title: { absolute: "Pixel Shine Creative Apps — Free AI Photo Generators Online | Pixel Shine" },
+  title: { absolute: "Pixel Shine Creative Apps — 200+ AI Photo Generators Online | Pixel Shine" },
   description:
-    "Free Pixel Shine Creative apps — saree photoshoot, 3D figurine, retro Bollywood, pet portrait, anime and more. Upload a photo and get the result right on the page. No app, no watermark.",
-  keywords: "ai creative apps, ai photo generator free, ai photoshoot online, ai photo trends, free ai photo editor apps",
+    "Explore 200+ Pixel Shine AI creative apps — saree photoshoots, 3D figurines, retro portraits, pet art, anime and more. Upload a photo, choose a look and generate on the page. No app to install, no watermark.",
+  keywords: "ai creative apps, ai photo generator, ai photoshoot online, ai photo trends, ai photo editor, one tap ai photo apps",
   alternates: { canonical: URL },
-  openGraph: { title: "Pixel Shine Creative Apps — Free AI Photo Generators", description: "Upload a photo and get viral AI results right on the page. Free, no watermark.", url: URL },
+  openGraph: { title: "Pixel Shine Creative Apps — 200+ AI Photo Generators", description: "Upload a photo and get AI results right on the page. No app to install and no watermark.", url: URL },
 };
 
 /*
