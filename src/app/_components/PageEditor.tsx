@@ -101,11 +101,17 @@ export default function PageEditor({ edits, path, onExit }: { edits: PageEdits; 
     };
     const block = (e: Event) => {
       if (isEditor(e.target)) return;
+      // Alt/Option-click passes through, so menus and dropdowns can be opened
+      // and their contents edited without leaving Edit mode.
+      if ((e as MouseEvent).altKey) return;
       e.preventDefault();
       e.stopPropagation();
     };
     const click = (e: MouseEvent) => {
       if (isEditor(e.target)) return;
+      // Alt/Option-click passes through, so menus and dropdowns can be opened
+      // and their contents edited without leaving Edit mode.
+      if ((e as MouseEvent).altKey) return;
       e.preventDefault();
       e.stopPropagation();
       e.stopImmediatePropagation();
@@ -247,7 +253,7 @@ export default function PageEditor({ edits, path, onExit }: { edits: PageEdits; 
 
       {mode === "edit" && token && !sel && (
         <div style={{ position: "fixed", bottom: 14, left: "50%", transform: "translateX(-50%)", zIndex: 2147483001, background: "#15151A", border: "1px solid rgba(255,255,255,.14)", borderRadius: 12, padding: "9px 14px", fontSize: 13, color: "rgba(255,255,255,.8)", boxShadow: "0 12px 40px rgba(0,0,0,.45)", maxWidth: "calc(100vw - 20px)", textAlign: "center" }}>
-          {note ? <span style={{ color: note.ok ? "#4ADE80" : "#F87171", fontWeight: 700 }}>{note.text}</span> : "Click any text or image to change it. Use Browse to open other pages."}
+          {note ? <span style={{ color: note.ok ? "#4ADE80" : "#F87171", fontWeight: 700 }}>{note.text}</span> : "Click any text or image to change it. Alt/Option-click opens menus and dropdowns. Use Browse to open other pages."}
         </div>
       )}
 

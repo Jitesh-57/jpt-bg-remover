@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import ToolIcon, { iconKeyForHref } from "@/app/editor/ToolIcon";
 
 /**
@@ -13,14 +12,15 @@ import ToolIcon, { iconKeyForHref } from "@/app/editor/ToolIcon";
 
 const SUPA = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const thumb = (slug: string) => `${SUPA}/storage/v1/object/public/landing/creative/v2/${slug}.png`;
+const after = (slug: string) => `${SUPA}/storage/v1/object/public/landing/creatives/${slug}-after.webp`;
 
 const SPACES = [
-  { label: "Create Image", desc: "Turn a prompt into a stunning photo", href: "/app/create", img: thumb("aesthetic-photo-editor"), grad: "#7C3AED, #DB2777" },
-  { label: "AI Image Editor", desc: "Describe the change, get the edit", href: "/app/editor", img: thumb("fashion-photo-editor"), grad: "#0EA5E9, #6366F1" },
-  { label: "Recreate", desc: "Any photo's look, with your own face", href: "/app/recreate", img: thumb("dress-photo-editor"), grad: "#F97316, #DB2777", badge: "NEW" },
-  { label: "AI Headshot", desc: "Studio portraits from a selfie", href: "/ai-headshot", img: thumb("professional-headshot"), grad: "#10B981, #0EA5E9" },
-  { label: "Batch Editor", desc: "One edit on up to 100 images", href: "/batch-editor", img: thumb("ai-photoshoot"), grad: "#F59E0B, #EF4444" },
-  { label: "Photo Editor", desc: "Every tool on one canvas", href: "/editor", img: thumb("birthday-photo-editor"), grad: "#A855F7, #EC4899" },
+  { label: "Create Image", desc: "Turn a prompt into a stunning photo", href: "/app/create", slug: "old-hollywood-glamour", grad: "#7C3AED, #DB2777" },
+  { label: "AI Image Editor", desc: "Describe the change, get the edit", href: "/app/editor", slug: "fashion-photo-editor", grad: "#0EA5E9, #6366F1" },
+  { label: "Recreate", desc: "Any photo's look, with your own face", href: "/app/recreate", slug: "dress-photo-editor", grad: "#F97316, #DB2777", badge: "NEW" },
+  { label: "AI Headshot", desc: "Studio portraits from a selfie", href: "/ai-headshot", slug: "professional-headshot", grad: "#10B981, #0EA5E9" },
+  { label: "Batch Editor", desc: "One edit on up to 100 images", href: "/batch-editor", slug: "saree-photoshoot", grad: "#F59E0B, #EF4444" },
+  { label: "Photo Editor", desc: "Every tool on one canvas", href: "/editor", slug: "renaissance-portrait", grad: "#A855F7, #EC4899" },
 ];
 
 const FEATURES = [
@@ -39,18 +39,28 @@ const POPULAR = [
   { label: "Professional Headshot", slug: "professional-headshot" },
   { label: "Baby Photoshoot", slug: "baby-photoshoot" },
   { label: "Outfit Generator", slug: "outfit-generator" },
-  { label: "Aesthetic Photo Editor", slug: "aesthetic-photo-editor" },
+  { label: "3D Figurine", slug: "3d-figurine" },
 ];
 
-function Thumb({ src, grad, size }: { src: string; grad: string; size: number }) {
-  const [failed, setFailed] = useState(!SUPA);
+/**
+ * A menu thumbnail, drawn as a background so it can be replaced from the
+ * visual page editor like any other picture. Candidates are layered: the
+ * app's uploaded "after" photo first, then its preview, then a gradient, so
+ * whichever exists shows. Cropped towards the top, where the face usually is,
+ * so a portrait still reads at 30px.
+ */
+function Thumb({ slug, grad, size }: { slug: string; grad: string; size: number }) {
+  const layers = SUPA ? [`url("${after(slug)}")`, `url("${thumb(slug)}")`] : [];
   return (
-    <span style={{ width: size, height: size, borderRadius: Math.round(size * 0.22), overflow: "hidden", flexShrink: 0, background: `linear-gradient(135deg, ${grad})`, boxShadow: "inset 0 0 0 1px rgba(255,255,255,.08)", display: "block" }}>
-      {!failed && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={src} alt="" loading="lazy" onError={() => setFailed(true)} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-      )}
-    </span>
+    <span
+      aria-hidden
+      style={{
+        width: size, height: size, borderRadius: Math.round(size * 0.24), flexShrink: 0, display: "block",
+        backgroundImage: [...layers, `linear-gradient(135deg, ${grad})`].join(", "),
+        backgroundSize: "cover", backgroundPosition: "center 22%", backgroundRepeat: "no-repeat",
+        boxShadow: "inset 0 0 0 1px rgba(255,255,255,.1), 0 4px 12px -4px rgba(0,0,0,.5)",
+      }}
+    />
   );
 }
 
@@ -79,7 +89,7 @@ export default function MegaMenu({ onClose }: { onClose: () => void }) {
           {SPACES.map((s) => (
             <a key={s.href} href={s.href} onClick={onClose} {...hover}
               style={{ display: "flex", alignItems: "center", gap: 13, padding: "9px 10px", borderRadius: 12, textDecoration: "none", transition: "background .12s" }}>
-              <Thumb src={s.img} grad={s.grad} size={50} />
+              <Thumb slug={s.slug} grad={s.grad} size={54} />
               <span style={{ minWidth: 0 }}>
                 <span style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 14.5, fontWeight: 800, color: "var(--text)" }}>
                   {s.label}
@@ -113,7 +123,7 @@ export default function MegaMenu({ onClose }: { onClose: () => void }) {
         {POPULAR.map((p) => (
           <a key={p.slug} href={`/creative/${p.slug}`} onClick={onClose} {...hover}
             style={{ display: "flex", alignItems: "center", gap: 12, padding: "7px 10px", borderRadius: 10, textDecoration: "none", fontSize: 14, fontWeight: 600, color: "var(--text)", transition: "background .12s" }}>
-            <Thumb src={thumb(p.slug)} grad="#F97316, #DB2777" size={30} />
+            <Thumb slug={p.slug} grad="#F97316, #DB2777" size={34} />
             <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.label}</span>
           </a>
         ))}
