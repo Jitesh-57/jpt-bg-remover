@@ -25,6 +25,8 @@ import { trackEvent } from "@/lib/analytics";
 interface Version { id: string; src: string; url?: string; label: string; prompt: string }
 interface Understood { label: string; value: string }
 interface Intent {
+  source?: "ai" | "rules";
+  why?: string;
   understood: Understood[];
   prompt: string;
   question?: string;
@@ -106,6 +108,9 @@ export default function AIStudio() {
   const [intent, setIntent] = useState<Intent | null>(null);
   const [analysis, setAnalysis] = useState<Intent | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
+  const [model, setModel] = useState<"gpt-image" | "nano-banana">("gpt-image");
+  const [isAdmin, setIsAdmin] = useState(false);
+  useEffect(() => { try { setIsAdmin(!!localStorage.getItem("jpt-admin-token")); } catch {} }, []);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [stage, setStage] = useState(0);
   const [err, setErr] = useState<string | null>(null);
@@ -226,7 +231,7 @@ export default function AIStudio() {
       const image = await sourceFor(from);
       const res = await fetch("/api/edit-image", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image, prompt }),
+        body: JSON.stringify({ image, prompt, model }),
       });
       type Body = { dataUrl?: string; resultUrl?: string; error?: string; credits?: number; upgradeRequired?: boolean };
       let d: Body = {};
@@ -350,7 +355,7 @@ export default function AIStudio() {
             {/* After upload: what we see */}
             {original && !shown && (analyzing || analysis?.detected?.length || analysis?.recommended?.length) ? (
               <div className="jpt-a-up">
-                <div style={eyebrow}>We detected</div>
+                {(analyzing || !!analysis?.detected?.length) && <div style={eyebrow}>We detected</div>}
                 {analyzing ? (
                   <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>{[70, 90, 60].map((w, i) => <span key={i} className="jpt-skel" style={{ width: w, height: 26, borderRadius: 999 }} />)}</div>
                 ) : (
@@ -405,6 +410,13 @@ export default function AIStudio() {
               )}
             </div>
 
+            {/* Admins only: why smart reading fell back to keywords */}
+            {isAdmin && (intent?.source === "rules" || analysis?.source === "rules") && (
+              <div style={{ fontSize: 12, color: "var(--text-faint)", border: "1px dashed var(--border-strong)", borderRadius: 10, padding: "8px 10px", lineHeight: 1.5 }}>
+                Admin note: smart reading is off, using basic keyword mode. Reason: {intent?.why || analysis?.why || "unknown"}
+              </div>
+            )}
+
             {/* We understood */}
             {phase === "review" && intent && (
               <div className="jpt-a-pop" style={{ border: "1px solid var(--accent-border)", background: "linear-gradient(180deg, var(--accent-soft), transparent)", borderRadius: 16, padding: 16 }}>
@@ -428,7 +440,15 @@ export default function AIStudio() {
                         </div>
                       ))}
                     </div>
-                    <div style={{ display: "flex", gap: 8, marginTop: 14 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 14, fontSize: 12.5, color: "var(--text-muted)" }}>
+                      Model
+                      <div style={{ display: "flex", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 10, padding: 2 }}>
+                        {([["gpt-image", "ChatGPT"], ["nano-banana", "Nano Banana"]] as const).map(([id, label]) => (
+                          <button key={id} onClick={() => setModel(id)} style={{ border: "none", borderRadius: 8, padding: "5px 10px", fontSize: 12, fontWeight: 800, cursor: "pointer", fontFamily: "inherit", background: model === id ? "var(--grad-strong)" : "transparent", color: model === id ? "#fff" : "var(--text-muted)" }}>{label}</button>
+                        ))}
+                      </div>
+                    </div>
+                    <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
                       <button onClick={() => void generate(intent.prompt)} disabled={busy} style={{ flex: 1, padding: "12px 14px", borderRadius: 12, border: "none", background: "var(--grad-strong)", color: "#fff", fontWeight: 900, fontSize: 14.5, cursor: "pointer", boxShadow: "var(--glow)", fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
                         <Icon name="sparkle" size={16} /> Generate · {CREDIT_COST} credits
                       </button>

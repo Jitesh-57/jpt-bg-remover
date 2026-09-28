@@ -32,6 +32,8 @@ export interface IntentResult {
   detected?: string[];
   recommended?: { label: string; prompt: string }[];
   source: "ai" | "rules";
+  /** Why the keyword fallback was used, when it was. Shown to admins only. */
+  why?: string;
 }
 
 const MODEL = "claude-opus-5";
@@ -99,6 +101,7 @@ export async function readIntent(input: IntentInput): Promise<IntentResult> {
   const request = input.request.trim().slice(0, 2000);
   const history = (input.history || []).slice(-8);
   const img = imageBlock(input.image);
+  let why = client() ? "" : "ANTHROPIC_API_KEY is not set on this deployment";
 
   try {
     if (input.mode === "analyze") {
@@ -119,7 +122,7 @@ export async function readIntent(input: IntentInput): Promise<IntentResult> {
           suggestions: strs(j.suggestions, 4, 40),
         };
       }
-      return { ...rulesAnalyze(input.tool), source: "rules" };
+      return { ...rulesAnalyze(input.tool), source: "rules", why: why || (img ? "Claude's reply could not be read" : "The image could not be sent") };
     }
 
     const content: Anthropic.MessageParam["content"] = [
@@ -148,9 +151,11 @@ export async function readIntent(input: IntentInput): Promise<IntentResult> {
       }
     }
   } catch (e) {
-    console.error("[ai-intent]", (e as Error).message);
+    why = (e as Error).message.slice(0, 200);
+    console.error("[ai-intent]", why);
+    if (input.mode === "analyze") return { ...rulesAnalyze(input.tool), source: "rules", why };
   }
-  return { ...rulesIntent(request, history, input.tool), source: "rules" };
+  return { ...rulesIntent(request, history, input.tool), source: "rules", why: why || "Claude's reply could not be read" };
 }
 
 /* ── Fallback: keyword reading, so the studio works without the AI key ─── */
