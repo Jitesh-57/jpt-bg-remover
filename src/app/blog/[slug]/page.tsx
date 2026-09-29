@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import BlogCover from "../_components/BlogCover";
+import { mainsFrom } from "@/lib/blog-images";
+import { readOverrides } from "@/lib/overrides";
 import { POSTS, getPost } from "../_data/posts";
 import BlogStickyBar from "../_components/BlogStickyBar";
 
@@ -74,6 +76,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const { slug } = await params;
   const post = getPost(slug);
   if (!post) notFound();
+  const mains = mainsFrom((await readOverrides()).pages);
 
   const url = `https://www.sjpt.io/blog/${post.slug}`;
 
@@ -192,7 +195,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
             {/* Hero image */}
             <div style={{ marginBottom: 32 }}>
-              <BlogCover post={post} height={360} radius={16} eager sizes="(max-width: 768px) 100vw, 760px" />
+              <BlogCover post={post} mains={mains} height={360} radius={16} eager sizes="(max-width: 768px) 100vw, 760px" />
             </div>
 
             {/* Intro box */}
@@ -256,7 +259,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 18 }}>
                 {related.map((r) => (
                   <Link key={r.slug} href={`/blog/${r.slug}`} className="jpt-hover" style={{ textDecoration: "none", display: "block", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 14, overflow: "hidden" }}>
-                    <BlogCover post={r} height={120} sizes="260px" />
+                    <BlogCover post={r} mains={mains} height={120} sizes="260px" />
                     <div style={{ padding: "14px 16px" }}>
                       <span style={{ fontSize: 11, fontWeight: 700, color: CATEGORY_COLORS[r.category] || "var(--accent)", letterSpacing: 0.4 }}>{r.category}</span>
                       <div style={{ fontSize: 15, fontWeight: 700, color: "var(--text)", lineHeight: 1.35, marginTop: 6 }}>{r.title}</div>

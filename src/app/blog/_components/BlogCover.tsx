@@ -1,18 +1,25 @@
 import SmartImage from "@/app/_components/SmartImage";
-import { blogCoverSources } from "@/lib/blog-images";
+import { blogCover, type AppMains } from "@/lib/blog-images";
 
-/** A blog post's cover: its own picture, else the creative from the app it is about. */
-export default function BlogCover({ post, height, radius = 0, eager = false, sizes }: {
+/**
+ * A blog post's cover. When it is an app's before-and-after creative it is
+ * drawn at that image's own shape, so both halves show whole; otherwise it
+ * fills a fixed-height strip.
+ */
+export default function BlogCover({ post, mains, height, radius = 0, eager = false, sizes }: {
   post: { slug: string; title: string; toolHref: string; image?: string };
+  mains: AppMains;
   height: number;
   radius?: number;
   eager?: boolean;
   sizes?: string;
 }) {
+  const cover = blogCover(post, mains);
+  const shape: React.CSSProperties = cover.w && cover.h ? { aspectRatio: `${cover.w} / ${cover.h}` } : { height };
   return (
-    <div style={{ height, borderRadius: radius, overflow: "hidden" }}>
-      <SmartImage sources={blogCoverSources(post)} alt={post.title} eager={eager} sizes={sizes}
-        fallback="linear-gradient(135deg, var(--accent-soft), var(--surface-2))" style={{ backgroundPosition: "center" }} />
+    <div style={{ ...shape, width: "100%", borderRadius: radius, overflow: "hidden" }}>
+      <SmartImage sources={cover.sources} alt={`${post.title}: before and after`} eager={eager} sizes={sizes}
+        fallback="linear-gradient(135deg, var(--accent-soft), var(--surface-2))" />
     </div>
   );
 }

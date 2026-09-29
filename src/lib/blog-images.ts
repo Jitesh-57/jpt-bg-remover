@@ -117,8 +117,13 @@ export function deriveBlogPrompt(title: string, category: string): string {
 
 /* ── Cover images for the blog pages ─────────────────────────────────────── */
 
+/** An app's "main" creative: one image that already shows the before and the after side by side. */
+const appMain = (app: string) => `${SUPABASE_PUBLIC}/creatives/${app}-main.webp`;
 const appAfter = (app: string) => `${SUPABASE_PUBLIC}/creatives/${app}-after.webp`;
 const appPreview = (app: string) => `${SUPABASE_PUBLIC}/creative/v2/${app}.png`;
+
+/** Apps that have a main creative, with its size (from the overrides document). */
+export type AppMains = Map<string, { w: number; h: number }>;
 
 /** Which creative app best pictures a post about a free tool, by the tool it links to or its title. */
 const TOOL_APPS: [RegExp, string][] = [
@@ -135,25 +140,51 @@ const TOOL_APPS: [RegExp, string][] = [
   [/upscale|4k|blurry|sharp|quality|enhance|print/, "restore-old-photos"],
 ];
 
-/** Popular apps that always have a picture, used when nothing more specific matches. */
-const ANY_APP = ["professional-headshot", "ghibli-style", "old-hollywood-glamour", "polaroid-photo", "saree-photoshoot", "pixar-avatar", "renaissance-portrait", "3d-figurine"];
+/** Words too common in app names to say two things are related. */
+const GENERIC = new Set(["photo", "photos", "photoshoot", "generator", "maker", "portrait", "image", "style", "free", "online", "your", "with", "from", "into", "turn", "make", "the", "and", "for"]);
+
+function slugHash(slug: string): number {
+  let hash = 7;
+  for (let i = 0; i < slug.length; i++) hash = (hash * 31 + slug.charCodeAt(i)) >>> 0;
+  return hash;
+}
 
 /**
- * Every picture a post's cover could use, best first. The browser tries each
- * in turn (SmartImage), so a post whose own cover was never generated still
- * shows the creative from the app it is about, and never an empty box.
+ * A post's cover, best picture first. The browser tries each in turn
+ * (SmartImage), so nothing ends up an empty box.
+ *
+ * The before-and-after "main" creative leads whenever one fits: the app the
+ * post is about, else the app its topic maps to, else an app whose name shares
+ * a word with the title, else any app with a main (spread by slug so the grid
+ * does not repeat one picture). `w`/`h` are that image's shape, so the card
+ * shows the whole before and after instead of cropping it.
  */
-export function blogCoverSources(post: { slug: string; title: string; toolHref: string; image?: string }): string[] {
+export function blogCover(
+  post: { slug: string; title: string; toolHref: string; image?: string },
+  mains: AppMains,
+): { sources: string[]; w?: number; h?: number } {
   const own = [post.image, blogImageUrl(post.slug)].filter((u): u is string => !!u);
   const creative = post.toolHref.match(/^\/creative\/([a-z0-9-]+)/)?.[1];
   const text = `${post.toolHref} ${post.title}`.toLowerCase();
-  const matched = TOOL_APPS.find(([re]) => re.test(text))?.[1];
-  let hash = 7;
-  for (let i = 0; i < post.slug.length; i++) hash = (hash * 31 + post.slug.charCodeAt(i)) >>> 0;
-  const spare = ANY_APP[hash % ANY_APP.length];
-  const apps = [creative, matched, spare].filter((a, i, all): a is string => !!a && all.indexOf(a) === i);
-  const pictures = apps.flatMap((a) => [appAfter(a), appPreview(a)]);
-  // A post about an app leads with that app's own creative; a tool guide keeps its written-for cover first.
-  const order = creative ? [...pictures.slice(0, 2), ...own, ...pictures.slice(2)] : [...own, ...pictures];
-  return order.filter((u, i) => order.indexOf(u) === i);
+  const matched = TOOL_APPS.filter(([re]) => re.test(text)).map(([, app]) => app);
+  const words = new Set(text.split(/[^a-z0-9]+/).filter((w) => w.length > 2 && !GENERIC.has(w)));
+  const withMain = Array.from(mains.keys()).sort();
+  const related = withMain.filter((app) => app.split("-").some((w) => words.has(w)));
+  const spare = withMain.length ? [withMain[slugHash(post.slug) % withMain.length]] : [];
+
+  const pick = [creative, ...matched, ...related, ...spare].find((a): a is string => !!a && mains.has(a));
+  const old = [creative, matched[0]].filter((a): a is string => !!a).flatMap((a) => [appAfter(a), appPreview(a)]);
+
+  const order = pick ? [appMain(pick), ...own, ...old] : creative ? [...old, ...own] : [...own, ...old];
+  const size = pick ? mains.get(pick) : undefined;
+  return { sources: order.filter((u, i) => order.indexOf(u) === i), w: size?.w, h: size?.h };
+}
+
+/** The apps with a main creative, read from the overrides document the creative gallery uses. */
+export function mainsFrom(pages: Record<string, { main?: { w: number; h: number } }>): AppMains {
+  const out: AppMains = new Map();
+  for (const [key, page] of Object.entries(pages)) {
+    if (page.main && key.startsWith("creative/")) out.set(key.slice("creative/".length), { w: page.main.w, h: page.main.h });
+  }
+  return out;
 }
