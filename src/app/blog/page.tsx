@@ -1,9 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { editedPosts } from "@/lib/blog-edits.server";
-import BlogCover from "./_components/BlogCover";
-import { mainsFrom } from "@/lib/blog-images";
-import { readOverrides } from "@/lib/overrides";
+import BlogIndex from "./_components/BlogIndex";
 
 export const metadata: Metadata = {
   title: { absolute: "Image Upscaling Blog — Tips, Tutorials & Guides | Pixel Shine" },
@@ -24,68 +20,9 @@ export const metadata: Metadata = {
   },
 };
 
-// Badge fills sit under white text, so they use --accent-fill (dark enough for
-// white) rather than --accent (which is tuned to read as text on near-black).
-const CATEGORY_COLORS: Record<string, string> = {
-  Tutorial: "var(--accent-fill)",
-  Guide: "var(--accent-fill)",
-  News: "var(--accent-fill)",
-};
-
 /* Covers follow the creatives uploaded in /admin, re-read with the creative gallery's cadence. */
 export const revalidate = 300;
 
-export default async function BlogIndexPage() {
-  const [overrides, POSTS] = await Promise.all([readOverrides(), editedPosts()]);
-  const mains = mainsFrom(overrides.pages);
-  return (
-    <main style={{ background: "var(--surface-2)", minHeight: "100vh", padding: "60px 24px 80px" }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-        {/* Header */}
-        <div style={{ textAlign: "center", marginBottom: 56 }}>
-          <div style={{ display: "inline-block", background: "var(--accent-soft)", color: "var(--accent)", border: "1px solid var(--accent-border)", borderRadius: 100, padding: "5px 14px", fontSize: 12, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", marginBottom: 16 }}>
-            Blog
-          </div>
-          <h1 style={{ margin: "0 0 14px", fontSize: "clamp(28px, 4vw, 42px)", fontWeight: 900, color: "var(--text)", letterSpacing: "-0.8px", lineHeight: 1.15 }}>
-            Image Upscaling Tips & Tutorials
-          </h1>
-          <p style={{ margin: 0, fontSize: 18, color: "var(--text-muted)", lineHeight: 1.6, maxWidth: 540, marginLeft: "auto", marginRight: "auto" }}>
-            Step-by-step guides on upscaling images, enhancing photo quality, fixing blurry pictures, and getting print-ready resolution — all free.
-          </p>
-        </div>
-
-        {/* Grid */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(480px, 100%), 1fr))", gap: 28 }}>
-          {POSTS.map((post) => (
-            <Link key={post.slug} href={`/blog/${post.slug}`} style={{ textDecoration: "none" }}>
-              <article className="jpt-hover" style={{ background: "var(--surface)", borderRadius: 18, border: "1px solid #E8EAF0", overflow: "hidden", boxShadow: "0 2px 14px rgba(0,0,0,0.04)", cursor: "pointer" }}>
-                <BlogCover post={post} mains={mains} height={200} sizes="(max-width: 768px) 100vw, 540px" />
-                <div style={{ padding: "24px 28px 28px" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
-                    <span style={{ background: CATEGORY_COLORS[post.category] || "var(--accent-fill)", color: "#fff", fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 20, letterSpacing: 0.5 }}>
-                      {post.category}
-                    </span>
-                  </div>
-                  <h2 style={{ margin: "0 0 10px", fontSize: 20, fontWeight: 800, color: "var(--text)", lineHeight: 1.3, letterSpacing: "-0.3px" }}>
-                    {post.title}
-                  </h2>
-                  <p style={{ margin: "0 0 16px", fontSize: 14, color: "var(--text-muted)", lineHeight: 1.65 }}>
-                    {post.excerpt}
-                  </p>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    <div style={{ display: "flex", gap: 12, fontSize: 12, color: "var(--text-faint)" }}>
-                      <span>{new Date(post.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</span>
-                      <span>·</span>
-                      <span>{post.readTime}</span>
-                    </div>
-                    <span style={{ fontSize: 13, fontWeight: 700, color: "var(--accent)" }}>Read more →</span>
-                  </div>
-                </div>
-              </article>
-            </Link>
-          ))}
-        </div>
-      </div>
-    </main>
-  );
+export default function BlogIndexPage() {
+  return <BlogIndex page={1} />;
 }
