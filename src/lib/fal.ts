@@ -25,7 +25,8 @@
  * accidentally-included "Key " prefix are stripped for the same reason.
  */
 const KEY = () =>
-  (process.env.FAL_KEY || "")
+  (process.env.FAL_KEY || process.env.FAL_API_KEY || process.env.FAL_AI_KEY || process.env.FALAI_API_KEY ||
+    (process.env.FAL_KEY_ID && process.env.FAL_KEY_SECRET ? `${process.env.FAL_KEY_ID}:${process.env.FAL_KEY_SECRET}` : ""))
     .trim()
     .replace(/^["']|["']$/g, "")
     .replace(/^Key\s+/i, "")

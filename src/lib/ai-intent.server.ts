@@ -111,11 +111,22 @@ async function askClaude(system: string, content: Anthropic.MessageParam["conten
   return parseJson(text);
 }
 
+/**
+ * What this deployment actually has, for the admin note: environment, which
+ * commit is running, and the NAMES of any fal-looking variables (never values).
+ */
+function missingKeyReason(): string {
+  const names = Object.keys(process.env).filter((k) => /FAL/i.test(k) && !/FALLBACK/i.test(k));
+  const env = process.env.VERCEL_ENV || "unknown";
+  const sha = (process.env.VERCEL_GIT_COMMIT_SHA || "").slice(0, 7) || "unknown";
+  return `no fal key on this deployment (environment: ${env}, commit: ${sha}; fal-related variables found: ${names.length ? names.join(", ") : "none"}). Add FAL_KEY with Preview ticked in Vercel, then redeploy.`;
+}
+
 export async function readIntent(input: IntentInput): Promise<IntentResult> {
   const request = input.request.trim().slice(0, 2000);
   const history = (input.history || []).slice(-8);
   const img = imageBlock(input.image);
-  let why = falConfigured() || client() ? "" : "FAL_KEY is not set on this deployment";
+  let why = falConfigured() || client() ? "" : missingKeyReason();
 
   try {
     if (input.mode === "analyze") {
