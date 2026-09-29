@@ -93,6 +93,37 @@ function Compare({ before, after }: { before: string; after: string }) {
   );
 }
 
+/* ── Scanning effect over the photo while it's being read ───────────────── */
+const SCAN_TEXT = {
+  analyze: ["Scanning your photo…", "Finding the subject…", "Reading light and colour…", "Spotting what could be better…", "Preparing ideas for you…"],
+  reading: ["Understanding your request…", "Mapping it onto your photo…", "Planning the edit…"],
+};
+const DOTS = [[22, 30], [68, 24], [40, 58], [76, 66], [30, 80]];
+
+function ScanOverlay({ mode }: { mode: "analyze" | "reading" }) {
+  const lines = SCAN_TEXT[mode];
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    setI(0);
+    const t = setInterval(() => setI((n) => (n + 1) % lines.length), 1400);
+    return () => clearInterval(t);
+  }, [lines]);
+  return (
+    <div className="jpt-scan" aria-live="polite" role="status">
+      <div className="jpt-scan-grid" />
+      <div className="jpt-scan-beam" />
+      {DOTS.map(([x, y], k) => (
+        <span key={k} className="jpt-scan-dot" style={{ left: `${x}%`, top: `${y}%`, animationDelay: `${k * 0.35}s` }} />
+      ))}
+      {(["tl", "tr", "bl", "br"] as const).map((c) => <span key={c} className={`jpt-scan-corner ${c}`} />)}
+      <div className="jpt-scan-pill">
+        <span className="jpt-spin" style={{ width: 13, height: 13, borderRadius: "50%", border: "2px solid rgba(255,255,255,.35)", borderTopColor: "#fff", flexShrink: 0 }} />
+        <span key={i} className="jpt-a-pop">{lines[i]}</span>
+      </div>
+    </div>
+  );
+}
+
 export default function AIStudio() {
   const user = useDashboardUser();
   const [credits, setCredits] = useState(user.credits);
@@ -108,6 +139,7 @@ export default function AIStudio() {
   const [intent, setIntent] = useState<Intent | null>(null);
   const [analysis, setAnalysis] = useState<Intent | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
+  const [dims, setDims] = useState<{ w: number; h: number } | null>(null);
   const [model, setModel] = useState<"gpt-image" | "nano-banana">("gpt-image");
   const [isAdmin, setIsAdmin] = useState(false);
   useEffect(() => { try { setIsAdmin(!!localStorage.getItem("jpt-admin-token")); } catch {} }, []);
@@ -215,9 +247,13 @@ export default function AIStudio() {
   const direct = (label: string, prompt: string) => {
     trackEvent("suggestion_clicked", { tool: "ai-studio", label });
     setText(label);
-    setIntent({ understood: [{ label: "Action", value: label }, { label: "Keep", value: "Everything else as it is" }], prompt, suggestions: [] });
-    setPhase("review");
     setErr(null);
+    // A short read on the photo, so picking an option feels considered rather than instant.
+    setPhase("reading");
+    setTimeout(() => {
+      setIntent({ understood: [{ label: "Action", value: label }, { label: "Keep", value: "Everything else as it is" }], prompt, suggestions: [] });
+      setPhase("review");
+    }, 1300);
   };
 
   /* Generate ----------------------------------------------------------- */
@@ -292,7 +328,7 @@ export default function AIStudio() {
               onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
               onDragLeave={() => setDragOver(false)}
               onDrop={(e) => { e.preventDefault(); setDragOver(false); void pick(e.dataTransfer.files?.[0]); }}
-              style={{ position: "relative", borderRadius: 20, border: `1px ${original ? "solid" : "dashed"} ${dragOver ? "var(--accent)" : "var(--border-strong)"}`, background: "var(--bg-elevated)", minHeight: 420, height: "min(68vh, 680px)", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}
+              style={{ position: "relative", borderRadius: 20, border: `1px ${original ? "solid" : "dashed"} ${dragOver ? "var(--accent)" : "var(--border-strong)"}`, background: "var(--bg-elevated)", minHeight: 420, height: "min(68vh, 680px)", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", containerType: "size" }}
             >
               {!original ? (
                 <button onClick={() => fileRef.current?.click()} style={{ background: "none", border: "none", color: "var(--text)", cursor: "pointer", textAlign: "center", padding: 30, fontFamily: "inherit" }}>
@@ -304,7 +340,14 @@ export default function AIStudio() {
                 <Compare before={original.src} after={shown.src} />
               ) : (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={shownSrc!} alt={shown ? shown.label : "Your photo"} style={{ ...img, objectFit: "contain", filter: phase === "generating" ? "brightness(.55) blur(1px)" : undefined, transition: "filter .3s" }} />
+                <div style={dims
+                  ? { position: "relative", width: `min(100cqw, calc(100cqh * ${dims.w / dims.h}))`, aspectRatio: `${dims.w} / ${dims.h}` }
+                  : { position: "absolute", inset: 0 }}>
+                  <img src={shownSrc!} alt={shown ? shown.label : "Your photo"}
+                    onLoad={(e) => { const t = e.currentTarget; if (t.naturalWidth) setDims({ w: t.naturalWidth, h: t.naturalHeight }); }}
+                    style={{ ...img, objectFit: "contain", filter: phase === "generating" ? "brightness(.55) blur(1px)" : undefined, transition: "filter .3s" }} />
+                  {(analyzing || phase === "reading") && <ScanOverlay mode={analyzing && phase !== "reading" ? "analyze" : "reading"} />}
+                </div>
               )}
 
               {phase === "generating" && (
@@ -359,14 +402,14 @@ export default function AIStudio() {
                 {analyzing ? (
                   <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>{[70, 90, 60].map((w, i) => <span key={i} className="jpt-skel" style={{ width: w, height: 26, borderRadius: 999 }} />)}</div>
                 ) : (
-                  <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>{analysis?.detected?.map((d) => <span key={d} style={chip}>{d}</span>)}</div>
+                  <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>{analysis?.detected?.map((d, k) => <span key={d} className="jpt-a-pop" style={{ ...chip, ["--d" as string]: `${k * 90}ms` }}>{d}</span>)}</div>
                 )}
                 {!!analysis?.recommended?.length && (
                   <>
                     <div style={{ ...eyebrow, marginTop: 14 }}>Recommended</div>
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-                      {analysis.recommended.map((r) => (
-                        <button key={r.label} onClick={() => direct(r.label, r.prompt)} disabled={busy} className="jpt-lift" style={card}>
+                      {analysis.recommended.map((r, k) => (
+                        <button key={r.label} onClick={() => direct(r.label, r.prompt)} disabled={busy} className="jpt-lift jpt-a-up" style={{ ...card, ["--d" as string]: `${250 + k * 90}ms` }}>
                           <Icon name="wand" size={15} /> {r.label}
                         </button>
                       ))}
@@ -406,9 +449,9 @@ export default function AIStudio() {
               )}
               {phase !== "review" && (
                 <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 10 }}>
-                  {(shown && suggestions.length ? suggestions : original ? (analysis?.suggestions?.length ? analysis.suggestions : analyzing ? [] : STARTERS.slice(0, 4)) : STARTERS).map((s) => (
-                    <button key={s} disabled={!original || busy} onClick={() => { trackEvent("suggestion_clicked", { tool: "ai-studio", label: s }); setText(s); void understand(s); }} className="jpt-lift"
-                      style={{ padding: "6px 11px", borderRadius: 999, border: "1px solid var(--border)", background: "var(--surface)", color: "var(--text-muted)", fontSize: 12, fontWeight: 700, fontFamily: "inherit", cursor: original ? "pointer" : "default", opacity: original ? 1 : 0.6 }}>
+                  {(shown && suggestions.length ? suggestions : original ? (analysis?.suggestions?.length ? analysis.suggestions : analyzing ? [] : STARTERS.slice(0, 4)) : STARTERS).map((s, k) => (
+                    <button key={s} disabled={!original || busy} onClick={() => { trackEvent("suggestion_clicked", { tool: "ai-studio", label: s }); setText(s); void understand(s); }} className="jpt-lift jpt-a-up"
+                      style={{ ["--d" as string]: `${500 + k * 70}ms`, padding: "6px 11px", borderRadius: 999, border: "1px solid var(--border)", background: "var(--surface)", color: "var(--text-muted)", fontSize: 12, fontWeight: 700, fontFamily: "inherit", cursor: original ? "pointer" : "default", opacity: original ? 1 : 0.6 }}>
                       {s}
                     </button>
                   ))}
