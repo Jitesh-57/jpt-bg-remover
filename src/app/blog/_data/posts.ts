@@ -11,7 +11,8 @@ export interface BlogPost {
   toolHref: string;
   toolLabel: string;
   image?: string;
-  sections: { heading?: string; body: string }[];
+  /** `image` is only ever set by an edit made in /admin/blog. */
+  sections: { heading?: string; body: string; image?: string }[];
 }
 
 import { blogImageUrl } from "@/lib/blog-images";

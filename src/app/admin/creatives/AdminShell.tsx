@@ -73,6 +73,7 @@ export default function AdminShell({ apps }: { apps: App[] }) {
             <button key={id} onClick={() => setTab(id)} style={{ ...tabBtn, ...(tab === id ? tabOn : {}) }}>{l}</button>
           ))}
           <a href="/admin/editor" style={{ ...tabBtn, textDecoration: "none" }}>✏️ Page editor</a>
+          <a href="/admin/blog" style={{ ...tabBtn, textDecoration: "none" }}>📝 Blog editor</a>
           <a href="/admin/trials" style={{ ...tabBtn, textDecoration: "none" }}>🎁 Free trials</a>
         </div>
 

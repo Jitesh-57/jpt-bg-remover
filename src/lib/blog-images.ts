@@ -160,9 +160,11 @@ function slugHash(slug: string): number {
  * shows the whole before and after instead of cropping it.
  */
 export function blogCover(
-  post: { slug: string; title: string; toolHref: string; image?: string },
+  post: { slug: string; title: string; toolHref: string; image?: string; cover?: { url: string; w: number; h: number } },
   mains: AppMains,
 ): { sources: string[]; w?: number; h?: number } {
+  // A cover chosen in /admin/blog wins over everything picked automatically.
+  if (post.cover) return { sources: [post.cover.url], w: post.cover.w, h: post.cover.h };
   const own = [post.image, blogImageUrl(post.slug)].filter((u): u is string => !!u);
   const creative = post.toolHref.match(/^\/creative\/([a-z0-9-]+)/)?.[1];
   const text = `${post.toolHref} ${post.title}`.toLowerCase();

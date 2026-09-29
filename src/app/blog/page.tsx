@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { POSTS } from "./_data/posts";
+import { editedPosts } from "@/lib/blog-edits.server";
 import BlogCover from "./_components/BlogCover";
 import { mainsFrom } from "@/lib/blog-images";
 import { readOverrides } from "@/lib/overrides";
@@ -36,7 +36,8 @@ const CATEGORY_COLORS: Record<string, string> = {
 export const revalidate = 300;
 
 export default async function BlogIndexPage() {
-  const mains = mainsFrom((await readOverrides()).pages);
+  const [overrides, POSTS] = await Promise.all([readOverrides(), editedPosts()]);
+  const mains = mainsFrom(overrides.pages);
   return (
     <main style={{ background: "var(--surface-2)", minHeight: "100vh", padding: "60px 24px 80px" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>

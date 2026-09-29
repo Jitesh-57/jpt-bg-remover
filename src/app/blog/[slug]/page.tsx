@@ -4,7 +4,8 @@ import Link from "next/link";
 import BlogCover from "../_components/BlogCover";
 import { mainsFrom } from "@/lib/blog-images";
 import { readOverrides } from "@/lib/overrides";
-import { POSTS, getPost } from "../_data/posts";
+import { POSTS } from "../_data/posts";
+import { editedPost, editedPosts } from "@/lib/blog-edits.server";
 import BlogStickyBar from "../_components/BlogStickyBar";
 
 export async function generateStaticParams() {
@@ -13,7 +14,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const post = getPost(slug);
+  const post = await editedPost(slug);
   if (!post) return {};
   return {
     title: { absolute: post.metaTitle },
@@ -74,9 +75,10 @@ function renderBody(body: string) {
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const post = getPost(slug);
-  if (!post) notFound();
-  const mains = mainsFrom((await readOverrides()).pages);
+  const [found, overrides, visible] = await Promise.all([editedPost(slug), readOverrides(), editedPosts()]);
+  if (!found) notFound();
+  const post = found;
+  const mains = mainsFrom(overrides.pages);
 
   const url = `https://www.sjpt.io/blog/${post.slug}`;
 
@@ -141,7 +143,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   // Related posts — build a topic cluster: same tool first (e.g. all TikTok
   // posts link to each other), then same category, then fill with others.
   // Strong internal linking of a cluster is a ranking signal.
-  const others = POSTS.filter((p) => p.slug !== post.slug);
+  const others = visible.filter((p) => p.slug !== post.slug);
   const seen = new Set<string>();
   const related = [
     ...others.filter((p) => p.toolHref === post.toolHref),
@@ -212,6 +214,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                   <h2 style={{ margin: "0 0 16px", fontSize: 22, fontWeight: 800, color: "var(--text)", letterSpacing: "-0.3px", ...(i > 0 ? { borderTop: "1px solid var(--border)", paddingTop: 28 } : {}) }}>
                     {section.heading}
                   </h2>
+                )}
+                {section.image && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={section.image} alt={section.heading || post.title} loading="lazy"
+                    style={{ width: "100%", height: "auto", borderRadius: 14, margin: "4px 0 18px", display: "block", border: "1px solid var(--border)" }} />
                 )}
                 {renderBody(section.body)}
               </div>

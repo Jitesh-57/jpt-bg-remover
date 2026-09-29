@@ -7,7 +7,7 @@ import { blogCover, type AppMains } from "@/lib/blog-images";
  * fills a fixed-height strip.
  */
 export default function BlogCover({ post, mains, height, radius = 0, eager = false, sizes }: {
-  post: { slug: string; title: string; toolHref: string; image?: string };
+  post: { slug: string; title: string; toolHref: string; image?: string; cover?: { url: string; w: number; h: number } };
   mains: AppMains;
   height: number;
   radius?: number;
