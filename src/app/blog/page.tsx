@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { POSTS } from "./_data/posts";
+import BlogCover from "./_components/BlogCover";
 
 export const metadata: Metadata = {
   title: { absolute: "Image Upscaling Blog — Tips, Tutorials & Guides | Pixel Shine" },
@@ -51,10 +52,7 @@ export default function BlogIndexPage() {
           {POSTS.map((post) => (
             <Link key={post.slug} href={`/blog/${post.slug}`} style={{ textDecoration: "none" }}>
               <article className="jpt-hover" style={{ background: "var(--surface)", borderRadius: 18, border: "1px solid #E8EAF0", overflow: "hidden", boxShadow: "0 2px 14px rgba(0,0,0,0.04)", cursor: "pointer" }}>
-                {post.image && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={post.image} alt={post.title} style={{ width: "100%", height: 200, objectFit: "cover", display: "block" }} loading="lazy" />
-                )}
+                <BlogCover post={post} height={200} sizes="(max-width: 768px) 100vw, 540px" />
                 <div style={{ padding: "24px 28px 28px" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
                     <span style={{ background: CATEGORY_COLORS[post.category] || "var(--accent-fill)", color: "#fff", fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 20, letterSpacing: 0.5 }}>

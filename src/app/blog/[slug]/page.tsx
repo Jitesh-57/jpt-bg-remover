@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import BlogCover from "../_components/BlogCover";
 import { POSTS, getPost } from "../_data/posts";
 import BlogStickyBar from "../_components/BlogStickyBar";
 
@@ -190,10 +191,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             </div>
 
             {/* Hero image */}
-            {post.image && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={post.image} alt={post.title} style={{ width: "100%", height: 360, objectFit: "cover", borderRadius: 16, marginBottom: 32, display: "block" }} loading="eager" />
-            )}
+            <div style={{ marginBottom: 32 }}>
+              <BlogCover post={post} height={360} radius={16} eager sizes="(max-width: 768px) 100vw, 760px" />
+            </div>
 
             {/* Intro box */}
             <div style={{ background: "linear-gradient(135deg, var(--accent-soft), var(--surface-2))", border: "1px solid var(--accent-border)", borderRadius: 14, padding: "20px 24px", marginBottom: 40 }}>
@@ -256,10 +256,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 18 }}>
                 {related.map((r) => (
                   <Link key={r.slug} href={`/blog/${r.slug}`} className="jpt-hover" style={{ textDecoration: "none", display: "block", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 14, overflow: "hidden" }}>
-                    {r.image && (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={r.image} alt={r.title} style={{ width: "100%", height: 120, objectFit: "cover", display: "block" }} loading="lazy" />
-                    )}
+                    <BlogCover post={r} height={120} sizes="260px" />
                     <div style={{ padding: "14px 16px" }}>
                       <span style={{ fontSize: 11, fontWeight: 700, color: CATEGORY_COLORS[r.category] || "var(--accent)", letterSpacing: 0.4 }}>{r.category}</span>
                       <div style={{ fontSize: 15, fontWeight: 700, color: "var(--text)", lineHeight: 1.35, marginTop: 6 }}>{r.title}</div>

@@ -114,3 +114,46 @@ export function deriveBlogPrompt(title: string, category: string): string {
   // Default: upscaling / enhancing / sharpening / resolution / clarity / unblur
   return `A side-by-side before-and-after comparison of a photograph split down the middle: the left half is blurry and low-resolution, the right half is sharp, detailed and high-resolution 4K. ${STYLE}`;
 }
+
+/* ── Cover images for the blog pages ─────────────────────────────────────── */
+
+const appAfter = (app: string) => `${SUPABASE_PUBLIC}/creatives/${app}-after.webp`;
+const appPreview = (app: string) => `${SUPABASE_PUBLIC}/creative/v2/${app}.png`;
+
+/** Which creative app best pictures a post about a free tool, by the tool it links to or its title. */
+const TOOL_APPS: [RegExp, string][] = [
+  [/passport|id photo|white.background/, "passport-photo"],
+  [/headshot|linkedin|profile/, "professional-headshot"],
+  [/old|restore|vintage|family/, "restore-old-photos"],
+  [/anime/, "anime-style"],
+  [/pet|dog|cat/, "pet-portrait"],
+  [/remove-bg|background/, "background-changer"],
+  [/product|shop|ecommerce/, "background-changer"],
+  [/wedding|couple/, "couple-photoshoot"],
+  [/baby/, "baby-photoshoot"],
+  [/christmas|festival|diwali/, "festival-photoshoot"],
+  [/upscale|4k|blurry|sharp|quality|enhance|print/, "restore-old-photos"],
+];
+
+/** Popular apps that always have a picture, used when nothing more specific matches. */
+const ANY_APP = ["professional-headshot", "ghibli-style", "old-hollywood-glamour", "polaroid-photo", "saree-photoshoot", "pixar-avatar", "renaissance-portrait", "3d-figurine"];
+
+/**
+ * Every picture a post's cover could use, best first. The browser tries each
+ * in turn (SmartImage), so a post whose own cover was never generated still
+ * shows the creative from the app it is about, and never an empty box.
+ */
+export function blogCoverSources(post: { slug: string; title: string; toolHref: string; image?: string }): string[] {
+  const own = [post.image, blogImageUrl(post.slug)].filter((u): u is string => !!u);
+  const creative = post.toolHref.match(/^\/creative\/([a-z0-9-]+)/)?.[1];
+  const text = `${post.toolHref} ${post.title}`.toLowerCase();
+  const matched = TOOL_APPS.find(([re]) => re.test(text))?.[1];
+  let hash = 7;
+  for (let i = 0; i < post.slug.length; i++) hash = (hash * 31 + post.slug.charCodeAt(i)) >>> 0;
+  const spare = ANY_APP[hash % ANY_APP.length];
+  const apps = [creative, matched, spare].filter((a, i, all): a is string => !!a && all.indexOf(a) === i);
+  const pictures = apps.flatMap((a) => [appAfter(a), appPreview(a)]);
+  // A post about an app leads with that app's own creative; a tool guide keeps its written-for cover first.
+  const order = creative ? [...pictures.slice(0, 2), ...own, ...pictures.slice(2)] : [...own, ...pictures];
+  return order.filter((u, i) => order.indexOf(u) === i);
+}
