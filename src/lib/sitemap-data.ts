@@ -17,6 +17,7 @@ import { POSTS } from "@/app/blog/_data/posts";
 import { VARIANTS, PARENT_META, type ParentTool } from "@/lib/landing-variants";
 import { CREATIVE_APPS, CREATIVE_BASE } from "@/lib/creative-apps";
 import { USE_CASES, ANSWER_PAGES } from "@/lib/growth-pages";
+import { QUERY_PAGES } from "@/lib/query-pages";
 import { CONVERSIONS } from "@/lib/conversions";
 import { COMPRESSIONS } from "@/lib/compressions";
 import { CROPS } from "@/lib/crops";
@@ -70,6 +71,7 @@ export function pagesUrls(): SitemapUrl[] {
     { url: `${BASE}/batch-editor` },
     { url: `${BASE}/use-cases` },
     { url: `${BASE}/ai` },
+    { url: `${BASE}/answers` },
   ];
   if (PAID_FEATURES_ENABLED) out.push({ url: `${BASE}/pricing` });
   return dedupe(out);
@@ -168,6 +170,7 @@ export function growthUrls(): SitemapUrl[] {
     ...USE_CASES.map((p) => ({ url: `${BASE}/use-cases/${p.slug}` })),
     { url: `${BASE}/ai` },
     ...ANSWER_PAGES.map((p) => ({ url: `${BASE}/ai/${p.slug}` })),
+    ...QUERY_PAGES.map((p) => ({ url: `${BASE}/answers/${p.slug}` })),
   ]);
 }
 
