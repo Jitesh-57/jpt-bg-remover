@@ -387,7 +387,7 @@ export default function AIStudio() {
                   onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); void understand(text); } }}
                   rows={3}
                   disabled={!original || busy}
-                  placeholder={!original ? "Upload an image first" : shown ? "e.g. Make the background darker and add a soft shadow" : "e.g. Make this product look like a premium studio photo"}
+                  placeholder={!original ? "Upload an image first" : shown ? "e.g. Make the background darker and add a soft shadow" : analysis?.suggestions?.[0] ? `e.g. ${analysis.suggestions[0]}` : "Describe what you'd like to create"}
                   className="jpt-field"
                   style={{ width: "100%", resize: "none", padding: "13px 54px 13px 14px", borderRadius: 14, background: "var(--surface)", border: "1px solid var(--border-strong)", color: "var(--text)", fontSize: 14.5, lineHeight: 1.5, fontFamily: "inherit", outline: "none", boxSizing: "border-box" }}
                 />
@@ -397,10 +397,16 @@ export default function AIStudio() {
                 </button>
               </div>
 
-              {/* Starters or next-step suggestions */}
+              {/* Starters, ideas for this photo, or next steps after a result */}
+              {phase !== "review" && original && (analyzing || (shown ? suggestions.length : analysis?.suggestions?.length)) ? (
+                <div style={{ ...eyebrow, marginTop: 14, marginBottom: 0 }}>{shown ? "Try next" : "Ideas for this photo"}</div>
+              ) : null}
+              {phase !== "review" && analyzing && !shown && (
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 10 }}>{[180, 140, 200, 160].map((w, i) => <span key={i} className="jpt-skel" style={{ width: w, height: 30, borderRadius: 999 }} />)}</div>
+              )}
               {phase !== "review" && (
                 <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 10 }}>
-                  {(shown && suggestions.length ? suggestions : original ? STARTERS.slice(0, 4) : STARTERS).map((s) => (
+                  {(shown && suggestions.length ? suggestions : original ? (analysis?.suggestions?.length ? analysis.suggestions : analyzing ? [] : STARTERS.slice(0, 4)) : STARTERS).map((s) => (
                     <button key={s} disabled={!original || busy} onClick={() => { trackEvent("suggestion_clicked", { tool: "ai-studio", label: s }); setText(s); void understand(s); }} className="jpt-lift"
                       style={{ padding: "6px 11px", borderRadius: 999, border: "1px solid var(--border)", background: "var(--surface)", color: "var(--text-muted)", fontSize: 12, fontWeight: 700, fontFamily: "inherit", cursor: original ? "pointer" : "default", opacity: original ? 1 : 0.6 }}>
                       {s}

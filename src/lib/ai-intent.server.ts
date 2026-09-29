@@ -46,15 +46,27 @@ Rules:
 - Write "prompt" as one self-contained instruction to the image model: what to change, then what must stay the same. Always preserve the person's identity and face for portraits, and the product's shape, labels, logos, text, material and camera angle for products, unless the request is to change exactly that.
 - "understood" is 2-5 short pairs such as {"label":"Background","value":"Marble studio"}. Plain words, no jargon, no model names.
 - Only set "question" when the request can't be acted on sensibly (e.g. "make it better", "fix it"). Then give 3-5 short "options" the person can tap, and leave "prompt" empty.
-- "suggestions" are 4 short next steps (2-5 words each) that fit this image and tool, e.g. "Try a marble background".
+- "suggestions" are 4 specific, creative next steps (4-9 words each) that build on the result you just described and fit this photo, e.g. "Add warm fairy lights behind her" or "Turn it into a wedding invitation card". Never generic, never cropping or blurring.
 - Never mention AI models, prompts or technical settings to the person.
 - Reply with JSON only, no prose, matching:
 {"understood":[{"label":"","value":""}],"prompt":"","question":"","options":[],"suggestions":[]}`;
 
-const ANALYZE = `You are Pixel Shine's photo reader. Look at the photo and help the person decide what to do with it.
+const ANALYZE = `You are the creative director inside Pixel Shine, an AI photo studio. Study the photo closely: who or what is in it, the occasion, clothing, setting, lighting, pose, and anything that holds the photo back. Then suggest what would make THIS person or product look amazing, the way a top photographer or brand designer would.
+
 Reply with JSON only:
-{"detected":["3-5 short facts, e.g. Product","White background","Soft light"],"recommended":[{"label":"2-4 word action","prompt":"full edit instruction for the image model, including what to keep unchanged"}],"suggestions":["4 short next steps"]}
-Give 4 recommended actions that suit this specific photo${""}. Plain words, no jargon.`;
+{
+  "detected": ["3-5 short, specific facts, e.g. 'Woman in yellow lehenga', 'Indoor mehndi decor', 'Warm mixed light'"],
+  "recommended": [{"label": "2-4 words", "prompt": "full instruction for the image model"}],
+  "suggestions": ["6 short creative requests, 4-9 words each, written as the person would type them"]
+}
+
+"recommended": exactly 4 high-impact ideas for this specific photo, the best first. Mix:
+- one polish that fixes its biggest weakness (e.g. professional lighting and colour grade, clean up a cluttered background),
+- two creative transformations that fit the subject and occasion (e.g. for a festive portrait: royal palace courtyard at golden hour, editorial magazine cover; for a product: luxury marble studio, lifestyle scene),
+- one practical use (e.g. professional headshot, social post, invitation card, marketplace-ready shot).
+Never suggest cropping, blurring or trivial tweaks. Each "prompt" must say what to change and what to keep exactly the same: the person's face, identity, body and pose, and the outfit's design unless the idea is to change it; for products, the shape, labels, logos and text.
+
+"suggestions": 6 different creative ideas for this photo that go beyond the recommended ones (other settings, styles, seasons, outfit ideas, moods, uses). Specific to what you see, not generic. Plain words, no jargon, never mention AI or models.`;
 
 function client(): Anthropic | null {
   return process.env.ANTHROPIC_API_KEY ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY }) : null;
@@ -144,7 +156,7 @@ export async function readIntent(input: IntentInput): Promise<IntentResult> {
             .filter((r): r is { label: string; prompt: string } => !!r && typeof (r as { label?: unknown }).label === "string" && typeof (r as { prompt?: unknown }).prompt === "string")
             .slice(0, 4)
             .map((r) => ({ label: r.label.slice(0, 40), prompt: r.prompt.slice(0, 1200) })),
-          suggestions: strs(j.suggestions, 4, 40),
+          suggestions: strs(j.suggestions, 6, 70),
         };
       }
       return { ...rulesAnalyze(input.tool), source: "rules", why: why || (img ? "Claude's reply could not be read" : "The image could not be sent") };
@@ -172,7 +184,7 @@ export async function readIntent(input: IntentInput): Promise<IntentResult> {
       const question = typeof j.question === "string" && j.question.trim() ? j.question.trim().slice(0, 200) : undefined;
       const prompt = typeof j.prompt === "string" ? j.prompt.trim().slice(0, 2000) : "";
       if (question || prompt) {
-        return { understood, prompt: question ? "" : prompt, question, options: question ? strs(j.options, 5, 40) : undefined, suggestions: strs(j.suggestions, 4, 40), source: "ai" };
+        return { understood, prompt: question ? "" : prompt, question, options: question ? strs(j.options, 5, 40) : undefined, suggestions: strs(j.suggestions, 4, 70), source: "ai" };
       }
     }
   } catch (e) {
