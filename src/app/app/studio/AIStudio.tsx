@@ -145,6 +145,18 @@ export default function AIStudio() {
   const [isAdmin, setIsAdmin] = useState(false);
   useEffect(() => { try { setIsAdmin(!!localStorage.getItem("jpt-admin-token")); } catch {} }, []);
   const [suggestions, setSuggestions] = useState<string[]>([]);
+  // What an account without credits has left of its free smart reading: one photo analysis, one try.
+  const [allow, setAllow] = useState<{ analyze: boolean; tries: number } | null>(null);
+  const [unlock, setUnlock] = useState(false);
+  useEffect(() => {
+    void fetch("/api/ai/intent").then((r) => (r.ok ? r.json() : null)).then((d) => {
+      if (d && !d.paid) setAllow({ analyze: !!d.analyze, tries: Number(d.tries) || 0 });
+    }).catch(() => {});
+  }, []);
+  const paid = credits > 0;
+  const gate = useRef({ paid, allow });
+  gate.current = { paid, allow };
+  const askForCredits = () => { setUnlock(true); setPhase("idle"); openPricing("AI Studio smart reading"); };
   const [stage, setStage] = useState(0);
   const [err, setErr] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
@@ -185,8 +197,10 @@ export default function AIStudio() {
     trackEvent("image_uploaded", { tool: "ai-studio" });
 
     // Upload once (so every later call sends a URL, not megabytes), then read the photo.
-    setAnalyzing(true);
     setAnalysis(null);
+    const g = gate.current;
+    if (!g.paid && g.allow && !g.allow.analyze) { setUnlock(true); return; } // free analysis already used: no scan
+    setAnalyzing(true);
     try {
       const sent = await toSendable(src);
       const url = sent.imageUrl;
@@ -195,7 +209,11 @@ export default function AIStudio() {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ mode: "analyze", tool, image: url || sent.dataUrl }),
       });
-      if (r.ok) setAnalysis(await r.json());
+      if (r.ok) {
+        const d = (await r.json()) as Intent;
+        if (d.locked) setUnlock(true); else setAnalysis(d);
+        if (!g.paid) setAllow((a) => (a ? { ...a, analyze: false } : a));
+      }
     } catch { /* analysis is a nicety */ }
     finally { setAnalyzing(false); }
   }, [tool]);
@@ -224,6 +242,7 @@ export default function AIStudio() {
   const understand = async (request: string) => {
     const r = request.trim();
     if (!r || !original || phase === "reading" || phase === "generating") return;
+    if (!paid && allow && allow.tries <= 0) { askForCredits(); return; }
     setPhase("reading");
     setErr(null);
     trackEvent("ai_command_started", { tool: "ai-studio" });
@@ -236,6 +255,8 @@ export default function AIStudio() {
       if (res.status === 401) { await beginGoogleSignIn("/app/studio"); return; }
       const d = (await res.json()) as Intent & { error?: string };
       if (!res.ok || d.error) throw new Error(d.error || "We couldn't read that request. Please try again.");
+      if (!paid) setAllow((a) => (a ? { ...a, tries: Math.max(0, a.tries - 1) } : a));
+      if (d.locked) { askForCredits(); return; }
       setIntent({ ...d, understood: d.understood?.length ? d.understood : [{ label: "Change", value: r }] });
       setPhase("review");
       trackEvent("intent_detected", { tool: "ai-studio", clarify: !!d.question });
@@ -245,12 +266,21 @@ export default function AIStudio() {
     }
   };
 
-  const direct = (label: string, prompt: string) => {
+  const direct = async (label: string, prompt: string) => {
     trackEvent("suggestion_clicked", { tool: "ai-studio", label });
+    if (!paid && allow && allow.tries <= 0) { askForCredits(); return; }
     setText(label);
     setErr(null);
     // A short read on the photo, so picking an option feels considered rather than instant.
     setPhase("reading");
+    if (!paid) {
+      try {
+        const r = await fetch("/api/ai/intent", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ mode: "pick" }) });
+        const d = (await r.json()) as { locked?: boolean };
+        setAllow((a) => (a ? { ...a, tries: Math.max(0, a.tries - 1) } : a));
+        if (d.locked) { askForCredits(); return; }
+      } catch { /* let them try; the next read is checked on the server */ }
+    }
     setTimeout(() => {
       setIntent({ understood: [{ label: "Action", value: label }, { label: "Keep", value: "Everything else as it is" }], prompt, suggestions: [] });
       setPhase("review");
@@ -410,7 +440,7 @@ export default function AIStudio() {
                     <div style={{ ...eyebrow, marginTop: 14 }}>Recommended</div>
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
                       {analysis.recommended.map((r, k) => (
-                        <button key={r.label} onClick={() => direct(r.label, r.prompt)} disabled={busy} className="jpt-lift jpt-a-up" style={{ ...card, ["--d" as string]: `${250 + k * 90}ms` }}>
+                        <button key={r.label} onClick={() => void direct(r.label, r.prompt)} disabled={busy} className="jpt-lift jpt-a-up" style={{ ...card, ["--d" as string]: `${250 + k * 90}ms` }}>
                           <Icon name="wand" size={15} /> {r.label}
                         </button>
                       ))}
@@ -461,11 +491,11 @@ export default function AIStudio() {
             </div>
 
             {/* Free accounts get smart reading on one photo; after that, ask them to buy credits. */}
-            {(analysis?.locked || intent?.locked) && (
+            {unlock && !paid && (
               <div className="jpt-a-pop" style={{ border: "1px solid var(--accent-border)", background: "linear-gradient(180deg, var(--accent-soft), transparent)", borderRadius: 16, padding: 16 }}>
                 <div style={{ fontSize: 15, fontWeight: 900 }}>✨ Unlock smart AI reading</div>
                 <div style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.55, marginTop: 6 }}>
-                  You&apos;ve used your free AI photo analysis. Buy credits and smart reading is free and unlimited for as long as you have credits, with ideas made for each photo you upload.
+                  You&apos;ve used your free AI reading. Buy credits to unlock unlimited reading: every photo scanned, every suggestion tried, free for as long as you have credits.
                 </div>
                 <button onClick={() => openPricing("AI Studio smart reading")} style={{ marginTop: 12, width: "100%", padding: "11px 14px", borderRadius: 12, border: "none", background: "var(--grad-strong)", color: "#fff", fontWeight: 900, fontSize: 14, cursor: "pointer", boxShadow: "var(--glow)", fontFamily: "inherit" }}>
                   Get credits
@@ -474,7 +504,7 @@ export default function AIStudio() {
             )}
 
             {/* Admins only: why smart reading fell back to keywords */}
-            {isAdmin && !analysis?.locked && !intent?.locked && (intent?.source === "rules" || analysis?.source === "rules") && (
+            {isAdmin && !unlock && (intent?.source === "rules" || analysis?.source === "rules") && (
               <div style={{ fontSize: 12, color: "var(--text-faint)", border: "1px dashed var(--border-strong)", borderRadius: 10, padding: "8px 10px", lineHeight: 1.5 }}>
                 Admin note: smart reading is off, using basic keyword mode. Reason: {intent?.why || analysis?.why || "unknown"}
               </div>
