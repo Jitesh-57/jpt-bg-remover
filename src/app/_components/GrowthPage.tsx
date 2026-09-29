@@ -40,7 +40,7 @@ export default function GrowthPage({page}:{page:GrowthPage}) {
    <div style={{maxWidth:780,margin:"0 auto",textAlign:"center"}}>
     <h2 style={{fontSize:"1.7rem",fontWeight:900}}>Explore all 200+ Creative Apps</h2>
     <p style={{color:"var(--text-muted)",lineHeight:1.7}}>Find more focused AI transformations, from headshots and product photos to restoration and viral styles.</p>
-    <Link href={CREATIVE_BASE} className="jpt-btn jpt-btn-primary" style={{textDecoration:"none"}}>Browse Creative Apps →</Link>
+    <Link href={CREATIVE_BASE} className="jpt-btn jpt-btn-primary" style={{textDecoration:"none"}}>Browse Creative Apps →</Link><Link href="/answers" className="jpt-btn" style={{textDecoration:"none"}}>Browse AI answers →</Link>
    </div>
   </section>
   <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(faqLd)}}/>
