@@ -22,6 +22,7 @@ export interface IntentInput {
   history?: string[];            // edits already applied this session, oldest first
   image?: string | null;         // https URL or data URL of the current image
   mode?: "intent" | "analyze";   // analyze: describe the photo and recommend actions
+  basic?: boolean;               // keyword reading only: no paid model call
 }
 
 export interface IntentResult {
@@ -33,6 +34,8 @@ export interface IntentResult {
   detected?: string[];
   recommended?: { label: string; prompt: string }[];
   source: "ai" | "rules";
+  /** Smart reading is reserved for accounts with credits; this one got the basic reading. */
+  locked?: boolean;
   /** Why the keyword fallback was used, when it was. Shown to admins only. */
   why?: string;
 }
@@ -138,6 +141,11 @@ export async function readIntent(input: IntentInput): Promise<IntentResult> {
   const request = input.request.trim().slice(0, 2000);
   const history = (input.history || []).slice(-8);
   const img = imageBlock(input.image);
+  if (input.basic) {
+    return input.mode === "analyze"
+      ? { ...rulesAnalyze(input.tool), source: "rules", locked: true }
+      : { ...rulesIntent(request, history, input.tool), source: "rules", locked: true };
+  }
   let why = falConfigured() || client() ? "" : missingKeyReason();
 
   try {

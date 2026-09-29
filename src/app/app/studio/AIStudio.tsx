@@ -25,6 +25,7 @@ import { trackEvent } from "@/lib/analytics";
 interface Version { id: string; src: string; url?: string; label: string; prompt: string }
 interface Understood { label: string; value: string }
 interface Intent {
+  locked?: boolean;
   source?: "ai" | "rules";
   why?: string;
   understood: Understood[];
@@ -459,8 +460,21 @@ export default function AIStudio() {
               )}
             </div>
 
+            {/* Free accounts get smart reading on one photo; after that, ask them to buy credits. */}
+            {(analysis?.locked || intent?.locked) && (
+              <div className="jpt-a-pop" style={{ border: "1px solid var(--accent-border)", background: "linear-gradient(180deg, var(--accent-soft), transparent)", borderRadius: 16, padding: 16 }}>
+                <div style={{ fontSize: 15, fontWeight: 900 }}>✨ Unlock smart AI reading</div>
+                <div style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.55, marginTop: 6 }}>
+                  You&apos;ve used your free AI photo analysis. Buy credits and smart reading is free and unlimited for as long as you have credits, with ideas made for each photo you upload.
+                </div>
+                <button onClick={() => openPricing("AI Studio smart reading")} style={{ marginTop: 12, width: "100%", padding: "11px 14px", borderRadius: 12, border: "none", background: "var(--grad-strong)", color: "#fff", fontWeight: 900, fontSize: 14, cursor: "pointer", boxShadow: "var(--glow)", fontFamily: "inherit" }}>
+                  Get credits
+                </button>
+              </div>
+            )}
+
             {/* Admins only: why smart reading fell back to keywords */}
-            {isAdmin && (intent?.source === "rules" || analysis?.source === "rules") && (
+            {isAdmin && !analysis?.locked && !intent?.locked && (intent?.source === "rules" || analysis?.source === "rules") && (
               <div style={{ fontSize: 12, color: "var(--text-faint)", border: "1px dashed var(--border-strong)", borderRadius: 10, padding: "8px 10px", lineHeight: 1.5 }}>
                 Admin note: smart reading is off, using basic keyword mode. Reason: {intent?.why || analysis?.why || "unknown"}
               </div>
@@ -535,7 +549,7 @@ export default function AIStudio() {
             )}
 
             <div style={{ marginTop: "auto", fontSize: 12, color: "var(--text-faint)", lineHeight: 1.5 }}>
-              Reading your request is free. You only spend {CREDIT_COST} credits when you press Generate. Every result is saved to My Creations.
+              Reading your request is free for paid users. You only spend {CREDIT_COST} credits when you press Generate. Every result is saved to My Creations.
             </div>
           </aside>
         </div>
