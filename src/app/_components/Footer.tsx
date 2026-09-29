@@ -44,6 +44,7 @@ const ALL_COMPANY = [
   { labelKey: "80s AI Prompts", href: "/80s-ai-photo-prompts" },
   { labelKey: "Pricing", href: "/pricing" },
   { labelKey: "Blog",    href: "/blog" },
+  { labelKey: "AI Guide", href: "/answers" },
   { labelKey: "Contact", href: "mailto:patil.jitesh866@gmail.com" },
 ];
 
