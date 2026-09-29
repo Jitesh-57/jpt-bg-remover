@@ -25,7 +25,8 @@
  * accidentally-included "Key " prefix are stripped for the same reason.
  */
 const KEY = () =>
-  (process.env.FAL_KEY || "")
+  (process.env.FAL_KEY || process.env.FAL_API_KEY || process.env.FAL_AI_KEY || process.env.FALAI_API_KEY ||
+    (process.env.FAL_KEY_ID && process.env.FAL_KEY_SECRET ? `${process.env.FAL_KEY_ID}:${process.env.FAL_KEY_SECRET}` : ""))
     .trim()
     .replace(/^["']|["']$/g, "")
     .replace(/^Key\s+/i, "")
@@ -733,4 +734,50 @@ export async function falGenerateImage(
     paths: falPathVariants(model, "generate"),
   });
   return urlToDataUrl(firstImageUrl(result));
+}
+
+/* ── Text/vision chat through fal (any-llm) ───────────────────────────────
+   Used by the AI Studio to read a request, so it runs on the same fal key
+   and balance as the image models instead of needing a separate AI account.
+   Tries a short list of GPT models in order, since which ones fal offers can
+   change; the first that answers wins. */
+
+const CHAT_MODELS = ["openai/gpt-4o", "openai/gpt-4.1", "openai/gpt-4o-mini", "google/gemini-2.5-flash", "google/gemini-flash-1.5"];
+
+export async function falChat(system: string, prompt: string, imageUrl?: string | null, timeoutMs = 45_000): Promise<string> {
+  assertKey();
+  const endpoint = imageUrl ? "https://fal.run/fal-ai/any-llm/vision" : "https://fal.run/fal-ai/any-llm";
+  const errors: string[] = [];
+  // Vision has taken the image both as a single URL and as a list across versions.
+  const imageShapes: Record<string, unknown>[] = imageUrl ? [{ image_url: imageUrl }, { image_urls: [imageUrl] }] : [{}];
+  const deadline = Date.now() + timeoutMs;
+
+  for (const model of CHAT_MODELS) {
+    for (const shape of imageShapes) {
+      if (Date.now() > deadline) throw new Error(`fal chat timed out (${errors.join(" | ")})`);
+      try {
+        const res = await fetch(endpoint, {
+          method: "POST",
+          headers: authHeaders(),
+          body: JSON.stringify({ model, system_prompt: system, prompt, ...shape }),
+          signal: AbortSignal.timeout(Math.max(5_000, deadline - Date.now())),
+        });
+        const text = await res.text();
+        if (!res.ok) {
+          errors.push(`${model} ${res.status}: ${text.slice(0, 120)}`);
+          // 422 = this model or input shape isn't accepted: try the next one.
+          // 401/403 = key or balance problem: no point trying other models.
+          if (res.status === 401 || res.status === 403) throw new Error(`fal refused the request (${res.status}): ${text.slice(0, 160)}`);
+          continue;
+        }
+        const j = JSON.parse(text) as { output?: string; error?: string };
+        if (j.output && j.output.trim()) return j.output;
+        errors.push(`${model}: empty reply${j.error ? ` (${j.error})` : ""}`);
+      } catch (e) {
+        if ((e as Error).message.startsWith("fal refused")) throw e;
+        errors.push(`${model}: ${(e as Error).message.slice(0, 120)}`);
+      }
+    }
+  }
+  throw new Error(`No fal chat model answered: ${errors.slice(-3).join(" | ")}`);
 }

@@ -19,8 +19,9 @@ const GROUPS: { label?: string; items: NavItem[] }[] = [
   {
     label: "Create",
     items: [
+      { label: "AI Studio", href: "/app/studio", icon: "wand", badge: "New" },
       { label: "Create Image", href: "/app/create", icon: "sparkle" },
-      { label: "Recreate", href: "/app/recreate", icon: "copy", badge: "New" },
+      { label: "Recreate", href: "/app/recreate", icon: "copy" },
       { label: "Image Editor", href: "/app/editor", icon: "editor" },
     ],
   },
@@ -42,7 +43,7 @@ const BOTTOM: NavItem[] = [
 const MOBILE_TABS: NavItem[] = [
   { label: "Home", href: "/app", icon: "home" },
   { label: "Create", href: "/app/create", icon: "sparkle" },
-  { label: "Recreate", href: "/app/recreate", icon: "copy" },
+  { label: "Studio", href: "/app/studio", icon: "wand" },
   { label: "Edit", href: "/app/editor", icon: "editor" },
   { label: "Apps", href: "/app/apps", icon: "apps" },
 ];

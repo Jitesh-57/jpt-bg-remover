@@ -416,7 +416,7 @@ a { color: inherit; }
 @keyframes jptAppSheen { 0% { transform: translateX(-120%); } 60%, 100% { transform: translateX(220%); } }
 
 .jpt-a-up { animation: jptAppUp .55s var(--ease) both; animation-delay: var(--d, 0ms); }
-.jpt-a-pop { animation: jptAppPop .18s var(--ease) both; }
+.jpt-a-pop { animation: jptAppPop .18s var(--ease) both; animation-delay: var(--d, 0ms); }
 .jpt-a-glow { animation: jptAppGlow 8s ease-in-out infinite; }
 .jpt-skel {
   background: linear-gradient(90deg, var(--surface-2) 0px, var(--surface-3) 120px, var(--surface-2) 240px);
@@ -493,3 +493,42 @@ a { color: inherit; }
 .jpt-scroll-thin { scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
 .jpt-scroll-thin::-webkit-scrollbar { width: 6px; }
 .jpt-scroll-thin::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 6px; }
+
+/* AI Studio: big workspace left, assistant right; stacked on phones. */
+.jpt-studio-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, 400px); gap: 20px; align-items: start; }
+@media (max-width: 960px) { .jpt-studio-grid { grid-template-columns: 1fr; } }
+
+
+/* AI Studio: scanning effect over the photo while it's being read. */
+.jpt-scan { position: absolute; inset: 0; overflow: hidden; pointer-events: none; animation: jptScanIn .35s ease both;
+  background: radial-gradient(120% 90% at 50% 40%, rgba(255,106,26,.06), rgba(10,10,14,.38)); }
+.jpt-scan-grid { position: absolute; inset: 0; opacity: .6;
+  background-image:
+    linear-gradient(rgba(255,170,110,.42) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,170,110,.42) 1px, transparent 1px);
+  background-size: 32px 32px; background-position: center;
+  filter: drop-shadow(0 0 2px rgba(255,122,47,.6));
+  animation: jptScanGrid 2.4s ease-in-out infinite; }
+.jpt-scan-beam { position: absolute; left: 0; right: 0; height: 26%; top: -26%;
+  background: linear-gradient(180deg, transparent, rgba(255,106,26,.10) 55%, rgba(255,138,61,.45) 96%, #fff 100%);
+  box-shadow: 0 6px 22px rgba(255,106,26,.55); animation: jptScanBeam 2.1s cubic-bezier(.45,.05,.55,.95) infinite; }
+.jpt-scan-dot { position: absolute; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: #FF8A3D;
+  box-shadow: 0 0 0 0 rgba(255,138,61,.7); animation: jptScanPing 1.75s ease-out infinite; opacity: 0; }
+.jpt-scan-corner { position: absolute; width: 26px; height: 26px; border: 3px solid #FF8A3D; animation: jptScanCorner 1.4s ease-in-out infinite; }
+.jpt-scan-corner.tl { top: 12px; left: 12px; border-right: 0; border-bottom: 0; border-radius: 8px 0 0 0; }
+.jpt-scan-corner.tr { top: 12px; right: 12px; border-left: 0; border-bottom: 0; border-radius: 0 8px 0 0; }
+.jpt-scan-corner.bl { bottom: 12px; left: 12px; border-right: 0; border-top: 0; border-radius: 0 0 0 8px; }
+.jpt-scan-corner.br { bottom: 12px; right: 12px; border-left: 0; border-top: 0; border-radius: 0 0 8px 0; }
+.jpt-scan-pill { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); display: flex; align-items: center; gap: 9px;
+  padding: 9px 16px; border-radius: 999px; background: rgba(10,10,14,.78); backdrop-filter: blur(8px); border: 1px solid rgba(255,138,61,.45);
+  color: #fff; font-size: 13px; font-weight: 800; white-space: nowrap; box-shadow: 0 8px 26px rgba(0,0,0,.4); }
+@keyframes jptScanIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes jptScanBeam { 0% { top: -26%; } 100% { top: 100%; } }
+@keyframes jptScanGrid { 0%, 100% { opacity: .3; } 50% { opacity: .6; } }
+@keyframes jptScanPing { 0% { opacity: 0; transform: scale(.4); box-shadow: 0 0 0 0 rgba(255,138,61,.7); }
+  20% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1); box-shadow: 0 0 0 22px rgba(255,138,61,0); } }
+@keyframes jptScanCorner { 0%, 100% { opacity: .55; transform: scale(1); } 50% { opacity: 1; transform: scale(1.12); } }
+@media (prefers-reduced-motion: reduce) {
+  .jpt-scan-beam, .jpt-scan-dot, .jpt-scan-grid, .jpt-scan-corner { animation: none !important; }
+  .jpt-scan-beam { display: none; }
+}
