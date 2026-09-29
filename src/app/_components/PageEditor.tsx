@@ -17,12 +17,12 @@ import { hasBackgroundImage, imageKeyOf, imageSrcOf, originalText } from "./site
 
 type Sel =
   | { kind: "text"; node: Text; original: string; value: string }
-  | { kind: "image"; el: Element; key: string; src: string; file?: { dataUrl: string; preview: string; bytes: number } };
+  | { kind: "image"; el: Element; key: string; src: string; file?: { dataUrl: string; preview: string; bytes: number; w: number; h: number }; blog?: { slug: string; slot: string } };
 
 const TOKEN_KEY = "jpt-admin-token";
 const CAP = 2000;
 
-async function toWebp(file: File): Promise<{ dataUrl: string; preview: string; bytes: number }> {
+async function toWebp(file: File): Promise<{ dataUrl: string; preview: string; bytes: number; w: number; h: number }> {
   const url = URL.createObjectURL(file);
   try {
     const img = await new Promise<HTMLImageElement>((res, rej) => {
@@ -42,7 +42,7 @@ async function toWebp(file: File): Promise<{ dataUrl: string; preview: string; b
     const blob = await new Promise<Blob | null>((r) => c.toBlob(r, "image/webp", 0.88));
     if (!blob) throw new Error("The browser couldn't encode the image.");
     const dataUrl = await new Promise<string>((res) => { const fr = new FileReader(); fr.onload = () => res(fr.result as string); fr.readAsDataURL(blob); });
-    return { dataUrl, preview: dataUrl, bytes: blob.size };
+    return { dataUrl, preview: dataUrl, bytes: blob.size, w: c.width, h: c.height };
   } finally {
     URL.revokeObjectURL(url);
   }
@@ -64,6 +64,7 @@ function pick(e: MouseEvent): { el: Element; image: boolean; text?: Text } | nul
   if (!t || isEditor(t)) return null;
   for (let el: Element | null = t; el && el !== document.body; el = el.parentElement) {
     if (el instanceof HTMLImageElement || hasBackgroundImage(el)) return { el, image: true };
+    if ((el as HTMLElement).dataset?.blogImage) return { el, image: true }; // a blog picture slot, even while empty
     if (el.children.length > 3) break;
   }
   const text = textNodeAt(e.clientX, e.clientY);
@@ -119,7 +120,10 @@ export default function PageEditor({ edits, path, onExit }: { edits: PageEdits; 
       if (!p) return;
       setNote(null);
       if (p.image) {
-        setSel({ kind: "image", el: p.el, key: imageKeyOf(p.el), src: imageSrcOf(p.el) });
+        // A blog picture is saved into its post (see /admin/blog), not as a page rule.
+        const tag = p.el.closest<HTMLElement>("[data-blog-image]");
+        const blog = tag?.dataset.blogSlug && tag.dataset.blogImage ? { slug: tag.dataset.blogSlug, slot: tag.dataset.blogImage } : undefined;
+        setSel({ kind: "image", el: p.el, key: imageKeyOf(p.el), src: imageSrcOf(p.el), blog });
         setBox(p.el.getBoundingClientRect());
       } else if (p.text) {
         const original = originalText(p.text);
@@ -157,6 +161,17 @@ export default function PageEditor({ edits, path, onExit }: { edits: PageEdits; 
 
   const scopeKey = scope === "all" ? GLOBAL_SCOPE : page;
 
+  /** Sets (or with url null, removes) a blog post's picture, then reloads so the page shows what visitors will. */
+  const saveBlogImage = async (blog: { slug: string; slot: string }, img: { url: string; w: number; h: number } | null) => {
+    const r = await fetch(`/api/admin/blog-edits?token=${encodeURIComponent(token)}`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "image", slug: blog.slug, slot: blog.slot, url: img?.url ?? null, w: img?.w, h: img?.h }),
+    });
+    const d = (await r.json().catch(() => ({}))) as { error?: string };
+    if (!r.ok || d.error) throw new Error(d.error || `Save failed (${r.status}).`);
+    setTimeout(() => location.reload(), 700);
+  };
+
   const save = async () => {
     if (!sel) return;
     setBusy(true);
@@ -168,8 +183,15 @@ export default function PageEditor({ edits, path, onExit }: { edits: PageEdits; 
         publish(await call({ scope: scopeKey, kind: "text", key: sel.original, value }));
       } else {
         if (!sel.file) throw new Error("Choose a new image first.");
-        if (!sel.key) throw new Error("This image can't be replaced.");
+        if (!sel.key && !sel.blog) throw new Error("This image can't be replaced.");
         const up = await call({ action: "upload", dataUrl: sel.file.dataUrl });
+        if (sel.blog) {
+          await saveBlogImage(sel.blog, { url: up.url!, w: sel.file.w, h: sel.file.h });
+          setNote({ ok: true, text: "Saved to this blog post and live now. Reloading…" });
+          setSel(null);
+          setBox(null);
+          return;
+        }
         publish(await call({ scope: scopeKey, kind: "image", key: sel.key, value: up.url }));
       }
       setNote({ ok: true, text: scope === "all" ? "Saved on every page. Live for visitors within a minute." : "Saved on this page. Live for visitors within a minute." });
@@ -186,6 +208,13 @@ export default function PageEditor({ edits, path, onExit }: { edits: PageEdits; 
     if (!sel) return;
     setBusy(true);
     try {
+      if (sel.kind === "image" && sel.blog) {
+        await saveBlogImage(sel.blog, null);
+        setNote({ ok: true, text: sel.blog.slot === "cover" ? "Back to the automatic picture. Reloading…" : "Picture removed. Reloading…" });
+        setSel(null);
+        setBox(null);
+        return;
+      }
       const kind = sel.kind;
       const key = kind === "text" ? sel.original : sel.key;
       const inPage = kind === "text" ? pageRules.text?.[key] !== undefined : pageRules.images?.[key] !== undefined;
@@ -299,6 +328,11 @@ export default function PageEditor({ edits, path, onExit }: { edits: PageEdits; 
             </>
           )}
 
+          {sel.kind === "image" && sel.blog ? (
+            <div style={{ fontSize: 12.5, color: "rgba(255,255,255,.6)", margin: "12px 0 4px", lineHeight: 1.5 }}>
+              Saved into this blog post&apos;s {sel.blog.slot === "cover" ? "cover" : "section picture"}. You can also change it in /admin/blog.
+            </div>
+          ) : (
           <div style={{ display: "flex", gap: 6, margin: "12px 0 4px", fontSize: 12.5 }}>
             {(["page", "all"] as const).map((s) => (
               <button key={s} onClick={() => setScope(s)} style={{ ...ghost, flex: 1, ...(scope === s ? { borderColor: "#FF6A1A", color: "#FF8A3D", background: "rgba(255,106,26,.12)" } : {}) }}>
@@ -306,12 +340,17 @@ export default function PageEditor({ edits, path, onExit }: { edits: PageEdits; 
               </button>
             ))}
           </div>
+          )}
 
           {note && !note.ok && <div style={{ color: "#F87171", fontWeight: 600, margin: "8px 0", lineHeight: 1.5 }}>{note.text}</div>}
 
           <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
             <button onClick={save} disabled={busy} style={{ ...primary, flex: 1 }}>{busy ? "Saving…" : "Save & publish"}</button>
-            {edited && <button onClick={reset} disabled={busy} style={ghost}>Reset to original</button>}
+            {(edited || (sel.kind === "image" && sel.blog)) && (
+              <button onClick={reset} disabled={busy} style={ghost}>
+                {sel.kind === "image" && sel.blog ? (sel.blog.slot === "cover" ? "Use automatic" : "Remove picture") : "Reset to original"}
+              </button>
+            )}
           </div>
         </div>
       )}

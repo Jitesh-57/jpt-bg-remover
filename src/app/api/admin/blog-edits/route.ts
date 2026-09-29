@@ -15,6 +15,9 @@ export const dynamic = "force-dynamic";
  *   GET ?slug=…                          one post as written in code, plus its edit
  *   POST { action: "save",  slug, post } store what differs from the code, live at once
  *   POST { action: "reset", slug }       drop the edit, back to the code version
+ *   POST { action: "image", slug, slot, url, w, h }
+ *                                        one picture from the live page editor; slot "cover"
+ *                                        or "section:<i>", url null to remove
  *
  * Images are uploaded first through /api/admin/page-edits (action "upload").
  */
@@ -63,6 +66,27 @@ export async function POST(req: NextRequest) {
 
   if (body.action === "reset") {
     delete next.posts[slug];
+  } else if (body.action === "image") {
+    // From the live page editor: one picture, clicked on the post itself. url null = back to automatic / none.
+    const { slot, url, w, h } = body as unknown as { slot?: string; url?: string | null; w?: number; h?: number };
+    if (url != null && !isOurBlogImage(url)) return NextResponse.json({ error: "Upload the image first." }, { status: 400 });
+    const patch: BlogPatch = { ...(next.posts[slug] || {}) };
+    if (slot === "cover") {
+      if (url) patch.cover = { url, w: Math.max(1, Math.min(Math.round(Number(w)) || 1600, 10000)), h: Math.max(1, Math.min(Math.round(Number(h)) || 1000, 10000)) };
+      else delete patch.cover;
+    } else if (/^section:\d+$/.test(slot || "")) {
+      const i = Number(slot!.slice(8));
+      const sections = (patch.sections ?? original.sections).map((s) => ({ ...s }));
+      if (!sections[i]) return NextResponse.json({ error: "That section no longer exists. Reload the page." }, { status: 400 });
+      if (url) sections[i].image = url;
+      else delete sections[i].image;
+      patch.sections = sections;
+    } else {
+      return NextResponse.json({ error: "Unknown picture." }, { status: 400 });
+    }
+    delete patch.updatedAt;
+    if (Object.keys(patch).length) next.posts[slug] = { ...patch, updatedAt: next.updatedAt };
+    else delete next.posts[slug];
   } else if (body.action === "save" && body.post) {
     const f = body.post;
     const patch: BlogPatch = {};

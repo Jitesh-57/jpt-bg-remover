@@ -117,6 +117,23 @@ export default function BlogAdmin() {
     return { ...f, sections: s };
   });
 
+  /** Wraps the selected words of a section in [words](link), asking for the link. */
+  const addLink = (i: number) => {
+    const ta = document.getElementById(`blog-sec-${i}`) as HTMLTextAreaElement | null;
+    if (!ta || !form) return;
+    const { selectionStart: a, selectionEnd: b, value } = ta;
+    let words = value.slice(a, b).trim();
+    if (!words) words = (prompt("Words to show as the link:") || "").trim();
+    if (!words) return;
+    const href = (prompt("Link address (https://… or a page on this site like /upscale):", "https://") || "").trim();
+    if (!href || href === "https://") return;
+    if (!/^(https?:\/\/\S+|\/\S*|mailto:\S+)$/i.test(href)) { setErr("That link needs to start with https://, / or mailto:"); return; }
+    const md = `[${words.replace(/[[\]]/g, "")}](${href.replace(/[()\s]/g, encodeURIComponent)})`;
+    const next = value.slice(0, a) + md + value.slice(b);
+    setSection(i, { body: next });
+    requestAnimationFrame(() => { ta.focus(); ta.setSelectionRange(a + md.length, a + md.length); });
+  };
+
   const upload = async (file: File | undefined, key: string): Promise<{ url: string; w: number; h: number } | null> => {
     if (!file) return null;
     setBusy(key); setErr("");
@@ -220,6 +237,7 @@ export default function BlogAdmin() {
                       {busy === "save" ? "Saving…" : dirty ? "Save & publish" : "Saved"}
                     </button>
                     <a href={`/blog/${slug}`} target="_blank" rel="noreferrer" style={{ ...chip, textDecoration: "none" }}>View post ↗</a>
+                    <a href={`/blog/${slug}?jpt_edit=1`} target="_blank" rel="noreferrer" style={{ ...chip, textDecoration: "none" }}>Edit on page ↗</a>
                     <button style={chip} disabled={!!busy} onClick={() => void reset()}>Back to original</button>
                     <label style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 13, fontWeight: 700, marginLeft: "auto", cursor: "pointer" }}>
                       <input type="checkbox" checked={form.hidden} onChange={(e) => set("hidden", e.target.checked)} /> Hide this post
@@ -260,7 +278,9 @@ export default function BlogAdmin() {
 
                   {/* Sections */}
                   <div style={{ fontSize: 12, color: "var(--text-faint)", lineHeight: 1.5 }}>
-                    Sections — tip: wrap words in <code>**double stars**</code> to make them bold; a line that is only <code>**bold**</code> becomes a sub-heading.
+                    Sections — tips: <code>**double stars**</code> make words bold; a line that is only <code>**bold**</code> becomes a sub-heading;
+                    select some words and press <strong>🔗 Link</strong> to link them (it writes <code>[words](https://…)</code>).
+                    You can also change any picture right on the post: open it with <strong>Edit on page</strong> and click the picture.
                   </div>
                   {form.sections.map((s, i) => (
                     <div key={i} style={card}>
@@ -285,8 +305,9 @@ export default function BlogAdmin() {
                             onChange={async (e) => { const f = e.target.files?.[0]; e.target.value = ""; const up = await upload(f, `s${i}`); if (up) setSection(i, { image: up.url }); }} />
                         </label>
                         {s.image && <button style={small} onClick={() => setSection(i, { image: undefined })}>Remove picture</button>}
+                        <button style={small} onClick={() => addLink(i)} title="Select some words first, then press to turn them into a link">🔗 Link</button>
                       </div>
-                      <textarea value={s.body} maxLength={LIMITS.body} rows={Math.min(18, Math.max(5, Math.ceil(s.body.length / 90)))} onChange={(e) => setSection(i, { body: e.target.value })}
+                      <textarea id={`blog-sec-${i}`} value={s.body} maxLength={LIMITS.body} rows={Math.min(18, Math.max(5, Math.ceil(s.body.length / 90)))} onChange={(e) => setSection(i, { body: e.target.value })}
                         style={{ ...input, resize: "vertical", lineHeight: 1.6, fontSize: 14 }} />
                     </div>
                   ))}
