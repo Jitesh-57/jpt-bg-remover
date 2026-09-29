@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { parseTarget, type PageTarget } from "@/lib/page-target";
 import CreativeUploader, { type App } from "./CreativeUploader";
 import SeoEditor from "./SeoEditor";
+import BlogImageSlots from "./BlogImageSlots";
 
 /**
  * The admin console: one token, one target, tabs for the rest.
@@ -35,6 +36,9 @@ export default function AdminShell({ apps }: { apps: App[] }) {
     setToken(t);
     try { localStorage.setItem("jpt-admin-token", t.trim()); } catch { /* fine */ }
   };
+
+  /** A blog post's picture sections come from the post itself (cover + one per section). */
+  const blogSlug = target ? /^\/blog\/([a-z0-9-]+)$/.exec(target.path)?.[1] ?? null : null;
 
   /** The app behind the target, when the target is a creative app page. */
   const selected = target?.slug ? apps.find((a) => a.slug === target.slug) || null : null;
@@ -136,7 +140,9 @@ export default function AdminShell({ apps }: { apps: App[] }) {
           </>
         )}
 
-        {target && tab === "creative" && <CreativeUploader target={target} token={token} />}
+        {target && tab === "creative" && (blogSlug
+          ? <BlogImageSlots key={blogSlug} slug={blogSlug} token={token} />
+          : <CreativeUploader target={target} token={token} />)}
         {target && tab === "seo" && (selected ? (
           <SeoEditor app={selected} token={token} />
         ) : (

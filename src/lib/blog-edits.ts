@@ -11,8 +11,10 @@ export const BLOG_EDITS_BUCKET = "landing";
 export const BLOG_EDITS_PATH = "overrides/blog-edits.json";
 export const BLOG_EDITS_TAG = "blog-edits";
 
-export interface BlogCoverImage { url: string; w: number; h: number }
-export interface BlogSection { heading?: string; body: string; image?: string }
+/** width: how wide the picture is drawn in the post, as a percentage of the column (100, 75 or 50). */
+export interface BlogCoverImage { url: string; w: number; h: number; width?: number }
+export interface BlogSection { heading?: string; body: string; image?: string; imageWidth?: number }
+export const IMAGE_WIDTHS = [100, 75, 50] as const;
 
 export interface BlogPatch {
   title?: string;

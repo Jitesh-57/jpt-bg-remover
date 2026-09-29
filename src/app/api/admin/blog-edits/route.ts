@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { requireAdmin } from "@/lib/admin-token";
 import { POSTS } from "@/app/blog/_data/posts";
-import { BLOG_EDITS_TAG, LIMITS, isOurBlogImage, type BlogEdits, type BlogPatch, type BlogSection } from "@/lib/blog-edits";
-import { readBlogEditsNow, writeBlogEdits } from "@/lib/blog-edits.server";
+import { BLOG_EDITS_TAG, IMAGE_WIDTHS, LIMITS, isOurBlogImage, type BlogEdits, type BlogPatch, type BlogSection } from "@/lib/blog-edits";
+import { readBlogEditsNow, uploadBlogImage, writeBlogEdits } from "@/lib/blog-edits.server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -15,6 +15,9 @@ export const dynamic = "force-dynamic";
  *   GET ?slug=…                          one post as written in code, plus its edit
  *   POST { action: "save",  slug, post } store what differs from the code, live at once
  *   POST { action: "reset", slug }       drop the edit, back to the code version
+ *   POST { action: "upload", slug, slot, dataUrl, w, h, apply? }
+ *                                        store a named WebP for that slot; with apply, also set it
+ *   POST { action: "width", slug, slot, width }  100, 75 or 50 (% of the column)
  *   POST { action: "image", slug, slot, url, w, h }
  *                                        one picture from the live page editor; slot "cover"
  *                                        or "section:<i>", url null to remove
@@ -24,6 +27,12 @@ export const dynamic = "force-dynamic";
 
 function str(v: unknown, max: number): string {
   return typeof v === "string" ? v.replace(/\r\n/g, "\n").trim().slice(0, max) : "";
+}
+
+const MAX_UPLOAD = 3 * 1024 * 1024;
+
+function isSlot(slot: unknown): slot is string {
+  return slot === "cover" || (typeof slot === "string" && /^section:\d{1,2}$/.test(slot));
 }
 
 function refresh(slug: string) {
@@ -64,22 +73,56 @@ export async function POST(req: NextRequest) {
   const current = await readBlogEditsNow();
   const next: BlogEdits = { version: 1, updatedAt: new Date().toISOString(), posts: { ...current.posts } };
 
+  let uploaded: string | null = null;
+  if (body.action === "upload") {
+    // Stored under a name that says what it is: blog/<post>-main-<hash>.webp, blog/<post>-section-3-<hash>.webp.
+    const { slot, dataUrl, apply } = body as unknown as { slot?: string; dataUrl?: string; apply?: boolean };
+    if (!isSlot(slot)) return NextResponse.json({ error: "Unknown picture." }, { status: 400 });
+    const m = /^data:image\/webp;base64,/.exec(dataUrl || "");
+    if (!m) return NextResponse.json({ error: "Expected a WebP image." }, { status: 400 });
+    const bytes = Buffer.from(dataUrl!.slice(m[0].length), "base64");
+    if (!bytes.length || bytes.length > MAX_UPLOAD) return NextResponse.json({ error: "That image is empty or over 3MB even after compressing." }, { status: 413 });
+    const name = slot === "cover" ? "main" : `section-${Number(slot.slice(8)) + 1}`;
+    const up = await uploadBlogImage(`${slug}-${name}`, bytes);
+    if (!up.ok) return NextResponse.json({ error: up.error }, { status: 502 });
+    if (!apply) return NextResponse.json({ url: up.url });
+    uploaded = up.url;
+    (body as Record<string, unknown>).url = up.url;
+    (body as Record<string, unknown>).action = "image";
+  }
+
   if (body.action === "reset") {
     delete next.posts[slug];
+  } else if (body.action === "width") {
+    // How wide a picture is drawn in the post, like the creative pages' WIDTH setting.
+    const { slot, width } = body as unknown as { slot?: string; width?: number };
+    if (!isSlot(slot) || !(IMAGE_WIDTHS as readonly number[]).includes(Number(width))) return NextResponse.json({ error: "Pick 100, 75 or 50%." }, { status: 400 });
+    const patch: BlogPatch = { ...(next.posts[slug] || {}) };
+    if (slot === "cover") {
+      if (!patch.cover) return NextResponse.json({ error: "Upload a cover picture first." }, { status: 400 });
+      patch.cover = { ...patch.cover, width: Number(width) };
+    } else {
+      const i = Number(slot.slice(8));
+      const sections = (patch.sections ?? original.sections).map((s) => ({ ...s }));
+      if (!sections[i]?.image) return NextResponse.json({ error: "Add a picture to that section first." }, { status: 400 });
+      sections[i].imageWidth = Number(width);
+      patch.sections = sections;
+    }
+    next.posts[slug] = { ...patch, updatedAt: next.updatedAt };
   } else if (body.action === "image") {
-    // From the live page editor: one picture, clicked on the post itself. url null = back to automatic / none.
+    // One picture: from the live page editor or the Creatives admin. url null = back to automatic / none.
     const { slot, url, w, h } = body as unknown as { slot?: string; url?: string | null; w?: number; h?: number };
     if (url != null && !isOurBlogImage(url)) return NextResponse.json({ error: "Upload the image first." }, { status: 400 });
     const patch: BlogPatch = { ...(next.posts[slug] || {}) };
     if (slot === "cover") {
-      if (url) patch.cover = { url, w: Math.max(1, Math.min(Math.round(Number(w)) || 1600, 10000)), h: Math.max(1, Math.min(Math.round(Number(h)) || 1000, 10000)) };
+      if (url) patch.cover = { width: patch.cover?.width, url, w: Math.max(1, Math.min(Math.round(Number(w)) || 1600, 10000)), h: Math.max(1, Math.min(Math.round(Number(h)) || 1000, 10000)) };
       else delete patch.cover;
     } else if (/^section:\d+$/.test(slot || "")) {
       const i = Number(slot!.slice(8));
       const sections = (patch.sections ?? original.sections).map((s) => ({ ...s }));
       if (!sections[i]) return NextResponse.json({ error: "That section no longer exists. Reload the page." }, { status: 400 });
       if (url) sections[i].image = url;
-      else delete sections[i].image;
+      else { delete sections[i].image; delete sections[i].imageWidth; }
       patch.sections = sections;
     } else {
       return NextResponse.json({ error: "Unknown picture." }, { status: 400 });
@@ -99,7 +142,8 @@ export async function POST(req: NextRequest) {
       const c = f.cover as { url?: unknown; w?: unknown; h?: unknown };
       if (!isOurBlogImage(c.url)) return NextResponse.json({ error: "Upload the cover image first." }, { status: 400 });
       const w = Math.round(Number(c.w)) || 1600, h = Math.round(Number(c.h)) || 1000;
-      patch.cover = { url: c.url, w: Math.max(1, Math.min(w, 10000)), h: Math.max(1, Math.min(h, 10000)) };
+      const cw = Number((c as { width?: unknown }).width);
+      patch.cover = { ...((IMAGE_WIDTHS as readonly number[]).includes(cw) && cw !== 100 ? { width: cw } : {}), url: c.url, w: Math.max(1, Math.min(w, 10000)), h: Math.max(1, Math.min(h, 10000)) };
     }
     if (Array.isArray(f.sections)) {
       const sections: BlogSection[] = [];
@@ -109,7 +153,8 @@ export async function POST(req: NextRequest) {
         const image = raw?.image;
         if (image != null && image !== "" && !isOurBlogImage(image)) return NextResponse.json({ error: "Upload each section image first." }, { status: 400 });
         if (!heading && !text && !image) continue;
-        sections.push({ ...(heading ? { heading } : {}), body: text, ...(image ? { image: image as string } : {}) });
+        const iw = Number(raw?.imageWidth);
+        sections.push({ ...(heading ? { heading } : {}), body: text, ...(image ? { image: image as string } : {}), ...(image && (IMAGE_WIDTHS as readonly number[]).includes(iw) && iw !== 100 ? { imageWidth: iw } : {}) });
       }
       const same = JSON.stringify(sections) === JSON.stringify(original.sections
         .map((s) => ({ heading: str(s.heading, LIMITS.heading), body: str(s.body, LIMITS.body) }))
@@ -127,5 +172,5 @@ export async function POST(req: NextRequest) {
   const saved = await writeBlogEdits(next);
   if (!saved.ok) return NextResponse.json({ error: saved.error }, { status: 502 });
   refresh(slug);
-  return NextResponse.json({ ok: true, patch: next.posts[slug] || null });
+  return NextResponse.json({ ok: true, patch: next.posts[slug] || null, ...(uploaded ? { url: uploaded } : {}) });
 }

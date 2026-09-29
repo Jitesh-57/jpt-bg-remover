@@ -139,8 +139,10 @@ export default function BlogAdmin() {
     setBusy(key); setErr("");
     try {
       const img = await toWebp(file);
-      const r = await fetch(`/api/admin/page-edits?token=${encodeURIComponent(t)}`, {
-        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "upload", dataUrl: img.dataUrl }),
+      // Named after the post and the slot: blog/<post>-main-….webp, blog/<post>-section-3-….webp.
+      const slot = key === "cover" ? "cover" : `section:${key.slice(1)}`;
+      const r = await fetch(api(), {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "upload", slug, slot, dataUrl: img.dataUrl }),
       });
       const d = await r.json().catch(() => ({}));
       if (!r.ok || !d.url) throw new Error(d.error || `Upload failed (HTTP ${r.status}).`);
