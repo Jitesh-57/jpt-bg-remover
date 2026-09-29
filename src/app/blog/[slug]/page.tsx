@@ -222,7 +222,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             </div>
 
             {/* Hero image */}
-            <div style={{ marginBottom: 32 }}>
+            <div style={{ width: `${post.cover?.width ?? 100}%`, margin: "0 auto 32px" }}>
               <BlogCover post={post} mains={mains} height={360} radius={16} eager sizes="(max-width: 768px) 100vw, 760px" />
             </div>
 
@@ -244,7 +244,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 {section.image && (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={section.image} alt={section.heading || post.title} loading="lazy" data-blog-slug={post.slug} data-blog-image={`section:${i}`}
-                    style={{ width: "100%", height: "auto", borderRadius: 14, margin: "4px 0 18px", display: "block", border: "1px solid var(--border)" }} />
+                    style={{ width: `${section.imageWidth ?? 100}%`, height: "auto", borderRadius: 14, margin: "4px auto 18px", display: "block", border: "1px solid var(--border)" }} />
                 )}
                 {renderBody(section.body)}
               </div>

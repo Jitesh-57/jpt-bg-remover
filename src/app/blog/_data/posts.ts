@@ -12,7 +12,7 @@ export interface BlogPost {
   toolLabel: string;
   image?: string;
   /** `image` is only ever set by an edit made in /admin/blog. */
-  sections: { heading?: string; body: string; image?: string }[];
+  sections: { heading?: string; body: string; image?: string; imageWidth?: number }[];
 }
 
 import { blogImageUrl } from "@/lib/blog-images";

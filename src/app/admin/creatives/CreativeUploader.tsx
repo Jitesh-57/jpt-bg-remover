@@ -65,7 +65,7 @@ function sectionsFor(target: PageTarget): Section[] {
 }
 
 /** An image waiting to be published into a section. */
-type Pending = { dataUrl: string; bytes: number; w: number; h: number; from: string };
+export type Pending = { dataUrl: string; bytes: number; w: number; h: number; from: string };
 
 /** What a section holds: what is live, and what is about to replace it. */
 type Live = { url: string; w: number; h: number; width?: number };
@@ -76,7 +76,7 @@ const WIDTHS = [100, 75, 50];
 
 const kb = (n: number) => (n >= 1048576 ? `${(n / 1048576).toFixed(1)} MB` : `${Math.round(n / 1024)} KB`);
 
-function loadImage(src: Blob | string): Promise<HTMLImageElement> {
+export function loadImage(src: Blob | string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const url = typeof src === "string" ? src : URL.createObjectURL(src);
     const img = new Image();
@@ -96,7 +96,7 @@ function loadImage(src: Blob | string): Promise<HTMLImageElement> {
  * or more and the page draws it at about 1000, so capping and re-encoding is
  * worth doing; reframing is not ours to do.
  */
-async function prepare(img: HTMLImageElement, from: string): Promise<Pending> {
+export async function prepare(img: HTMLImageElement, from: string): Promise<Pending> {
   const w = Math.round(Math.min(img.width, CAP));
   const h = Math.round((w / img.width) * img.height);
   const canvas = document.createElement("canvas");

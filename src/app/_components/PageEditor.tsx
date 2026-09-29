@@ -184,14 +184,21 @@ export default function PageEditor({ edits, path, onExit }: { edits: PageEdits; 
       } else {
         if (!sel.file) throw new Error("Choose a new image first.");
         if (!sel.key && !sel.blog) throw new Error("This image can't be replaced.");
-        const up = await call({ action: "upload", dataUrl: sel.file.dataUrl });
         if (sel.blog) {
-          await saveBlogImage(sel.blog, { url: up.url!, w: sel.file.w, h: sel.file.h });
+          // Stored as blog/<post>-main-….webp (or -section-N-), and set on the post in the same call.
+          const r = await fetch(`/api/admin/blog-edits?token=${encodeURIComponent(token)}`, {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "upload", apply: true, slug: sel.blog.slug, slot: sel.blog.slot, dataUrl: sel.file.dataUrl, w: sel.file.w, h: sel.file.h }),
+          });
+          const d = (await r.json().catch(() => ({}))) as { error?: string };
+          if (!r.ok || d.error) throw new Error(d.error || `Save failed (${r.status}).`);
+          setTimeout(() => location.reload(), 700);
           setNote({ ok: true, text: "Saved to this blog post and live now. Reloading…" });
           setSel(null);
           setBox(null);
           return;
         }
+        const up = await call({ action: "upload", dataUrl: sel.file.dataUrl });
         publish(await call({ scope: scopeKey, kind: "image", key: sel.key, value: up.url }));
       }
       setNote({ ok: true, text: scope === "all" ? "Saved on every page. Live for visitors within a minute." : "Saved on this page. Live for visitors within a minute." });
