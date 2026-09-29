@@ -532,3 +532,10 @@ a { color: inherit; }
   .jpt-scan-beam, .jpt-scan-dot, .jpt-scan-grid, .jpt-scan-corner { animation: none !important; }
   .jpt-scan-beam { display: none; }
 }
+
+/* /admin/blog: post list beside the editor, stacked on phones */
+.jpt-blog-admin { grid-template-columns: 300px minmax(0, 1fr); }
+@media (max-width: 860px) {
+  .jpt-blog-admin { grid-template-columns: 1fr; }
+  .jpt-blog-admin > aside { position: static !important; max-height: 340px !important; }
+}

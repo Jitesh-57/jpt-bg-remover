@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import BlogCover from "../_components/BlogCover";
-import { POSTS, getPost } from "../_data/posts";
+import { mainsFrom } from "@/lib/blog-images";
+import { readOverrides } from "@/lib/overrides";
+import { POSTS } from "../_data/posts";
+import { editedPost, editedPosts } from "@/lib/blog-edits.server";
 import BlogStickyBar from "../_components/BlogStickyBar";
 
 export async function generateStaticParams() {
@@ -11,7 +14,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const post = getPost(slug);
+  const post = await editedPost(slug);
   if (!post) return {};
   return {
     title: { absolute: post.metaTitle },
@@ -56,24 +59,52 @@ function renderBody(body: string) {
     if (line.startsWith("**") && line.endsWith("**")) {
       return <strong key={i} style={{ display: "block", marginTop: 18, marginBottom: 4, color: "var(--text)", fontWeight: 800 }}>{line.replace(/\*\*/g, "")}</strong>;
     }
-    // inline bold
-    const parts = line.split(/(\*\*[^*]+\*\*)/g);
     return (
       <p key={i} style={{ margin: "0 0 14px", fontSize: 16, color: "var(--text-muted)", lineHeight: 1.75 }}>
-        {parts.map((part, j) =>
-          part.startsWith("**") && part.endsWith("**")
-            ? <strong key={j} style={{ color: "var(--text)", fontWeight: 700 }}>{part.replace(/\*\*/g, "")}</strong>
-            : part
-        )}
+        {renderInline(line)}
       </p>
     );
   });
 }
 
+/** Only web links and our own paths become links; anything else stays plain text. */
+function safeHref(href: string): string | null {
+  const h = href.trim();
+  if (/^\/(?!\/)/.test(h) || /^#/.test(h)) return h;
+  if (/^https?:\/\/[^\s]+$/i.test(h)) return h;
+  if (/^mailto:[^\s]+$/i.test(h)) return h;
+  return null;
+}
+
+/** **bold** and [words](link) inside one line of a post. */
+function renderInline(line: string): React.ReactNode[] {
+  const parts = line.split(/(\*\*[^*]+\*\*|\[[^\]]+\]\([^)\s]+\))/g);
+  return parts.map((part, j) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return <strong key={j} style={{ color: "var(--text)", fontWeight: 700 }}>{part.replace(/\*\*/g, "")}</strong>;
+    }
+    const link = /^\[([^\]]+)\]\(([^)\s]+)\)$/.exec(part);
+    if (link) {
+      const href = safeHref(link[2]);
+      if (!href) return link[1];
+      const external = /^https?:\/\//i.test(href) && !/^https?:\/\/(www\.)?sjpt\.io(\/|$)/i.test(href);
+      return (
+        <a key={j} href={href} {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+          style={{ color: "var(--accent)", fontWeight: 700, textDecoration: "underline", textUnderlineOffset: 3 }}>
+          {link[1]}
+        </a>
+      );
+    }
+    return part;
+  });
+}
+
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const post = getPost(slug);
-  if (!post) notFound();
+  const [found, overrides, visible] = await Promise.all([editedPost(slug), readOverrides(), editedPosts()]);
+  if (!found) notFound();
+  const post = found;
+  const mains = mainsFrom(overrides.pages);
 
   const url = `https://www.sjpt.io/blog/${post.slug}`;
 
@@ -118,7 +149,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       const m = block.match(/^\*\*(.+?)\*\*\s*\n?([\s\S]*)$/);
       if (m) {
         const q = m[1].trim();
-        const a = m[2].replace(/\*\*/g, "").trim();
+        const a = m[2].replace(/\*\*/g, "").replace(/\[([^\]]+)\]\([^)\s]+\)/g, "$1").trim();
         if (q && a) faqPairs.push({ q, a });
       }
     }
@@ -138,7 +169,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   // Related posts — build a topic cluster: same tool first (e.g. all TikTok
   // posts link to each other), then same category, then fill with others.
   // Strong internal linking of a cluster is a ranking signal.
-  const others = POSTS.filter((p) => p.slug !== post.slug);
+  const others = visible.filter((p) => p.slug !== post.slug);
   const seen = new Set<string>();
   const related = [
     ...others.filter((p) => p.toolHref === post.toolHref),
@@ -192,7 +223,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
             {/* Hero image */}
             <div style={{ marginBottom: 32 }}>
-              <BlogCover post={post} height={360} radius={16} eager sizes="(max-width: 768px) 100vw, 760px" />
+              <BlogCover post={post} mains={mains} height={360} radius={16} eager sizes="(max-width: 768px) 100vw, 760px" />
             </div>
 
             {/* Intro box */}
@@ -209,6 +240,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                   <h2 style={{ margin: "0 0 16px", fontSize: 22, fontWeight: 800, color: "var(--text)", letterSpacing: "-0.3px", ...(i > 0 ? { borderTop: "1px solid var(--border)", paddingTop: 28 } : {}) }}>
                     {section.heading}
                   </h2>
+                )}
+                {section.image && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={section.image} alt={section.heading || post.title} loading="lazy" data-blog-slug={post.slug} data-blog-image={`section:${i}`}
+                    style={{ width: "100%", height: "auto", borderRadius: 14, margin: "4px 0 18px", display: "block", border: "1px solid var(--border)" }} />
                 )}
                 {renderBody(section.body)}
               </div>
@@ -256,7 +292,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 18 }}>
                 {related.map((r) => (
                   <Link key={r.slug} href={`/blog/${r.slug}`} className="jpt-hover" style={{ textDecoration: "none", display: "block", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 14, overflow: "hidden" }}>
-                    <BlogCover post={r} height={120} sizes="260px" />
+                    <BlogCover post={r} mains={mains} height={120} sizes="260px" />
                     <div style={{ padding: "14px 16px" }}>
                       <span style={{ fontSize: 11, fontWeight: 700, color: CATEGORY_COLORS[r.category] || "var(--accent)", letterSpacing: 0.4 }}>{r.category}</span>
                       <div style={{ fontSize: 15, fontWeight: 700, color: "var(--text)", lineHeight: 1.35, marginTop: 6 }}>{r.title}</div>

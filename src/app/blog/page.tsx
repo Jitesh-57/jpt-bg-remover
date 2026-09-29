@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { POSTS } from "./_data/posts";
+import { editedPosts } from "@/lib/blog-edits.server";
 import BlogCover from "./_components/BlogCover";
+import { mainsFrom } from "@/lib/blog-images";
+import { readOverrides } from "@/lib/overrides";
 
 export const metadata: Metadata = {
   title: { absolute: "Image Upscaling Blog — Tips, Tutorials & Guides | Pixel Shine" },
@@ -30,7 +32,12 @@ const CATEGORY_COLORS: Record<string, string> = {
   News: "var(--accent-fill)",
 };
 
-export default function BlogIndexPage() {
+/* Covers follow the creatives uploaded in /admin, re-read with the creative gallery's cadence. */
+export const revalidate = 300;
+
+export default async function BlogIndexPage() {
+  const [overrides, POSTS] = await Promise.all([readOverrides(), editedPosts()]);
+  const mains = mainsFrom(overrides.pages);
   return (
     <main style={{ background: "var(--surface-2)", minHeight: "100vh", padding: "60px 24px 80px" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
@@ -52,7 +59,7 @@ export default function BlogIndexPage() {
           {POSTS.map((post) => (
             <Link key={post.slug} href={`/blog/${post.slug}`} style={{ textDecoration: "none" }}>
               <article className="jpt-hover" style={{ background: "var(--surface)", borderRadius: 18, border: "1px solid #E8EAF0", overflow: "hidden", boxShadow: "0 2px 14px rgba(0,0,0,0.04)", cursor: "pointer" }}>
-                <BlogCover post={post} height={200} sizes="(max-width: 768px) 100vw, 540px" />
+                <BlogCover post={post} mains={mains} height={200} sizes="(max-width: 768px) 100vw, 540px" />
                 <div style={{ padding: "24px 28px 28px" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
                     <span style={{ background: CATEGORY_COLORS[post.category] || "var(--accent-fill)", color: "#fff", fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 20, letterSpacing: 0.5 }}>
