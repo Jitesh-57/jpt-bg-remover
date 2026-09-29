@@ -502,9 +502,13 @@ a { color: inherit; }
 /* AI Studio: scanning effect over the photo while it's being read. */
 .jpt-scan { position: absolute; inset: 0; overflow: hidden; pointer-events: none; animation: jptScanIn .35s ease both;
   background: radial-gradient(120% 90% at 50% 40%, rgba(255,106,26,.06), rgba(10,10,14,.38)); }
-.jpt-scan-grid { position: absolute; inset: 0; opacity: .35;
-  background-image: linear-gradient(rgba(255,160,90,.18) 1px, transparent 1px), linear-gradient(90deg, rgba(255,160,90,.18) 1px, transparent 1px);
-  background-size: 34px 34px; animation: jptScanGrid 2.4s ease-in-out infinite; }
+.jpt-scan-grid { position: absolute; inset: 0; opacity: .6;
+  background-image:
+    linear-gradient(rgba(255,170,110,.55) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,170,110,.55) 1px, transparent 1px);
+  background-size: 32px 32px; background-position: center;
+  filter: drop-shadow(0 0 2px rgba(255,122,47,.6));
+  animation: jptScanGrid 2.4s ease-in-out infinite; }
 .jpt-scan-beam { position: absolute; left: 0; right: 0; height: 26%; top: -26%;
   background: linear-gradient(180deg, transparent, rgba(255,106,26,.10) 55%, rgba(255,138,61,.45) 96%, #fff 100%);
   box-shadow: 0 6px 22px rgba(255,106,26,.55); animation: jptScanBeam 2.1s cubic-bezier(.45,.05,.55,.95) infinite; }
@@ -520,7 +524,7 @@ a { color: inherit; }
   color: #fff; font-size: 13px; font-weight: 800; white-space: nowrap; box-shadow: 0 8px 26px rgba(0,0,0,.4); }
 @keyframes jptScanIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes jptScanBeam { 0% { top: -26%; } 100% { top: 100%; } }
-@keyframes jptScanGrid { 0%, 100% { opacity: .18; } 50% { opacity: .42; } }
+@keyframes jptScanGrid { 0%, 100% { opacity: .38; } 50% { opacity: .75; } }
 @keyframes jptScanPing { 0% { opacity: 0; transform: scale(.4); box-shadow: 0 0 0 0 rgba(255,138,61,.7); }
   20% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1); box-shadow: 0 0 0 22px rgba(255,138,61,0); } }
 @keyframes jptScanCorner { 0%, 100% { opacity: .55; transform: scale(1); } 50% { opacity: 1; transform: scale(1.12); } }
