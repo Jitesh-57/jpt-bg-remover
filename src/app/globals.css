@@ -539,3 +539,13 @@ a { color: inherit; }
   .jpt-blog-admin { grid-template-columns: 1fr; }
   .jpt-blog-admin > aside { position: static !important; max-height: 340px !important; }
 }
+
+/* /docs: contents beside the article, stacked on phones */
+.jpt-docs { grid-template-columns: 220px minmax(0, 1fr); }
+.jpt-docs-nav a:hover { background: var(--surface); color: var(--text) !important; }
+@media (max-width: 820px) {
+  .jpt-docs { grid-template-columns: 1fr; gap: 20px !important; }
+  .jpt-docs-nav { position: static !important; }
+  .jpt-docs-nav nav { flex-direction: row !important; flex-wrap: wrap; gap: 6px !important; }
+  .jpt-docs-nav nav a { border: 1px solid var(--border); background: var(--surface); padding: 6px 11px !important; font-size: 13px !important; }
+}

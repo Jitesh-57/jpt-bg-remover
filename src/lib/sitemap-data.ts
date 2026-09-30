@@ -72,6 +72,7 @@ export function pagesUrls(): SitemapUrl[] {
     { url: `${BASE}/use-cases` },
     { url: `${BASE}/ai` },
     { url: `${BASE}/answers` },
+    { url: `${BASE}/docs` },
   ];
   if (PAID_FEATURES_ENABLED) out.push({ url: `${BASE}/pricing` });
   return dedupe(out);
