@@ -1,23 +1,15 @@
 import HomeView from "./HomeView";
 import type { Pic, ShowFeature } from "./_components/FeatureShowcase";
-import { appCards, communityFeed, APP_CATEGORIES, type AppCardData } from "@/lib/dashboard-feed.server";
-import { popularTools } from "@/lib/dashboard-catalog";
+import { appCards, communityFeed, popularApps, exploreApps, APP_CATEGORIES, type AppCardData } from "@/lib/dashboard-feed.server";
+import { curateApps, readPlacements } from "@/lib/placements.server";
 
 export const revalidate = 300;
 
 export default async function DashboardHome() {
-  const [apps, feed, community] = await Promise.all([appCards(), communityFeed(400), communityFeed(13, { placement: "app.home.community" })]);
+  const [apps, feed, community, placements] = await Promise.all([appCards(), communityFeed(400), communityFeed(13, { placement: "app.home.community" }), readPlacements()]);
   const bySlug = new Map(apps.map((a) => [a.slug, a]));
 
-  const popular: AppCardData[] = [];
-  for (const t of popularTools()) {
-    const a = bySlug.get(t.slug);
-    if (a) popular.push(a);
-  }
-  for (const a of apps) {
-    if (popular.length >= 8) break;
-    if (a.hasExample && !popular.includes(a)) popular.push(a);
-  }
+  const popular = popularApps(apps);
 
   /*
     Each card's picture is chosen from what actually exists, best candidate
@@ -52,7 +44,7 @@ export default async function DashboardHome() {
     { kind: "photo", title: "Photo Editor", tagline: "Crop, adjust and finish, free", sub: "Every free tool on one canvas", href: "/editor", icon: "tools", grad: ["#06B6D4", "#3B82F6"], pics: [exampleAt(15)] },
   ];
 
-  const showcase = apps.filter((a) => a.hasExample).length >= 12 ? apps.filter((a) => a.hasExample) : apps;
+  const showcase = exploreApps(apps);
   const categories = APP_CATEGORIES
     .filter((c) => showcase.filter((a) => a.category === c.id).length >= 4)
     .map(({ id, label }) => ({ id, label }));
@@ -60,8 +52,8 @@ export default async function DashboardHome() {
   return (
     <HomeView
       features={features}
-      popular={popular.slice(0, 8)}
-      showcase={showcase.slice(0, 120)}
+      popular={curateApps("app.home.popular", placements, popular, apps, 8)}
+      showcase={curateApps("app.home.explore", placements, showcase, apps, 120)}
       categories={categories}
       community={community}
       appCount={apps.length}

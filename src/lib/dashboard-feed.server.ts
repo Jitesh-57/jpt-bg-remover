@@ -8,6 +8,7 @@ import { creativeSources, uploadedCreative } from "@/lib/app-creatives";
 import { appsWithExamples } from "@/lib/creative-examples.server";
 import { readOverrides } from "@/lib/overrides";
 import { categoryOf } from "@/lib/creative-categories";
+import { popularTools } from "@/lib/dashboard-catalog";
 import { CAT_META, type AppCat } from "@/lib/app-catalog";
 
 /** A community image: a prompt from the CC BY 4.0 library, credited to its author. */
@@ -140,6 +141,27 @@ export async function appCards(): Promise<AppCardData[]> {
   }
   const cards = CREATIVE_APPS.map((a) => toAppCard(a, mains.get(a.slug), withExamples.has(a.slug)));
   return [...cards.filter((c) => c.hasExample), ...cards.filter((c) => !c.hasExample)];
+}
+
+/** The dashboard's automatic "Popular AI apps": the catalogue's popular tools, topped up with apps that have an example. */
+export function popularApps(apps: AppCardData[]): AppCardData[] {
+  const bySlug = new Map(apps.map((a) => [a.slug, a]));
+  const out: AppCardData[] = [];
+  for (const t of popularTools()) {
+    const a = bySlug.get(t.slug);
+    if (a) out.push(a);
+  }
+  for (const a of apps) {
+    if (out.length >= 8) break;
+    if (a.hasExample && !out.includes(a)) out.push(a);
+  }
+  return out.slice(0, 8);
+}
+
+/** The dashboard's automatic "Explore AI apps": apps with an example, when there are enough of them. */
+export function exploreApps(apps: AppCardData[]): AppCardData[] {
+  const withExample = apps.filter((a) => a.hasExample);
+  return withExample.length >= 12 ? withExample : apps;
 }
 
 export const APP_CATEGORIES = (Object.keys(CAT_META) as AppCat[]).map((id) => ({ id, label: CAT_META[id].label, emoji: CAT_META[id].emoji }));

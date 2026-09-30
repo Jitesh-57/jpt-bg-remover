@@ -4,9 +4,12 @@ import { requireAdmin } from "@/lib/admin-token";
 import { ALL, cardImage, featured, getPrompt, hottest, newest, search } from "@/lib/prompts/data";
 import type { PromptRecord } from "@/lib/prompts/types";
 import { mediaResolver } from "@/lib/prompts/media";
-import { communityFeed } from "@/lib/dashboard-feed.server";
+import { appCards, communityFeed, exploreApps, popularApps, type AppCardData } from "@/lib/dashboard-feed.server";
+import { CREATIVE_APPS } from "@/lib/creative-apps";
+import { FEATURED_APPS, SHOWCASE_APPS } from "@/lib/home-apps";
+import { CAT_META } from "@/lib/app-catalog";
 import { PLACEMENTS, PLACEMENTS_TAG, PLACEMENT_BY_ID, type PlacementId, type PlacementsDoc } from "@/lib/placements";
-import { curate, fits, readPlacementsNow, writePlacements } from "@/lib/placements.server";
+import { curate, curateApps, fits, readPlacementsNow, writePlacements } from "@/lib/placements.server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -15,7 +18,7 @@ export const dynamic = "force-dynamic";
  * /api/admin/placements — what each section shows, and changing it. ?token= on every call.
  *
  *   GET                              every placement with the items live in it now
- *   GET ?placement=…&q=…             library items that fit that placement (search, or the hottest)
+ *   GET ?placement=…&q=…&offset=…    everything that fits that placement (search, or all of it), 60 at a time
  *   POST { placement, uids }         set its list, in order (uids null = back to automatic)
  */
 
@@ -23,6 +26,23 @@ type Item = { uid: string; title: string; image: string | null; media: string; m
 
 function itemsOf(rs: PromptRecord[], resolve: (u: string | null) => string | null): Item[] {
   return rs.map((r) => ({ uid: r.uid, title: r.title, image: resolve(cardImage(r)), media: r.media, model: r.model, author: r.author.name }));
+}
+
+function appItem(a: AppCardData): Item {
+  return { uid: a.slug, title: a.name, image: a.main?.url ?? a.sources[0] ?? null, media: "app", model: a.category ? CAT_META[a.category].label : "AI app", author: a.hasExample || a.main ? "" : "no example yet" };
+}
+
+/** What an app placement shows right now, computed the way its page computes it. */
+function liveApps(id: PlacementId, doc: PlacementsDoc, apps: AppCardData[]): Item[] {
+  const bySlug = new Map(apps.map((a) => [a.slug, a]));
+  const pick = (slugs: string[]) => slugs.map((s) => bySlug.get(s)).filter((a): a is AppCardData => !!a);
+  switch (id) {
+    case "home.showcase": return curateApps(id, doc, pick(SHOWCASE_APPS), apps).map(appItem);
+    case "home.apps": return curateApps(id, doc, pick(FEATURED_APPS), apps).map(appItem);
+    case "app.home.popular": return curateApps(id, doc, popularApps(apps), apps, 8).map(appItem);
+    case "app.home.explore": return curateApps(id, doc, exploreApps(apps), apps, 120).map(appItem);
+    default: return curateApps(id, doc, apps, apps, apps.length + 60).map(appItem);
+  }
 }
 
 /** What each placement shows right now, computed the way its page computes it. */
@@ -56,18 +76,27 @@ export async function GET(req: NextRequest) {
   if (pid) {
     const p = PLACEMENT_BY_ID[pid];
     if (!p) return NextResponse.json({ error: "Unknown section." }, { status: 404 });
-    const q = (sp.get("q") || "").trim().slice(0, 100);
-    const pool = q ? search(q) : ALL;
-    const results = pool.filter((r) => fits(p, r) && cardImage(r)).slice(0, 60);
-    return NextResponse.json({ results: itemsOf(results, resolve) });
+    const q = (sp.get("q") || "").trim().toLowerCase().slice(0, 100);
+    const offset = Math.max(0, Math.min(Number(sp.get("offset")) || 0, 100_000));
+    const PAGE = 60;
+    if (p.kind === "app") {
+      const apps = await appCards();
+      const all = q ? apps.filter((a) => `${a.name} ${a.slug} ${a.blurb}`.toLowerCase().includes(q)) : apps;
+      return NextResponse.json({ total: all.length, results: all.slice(offset, offset + PAGE).map(appItem) });
+    }
+    const all = (q ? search(q) : ALL).filter((r) => fits(p, r) && cardImage(r));
+    return NextResponse.json({ total: all.length, results: itemsOf(all.slice(offset, offset + PAGE), resolve) });
   }
 
-  const doc = await readPlacementsNow();
-  const placements = await Promise.all(PLACEMENTS.map(async (p) => ({
-    ...p,
-    custom: !!doc.lists[p.id]?.length,
-    live: await live(p.id, doc, resolve),
-  })));
+  const [doc, apps] = await Promise.all([readPlacementsNow(), appCards()]);
+  const placements = await Promise.all(PLACEMENTS.map(async (p) => {
+    const items = p.kind === "app" ? liveApps(p.id, doc, apps) : await live(p.id, doc, resolve);
+    // The all-apps gallery lists every app; the admin only needs to see the top of it.
+    const custom = !!doc.lists[p.id]?.length;
+    // For a pin section the chosen items lead the live list, so they are its head.
+    const pinned = p.mode === "pin" && custom ? items.slice(0, Math.min(doc.lists[p.id]!.length, items.length)) : [];
+    return { ...p, custom, pinned, live: p.id === "app.apps.top" ? items.slice(0, 48) : items };
+  }));
   return NextResponse.json({ updatedAt: doc.updatedAt, placements });
 }
 
@@ -88,8 +117,15 @@ export async function POST(req: NextRequest) {
     const cap = p.mode === "pin" ? 60 : p.size;
     const seen = new Set<string>();
     const uids: string[] = [];
+    const appSlugs = p.kind === "app" ? new Set(CREATIVE_APPS.map((a) => a.slug)) : null;
     for (const u of body!.uids) {
       if (typeof u !== "string" || seen.has(u)) continue;
+      if (appSlugs) {
+        if (!appSlugs.has(u)) return NextResponse.json({ error: `The app “${u}” no longer exists.` }, { status: 400 });
+        seen.add(u);
+        uids.push(u);
+        continue;
+      }
       const r = getPrompt(u);
       if (!r) return NextResponse.json({ error: `“${u}” is no longer in the library.` }, { status: 400 });
       if (!fits(p, r)) return NextResponse.json({ error: `“${r.title}” can't go in this section (${p.media === "video" ? "videos only" : p.textOnly ? "needs a prompt that runs without a photo" : "images only"}).` }, { status: 400 });

@@ -13,9 +13,12 @@ import type { Placement, PlacementId } from "@/lib/placements";
  */
 
 type Item = { uid: string; title: string; image: string | null; media: string; model: string; author: string };
-type Row = Placement & { custom: boolean; live: Item[] };
+type Row = Placement & { custom: boolean; live: Item[]; pinned: Item[] };
 
 const TOKEN_KEY = "jpt-admin-token";
+
+/** What editing starts from: the whole list for an exact section, only the pinned items for a pin section. */
+const start = (r: Row): Item[] => (r.mode === "pin" ? r.pinned : r.live);
 const card: React.CSSProperties = { background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 16, padding: 16 };
 const small: React.CSSProperties = { ...chip, padding: "4px 9px", fontSize: 11.5 };
 
@@ -39,6 +42,8 @@ export default function PlacementsAdmin() {
   const [picking, setPicking] = useState<{ index: number | null } | null>(null); // index null = add at the end
   const [q, setQ] = useState("");
   const [results, setResults] = useState<Item[]>([]);
+  const [total, setTotal] = useState(0);
+  const [more, setMore] = useState(false);
   const [searching, setSearching] = useState(false);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
@@ -56,18 +61,18 @@ export default function PlacementsAdmin() {
     try { localStorage.setItem(TOKEN_KEY, t); } catch {}
     setRows(d.placements as Row[]);
     const id = keep ?? null;
-    if (id) { const row = (d.placements as Row[]).find((p) => p.id === id); if (row) setDraft(row.live); }
+    if (id) { const row = (d.placements as Row[]).find((p) => p.id === id); if (row) setDraft(start(row)); }
   }, [t]);
   useEffect(() => { void load(); }, [load]);
 
   const row = rows?.find((r) => r.id === sel) ?? null;
-  const dirty = !!row && JSON.stringify(draft.map((d) => d.uid)) !== JSON.stringify(row.live.map((d) => d.uid));
+  const dirty = !!row && JSON.stringify(draft.map((d) => d.uid)) !== JSON.stringify(start(row).map((d) => d.uid));
   const cap = row ? (row.mode === "pin" ? 60 : row.size) : 0;
 
   const open = (id: PlacementId) => {
     if (dirty && !confirm("You have unpublished changes. Leave them?")) return;
     const r = rows?.find((x) => x.id === id);
-    setSel(id); setDraft(r?.live ?? []); setPicking(null); setOk(""); setErr(""); setQ("");
+    setSel(id); setDraft(r ? start(r) : []); setPicking(null); setOk(""); setErr(""); setQ("");
   };
 
   // Library search for the open section.
@@ -80,11 +85,24 @@ export default function PlacementsAdmin() {
         const r = await fetch(`/api/admin/placements?token=${encodeURIComponent(t)}&placement=${sel}&q=${encodeURIComponent(q)}`, { signal: ctl.signal });
         const d = await r.json();
         setResults(d.results || []);
+        setTotal(d.total || 0);
       } catch { /* aborted */ }
       finally { setSearching(false); }
     }, 250);
     return () => { clearTimeout(h); ctl.abort(); };
   }, [picking, sel, q, t]);
+
+  /** Loads the next 60 of everything that fits. */
+  const loadMore = async () => {
+    if (!sel) return;
+    setMore(true);
+    try {
+      const r = await fetch(`/api/admin/placements?token=${encodeURIComponent(t)}&placement=${sel}&q=${encodeURIComponent(q)}&offset=${results.length}`);
+      const d = await r.json();
+      setResults((cur) => [...cur, ...((d.results || []) as Item[]).filter((x) => !cur.some((c) => c.uid === x.uid))]);
+      setTotal(d.total || 0);
+    } finally { setMore(false); }
+  };
 
   const choose = (it: Item) => {
     if (!picking) return;
@@ -158,7 +176,7 @@ export default function PlacementsAdmin() {
                       style={{ display: "block", width: "100%", textAlign: "left", cursor: "pointer", fontFamily: "inherit", border: "none", borderRadius: 10, padding: "8px 10px", background: r.id === sel ? "var(--accent-soft)" : "transparent", color: "var(--text)" }}>
                       <span style={{ display: "block", fontSize: 13.5, fontWeight: 600 }}>{r.label}</span>
                       <span style={{ display: "block", fontSize: 11.5, marginTop: 2, color: r.custom ? "var(--accent-strong)" : "var(--text-faint)", fontWeight: r.custom ? 700 : 500 }}>
-                        {r.custom ? "Chosen by you" : "Automatic"} · {r.live.length} shown
+                        {r.kind === "app" ? "Apps · " : ""}{r.custom ? (r.mode === "pin" ? `${r.pinned.length} pinned by you` : "Chosen by you") : "Automatic"}{r.mode === "exact" ? ` · ${r.live.length} shown` : ""}
                       </span>
                     </button>
                   ))}
@@ -182,7 +200,7 @@ export default function PlacementsAdmin() {
                     <button style={{ ...primary, padding: "10px 18px", fontSize: 14, opacity: busy || !dirty ? 0.55 : 1 }} disabled={busy || !dirty} onClick={() => void save(draft.map((d) => d.uid))}>
                       {busy ? "Publishing…" : dirty ? "Publish" : "Published"}
                     </button>
-                    {dirty && <button style={chip} onClick={() => setDraft(row.live)}>Discard</button>}
+                    {dirty && <button style={chip} onClick={() => setDraft(start(row))}>Discard</button>}
                     {row.custom && <button style={chip} disabled={busy} onClick={() => { if (confirm("Go back to the automatic pick for this section?")) void save(null); }}>Back to automatic</button>}
                     <a href={row.paths[0]} target="_blank" rel="noreferrer" style={{ ...chip, textDecoration: "none" }}>View page ↗</a>
                     {ok && !dirty && <div style={{ ...success, marginTop: 0, width: "100%", padding: "8px 12px", fontSize: 13 }}>{ok}</div>}
@@ -217,10 +235,12 @@ export default function PlacementsAdmin() {
                     <div style={card}>
                       <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 12, flexWrap: "wrap" }}>
                         <strong style={{ fontSize: 14 }}>{picking.index === null ? "Add from the library" : `Replace #${picking.index + 1} with…`}</strong>
-                        <input autoFocus value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search prompts: ghibli, product, poster, portrait…" style={{ ...input, flex: "1 1 260px" }} />
+                        <input autoFocus value={q} onChange={(e) => setQ(e.target.value)} placeholder={row.kind === "app" ? "Search apps: headshot, ghibli, saree, product…" : "Search prompts: ghibli, product, poster, portrait…"} style={{ ...input, flex: "1 1 260px" }} />
                         <button style={chip} onClick={() => setPicking(null)}>Cancel</button>
                       </div>
-                      <div style={{ fontSize: 12, color: "var(--text-faint)", marginBottom: 10 }}>{searching ? "Searching…" : q ? `${results.length} matches` : "The hottest items that fit this section. Search for anything else."}</div>
+                      <div style={{ fontSize: 12, color: "var(--text-faint)", marginBottom: 10 }}>
+                        {searching ? "Searching…" : `Showing ${results.length} of ${total}${q ? ` matching “${q}”` : ` ${row.kind === "app" ? "apps" : "items that fit this section"}`}`}
+                      </div>
                       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(140px, 100%), 1fr))", gap: 10 }}>
                         {results.map((it) => (
                           <button key={it.uid} onClick={() => choose(it)} title={it.title}
@@ -229,6 +249,22 @@ export default function PlacementsAdmin() {
                             <span style={{ display: "block", fontSize: 11.5, fontWeight: 600, marginTop: 6, lineHeight: 1.3, height: 30, overflow: "hidden" }}>{it.title}</span>
                             {inDraft.has(it.uid) && <span style={{ display: "block", fontSize: 10.5, color: "var(--accent-strong)", fontWeight: 700 }}>In this section</span>}
                           </button>
+                        ))}
+                      </div>
+                      {results.length < total && (
+                        <button style={{ ...chip, display: "block", margin: "14px auto 0" }} disabled={more} onClick={() => void loadMore()}>
+                          {more ? "Loading…" : `Show more (${total - results.length} more)`}
+                        </button>
+                      )}
+                    </div>
+                  )}
+
+                  {row.mode === "pin" && (
+                    <div style={{ ...card, opacity: 0.8 }}>
+                      <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 10 }}>Then, automatically</div>
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(110px, 100%), 1fr))", gap: 8 }}>
+                        {row.live.filter((x) => !inDraft.has(x.uid)).slice(0, 12).map((it) => (
+                          <div key={it.uid} title={it.title}><Thumb it={it} h={70} /><div style={{ fontSize: 10.5, color: "var(--text-faint)", marginTop: 4, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{it.title}</div></div>
                         ))}
                       </div>
                     </div>

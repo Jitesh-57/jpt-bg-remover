@@ -7,6 +7,9 @@ import PricingSection from "@/app/_components/PricingSection";
 import FAQAccordion from "@/app/_components/FAQAccordion";
 import ScrollReveal from "@/app/_components/ScrollReveal";
 import { CREATIVE_APPS, CREATIVE_BASE, previewUrl } from "@/lib/creative-apps";
+import { EMPTY_PLACEMENTS, type PlacementsDoc } from "@/lib/placements";
+import { FEATURED_APPS, SHOWCASE_APPS } from "@/lib/home-apps";
+import { curateApps } from "@/lib/placements.server";
 import { creativeSources, mainSources } from "@/lib/app-creatives";
 import { landingImg } from "@/lib/landing-images";
 import { CREDIT_COST } from "@/lib/plans";
@@ -24,14 +27,9 @@ const BASE = "https://www.sjpt.io";
 // A deliberate, fixed list — CompareCard already falls back to a plain
 // static (or placeholder) card on its own when a slug has no photo, so
 // there's no need to top this up from whatever else happens to have one.
-const FEATURED_APPS = [
-  "aesthetic-photo-editor", "baby-photoshoot", "ghibli-style", "professional-headshot",
-  "ai-photoshoot", "birthday-photo-editor", "real-estate-headshot", "doctor-headshot",
-];
 
 // The three big panels under the hero — a separate, smaller pick from the
 // gallery below it, not derived from it.
-const SHOWCASE_APPS = ["dress-photo-editor", "outfit-generator", "fashion-photo-editor"];
 
 const FREE_TOOLS = [
   { name: "Image Upscaler",     desc: "Sharpen and enlarge up to 4×",   href: "/upscale" },
@@ -65,12 +63,18 @@ const STEPS = [
 
 export default function HomePage({
   config,
+  placements,
 }: {
   config: PageSEO;
+  /** What the admin chose in /admin/placements; both rows keep their built-in apps otherwise. */
+  placements?: PlacementsDoc;
 }) {
   const bySlug = (slug: string) => CREATIVE_APPS.find((a) => a.slug === slug);
-  const apps = FEATURED_APPS.map(bySlug).filter((a): a is NonNullable<typeof a> => !!a);
-  const showcase = SHOWCASE_APPS.map(bySlug).filter((a): a is NonNullable<typeof a> => !!a);
+  const defaultApps = FEATURED_APPS.map(bySlug).filter((a): a is NonNullable<typeof a> => !!a);
+  const defaultShowcase = SHOWCASE_APPS.map(bySlug).filter((a): a is NonNullable<typeof a> => !!a);
+  const doc = placements ?? EMPTY_PLACEMENTS;
+  const apps = curateApps("home.apps", doc, defaultApps, CREATIVE_APPS);
+  const showcase = curateApps("home.showcase", doc, defaultShowcase, CREATIVE_APPS);
 
   const faqLd = {
     "@context": "https://schema.org", "@type": "FAQPage",

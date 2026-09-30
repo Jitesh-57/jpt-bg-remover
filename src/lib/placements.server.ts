@@ -75,3 +75,19 @@ export function curate(id: PlacementId, doc: PlacementsDoc, automatic: PromptRec
 export async function curated(id: PlacementId, automatic: PromptRecord[], size?: number): Promise<PromptRecord[]> {
   return curate(id, await readPlacements(), automatic, size);
 }
+
+/**
+ * The same for AI apps, keyed by slug: the admin's list (exact, or pinned
+ * ahead of the automatic order), otherwise the automatic order unchanged.
+ */
+export function curateApps<T extends { slug: string }>(id: PlacementId, doc: PlacementsDoc, automatic: T[], all: T[], size?: number): T[] {
+  const p = PLACEMENT_BY_ID[id];
+  const n = size ?? p.size;
+  const list = doc.lists[id];
+  if (!list?.length) return automatic.slice(0, n);
+  const bySlug = new Map(all.map((a) => [a.slug, a]));
+  const chosen = list.map((s) => bySlug.get(s)).filter((a): a is T => !!a);
+  if (p.mode === "exact") return chosen.slice(0, n);
+  const seen = new Set(chosen.map((a) => a.slug));
+  return [...chosen, ...automatic.filter((a) => !seen.has(a.slug))].slice(0, n);
+}
