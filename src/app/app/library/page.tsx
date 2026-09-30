@@ -49,6 +49,18 @@ function removeLocalGen(id: string) {
     localStorage.removeItem(`jpt_img_${id}`);
   } catch { /* silent */ }
 }
+/**
+ * The best copy of a creation this browser can show: the full image in
+ * Storage, else the 900px preview kept locally when it was made, else the
+ * small thumbnail. Older creations saved before the full image was kept only
+ * have the last two.
+ */
+function bestSrc(i: GenItem): string {
+  if (i.imageUrl) return i.imageUrl;
+  try { const local = localStorage.getItem(`jpt_img_${i.id}`); if (local) return local; } catch { /* storage blocked */ }
+  return i.thumb;
+}
+
 function mergeItems(server: GenItem[], local: GenItem[]): GenItem[] {
   const ids = new Set(server.map((i) => i.id));
   return [...server, ...local.filter((i) => !ids.has(i.id))].sort((a, b) => b.timestamp - a.timestamp).slice(0, 40);
@@ -122,7 +134,7 @@ export default function LibraryPage() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(200px, 100%), 1fr))", gap: 16 }}>
             {filtered.map((item) => {
               const meta = metaFor(item.tool);
-              const src = item.imageUrl || item.thumb;
+              const src = bestSrc(item);
               return (
                 <button key={item.id} onClick={() => setPreview(item)} className="jpt-hover" style={{ textAlign: "left", cursor: "pointer", border: "1px solid var(--border)", background: "var(--surface)", borderRadius: 16, overflow: "hidden", fontFamily: "inherit", opacity: deleting === item.id ? 0.4 : 1 }}>
                   <div style={{ aspectRatio: "4 / 5", background: "var(--surface-2)" }}>
@@ -147,13 +159,13 @@ export default function LibraryPage() {
           <div onClick={(e) => e.stopPropagation()} style={{ maxWidth: 560, width: "100%", background: "var(--surface)", borderRadius: 18, overflow: "hidden", border: "1px solid var(--border)" }}>
             <div style={{ background: "var(--surface-2)" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={preview.imageUrl || preview.thumb} alt={preview.label} style={{ width: "100%", maxHeight: "60vh", objectFit: "contain", display: "block" }} />
+              <img src={bestSrc(preview)} alt={preview.label} style={{ width: "100%", maxHeight: "60vh", objectFit: "contain", display: "block" }} />
             </div>
             <div style={{ padding: 18 }}>
               <div style={{ fontSize: 15, fontWeight: 800, color: "var(--text)" }}>{metaFor(preview.tool).icon} {preview.label}</div>
               <div style={{ fontSize: 12.5, color: "var(--text-faint)", marginTop: 4 }}>{timeAgo(preview.timestamp)}</div>
               <div style={{ display: "flex", gap: 10, marginTop: 16 }}>
-                <a href={preview.imageUrl || preview.thumb} download={`${preview.tool}.png`} style={{ flex: 1, textAlign: "center", padding: "11px", borderRadius: 11, background: "var(--grad-strong)", color: "#fff", fontWeight: 800, fontSize: 13.5, textDecoration: "none" }}>⬇ Download</a>
+                <a href={bestSrc(preview)} download={`${preview.tool}.png`} style={{ flex: 1, textAlign: "center", padding: "11px", borderRadius: 11, background: "var(--grad-strong)", color: "#fff", fontWeight: 800, fontSize: 13.5, textDecoration: "none" }}>⬇ Download</a>
                 <button onClick={() => handleDelete(preview.id)} style={{ padding: "11px 18px", borderRadius: 11, background: "var(--danger-soft)", color: "var(--danger)", border: "1px solid var(--danger)", fontWeight: 800, fontSize: 13.5, fontFamily: "inherit", cursor: "pointer" }}>Delete</button>
               </div>
             </div>

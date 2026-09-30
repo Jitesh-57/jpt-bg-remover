@@ -4,6 +4,8 @@
  * schema used by the editor and headshot tools (jpt_gens_v1 + jpt_img_<id>).
  */
 
+import { fullImagePayload } from "@/lib/full-image";
+
 function resize(url: string, maxDim: number, quality: number): Promise<string | null> {
   return new Promise((resolve) => {
     const img = new Image();
@@ -49,10 +51,12 @@ export async function saveGeneration(opts: { url: string; tool: string; label: s
       try { localStorage.setItem(`jpt_img_${id}`, preview); } catch { /* storage full */ }
     }
 
+    // The full-size image goes with it, so My Creations never shows a stretched thumbnail.
+    const full = await fullImagePayload(opts.url);
     fetch("/api/generations/save", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ tool: opts.tool, category: "generation", label: opts.label, thumb }),
+      body: JSON.stringify({ tool: opts.tool, category: "generation", label: opts.label, thumb, ...full }),
     }).catch(() => {});
   } catch { /* non-critical */ }
 }
