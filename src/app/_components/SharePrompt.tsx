@@ -152,7 +152,7 @@ export default function SharePrompt({
           padding: "28px 24px 24px",
           boxShadow: "0 24px 60px rgba(15,23,42,0.28)",
           textAlign: "center",
-          fontFamily: "system-ui,-apple-system,sans-serif",
+          fontFamily: "var(--font)",
           position: "relative",
         }}
       >

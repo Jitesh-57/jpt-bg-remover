@@ -117,7 +117,7 @@ export default async function CreativeHub() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd(flat)) }} />
-      <main style={{ fontFamily: "system-ui, -apple-system, sans-serif", color: "var(--text)", background: "var(--surface)" }}>
+      <main style={{ fontFamily: "var(--font)", color: "var(--text)", background: "var(--surface)" }}>
         <section style={{ background: "linear-gradient(160deg,var(--surface-2) 0%,var(--surface) 55%,var(--success-soft) 100%)", padding: "80px 24px 48px", textAlign: "center" }}>
           <div style={{ maxWidth: 800, margin: "0 auto" }}>
             <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "var(--accent-soft)", color: "var(--accent)", fontWeight: 700, fontSize: 12, borderRadius: 20, padding: "6px 14px", marginBottom: 24, letterSpacing: "0.06em", textTransform: "uppercase" }}>

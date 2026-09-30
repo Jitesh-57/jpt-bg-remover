@@ -2970,7 +2970,7 @@ export default function ImageEditorPage() {
 // ─── Styles ───────────────────────────────────────────────────────────────────
 
 const s: Record<string, React.CSSProperties> = {
-  root: { minHeight: "100vh", background: "var(--surface-2)", fontFamily: "system-ui,-apple-system,sans-serif", color: "var(--text)", display: "flex", flexDirection: "column" },
+  root: { minHeight: "100vh", background: "var(--surface-2)", fontFamily: "var(--font)", color: "var(--text)", display: "flex", flexDirection: "column" },
 
   pageHeader: { background: "var(--bg-elevated)", borderBottom: "1px solid var(--border)", backdropFilter: "blur(8px)", position: "relative" as const, zIndex: 90, flexShrink: 0 },
   pageHeaderInner: { maxWidth: 1400, margin: "0 auto", padding: "8px 20px", display: "flex", alignItems: "center", gap: 12 },

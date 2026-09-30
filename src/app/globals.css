@@ -53,7 +53,7 @@
   --dur:  .22s;
 
   /* Type */
-  --font: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -94,12 +94,12 @@ a { color: inherit; }
 /* ── Typography helpers ─────────────────────────────────────────────────── */
 .jpt-h1 {
   font-size: clamp(2.6rem, 6vw, 4.4rem);
-  font-weight: 800; line-height: 1.04; letter-spacing: -0.038em;
+  font-weight: 700; line-height: 1.04; letter-spacing: -0.038em;
   color: var(--text); margin: 0 0 20px;
 }
 .jpt-h2 {
   font-size: clamp(1.9rem, 3.8vw, 2.8rem);
-  font-weight: 800; line-height: 1.14; letter-spacing: -0.028em;
+  font-weight: 700; line-height: 1.14; letter-spacing: -0.028em;
   color: var(--text); margin: 0 0 14px;
 }
 .jpt-h3 { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.015em; color: var(--text); margin: 0 0 8px; }
@@ -165,7 +165,7 @@ a { color: inherit; }
 }
 .jpt-brand { display: flex; align-items: center; gap: 8px; text-decoration: none; flex-shrink: 0; }
 .jpt-brand-icon { font-size: 18px; color: var(--accent); }
-.jpt-brand-text { font-size: 16px; font-weight: 800; color: var(--text); letter-spacing: -0.03em; }
+.jpt-brand-text { font-size: 16px; font-weight: 600; color: var(--text); letter-spacing: -0.03em; }
 .jpt-nav-divider { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
 .jpt-section-label {
   font-size: 10px; font-weight: 700; color: var(--text-faint);
@@ -230,16 +230,16 @@ a { color: inherit; }
 /* Drag mode: a bigger knob with ‹ › so it reads as "slide me", on touch too. */
 .cmp-handle-knob::after {
   content: "\2039\00a0\203A"; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;
-  color: #0B0B0E; font-size: 18px; font-weight: 900; line-height: 1;
+  color: #0B0B0E; font-size: 18px; font-weight: 700; line-height: 1;
 }
 .cmp-frame img, .cmp-layer { -webkit-user-drag: none; -webkit-touch-callout: none; }
-.cmp-tag { position: absolute; top: 10px; font-size: 11px; font-weight: 800; letter-spacing: 0.04em; color: #fff; background: rgba(11,11,14,0.72); backdrop-filter: blur(6px); border-radius: 999px; padding: 4px 10px; pointer-events: none; z-index: 2; }
+.cmp-tag { position: absolute; top: 10px; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; color: #fff; background: rgba(11,11,14,0.72); backdrop-filter: blur(6px); border-radius: 999px; padding: 4px 10px; pointer-events: none; z-index: 2; }
 .cmp-tag-before { left: 10px; }
 .cmp-tag-after { right: 10px; }
 .cmp-caption {
   position: absolute; left: 12px; bottom: 12px; right: 12px; z-index: 2;
   background: rgba(11,11,14,0.78); backdrop-filter: blur(6px); color: #fff;
-  font-size: 12.5px; font-weight: 800; border-radius: 10px; padding: 8px 11px;
+  font-size: 12.5px; font-weight: 600; border-radius: 10px; padding: 8px 11px;
   line-height: 1.35; pointer-events: none;
 }
 
@@ -521,7 +521,7 @@ a { color: inherit; }
 .jpt-scan-corner.br { bottom: 12px; right: 12px; border-left: 0; border-top: 0; border-radius: 0 0 8px 0; }
 .jpt-scan-pill { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); display: flex; align-items: center; gap: 9px;
   padding: 9px 16px; border-radius: 999px; background: rgba(10,10,14,.78); backdrop-filter: blur(8px); border: 1px solid rgba(255,138,61,.45);
-  color: #fff; font-size: 13px; font-weight: 800; white-space: nowrap; box-shadow: 0 8px 26px rgba(0,0,0,.4); }
+  color: #fff; font-size: 13px; font-weight: 600; white-space: nowrap; box-shadow: 0 8px 26px rgba(0,0,0,.4); }
 @keyframes jptScanIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes jptScanBeam { 0% { top: -26%; } 100% { top: 100%; } }
 @keyframes jptScanGrid { 0%, 100% { opacity: .3; } 50% { opacity: .6; } }
@@ -549,3 +549,17 @@ a { color: inherit; }
   .jpt-docs-nav nav { flex-direction: row !important; flex-wrap: wrap; gap: 6px !important; }
   .jpt-docs-nav nav a { border: 1px solid var(--border); background: var(--surface); padding: 6px 11px !important; font-size: 13px !important; }
 }
+
+
+/* ── Type weight ─────────────────────────────────────────────────────────
+   One step lighter everywhere, so text reads rather than shouts. Most weights
+   are inline styles, so they are matched by what React writes: "font-weight:800"
+   in server HTML and "font-weight: 800" when rendered in the browser.
+   900/950 → 700, 800/700 → 600; page headings stay 700. */
+[style*="font-weight:950"], [style*="font-weight: 950"],
+[style*="font-weight:900"], [style*="font-weight: 900"] { font-weight: 700 !important; }
+[style*="font-weight:800"], [style*="font-weight: 800"],
+[style*="font-weight:700"], [style*="font-weight: 700"] { font-weight: 600 !important; }
+h1, h1[style] { font-weight: 700 !important; }
+strong, b { font-weight: 600; }
+body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }

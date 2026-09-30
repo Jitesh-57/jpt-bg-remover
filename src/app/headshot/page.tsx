@@ -866,7 +866,7 @@ export default function HeadshotPage() {
 const steps: Step[] = ["upload", "styles", "gallery", "edit"];
 
 const s: Record<string, React.CSSProperties> = {
-  root: { minHeight: "100vh", background: "var(--surface-2)", fontFamily: "system-ui, -apple-system, sans-serif", color: "var(--text)" },
+  root: { minHeight: "100vh", background: "var(--surface-2)", fontFamily: "var(--font)", color: "var(--text)" },
   /*
     This bar was never converted when the site went dark.
 

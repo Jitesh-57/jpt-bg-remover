@@ -62,7 +62,7 @@ export default function Page() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(appLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
 
-      <div style={{ fontFamily: "system-ui,-apple-system,sans-serif", color: "var(--text)", background: "var(--surface)" }}>
+      <div style={{ fontFamily: "var(--font)", color: "var(--text)", background: "var(--surface)" }}>
         {/* HERO + TOOL */}
         <section style={{ background: "linear-gradient(160deg,var(--surface-2) 0%,var(--surface) 55%,var(--success-soft) 100%)", padding: "56px 24px 48px" }}>
           <div style={{ maxWidth: 960, margin: "0 auto" }}>

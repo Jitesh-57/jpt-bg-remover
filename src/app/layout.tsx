@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
+import { Inter } from "next/font/google";
 import NavBar from "./_components/NavBar";
 import Footer from "./_components/Footer";
 import PricingModalHost from "./_components/PricingModalHost";
@@ -10,6 +11,13 @@ import AuthReturn from "./_components/AuthReturn";
 import PageGallery from "./_components/PageGallery";
 import SiteEdits from "./_components/SiteEdits";
 import { readEdits } from "@/lib/page-edits.server";
+/*
+  Inter, self-hosted by next/font. The font stack always named Inter but never
+  loaded it, so Windows fell back to Segoe UI, whose 800/900 weights read as a
+  slab. A variable font, so every weight in between renders true.
+*/
+const inter = Inter({ subsets: ["latin"], display: "swap", variable: "--font-inter" });
+
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import { galleryIndex, galleryTitleFor, readOverrides } from "@/lib/overrides";
 
@@ -103,7 +111,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const titles = Object.fromEntries(Object.keys(galleries).map((k) => [k, galleryTitleFor(overrides, k)]));
 
   return (
-    <html lang="en">
+    <html lang="en" className={inter.variable}>
       <head>
         {/* Speed up the LCP image + tag scripts by warming these connections early. */}
         <link rel="preconnect" href={SUPA_ORIGIN} crossOrigin="anonymous" />
