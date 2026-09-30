@@ -1,5 +1,7 @@
 "use client";
 
+import { useLayoutEffect, useState } from "react";
+
 /**
  * The "Resources" mega menu: learn (blog, docs, guides), prompts, a featured
  * article, and a featured prompt collection in a tinted panel on the right.
@@ -64,13 +66,36 @@ function Pill({ href, label, onClose }: { href: string; label: string; onClose: 
   );
 }
 
-export default function ResourcesMenu({ onClose }: { onClose: () => void }) {
+/**
+ * Where the menu sits: under the Resources button, starting at its left edge,
+ * moved left only as far as it must to stay on screen. Measured rather than
+ * centred with a transform, because the pop-in animation owns `transform`.
+ */
+function usePlacement(anchor: HTMLElement | null) {
+  const [box, setBox] = useState<{ left: number; top: number; width: number } | null>(null);
+  useLayoutEffect(() => {
+    const place = () => {
+      const vw = document.documentElement.clientWidth;
+      const width = Math.min(1080, vw - 32);
+      const r = anchor?.getBoundingClientRect();
+      const want = r ? r.left - 8 : (vw - width) / 2;
+      setBox({ width, top: r ? r.bottom + 10 : 64, left: Math.max(16, Math.min(want, vw - width - 16)) });
+    };
+    place();
+    window.addEventListener("resize", place);
+    return () => window.removeEventListener("resize", place);
+  }, [anchor]);
+  return box;
+}
+
+export default function ResourcesMenu({ onClose, anchor }: { onClose: () => void; anchor: HTMLElement | null }) {
+  const box = usePlacement(anchor);
+  if (!box) return null;
   return (
     <div
       className="jpt-a-pop"
       style={{
-        position: "fixed", top: 64, left: "50%", transform: "translateX(-50%)", zIndex: 1000,
-        width: "min(1080px, calc(100vw - 32px))",
+        position: "fixed", top: box.top, left: box.left, width: box.width, zIndex: 1000,
         background: "var(--bg-elevated, var(--surface))", border: "1px solid var(--border)", borderRadius: 18,
         boxShadow: "0 24px 70px rgba(0,0,0,.45)", overflow: "hidden",
         display: "grid", gridTemplateColumns: "1fr 1fr 1.25fr 1.25fr",

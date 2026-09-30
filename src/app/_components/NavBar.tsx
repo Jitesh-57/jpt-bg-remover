@@ -416,7 +416,7 @@ export default function NavBar() {
                 <polyline points="6 9 12 15 18 9" />
               </svg>
             </button>
-            {showResources && !isMobile && <ResourcesMenu onClose={() => setShowResources(false)} />}
+            {showResources && !isMobile && <ResourcesMenu anchor={resourcesRef.current} onClose={() => setShowResources(false)} />}
           </div>
 
           {/* Creative Apps — standalone navbar link (hidden in free-only mode) */}
