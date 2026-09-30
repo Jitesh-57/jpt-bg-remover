@@ -6,8 +6,7 @@ import { popularTools } from "@/lib/dashboard-catalog";
 export const revalidate = 300;
 
 export default async function DashboardHome() {
-  const [apps, feed] = await Promise.all([appCards(), communityFeed(400)]);
-  const community = feed.slice(0, 13);
+  const [apps, feed, community] = await Promise.all([appCards(), communityFeed(400), communityFeed(13, { placement: "app.home.community" })]);
   const bySlug = new Map(apps.map((a) => [a.slug, a]));
 
   const popular: AppCardData[] = [];

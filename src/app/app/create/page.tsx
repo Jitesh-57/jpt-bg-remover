@@ -6,6 +6,6 @@ export const metadata: Metadata = { title: "Create Image", robots: { index: fals
 export const revalidate = 300;
 
 export default async function CreatePage() {
-  const inspirations = await communityFeed(18, { textOnly: true });
+  const inspirations = await communityFeed(18, { textOnly: true, placement: "app.create.ideas" });
   return <CreateStudio inspirations={inspirations} />;
 }

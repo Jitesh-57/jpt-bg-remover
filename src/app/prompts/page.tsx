@@ -7,6 +7,7 @@ import {
   COUNTS, MODELS, facetList, featured, hottest, toCards,
 } from "@/lib/prompts/data";
 import { mediaResolver } from "@/lib/prompts/media";
+import { curate, readPlacements } from "@/lib/placements.server";
 import { PACKS, packPrompts } from "@/lib/prompts/packs";
 import { PROMPT_COUNT as ORIGINALS_COUNT } from "@/lib/prompt-library";
 import { BRAND } from "@/lib/brand";
@@ -53,12 +54,13 @@ function H2({ children, sub, href, hrefLabel }: { children: React.ReactNode; sub
 }
 
 export default async function PromptsHub() {
-  const [resolve, files80s] = await Promise.all([mediaResolver(), listBucketImagesServer().catch(() => [] as string[])]);
+  const [resolve, files80s, placements] = await Promise.all([mediaResolver(), listBucketImagesServer().catch(() => [] as string[]), readPlacements()]);
   // The 80s collection lives on its own page; this is its shelf in the library.
   const images80s = matchImages(PROMPTS_80S, files80s);
   const shelf80s = PROMPTS_80S.filter((p) => images80s[p.id]).slice(0, 6);
-  const hot = toCards(hottest(8)).map((c) => ({ ...c, image: resolve(c.image) }));
-  const weekly = featured(1)[0];
+  // Both chosen in /admin/placements when set; the automatic pick otherwise.
+  const hot = toCards(curate("prompts.hottest", placements, hottest(8))).map((c) => ({ ...c, image: resolve(c.image) }));
+  const weekly = curate("prompts.weekly", placements, featured(1))[0];
   const weeklyImage = weekly ? resolve(weekly.media === "video" ? weekly.videoThumbnail : weekly.images[0]) : null;
 
   const faqLd = {

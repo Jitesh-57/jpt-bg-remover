@@ -1,4 +1,7 @@
-import { byMedia, cardImage, promptHref, fillVariables } from "@/lib/prompts/data";
+import { byMedia, cardImage, promptHref, fillVariables, getPrompt } from "@/lib/prompts/data";
+import type { PromptRecord } from "@/lib/prompts/types";
+import { readPlacements, fits } from "@/lib/placements.server";
+import { PLACEMENT_BY_ID, type PlacementId } from "@/lib/placements";
 import { mediaResolver } from "@/lib/prompts/media";
 import { CREATIVE_APPS, previewUrl, type CreativeApp } from "@/lib/creative-apps";
 import { creativeSources, uploadedCreative } from "@/lib/app-creatives";
@@ -31,32 +34,63 @@ function isEnglish(r: { languages?: string[]; title: string; prompt: string }): 
   return !CJK.test(r.title) && !CJK.test(r.prompt);
 }
 
-export async function communityFeed(limit: number, opts?: { textOnly?: boolean }): Promise<FeedItem[]> {
+function toFeedItem(r: PromptRecord, resolve: (u: string | null) => string | null): FeedItem | null {
+  // Placeholders like {argument name="hair color" default="dark brown"} are
+  // filled with their defaults: the prompt box shows ready-to-run text.
+  const text = r.hasVariables ? fillVariables(r.prompt, {}) : r.prompt;
+  const image = resolve(cardImage(r));
+  if (!image) return null;
+  return {
+    uid: r.uid,
+    title: r.title,
+    prompt: text.length <= RUNNABLE_PROMPT ? text : null,
+    image,
+    author: r.author.name,
+    authorUrl: r.author.url,
+    href: promptHref(r),
+    model: r.model,
+    useCase: r.useCase,
+    needsPhoto: r.needsPhoto,
+  };
+}
+
+/** Only what the admin chose for a placement, in order; null when it is left automatic. */
+export async function chosenFeed(placement: PlacementId): Promise<FeedItem[] | null> {
+  const list = (await readPlacements()).lists[placement];
+  if (!list?.length) return null;
   const resolve = await mediaResolver();
-  const out: FeedItem[] = [];
+  const p = PLACEMENT_BY_ID[placement];
+  return list
+    .map((uid) => getPrompt(uid))
+    .filter((r): r is PromptRecord => !!r && fits(p, r))
+    .map((r) => toFeedItem(r, resolve))
+    .filter((x): x is FeedItem => !!x);
+}
+
+/**
+ * Community images, newest-hottest first. With a `placement`, what the admin
+ * chose for that spot in /admin/placements comes first (or is the whole list,
+ * for an exact placement); left alone, the automatic pick is unchanged.
+ */
+export async function communityFeed(limit: number, opts?: { textOnly?: boolean; placement?: PlacementId }): Promise<FeedItem[]> {
+  const resolve = await mediaResolver();
+  const auto: FeedItem[] = [];
   for (const r of byMedia("image")) {
-    if (out.length >= limit) break;
+    if (auto.length >= limit) break;
     if (!isEnglish(r)) continue;
-    // Placeholders like {argument name="hair color" default="dark brown"} are
-    // filled with their defaults: the prompt box shows ready-to-run text.
     const text = r.hasVariables ? fillVariables(r.prompt, {}) : r.prompt;
     if (opts?.textOnly && (r.needsPhoto || text.length > RUNNABLE_PROMPT)) continue;
-    const image = resolve(cardImage(r));
-    if (!image) continue;
-    out.push({
-      uid: r.uid,
-      title: r.title,
-      prompt: text.length <= RUNNABLE_PROMPT ? text : null,
-      image,
-      author: r.author.name,
-      authorUrl: r.author.url,
-      href: promptHref(r),
-      model: r.model,
-      useCase: r.useCase,
-      needsPhoto: r.needsPhoto,
-    });
+    const item = toFeedItem(r, resolve);
+    if (item) auto.push(item);
   }
-  return out;
+  if (!opts?.placement) return auto;
+
+  const chosen = await chosenFeed(opts.placement);
+  if (!chosen) return auto;
+  const p = PLACEMENT_BY_ID[opts.placement];
+  if (p.mode === "exact") return chosen.slice(0, limit);
+  const seen = new Set(chosen.map((c) => c.uid));
+  return [...chosen, ...auto.filter((a) => !seen.has(a.uid))].slice(0, limit);
 }
 
 /** An AI app card: whichever example image is best, plus what the card needs to say. */

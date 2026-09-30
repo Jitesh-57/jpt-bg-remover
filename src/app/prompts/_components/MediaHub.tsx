@@ -5,6 +5,7 @@ import {
   MODELS, byMedia, facetList, hottest, newest, toCards,
 } from "@/lib/prompts/data";
 import { mediaResolver } from "@/lib/prompts/media";
+import { curate, readPlacements } from "@/lib/placements.server";
 import type { Media, PromptRecord } from "@/lib/prompts/types";
 
 /**
@@ -48,7 +49,7 @@ function resolveCards(records: PromptRecord[], resolve: (u: string | null) => st
 }
 
 export default async function MediaHub({ media }: { media: Media }) {
-  const resolve = await mediaResolver();
+  const [resolve, placements] = await Promise.all([mediaResolver(), readPlacements()]);
   const all = byMedia(media);
   const isVideo = media === "video";
   const label = isVideo ? "Video" : "Image";
@@ -90,13 +91,13 @@ export default async function MediaHub({ media }: { media: Media }) {
         <Row
           title="🔥 Hottest this week"
           sub="Featured by the curators, or newly added with the most to look at."
-          cards={resolveCards(hottest(8, media), resolve)}
+          cards={resolveCards(curate(`prompts.${media}.hottest`, placements, hottest(8, media)), resolve)}
         />
 
         <Row
           title="Just added"
           sub="The most recent arrivals in this medium."
-          cards={resolveCards(newest(8, media), resolve)}
+          cards={resolveCards(curate(`prompts.${media}.new`, placements, newest(8, media)), resolve)}
         />
 
         {/* ONE ROW PER MODEL */}
