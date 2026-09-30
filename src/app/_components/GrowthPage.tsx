@@ -7,7 +7,7 @@ export default function GrowthPage({page}:{page:GrowthPage}) {
  const apps=appsForPage(page);
  const faqLd={"@context":"https://schema.org","@type":"FAQPage",mainEntity:page.faqs.map(f=>({"@type":"Question",name:f.q,acceptedAnswer:{"@type":"Answer",text:f.a}}))};
  const itemLd={"@context":"https://schema.org","@type":"ItemList",itemListElement:apps.map((a,i)=>({"@type":"ListItem",position:i+1,name:a.h1,url:`https://www.sjpt.io${CREATIVE_BASE}/${a.slug}`}))};
- return <main style={{background:"var(--bg)",color:"var(--text)",fontFamily:"system-ui,-apple-system,sans-serif"}}>
+ return <main style={{background:"var(--bg)",color:"var(--text)",fontFamily:"var(--font)"}}>
   <section style={{padding:"72px 24px 54px",background:"linear-gradient(160deg,var(--surface-2),var(--accent-soft))"}}>
    <div style={{maxWidth:900,margin:"0 auto"}}>
     <nav aria-label="Breadcrumb" style={{fontSize:13,fontWeight:700,marginBottom:24}}><Link href="/" style={{color:"var(--text-muted)",textDecoration:"none"}}>Home</Link><span style={{margin:"0 8px",color:"var(--text-faint)"}}>›</span><span style={{color:"var(--accent)"}}>AI Guides</span></nav>

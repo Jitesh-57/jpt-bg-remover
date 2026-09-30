@@ -3,7 +3,7 @@ import { QUERY_PAGES } from "@/lib/query-pages";
 export const revalidate=300;
 export const metadata={title:"AI Photo Editing Answers | Pixel Shine",description:"Practical answers to common AI photo editing questions, with direct Pixel Shine tools for each task.",alternates:{canonical:"https://www.sjpt.io/answers"}};
 export default function Answers(){
- return <main style={{padding:"70px 24px 90px",background:"var(--bg)",color:"var(--text)",fontFamily:"system-ui,-apple-system,sans-serif"}}>
+ return <main style={{padding:"70px 24px 90px",background:"var(--bg)",color:"var(--text)",fontFamily:"var(--font)"}}>
   <div style={{maxWidth:1100,margin:"0 auto"}}>
    <div style={{maxWidth:780,margin:"0 auto 52px",textAlign:"center"}}>
     <h1 style={{fontSize:"clamp(2.2rem,5vw,3.5rem)",fontWeight:950,margin:"0 0 16px"}}>AI Photo Editing Answers</h1>

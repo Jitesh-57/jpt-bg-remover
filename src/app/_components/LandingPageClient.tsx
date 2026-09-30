@@ -768,7 +768,7 @@ export default function LandingPageClient() {
 // ─── Styles ───────────────────────────────────────────────────────────────────
 
 const s: Record<string, React.CSSProperties> = {
-  root: { fontFamily: "system-ui,-apple-system,sans-serif", color: "var(--text)", background: "var(--surface)" },
+  root: { fontFamily: "var(--font)", color: "var(--text)", background: "var(--surface)" },
 
   // Hero
   hero: { background: "linear-gradient(160deg, var(--accent-soft) 0%, #FAFAFE 60%, var(--surface) 100%)", padding: "72px 24px 80px", textAlign: "center" },

@@ -145,7 +145,7 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
 
-      <main style={{ fontFamily: "system-ui, -apple-system, sans-serif", color: "var(--text)", background: "var(--surface)" }}>
+      <main style={{ fontFamily: "var(--font)", color: "var(--text)", background: "var(--surface)" }}>
         {/* HERO + on-page generator */}
         <section style={{ background: "var(--bg)", padding: "34px 24px 64px" }}>
           <div style={{ maxWidth: 1240, margin: "0 auto" }}>

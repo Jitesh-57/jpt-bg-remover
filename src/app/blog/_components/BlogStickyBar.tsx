@@ -1,6 +1,8 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { savePendingContext } from '@/lib/pending-image'
+import { prepareDataUrl } from '@/lib/upload-prep'
 
 interface BlogStickyBarProps {
   toolHref: string
@@ -72,9 +74,13 @@ export default function BlogStickyBar({ toolHref, toolLabel }: BlogStickyBarProp
     if (!file || !file.type.startsWith('image/')) return
     setLoading(true)
     try {
-      const dataUrl = await readFileAsDataUrl(file)
-      sessionStorage.setItem('jpt_pending_image', dataUrl)
-      if (editorTool) sessionStorage.setItem('jpt_pending_tool', editorTool)
+      // Shrunk to what the tools use and handed over through the shared
+      // pending store (IndexedDB): sessionStorage alone silently dropped any
+      // photo over ~5MB, which is most phone photos. A creative app is named
+      // by its slug, so the page it opens knows the photo is meant for it.
+      const dataUrl = await prepareDataUrl(await readFileAsDataUrl(file))
+      const slug = /^\/creative\/([a-z0-9-]+)/.exec(toolHref)?.[1]
+      await savePendingContext({ image: dataUrl, tool: slug ? `creative:${slug}` : editorTool || undefined })
     } catch {}
     window.location.href = dest
   }

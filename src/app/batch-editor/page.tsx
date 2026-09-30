@@ -503,7 +503,7 @@ export default function BatchEditorPage() {
   const totalToProcess = processing ? items.filter(i => i.status !== "pending").length + processedCount : 0;
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--surface-2)", fontFamily: "system-ui, sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: "var(--surface-2)", fontFamily: "var(--font)" }}>
 
       {showPricingModal && (
         <PricingModal

@@ -65,7 +65,7 @@ export default function VideoWatermarkRemover() {
   };
 
   return (
-    <div style={{ fontFamily: "system-ui, -apple-system, sans-serif", color: "var(--text)", background: "var(--surface)" }}>
+    <div style={{ fontFamily: "var(--font)", color: "var(--text)", background: "var(--surface)" }}>
       {/* HERO */}
       <section style={{ background: "linear-gradient(160deg,var(--surface-2) 0%,var(--surface) 50%,var(--success-soft) 100%)", padding: "72px 24px 60px", textAlign: "center" }}>
         <div style={{ maxWidth: 720, margin: "0 auto" }}>

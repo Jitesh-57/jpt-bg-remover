@@ -95,7 +95,7 @@ export default function ToolsPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
       <ScrollReveal />
 
-      <div style={{ fontFamily: "system-ui,-apple-system,sans-serif", color: "var(--text)", background: "var(--surface)" }}>
+      <div style={{ fontFamily: "var(--font)", color: "var(--text)", background: "var(--surface)" }}>
         {/* HERO */}
         <section style={{ background: "linear-gradient(160deg,var(--surface-2) 0%,var(--surface) 55%,var(--success-soft) 100%)", padding: "64px 24px 44px", textAlign: "center" }}>
           <div style={{ maxWidth: 760, margin: "0 auto" }}>

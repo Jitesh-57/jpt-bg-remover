@@ -48,7 +48,7 @@ export default function AlternativesIndex() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }} />
       <ScrollReveal />
 
-      <div style={{ fontFamily: "system-ui,-apple-system,sans-serif", color: "var(--text)", background: "var(--surface)" }}>
+      <div style={{ fontFamily: "var(--font)", color: "var(--text)", background: "var(--surface)" }}>
         <section style={{ background: "linear-gradient(160deg,var(--surface-2) 0%,var(--surface) 55%,var(--success-soft) 100%)", padding: "64px 24px 48px", textAlign: "center" }}>
           <div style={{ maxWidth: 760, margin: "0 auto" }}>
             <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 18 }}>

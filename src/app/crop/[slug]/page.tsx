@@ -54,7 +54,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
       <ScrollReveal />
 
-      <div style={{ fontFamily: "system-ui,-apple-system,sans-serif", color: "var(--text)", background: "var(--surface)" }}>
+      <div style={{ fontFamily: "var(--font)", color: "var(--text)", background: "var(--surface)" }}>
         <section style={{ background: "linear-gradient(160deg,var(--surface-2) 0%,var(--surface) 55%,var(--surface-2) 100%)", padding: "64px 24px 52px", textAlign: "center" }}>
           <div style={{ maxWidth: 720, margin: "0 auto" }}>
             <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 18 }}>

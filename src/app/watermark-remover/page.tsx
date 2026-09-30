@@ -122,7 +122,7 @@ export default function Page() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
       <ScrollReveal />
 
-      <div style={{ fontFamily: "system-ui,-apple-system,sans-serif", color: "var(--text)", background: "var(--surface)" }}>
+      <div style={{ fontFamily: "var(--font)", color: "var(--text)", background: "var(--surface)" }}>
         {/* HERO */}
         <section style={{ background: "linear-gradient(160deg,var(--surface-2) 0%,var(--surface) 55%,var(--success-soft) 100%)", padding: "60px 24px 52px" }}>
           <div style={{ maxWidth: 760, margin: "0 auto", textAlign: "center" }}>

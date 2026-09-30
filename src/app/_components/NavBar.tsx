@@ -10,6 +10,7 @@ import { persistAuthContext } from "@/lib/pending-image";
 import { beginGoogleSignIn } from "@/lib/auth-return";
 import ToolIcon, { iconKeyForHref } from "@/app/editor/ToolIcon";
 import MegaMenu from "./MegaMenu";
+import ResourcesMenu from "./ResourcesMenu";
 import BrandLogo from "./BrandLogo";
 import { openPricing } from "@/lib/pricing-modal";
 import { CREDIT_COST } from "@/lib/plans";
@@ -165,6 +166,8 @@ export default function NavBar() {
   const [showPricing, setShowPricing] = useState(false);
   const [showToolsDropdown, setShowToolsDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [showResources, setShowResources] = useState(false);
+  const resourcesRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -201,6 +204,8 @@ export default function NavBar() {
       if (window.innerWidth < 768) return;
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node))
         setShowToolsDropdown(false);
+      if (resourcesRef.current && !resourcesRef.current.contains(e.target as Node))
+        setShowResources(false);
     };
     document.addEventListener("mousedown", onClickOutside);
     /*
@@ -305,7 +310,7 @@ export default function NavBar() {
           {/* AI Tools Dropdown */}
           <div ref={dropdownRef} style={{ position: "relative" }}>
             <button
-              onClick={() => setShowToolsDropdown(v => !v)}
+              onClick={() => { setShowResources(false); setShowToolsDropdown(v => !v); }}
               style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", background: showToolsDropdown ? "var(--accent-soft)" : "transparent", border: "none", borderRadius: 8, color: "var(--text-muted)", fontSize: 14, fontWeight: 600, cursor: "pointer" }}
             >
               {PAID_FEATURES_ENABLED ? "AI Tools" : "Tools"}
@@ -378,6 +383,7 @@ export default function NavBar() {
                       ...(user ? [{ icon: "▦", label: "Dashboard", href: "/app" }] : []),
                       { icon: "🧰", label: "All free tools", href: "/tools" },
                       { icon: "📝", label: "Blog", href: "/blog" },
+                      { icon: "📘", label: "Docs", href: "/docs" },
                       { icon: "✨", label: "Prompt library", href: "/prompts" },
                       { icon: "🎬", label: "Video prompts", href: "/prompts/video" },
                       ...(PAID_FEATURES_ENABLED ? [{ icon: "✦", label: "Creative Apps", href: "/creative" }] : []),
@@ -398,21 +404,20 @@ export default function NavBar() {
 
           <div className="jpt-nav-links">
 
-          {/* Blog */}
-          <a href="/blog"
-            style={{ padding: "7px 14px", color: "var(--text-muted)", fontSize: 14, fontWeight: 600, textDecoration: "none", borderRadius: 8 }}
-            onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")}
-            onMouseLeave={e => (e.currentTarget.style.color = "var(--text-muted)")}>
-            Blog
-          </a>
-
-          {/* Prompt library */}
-          <a href="/prompts"
-            style={{ padding: "7px 14px", color: "var(--text-muted)", fontSize: 14, fontWeight: 600, textDecoration: "none", borderRadius: 8 }}
-            onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")}
-            onMouseLeave={e => (e.currentTarget.style.color = "var(--text-muted)")}>
-            Prompts
-          </a>
+          {/* Resources: blog, docs, prompts */}
+          <div ref={resourcesRef} style={{ position: "relative" }}>
+            <button
+              onClick={() => { setShowToolsDropdown(false); setShowResources(v => !v); }}
+              aria-expanded={showResources}
+              style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", background: showResources ? "var(--accent-soft)" : "transparent", border: "none", borderRadius: 8, color: "var(--text-muted)", fontSize: 14, fontWeight: 600, cursor: "pointer" }}
+            >
+              Resources
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ transform: showResources ? "rotate(180deg)" : "none", opacity: 0.7 }}>
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+            {showResources && !isMobile && <ResourcesMenu anchor={resourcesRef.current} onClose={() => setShowResources(false)} />}
+          </div>
 
           {/* Creative Apps — standalone navbar link (hidden in free-only mode) */}
           {PAID_FEATURES_ENABLED && (

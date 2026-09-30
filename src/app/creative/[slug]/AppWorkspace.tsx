@@ -16,7 +16,7 @@ import {
 } from "@/lib/app-options";
 import { openPricing, needsCredits } from "@/lib/pricing-modal";
 import { trackEvent } from "@/lib/analytics";
-import { savePendingContext } from "@/lib/pending-image";
+import { savePendingContext, loadPendingContext, clearPendingContext } from "@/lib/pending-image";
 import { beginGoogleSignIn } from "@/lib/auth-return";
 import { prepareDataUrl, parseJsonResponse } from "@/lib/upload-prep";
 import Image from "next/image";
@@ -92,6 +92,29 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
       .catch(() => {});
   }, []);
 
+  /*
+    A photo handed over from elsewhere — uploaded on a blog post or the
+    homepage for this app, or kept across a sign-in from this page — opens
+    here ready to go. Only a photo meant for this app (or for no tool in
+    particular) is taken, and only a recent one, so the editor's or another
+    app's upload never turns up here by surprise.
+  */
+  useEffect(() => {
+    if (textOnly) return;
+    let alive = true;
+    void loadPendingContext().then(async (ctx) => {
+      if (!alive || !ctx?.image) return;
+      const mine = !ctx.tool || ctx.tool === "creative" || ctx.tool === `creative:${app.slug}`;
+      if (!mine || Date.now() - ctx.ts > 30 * 60 * 1000) return;
+      const url = ctx.image.startsWith("data:") ? await prepareDataUrl(ctx.image) : ctx.image;
+      if (!alive) return;
+      setOriginal((cur) => cur ?? url);
+      setResult(null);
+      void clearPendingContext();
+    });
+    return () => { alive = false; };
+  }, [app.slug, textOnly]);
+
   // Default to the first preset so Generate is never a no-op.
   useEffect(() => {
     if (tab !== "custom" && !preset && presets.length) setPreset(presets[0]);
@@ -128,8 +151,8 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
     setOriginal(url);
     setResult(null);
     // Keep it if they end up signing in from here.
-    void savePendingContext({ image: url });
-  }, []);
+    void savePendingContext({ image: url, tool: `creative:${app.slug}` });
+  }, [app.slug]);
 
   const signIn = async () => {
     await beginGoogleSignIn();
