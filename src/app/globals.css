@@ -563,3 +563,86 @@ a { color: inherit; }
 h1, h1[style] { font-weight: 700 !important; }
 strong, b { font-weight: 600; }
 body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
+
+/* ── "Everything you can make": animated product mock-ups (FeatureShowcase) ── */
+.jpt-show-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); gap: 16px; }
+.jpt-show-card { display: block; text-decoration: none; border-radius: 18px; border: 1px solid var(--border); background: var(--surface); overflow: hidden;
+  transition: transform .25s var(--ease), border-color .25s ease, box-shadow .25s ease; }
+.jpt-show-card:hover { transform: translateY(-4px); border-color: var(--border-strong); box-shadow: 0 18px 44px -18px rgba(0,0,0,.6); }
+.jpt-show-banner { position: relative; display: block; aspect-ratio: 16 / 10; overflow: hidden;
+  background:
+    radial-gradient(120% 90% at 100% 0%, color-mix(in srgb, var(--g1) 55%, transparent), transparent 60%),
+    radial-gradient(90% 80% at 0% 100%, color-mix(in srgb, var(--g2) 35%, transparent), transparent 60%),
+    linear-gradient(160deg, #14141c, #0c0c11); }
+.jpt-show-banner::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image: radial-gradient(rgba(255,255,255,.07) 1px, transparent 1px); background-size: 14px 14px; mask-image: linear-gradient(90deg, #000 20%, transparent 70%); }
+.jpt-show-copy { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); width: 40%; z-index: 2; }
+.jpt-show-title { display: block; color: #fff; font-size: clamp(15px, 1.5vw, 19px); font-weight: 700; letter-spacing: -.02em; line-height: 1.15; }
+.jpt-show-tagline { display: block; color: rgba(255,255,255,.66); font-size: 10.5px; line-height: 1.4; margin-top: 5px; }
+.jpt-show-mock { position: absolute; right: -4%; top: 12%; width: 62%; height: 80%; perspective: 900px; z-index: 1; }
+.jpt-show-mock > * { transform: rotateY(-16deg) rotateX(7deg) rotateZ(1deg); transform-origin: 70% 50%;
+  transition: transform .6s var(--ease); animation: jptMockFloat 6s ease-in-out infinite; }
+.jpt-show-card:hover .jpt-show-mock > * { transform: rotateY(-6deg) rotateX(3deg) translateY(-3px); }
+
+.jpt-mock-window { position: relative; display: flex; flex-direction: column; width: 100%; height: 100%; border-radius: 10px; overflow: hidden;
+  background: #17171f; border: 1px solid rgba(255,255,255,.14); box-shadow: 0 24px 48px -12px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.08); }
+.jpt-mock-bar { display: flex; align-items: center; gap: 4px; height: 14px; padding: 0 7px; background: #202029; flex-shrink: 0; }
+.jpt-mock-bar i { width: 5px; height: 5px; border-radius: 50%; display: block; }
+.jpt-mock-bar b { flex: 1; height: 5px; margin-left: 8px; border-radius: 3px; background: rgba(255,255,255,.08); }
+
+.jpt-mock-bubble { position: absolute; z-index: 3; max-width: 78%; padding: 4px 7px; border-radius: 8px 8px 8px 2px; font-size: 8.5px; font-weight: 600;
+  color: #fff; background: rgba(12,12,16,.82); border: 1px solid rgba(255,255,255,.14); backdrop-filter: blur(4px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  animation: jptMockBubble 6s ease-in-out infinite; }
+.jpt-mock-bubble-ai { border-radius: 8px 8px 2px 8px; background: linear-gradient(135deg, #F97316, #DB2777); border-color: transparent; animation-delay: 1.2s; }
+.jpt-mock-scan { position: absolute; left: 0; right: 0; height: 36%; z-index: 2; pointer-events: none;
+  background: linear-gradient(180deg, transparent, rgba(255,140,60,.28) 80%, rgba(255,170,110,.9)); border-bottom: 1px solid #FFAA6E;
+  animation: jptMockScan 3.2s ease-in-out infinite; }
+
+.jpt-mock-prompt { display: flex; align-items: center; height: 18px; padding: 0 7px; border-radius: 6px; background: #22222c; border: 1px solid rgba(255,255,255,.12); overflow: hidden; }
+.jpt-mock-type { display: inline-block; overflow: hidden; white-space: nowrap; font-size: 8px; color: rgba(255,255,255,.85); border-right: 1px solid #FF8A3D;
+  animation: jptMockType 6s steps(40, end) infinite; }
+.jpt-mock-pop { animation: jptMockPop 6s var(--ease) infinite; animation-delay: calc(var(--i) * .18s); }
+
+.jpt-mock-wipe { position: absolute; inset: 0; z-index: 1; animation: jptMockWipe 5s ease-in-out infinite; }
+.jpt-mock-handle { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: #fff; z-index: 2; box-shadow: 0 0 10px rgba(0,0,0,.5);
+  animation: jptMockHandle 5s ease-in-out infinite; }
+.jpt-mock-fade { position: absolute; inset: 0; animation: jptMockFade 5s ease-in-out infinite; }
+
+.jpt-mock-row { position: relative; display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; height: 100%; }
+.jpt-mock-card { position: relative; display: block; width: 38%; aspect-ratio: 4 / 5; border-radius: 9px; overflow: hidden;
+  border: 2px solid rgba(255,255,255,.9); box-shadow: 0 16px 30px -10px rgba(0,0,0,.7); }
+.jpt-mock-plus { display: flex; flex-direction: column; align-items: center; gap: 4px; z-index: 2; }
+.jpt-mock-glow { animation: jptMockGlow 3s ease-in-out infinite; }
+.jpt-mock-fan { position: relative; display: block; width: 100%; height: 100%; }
+.jpt-mock-fan .jpt-mock-card { position: absolute; left: 31%; top: 6%; width: 38%;
+  transform: translateX(var(--x)) rotate(var(--r)); animation: jptMockFan 5s ease-in-out infinite; }
+
+.jpt-mock-check { position: absolute; right: 3px; bottom: 3px; width: 12px; height: 12px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 7px; font-weight: 700; color: #fff; background: #22C55E; box-shadow: 0 2px 6px rgba(0,0,0,.4);
+  animation: jptMockCheck 6s var(--ease) infinite; animation-delay: calc(var(--i) * .45s); }
+.jpt-mock-crop { position: absolute; inset: 14% 40% 14% 8%; border: 1.5px solid #fff; box-shadow: 0 0 0 999px rgba(0,0,0,.35); z-index: 2; animation: jptMockCrop 5s ease-in-out infinite; }
+.jpt-mock-slider { position: relative; display: block; height: 3px; border-radius: 3px; background: rgba(255,255,255,.18); }
+.jpt-mock-slider i { position: absolute; top: 50%; width: 8px; height: 8px; margin: -4px 0 0 -4px; border-radius: 50%; background: #FF8A3D;
+  animation: jptMockSlide 4s ease-in-out infinite; animation-delay: calc(var(--i) * .5s); }
+
+.jpt-show-card:hover .jpt-mock-scan, .jpt-show-card:hover .jpt-mock-wipe, .jpt-show-card:hover .jpt-mock-handle { animation-duration: 2.2s; }
+
+@keyframes jptMockFloat { 0%, 100% { translate: 0 0; } 50% { translate: 0 -5px; } }
+@keyframes jptMockScan { 0% { top: -36%; } 100% { top: 100%; } }
+@keyframes jptMockBubble { 0%, 12% { opacity: 0; transform: translateY(6px); } 22%, 85% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+@keyframes jptMockType { 0% { max-width: 0; } 45%, 90% { max-width: 100%; } 100% { max-width: 0; } }
+@keyframes jptMockPop { 0%, 45% { opacity: 0; transform: scale(.85); } 55%, 92% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+@keyframes jptMockWipe { 0%, 100% { clip-path: inset(0 0 0 78%); } 50% { clip-path: inset(0 0 0 22%); } }
+@keyframes jptMockHandle { 0%, 100% { left: 78%; } 50% { left: 22%; } }
+@keyframes jptMockFade { 0%, 30% { opacity: 0; } 50%, 85% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes jptMockGlow { 0%, 100% { box-shadow: 0 16px 30px -10px rgba(0,0,0,.7); } 50% { box-shadow: 0 0 0 3px rgba(255,138,61,.55), 0 16px 30px -10px rgba(0,0,0,.7); } }
+@keyframes jptMockFan { 0%, 100% { transform: translateX(var(--x)) rotate(var(--r)); } 50% { transform: translateX(calc(var(--x) * 1.25)) rotate(calc(var(--r) * 1.4)) translateY(-3px); } }
+@keyframes jptMockCheck { 0%, 8% { opacity: 0; transform: scale(.3); } 14%, 88% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+@keyframes jptMockCrop { 0%, 100% { inset: 14% 40% 14% 8%; } 50% { inset: 22% 46% 20% 14%; } }
+@keyframes jptMockSlide { 0%, 100% { left: 20%; } 50% { left: 80%; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .jpt-show-mock > *, .jpt-mock-bubble, .jpt-mock-scan, .jpt-mock-type, .jpt-mock-pop, .jpt-mock-wipe, .jpt-mock-handle, .jpt-mock-fade,
+  .jpt-mock-glow, .jpt-mock-fan .jpt-mock-card, .jpt-mock-check, .jpt-mock-crop, .jpt-mock-slider i { animation: none !important; }
+  .jpt-mock-type { max-width: 100%; } .jpt-mock-wipe { clip-path: inset(0 0 0 50%); } .jpt-mock-handle { left: 50%; } .jpt-mock-fade { opacity: .5; }
+}
