@@ -4,25 +4,16 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Icon, { type IconName } from "./_components/Icon";
-import { AppRow, AfterImage } from "./_components/AppCard";
+import { AppRow } from "./_components/AppCard";
 import AppCarousel from "./_components/AppCarousel";
 import type { AppCat } from "@/lib/app-catalog";
 import FeedCard from "./_components/FeedCard";
+import FeatureShowcase, { type ShowFeature } from "./_components/FeatureShowcase";
 import { useDashboardUser } from "./_components/DashboardUser";
 import { sendToCreate, openInEditor } from "./_components/handoff";
 import { openPricing } from "@/lib/pricing-modal";
 import { CREDIT_COST } from "@/lib/plans";
 import type { AppCardData, FeedItem } from "@/lib/dashboard-feed.server";
-
-export interface Feature {
-  title: string;
-  sub: string;
-  href: string;
-  icon: IconName;
-  /** A direct image URL, or an app whose live creative to show (whole, or just its after half). */
-  image: { kind: "url"; url: string } | { kind: "app"; app: AppCardData; full?: boolean } | null;
-  gradient: [string, string];
-}
 
 interface Recent { id: number; label: string; thumb?: string; imageUrl?: string; timestamp: number }
 
@@ -71,7 +62,7 @@ function readFile(file: File): Promise<string> {
 }
 
 export default function HomeView({ features, popular, showcase, categories, community, appCount }: {
-  features: Feature[];
+  features: ShowFeature[];
   popular: AppCardData[];
   showcase: AppCardData[];
   categories: { id: AppCat; label: string }[];
@@ -214,28 +205,10 @@ export default function HomeView({ features, popular, showcase, categories, comm
           </div>
         </section>
 
-        {/* ── Feature banners ──────────────────────────────────────────── */}
+        {/* ── Everything you can make: animated mock-ups ─────────────── */}
         <section style={{ marginBottom: 44 }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(240px, 100%), 1fr))", gap: 14 }}>
-            {features.map((f, i) => (
-              <Link key={f.title} href={f.href} className="jpt-zoom jpt-a-up jpt-lift" style={{ ["--d" as string]: `${280 + i * 60}ms`, display: "block", borderRadius: 18, border: "1px solid var(--border)", background: "var(--surface)", textDecoration: "none" }}>
-                <div style={{ position: "relative", aspectRatio: "4 / 3", overflow: "hidden", borderRadius: "17px 17px 0 0", background: `linear-gradient(135deg, ${f.gradient[0]}, ${f.gradient[1]})` }}>
-                  <div className="jpt-zoom-media" style={{ position: "absolute", inset: 0 }}>
-                    <FeatureImage f={f} />
-                  </div>
-                  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 70%, rgba(8,8,10,.35) 100%)" }} />
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "14px 16px" }}>
-                  <span style={{ width: 36, height: 36, borderRadius: 10, background: "var(--accent-soft)", color: "var(--accent)", display: "inline-flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}><Icon name={f.icon} size={18} /></span>
-                  <span style={{ minWidth: 0, flex: 1 }}>
-                    <span style={{ display: "block", fontSize: 15, fontWeight: 800, color: "var(--text)" }}>{f.title}</span>
-                    <span style={{ display: "block", fontSize: 12.5, color: "var(--text-muted)", marginTop: 1 }}>{f.sub}</span>
-                  </span>
-                  <Icon name="arrowRight" size={16} style={{ color: "var(--text-faint)" }} />
-                </div>
-              </Link>
-            ))}
-          </div>
+          <SectionHead title="Everything you can make" sub="Pick a workspace to start" />
+          <FeatureShowcase features={features} />
         </section>
 
         {/* ── Recent creations ─────────────────────────────────────────── */}
@@ -289,21 +262,6 @@ export default function HomeView({ features, popular, showcase, categories, comm
       </div>
     </div>
   );
-}
-
-function FeatureImage({ f }: { f: Feature }) {
-  const [broken, setBroken] = useState(false);
-  const img = f.image;
-  if (!img || broken) return null;
-  if (img.kind === "url") {
-    // eslint-disable-next-line @next/next/no-img-element
-    return <img src={img.url} alt="" referrerPolicy="no-referrer" loading="eager" onError={() => setBroken(true)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />;
-  }
-  if (img.full && img.app.main) {
-    // eslint-disable-next-line @next/next/no-img-element
-    return <img src={img.app.main.url} alt="" loading="eager" onError={() => setBroken(true)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />;
-  }
-  return <AfterImage a={img.app} box={4 / 3} sizes="(max-width: 768px) 100vw, 320px" eager />;
 }
 
 const chip: React.CSSProperties = {
