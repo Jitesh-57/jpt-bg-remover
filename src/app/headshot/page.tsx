@@ -1,6 +1,7 @@
 "use client";
 
 import "./headshot.css";
+import { fullImagePayload } from "@/lib/full-image";
 import { useRef, useState, useCallback, useEffect } from "react";
 import { prepareForUpload, parseJsonResponse } from "@/lib/upload-prep";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
@@ -216,10 +217,11 @@ export default function HeadshotPage() {
       }
 
       // 3. Also try EC (best-effort)
+      const full = await fullImagePayload(url);
       fetch("/api/generations/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tool, category, label, thumb }),
+        body: JSON.stringify({ tool, category, label, thumb, ...full }),
       }).catch(() => {});
     } catch { /* non-critical */ }
   };

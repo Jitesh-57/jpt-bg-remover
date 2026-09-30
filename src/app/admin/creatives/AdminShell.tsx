@@ -78,6 +78,7 @@ export default function AdminShell({ apps }: { apps: App[] }) {
           ))}
           <a href="/admin/editor" style={{ ...tabBtn, textDecoration: "none" }}>✏️ Page editor</a>
           <a href="/admin/blog" style={{ ...tabBtn, textDecoration: "none" }}>📝 Blog editor</a>
+          <a href="/admin/placements" style={{ ...tabBtn, textDecoration: "none" }}>📌 What shows where</a>
           <a href="/admin/trials" style={{ ...tabBtn, textDecoration: "none" }}>🎁 Free trials</a>
         </div>
 

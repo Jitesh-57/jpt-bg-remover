@@ -1,6 +1,7 @@
 "use client";
 
 import "../globals.css";
+import { fullImagePayload } from "@/lib/full-image";
 import { useRef, useState, useCallback, useEffect } from "react";
 import {
   trackImageUploaded, trackImageUploadFailed, trackTransformButtonClicked, trackImageTransformed,
@@ -1561,10 +1562,11 @@ export default function ImageEditorPage() {
       }
 
       // 3. Also try Edge Config (best-effort — fails silently if token lacks permission)
+      const full = await fullImagePayload(imageUrl);
       fetch("/api/generations/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tool: toolUsed, category: item.category, label: item.label, thumb, originalName: original?.name }),
+        body: JSON.stringify({ tool: toolUsed, category: item.category, label: item.label, thumb, originalName: original?.name, ...full }),
       }).catch(() => { /* EC not available — localStorage copy is the source of truth */ });
 
     } catch (e) {

@@ -88,7 +88,11 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
   // Same category first — a link here is a claim "does a similar job", not
   // "exists", and the category is the thing a visitor can check that claim
   // against by looking at the two pages.
-  const related = relatedApps(a, 6);
+  // Apps with a published before-and-after creative lead, so the row shows the
+  // current pictures rather than old previews or placeholder artwork.
+  const mainOf = (s: string) => overrides.pages[creativeKey(s)]?.main;
+  const candidates = relatedApps(a, 24);
+  const related = [...candidates.filter((r) => mainOf(r.slug)), ...candidates.filter((r) => !mainOf(r.slug))].slice(0, 6);
   const cat = categoryOf(a);
   const catMeta = cat ? CAT_META[cat] : null;
 
@@ -440,13 +444,13 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
         <section style={{ padding: "0 24px 80px", background: "var(--surface)" }}>
           <div style={{ maxWidth: 1000, margin: "0 auto" }}>
             <h2 style={{ fontSize: "clamp(1.4rem,3vw,2rem)", fontWeight: 900, color: "var(--text)", textAlign: "center", margin: "0 0 32px", letterSpacing: "-0.02em" }}>More Creative Apps</h2>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 14 }}>
-              {related.map((r) => (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 14, alignItems: "start" }}>
+              {related.map((r) => { const main = mainOf(r.slug); return (
                 <a key={r.slug} href={`${CREATIVE_BASE}/${r.slug}`} className="jpt-hover" style={{ textDecoration: "none", display: "block", borderRadius: 14, padding: 8 }}>
                   {/* position: relative — ExampleImage fills its container. */}
-                  <div style={{ position: "relative", aspectRatio: "16 / 10", borderRadius: 14, overflow: "hidden", marginBottom: 8, background: `linear-gradient(135deg, ${r.gradient[0]}, ${r.gradient[1]})` }}>
+                  <div style={{ position: "relative", aspectRatio: main ? `${main.w} / ${main.h}` : "16 / 10", borderRadius: 14, overflow: "hidden", marginBottom: 8, background: `linear-gradient(135deg, ${r.gradient[0]}, ${r.gradient[1]})` }}>
                     <ExampleImage
-                      sources={creativeSources(r.slug, "after", previewUrl(r.slug))}
+                      sources={main ? [uploadedCreative(r.slug, "main"), ...creativeSources(r.slug, "after", previewUrl(r.slug))] : creativeSources(r.slug, "after", previewUrl(r.slug))}
                       alt={`${r.h1} example`}
                       slug={r.slug}
                       name={r.h1}
@@ -457,7 +461,7 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
                   </div>
                   <div style={{ fontSize: 13, fontWeight: 700, color: "var(--text)", textAlign: "center", lineHeight: 1.3 }}>{r.h1}</div>
                 </a>
-              ))}
+              ); })}
             </div>
           </div>
         </section>
