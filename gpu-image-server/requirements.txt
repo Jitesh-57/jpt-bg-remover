@@ -14,3 +14,8 @@ uvicorn[standard]>=0.30
 python-multipart>=0.0.9
 requests>=2.32
 peft>=0.12                  # optional: LoRA / fine-tune adapters
+
+# Watermark remover (watermark/): our own trained detector + LaMa inpainting
+segmentation-models-pytorch>=0.3.3
+opencv-python-headless>=4.8
+numpy>=1.24

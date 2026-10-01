@@ -180,13 +180,128 @@ print("saved creative.png")
 
 ---
 
+## Watermark remover — our own model
+
+`/watermark/remove` removes visible watermarks (text, logos, date stamps,
+signatures, tiled marks) from photos. It powers the free tool on
+`sjpt.io/watermark-remover`. Two models run one after the other:
+
+```
+photo ──► detector (ours, trained here) ──► watermark mask ──► LaMa inpainting ──► clean photo
+```
+
+| Part | What it is | Licence |
+|---|---|---|
+| **Detector** (`watermark/model.py`) | U-Net, ResNet-34 encoder. Predicts a *text* mask and a *logo* mask (behind the site's "Remove Text" / "Remove Logo" checkboxes). | Yours: trained on your data |
+| **Training data** (`watermark/synth.py`) | Made on the fly: random watermarks stamped onto your clean photos, so every mask is exact and nothing is labelled by hand | n/a |
+| **Inpainter** | LaMa "big-lama", ~200 MB, downloads itself on first use to `weights/big-lama.pt`. OpenCV inpainting is the fallback if the download fails | Apache-2.0 |
+
+### 1. Collect clean photos
+
+Put **3,000–20,000 watermark-free photos** in one folder (subfolders are fine).
+Mix people, products, food, landscapes, interiors, screenshots and documents:
+the more variety, the fewer false alarms on real uploads. Use photos you
+shot yourself or an openly licensed set whose licence allows commercial use.
+
+Optional:
+- `--logos D:\logos`: transparent PNG logos you own. They're mixed in with
+  the logos the generator draws itself.
+- `--fonts D:\fonts`: extra `.ttf` / `.otf` fonts. Windows fonts are found
+  automatically.
+
+### 2. Check the training data
+
+```
+venv\Scripts\python -m watermark.synth --images D:\clean-photos --out synth-preview --count 24
+```
+Open `synth-preview\`. Each image shows the generated input on the left and
+its mask on the right (red = text, blue = logo). If real watermarks you care
+about look different (style, size, placement), tune `make_sample()` in
+`watermark/synth.py` before you train.
+
+### 3. Train (RTX 3050: overnight)
+
+Drag the photo folder onto **`train.bat`**, or run:
+```
+venv\Scripts\python -m watermark.train --images D:\clean-photos
+```
+- Defaults: 512px crops, batch 8, mixed precision, 15 epochs × 2,000 steps.
+  That's about 20–30 min per epoch on 6 GB.
+- If you run out of VRAM (`CUDA out of memory`), use `--batch 4`.
+- After every epoch it prints validation **IoU** (how well the predicted mask
+  overlaps the real one; 1.0 is perfect) and saves the best model to
+  `weights\wm_detector.pt`. Aim for `any` IoU above 0.85.
+- Stopping and restarting is safe: `--resume` continues from the last
+  finished epoch.
+
+### 4. Test on real watermarked photos
+
+```
+venv\Scripts\python -m watermark.evaluate --images D:\test-watermarked --out eval-out
+```
+For each photo it writes `original | mask | cleaned` into `eval-out\`. If
+you hand-draw a few masks (white = watermark, same file names) and pass
+`--masks D:\test-masks`, it also reports IoU on real photos. That's the
+number to compare between training runs.
+
+When real photos fail in a consistent way, the fix is nearly always in the
+generator. Teach `synth.py` to draw that kind of watermark, then train again.
+
+### 5. Serve it
+
+Restart `start.bat`. The detector and LaMa load on the first watermark
+request, not at startup.
+```
+curl http://localhost:7860/health          # "watermark": {"detector": true, ...}
+```
+To use this machine **only** for watermark removal (faster start, about
+1 GB VRAM instead of the full Stable Diffusion load), add `LOAD_DIFFUSION=0`
+to `.env`.
+
+The website reaches it through `/api/watermark-remove`, which uses the same
+`GPU_SERVER_URL` / `GPU_SERVER_TOKEN` as the studio.
+
+Request (direct to the server):
+```json
+POST /watermark/remove
+{ "image": "data:image/jpeg;base64,...", "remove_text": true, "remove_logo": true,
+  "mask": null, "threshold": 0.5, "output_format": "jpeg" }
+```
+- `mask` (optional): a black-and-white image (white = remove). It skips
+  detection; this is how the site's **Manual Edit** brush works.
+- `threshold`: lower it (for example 0.35) to catch fainter marks, at the
+  risk of removing things that aren't watermarks.
+
+Response:
+```json
+{ "dataUrl": "...", "maskDataUrl": "...", "found": true, "coverage": 0.021,
+  "engine": "lama", "timings": {"detect": 0.05, "inpaint": 0.4}, "seconds": 0.5 }
+```
+Manual mode works even before you've trained a detector. Automatic mode
+answers `503` until `weights/wm_detector.pt` exists.
+
+### What it can't do
+
+- **Large, solid watermarks:** when one covers faces or fine detail, the
+  original pixels are gone. LaMa fills in a convincing guess, but it is a guess.
+- **Faint full-frame tiled marks:** these are the hardest to detect. Show the
+  generator more of them (raise the `"tiled"` weight in `make_sample`) if your
+  users upload many.
+- **Ownership:** only remove watermarks from images you own or have
+  permission to edit. The site says so next to the upload button.
+
+---
+
 ## Files
 
 | File | Purpose |
 |---|---|
-| `server.py` | FastAPI server: `/generate`, `/edit`, `/inpaint`, `/health` |
+| `server.py` | FastAPI server: `/generate`, `/edit`, `/inpaint`, `/upscale`, `/watermark/remove`, `/health` |
+| `watermark/` | Our watermark remover: `synth.py` (training data), `model.py`, `train.py`, `evaluate.py`, `remover.py` |
+| `train.bat` | Windows one-click detector training (drag a photo folder onto it) |
 | `prompt_brain.py` | GPT-4o (GitHub Models) prompt enhancement |
 | `requirements.txt` | Python dependencies |
 | `start.bat` | Windows one-click: auto-setup on first run, then launches |
 | `.env.example` | Configuration template |
 | `../src/app/api/studio/route.ts` | Next.js route that proxies to this server |
+| `../src/app/api/watermark-remove/route.ts` | Next.js route behind sjpt.io/watermark-remover |

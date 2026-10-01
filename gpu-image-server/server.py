@@ -10,6 +10,9 @@ Endpoints
   POST /generate          -> text -> image
   POST /edit              -> image + prompt -> edited image (img2img)
   POST /inpaint           -> image + mask + prompt -> region edit / bg swap
+  POST /upscale           -> image -> Full HD / 4K
+  POST /watermark/remove  -> image (+ optional mask) -> image with the visible watermark removed
+                             (our own detector + LaMa; see watermark/)
 
 All POST endpoints accept an optional  "enhance": true  which runs the prompt
 through GitHub Models (GPT-4o) first for richer detail (see prompt_brain.py).
@@ -39,6 +42,8 @@ MODEL_ID   = os.getenv("MODEL_ID", "Lykon/dreamshaper-8")   # strong general-pur
 API_TOKEN  = os.getenv("API_TOKEN", "")                     # shared secret; empty = open (dev only)
 HOST       = os.getenv("HOST", "0.0.0.0")
 PORT       = int(os.getenv("PORT", "7860"))
+# Set LOAD_DIFFUSION=0 to run only the watermark remover (faster start, ~1 GB VRAM).
+LOAD_DIFFUSION = os.getenv("LOAD_DIFFUSION", "1") != "0"
 
 _lower = MODEL_ID.lower()
 FAMILY = "flux" if "flux" in _lower else "sdxl" if "xl" in _lower else "sd15"
@@ -117,7 +122,27 @@ app.add_middleware(
 
 @app.on_event("startup")
 def _startup():
-    load_models()
+    if LOAD_DIFFUSION:
+        load_models()
+    else:
+        print("[load] LOAD_DIFFUSION=0 — skipping Stable Diffusion; only /watermark/* is served")
+
+
+def _require_diffusion():
+    if txt2img is None:
+        raise HTTPException(status_code=503, detail="Image generation is turned off on this server (LOAD_DIFFUSION=0).")
+
+
+# The watermark remover loads its own (small) models on first use.
+_wm = None
+
+
+def _watermark():
+    global _wm
+    if _wm is None:
+        from watermark.remover import WatermarkRemover
+        _wm = WatermarkRemover(DEVICE)
+    return _wm
 
 
 def _auth(authorization: Optional[str]):
@@ -133,8 +158,11 @@ def _b64_to_image(data: str) -> Image.Image:
     return Image.open(io.BytesIO(base64.b64decode(data))).convert("RGB")
 
 
-def _image_to_dataurl(img: Image.Image) -> str:
+def _image_to_dataurl(img: Image.Image, fmt: str = "png") -> str:
     buf = io.BytesIO()
+    if fmt == "jpeg":
+        img.convert("RGB").save(buf, format="JPEG", quality=93, subsampling=0)
+        return "data:image/jpeg;base64," + base64.b64encode(buf.getvalue()).decode()
     img.save(buf, format="PNG")
     return "data:image/png;base64," + base64.b64encode(buf.getvalue()).decode()
 
@@ -190,6 +218,18 @@ class UpscaleReq(BaseModel):
     prompt: Optional[str] = "high quality, sharp, detailed, crisp"
     negative_prompt: Optional[str] = "blurry, low quality, watermark, text, deformed"
     seed: Optional[int] = None
+
+
+WM_MAX_PIXELS = 40_000_000  # ~7700x5200; bigger is a mistake or an attack, not a photo to clean
+
+
+class WatermarkReq(BaseModel):
+    image: str                 # base64 / data URL
+    remove_text: bool = True
+    remove_logo: bool = True
+    mask: Optional[str] = None # manual mode: white = remove, black = keep (skips detection)
+    threshold: float = 0.5     # detector confidence; lower catches fainter marks
+    output_format: str = "png" # "png" or "jpeg" (much smaller for photos)
 
 
 def _generator(seed: Optional[int]):
@@ -253,12 +293,15 @@ def health():
         "vram_gb": round(VRAM_GB, 1),
         "low_vram": LOW_VRAM,
         "prompt_brain": bool(os.getenv("GITHUB_TOKEN")),
+        "diffusion": txt2img is not None,
+        "watermark": _watermark().status(),
     }
 
 
 @app.post("/generate")
 def generate(req: GenerateReq, authorization: Optional[str] = Header(None)):
     _auth(authorization)
+    _require_diffusion()
     steps, guidance = _steps_and_guidance(req.steps, req.guidance)
     prompt = enhance_prompt(req.prompt, "generate") if req.enhance else req.prompt
     t0 = time.time()
@@ -291,6 +334,7 @@ def generate(req: GenerateReq, authorization: Optional[str] = Header(None)):
 @app.post("/edit")
 def edit(req: EditReq, authorization: Optional[str] = Header(None)):
     _auth(authorization)
+    _require_diffusion()
     steps, guidance = _steps_and_guidance(req.steps, req.guidance)
     prompt = enhance_prompt(req.prompt, "edit") if req.enhance else req.prompt
     init = _b64_to_image(req.image)
@@ -309,6 +353,7 @@ def edit(req: EditReq, authorization: Optional[str] = Header(None)):
 @app.post("/inpaint")
 def inpaint_route(req: InpaintReq, authorization: Optional[str] = Header(None)):
     _auth(authorization)
+    _require_diffusion()
     steps, guidance = _steps_and_guidance(req.steps, req.guidance)
     prompt = enhance_prompt(req.prompt, "edit") if req.enhance else req.prompt
     init = _b64_to_image(req.image)
@@ -328,6 +373,7 @@ def inpaint_route(req: InpaintReq, authorization: Optional[str] = Header(None)):
 @app.post("/upscale")
 def upscale_route(req: UpscaleReq, authorization: Optional[str] = Header(None)):
     _auth(authorization)
+    _require_diffusion()
     steps, guidance = _steps_and_guidance(None, None)
     init = _b64_to_image(req.image)
     t0 = time.time()
@@ -337,6 +383,43 @@ def upscale_route(req: UpscaleReq, authorization: Optional[str] = Header(None)):
         "dataUrl": _image_to_dataurl(image),
         "seconds": round(time.time() - t0, 1),
         "size": f"{image.width}x{image.height}",
+    }
+
+
+@app.post("/watermark/remove")
+def watermark_remove(req: WatermarkReq, authorization: Optional[str] = Header(None)):
+    _auth(authorization)
+    wm = _watermark()
+    try:
+        img = _b64_to_image(req.image)
+        mask = _b64_to_image(req.mask) if req.mask else None
+    except Exception:
+        raise HTTPException(status_code=400, detail="That file couldn't be read as an image.")
+    if img.width * img.height > WM_MAX_PIXELS:
+        raise HTTPException(status_code=413, detail="That image is too large. Please use one under 40 megapixels.")
+    if mask is None and not wm.detector_ready:
+        raise HTTPException(
+            status_code=503,
+            detail="Automatic detection isn't trained yet. Paint over the watermark to remove it manually.",
+        )
+    t0 = time.time()
+    result = wm.remove(
+        img,
+        remove_text=req.remove_text,
+        remove_logo=req.remove_logo,
+        manual_mask=mask,
+        threshold=min(0.95, max(0.05, req.threshold)),
+    )
+    fmt = "jpeg" if req.output_format == "jpeg" else "png"
+    return {
+        "dataUrl": _image_to_dataurl(result.image, fmt),
+        "maskDataUrl": _image_to_dataurl(result.mask),
+        "found": result.found,
+        "coverage": round(result.coverage, 4),
+        "engine": result.engine,
+        "timings": result.timings,
+        "seconds": round(time.time() - t0, 2),
+        "size": f"{result.image.width}x{result.image.height}",
     }
 
 
