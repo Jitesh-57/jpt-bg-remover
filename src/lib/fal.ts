@@ -688,7 +688,12 @@ export async function falEditImage(
       ? { prompt, image_urls: [imageUrl], num_images: 1, output_format: "png",
           ...(aspectRatio ? { aspect_ratio: aspectRatio } : {}) }
       : falModelSpec(model).family === "seedream"
-      ? { prompt, image_urls: [imageUrl], num_images: 1, image_size: seedreamSize(aspectRatio) }
+      // Seedream 4.5's documented edit example uses only the two required
+      // fields. Do not send image_size/num_images here: fal validates those
+      // optional fields differently across account/model revisions and was
+      // returning 422 before generation. Seedream will choose its native
+      // output size from the source image when image_size is omitted.
+      ? { prompt, image_urls: [imageUrl] }
       : { prompt, image_urls: [imageUrl], num_images: 1, quality: "high",
           image_size: imageSizeFor(falModelSpec(model).sizeStyle, aspectRatio) };
 
@@ -718,7 +723,8 @@ export async function falEditImages(
     falModelSpec(model).family === "nano"
       ? { prompt, image_urls: imageUrls, num_images: 1, output_format: "png" }
       : falModelSpec(model).family === "seedream"
-      ? { prompt, image_urls: imageUrls, num_images: 1, image_size: "auto_2K" }
+      // Same rule for multi-image edits: send only Seedream's required fields.
+      ? { prompt, image_urls: imageUrls }
       : { prompt, image_urls: imageUrls, num_images: 1, image_size: "auto", quality: "high" };
 
   const result = await runQueued(endpoint, input, budgetMs, {
@@ -755,7 +761,9 @@ export async function falGenerateImage(
       ? { prompt, num_images: 1, output_format: "png",
           ...(aspectRatio ? { aspect_ratio: aspectRatio } : {}) }
       : falModelSpec(model).family === "seedream"
-      ? { prompt, num_images: 1, image_size: seedreamSize(aspectRatio) }
+      // Seedream's text-to-image endpoint also documents prompt as the only
+      // required input. Let fal choose its native output size.
+      ? { prompt }
       : { prompt, num_images: 1, quality: "high",
           image_size: imageSizeFor(falModelSpec(model).sizeStyle, aspectRatio) };
 
