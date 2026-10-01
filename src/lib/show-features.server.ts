@@ -6,7 +6,20 @@ import type { AppCardData, FeedItem } from "@/lib/dashboard-feed.server";
  * by the dashboard and the homepage so both show the same tools, pictures and
  * links (the new /app workspaces, never the old pages).
  */
-export function buildShowFeatures(apps: AppCardData[], feed: FeedItem[]): ShowFeature[] {
+/**
+ * The prompts the Create Image mock types, each over its own image: chosen by
+ * hand (people first, plus the pug), so the card shows the best of the library.
+ */
+export const CREATE_PICKS = [
+  "cinematic-stormy-ocean-pier-portrait-4bc832",
+  "melancholic-fine-art-oil-portrait-23bb0d",
+  "realistic-lifestyle-photo-with-doodle-wall-art-b81dad",
+  "pug-with-reindeer-antlers-and-clown-nose-411ebd",
+  "futuristic-metropolis-above-the-clouds-ee68e4",
+];
+
+/** `picks`: CREATE_PICKS resolved to feed items; when empty, the automatic people-first pick is used. */
+export function buildShowFeatures(apps: AppCardData[], feed: FeedItem[], picks: FeedItem[] = []): ShowFeature[] {
   const bySlug = new Map(apps.map((a) => [a.slug, a]));
   /*
     Each card's picture is chosen from what actually exists, best candidate
@@ -33,7 +46,7 @@ export function buildShowFeatures(apps: AppCardData[], feed: FeedItem[]): ShowFe
   // a portrait sells "make me / my model" better than a still life.
   const PEOPLE = /\b(portrait|woman|women|man|men|girl|boy|model|fashion|selfie|headshot|person|lady|bride|couple|editorial|actress|actor)\b/i;
   const short = textOnly.filter((f) => f.title && f.title.length <= 90);
-  const leads = [...short.filter((f) => PEOPLE.test(`${f.title} ${f.prompt ?? ""}`)), ...short.filter((f) => !PEOPLE.test(`${f.title} ${f.prompt ?? ""}`))].slice(0, 4);
+  const leads = picks.length >= 3 ? picks : [...short.filter((f) => PEOPLE.test(`${f.title} ${f.prompt ?? ""}`)), ...short.filter((f) => !PEOPLE.test(`${f.title} ${f.prompt ?? ""}`))].slice(0, 4);
   const captions = leads.map((f) => f.title.replace(/\s+/g, " ").trim().toLowerCase());
   const withExamples = apps.filter((a) => a.main || a.hasExample);
   const exampleAt = (n: number) => pic(withExamples[n % Math.max(1, withExamples.length)]);

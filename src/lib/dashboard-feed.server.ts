@@ -55,6 +55,16 @@ function toFeedItem(r: PromptRecord, resolve: (u: string | null) => string | nul
   };
 }
 
+/** Specific community prompts by uid, in the order given; missing or imageless ones are skipped. */
+export async function feedItemsByUid(uids: string[]): Promise<FeedItem[]> {
+  const resolve = await mediaResolver();
+  return uids
+    .map((uid) => getPrompt(uid))
+    .filter((r): r is PromptRecord => !!r)
+    .map((r) => toFeedItem(r, resolve))
+    .filter((x): x is FeedItem => !!x);
+}
+
 /** Only what the admin chose for a placement, in order; null when it is left automatic. */
 export async function chosenFeed(placement: PlacementId): Promise<FeedItem[] | null> {
   const list = (await readPlacements()).lists[placement];

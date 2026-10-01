@@ -1,6 +1,6 @@
 import HomeView from "./HomeView";
-import { buildShowFeatures } from "@/lib/show-features.server";
-import { appCards, communityFeed, popularApps, exploreApps, APP_CATEGORIES } from "@/lib/dashboard-feed.server";
+import { buildShowFeatures, CREATE_PICKS } from "@/lib/show-features.server";
+import { appCards, communityFeed, feedItemsByUid, popularApps, exploreApps, APP_CATEGORIES } from "@/lib/dashboard-feed.server";
 import { curateApps, readPlacements } from "@/lib/placements.server";
 
 export const revalidate = 300;
@@ -9,7 +9,7 @@ export default async function DashboardHome() {
   const [apps, feed, community, placements] = await Promise.all([appCards(), communityFeed(400), communityFeed(13, { placement: "app.home.community" }), readPlacements()]);
   const popular = popularApps(apps);
 
-  const features = buildShowFeatures(apps, feed);
+  const features = buildShowFeatures(apps, feed, await feedItemsByUid(CREATE_PICKS));
 
   const showcase = exploreApps(apps);
   const categories = APP_CATEGORIES
