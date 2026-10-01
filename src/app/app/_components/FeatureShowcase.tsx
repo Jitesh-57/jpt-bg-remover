@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Icon, { type IconName } from "./Icon";
 
@@ -31,6 +31,8 @@ export interface ShowFeature {
   badge?: string;
   grad: [string, string];
   pics: Pic[];
+  /** Create Image: the prompt that made each of pics, in order. With them the mock types each prompt over its own image, in turn. */
+  captions?: string[];
 }
 
 /** An image that walks down its candidates on error, and leaves the gradient showing if none load. */
@@ -74,7 +76,28 @@ function Window({ children, bar = true }: { children: React.ReactNode; bar?: boo
 
 const tag: React.CSSProperties = { position: "absolute", padding: "2px 6px", borderRadius: 5, background: "rgba(10,10,14,.78)", color: "#fff", fontSize: 8, fontWeight: 700, letterSpacing: ".04em", zIndex: 3 };
 
-function Mock({ f }: { f: ShowFeature }) {
+/** Create Image: each prompt types out while its own image develops, then the next pair. */
+function CreateMock({ f }: { f: ShowFeature }) {
+  const n = Math.min(f.captions?.length ?? 0, f.pics.length);
+  const [k, setK] = useState(0);
+  useEffect(() => {
+    if (n < 2) return;
+    const h = setInterval(() => setK((x) => (x + 1) % n), 6000);
+    return () => clearInterval(h);
+  }, [n]);
+  return (
+    <Window>
+      {/* Keyed so the typing and developing animations restart with each pair. */}
+      <span key={k} style={{ position: "absolute", inset: 6, display: "flex", flexDirection: "column", gap: 5 }}>
+        <span className="jpt-mock-prompt"><span className="jpt-mock-type">{f.captions?.[k]}</span></span>
+        <Frame pic={f.pics[k]} className="jpt-mock-develop" style={{ flex: 1, borderRadius: 6 }} />
+      </span>
+    </Window>
+  );
+}
+
+/** The living mock-up of one tool, sized to its container. Also used by the homepage bento. */
+export function Mock({ f }: { f: ShowFeature }) {
   const [a, b, c, d, e, g] = f.pics;
   switch (f.kind) {
     case "studio":
@@ -87,6 +110,7 @@ function Mock({ f }: { f: ShowFeature }) {
         </Window>
       );
     case "create":
+      if (f.captions?.length) return <CreateMock f={f} />;
       return (
         <Window>
           <span style={{ position: "absolute", inset: 6, display: "flex", flexDirection: "column", gap: 5 }}>

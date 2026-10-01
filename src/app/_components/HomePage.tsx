@@ -13,6 +13,8 @@ import { curateApps } from "@/lib/placements.server";
 import { creativeSources, mainSources } from "@/lib/app-creatives";
 import { landingImg } from "@/lib/landing-images";
 import { CREDIT_COST } from "@/lib/plans";
+import type { ShowFeature } from "@/app/app/_components/FeatureShowcase";
+import HomeToolsBento from "@/app/_components/HomeToolsBento";
 
 /* The hero copy is set here rather than read from the page-SEO row, so an old
    admin override cannot put a retired headline back on the homepage. */
@@ -46,14 +48,6 @@ const FREE_TOOLS = [
   { name: "Batch Editor",       desc: "Same edit, 100 images",          href: "/batch-editor" },
 ];
 
-const PRO_TOOLS = [
-  { name: "AI Editor",          desc: "Edit anything with a sentence",             href: "/ai-editor" },
-  { name: "Remove Background",  desc: "Clean cutouts, hair and all",               href: "/remove-bg" },
-  { name: "AI Headshot",        desc: "Studio headshots from a selfie",            href: "/ai-headshot" },
-  { name: "Generate Background",desc: "A new scene behind your subject",           href: "/editor?tool=generate-bg" },
-  { name: "4× AI Upscale",      desc: "Super-resolution with real detail",         href: "/editor?tool=upscale" },
-  { name: "200+ AI Apps",        desc: "One-tap looks, no prompt writing",          href: CREATIVE_BASE },
-];
 
 const STEPS = [
   { n: "01", t: "Upload a photo",       d: "Drop any JPG, PNG or WebP. Your photo stays private, and your original is never changed.",           img: landingImg("home-step-1.png") },
@@ -64,8 +58,11 @@ const STEPS = [
 export default function HomePage({
   config,
   placements,
+  features,
 }: {
   config: PageSEO;
+  /** The dashboard's "Everything you can make" cards, built in page.tsx. */
+  features?: ShowFeature[];
   /** What the admin chose in /admin/placements; both rows keep their built-in apps otherwise. */
   placements?: PlacementsDoc;
 }) {
@@ -146,8 +143,35 @@ export default function HomePage({
           </div>
         </section>
 
-        {/* ── AI APPS GALLERY ──────────────────────────────────────────────── */}
+        {/* ── PRO TOOLS ────────────────────────────────────────────────────── */}
         <section style={{ padding: "0 24px 88px" }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            {sectionHead("Pro tools", "The AI tools, on credits", `Server-side AI at ${CREDIT_COST} credits a generation. Buy a pack once from $2 — it never expires and nothing auto-renews.`)}
+            {/* Search-intent names on photo tiles, each opening its new /app workspace. */}
+            <HomeToolsBento features={features ?? []} />
+          </div>
+        </section>
+
+        {/* ── FREE TOOLS ───────────────────────────────────────────────────── */}
+        <section style={{ padding: "80px 24px", background: "var(--surface)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            {sectionHead("Free tools", "Free, unlimited, private", "No limit, no account and no watermark — use them as often as you like.")}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(200px, 100%), 1fr))", gap: 12 }}>
+              {FREE_TOOLS.map((t) => (
+                <Link key={t.href} href={t.href} className="jpt-hover" style={{ textDecoration: "none", display: "flex", gap: 13, alignItems: "center", background: "var(--surface-2)", border: "1px solid var(--border)", borderRadius: 14, padding: "14px 15px" }}>
+                  <ToolIcon id={iconKeyForHref(t.href)} size={40} />
+                  <span style={{ minWidth: 0 }}>
+                    <span style={{ display: "block", fontSize: 14.5, fontWeight: 800, color: "var(--text)" }}>{t.name}</span>
+                    <span style={{ display: "block", fontSize: 12.5, color: "var(--text-muted)", marginTop: 2 }}>{t.desc}</span>
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── AI APPS GALLERY ──────────────────────────────────────────────── */}
+        <section style={{ padding: "80px 24px" }}>
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
             {sectionHead("AI apps", "Turn one photo into any look", "Each app carries a tuned prompt, so you upload and tap. No prompt writing, no settings to learn.")}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(250px, 100%), 1fr))", gap: 18 }}>
@@ -178,43 +202,6 @@ export default function HomePage({
             </div>
             <div style={{ textAlign: "center", marginTop: 28 }}>
               <Link href={CREATIVE_BASE} className="jpt-btn jpt-btn-ghost" style={{ textDecoration: "none" }}>See all {CREATIVE_APPS.length} apps →</Link>
-            </div>
-          </div>
-        </section>
-
-        {/* ── FREE TOOLS ───────────────────────────────────────────────────── */}
-        <section style={{ padding: "80px 24px", background: "var(--surface)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
-          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
-            {sectionHead("Free tools", "Free, unlimited, private", "No limit, no account and no watermark — use them as often as you like.")}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(200px, 100%), 1fr))", gap: 12 }}>
-              {FREE_TOOLS.map((t) => (
-                <Link key={t.href} href={t.href} className="jpt-hover" style={{ textDecoration: "none", display: "flex", gap: 13, alignItems: "center", background: "var(--surface-2)", border: "1px solid var(--border)", borderRadius: 14, padding: "14px 15px" }}>
-                  <ToolIcon id={iconKeyForHref(t.href)} size={40} />
-                  <span style={{ minWidth: 0 }}>
-                    <span style={{ display: "block", fontSize: 14.5, fontWeight: 800, color: "var(--text)" }}>{t.name}</span>
-                    <span style={{ display: "block", fontSize: 12.5, color: "var(--text-muted)", marginTop: 2 }}>{t.desc}</span>
-                  </span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── PRO TOOLS ────────────────────────────────────────────────────── */}
-        <section style={{ padding: "80px 24px" }}>
-          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
-            {sectionHead("Pro tools", "The AI tools, on credits", `Server-side AI at ${CREDIT_COST} credits a generation. Buy a pack once from $2 — it never expires and nothing auto-renews.`)}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(300px, 100%), 1fr))", gap: 16 }}>
-              {PRO_TOOLS.map((t) => (
-                <Link key={t.href} href={t.href} className="jpt-hover" style={{ textDecoration: "none", position: "relative", display: "flex", gap: 14, alignItems: "center", background: "var(--surface)", border: "1px solid var(--accent-border)", borderRadius: 16, padding: "18px 18px" }}>
-                  <ToolIcon id={iconKeyForHref(t.href)} size={46} />
-                  <span style={{ minWidth: 0 }}>
-                    <span style={{ display: "block", fontSize: 16, fontWeight: 800, color: "var(--text)" }}>{t.name}</span>
-                    <span style={{ display: "block", fontSize: 13.5, color: "var(--text-muted)", marginTop: 3, lineHeight: 1.5 }}>{t.desc}</span>
-                  </span>
-                  <span style={{ position: "absolute", top: 12, right: 12, fontSize: 10.5, fontWeight: 800, color: "var(--accent)", background: "var(--accent-soft)", border: "1px solid var(--accent-border)", borderRadius: 999, padding: "3px 8px", letterSpacing: "0.06em" }}>PRO</span>
-                </Link>
-              ))}
             </div>
           </div>
         </section>

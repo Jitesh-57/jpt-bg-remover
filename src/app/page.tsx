@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { getPageConfig } from "@/lib/page-config";
 import HomePage from "./_components/HomePage";
 import { readPlacements } from "@/lib/placements.server";
+import { appCards, communityFeed, feedItemsByUid } from "@/lib/dashboard-feed.server";
+import { buildShowFeatures, CREATE_PICKS } from "@/lib/show-features.server";
 
 const BASE = "https://www.sjpt.io";
 
@@ -30,12 +32,13 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Page() {
-  const [config, placements] = await Promise.all([getPageConfig("home"), readPlacements()]);
+  const [config, placements, apps, feed, picks] = await Promise.all([getPageConfig("home"), readPlacements(), appCards(), communityFeed(60), feedItemsByUid(CREATE_PICKS)]);
+  const features = buildShowFeatures(apps, feed, picks);
 
   // FAQ and WebPage structured data are emitted by <HomePage>.
   return (
     <>
-      <HomePage config={config} placements={placements} />
+      <HomePage config={config} placements={placements} features={features} />
     </>
   );
 }

@@ -15,19 +15,20 @@ const thumb = (slug: string) => `${SUPA}/storage/v1/object/public/landing/creati
 const after = (slug: string) => `${SUPA}/storage/v1/object/public/landing/creatives/${slug}-after.webp`;
 
 const SPACES = [
-  { label: "AI Studio", desc: "Say what you want, then refine it by chatting", href: "/app/studio", slug: "fashion-photo-editor", grad: "#F97316, #DB2777", badge: "NEW" },
-  { label: "Create Image", desc: "Turn a prompt into a stunning photo", href: "/app/create", slug: "old-hollywood-glamour", grad: "#7C3AED, #DB2777" },
-  { label: "AI Image Editor", desc: "Describe the change, get the edit", href: "/app/editor", slug: "fashion-photo-editor", grad: "#0EA5E9, #6366F1" },
-  { label: "Recreate", desc: "Any photo's look, with your own face", href: "/app/recreate", slug: "dress-photo-editor", grad: "#F97316, #DB2777" },
-  { label: "AI Headshot", desc: "Studio portraits from a selfie", href: "/ai-headshot", slug: "professional-headshot", grad: "#10B981, #0EA5E9" },
-  { label: "Batch Editor", desc: "One edit on up to 100 images", href: "/batch-editor", slug: "saree-photoshoot", grad: "#F59E0B, #EF4444" },
-  { label: "Photo Editor", desc: "Every tool on one canvas", href: "/editor", slug: "renaissance-portrait", grad: "#A855F7, #EC4899" },
+  { label: "AI Photo Studio", desc: "Say what you want, then refine it by chatting", href: "/app/studio", slug: "fashion-photo-editor", grad: "#F97316, #DB2777", badge: "NEW" },
+  { label: "AI Image Generator", desc: "Turn a prompt into a stunning photo", href: "/app/create", slug: "old-hollywood-glamour", grad: "#7C3AED, #DB2777" },
+  { label: "AI Photo Editor", desc: "Describe the change, get the edit", href: "/app/editor", slug: "fashion-photo-editor", grad: "#0EA5E9, #6366F1" },
+  { label: "Copy Photo Style", desc: "Any photo's look, with your own face", href: "/app/recreate", slug: "dress-photo-editor", grad: "#F97316, #DB2777" },
+  { label: "AI Headshot Generator", desc: "Studio portraits from a selfie", href: "/ai-headshot", slug: "professional-headshot", grad: "#10B981, #0EA5E9" },
+  { label: "Bulk Photo Editor", desc: "One edit on up to 100 images", href: "/batch-editor", slug: "saree-photoshoot", grad: "#F59E0B, #EF4444" },
+  { label: "Free Photo Editor", desc: "Every tool on one canvas", href: "/editor", slug: "renaissance-portrait", grad: "#A855F7, #EC4899" },
 ];
 
 const FEATURES = [
   { label: "Remove Background", href: "/remove-bg" },
   { label: "Upscale Image", href: "/upscale" },
-  { label: "Prompt to Edit", href: "/ai-editor" },
+  { label: "Prompt to Edit", href: "/app/editor" },
+  { label: "AI Image Generator", href: "/app/create" },
   { label: "Remove Watermark", href: "/watermark-remover" },
   { label: "Resize Image", href: "/resize-image" },
   { label: "Crop Image", href: "/crop-image" },
