@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { checkAuth, checkEntitlement, withCredits } from "@/lib/auth";
+import { checkAuth, checkEntitlement, withCredits, CREDIT_COST } from "@/lib/auth";
+import { fileCreation } from "@/lib/file-creation";
 import { editImage } from "@/lib/ai-image";
 import { userMessage } from "@/lib/user-message";
 
@@ -23,7 +24,8 @@ export async function POST(req: NextRequest) {
 
   try {
     const resultDataUrl = await editImage(src, prompt, model);
-    return withCredits({ dataUrl: resultDataUrl }, session!, "ai", req, "ai-edit");
+    const saved = await fileCreation({ userId: session!.userId, tool: "ai-edit", label: prompt.trim().slice(0, 60) || "AI Edit", result: resultDataUrl, prompt, creditsSpent: CREDIT_COST });
+    return withCredits({ dataUrl: resultDataUrl, saved }, session!, "ai", req, "ai-edit");
   } catch (e) {
     console.error("[ai-edit]", e);
     return NextResponse.json({ error: userMessage(e) }, { status: 500 });

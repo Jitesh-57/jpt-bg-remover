@@ -970,7 +970,7 @@ export default function ImageEditorPage() {
     try {
       // Use AI Edit to directly replace the background — keeps subject intact
       const aiPrompt = `Replace the background of this image with: ${templateOrPrompt}. Keep the person/subject exactly as they are — same pose, appearance, clothing. Only change the background behind them.`;
-      const data = await callApi<{ dataUrl: string }>("/api/ai-edit", { dataUrl: src, prompt: aiPrompt, model }, () => setUser(u => u ? { ...u, credits: prevCreditsGBg } : u));
+      const data = await callApi<{ dataUrl: string; saved?: boolean }>("/api/ai-edit", { dataUrl: src, prompt: aiPrompt, model }, () => setUser(u => u ? { ...u, credits: prevCreditsGBg } : u));
       if (!data?.dataUrl) throw new Error("Background generation failed");
       setEditHistory(prev => working ? [...prev, working] : prev);
       setWorking(data.dataUrl);
@@ -1010,7 +1010,7 @@ export default function ImageEditorPage() {
     try {
       if (isPro) {
         // Pro: use Gemini AI — costs 2 credits, plan-gated
-        const data = await callApi<{ dataUrl: string }>(
+        const data = await callApi<{ dataUrl: string; saved?: boolean }>(
           "/api/upscale-pro",
           { dataUrl: src, scale: upscaleScale },
           () => setUser(u => u ? { ...u, credits: prevCredits } : u)
@@ -1021,7 +1021,7 @@ export default function ImageEditorPage() {
         setAppliedUpscale(upscaleScale);
         setToolResult({ title: `Pro upscaled ${upscaleScale}`, detail: "AI super-resolution applied" });
         trackImageTransformed("upscale-pro");
-        autoSaveToDrive(data.dataUrl, "upscale", `${upscaleScale} Pro Upscale`);
+        autoSaveToDrive(data.dataUrl, "upscale", `${upscaleScale} Pro Upscale`, data.saved);
       } else {
         // Normal: canvas upscale — free, unlimited, no account or credits needed.
         const { upscaleImage } = await import("@/lib/upscale-client");
@@ -1392,12 +1392,12 @@ export default function ImageEditorPage() {
     const prevCreditsAI = user?.credits ?? 0;
     setUser(u => u ? { ...u, credits: Math.max(0, u.credits - CREDIT_COST) } : u);
     try {
-      const data = await callApi<{ dataUrl: string }>("/api/ai-edit", { dataUrl: src, prompt: prompt.trim(), model }, () => setUser(u => u ? { ...u, credits: prevCreditsAI } : u));
+      const data = await callApi<{ dataUrl: string; saved?: boolean }>("/api/ai-edit", { dataUrl: src, prompt: prompt.trim(), model }, () => setUser(u => u ? { ...u, credits: prevCreditsAI } : u));
       if (data?.dataUrl) {
         setEditHistory(prev => working ? [...prev, working] : prev);
         setWorking(data.dataUrl);
         trackImageTransformed("ai-edit");
-        autoSaveToDrive(data.dataUrl, "ai-edit", prompt.trim().slice(0, 60));
+        autoSaveToDrive(data.dataUrl, "ai-edit", prompt.trim().slice(0, 60), data.saved);
         setPrompt("");
       } else throw new Error("Edit failed");
     } catch (e) {
@@ -1420,14 +1420,14 @@ export default function ImageEditorPage() {
     // (401 sign-in, 402 credits, 403 upgrade) by showing the right modal.
     setProcessing(true); setProcessingLabel("Removing background…"); setError(null); setRemoveBgProgress(20);
     try {
-      const data = await callApi<{ dataUrl: string }>("/api/remove-bg", { dataUrl: src });
+      const data = await callApi<{ dataUrl: string; saved?: boolean }>("/api/remove-bg", { dataUrl: src });
       setRemoveBgProgress(90);
       if (!data?.dataUrl) return; // blocked — callApi already surfaced the modal
       setEditHistory(prev => working ? [...prev, working] : prev);
       setWorking(data.dataUrl);
       setRemoveBgProgress(100);
       trackImageTransformed("remove-bg");
-      autoSaveToDrive(data.dataUrl, "remove-bg", "Background Removed");
+      autoSaveToDrive(data.dataUrl, "remove-bg", "Background Removed", data.saved);
     } catch (e) {
       trackImageTransformedFailed("remove-bg", (e as Error).message || "remove_bg_failed");
       setError(userMessage(e, "The background could not be removed. Please try again."));
@@ -1530,7 +1530,8 @@ export default function ImageEditorPage() {
 
   // ── Auto-save to My Generations (PRIMARY: localStorage, SECONDARY: EC best-effort) ──
 
-  const autoSaveToDrive = async (imageUrl: string, toolUsed: string, label?: string) => {
+  /** `serverSaved`: the AI route already filed this result in My Creations, so only the local copy is kept here. */
+  const autoSaveToDrive = async (imageUrl: string, toolUsed: string, label?: string, serverSaved?: boolean) => {
     if (!user) return;
     try {
       const [thumb, preview] = await Promise.all([makeThumbnail(imageUrl), makePreview(imageUrl)]);
@@ -1561,7 +1562,8 @@ export default function ImageEditorPage() {
         }
       }
 
-      // 3. Also try Edge Config (best-effort — fails silently if token lacks permission)
+      // 3. The server copy, unless the AI route already made it.
+      if (serverSaved) return;
       const full = await fullImagePayload(imageUrl);
       fetch("/api/generations/save", {
         method: "POST",

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { checkAuth, checkEntitlement, withCredits } from "@/lib/auth";
+import { checkAuth, checkEntitlement, withCredits, CREDIT_COST } from "@/lib/auth";
+import { fileCreation } from "@/lib/file-creation";
 import { upscaleImage } from "@/lib/ai-image";
 import { userMessage } from "@/lib/user-message";
 
@@ -19,7 +20,8 @@ export async function POST(req: NextRequest) {
 
   try {
     const resultDataUrl = await upscaleImage(src, "4x");
-    return withCredits({ dataUrl: resultDataUrl }, session!, "ai", req, "upscale-pro");
+    const saved = await fileCreation({ userId: session!.userId, tool: "upscale", label: "4x Pro Upscale", result: resultDataUrl, creditsSpent: CREDIT_COST });
+    return withCredits({ dataUrl: resultDataUrl, saved }, session!, "ai", req, "upscale-pro");
   } catch (e) {
     console.error("[upscale-pro]", e);
     return NextResponse.json({ error: userMessage(e) }, { status: 500 });

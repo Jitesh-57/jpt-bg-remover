@@ -6,6 +6,7 @@ import { storeImage } from "@/lib/store-image";
 import { CREDIT_COST } from "@/lib/plans";
 import { userMessage } from "@/lib/user-message";
 import { isTextOnlyApp } from "@/lib/app-options";
+import { CREATIVE_APPS } from "@/lib/creative-apps";
 
 export const runtime = "nodejs";
 /**
@@ -92,6 +93,8 @@ export async function POST(req: NextRequest) {
       userId: session!.userId,
       tool: "creative",
       appSlug: slug,
+      // The app's name, so My Creations reads "Vampire Filter", not "ai-vampire".
+      label: CREATIVE_APPS.find((a) => a.slug === slug)?.h1 || slug,
       sourceUrl,
       resultUrl,
       model: model || null,

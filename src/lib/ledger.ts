@@ -91,6 +91,7 @@ export async function recordGeneration(g: GenerationRecord): Promise<number | nu
         app_slug: g.appSlug ?? null,
         category: "generation",
         label: g.label || g.appSlug || g.tool,
+        thumb: "", // older tables have thumb NOT NULL
         source_url: g.sourceUrl ?? null,
         result_url: g.resultUrl ?? null,
         image_url: g.resultUrl ?? null, // what /generations already reads
@@ -108,7 +109,34 @@ export async function recordGeneration(g: GenerationRecord): Promise<number | nu
       .select("id")
       .single() as { data: { id: number } | null; error: { message: string } | null };
 
-    if (error) throw new Error(error.message);
+    if (error) {
+      /*
+        A database without the 20260913 columns (app_slug, result_url, status…)
+        rejects the whole insert, and the creation never reached My Creations.
+        A successful one is filed again with only the columns every version of
+        the table has; a failed one has nothing to show, so it is just logged.
+      */
+      if (/column|schema cache|null value/i.test(error.message) && (g.status ?? "succeeded") === "succeeded" && g.resultUrl) {
+        const { data: basic, error: basicErr } = await createAdminSupabase()
+          .from("generations")
+          .insert({
+            user_id: g.userId,
+            tool: g.appSlug ? `${g.tool}:${g.appSlug}` : g.tool,
+            category: "generation",
+            label: g.label || g.appSlug || g.tool,
+            thumb: "",
+            image_url: g.resultUrl,
+          })
+          .select("id")
+          .single() as { data: { id: number } | null; error: { message: string } | null };
+        if (!basicErr) {
+          console.warn(`[ledger] generation filed without detail columns (run /api/admin/migrate): ${error.message}`);
+          return basic?.id ?? null;
+        }
+        throw new Error(`${error.message}; basic insert: ${basicErr.message}`);
+      }
+      throw new Error(error.message);
+    }
     return data?.id ?? null;
   } catch (e) {
     console.error(`[ledger] generation NOT recorded for ${g.userId} (${g.tool}): ${(e as Error).message}`);

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { checkAuth, checkEntitlement, withCredits } from "@/lib/auth";
+import { checkAuth, checkEntitlement, withCredits, CREDIT_COST } from "@/lib/auth";
+import { fileCreation } from "@/lib/file-creation";
 import { removeBackground } from "@/lib/ai-image";
 import { userMessage } from "@/lib/user-message";
 
@@ -21,7 +22,8 @@ export async function POST(req: NextRequest) {
 
   try {
     const resultDataUrl = await removeBackground(src);
-    return withCredits({ dataUrl: resultDataUrl }, session!, "ai", req, "remove-bg");
+    const saved = await fileCreation({ userId: session!.userId, tool: "remove-bg", label: "Background Removed", result: resultDataUrl, creditsSpent: CREDIT_COST });
+    return withCredits({ dataUrl: resultDataUrl, saved }, session!, "ai", req, "remove-bg");
   } catch (e) {
     console.error("[remove-bg]", e);
     return NextResponse.json({ error: userMessage(e) }, { status: 500 });
