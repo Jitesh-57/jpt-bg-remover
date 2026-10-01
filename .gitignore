@@ -8,6 +8,7 @@ out/
 .env*
 .claude/
 
-# Watermark-remover ONNX models are ~150 MB: host them (see gpu-image-server/README.md), never commit them.
+# Whole ONNX models never go in git (GitHub's limit is 100 MB per file). LaMa
+# ships split into public/models/lama-512-v1.part* with a .json manifest.
 public/models/*.onnx
 public/ort/

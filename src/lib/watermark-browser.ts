@@ -21,7 +21,10 @@
 
 import type * as Ort from "onnxruntime-web";
 
-export const LAMA_URL = process.env.NEXT_PUBLIC_WM_LAMA_URL || "/models/lama-512.onnx";
+// LaMa ships with the site, split into parts (GitHub refuses files over 100 MB):
+// public/models/lama-512-v1.json lists them. Either URL may also point at a
+// single hosted .onnx file instead.
+export const LAMA_URL = process.env.NEXT_PUBLIC_WM_LAMA_URL || "/models/lama-512-v1.json";
 export const DETECTOR_URL = process.env.NEXT_PUBLIC_WM_DETECTOR_URL || "/models/wm-detector.onnx";
 
 const CACHE_NAME = "wm-models-v1";
@@ -88,6 +91,43 @@ function getOrt(): Promise<typeof Ort> {
 }
 
 
+type Manifest = { size: number; sha256: string; parts: string[] };
+
+async function sha256Hex(bytes: Uint8Array<ArrayBuffer>): Promise<string> {
+  const digest = await crypto.subtle.digest("SHA-256", bytes);
+  return Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+/** Download the parts a manifest lists and join them, checking the result's SHA-256. */
+async function fetchParts(url: string, label: string, onProgress?: Progress): Promise<Uint8Array<ArrayBuffer>> {
+  const res = await fetch(url);
+  if (!res.ok) throw new ModelUnavailableError(`${label} manifest not found (${res.status})`);
+  const m = (await res.json()) as Manifest;
+  const bytes = new Uint8Array(m.size);
+  let got = 0;
+  for (const part of m.parts) {
+    const pr = await fetch(new URL(part, new URL(url, location.href)).toString());
+    if (!pr.ok || !pr.body) throw new ModelUnavailableError(`${label} part ${part} not found (${pr.status})`);
+    const reader = pr.body.getReader();
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      if (got + value.length > bytes.length) throw new Error(`${label} is larger than its manifest says`);
+      bytes.set(value, got);
+      got += value.length;
+      onProgress?.({
+        stage: "download",
+        label: `Downloading ${label} (first time only) — ${(got / 1e6).toFixed(0)} of ${(m.size / 1e6).toFixed(0)} MB`,
+        fraction: got / m.size,
+      });
+    }
+  }
+  if (got !== m.size || (await sha256Hex(bytes)) !== m.sha256) {
+    throw new Error(`${label} download was incomplete or corrupted — please try again`);
+  }
+  return bytes;
+}
+
 async function fetchModel(url: string, label: string, onProgress?: Progress): Promise<Uint8Array<ArrayBuffer>> {
   let cache: Cache | null = null;
   try {
@@ -95,6 +135,12 @@ async function fetchModel(url: string, label: string, onProgress?: Progress): Pr
     const hit = await cache.match(url);
     if (hit) return new Uint8Array(await hit.arrayBuffer());
   } catch { /* Cache API unavailable (private mode) — just download */ }
+
+  if (url.endsWith(".json")) {
+    const joined = await fetchParts(url, label, onProgress);
+    try { await cache?.put(url, new Response(joined.slice())); } catch { /* quota — fine, re-download next time */ }
+    return joined;
+  }
 
   const res = await fetch(url);
   if (!res.ok) throw new ModelUnavailableError(`${label} model not found (${res.status})`);
