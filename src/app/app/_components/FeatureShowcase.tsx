@@ -74,7 +74,8 @@ function Window({ children, bar = true }: { children: React.ReactNode; bar?: boo
 
 const tag: React.CSSProperties = { position: "absolute", padding: "2px 6px", borderRadius: 5, background: "rgba(10,10,14,.78)", color: "#fff", fontSize: 8, fontWeight: 700, letterSpacing: ".04em", zIndex: 3 };
 
-function Mock({ f }: { f: ShowFeature }) {
+/** The living mock-up of one tool, sized to its container. Also used by the homepage bento. */
+export function Mock({ f }: { f: ShowFeature }) {
   const [a, b, c, d, e, g] = f.pics;
   switch (f.kind) {
     case "studio":
