@@ -602,6 +602,9 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 .jpt-mock-type { display: inline-block; overflow: hidden; white-space: nowrap; font-size: 8px; color: rgba(255,255,255,.85); border-right: 1px solid #FF8A3D;
   animation: jptMockType 6s steps(40, end) infinite; }
 .jpt-mock-pop { animation: jptMockPop 6s var(--ease) infinite; animation-delay: calc(var(--i) * .18s); }
+/* Create Image with its own prompt: the image develops from a blur while the prompt types, never an empty frame. */
+.jpt-mock-develop { animation: jptMockDevelop 6s ease-in-out infinite; }
+@keyframes jptMockDevelop { 0%, 8% { filter: blur(14px) saturate(.4); opacity: .35; transform: scale(1.04); } 50%, 92% { filter: none; opacity: 1; transform: none; } 100% { filter: blur(14px) saturate(.4); opacity: .35; transform: scale(1.04); } }
 
 .jpt-mock-wipe { position: absolute; inset: 0; z-index: 1; animation: jptMockWipe 5s ease-in-out infinite; }
 .jpt-mock-handle { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: #fff; z-index: 2; box-shadow: 0 0 10px rgba(0,0,0,.5);
@@ -642,7 +645,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 @keyframes jptMockSlide { 0%, 100% { left: 20%; } 50% { left: 80%; } }
 
 @media (prefers-reduced-motion: reduce) {
-  .jpt-show-mock > *, .jpt-mock-bubble, .jpt-mock-scan, .jpt-mock-type, .jpt-mock-pop, .jpt-mock-wipe, .jpt-mock-handle, .jpt-mock-fade,
+  .jpt-show-mock > *, .jpt-mock-bubble, .jpt-mock-scan, .jpt-mock-type, .jpt-mock-pop, .jpt-mock-develop, .jpt-mock-wipe, .jpt-mock-handle, .jpt-mock-fade,
   .jpt-mock-glow, .jpt-mock-fan .jpt-mock-card, .jpt-mock-check, .jpt-mock-crop, .jpt-mock-slider i { animation: none !important; }
   .jpt-mock-type { max-width: 100%; } .jpt-mock-wipe { clip-path: inset(0 0 0 50%); } .jpt-mock-handle { left: 50%; } .jpt-mock-fade { opacity: .5; }
 }

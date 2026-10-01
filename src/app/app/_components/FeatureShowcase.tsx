@@ -31,6 +31,8 @@ export interface ShowFeature {
   badge?: string;
   grad: [string, string];
   pics: Pic[];
+  /** Create Image: the prompt that made pics[0]. With it the mock types that prompt over that one image. */
+  caption?: string;
 }
 
 /** An image that walks down its candidates on error, and leaves the gradient showing if none load. */
@@ -88,6 +90,14 @@ export function Mock({ f }: { f: ShowFeature }) {
         </Window>
       );
     case "create":
+      if (f.caption) return (
+        <Window>
+          <span style={{ position: "absolute", inset: 6, display: "flex", flexDirection: "column", gap: 5 }}>
+            <span className="jpt-mock-prompt"><span className="jpt-mock-type">{f.caption}</span></span>
+            <Frame pic={a} className="jpt-mock-develop" style={{ flex: 1, borderRadius: 6 }} />
+          </span>
+        </Window>
+      );
       return (
         <Window>
           <span style={{ position: "absolute", inset: 6, display: "flex", flexDirection: "column", gap: 5 }}>
