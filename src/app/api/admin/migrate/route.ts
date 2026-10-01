@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { Client } from "pg";
 import { readFile, readdir } from "fs/promises";
 import path from "path";
-import { requireAdmin, databaseUrl } from "@/lib/admin-token";
+import { requireAdmin, databaseUrl, pgConnectionString } from "@/lib/admin-token";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
@@ -84,7 +84,7 @@ export async function GET(req: NextRequest) {
 
 
   const client = new Client({
-    connectionString: db.url,
+    connectionString: pgConnectionString(db.url),
     /*
       Supabase terminates TLS with a certificate this client has no root for;
       the connection is still encrypted and the host is fixed by the URL, so the
