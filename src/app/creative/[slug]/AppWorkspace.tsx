@@ -16,6 +16,7 @@ import {
 } from "@/lib/app-options";
 import { openPricing, needsCredits } from "@/lib/pricing-modal";
 import { trackEvent } from "@/lib/analytics";
+import GeneratingFx from "./GeneratingFx";
 import { savePendingContext, loadPendingContext, clearPendingContext } from "@/lib/pending-image";
 import { beginGoogleSignIn } from "@/lib/auth-return";
 import { prepareDataUrl, parseJsonResponse } from "@/lib/upload-prep";
@@ -683,18 +684,19 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
             )
           ) : original ? (
             <div className="jpt-compare">
-              <Pane label="Original" src={original} />
+              <Pane label="Original" src={original} scanning={busy} />
               <Pane
                 label="Transformed"
                 src={result}
                 busy={busy}
-                emptyText={busy ? "Generating…" : "Hit Generate to see the result"}
+                emptyText="Hit Generate to see the result"
+                fx={busy && !result ? <GeneratingFx ghost={original} name={app.h1} /> : null}
               />
             </div>
           ) : (
             // Text-only app with a result (or mid-generation) but no photo to compare against.
             <div style={{ maxWidth: 420, margin: "0 auto" }}>
-              <Pane label="Result" src={result} busy={busy} emptyText={busy ? "Generating…" : ""} />
+              <Pane label="Result" src={result} busy={busy} emptyText="" fx={busy && !result ? <GeneratingFx name={app.h1} /> : null} />
             </div>
           )}
         </div>
@@ -721,7 +723,7 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
   );
 }
 
-function Pane({ label, src, busy, emptyText }: { label: string; src: string | null; busy?: boolean; emptyText?: string }) {
+function Pane({ label, src, busy, emptyText, fx, scanning }: { label: string; src: string | null; busy?: boolean; emptyText?: string; fx?: React.ReactNode; scanning?: boolean }) {
   return (
     <div style={{ position: "relative", minWidth: 0 }}>
       <span
@@ -740,11 +742,11 @@ function Pane({ label, src, busy, emptyText }: { label: string; src: string | nu
           // screen and you could see neither the whole image nor the controls.
           // Capped like this, the upload always fits inside its pane — and
           // `contain` below means it is the whole image, never a crop.
-          height: "clamp(240px, 42vh, 420px)", maxWidth: "100%", borderRadius: 14, overflow: "hidden",
+          position: "relative", height: "clamp(240px, 42vh, 420px)", maxWidth: "100%", borderRadius: 14, overflow: "hidden",
           background: "var(--surface-2)", display: "flex", alignItems: "center", justifyContent: "center",
         }}
       >
-        {src ? (
+        {fx ? fx : src ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={src} alt={label} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
         ) : (
@@ -752,6 +754,14 @@ function Pane({ label, src, busy, emptyText }: { label: string; src: string | nu
             {busy && <span className="jpt-spin" style={{ display: "inline-block", marginRight: 8 }}>◍</span>}
             {emptyText}
           </span>
+        )}
+        {/* The photo being read: the same radar scan as AI Studio, while the result is made. */}
+        {scanning && src && (
+          <div className="jpt-scan" aria-hidden>
+            <div className="jpt-scan-grid" />
+            <div className="jpt-scan-beam" />
+            <span className="jpt-scan-corner tl" /><span className="jpt-scan-corner tr" /><span className="jpt-scan-corner bl" /><span className="jpt-scan-corner br" />
+          </div>
         )}
       </div>
     </div>
