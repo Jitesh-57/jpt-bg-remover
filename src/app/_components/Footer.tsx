@@ -11,7 +11,8 @@ const AI_TOOLS = [
   { labelKey: "AI Upscale",         href: "/upscale" },
   { labelKey: "Remove Background",  href: "/remove-bg" },
   { labelKey: "AI Headshot",        href: "/ai-headshot" },
-  { labelKey: "AI Editor",          href: "/ai-editor" },
+  { labelKey: "AI Editor",          href: "/app/editor" },
+  { labelKey: "Create Image",       href: "/app/create" },
   { labelKey: "Creative Apps",      href: "/creative" },
 ];
 

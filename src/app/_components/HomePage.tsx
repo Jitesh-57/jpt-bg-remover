@@ -13,6 +13,7 @@ import { curateApps } from "@/lib/placements.server";
 import { creativeSources, mainSources } from "@/lib/app-creatives";
 import { landingImg } from "@/lib/landing-images";
 import { CREDIT_COST } from "@/lib/plans";
+import FeatureShowcase, { type ShowFeature } from "@/app/app/_components/FeatureShowcase";
 
 /* The hero copy is set here rather than read from the page-SEO row, so an old
    admin override cannot put a retired headline back on the homepage. */
@@ -46,14 +47,6 @@ const FREE_TOOLS = [
   { name: "Batch Editor",       desc: "Same edit, 100 images",          href: "/batch-editor" },
 ];
 
-const PRO_TOOLS = [
-  { name: "AI Editor",          desc: "Edit anything with a sentence",             href: "/ai-editor" },
-  { name: "Remove Background",  desc: "Clean cutouts, hair and all",               href: "/remove-bg" },
-  { name: "AI Headshot",        desc: "Studio headshots from a selfie",            href: "/ai-headshot" },
-  { name: "Generate Background",desc: "A new scene behind your subject",           href: "/editor?tool=generate-bg" },
-  { name: "4× AI Upscale",      desc: "Super-resolution with real detail",         href: "/editor?tool=upscale" },
-  { name: "200+ AI Apps",        desc: "One-tap looks, no prompt writing",          href: CREATIVE_BASE },
-];
 
 const STEPS = [
   { n: "01", t: "Upload a photo",       d: "Drop any JPG, PNG or WebP. Your photo stays private, and your original is never changed.",           img: landingImg("home-step-1.png") },
@@ -64,8 +57,11 @@ const STEPS = [
 export default function HomePage({
   config,
   placements,
+  features,
 }: {
   config: PageSEO;
+  /** The dashboard's "Everything you can make" cards, built in page.tsx. */
+  features?: ShowFeature[];
   /** What the admin chose in /admin/placements; both rows keep their built-in apps otherwise. */
   placements?: PlacementsDoc;
 }) {
@@ -204,18 +200,8 @@ export default function HomePage({
         <section style={{ padding: "80px 24px" }}>
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
             {sectionHead("Pro tools", "The AI tools, on credits", `Server-side AI at ${CREDIT_COST} credits a generation. Buy a pack once from $2 — it never expires and nothing auto-renews.`)}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(300px, 100%), 1fr))", gap: 16 }}>
-              {PRO_TOOLS.map((t) => (
-                <Link key={t.href} href={t.href} className="jpt-hover" style={{ textDecoration: "none", position: "relative", display: "flex", gap: 14, alignItems: "center", background: "var(--surface)", border: "1px solid var(--accent-border)", borderRadius: 16, padding: "18px 18px" }}>
-                  <ToolIcon id={iconKeyForHref(t.href)} size={46} />
-                  <span style={{ minWidth: 0 }}>
-                    <span style={{ display: "block", fontSize: 16, fontWeight: 800, color: "var(--text)" }}>{t.name}</span>
-                    <span style={{ display: "block", fontSize: 13.5, color: "var(--text-muted)", marginTop: 3, lineHeight: 1.5 }}>{t.desc}</span>
-                  </span>
-                  <span style={{ position: "absolute", top: 12, right: 12, fontSize: 10.5, fontWeight: 800, color: "var(--accent)", background: "var(--accent-soft)", border: "1px solid var(--accent-border)", borderRadius: 999, padding: "3px 8px", letterSpacing: "0.06em" }}>PRO</span>
-                </Link>
-              ))}
-            </div>
+            {/* The same eight animated cards as the dashboard, linking to the new /app workspaces. */}
+            <FeatureShowcase features={features ?? []} />
           </div>
         </section>
 
