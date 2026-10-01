@@ -5,7 +5,7 @@
     result.image, result.mask, result.found
 
 Large photos are never squashed down to the model's size as a whole. The
-detector runs on a resized copy (marks are big enough to find at ~1024px),
+detector runs on a resized copy at the scale it was trained at,
 then each marked area is cut out with some surrounding context, inpainted at
 a size LaMa handles well, and pasted back — so every pixel outside the
 watermark stays exactly as uploaded.
@@ -31,7 +31,7 @@ LAMA_PATH = Path(os.getenv("WM_LAMA", ROOT / "weights" / "big-lama.pt"))
 # published by the simple-lama-inpainting project.
 LAMA_URL = os.getenv("WM_LAMA_URL", "https://github.com/enesmsahin/simple-lama-inpainting/releases/download/v0.1.0/big-lama.pt")
 
-DETECT_LONG = int(os.getenv("WM_DETECT_SIZE", "1024"))  # detector input, long edge
+DETECT_LONG = int(os.getenv("WM_DETECT_LONG", "1536"))  # cap on the detector input's long edge (panoramas)
 LAMA_MAX = int(os.getenv("WM_LAMA_MAX", "1024"))       # biggest crop LaMa sees, long edge
 
 
@@ -100,7 +100,13 @@ class WatermarkRemover:
 
         model = self._get_detector()
         W, H = img.size
-        scale = min(1.0, DETECT_LONG / max(W, H))
+        # Match the scale the detector was trained at: synth.py sizes every
+        # watermark relative to the crop's short side (the training size), so
+        # the photo's short side is brought to that size too. Feeding it at a
+        # larger size makes marks look bigger than anything seen in training.
+        scale = self._detector_size / min(W, H)
+        if max(W, H) * scale > DETECT_LONG:  # very wide or tall image: cap the long side
+            scale = DETECT_LONG / max(W, H)
         # The U-Net halves the size five times, so both sides must divide by 32.
         dw, dh = max(32, round(W * scale / 32) * 32), max(32, round(H * scale / 32) * 32)
         x = to_tensor(img.resize((dw, dh), Image.BILINEAR)).unsqueeze(0).to(self.device)
@@ -125,8 +131,13 @@ class WatermarkRemover:
 
     @staticmethod
     def grow(mask: np.ndarray) -> np.ndarray:
-        """Widen the mask a little so anti-aliased edges and glow get removed too."""
-        k = max(3, int(min(mask.shape) * 0.006)) | 1
+        """Close the gaps inside and between letters, then widen the mask so
+        anti-aliased edges and glow go too. A ring of untouched watermark pixels
+        left around a stroke is exactly the "ghost" people notice."""
+        side = min(mask.shape)
+        close = max(3, int(side * 0.012)) | 1
+        mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (close, close)))
+        k = max(5, int(side * 0.01)) | 1
         return cv2.dilate(mask, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (k, k)), iterations=1)
 
     # ── Inpainting ───────────────────────────────────────────────────────────
