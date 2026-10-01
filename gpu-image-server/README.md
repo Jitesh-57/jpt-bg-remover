@@ -302,8 +302,16 @@ need to be on.
      0.00001.
    - Convolution weights are stored as float16, which halves the download
      and costs well under one brightness level.
-2. **Host the two files** somewhere that allows downloads from other sites
-   (CORS). A free Hugging Face model repository works well:
+   **LaMa already ships with the website.** It's split into
+   `public/models/lama-512-v1.part0–2` with a manifest that holds the SHA-256,
+   so the Manual Edit brush works with no setup. Only the detector needs
+   hosting, once you've trained it. To update LaMa itself, re-split it under a
+   new version name:
+   `split -n 3 -d -a 1 lama-512.onnx public/models/lama-512-v2.part`
+   Then write a matching `lama-512-v2.json` and point `LAMA_URL` at it.
+2. **Host the detector** (`wm-detector.onnx`, 49 MB) somewhere that allows
+   downloads from other sites (CORS). A free Hugging Face model repository
+   works well:
    ```
    pip install -U huggingface_hub
    huggingface-cli login
@@ -311,10 +319,8 @@ need to be on.
    ```
    Cloudflare R2 or any CDN also works. They're too big for git and for
    Supabase's 50 MB free-plan limit.
-3. **Tell the website where they are.** In Vercel → Settings → Environment
+3. **Tell the website where it is.** In Vercel → Settings → Environment
    Variables, add:
-   - `NEXT_PUBLIC_WM_LAMA_URL` =
-     `https://huggingface.co/YOUR_NAME/pixelshine-watermark/resolve/main/lama-512.onnx`
    - `NEXT_PUBLIC_WM_DETECTOR_URL` =
      `https://huggingface.co/YOUR_NAME/pixelshine-watermark/resolve/main/wm-detector.onnx`
 
