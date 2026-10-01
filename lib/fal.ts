@@ -102,13 +102,14 @@ export async function falEndpointProbe(path: string): Promise<{ status: number; 
 export type FalModel =
   | "nano-banana"
   | "playground-v25"
+  | "seedream-v45"
   | "gpt-image-2.5-sunburst"
   | "gpt-image-2.5-flare"
   | "gpt-image-2"
   | "gpt-image-1-byok";
 
 /** Which input shape an endpoint expects. */
-type Family = "nano" | "gpt" | "playground";
+type Family = "nano" | "gpt" | "playground" | "seedream";
 
 /** Which spelling of image_size the endpoint validates against. */
 type SizeStyle = "named" | "pixels";
@@ -135,6 +136,13 @@ const MODEL_SPECS: Record<FalModel, ModelSpec> = {
     generate: "fal-ai/playground-v25",
     family: "playground",
     label: "Playground v2.5",
+    sizeStyle: "named",
+  },
+  "seedream-v45": {
+    edit: "fal-ai/bytedance/seedream/v4.5/edit",
+    generate: "fal-ai/bytedance/seedream/v4.5/text-to-image",
+    family: "seedream",
+    label: "Seedream 4.5",
     sizeStyle: "named",
   },
   // "Editing built for the tightest control, edits scoped precisely to the
@@ -680,6 +688,13 @@ export async function falEditImage(
           image_size: imageSizeFor("named", aspectRatio),
           enable_safety_checker: false,
         }
+      : falModelSpec(model).family === "seedream"
+      ? {
+          prompt,
+          image_urls: [imageUrl],
+          num_images: 1,
+          image_size: imageSizeFor("named", aspectRatio),
+        }
       : { prompt, image_urls: [imageUrl], num_images: 1, quality: "high",
           image_size: imageSizeFor(falModelSpec(model).sizeStyle, aspectRatio) };
 
@@ -688,9 +703,10 @@ export async function falEditImage(
     // If an endpoint does not recognise one of them it answers 422, and a
     // rejected *option* is a poor reason to lose the generation — so the
     // retry drops to prompt and image alone. See runQueued.
-    minimalInput: falModelSpec(model).family === "playground"
-      ? { prompt, image_url: imageUrl, num_images: 1, enable_safety_checker: false }
-      : { prompt, image_urls: [imageUrl], num_images: 1 },
+    minimalInput:
+      falModelSpec(model).family === "playground"
+        ? { prompt, image_url: imageUrl, num_images: 1, enable_safety_checker: false }
+        : { prompt, image_urls: [imageUrl], num_images: 1 },
     paths: falPathVariants(model, "edit"),
   });
   return urlToDataUrl(firstImageUrl(result));
@@ -727,6 +743,8 @@ export async function falEditImages(
   const input =
     falModelSpec(model).family === "nano"
       ? { prompt, image_urls: imageUrls, num_images: 1, output_format: "png" }
+      : falModelSpec(model).family === "seedream"
+      ? { prompt, image_urls: imageUrls, num_images: 1, image_size: "auto_2K" }
       : { prompt, image_urls: imageUrls, num_images: 1, image_size: "auto", quality: "high" };
 
   const result = await runQueued(endpoint, input, budgetMs, {
@@ -769,6 +787,12 @@ export async function falGenerateImage(
           format: "png",
           image_size: imageSizeFor("named", aspectRatio),
           enable_safety_checker: false,
+        }
+      : falModelSpec(model).family === "seedream"
+      ? {
+          prompt,
+          num_images: 1,
+          image_size: imageSizeFor("named", aspectRatio),
         }
       : { prompt, num_images: 1, quality: "high",
           image_size: imageSizeFor(falModelSpec(model).sizeStyle, aspectRatio) };
