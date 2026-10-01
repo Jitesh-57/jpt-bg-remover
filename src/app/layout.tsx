@@ -120,6 +120,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <link rel="dns-prefetch" href="https://images.pexels.com" />
         <meta name="google-site-verification" content="oaUjZEOCATyjaE5OvAHr6gXTXGjt6wJnk436SYbf1O4" />
         <meta name="google-adsense-account" content="ca-pub-6299138657923728" />
+        {/* Machine-readable site guide for AI/search crawlers. */}
+        <link rel="alternate" type="text/plain" href="/llms.txt" title="Pixel Shine AI-readable site guide" />
         {/* Google AdSense loader — placed as a raw <script> in <head> exactly
             where the AdSense crawler and the "code snippet" site-verification
             look for it. Auto ads serves units from this single loader. */}
