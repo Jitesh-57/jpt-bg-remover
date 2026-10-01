@@ -1,11 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { Progress } from "@/lib/watermark-browser";
 
-// Visible-watermark remover, backed by our own model on the GPU server
-// (/api/watermark-remove → gpu-image-server /watermark/remove). Upload runs
-// automatic detection straight away; "Try Manual Edit" lets the visitor paint
-// over anything it missed, and the painted area is filled on the next pass.
+// Visible-watermark remover running our own models. Each request tries, in order:
+//   1. the visitor's browser (lib/watermark-browser: detector + LaMa in ONNX),
+//   2. our GPU server (/api/watermark-remove → gpu-image-server),
+// and when neither can detect automatically, opens the manual brush.
+// Upload runs automatic detection straight away; "Try Manual Edit" lets the
+// visitor paint over anything it missed.
 
 const GRAD = "linear-gradient(120deg,var(--accent),var(--accent-2))";
 const MAX_SIDE = 2048; // keeps the upload under Vercel's 4.5 MB body limit
@@ -46,6 +49,7 @@ export default function WatermarkRemoverTool() {
   const [removeLogo, setRemoveLogo] = useState(true);
   const [message, setMessage] = useState<{ kind: "ok" | "warn" | "error"; text: string } | null>(null);
   const [drag, setDrag] = useState(false);
+  const [progress, setProgress] = useState<{ label: string; fraction?: number } | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const runId = useRef(0);
 
@@ -53,6 +57,37 @@ export default function WatermarkRemoverTool() {
     const id = ++runId.current;
     setPhase("working");
     setMessage(null);
+    setProgress(null);
+    const done = (dataUrl: string, found: boolean) => {
+      setResult(dataUrl);
+      setPhase("done");
+      setMessage(found
+        ? { kind: "ok", text: "Watermark removed successfully" }
+        : { kind: "warn", text: opts.mask ? "Nothing was painted. Paint over the watermark and try again." : "No watermark detected. Use Manual Edit to paint over it." });
+    };
+
+    // 1. In the browser, when the model files are published.
+    try {
+      const wb = await import("@/lib/watermark-browser");
+      const onProgress: Progress = (p) => { if (id === runId.current) setProgress({ label: p.label, fraction: p.fraction }); };
+      const lama = await wb.modelAvailable(wb.LAMA_URL);
+      if (lama && opts.mask) {
+        const r = await wb.removeWithMask(image, opts.mask, onProgress);
+        if (id === runId.current) done(r.dataUrl, r.found);
+        return;
+      }
+      if (lama && !opts.mask && (await wb.modelAvailable(wb.DETECTOR_URL))) {
+        const r = await wb.removeAuto(image, { text: opts.text, logo: opts.logo }, onProgress);
+        if (id === runId.current) done(r.dataUrl, r.found);
+        return;
+      }
+    } catch (e) {
+      console.warn("[watermark] in-browser removal failed, trying the server:", e);
+    }
+    if (id !== runId.current) return;
+    setProgress({ label: "Removing watermark…" });
+
+    // 2. Our GPU server.
     try {
       const res = await fetch("/api/watermark-remove", {
         method: "POST",
@@ -62,15 +97,17 @@ export default function WatermarkRemoverTool() {
       const data = (await res.json().catch(() => ({}))) as { dataUrl?: string; found?: boolean; error?: string; needsManual?: boolean };
       if (id !== runId.current) return; // a newer request superseded this one
       if (!res.ok || !data.dataUrl) {
+        // 3. Nothing can find the watermark automatically: let the visitor paint it.
+        if (data.needsManual && !opts.mask) {
+          setMessage({ kind: "warn", text: "Paint over the watermark, then click Remove Painted Area." });
+          setPhase("manual");
+          return;
+        }
         setMessage({ kind: "error", text: data.error || "Something went wrong. Please try again." });
-        setPhase(data.needsManual ? "manual" : "done");
+        setPhase("done");
         return;
       }
-      setResult(data.dataUrl);
-      setPhase("done");
-      setMessage(data.found
-        ? { kind: "ok", text: "Watermark removed successfully" }
-        : { kind: "warn", text: "No watermark detected. Use Manual Edit to paint over it." });
+      done(data.dataUrl, !!data.found);
     } catch {
       if (id !== runId.current) return;
       setMessage({ kind: "error", text: "Couldn't reach the server. Check your connection and try again." });
@@ -142,7 +179,7 @@ export default function WatermarkRemoverTool() {
       <ManualEditor
         image={result || source}
         size={size}
-        notice={message?.kind === "error" ? message.text : null}
+        notice={message && message.kind !== "ok" ? message.text : null}
         onCancel={() => { setMessage(null); setPhase("done"); }}
         onApply={(mask) => call(result || source, { mask, text: true, logo: true })}
       />
@@ -154,7 +191,7 @@ export default function WatermarkRemoverTool() {
   return (
     <div style={{ display: "flex", flexWrap: "wrap", gap: 18, alignItems: "flex-start", maxWidth: 1040, margin: "0 auto", textAlign: "left" }}>
       <div style={{ ...panel, flex: "1 1 520px", minWidth: 0, position: "relative" }}>
-        <Compare before={source} after={result} working={working} />
+        <Compare before={source} after={result} working={working} progress={progress} />
       </div>
       <div style={{ ...panel, flex: "1 1 280px", maxWidth: 420, display: "grid", gap: 14 }}>
         <div style={{ background: "var(--surface-2)", borderRadius: 12, padding: "12px 14px", textAlign: "center" }}>
@@ -191,7 +228,12 @@ export default function WatermarkRemoverTool() {
 
 // ── Before / after slider ─────────────────────────────────────────────────
 
-function Compare({ before, after, working }: { before: string; after: string | null; working: boolean }) {
+function Compare({ before, after, working, progress }: {
+  before: string;
+  after: string | null;
+  working: boolean;
+  progress: { label: string; fraction?: number } | null;
+}) {
   const [pos, setPos] = useState(50);
   const pill = (side: "left" | "right"): React.CSSProperties => ({
     position: "absolute", top: 10, [side]: 10, zIndex: 3, fontSize: 11, fontWeight: 800, color: "#fff",
@@ -219,7 +261,12 @@ function Compare({ before, after, working }: { before: string; after: string | n
       {working && (
         <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,.45)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", color: "#fff", gap: 12, zIndex: 4 }}>
           <div className="wm-spin" style={{ width: 38, height: 38, borderRadius: "50%", border: "4px solid rgba(255,255,255,.3)", borderTopColor: "#fff" }} />
-          <div style={{ fontSize: 14.5, fontWeight: 700 }}>Removing watermark…</div>
+          <div style={{ fontSize: 14.5, fontWeight: 700, textAlign: "center", padding: "0 16px" }}>{progress?.label ?? "Removing watermark…"}</div>
+          {progress?.fraction !== undefined && (
+            <div style={{ width: "min(260px, 70%)", height: 6, borderRadius: 3, background: "rgba(255,255,255,.25)", overflow: "hidden" }}>
+              <div style={{ width: `${Math.round(progress.fraction * 100)}%`, height: "100%", background: "#fff", transition: "width .2s" }} />
+            </div>
+          )}
           <style>{`@keyframes wmspin{to{transform:rotate(360deg)}}.wm-spin{animation:wmspin .9s linear infinite}`}</style>
         </div>
       )}

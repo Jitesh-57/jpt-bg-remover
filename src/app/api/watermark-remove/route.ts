@@ -48,8 +48,10 @@ const isImageDataUrl = (v: unknown): v is string =>
 
 export async function POST(req: NextRequest) {
   if (!GPU_URL) {
+    // No GPU server: the page does its work in the browser, and when it
+    // can't detect automatically it falls back to the manual brush.
     return NextResponse.json(
-      { error: "The watermark remover is offline right now. Please try again later." },
+      { error: "Automatic removal isn't available right now. Paint over the watermark to remove it.", needsManual: true },
       { status: 503 }
     );
   }

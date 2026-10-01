@@ -280,6 +280,61 @@ Response:
 Manual mode works even before you've trained a detector. Automatic mode
 answers `503` until `weights/wm_detector.pt` exists.
 
+### 6. Run it in visitors' browsers (no GPU server needed)
+
+The website can run both models in the visitor's own browser with
+onnxruntime-web. It uses **WebGPU** where the browser has it (about 1–2 s per
+photo) and falls back to WebAssembly elsewhere (tens of seconds; the page
+stays responsive while it works). Nothing is uploaded, and your PC doesn't
+need to be on.
+
+1. **Export both models to ONNX.** `train.bat` does this at the end; to do it
+   by hand:
+   ```
+   venv\Scripts\python -m watermark.export_onnx
+   ```
+   This writes `weights\onnx\lama-512.onnx` (109 MB) and
+   `weights\onnx\wm-detector.onnx` (49 MB). Each export is checked against
+   the PyTorch model, and against the list of operators browsers can run,
+   before it's kept.
+   - LaMa's Fourier transforms are rebuilt as fixed matrix multiplications
+     (`watermark/lama_arch.py`). The result matches the original to within
+     0.00001.
+   - Convolution weights are stored as float16, which halves the download
+     and costs well under one brightness level.
+2. **Host the two files** somewhere that allows downloads from other sites
+   (CORS). A free Hugging Face model repository works well:
+   ```
+   pip install -U huggingface_hub
+   huggingface-cli login
+   huggingface-cli upload YOUR_NAME/pixelshine-watermark weights\onnx .
+   ```
+   Cloudflare R2 or any CDN also works. They're too big for git and for
+   Supabase's 50 MB free-plan limit.
+3. **Tell the website where they are.** In Vercel → Settings → Environment
+   Variables, add:
+   - `NEXT_PUBLIC_WM_LAMA_URL` =
+     `https://huggingface.co/YOUR_NAME/pixelshine-watermark/resolve/main/lama-512.onnx`
+   - `NEXT_PUBLIC_WM_DETECTOR_URL` =
+     `https://huggingface.co/YOUR_NAME/pixelshine-watermark/resolve/main/wm-detector.onnx`
+
+   Then redeploy. `NEXT_PUBLIC_` values are built into the page, so a
+   redeploy is required.
+
+After you retrain, export again and re-upload under **new file names** (for
+example `wm-detector-v2.onnx`), then update the variable. Browsers cache the
+models by URL, so a new name is what makes them download the new version.
+
+**How the page chooses an engine** (`src/lib/watermark-browser.ts`):
+- **Automatic removal:** the browser, if both model URLs answer. Otherwise
+  the GPU server (`/api/watermark-remove`). If neither is available, it opens
+  the manual brush.
+- **Manual brush:** the browser, if the LaMa URL answers. Otherwise the GPU
+  server.
+
+You can publish LaMa first and the detector later. Until the detector is
+online, the page goes straight to the brush and fills it in the browser.
+
 ### What it can't do
 
 - **Large, solid watermarks:** when one covers faces or fine detail, the
@@ -297,11 +352,12 @@ answers `503` until `weights/wm_detector.pt` exists.
 | File | Purpose |
 |---|---|
 | `server.py` | FastAPI server: `/generate`, `/edit`, `/inpaint`, `/upscale`, `/watermark/remove`, `/health` |
-| `watermark/` | Our watermark remover: `synth.py` (training data), `model.py`, `train.py`, `evaluate.py`, `remover.py` |
+| `watermark/` | Our watermark remover: `synth.py` (training data), `model.py`, `train.py`, `evaluate.py`, `remover.py`, `lama_arch.py` + `export_onnx.py` (browser models) |
 | `train.bat` | Windows one-click detector training (drag a photo folder onto it) |
 | `prompt_brain.py` | GPT-4o (GitHub Models) prompt enhancement |
 | `requirements.txt` | Python dependencies |
 | `start.bat` | Windows one-click: auto-setup on first run, then launches |
 | `.env.example` | Configuration template |
 | `../src/app/api/studio/route.ts` | Next.js route that proxies to this server |
-| `../src/app/api/watermark-remove/route.ts` | Next.js route behind sjpt.io/watermark-remover |
+| `../src/app/api/watermark-remove/route.ts` | Next.js route behind sjpt.io/watermark-remover (GPU-server path) |
+| `../src/lib/watermark-browser.ts` | The same pipeline running in the visitor's browser (onnxruntime-web) |

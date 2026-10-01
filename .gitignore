@@ -7,3 +7,7 @@ out/
 .vercel
 .env*
 .claude/
+
+# Watermark-remover ONNX models are ~150 MB: host them (see gpu-image-server/README.md), never commit them.
+public/models/*.onnx
+public/ort/

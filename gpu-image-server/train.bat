@@ -27,5 +27,9 @@ echo.
 echo [train] Starting. The best model is saved to weights\wm_detector.pt after each epoch.
 python -m watermark.train --images "%~1" --resume --workers 2
 echo.
+echo [export] Writing browser versions of the models to weights\onnx\ ...
+python -m watermark.export_onnx
+echo.
 echo [done] Restart start.bat so the server picks up the new model.
+echo        For the website, upload weights\onnx\*.onnx (see README, step 6).
 pause
