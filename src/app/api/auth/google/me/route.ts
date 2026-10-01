@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { resolveUnlimited } from "@/lib/auth";
-import { claimSignupTrial, isFreshSignup } from "@/lib/free-trial.server";
+import { claimSignupTrial, isFreshSignup, rememberCountry } from "@/lib/free-trial.server";
 
 export const runtime = "nodejs";
 
@@ -35,7 +35,9 @@ export async function GET(req: NextRequest) {
     so a brand-new account is also offered its free trial here. Only for the
     first hour of an account's life; the claim itself is once-only.
   */
-  const trial = isFreshSignup(user) ? await claimSignupTrial(user, req) : 0;
+  const trial = isFreshSignup(user)
+    ? (await Promise.all([claimSignupTrial(user, req), rememberCountry(user.id, req)]))[0]
+    : 0;
   const credits = (profile ? (profile.credits ?? 0) : 0) + trial;
   // Honour "unlimited" only while its 30-day window is open, else fall to free.
   const { plan, expiresAt: planExpiresAt } = resolveUnlimited(profile?.plan, user.user_metadata);

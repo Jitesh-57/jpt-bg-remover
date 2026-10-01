@@ -4,6 +4,7 @@ import { checkAuth, createAdminSupabase } from "@/lib/auth";
 import { PACKS, inrPaise } from "@/lib/plans";
 import { financialYear, invoiceNumber } from "@/lib/invoice";
 import { recordCredits } from "@/lib/ledger";
+import { rememberPurchaseCountry } from "@/lib/free-trial.server";
 
 export const runtime = "nodejs";
 
@@ -107,6 +108,8 @@ export async function POST(req: NextRequest) {
       `(user ${session!.userId}, plan ${plan}): ${purchaseErr.message}`
     );
   }
+
+  if (purchaseRow) await rememberPurchaseCountry(purchaseRow.id, session!.userId, req);
 
   /*
     And the credits arriving, as a ledger entry.

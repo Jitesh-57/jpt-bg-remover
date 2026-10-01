@@ -2,6 +2,7 @@ import type { NextRequest } from "next/server";
 import type { User } from "@supabase/supabase-js";
 import { createAdminSupabase } from "@/lib/auth";
 import { recordCredits } from "@/lib/ledger";
+import { WORLDWIDE } from "@/lib/trial-batches";
 
 /**
  * free-trial.server.ts — the one-time signup credit grant, per country.
@@ -119,9 +120,11 @@ export async function claimSignupTrial(user: Pick<User, "id" | "email" | "create
 
     const db = createAdminSupabase();
 
-    const { data: rule, error: ruleErr } = await db.from("trial_countries").select("credits, live").eq("country", country).maybeSingle() as
-      { data: { credits: number; live: boolean } | null; error: { message: string } | null };
+    // The country's own rule wins, live or stopped; the worldwide rule covers every country without one.
+    const { data: rules, error: ruleErr } = await db.from("trial_countries").select("country, credits, live").in("country", [country, WORLDWIDE]) as
+      { data: { country: string; credits: number; live: boolean }[] | null; error: { message: string } | null };
     if (ruleErr) { await note("error", { detail: `rules: ${ruleErr.message}` }); return 0; }
+    const rule = rules?.find((r) => r.country === country) ?? rules?.find((r) => r.country === WORLDWIDE);
     if (!rule || !rule.live || !(rule.credits > 0)) { await note("no-live-rule"); return 0; }
     const credits = rule.credits;
 
@@ -152,7 +155,7 @@ export async function claimSignupTrial(user: Pick<User, "id" | "email" | "create
       return 0;
     }
 
-    await recordCredits({ userId: user.id, delta: credits, balanceAfter: balance, reason: "signup_grant", note: `Free trial: ${country}` });
+    await recordCredits({ userId: user.id, delta: credits, balanceAfter: balance, reason: "signup_grant", note: `Free trial: ${country}${rule.country === WORLDWIDE ? " (worldwide)" : ""}` });
     await note("granted", { credits });
     console.log(`[free-trial] +${credits} credits to ${user.id} (${country})`);
     return credits;
@@ -167,4 +170,29 @@ export async function claimSignupTrial(user: Pick<User, "id" | "email" | "create
 export function isFreshSignup(user: Pick<User, "created_at">): boolean {
   const created = Date.parse(user.created_at);
   return Number.isFinite(created) && Date.now() - created <= TRIAL_WINDOW_MIN * 60_000;
+}
+
+/**
+ * Remembers where an account signed up from (the first country seen) and
+ * where it last signed in from, for the "Which countries buy" table.
+ * Best effort and never throws: a missing table must not break signing in.
+ */
+export async function rememberCountry(userId: string, req: NextRequest | Request): Promise<void> {
+  const country = requestCountry(req);
+  if (!country || !userId) return;
+  try {
+    const db = createAdminSupabase();
+    const now = new Date().toISOString();
+    await db.from("user_countries").upsert({ user_id: userId, signup_country: country, last_country: country }, { onConflict: "user_id", ignoreDuplicates: true });
+    await db.from("user_countries").update({ last_country: country, last_seen: now }).eq("user_id", userId);
+  } catch { /* best effort */ }
+}
+
+/** The country a purchase was paid from. Best effort, like rememberCountry. */
+export async function rememberPurchaseCountry(purchaseId: number, userId: string, req: NextRequest | Request): Promise<void> {
+  const country = requestCountry(req);
+  if (!country || !purchaseId) return;
+  try {
+    await createAdminSupabase().from("purchase_countries").upsert({ purchase_id: purchaseId, user_id: userId, country }, { onConflict: "purchase_id", ignoreDuplicates: true });
+  } catch { /* best effort */ }
 }
