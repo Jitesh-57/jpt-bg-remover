@@ -331,6 +331,48 @@ async function toFalImageUrl(src: string): Promise<string> {
   throw new Error("Image must be a data URL or an https URL");
 }
 
+/**
+ * Seedream is stricter than most fal image endpoints about reference URLs.
+ * Re-host the source on fal's own CDN before an edit so model-side validation
+ * never depends on Supabase/public-host fetching, redirects, or bot blocking.
+ * The object is short-lived because it is only an inference input.
+ */
+async function uploadImageToFalStorage(src: string): Promise<string> {
+  const input = await toFalImageUrl(src);
+  const res = await fetch(input);
+  if (!res.ok) throw new Error(`Could not read the source image (${res.status}).`);
+
+  const contentType = (res.headers.get("content-type") || "image/jpeg").split(";")[0];
+  const ext = contentType.split("/")[1] || "jpg";
+  const bytes = await res.arrayBuffer();
+  const fileName = `seedream-input-${Date.now()}.${ext}`;
+
+  const init = await fetch("https://rest.fal.ai/storage/upload/initiate?storage_type=fal-cdn-v3", {
+    method: "POST",
+    headers: {
+      ...authHeaders(),
+      "X-Fal-Object-Lifecycle": JSON.stringify({ expiration_duration_seconds: 3600 }),
+    },
+    body: JSON.stringify({ content_type: contentType, file_name: fileName }),
+  });
+  const initBody = await init.json().catch(() => ({})) as { file_url?: string; upload_url?: string; detail?: string };
+  if (!init.ok || !initBody.file_url || !initBody.upload_url) {
+    throw new FalError(
+      typeof initBody.detail === "string" ? initBody.detail : `fal storage upload failed (${init.status})`,
+      init.status,
+      JSON.stringify(initBody).slice(0, 400)
+    );
+  }
+
+  const put = await fetch(initBody.upload_url, {
+    method: "PUT",
+    headers: { "Content-Type": contentType },
+    body: bytes,
+  });
+  if (!put.ok) throw new Error(`fal storage upload failed (${put.status}).`);
+  return initBody.file_url;
+}
+
 type QueueSubmit = { request_id?: string; status_url?: string; response_url?: string; detail?: string };
 
 /**
@@ -688,12 +730,7 @@ export async function falEditImage(
       ? { prompt, image_urls: [imageUrl], num_images: 1, output_format: "png",
           ...(aspectRatio ? { aspect_ratio: aspectRatio } : {}) }
       : falModelSpec(model).family === "seedream"
-      // Seedream 4.5's documented edit example uses only the two required
-      // fields. Do not send image_size/num_images here: fal validates those
-      // optional fields differently across account/model revisions and was
-      // returning 422 before generation. Seedream will choose its native
-      // output size from the source image when image_size is omitted.
-      ? { prompt, image_urls: [imageUrl] }
+      ? { prompt, image_urls: [await uploadImageToFalStorage(imageUrl)] }
       : { prompt, image_urls: [imageUrl], num_images: 1, quality: "high",
           image_size: imageSizeFor(falModelSpec(model).sizeStyle, aspectRatio) };
 
@@ -702,7 +739,9 @@ export async function falEditImage(
     // If an endpoint does not recognise one of them it answers 422, and a
     // rejected *option* is a poor reason to lose the generation — so the
     // retry drops to prompt and image alone. See runQueued.
-    minimalInput: { prompt, image_urls: [imageUrl], num_images: 1 },
+    minimalInput: falModelSpec(model).family === "seedream"
+      ? { prompt, image_urls: [await uploadImageToFalStorage(imageUrl)] }
+      : { prompt, image_urls: [imageUrl], num_images: 1 },
     paths: falPathVariants(model, "edit"),
   });
   return urlToDataUrl(firstImageUrl(result));
@@ -723,12 +762,13 @@ export async function falEditImages(
     falModelSpec(model).family === "nano"
       ? { prompt, image_urls: imageUrls, num_images: 1, output_format: "png" }
       : falModelSpec(model).family === "seedream"
-      // Same rule for multi-image edits: send only Seedream's required fields.
-      ? { prompt, image_urls: imageUrls }
+      ? { prompt, image_urls: await Promise.all(imageUrls.map(uploadImageToFalStorage)) }
       : { prompt, image_urls: imageUrls, num_images: 1, image_size: "auto", quality: "high" };
 
   const result = await runQueued(endpoint, input, budgetMs, {
-    minimalInput: { prompt, image_urls: imageUrls, num_images: 1 },
+    minimalInput: falModelSpec(model).family === "seedream"
+      ? { prompt, image_urls: await Promise.all(imageUrls.map(uploadImageToFalStorage)) }
+      : { prompt, image_urls: imageUrls, num_images: 1 },
     paths: falPathVariants(model, "edit"),
   });
   return urlToDataUrl(firstImageUrl(result));
