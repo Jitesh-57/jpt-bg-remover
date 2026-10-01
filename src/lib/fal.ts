@@ -104,10 +104,11 @@ export type FalModel =
   | "gpt-image-2.5-sunburst"
   | "gpt-image-2.5-flare"
   | "gpt-image-2"
-  | "gpt-image-1-byok";
+  | "gpt-image-1-byok"
+  | "seedream-v45";
 
 /** Which input shape an endpoint expects. */
-type Family = "nano" | "gpt";
+type Family = "nano" | "gpt" | "seedream";
 
 /** Which spelling of image_size the endpoint validates against. */
 type SizeStyle = "named" | "pixels";
@@ -127,6 +128,15 @@ const MODEL_SPECS: Record<FalModel, ModelSpec> = {
     generate: "fal-ai/nano-banana",
     family: "nano",
     label: "Nano Banana",
+    sizeStyle: "named",
+  },
+  // ByteDance Seedream 4.5: strong multi-image editing and high-resolution
+  // output. Takes image_urls like nano-banana, but sizes by image_size.
+  "seedream-v45": {
+    edit: "fal-ai/bytedance/seedream/v4.5/edit",
+    generate: "fal-ai/bytedance/seedream/v4.5/text-to-image",
+    family: "seedream",
+    label: "Seedream 4.5",
     sizeStyle: "named",
   },
   // "Editing built for the tightest control, edits scoped precisely to the
@@ -180,6 +190,11 @@ const MODEL_SPECS: Record<FalModel, ModelSpec> = {
  * invented at runtime.
  */
 const PATH_VARIANTS: Partial<Record<FalModel, { edit: string[]; generate: string[] }>> = {
+  // fal lists Seedream both with and without the "fal-ai/" owner prefix.
+  "seedream-v45": {
+    edit: ["fal-ai/bytedance/seedream/v4.5/edit", "bytedance/seedream/v4.5/edit"],
+    generate: ["fal-ai/bytedance/seedream/v4.5/text-to-image", "bytedance/seedream/v4.5/text-to-image"],
+  },
   "gpt-image-2.5-sunburst": {
     edit: [
       "fal-ai/gpt-image-2.5/sunburst/edit",
@@ -645,6 +660,15 @@ function imageSizeFor(style: SizeStyle, aspectRatio?: string): string {
   }
 }
 
+/**
+ * Seedream takes the named sizes too, but its "keep the framing" value is
+ * auto_2K (or auto_4K), not plain "auto" — that one it rejects.
+ */
+function seedreamSize(aspectRatio?: string): string {
+  const named = imageSizeFor("named", aspectRatio);
+  return named === "auto" ? "auto_2K" : named;
+}
+
 /** Edits an existing image from a text instruction. */
 export async function falEditImage(
   src: string,
@@ -663,6 +687,8 @@ export async function falEditImage(
     falModelSpec(model).family === "nano"
       ? { prompt, image_urls: [imageUrl], num_images: 1, output_format: "png",
           ...(aspectRatio ? { aspect_ratio: aspectRatio } : {}) }
+      : falModelSpec(model).family === "seedream"
+      ? { prompt, image_urls: [imageUrl], num_images: 1, image_size: seedreamSize(aspectRatio) }
       : { prompt, image_urls: [imageUrl], num_images: 1, quality: "high",
           image_size: imageSizeFor(falModelSpec(model).sizeStyle, aspectRatio) };
 
@@ -691,6 +717,8 @@ export async function falEditImages(
   const input =
     falModelSpec(model).family === "nano"
       ? { prompt, image_urls: imageUrls, num_images: 1, output_format: "png" }
+      : falModelSpec(model).family === "seedream"
+      ? { prompt, image_urls: imageUrls, num_images: 1, image_size: "auto_2K" }
       : { prompt, image_urls: imageUrls, num_images: 1, image_size: "auto", quality: "high" };
 
   const result = await runQueued(endpoint, input, budgetMs, {
@@ -726,6 +754,8 @@ export async function falGenerateImage(
     falModelSpec(model).family === "nano"
       ? { prompt, num_images: 1, output_format: "png",
           ...(aspectRatio ? { aspect_ratio: aspectRatio } : {}) }
+      : falModelSpec(model).family === "seedream"
+      ? { prompt, num_images: 1, image_size: seedreamSize(aspectRatio) }
       : { prompt, num_images: 1, quality: "high",
           image_size: imageSizeFor(falModelSpec(model).sizeStyle, aspectRatio) };
 
