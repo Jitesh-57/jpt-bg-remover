@@ -247,6 +247,7 @@ export const MODELS = [
   { id: "nano-banana",    label: "Nano Banana",    hint: "Fast and cheap — best at keeping your face exactly as it is" },
   { id: "gpt-image",      label: "ChatGPT",        hint: "OpenAI's image model — richer light and texture, slower" },
   { id: "playground-v25", label: "Playground v2.5", hint: "Playground v2.5 — safety checker disabled when fal.ai account authorization allows it" },
+  { id: "seedream-v45",    label: "Seedream 4.5",    hint: "ByteDance Seedream 4.5 — advanced multi-image editing and high-resolution results" },
 ] as const;
 
 /** Supabase bucket holding preset thumbnails, matched by name at runtime. */
