@@ -141,7 +141,7 @@ export default function AIStudio() {
   const [analysis, setAnalysis] = useState<Intent | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
   const [dims, setDims] = useState<{ w: number; h: number } | null>(null);
-  const [model, setModel] = useState<"gpt-image" | "nano-banana">("gpt-image");
+  const [model, setModel] = useState<"gpt-image" | "nano-banana" | "seedream-v45">("gpt-image");
   const [isAdmin, setIsAdmin] = useState(false);
   useEffect(() => { try { setIsAdmin(!!localStorage.getItem("jpt-admin-token")); } catch {} }, []);
   const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -536,7 +536,7 @@ export default function AIStudio() {
                     <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 14, fontSize: 12.5, color: "var(--text-muted)" }}>
                       Model
                       <div style={{ display: "flex", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 10, padding: 2 }}>
-                        {([["gpt-image", "ChatGPT"], ["nano-banana", "Nano Banana"]] as const).map(([id, label]) => (
+                        {([["gpt-image", "ChatGPT"], ["nano-banana", "Nano Banana"], ["seedream-v45", "Seedream 4.5"]] as const).map(([id, label]) => (
                           <button key={id} onClick={() => setModel(id)} style={{ border: "none", borderRadius: 8, padding: "5px 10px", fontSize: 12, fontWeight: 800, cursor: "pointer", fontFamily: "inherit", background: model === id ? "var(--grad-strong)" : "transparent", color: model === id ? "#fff" : "var(--text-muted)" }}>{label}</button>
                         ))}
                       </div>
