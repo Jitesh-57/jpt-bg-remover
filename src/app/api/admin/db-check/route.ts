@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Client } from "pg";
-import { requireAdmin, databaseUrl } from "@/lib/admin-token";
+import { requireAdmin, databaseUrl, pgConnectionString } from "@/lib/admin-token";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -63,7 +63,7 @@ export async function GET(req: NextRequest) {
   }
 
   const client = new Client({
-    connectionString: db.url,
+    connectionString: pgConnectionString(db.url),
     ssl: /[?&]sslmode=disable\b/.test(db.url) ? false : { rejectUnauthorized: false },
     connectionTimeoutMillis: 15_000,
     statement_timeout: 30_000,

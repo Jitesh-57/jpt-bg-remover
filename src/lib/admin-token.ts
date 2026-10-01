@@ -72,3 +72,15 @@ export function databaseUrl(): { url: string; from: string } | null {
   }
   return null;
 }
+
+/**
+ * The connection string without its ssl* query parameters. pg reads those from
+ * the URL and lets them override the `ssl` option given in code, so a
+ * `?sslmode=require` (which Supabase and Vercel URIs carry) turned certificate
+ * checking back on and failed with "self-signed certificate in certificate chain".
+ */
+export function pgConnectionString(url: string): string {
+  const [base, query = ""] = url.split("?");
+  const kept = query.split("&").filter((p) => p && !/^ssl/i.test(p));
+  return kept.length ? `${base}?${kept.join("&")}` : base;
+}

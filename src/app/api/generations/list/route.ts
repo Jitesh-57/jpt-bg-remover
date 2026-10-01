@@ -19,17 +19,19 @@ export async function GET(req: NextRequest) {
   const admin = createAdmin();
   const { data, error: dbError } = await admin
     .from("generations")
-    .select("id, tool, category, label, thumb, image_url, original_name, created_at")
+    // "*" so this reads on databases with or without the status column.
+    .select("*")
     .eq("user_id", session.userId)
     .order("created_at", { ascending: false })
-    .limit(40);
+    .limit(60) as { data: { id: number; tool: string; category: string; label: string; thumb: string | null; image_url: string | null; original_name: string | null; created_at: string; status?: string }[] | null; error: { message: string } | null };
 
   if (dbError) {
     console.error("[generations/list]", dbError);
     return NextResponse.json({ error: "Your generations could not be loaded. Please try again in a moment." }, { status: 500 });
   }
 
-  const items = (data || []).map(r => ({
+  // Failed attempts are kept for the ledger, but there is nothing to show for them.
+  const items = (data || []).filter(r => r.status !== "failed" && (r.image_url || r.thumb)).map(r => ({
     id: r.id,
     tool: r.tool,
     category: r.category,
