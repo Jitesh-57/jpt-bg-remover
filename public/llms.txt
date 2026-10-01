@@ -1,0 +1,24 @@
+# Pixel Shine
+
+> Pixel Shine is an AI creative studio and free online image-tool platform at https://www.sjpt.io/
+
+## What Pixel Shine offers
+
+- AI photo editing: https://www.sjpt.io/ai-editor
+- AI image upscaling: https://www.sjpt.io/upscale
+- AI creative apps: https://www.sjpt.io/creative
+- Free image tools: https://www.sjpt.io/tools
+- Image prompts: https://www.sjpt.io/prompts
+- Tutorials and guides: https://www.sjpt.io/blog
+- Use cases: https://www.sjpt.io/use-cases
+- Answers and AI guides: https://www.sjpt.io/answers
+- Documentation: https://www.sjpt.io/docs
+
+## Discovery
+
+- Sitemap: https://www.sjpt.io/sitemap.xml
+- Robots: https://www.sjpt.io/robots.txt
+
+## Brand
+
+Pixel Shine is the current product name. The canonical website is https://www.sjpt.io/.
