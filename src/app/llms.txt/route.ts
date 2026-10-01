@@ -25,6 +25,7 @@ const FREE_TOOLS: [string, string, string][] = [
   ["Meme Generator", "/meme-generator", "Add top and bottom meme captions to any image. Free, no watermark."],
   ["Image to PDF", "/image-to-pdf", "Combine JPG and PNG images into a single PDF. Free and unlimited."],
   ["Watermark Remover", "/watermark-remover", "Remove watermarks, logos and text from photos you own."],
+  ["Invisible Watermark & Metadata Remover", "/invisible-watermark-remover", "Strip EXIF, GPS, XMP, C2PA Content Credentials and AI prompts from images, PDFs, Office and audio files, and zero-width characters from text. Lossless, runs in the browser."],
   ["TikTok Watermark Remover", "/tiktok-watermark-remover", "Download TikTok videos without the watermark."],
   ["Batch Editor", "/batch-editor", "Apply the same edit to up to 100 images at once."],
   ["80s AI Photo Prompts", "/80s-ai-photo-prompts", "100 free copy-paste prompts for the viral 80s AI photo trend, with a reference image for each. Works in ChatGPT and Gemini."],

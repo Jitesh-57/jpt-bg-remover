@@ -35,6 +35,7 @@ const FREE_TOOLS = [
   { labelKey: "Meme Generator",   href: "/meme-generator" },
   { labelKey: "Image to PDF",     href: "/image-to-pdf" },
   { labelKey: "TikTok Watermark Remover", href: "/tiktok-watermark-remover" },
+  { labelKey: "Metadata Remover", href: "/invisible-watermark-remover" },
 ];
 
 const ALL_COMPANY = [

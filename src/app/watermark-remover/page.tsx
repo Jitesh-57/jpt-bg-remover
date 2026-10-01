@@ -94,6 +94,7 @@ const RELATED = [
   { href: "/crop-image", label: "Crop Image" },
   { href: "/upscale", label: "Image Upscaler" },
   { href: "/watermark-image", label: "Add Watermark" },
+  { href: "/invisible-watermark-remover", label: "Invisible Watermark & Metadata Remover" },
 ];
 
 export default function Page() {
