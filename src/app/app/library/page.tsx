@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { openInEditor } from "../_components/handoff";
 
 interface GenItem {
   id: string;
@@ -11,6 +12,8 @@ interface GenItem {
   imageUrl?: string;
   timestamp: number;
   originalName?: string;
+  /** The browser copy this server item was matched with, whose saved preview it can fall back on. */
+  localId?: string;
 }
 
 const TOOL_META: Record<string, { icon: string; label: string }> = {
@@ -57,13 +60,31 @@ function removeLocalGen(id: string) {
  */
 function bestSrc(i: GenItem): string {
   if (i.imageUrl) return i.imageUrl;
-  try { const local = localStorage.getItem(`jpt_img_${i.id}`); if (local) return local; } catch { /* storage blocked */ }
+  try {
+    const local = localStorage.getItem(`jpt_img_${i.id}`) || (i.localId ? localStorage.getItem(`jpt_img_${i.localId}`) : null);
+    if (local) return local;
+  } catch { /* storage blocked */ }
   return i.thumb;
 }
 
+/**
+ * One card per creation. A tool that saves keeps a browser copy (a thumbnail)
+ * and the server copy (the full image) under different ids, so the same result
+ * used to appear twice, the second one blurry. A browser copy that matches a
+ * server item (same tool and name, made within ten minutes) is dropped, and
+ * lends the server item its saved preview in case the server has no full image.
+ */
 function mergeItems(server: GenItem[], local: GenItem[]): GenItem[] {
   const ids = new Set(server.map((i) => i.id));
-  return [...server, ...local.filter((i) => !ids.has(i.id))].sort((a, b) => b.timestamp - a.timestamp).slice(0, 40);
+  const used = new Set<string>();
+  const merged = server.map((s) => {
+    const twin = local.find((l) => !used.has(l.id) && !ids.has(l.id) && l.tool === s.tool && (l.label || "") === (s.label || "") && Math.abs(l.timestamp - s.timestamp) < 10 * 60_000);
+    if (!twin) return s;
+    used.add(twin.id);
+    return { ...s, localId: twin.id };
+  });
+  const rest = local.filter((l) => !ids.has(l.id) && !used.has(l.id));
+  return [...merged, ...rest].sort((a, b) => b.timestamp - a.timestamp).slice(0, 40);
 }
 
 type Tab = "all" | "generation" | "edit";
@@ -166,6 +187,7 @@ export default function LibraryPage() {
               <div style={{ fontSize: 12.5, color: "var(--text-faint)", marginTop: 4 }}>{timeAgo(preview.timestamp)}</div>
               <div style={{ display: "flex", gap: 10, marginTop: 16 }}>
                 <a href={bestSrc(preview)} download={`${preview.tool}.png`} style={{ flex: 1, textAlign: "center", padding: "11px", borderRadius: 11, background: "var(--grad-strong)", color: "#fff", fontWeight: 800, fontSize: 13.5, textDecoration: "none" }}>⬇ Download</a>
+                <button onClick={() => void openInEditor(bestSrc(preview))} style={{ flex: 1, padding: "11px", borderRadius: 11, background: "var(--surface-2)", color: "var(--text)", border: "1px solid var(--border-strong)", fontWeight: 700, fontSize: 13.5, fontFamily: "inherit", cursor: "pointer" }}>✨ Edit with AI</button>
                 <button onClick={() => handleDelete(preview.id)} style={{ padding: "11px 18px", borderRadius: 11, background: "var(--danger-soft)", color: "var(--danger)", border: "1px solid var(--danger)", fontWeight: 800, fontSize: 13.5, fontFamily: "inherit", cursor: "pointer" }}>Delete</button>
               </div>
             </div>
