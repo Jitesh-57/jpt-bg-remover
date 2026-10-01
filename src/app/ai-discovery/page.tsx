@@ -16,7 +16,6 @@ const groups = [
     description: "Edit photos with plain-English instructions and transform backgrounds, lighting, styles, and more.",
     links: [
       ["/ai-editor", "AI Image Editor"],
-      ["/creative/background-changer", "AI Background Changer"],
       ["/creative/object-remover", "AI Object Remover"],
       ["/creative/photo-retouching", "AI Photo Retouching"],
     ],
