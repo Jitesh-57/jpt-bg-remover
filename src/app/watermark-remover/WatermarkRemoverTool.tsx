@@ -3,17 +3,15 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Progress } from "@/lib/watermark-browser";
 
-// Visible-watermark remover running our own models. Each request tries, in order:
-//   1. the visitor's browser (lib/watermark-browser: detector + LaMa in ONNX),
-//   2. our GPU server (/api/watermark-remove → gpu-image-server),
-// and when neither can detect automatically, opens the manual brush.
-// Upload runs automatic detection straight away; "Try Manual Edit" lets the
-// visitor paint over anything it missed.
+// Free watermark remover that runs entirely in the visitor's browser: they
+// paint over the watermark and LaMa (lib/watermark-browser, ONNX) fills the
+// painted area. No upload, no account, no credits, no server.
 
 const GRAD = "linear-gradient(120deg,var(--accent),var(--accent-2))";
-const MAX_SIDE = 2048; // keeps the upload under Vercel's 4.5 MB body limit
+const MAX_SIDE = 4096; // LaMa works on crops, so big photos keep their detail
 
-type Phase = "idle" | "working" | "done" | "manual";
+type Phase = "idle" | "edit" | "working" | "done";
+type Status = { label: string; fraction?: number } | null;
 
 const panel: React.CSSProperties = { background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 16, padding: 16 };
 const ghost: React.CSSProperties = { background: "var(--surface-2)", color: "var(--text)", border: "1px solid var(--border)", borderRadius: 11, padding: "11px 16px", fontSize: 14.5, fontWeight: 700, cursor: "pointer", width: "100%" };
@@ -33,7 +31,7 @@ function prepare(file: File): Promise<{ dataUrl: string; w: number; h: number }>
       ctx.fillRect(0, 0, w, h);
       ctx.drawImage(img, 0, 0, w, h);
       URL.revokeObjectURL(img.src);
-      resolve({ dataUrl: c.toDataURL("image/jpeg", 0.93), w, h });
+      resolve({ dataUrl: c.toDataURL("image/jpeg", 0.95), w, h });
     };
     img.onerror = () => reject(new Error("That file couldn't be opened as an image."));
     img.src = URL.createObjectURL(file);
@@ -43,75 +41,57 @@ function prepare(file: File): Promise<{ dataUrl: string; w: number; h: number }>
 export default function WatermarkRemoverTool() {
   const [phase, setPhase] = useState<Phase>("idle");
   const [source, setSource] = useState<string | null>(null);   // what was uploaded
-  const [result, setResult] = useState<string | null>(null);   // latest cleaned image
+  const [history, setHistory] = useState<string[]>([]);       // each removal's result, newest last
   const [size, setSize] = useState({ w: 0, h: 0 });
-  const [removeText, setRemoveText] = useState(true);
-  const [removeLogo, setRemoveLogo] = useState(true);
   const [message, setMessage] = useState<{ kind: "ok" | "warn" | "error"; text: string } | null>(null);
   const [drag, setDrag] = useState(false);
-  const [progress, setProgress] = useState<{ label: string; fraction?: number } | null>(null);
+  const [progress, setProgress] = useState<Status>(null);      // shown while removing
+  const [modelStatus, setModelStatus] = useState<Status>(null); // background model download
   const fileRef = useRef<HTMLInputElement>(null);
   const runId = useRef(0);
 
-  const call = useCallback(async (image: string, opts: { mask?: string; text: boolean; logo: boolean }) => {
+  const current = history[history.length - 1] ?? source;
+
+  // Start fetching the model while the visitor paints, so "Remove" is quick.
+  const warmUp = useCallback(async () => {
+    try {
+      const wb = await import("@/lib/watermark-browser");
+      await wb.preload((p) => setModelStatus(p.stage === "download" || p.stage === "load" ? { label: p.label, fraction: p.fraction } : null));
+      setModelStatus(null);
+    } catch {
+      setModelStatus(null); // the real attempt on "Remove" reports any error
+    }
+  }, []);
+
+  const remove = useCallback(async (image: string, mask: string) => {
     const id = ++runId.current;
     setPhase("working");
     setMessage(null);
-    setProgress(null);
-    const done = (dataUrl: string, found: boolean) => {
-      setResult(dataUrl);
-      setPhase("done");
-      setMessage(found
-        ? { kind: "ok", text: "Watermark removed successfully" }
-        : { kind: "warn", text: opts.mask ? "Nothing was painted. Paint over the watermark and try again." : "No watermark detected. Use Manual Edit to paint over it." });
-    };
-
-    // 1. In the browser, when the model files are published.
+    setProgress({ label: "Removing watermark…" });
     try {
       const wb = await import("@/lib/watermark-browser");
       const onProgress: Progress = (p) => { if (id === runId.current) setProgress({ label: p.label, fraction: p.fraction }); };
-      const lama = await wb.modelAvailable(wb.LAMA_URL);
-      if (lama && opts.mask) {
-        const r = await wb.removeWithMask(image, opts.mask, onProgress);
-        if (id === runId.current) done(r.dataUrl, r.found);
-        return;
-      }
-      if (lama && !opts.mask && (await wb.modelAvailable(wb.DETECTOR_URL))) {
-        const r = await wb.removeAuto(image, { text: opts.text, logo: opts.logo }, onProgress);
-        if (id === runId.current) done(r.dataUrl, r.found);
-        return;
-      }
-    } catch (e) {
-      console.warn("[watermark] in-browser removal failed, trying the server:", e);
-    }
-    if (id !== runId.current) return;
-    setProgress({ label: "Removing watermark…" });
-
-    // 2. Our GPU server.
-    try {
-      const res = await fetch("/api/watermark-remove", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image, mask: opts.mask, removeText: opts.text, removeLogo: opts.logo }),
-      });
-      const data = (await res.json().catch(() => ({}))) as { dataUrl?: string; found?: boolean; error?: string; needsManual?: boolean };
-      if (id !== runId.current) return; // a newer request superseded this one
-      if (!res.ok || !data.dataUrl) {
-        // 3. Nothing can find the watermark automatically: let the visitor paint it.
-        if (data.needsManual && !opts.mask) {
-          setMessage({ kind: "warn", text: "Paint over the watermark, then click Remove Painted Area." });
-          setPhase("manual");
-          return;
-        }
-        setMessage({ kind: "error", text: data.error || "Something went wrong. Please try again." });
-        setPhase("done");
-        return;
-      }
-      done(data.dataUrl, !!data.found);
-    } catch {
+      const r = await wb.removeWithMask(image, mask, onProgress);
       if (id !== runId.current) return;
-      setMessage({ kind: "error", text: "Couldn't reach the server. Check your connection and try again." });
+      if (!r.found) {
+        setMessage({ kind: "warn", text: "Nothing was painted. Paint over the watermark and try again." });
+        setPhase("edit");
+        return;
+      }
+      setHistory((h) => [...h, r.dataUrl]);
+      setMessage({ kind: "ok", text: "Watermark removed" });
       setPhase("done");
+    } catch (e) {
+      if (id !== runId.current) return;
+      console.error("[watermark]", e);
+      const offline = !navigator.onLine;
+      setMessage({
+        kind: "error",
+        text: offline
+          ? "You're offline — the AI model needs to download once. Reconnect and try again."
+          : "Something went wrong while removing the watermark. Please try again.",
+      });
+      setPhase("edit");
     }
   }, []);
 
@@ -120,36 +100,40 @@ export default function WatermarkRemoverTool() {
     if (!file.type.startsWith("image/")) { setMessage({ kind: "error", text: "Please choose a JPG, PNG or WebP image." }); return; }
     try {
       const { dataUrl, w, h } = await prepare(file);
+      runId.current++;
       setSource(dataUrl);
-      setResult(null);
+      setHistory([]);
       setSize({ w, h });
-      call(dataUrl, { text: removeText, logo: removeLogo });
+      setMessage(null);
+      setPhase("edit");
+      warmUp();
     } catch (e) {
       setMessage({ kind: "error", text: (e as Error).message });
     }
-  }, [call, removeText, removeLogo]);
-
-  const toggle = (which: "text" | "logo", on: boolean) => {
-    const text = which === "text" ? on : removeText;
-    const logo = which === "logo" ? on : removeLogo;
-    setRemoveText(text);
-    setRemoveLogo(logo);
-    if (source && (text || logo)) call(source, { text, logo });
-  };
+  }, [warmUp]);
 
   const download = () => {
-    if (!result) return;
+    const last = history[history.length - 1];
+    if (!last) return;
     const a = document.createElement("a");
-    a.href = result;
+    a.href = last;
     a.download = "watermark-removed.jpg";
     a.click();
   };
 
-  // The new upload replaces this one in onFile, so nothing is cleared until a file is actually picked.
-  const reset = () => fileRef.current?.click();
+  const undo = () => {
+    setHistory((h) => h.slice(0, -1));
+    setMessage(null);
+    if (history.length <= 1) setPhase("edit");
+  };
+
+  const fileInput = (
+    <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" style={{ display: "none" }}
+      onChange={(e) => { onFile(e.target.files?.[0]); e.target.value = ""; }} />
+  );
 
   // ── Upload ───────────────────────────────────────────────────────────────
-  if (phase === "idle" || !source) {
+  if (phase === "idle" || !source || !current) {
     return (
       <div style={{ maxWidth: 620, margin: "0 auto" }}>
         <label
@@ -163,64 +147,62 @@ export default function WatermarkRemoverTool() {
             background: drag ? "var(--accent-soft)" : "var(--surface)", transition: "all .2s",
           }}
         >
-          <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" style={{ display: "none" }} onChange={(e) => { onFile(e.target.files?.[0]); e.target.value = ""; }} />
+          {fileInput}
           <span style={{ background: GRAD, color: "#fff", borderRadius: 12, padding: "14px 30px", fontSize: 16, fontWeight: 800, marginBottom: 14, boxShadow: "0 8px 22px var(--accent-border)" }}>Upload Image</span>
           <span style={{ fontSize: 14, color: "var(--text-muted)" }}>or drop a JPG, PNG or WebP here</span>
-          <span style={{ fontSize: 12.5, color: "var(--text-faint)", marginTop: 12 }}>Only upload images you own or have permission to edit.</span>
+          <span style={{ fontSize: 12.5, color: "var(--text-faint)", marginTop: 12 }}>100% free · runs in your browser · your photo is never uploaded</span>
+          <span style={{ fontSize: 12.5, color: "var(--text-faint)", marginTop: 4 }}>Only edit images you own or have permission to edit.</span>
         </label>
         {message && <p style={{ textAlign: "center", color: "var(--danger)", fontSize: 14, marginTop: 12 }}>{message.text}</p>}
       </div>
     );
   }
 
-  // ── Manual brush ─────────────────────────────────────────────────────────
-  if (phase === "manual") {
+  // ── Brush ────────────────────────────────────────────────────────────────
+  if (phase === "edit") {
     return (
       <ManualEditor
-        image={result || source}
+        image={current}
         size={size}
-        notice={message && message.kind !== "ok" ? message.text : null}
+        notice={message && message.kind !== "ok" ? message : null}
+        modelStatus={modelStatus}
+        canCancel={history.length > 0}
         onCancel={() => { setMessage(null); setPhase("done"); }}
-        onApply={(mask) => call(result || source, { mask, text: true, logo: true })}
+        onNewImage={() => fileRef.current?.click()}
+        onApply={(mask) => remove(current, mask)}
+        fileInput={fileInput}
       />
     );
   }
 
   // ── Result ───────────────────────────────────────────────────────────────
   const working = phase === "working";
+  const last = history[history.length - 1] ?? null;
   return (
     <div style={{ display: "flex", flexWrap: "wrap", gap: 18, alignItems: "flex-start", maxWidth: 1040, margin: "0 auto", textAlign: "left" }}>
       <div style={{ ...panel, flex: "1 1 520px", minWidth: 0, position: "relative" }}>
-        <Compare before={source} after={result} working={working} progress={progress} />
+        <Compare before={source} after={working ? null : last} working={working} progress={progress} />
       </div>
       <div style={{ ...panel, flex: "1 1 280px", maxWidth: 420, display: "grid", gap: 14 }}>
-        <div style={{ background: "var(--surface-2)", borderRadius: 12, padding: "12px 14px", textAlign: "center" }}>
-          <div style={{ fontSize: 13.5, color: "var(--text-muted)", marginBottom: 4 }}>Result still has a watermark?</div>
-          <button onClick={() => setPhase("manual")} disabled={working} style={{ background: "none", border: "none", color: "var(--accent)", fontSize: 15, fontWeight: 800, textDecoration: "underline", cursor: working ? "default" : "pointer", padding: 0 }}>
-            ✎ Try Manual Edit
-          </button>
-        </div>
-
-        <button onClick={download} disabled={!result || working} style={{ ...primary, opacity: !result || working ? 0.55 : 1, cursor: !result || working ? "default" : "pointer" }}>
+        <button onClick={download} disabled={!last || working} style={{ ...primary, opacity: !last || working ? 0.55 : 1, cursor: !last || working ? "default" : "pointer" }}>
           {working ? "Removing watermark…" : "Download Image"}
         </button>
-        {message && (
+        {message && !working && (
           <div style={{ textAlign: "center", fontSize: 13.5, fontWeight: 600, color: message.kind === "ok" ? "var(--success)" : message.kind === "warn" ? "var(--warn)" : "var(--danger)" }}>
             {message.kind === "ok" ? "✓ " : ""}{message.text}
           </div>
         )}
-
-        <div style={{ display: "flex", justifyContent: "center", gap: 22 }}>
-          {([["text", "Remove Text", removeText], ["logo", "Remove Logo", removeLogo]] as const).map(([k, label, on]) => (
-            <label key={k} style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 15, color: "var(--text)", cursor: working ? "default" : "pointer" }}>
-              <input type="checkbox" checked={on} disabled={working || (on && !(k === "text" ? removeLogo : removeText))} onChange={(e) => toggle(k, e.target.checked)} style={{ width: 18, height: 18, accentColor: "var(--accent)" }} />
-              {label}
-            </label>
-          ))}
+        <div style={{ background: "var(--surface-2)", borderRadius: 12, padding: "12px 14px", textAlign: "center" }}>
+          <div style={{ fontSize: 13.5, color: "var(--text-muted)", marginBottom: 4 }}>Still see part of the watermark?</div>
+          <button onClick={() => { setMessage(null); setPhase("edit"); }} disabled={working} style={{ background: "none", border: "none", color: "var(--accent)", fontSize: 15, fontWeight: 800, textDecoration: "underline", cursor: working ? "default" : "pointer", padding: 0 }}>
+            ✎ Paint &amp; remove more
+          </button>
         </div>
-
-        <button onClick={reset} style={{ ...ghost, border: "1px solid var(--accent-border)" }}>Upload Next Image</button>
-        <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" style={{ display: "none" }} onChange={(e) => { onFile(e.target.files?.[0]); e.target.value = ""; }} />
+        <div style={{ display: "flex", gap: 10 }}>
+          <button onClick={undo} disabled={working || !history.length} style={{ ...ghost, opacity: working || !history.length ? 0.5 : 1 }}>Undo last removal</button>
+        </div>
+        <button onClick={() => fileRef.current?.click()} disabled={working} style={{ ...ghost, border: "1px solid var(--accent-border)" }}>Upload Next Image</button>
+        {fileInput}
       </div>
     </div>
   );
@@ -276,20 +258,29 @@ function Compare({ before, after, working, progress }: {
 
 // ── Manual brush editor ───────────────────────────────────────────────────
 
-function ManualEditor({ image, size, notice, onCancel, onApply }: {
+function ManualEditor({ image, size, notice, modelStatus, canCancel, onCancel, onNewImage, onApply, fileInput }: {
   image: string;
   size: { w: number; h: number };
-  notice: string | null;
+  notice: { kind: "ok" | "warn" | "error"; text: string } | null;
+  modelStatus: { label: string; fraction?: number } | null;
+  canCancel: boolean;
   onCancel: () => void;
+  onNewImage: () => void;
   onApply: (maskDataUrl: string) => void;
+  fileInput: React.ReactNode;
 }) {
   const viewRef = useRef<HTMLCanvasElement>(null);
   const maskRef = useRef<HTMLCanvasElement | null>(null);
   const imgRef = useRef<HTMLImageElement | null>(null);
   const history = useRef<ImageData[]>([]);
   const last = useRef<{ x: number; y: number } | null>(null);
-  const [brush, setBrush] = useState(28); // in image pixels at 1000px wide
+  const previewTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [brush, setBrush] = useState(28); // diameter, per 1000 px of image width
   const [painted, setPainted] = useState(false);
+  // The brush outline, in on-screen pixels relative to the canvas.
+  const [cursor, setCursor] = useState<{ x: number; y: number } | null>(null);
+  const [preview, setPreview] = useState(false); // show the outline mid-canvas while resizing
+  const [displayW, setDisplayW] = useState(0);
 
   const redraw = useCallback(() => {
     const view = viewRef.current, mask = maskRef.current, img = imgRef.current;
@@ -316,18 +307,37 @@ function ManualEditor({ image, size, notice, onCancel, onApply }: {
       const m = document.createElement("canvas");
       m.width = size.w || img.naturalWidth; m.height = size.h || img.naturalHeight;
       maskRef.current = m;
+      history.current = [];
+      setPainted(false);
       const view = viewRef.current!;
       view.width = m.width; view.height = m.height;
       redraw();
+      setDisplayW(view.getBoundingClientRect().width);
     };
     img.src = image;
   }, [image, size, redraw]);
+
+  // Keep the outline's scale right when the canvas is resized (rotation, window resize).
+  useEffect(() => {
+    const view = viewRef.current;
+    if (!view || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(() => setDisplayW(view.getBoundingClientRect().width));
+    ro.observe(view);
+    return () => ro.disconnect();
+  }, []);
+
+  useEffect(() => () => { if (previewTimer.current) clearTimeout(previewTimer.current); }, []);
 
   const point = (e: React.PointerEvent<HTMLCanvasElement>) => {
     const r = e.currentTarget.getBoundingClientRect();
     return { x: ((e.clientX - r.left) / r.width) * e.currentTarget.width, y: ((e.clientY - r.top) / r.height) * e.currentTarget.height };
   };
+  const track = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    setCursor({ x: e.clientX - r.left, y: e.clientY - r.top });
+  };
   const radius = () => ((maskRef.current?.width || 1000) / 1000) * brush / 2;
+  const outline = Math.max(4, (displayW * brush) / 1000); // on-screen diameter of the brush
 
   const stroke = (to: { x: number; y: number }) => {
     const m = maskRef.current!.getContext("2d")!;
@@ -347,11 +357,25 @@ function ManualEditor({ image, size, notice, onCancel, onApply }: {
     history.current.push(m.getContext("2d")!.getImageData(0, 0, m.width, m.height));
     if (history.current.length > 20) history.current.shift();
     last.current = null;
+    track(e);
     stroke(point(e));
     setPainted(true);
   };
-  const move = (e: React.PointerEvent<HTMLCanvasElement>) => { if (last.current) stroke(point(e)); };
-  const up = () => { last.current = null; };
+  const move = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    track(e);
+    if (last.current) stroke(point(e));
+  };
+  const up = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    last.current = null;
+    if (e.pointerType !== "mouse") setCursor(null); // a finger has left the screen
+  };
+
+  const resize = (v: number) => {
+    setBrush(v);
+    setPreview(true);
+    if (previewTimer.current) clearTimeout(previewTimer.current);
+    previewTimer.current = setTimeout(() => setPreview(false), 900);
+  };
 
   const undo = () => {
     const m = maskRef.current, prev = history.current.pop();
@@ -375,30 +399,62 @@ function ManualEditor({ image, size, notice, onCancel, onApply }: {
     onApply(out.toDataURL("image/png"));
   };
 
+  const view = viewRef.current;
+  const ring = cursor ?? (preview && view ? { x: view.clientWidth / 2, y: view.clientHeight / 2 } : null);
+
   return (
     <div style={{ maxWidth: 1040, margin: "0 auto", textAlign: "left" }}>
       <div style={{ ...panel, display: "flex", flexWrap: "wrap", alignItems: "center", gap: 14, marginBottom: 14 }}>
         <strong style={{ fontSize: 15, color: "var(--text)" }}>Paint over the watermark</strong>
         <label style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 13.5, color: "var(--text-muted)", flex: "1 1 200px" }}>
-          Brush
-          <input type="range" min={8} max={120} value={brush} onChange={(e) => setBrush(Number(e.target.value))} style={{ flex: 1, accentColor: "var(--accent)" }} />
+          Brush size
+          <input type="range" min={8} max={160} value={brush} onChange={(e) => resize(Number(e.target.value))} style={{ flex: 1, accentColor: "var(--accent)" }} aria-label="Brush size" />
+          <span aria-hidden style={{ width: 22, height: 22, display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+            <span style={{ width: Math.max(4, Math.min(22, brush / 7)), height: Math.max(4, Math.min(22, brush / 7)), borderRadius: "50%", border: "2px solid var(--accent)" }} />
+          </span>
         </label>
         <div style={{ display: "flex", gap: 8 }}>
           <button onClick={undo} disabled={!painted} style={{ ...ghost, width: "auto", padding: "8px 14px", opacity: painted ? 1 : 0.5 }}>Undo</button>
           <button onClick={clear} disabled={!painted} style={{ ...ghost, width: "auto", padding: "8px 14px", opacity: painted ? 1 : 0.5 }}>Clear</button>
         </div>
       </div>
-      {notice && <p style={{ color: "var(--warn)", fontSize: 14, margin: "0 0 12px", textAlign: "center" }}>{notice}</p>}
+      {notice && (
+        <p style={{ color: notice.kind === "error" ? "var(--danger)" : "var(--warn)", fontSize: 14, margin: "0 0 12px", textAlign: "center" }}>{notice.text}</p>
+      )}
       <div style={{ ...panel, padding: 10, textAlign: "center" }}>
-        <canvas
-          ref={viewRef}
-          onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up}
-          style={{ maxWidth: "100%", height: "auto", borderRadius: 8, cursor: "crosshair", touchAction: "none", display: "inline-block" }}
-        />
+        <div style={{ position: "relative", display: "inline-block", maxWidth: "100%", lineHeight: 0 }}>
+          <canvas
+            ref={viewRef}
+            onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up}
+            onPointerLeave={(e) => { if (e.pointerType === "mouse" && !last.current) setCursor(null); }}
+            style={{ maxWidth: "100%", height: "auto", borderRadius: 8, cursor: "none", touchAction: "none", display: "block" }}
+          />
+          {ring && (
+            // The brush outline: a white ring with a dark edge so it shows on any photo.
+            <span aria-hidden style={{
+              position: "absolute", left: ring.x, top: ring.y, width: outline, height: outline,
+              transform: "translate(-50%, -50%)", borderRadius: "50%", pointerEvents: "none",
+              border: "2px solid #fff", boxShadow: "0 0 0 1px rgba(0,0,0,.7), inset 0 0 0 1px rgba(0,0,0,.7)",
+              background: "rgba(255,70,90,0.18)",
+            }} />
+          )}
+        </div>
       </div>
+      {modelStatus && (
+        <div style={{ margin: "10px auto 0", maxWidth: 420, textAlign: "center", fontSize: 12.5, color: "var(--text-muted)" }}>
+          {modelStatus.label}
+          {modelStatus.fraction !== undefined && (
+            <div style={{ height: 4, borderRadius: 2, background: "var(--surface-3)", marginTop: 6, overflow: "hidden" }}>
+              <div style={{ width: `${Math.round(modelStatus.fraction * 100)}%`, height: "100%", background: "var(--accent)" }} />
+            </div>
+          )}
+        </div>
+      )}
       <div style={{ display: "flex", gap: 10, justifyContent: "center", marginTop: 14, flexWrap: "wrap" }}>
         <button onClick={apply} disabled={!painted} style={{ ...primary, width: "auto", padding: "13px 28px", opacity: painted ? 1 : 0.55, cursor: painted ? "pointer" : "default" }}>Remove Painted Area</button>
-        <button onClick={onCancel} style={{ ...ghost, width: "auto", padding: "13px 22px" }}>Cancel</button>
+        {canCancel && <button onClick={onCancel} style={{ ...ghost, width: "auto", padding: "13px 22px" }}>Back to result</button>}
+        <button onClick={onNewImage} style={{ ...ghost, width: "auto", padding: "13px 22px" }}>New image</button>
+        {fileInput}
       </div>
     </div>
   );

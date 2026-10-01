@@ -12,13 +12,13 @@ const GRAD = "linear-gradient(120deg,var(--accent),var(--accent-2))";
 export const metadata: Metadata = {
   title: { absolute: "Best Free Watermark Remover — Remove Watermark From Photos Online | Pixel Shine" },
   description:
-    "Remove watermarks from images online with the best free AI watermark remover. Erase logos, text, timestamps and stock watermarks from photos in seconds — no software, no sign-up.",
+    "Remove watermarks from photos free — just paint over the watermark and AI erases it. Logos, text, timestamps and signatures. 100% free, no sign-up, runs privately in your browser.",
   keywords:
     "watermark remover, remove watermark, watermark remover online, remove watermark from image, photo watermark remover, free watermark remover, remove watermark from photo, ai watermark remover, image watermark remover",
   alternates: { canonical: URL },
   openGraph: {
     title: "Best Free Watermark Remover — Remove Watermark From Photos | Pixel Shine",
-    description: "Erase logos, text and stock watermarks from images with the best free AI watermark remover — fast, online, no sign-up.",
+    description: "Paint over a watermark and AI erases it — logos, text and timestamps. 100% free, no sign-up, nothing uploaded.",
     url: URL,
     type: "website",
     siteName: "Pixel Shine",
@@ -26,40 +26,41 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Best Free Watermark Remover | Pixel Shine",
-    description: "Remove watermarks from photos online free with AI — logos, text, timestamps and more.",
+    description: "Paint over a watermark and AI erases it. 100% free, no sign-up, runs in your browser.",
   },
 };
 
 const FAQS = [
-  { q: "How do I remove a watermark from an image for free?", a: "Upload your image above. Our AI finds the watermark automatically and rebuilds the pixels behind it — then drag the slider to compare and click Download. If any trace is left, use Manual Edit to paint over it." },
-  { q: "What kinds of watermarks can it remove?", a: "It handles most common watermarks: semi-transparent logos, text overlays, date and time stamps, stock-photo watermarks, signatures and repeated tiled marks across a photo." },
-  { q: "Is the watermark remover really free?", a: "Yes. It runs on Pixel Shine's own AI model, so there's no sign-up, no credits and no watermark of our own on the result." },
-  { q: "What if part of the watermark is still visible?", a: "Click Try Manual Edit, paint over what's left with the brush, and click Remove Painted Area. You can repeat this as many times as you like." },
-  { q: "Can I choose to remove only text or only a logo?", a: "Yes. Untick Remove Text or Remove Logo and the image is re-processed with just the other one — handy when a logo is part of the photo you want to keep." },
-  { q: "Does it work on my phone?", a: "Yes. It works on phones, tablets and computers — with nothing to download." },
-  { q: "Will the quality of my photo drop?", a: "The AI fills in the area behind the watermark to match the surrounding image, so the result stays sharp and natural in most photos." },
+  { q: "How do I remove a watermark from an image for free?", a: "Upload your image, paint over the watermark with the brush and click Remove Painted Area. The AI rebuilds what was behind it — drag the slider to compare, then click Download." },
+  { q: "Is it really free?", a: "Yes — completely. No sign-up, no credits, no limits and no watermark of our own on the result. It runs in your browser, so it costs us nothing per photo." },
+  { q: "Is my photo uploaded anywhere?", a: "No. The AI model runs on your own device, in your browser. Your photo never leaves your computer or phone." },
+  { q: "Why does the first removal take a little longer?", a: "The first time, your browser downloads the AI model (about 109 MB). It's saved, so after that removal starts straight away — usually in a second or two on a computer with a modern graphics card." },
+  { q: "How do I make the brush bigger or smaller?", a: "Use the Brush size slider. The circle on the image shows exactly how much the brush will cover — paint a little past the edges of the watermark for the cleanest result." },
+  { q: "What if part of the watermark is still visible?", a: "Click Paint & remove more, brush over what's left and remove it again. Undo last removal takes you back a step if you don't like a result." },
+  { q: "What kinds of watermarks can it remove?", a: "Logos, text overlays, date and time stamps, signatures, stamps and small objects. It works best when the watermark sits over sky, walls, fabric or other natural texture." },
+  { q: "Does it work on my phone?", a: "Yes. Paint with your finger on phones and tablets. Older phones without graphics acceleration are slower, but it still works." },
   { q: "Should I only remove watermarks I own?", a: "Yes. Only remove watermarks from images you own or have permission to edit. Removing someone else's watermark from copyrighted work without permission may be against their rights." },
 ];
 
 const FEATURES = [
-  { t: "Our own AI model", d: "A detector trained to find watermarks, plus inpainting that rebuilds what was behind them — no smudge, no blur.", icon: "M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.4z" },
-  { t: "Any kind of watermark", d: "Logos, text, timestamps, signatures and stock-photo marks — cleared in a couple of clicks.", icon: "M4 7h16M4 12h10M4 17h7" },
-  { t: "Photos, screenshots & more", d: "Works on JPG, PNG and WEBP — product shots, screenshots, downloads and social images.", icon: "M4 5h16v14H4zM4 15l4-4 4 4 3-3 5 5" },
-  { t: "Free, no sign-up", d: "No account, no credits and no watermark of our own on the result.", icon: "M12 3v18M5 12h14" },
-  { t: "Fast & online", d: "No installs, no waiting on heavy software — it is ready the moment the page opens.", icon: "M13 3L4 14h7l-1 8 9-11h-7z" },
-  { t: "Private & secure", d: "Your upload stays your own — a quick, hassle-free way to clean up an image.", icon: "M12 3l7 4v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V7z" },
+  { t: "Paint & it's gone", d: "Brush over the watermark and AI inpainting rebuilds what was behind it — no smudge, no blur.", icon: "M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.4z" },
+  { t: "100% free, no limits", d: "No account, no credits, no daily cap and no watermark of our own on the result.", icon: "M12 3v18M5 12h14" },
+  { t: "Private — never uploaded", d: "The AI runs in your browser, so your photo stays on your device the whole time.", icon: "M12 3l7 4v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V7z" },
+  { t: "Any kind of mark", d: "Logos, text, timestamps, signatures, stamps and small objects.", icon: "M4 7h16M4 12h10M4 17h7" },
+  { t: "Full-quality download", d: "Only the painted area changes — the rest of your photo stays exactly as it was.", icon: "M4 5h16v14H4zM4 15l4-4 4 4 3-3 5 5" },
+  { t: "Undo & refine", d: "Remove more in as many passes as you like, and undo any step.", icon: "M13 3L4 14h7l-1 8 9-11h-7z" },
 ];
 
 const REMOVES = [
-  "Logo watermarks", "Text overlays", "Date & time stamps", "Stock-photo watermarks",
-  "Signatures", "Tiled / repeated marks", "Copyright stamps", "Brand overlays",
+  "Logo watermarks", "Text overlays", "Date & time stamps", "Signatures",
+  "Stamps", "Captions", "Small objects", "Blemishes & spots",
 ];
 
 const STEPS = [
   { t: "Upload your image", d: "Drag in or select the photo, screenshot or download that has the watermark you want gone." },
-  { t: "Click Remove Watermark", d: "The AI detects the watermark and rebuilds the pixels behind it to match the rest of the photo." },
-  { t: "Download the clean image", d: "Get a crisp, watermark-free version ready to post, print or reuse anywhere." },
-];
+  { t: "Paint over the watermark", d: "Brush over it — the circle shows your brush size. Then click Remove Painted Area and the AI rebuilds what was behind it." },
+  { t: "Download the clean image", d: "Compare with the slider, remove more if needed, then download — free, at full quality." },
+]
 
 /** Labeled before/after frame. Shows a placeholder until the creative is uploaded to the Blogs bucket. */
 function Frame({ name, label, alt }: { name: string; label: string; alt: string }) {
@@ -137,14 +138,14 @@ export default function Page() {
               <span style={{ background: GRAD, WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", color: "transparent" }}>in Seconds</span>
             </h1>
             <p style={{ fontSize: "clamp(1rem,2vw,1.15rem)", color: "var(--text-muted)", lineHeight: 1.7, maxWidth: 580, margin: "0 auto 30px" }}>
-              Upload a photo and our AI finds the watermark and rebuilds what was behind it. Logos, text, timestamps and signatures — free, no sign-up.
+              Paint over the watermark and AI rebuilds what was behind it. Logos, text, timestamps and signatures — 100% free, no sign-up, and your photo never leaves your device.
             </p>
             <div id="tool" style={{ scrollMarginTop: 80 }}><WatermarkRemoverTool /></div>
             <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 18, marginTop: 26, fontSize: 13.5, color: "var(--text-muted)", fontWeight: 600 }}>
-              <span>✓ Free</span>
+              <span>✓ 100% free</span>
               <span>✓ No sign-up</span>
               <span>✓ Works on any device</span>
-              <span>✓ AI-powered</span>
+              <span>✓ Never uploaded</span>
             </div>
           </div>
         </section>
@@ -159,7 +160,7 @@ export default function Page() {
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 20 }}>
               <BeforeAfter id={1} caption="Logo watermark removed from a product photo" />
               <BeforeAfter id={2} caption="Text & timestamp cleared from a downloaded image" />
-              <BeforeAfter id={3} caption="Stock-photo watermark erased cleanly" />
+              <BeforeAfter id={3} caption="Date stamp erased cleanly" />
               <BeforeAfter id={4} caption="Signature removed from artwork" />
             </div>
           </div>

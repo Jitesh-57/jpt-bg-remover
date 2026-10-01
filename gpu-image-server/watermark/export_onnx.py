@@ -1,34 +1,32 @@
-"""Export the watermark models to ONNX so the website can run them in the browser.
+"""Export LaMa to ONNX for the in-browser watermark remover.
 
     python -m watermark.export_onnx
 
-writes, into weights/onnx/:
+writes weights/onnx/lama-512.onnx (fixed 512x512 input, ~109 MB), checked
+against the original TorchScript model and against the operators browsers
+can run before it is kept. The website ships it split into parts — see the
+README section "Watermark remover model".
 
-  lama-512.onnx         LaMa inpainting, fixed 512x512 input (~100 MB)
-  wm-detector.onnx      our trained detector, any size divisible by 32 (~49 MB)
-
-Each file is checked against the PyTorch model it came from before it is
-kept. Upload both somewhere that serves files with CORS (a Hugging Face model
-repo is simplest, see the README), then set NEXT_PUBLIC_WM_LAMA_URL and
-NEXT_PUBLIC_WM_DETECTOR_URL in Vercel.
-
-Weights are stored as float16 to halve the download, with a Cast back to
-float32 in front of every use, so the maths still runs in float32 and works
-on every browser backend (WebGPU and plain WebAssembly).
+Convolution weights are stored as float16 to halve the download, with a Cast
+back to float32 in front of every use, so the maths still runs in float32 and
+works on every browser backend (WebGPU and plain WebAssembly).
 """
 from __future__ import annotations
 
 import argparse
+import os
 import time
 from pathlib import Path
 
 import numpy as np
 import torch
 
-from .remover import DETECTOR_PATH, LAMA_PATH, LAMA_URL
-
 ROOT = Path(__file__).resolve().parent.parent
 OUT_DIR = ROOT / "weights" / "onnx"
+LAMA_PATH = Path(os.getenv("WM_LAMA", ROOT / "weights" / "big-lama.pt"))
+# TorchScript export of the official big-lama checkpoint (Apache-2.0),
+# published by the simple-lama-inpainting project.
+LAMA_URL = os.getenv("WM_LAMA_URL", "https://github.com/enesmsahin/simple-lama-inpainting/releases/download/v0.1.0/big-lama.pt")
 LAMA_SIZE = 512
 
 
@@ -132,50 +130,13 @@ def export_lama(out: Path) -> None:
     _check(out, {"image": img.numpy(), "mask": mask.numpy()}, ref_ts, "lama", max_tol=0.1, mean_tol=0.01)
 
 
-def export_detector(out: Path) -> None:
-    from .model import load_detector
-
-    if not DETECTOR_PATH.exists():
-        print(f"[detector] skipped: no trained detector at {DETECTOR_PATH} (run python -m watermark.train first)")
-        return
-    model, ckpt = load_detector(DETECTOR_PATH, "cpu")
-    size = int(ckpt.get("size", 512))
-    x = torch.randn(1, 3, size, size + 96)
-    with torch.no_grad():
-        ref = torch.sigmoid(model(x)).numpy()
-
-    class WithSigmoid(torch.nn.Module):
-        """Probabilities, plus the training crop size as a second output — the
-        browser must feed images at the scale the detector learned (see
-        remover.detect), and this way the number travels with the model."""
-
-        def __init__(self, m):
-            super().__init__()
-            self.m = m
-
-        def forward(self, x):
-            return torch.sigmoid(self.m(x)), torch.full((1,), float(size))
-
-    _export(WithSigmoid(model), (x,), out, ["image"], ["prob", "train_size"],
-            dynamic={"image": {2: "height", 3: "width"}, "prob": {2: "height", 3: "width"}})
-    store_weights_fp16(out)
-    _require_only_browser_ops(out)
-    _check(out, {"image": x.numpy()}, ref, "detector", max_tol=0.1, mean_tol=0.01)
-    print(f"[detector] trained at {size}px, validation IoU {ckpt.get('best_iou', float('nan')):.3f}")
-
-
 def main() -> None:
-    ap = argparse.ArgumentParser(description="Export the watermark models to ONNX for the browser.")
+    ap = argparse.ArgumentParser(description="Export LaMa to ONNX for the in-browser watermark remover.")
     ap.add_argument("--out", default=str(OUT_DIR))
-    ap.add_argument("--skip-lama", action="store_true")
-    ap.add_argument("--skip-detector", action="store_true")
     args = ap.parse_args()
-    out = Path(args.out)
-    if not args.skip_lama:
-        export_lama(out / "lama-512.onnx")
-    if not args.skip_detector:
-        export_detector(out / "wm-detector.onnx")
-    print(f"[done] files in {out}")
+    out = Path(args.out) / "lama-512.onnx"
+    export_lama(out)
+    print(f"[done] {out}")
 
 
 if __name__ == "__main__":

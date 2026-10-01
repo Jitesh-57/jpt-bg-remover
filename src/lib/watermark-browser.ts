@@ -1,22 +1,16 @@
 "use client";
 
 /*
-  Watermark removal entirely in the visitor's browser.
+  Free watermark removal entirely in the visitor's browser.
 
-  The same two models as gpu-image-server/watermark, exported to ONNX by
-  `python -m watermark.export_onnx` and run with onnxruntime-web (WebGPU when
-  the browser has it, WebAssembly otherwise):
+  The visitor paints over the watermark; LaMa (Apache-2.0) fills the painted
+  area from its surroundings. LaMa runs as ONNX with onnxruntime-web —
+  WebGPU when the browser has it, WebAssembly in a worker otherwise — so the
+  photo never leaves the device and nothing runs on a server.
 
-    detector  — our trained U-Net: per-pixel "text" and "logo" probabilities
-    LaMa      — fills the masked area from its surroundings (fixed 512x512)
-
-  This file mirrors watermark/remover.py step for step — detect at the scale
-  the detector was trained at, drop specks, close and grow the mask, then
-  inpaint each marked region with context and paste back only the masked
-  pixels — so the browser and the server give the same result.
-
-  The model files (~100 MB + ~50 MB) are downloaded once and kept in the
-  Cache API, so later visits start immediately.
+  The model (exported by gpu-image-server/watermark/export_onnx.py) ships
+  with the site in public/models/, is downloaded once and kept in the Cache
+  API, so later visits start immediately.
 */
 
 import type * as Ort from "onnxruntime-web";
@@ -25,15 +19,11 @@ import type * as Ort from "onnxruntime-web";
 // public/models/lama-512-v1.json lists them. Either URL may also point at a
 // single hosted .onnx file instead.
 export const LAMA_URL = process.env.NEXT_PUBLIC_WM_LAMA_URL || "/models/lama-512-v1.json";
-export const DETECTOR_URL = process.env.NEXT_PUBLIC_WM_DETECTOR_URL || "/models/wm-detector.onnx";
 
 const CACHE_NAME = "wm-models-v1";
 const LAMA_SIZE = 512;
-const DETECT_LONG = 1536;
-const MEAN = [0.485, 0.456, 0.406];
-const STD = [0.229, 0.224, 0.225];
 
-export type Stage = "download" | "load" | "detect" | "inpaint";
+export type Stage = "download" | "load" | "inpaint";
 export type Progress = (p: { stage: Stage; label: string; fraction?: number }) => void;
 
 export class ModelUnavailableError extends Error {}
@@ -176,13 +166,21 @@ async function fetchModel(url: string, label: string, onProgress?: Progress): Pr
 }
 
 const sessions = new Map<string, Promise<Ort.InferenceSession>>();
+// Everyone waiting on a model hears its progress — e.g. the background
+// preload *and* a "Remove" click made while the download is still running.
+const listeners = new Map<string, Set<Progress>>();
 
 function getSession(url: string, label: string, onProgress?: Progress): Promise<Ort.InferenceSession> {
+  let subs = listeners.get(url);
+  if (!subs) listeners.set(url, (subs = new Set()));
+  if (onProgress) subs.add(onProgress);
+  const tell: Progress = (p) => listeners.get(url)?.forEach((fn) => fn(p));
+
   let s = sessions.get(url);
   if (!s) {
     s = (async () => {
-      const [ort, bytes] = await Promise.all([getOrt(), fetchModel(url, label, onProgress)]);
-      onProgress?.({ stage: "load", label: `Starting ${label}…` });
+      const [ort, bytes] = await Promise.all([getOrt(), fetchModel(url, label, tell)]);
+      tell({ stage: "load", label: `Starting ${label}…` });
       if (!ort.env.wasm.proxy) {
         try {
           return await ort.InferenceSession.create(bytes, { executionProviders: ["webgpu"] });
@@ -193,31 +191,10 @@ function getSession(url: string, label: string, onProgress?: Progress): Promise<
       return ort.InferenceSession.create(bytes, { executionProviders: ["wasm"] });
     })();
     s.catch(() => sessions.delete(url)); // let a later attempt retry
+    s.finally(() => listeners.delete(url)).catch(() => {});
     sessions.set(url, s);
   }
   return s;
-}
-
-/** Is a model file reachable (cached, or answering on the network)? */
-const availability = new Map<string, Promise<boolean>>();
-export function modelAvailable(url: string): Promise<boolean> {
-  let p = availability.get(url);
-  if (!p) {
-    p = (async () => {
-      try {
-        const cache = await caches.open(CACHE_NAME);
-        if (await cache.match(url)) return true;
-      } catch { /* ignore */ }
-      try {
-        const res = await fetch(url, { method: "HEAD" });
-        return res.ok;
-      } catch {
-        return false;
-      }
-    })();
-    availability.set(url, p);
-  }
-  return p;
 }
 
 // ── Image helpers ─────────────────────────────────────────────────────────
@@ -276,14 +253,6 @@ function dilate(m: Uint8Array, w: number, h: number, k: number): Uint8Array {
   return out;
 }
 
-function erode(m: Uint8Array, w: number, h: number, k: number): Uint8Array {
-  const inv = new Uint8Array(m.length);
-  for (let i = 0; i < m.length; i++) inv[i] = m[i] ? 0 : 255;
-  const d = dilate(inv, w, h, k);
-  for (let i = 0; i < d.length; i++) d[i] = d[i] ? 0 : 255;
-  return d;
-}
-
 type Box = { x: number; y: number; w: number; h: number; area: number };
 
 /** 8-connected components of a binary mask: their bounding boxes and the label image. */
@@ -318,82 +287,6 @@ function components(m: Uint8Array, w: number, h: number): { boxes: Box[]; labels
   }
   return { boxes, labels };
 }
-
-/** Close gaps inside letters, then widen the mask to take anti-aliased edges too (remover.grow). */
-export function growMask(m: Uint8Array, w: number, h: number): Uint8Array {
-  const side = Math.min(w, h);
-  const close = Math.max(3, Math.round(side * 0.012)) | 1;
-  const closed = erode(dilate(m, w, h, close), w, h, close);
-  return dilate(closed, w, h, Math.max(5, Math.round(side * 0.01)) | 1);
-}
-
-// ── Detection ─────────────────────────────────────────────────────────────
-
-let trainSize: number | null = null;
-
-export async function detect(
-  src: HTMLCanvasElement,
-  opts: { text: boolean; logo: boolean; threshold?: number },
-  onProgress?: Progress,
-): Promise<Uint8Array> {
-  const ort = await getOrt();
-  const session = await getSession(DETECTOR_URL, "watermark detector", onProgress);
-  onProgress?.({ stage: "detect", label: "Finding the watermark…" });
-
-  if (trainSize === null) {
-    // export_onnx.py ships the training crop size as a second output.
-    const probe = await session.run({ image: new ort.Tensor("float32", new Float32Array(3 * 32 * 32), [1, 3, 32, 32]) });
-    trainSize = Number((probe.train_size?.data as Float32Array | undefined)?.[0]) || 512;
-  }
-
-  const W = src.width, H = src.height;
-  let scale = trainSize / Math.min(W, H);
-  if (Math.max(W, H) * scale > DETECT_LONG) scale = DETECT_LONG / Math.max(W, H);
-  const dw = Math.max(32, Math.round((W * scale) / 32) * 32);
-  const dh = Math.max(32, Math.round((H * scale) / 32) * 32);
-
-  const small = canvas(dw, dh);
-  const sg = ctx2d(small);
-  sg.imageSmoothingQuality = "high";
-  sg.drawImage(src, 0, 0, dw, dh);
-  const px = sg.getImageData(0, 0, dw, dh).data;
-  const n = dw * dh;
-  const input = new Float32Array(3 * n);
-  for (let i = 0; i < n; i++) {
-    for (let c = 0; c < 3; c++) input[c * n + i] = (px[i * 4 + c] / 255 - MEAN[c]) / STD[c];
-  }
-  const out = await session.run({ image: new ort.Tensor("float32", input, [1, 3, dh, dw]) });
-  const prob = out.prob.data as Float32Array;
-
-  // Combine the channels the visitor asked for, then upsample the
-  // probabilities smoothly to full size before thresholding (cleaner edges).
-  const pc = canvas(dw, dh);
-  const pg = ctx2d(pc);
-  const pimg = pg.createImageData(dw, dh);
-  for (let i = 0; i < n; i++) {
-    const p = Math.max(opts.text ? prob[i] : 0, opts.logo ? prob[n + i] : 0);
-    const v = Math.round(p * 255);
-    pimg.data[i * 4] = pimg.data[i * 4 + 1] = pimg.data[i * 4 + 2] = v;
-    pimg.data[i * 4 + 3] = 255;
-  }
-  pg.putImageData(pimg, 0, 0);
-  const full = canvas(W, H);
-  const fg = ctx2d(full);
-  fg.imageSmoothingQuality = "high";
-  fg.drawImage(pc, 0, 0, W, H);
-  const fp = fg.getImageData(0, 0, W, H).data;
-  const cut = (opts.threshold ?? 0.5) * 255;
-  const mask = new Uint8Array(W * H);
-  for (let i = 0; i < mask.length; i++) mask[i] = fp[i * 4] > cut ? 255 : 0;
-
-  // Drop specks: a real watermark is never a handful of stray pixels.
-  const { boxes, labels } = components(mask, W, H);
-  const minArea = Math.max(12, Math.round(W * H * 2e-5));
-  for (let i = 0; i < mask.length; i++) if (labels[i] && boxes[labels[i] - 1].area < minArea) mask[i] = 0;
-  return mask;
-}
-
-// ── Inpainting ────────────────────────────────────────────────────────────
 
 type Rect = { x: number; y: number; w: number; h: number };
 
@@ -448,7 +341,7 @@ function mergeCrops(crops: Rect[], W: number, H: number): Rect[] {
 /** Fill every masked pixel of `src` with LaMa. Returns a new canvas; pixels outside the mask are untouched. */
 export async function inpaint(src: HTMLCanvasElement, mask: Uint8Array, onProgress?: Progress): Promise<HTMLCanvasElement> {
   const ort = await getOrt();
-  const session = await getSession(LAMA_URL, "AI inpainting model", onProgress);
+  const session = await getSession(LAMA_URL, "AI model", onProgress);
   const W = src.width, H = src.height;
 
   const out = canvas(W, H);
@@ -539,12 +432,9 @@ export async function inpaint(src: HTMLCanvasElement, mask: Uint8Array, onProgre
 
 export type BrowserResult = { dataUrl: string; found: boolean };
 
-export async function removeAuto(srcDataUrl: string, opts: { text: boolean; logo: boolean }, onProgress?: Progress): Promise<BrowserResult> {
-  const src = await loadCanvas(srcDataUrl);
-  const raw = await detect(src, opts, onProgress);
-  if (!raw.some((v) => v)) return { dataUrl: srcDataUrl, found: false };
-  const out = await inpaint(src, growMask(raw, src.width, src.height), onProgress);
-  return { dataUrl: out.toDataURL("image/jpeg", 0.93), found: true };
+/** Download and start the model ahead of time (e.g. while the visitor paints). */
+export async function preload(onProgress?: Progress): Promise<void> {
+  await getSession(LAMA_URL, "AI model", onProgress);
 }
 
 export async function removeWithMask(srcDataUrl: string, maskDataUrl: string, onProgress?: Progress): Promise<BrowserResult> {
