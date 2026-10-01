@@ -37,8 +37,8 @@ const ALL_TOOLS = [
       { icon: "🔍", label: "AI Upscale",     desc: "Enhance resolution up to 4×",           href: "/upscale", free: true },
       { icon: "🪄", label: "Remove BG (AI)",  desc: "AI-powered, higher quality",            href: "/remove-bg", free: false },
       { icon: "🎯", label: "AI Headshot",    desc: "Professional headshots from any photo", href: "/ai-headshot", free: false },
-      { icon: "✍️", label: "AI Image Editor", desc: "Edit images with text prompts",       href: "/app/editor", free: false },
-      { icon: "🎨", label: "Create Image",  desc: "Generate an image from a prompt",       href: "/app/create", free: false },
+      { icon: "✍️", label: "AI Photo Editor", desc: "Edit images with text prompts",       href: "/app/editor", free: false },
+      { icon: "🎨", label: "AI Image Generator", desc: "Generate an image from a prompt",  href: "/app/create", free: false },
     ],
   },
   {

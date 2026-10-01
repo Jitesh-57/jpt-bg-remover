@@ -13,7 +13,8 @@ import { curateApps } from "@/lib/placements.server";
 import { creativeSources, mainSources } from "@/lib/app-creatives";
 import { landingImg } from "@/lib/landing-images";
 import { CREDIT_COST } from "@/lib/plans";
-import FeatureShowcase, { type ShowFeature } from "@/app/app/_components/FeatureShowcase";
+import type { ShowFeature } from "@/app/app/_components/FeatureShowcase";
+import HomeToolsBento from "@/app/_components/HomeToolsBento";
 
 /* The hero copy is set here rather than read from the page-SEO row, so an old
    admin override cannot put a retired headline back on the homepage. */
@@ -200,8 +201,8 @@ export default function HomePage({
         <section style={{ padding: "80px 24px" }}>
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
             {sectionHead("Pro tools", "The AI tools, on credits", `Server-side AI at ${CREDIT_COST} credits a generation. Buy a pack once from $2 — it never expires and nothing auto-renews.`)}
-            {/* The same eight animated cards as the dashboard, linking to the new /app workspaces. */}
-            <FeatureShowcase features={features ?? []} />
+            {/* Search-intent names on photo tiles, each opening its new /app workspace. */}
+            <HomeToolsBento features={features ?? []} />
           </div>
         </section>
 
