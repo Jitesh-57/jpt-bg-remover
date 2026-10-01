@@ -1,0 +1,7 @@
+venv/
+.env
+__pycache__/
+# Trained / downloaded model files are large — keep them out of git.
+weights/
+synth-preview/
+eval-out/

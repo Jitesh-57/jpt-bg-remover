@@ -180,6 +180,41 @@ print("saved creative.png")
 
 ---
 
+## Watermark remover model (runs in the browser)
+
+`sjpt.io/watermark-remover` is free and runs entirely in the visitor's
+browser. The visitor paints over the watermark, and **LaMa** (Apache-2.0)
+fills the painted area. It runs as ONNX with onnxruntime-web: WebGPU where
+the browser has it, WebAssembly elsewhere. No GPU server is involved.
+
+The model ships with the website in `public/models/`:
+- `lama-512-v1.part0–2`: three parts, because GitHub refuses files over 100 MB
+- `lama-512-v1.json`: lists the parts with the total size and SHA-256, which
+  the browser checks after downloading
+
+To rebuild it (for example after a LaMa update):
+```
+pip install onnx onnxruntime
+venv\Scripts\python -m watermark.export_onnx
+split -n 3 -d -a 1 weights/onnx/lama-512.onnx ../public/models/lama-512-v2.part
+```
+Then write `lama-512-v2.json` with the new size and SHA-256, and point
+`LAMA_URL` in `src/lib/watermark-browser.ts` at it. Use a new version name:
+browsers cache the model by URL.
+
+- **`watermark/lama_arch.py`:** rebuilds LaMa in plain PyTorch from the
+  official `big-lama.pt`. Its Fourier transforms become fixed matrix
+  multiplications, so the model exports to operators browsers can run. It
+  matches the original to within 0.00001.
+- **`watermark/export_onnx.py`:**
+  - exports LaMa at a fixed 512×512
+  - stores the convolution weights as float16 (half the download, under one
+    brightness level of difference)
+  - checks the result against the original model and against a list of
+    browser-safe operators before keeping it
+
+---
+
 ## Files
 
 | File | Purpose |
@@ -190,3 +225,4 @@ print("saved creative.png")
 | `start.bat` | Windows one-click: auto-setup on first run, then launches |
 | `.env.example` | Configuration template |
 | `../src/app/api/studio/route.ts` | Next.js route that proxies to this server |
+| `watermark/` | LaMa export for the in-browser watermark remover (`lama_arch.py`, `export_onnx.py`) |

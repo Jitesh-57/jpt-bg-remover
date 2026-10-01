@@ -3,7 +3,7 @@ import Link from "next/link";
 import { blogCreative } from "@/lib/creative-images";
 import SafeImage from "@/app/_components/SafeImage";
 import ScrollReveal from "@/app/_components/ScrollReveal";
-import WatermarkRemoverCTA from "./WatermarkRemoverCTA";
+import WatermarkRemoverTool from "./WatermarkRemoverTool";
 
 const BASE = "https://www.sjpt.io";
 const URL = `${BASE}/watermark-remover`;
@@ -12,13 +12,13 @@ const GRAD = "linear-gradient(120deg,var(--accent),var(--accent-2))";
 export const metadata: Metadata = {
   title: { absolute: "Best Free Watermark Remover — Remove Watermark From Photos Online | Pixel Shine" },
   description:
-    "Remove watermarks from images online with the best free AI watermark remover. Erase logos, text, timestamps and stock watermarks from photos in seconds — no software, no sign-up.",
+    "Remove watermarks from photos free — just paint over the watermark and AI erases it. Logos, text, timestamps and signatures. 100% free, no sign-up, runs privately in your browser.",
   keywords:
     "watermark remover, remove watermark, watermark remover online, remove watermark from image, photo watermark remover, free watermark remover, remove watermark from photo, ai watermark remover, image watermark remover",
   alternates: { canonical: URL },
   openGraph: {
     title: "Best Free Watermark Remover — Remove Watermark From Photos | Pixel Shine",
-    description: "Erase logos, text and stock watermarks from images with the best free AI watermark remover — fast, online, no sign-up.",
+    description: "Paint over a watermark and AI erases it — logos, text and timestamps. 100% free, no sign-up, nothing uploaded.",
     url: URL,
     type: "website",
     siteName: "Pixel Shine",
@@ -26,38 +26,41 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Best Free Watermark Remover | Pixel Shine",
-    description: "Remove watermarks from photos online free with AI — logos, text, timestamps and more.",
+    description: "Paint over a watermark and AI erases it. 100% free, no sign-up, runs in your browser.",
   },
 };
 
 const FAQS = [
-  { q: "How do I remove a watermark from an image for free?", a: "Upload your image here, then click Remove Watermark. Our recommended AI watermark remover erases logos, text and stock watermarks automatically — no software to install and free to try." },
-  { q: "What kinds of watermarks can it remove?", a: "It handles most common watermarks: semi-transparent logos, text overlays, date and time stamps, stock-photo watermarks, signatures and repeated tiled marks across a photo." },
-  { q: "Is the watermark remover really free?", a: "Yes — you can upload and try it free with no sign-up. It's the fastest way to see your image cleaned up before you download." },
-  { q: "Does it work on my phone?", a: "Yes. It works on phones, tablets and computers — with nothing to download." },
-  { q: "Will the quality of my photo drop?", a: "The AI fills in the area behind the watermark to match the surrounding image, so the result stays sharp and natural in most photos." },
+  { q: "How do I remove a watermark from an image for free?", a: "Upload your image, paint over the watermark with the brush and click Remove Painted Area. The AI rebuilds what was behind it — drag the slider to compare, then click Download." },
+  { q: "Is it really free?", a: "Yes — completely. No sign-up, no credits, no limits and no watermark of our own on the result. It runs in your browser, so it costs us nothing per photo." },
+  { q: "Is my photo uploaded anywhere?", a: "No. The AI model runs on your own device, in your browser. Your photo never leaves your computer or phone." },
+  { q: "Why does the first removal take a little longer?", a: "The first time, your browser downloads the AI model (about 109 MB). It's saved, so after that removal starts straight away — usually in a second or two on a computer with a modern graphics card." },
+  { q: "How do I make the brush bigger or smaller?", a: "Use the Brush size slider. The circle on the image shows exactly how much the brush will cover — paint a little past the edges of the watermark for the cleanest result." },
+  { q: "What if part of the watermark is still visible?", a: "Click Paint & remove more, brush over what's left and remove it again. Undo last removal takes you back a step if you don't like a result." },
+  { q: "What kinds of watermarks can it remove?", a: "Logos, text overlays, date and time stamps, signatures, stamps and small objects. It works best when the watermark sits over sky, walls, fabric or other natural texture." },
+  { q: "Does it work on my phone?", a: "Yes. Paint with your finger on phones and tablets. Older phones without graphics acceleration are slower, but it still works." },
   { q: "Should I only remove watermarks I own?", a: "Yes. Only remove watermarks from images you own or have permission to edit. Removing someone else's watermark from copyrighted work without permission may be against their rights." },
 ];
 
 const FEATURES = [
-  { t: "AI-powered removal", d: "Smart inpainting rebuilds the area behind the watermark so the fix looks natural, not smudged.", icon: "M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.4z" },
-  { t: "Any kind of watermark", d: "Logos, text, timestamps, signatures and stock-photo marks — cleared in a couple of clicks.", icon: "M4 7h16M4 12h10M4 17h7" },
-  { t: "Photos, screenshots & more", d: "Works on JPG, PNG and WEBP — product shots, screenshots, downloads and social images.", icon: "M4 5h16v14H4zM4 15l4-4 4 4 3-3 5 5" },
-  { t: "Free to try, no sign-up", d: "Upload and see your cleaned image before you commit — no account, no watermark of our own.", icon: "M12 3v18M5 12h14" },
-  { t: "Fast & online", d: "No installs, no waiting on heavy software — it is ready the moment the page opens.", icon: "M13 3L4 14h7l-1 8 9-11h-7z" },
-  { t: "Private & secure", d: "Your upload stays your own — a quick, hassle-free way to clean up an image.", icon: "M12 3l7 4v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V7z" },
+  { t: "Paint & it's gone", d: "Brush over the watermark and AI inpainting rebuilds what was behind it — no smudge, no blur.", icon: "M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.4z" },
+  { t: "100% free, no limits", d: "No account, no credits, no daily cap and no watermark of our own on the result.", icon: "M12 3v18M5 12h14" },
+  { t: "Private — never uploaded", d: "The AI runs in your browser, so your photo stays on your device the whole time.", icon: "M12 3l7 4v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V7z" },
+  { t: "Any kind of mark", d: "Logos, text, timestamps, signatures, stamps and small objects.", icon: "M4 7h16M4 12h10M4 17h7" },
+  { t: "Full-quality download", d: "Only the painted area changes — the rest of your photo stays exactly as it was.", icon: "M4 5h16v14H4zM4 15l4-4 4 4 3-3 5 5" },
+  { t: "Undo & refine", d: "Remove more in as many passes as you like, and undo any step.", icon: "M13 3L4 14h7l-1 8 9-11h-7z" },
 ];
 
 const REMOVES = [
-  "Logo watermarks", "Text overlays", "Date & time stamps", "Stock-photo watermarks",
-  "Signatures", "Tiled / repeated marks", "Copyright stamps", "Brand overlays",
+  "Logo watermarks", "Text overlays", "Date & time stamps", "Signatures",
+  "Stamps", "Captions", "Small objects", "Blemishes & spots",
 ];
 
 const STEPS = [
   { t: "Upload your image", d: "Drag in or select the photo, screenshot or download that has the watermark you want gone." },
-  { t: "Click Remove Watermark", d: "The AI detects the watermark and rebuilds the pixels behind it to match the rest of the photo." },
-  { t: "Download the clean image", d: "Get a crisp, watermark-free version ready to post, print or reuse anywhere." },
-];
+  { t: "Paint over the watermark", d: "Brush over it — the circle shows your brush size. Then click Remove Painted Area and the AI rebuilds what was behind it." },
+  { t: "Download the clean image", d: "Compare with the slider, remove more if needed, then download — free, at full quality." },
+]
 
 /** Labeled before/after frame. Shows a placeholder until the creative is uploaded to the Blogs bucket. */
 function Frame({ name, label, alt }: { name: string; label: string; alt: string }) {
@@ -94,6 +97,7 @@ const RELATED = [
   { href: "/crop-image", label: "Crop Image" },
   { href: "/upscale", label: "Image Upscaler" },
   { href: "/watermark-image", label: "Add Watermark" },
+  { href: "/invisible-watermark-remover", label: "Invisible Watermark & Metadata Remover" },
 ];
 
 export default function Page() {
@@ -125,7 +129,7 @@ export default function Page() {
       <div style={{ fontFamily: "var(--font)", color: "var(--text)", background: "var(--surface)" }}>
         {/* HERO */}
         <section style={{ background: "linear-gradient(160deg,var(--surface-2) 0%,var(--surface) 55%,var(--success-soft) 100%)", padding: "60px 24px 52px" }}>
-          <div style={{ maxWidth: 760, margin: "0 auto", textAlign: "center" }}>
+          <div style={{ maxWidth: 1080, margin: "0 auto", textAlign: "center" }}>
             <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "var(--accent-soft)", color: "var(--accent)", fontWeight: 700, fontSize: 12, borderRadius: 20, padding: "6px 14px", marginBottom: 20, letterSpacing: "0.06em", textTransform: "uppercase" }}>
               ✦ Best Free Watermark Remover
             </div>
@@ -134,14 +138,14 @@ export default function Page() {
               <span style={{ background: GRAD, WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", color: "transparent" }}>in Seconds</span>
             </h1>
             <p style={{ fontSize: "clamp(1rem,2vw,1.15rem)", color: "var(--text-muted)", lineHeight: 1.7, maxWidth: 580, margin: "0 auto 30px" }}>
-              The best free AI watermark remover online. Erase logos, text, timestamps and stock watermarks from any image — no software, no sign-up. Just upload and click.
+              Paint over the watermark and AI rebuilds what was behind it. Logos, text, timestamps and signatures — 100% free, no sign-up, and your photo never leaves your device.
             </p>
-            <WatermarkRemoverCTA />
+            <div id="tool" style={{ scrollMarginTop: 80 }}><WatermarkRemoverTool /></div>
             <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 18, marginTop: 26, fontSize: 13.5, color: "var(--text-muted)", fontWeight: 600 }}>
-              <span>✓ Free to try</span>
+              <span>✓ 100% free</span>
               <span>✓ No sign-up</span>
               <span>✓ Works on any device</span>
-              <span>✓ AI-powered</span>
+              <span>✓ Never uploaded</span>
             </div>
           </div>
         </section>
@@ -156,7 +160,7 @@ export default function Page() {
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 20 }}>
               <BeforeAfter id={1} caption="Logo watermark removed from a product photo" />
               <BeforeAfter id={2} caption="Text & timestamp cleared from a downloaded image" />
-              <BeforeAfter id={3} caption="Stock-photo watermark erased cleanly" />
+              <BeforeAfter id={3} caption="Date stamp erased cleanly" />
               <BeforeAfter id={4} caption="Signature removed from artwork" />
             </div>
           </div>
@@ -231,7 +235,7 @@ export default function Page() {
           <div style={{ maxWidth: 760, margin: "0 auto", background: GRAD, borderRadius: 22, padding: "40px 30px", textAlign: "center" }}>
             <h2 style={{ fontSize: "clamp(1.5rem,3vw,2rem)", fontWeight: 900, color: "#fff", margin: "0 0 12px", letterSpacing: "-0.02em" }}>Ready to remove your watermark?</h2>
             <p style={{ margin: "0 0 24px", fontSize: 15.5, color: "rgba(255,255,255,.92)" }}>Upload your image and get a clean, watermark-free result — free to try, no sign-up.</p>
-            <a href="https://www.gostudio.ai/watermark-remover?utm_source=jitesh-patil&utm_medium=sjpt" rel="sponsored nofollow noopener" className="jpt-hover" style={{ display: "inline-block", background: "var(--surface)", color: "var(--accent)", borderRadius: 12, padding: "15px 34px", fontSize: 16, fontWeight: 800, textDecoration: "none" }}>
+            <a href="#tool" className="jpt-hover" style={{ display: "inline-block", background: "var(--surface)", color: "var(--accent)", borderRadius: 12, padding: "15px 34px", fontSize: 16, fontWeight: 800, textDecoration: "none" }}>
               Remove Watermark Now →
             </a>
           </div>

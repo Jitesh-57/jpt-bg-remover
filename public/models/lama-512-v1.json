@@ -1,0 +1,7 @@
+{
+  "model": "LaMa big-lama, 512x512, exported by gpu-image-server/watermark/export_onnx.py",
+  "license": "Apache-2.0 (https://github.com/advimman/lama)",
+  "size": 108926917,
+  "sha256": "e3287d11a1cdc67b00738f7fb161c69fc62fc264d495abe3682a4ac6779d9db3",
+  "parts": ["lama-512-v1.part0", "lama-512-v1.part1", "lama-512-v1.part2"]
+}

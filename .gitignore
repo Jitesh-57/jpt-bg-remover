@@ -7,3 +7,8 @@ out/
 .vercel
 .env*
 .claude/
+
+# Whole ONNX models never go in git (GitHub's limit is 100 MB per file). LaMa
+# ships split into public/models/lama-512-v1.part* with a .json manifest.
+public/models/*.onnx
+public/ort/

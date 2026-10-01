@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "predev": "node scripts/copy-ort-wasm.mjs",
     "dev": "next dev",
+    "prebuild": "node scripts/copy-ort-wasm.mjs",
     "build": "next build",
     "start": "next start",
     "creative": "node scripts/add-creative.mjs",
@@ -28,6 +30,8 @@
     "form-data": "^4.0.5",
     "jszip": "^3.10.1",
     "next": "14.2.29",
+    "onnxruntime-web": "1.21.0",
+    "pdf-lib": "^1.17.1",
     "pg": "^8.23.0",
     "qrcode": "^1.5.4",
     "razorpay": "^2.9.6",
@@ -40,7 +44,7 @@
     "@types/qrcode": "^1.5.6",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "typescript": "^5",
-    "sharp": "^0.35.4"
+    "sharp": "^0.35.4",
+    "typescript": "^5"
   }
 }

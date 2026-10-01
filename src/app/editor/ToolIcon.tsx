@@ -103,6 +103,10 @@ const GLYPHS: Record<string, React.ReactNode> = {
     <rect x="3.5" y="3.5" width="7" height="7" rx="2" /><rect x="3.5" y="13.5" width="7" height="7" rx="2" /><rect x="13.5" y="13.5" width="7" height="7" rx="2" />
     <path d="M17 3.5l1 2.5 2.5 1-2.5 1-1 2.5-1-2.5-2.5-1 2.5-1z" />
   </>),
+  scrub: (<>
+    <path d="M12 3l7.5 3v5.5c0 4.6-3.1 8.1-7.5 9.5-4.4-1.4-7.5-4.9-7.5-9.5V6L12 3z" />
+    <path d="M8.5 12.5s1.3-2.5 3.5-2.5 3.5 2.5 3.5 2.5M9 16l6-7" />
+  </>),
   eraser: (<>
     <path d="M16 3.5l4.5 4.5L10 18.5H5.5L3.5 16.5 16 3.5z" />
     <path d="M9.5 10l4.5 4.5M10 18.5h10.5" />
@@ -151,6 +155,7 @@ export function iconKeyForHref(href: string): string {
     "/image-to-pdf": "pdf",
     "/tiktok-watermark-remover": "tiktok",
     "/watermark-remover": "eraser",
+    "/invisible-watermark-remover": "scrub",
     "/editor": "editor",
     "/batch-editor": "batch",
     "/ai-editor": "ai-edit",
@@ -185,7 +190,7 @@ const PALETTE: [string, string][] = [
 ];
 const TONE: Record<string, number> = {
   upscale: 0, "upscale-ai": 4, compress: 2, convert: 3, crop: 1, resize: 5, rotate: 4, blur: 3,
-  qr: 5, watermark: 1, meme: 0, pdf: 2, tiktok: 3, eraser: 4, editor: 1, batch: 0, "ai-edit": 4,
+  qr: 5, watermark: 1, meme: 0, pdf: 2, tiktok: 3, eraser: 4, scrub: 2, editor: 1, batch: 0, "ai-edit": 4,
   "remove-bg": 1, headshot: 2, "generate-bg": 0, apps: 3, generations: 5, adjust: 2, stickers: 3,
   dashboard: 1, tools: 0, blog: 2, prompts: 4, video: 3, pricing: 5,
 };

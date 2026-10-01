@@ -229,15 +229,16 @@ export type AspectRatio = (typeof ASPECT_RATIOS)[number];
 /**
  * The models offered in the picker.
  *
- * Two, because that is the choice people actually have an opinion about: the
- * fast one that is best at holding a face, and OpenAI's. "ChatGPT" is the name
+ * Three, because that is the choice people actually have an opinion about:
+ * the fast one that is best at holding a face, OpenAI's, and ByteDance's
+ * Seedream 4.5 for multi-image edits and high resolution. "ChatGPT" is the name
  * to put in front of a visitor — "GPT Image 2.5 Sunburst" is a fal endpoint id,
  * and nobody chose their photo tool on the strength of knowing one.
  *
  * ChatGPT is a family rather than a single endpoint: picking it walks the
  * cascade in src/lib/ai-image.ts, so it gets the best of OpenAI's models the
  * account can actually reach rather than dead-ending on one path. Both run on
- * fal credit.
+ * fal credit, as does Seedream.
  *
  * If one is unavailable the request is served by the other rather than
  * failing, and the substitution is logged with the endpoint that refused it —
@@ -246,6 +247,7 @@ export type AspectRatio = (typeof ASPECT_RATIOS)[number];
 export const MODELS = [
   { id: "nano-banana", label: "Nano Banana", hint: "Fast and cheap — best at keeping your face exactly as it is" },
   { id: "gpt-image",   label: "ChatGPT",     hint: "OpenAI's image model — richer light and texture, slower" },
+  { id: "seedream-v45", label: "Seedream 4.5", hint: "ByteDance Seedream 4.5 — advanced multi-image editing and high-resolution results" },
 ] as const;
 
 /** Supabase bucket holding preset thumbnails, matched by name at runtime. */

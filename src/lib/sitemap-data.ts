@@ -95,6 +95,7 @@ export function toolsUrls(): SitemapUrl[] {
     { url: `${BASE}/image-to-pdf` },
     { url: `${BASE}/tiktok-watermark-remover` },
     { url: `${BASE}/watermark-remover` },
+    { url: `${BASE}/invisible-watermark-remover` },
     { url: `${BASE}/alternatives` },
     ...ALTERNATIVES.map((a) => ({ url: `${BASE}/alternatives/${a.slug}` })),
     ...CONVERSIONS.map((c) => ({ url: `${BASE}/convert/${c.slug}` })),
