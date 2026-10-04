@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LaunchPilot</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%234f46e5'/><path d='M10 21l12-10M15 11h7v7' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="login" class="login hidden">
+    <form class="card login-card" id="login-form">
+      <div class="brand"><span class="logo">↗</span> LaunchPilot</div>
+      <label>Password <input type="password" name="password" autofocus required /></label>
+      <button class="btn primary" type="submit">Sign in</button>
+      <p class="error" id="login-error"></p>
+    </form>
+  </div>
+
+  <div id="app" class="shell hidden">
+    <aside class="sidebar">
+      <div class="brand"><span class="logo">↗</span> LaunchPilot</div>
+      <label class="product-switch">
+        <span>Product</span>
+        <select id="product-select"></select>
+      </label>
+      <nav id="nav">
+        <a data-view="dashboard">Dashboard</a>
+        <a data-view="products">Product profile</a>
+        <a data-view="directories">Listing sites</a>
+        <a data-view="launches">Launches</a>
+        <a data-view="schedule">Schedule</a>
+        <a data-view="vault">Logins vault</a>
+        <a data-view="help">Help</a>
+      </nav>
+      <div class="sidebar-foot" id="ai-status"></div>
+    </aside>
+    <main id="view" class="main"></main>
+  </div>
+
+  <div id="drawer" class="drawer hidden" aria-hidden="true">
+    <div class="drawer-backdrop" data-close></div>
+    <section class="drawer-panel" id="drawer-panel"></section>
+  </div>
+  <div id="toast" class="toast hidden"></div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

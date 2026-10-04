@@ -1,0 +1,20 @@
+{
+  "name": "launchpilot",
+  "version": "1.0.0",
+  "description": "AI launch agent: find listing directories, write tailored listings, fill submission forms, and schedule launches.",
+  "type": "module",
+  "private": true,
+  "license": "UNLICENSED",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "browser:install": "playwright install chromium",
+    "check": "node --check src/server.js && node --check src/ai.js && node --check src/automation.js && node --check src/scheduler.js && node --check src/inspect.js && node --check src/vault.js && node --check src/db.js && node --check src/catalog.js && node --check public/app.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.131.0",
+    "express": "^4.21.2",
+    "playwright": "~1.56.0"
+  }
+}
