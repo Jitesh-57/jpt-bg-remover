@@ -153,9 +153,11 @@ function viewProduct(el) {
     <div class="page-head"><div><h1>${p ? 'Product profile' : 'New product'}</h1><p class="muted">Every listing is written from this profile. The more complete it is, the better the copy.</p></div>
       ${p ? '<button class="btn danger" id="del-product">Delete product</button>' : ''}</div>
     <div class="card stack" style="margin-bottom:16px">
-      <h2>Auto-fill from your website</h2>
-      <div class="row"><input id="autofill-url" placeholder="https://yourproduct.com" value="${esc(v.url || '')}" style="flex:1;min-width:220px" /><button class="btn primary" id="autofill">Read my site</button></div>
-      <p class="muted small">The agent opens your site, reads it, and drafts name, tagline, descriptions, categories, tags and competitors. Review before saving.</p>
+      <h2>Crawl your whole website</h2>
+      <div class="row"><input id="autofill-url" placeholder="https://yourproduct.com" value="${esc(v.url || '')}" style="flex:1;min-width:220px" />
+        <select id="crawl-pages" style="width:auto">${[20, 40, 60, 80].map((n) => `<option value="${n}" ${n === 40 ? 'selected' : ''}>${n} pages</option>`).join('')}</select>
+        <button class="btn primary" id="autofill">${v.factSheet ? 'Crawl again' : 'Crawl my site'}</button></div>
+      <p class="muted small" id="crawl-status">The agent reads your sitemap and pages (pricing, features, tools, FAQ first), then writes a fact sheet with your real tool names, prices and limits. Every listing is written from it. Takes 1-3 minutes.</p>
     </div>
     <form class="card" id="product-form">
       <div class="form-grid">
@@ -167,6 +169,8 @@ function viewProduct(el) {
         <label>Pricing<select name="pricing">${['free', 'freemium', 'paid', 'free-trial', 'open-source', 'unknown'].map((o) => `<option ${v.pricing === o ? 'selected' : ''}>${o}</option>`).join('')}</select></label>
         <span></span>
         ${PRODUCT_LISTS.map(([k, label]) => `<label class="full">${label} <span class="muted small">(one per line)</span><textarea name="${k}" style="min-height:70px">${esc((v[k] || []).join('\n'))}</textarea></label>`).join('')}
+        <label class="full">Fact sheet <span class="muted small">(every listing is written from this; correct anything that's wrong)</span><textarea name="factSheet" style="min-height:${v.factSheet ? 360 : 90}px;font-family:ui-monospace,Consolas,monospace;font-size:12.5px" placeholder="Crawl your site to build this, or write the key facts yourself: tools, prices, limits, who it's for.">${esc(v.factSheet)}</textarea></label>
+        ${v.crawledPages?.length ? `<details class="full"><summary class="small">${v.crawledPages.length} pages read${v.crawledAt ? ` · ${new Date(v.crawledAt).toLocaleString()}` : ''}</summary><div class="small">${v.crawledPages.map((c) => `<div><a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.title || c.url)}</a></div>`).join('')}</div></details>` : ''}
       </div>
       <div class="row" style="margin-top:16px"><span class="spacer"></span><button class="btn primary" type="submit">${p ? 'Save profile' : 'Create product'}</button></div>
     </form>
@@ -183,6 +187,7 @@ function viewProduct(el) {
     </div>` : ''}`;
 
   const form = $('#product-form');
+  let pendingCrawl = null;
   const updateCounters = () => $$('.counter', form).forEach((c) => {
     const input = c.parentElement.querySelector('input, textarea');
     c.textContent = `${input.value.length}/${c.dataset.max}`;
@@ -195,6 +200,7 @@ function viewProduct(el) {
     e.preventDefault();
     const data = Object.fromEntries(new FormData(form));
     for (const [k] of PRODUCT_LISTS) data[k] = data[k].split('\n').map((s) => s.trim()).filter(Boolean);
+    if (pendingCrawl) Object.assign(data, pendingCrawl);
     busy(form.querySelector('[type="submit"]'), 'Saving', async () => {
       const row = p ? await api(`/products/${p.id}`, { method: 'PATCH', body: data }) : await api('/products', { body: data });
       state.productId = row.id;
@@ -205,13 +211,29 @@ function viewProduct(el) {
     });
   });
 
-  $('#autofill').addEventListener('click', (e) => busy(e.currentTarget, 'Reading site…', async () => {
-    const draft = await api('/products/autofill', { body: { url: $('#autofill-url').value } });
+  $('#autofill').addEventListener('click', (e) => busy(e.currentTarget, 'Crawling…', async () => {
+    const status = $('#crawl-status');
+    const { id } = await api('/products/autofill', { body: { url: $('#autofill-url').value, maxPages: $('#crawl-pages').value } });
+    let job;
+    for (;;) {
+      await new Promise((r) => setTimeout(r, 2000));
+      job = await api(`/crawls/${id}`);
+      status.textContent = job.status === 'crawling'
+        ? `Reading page ${job.done} of up to ${job.total}${job.current ? `: ${job.current}` : ''}`
+        : job.status === 'writing' ? `Read ${job.done} pages. Writing the fact sheet…` : '';
+      if (job.status === 'done' || job.status === 'failed') break;
+    }
+    if (job.status === 'failed') throw new Error(job.error);
+    const draft = job.result;
     for (const [k] of PRODUCT_TEXT) if (draft[k] && form.elements[k]) form.elements[k].value = draft[k];
     for (const [k] of PRODUCT_LISTS) if (draft[k]?.length) form.elements[k].value = draft[k].join('\n');
     if (draft.pricing) form.elements.pricing.value = draft.pricing;
+    form.elements.factSheet.value = draft.factSheet || '';
+    form.elements.factSheet.style.minHeight = '360px';
+    pendingCrawl = { crawledPages: draft.crawledPages, crawledAt: draft.crawledAt };
+    status.textContent = `Read ${draft.crawledPages.length} pages. Review the profile and fact sheet below, then save.`;
     updateCounters();
-    toast('Draft ready. Review it and save.');
+    toast('Fact sheet ready. Review it and save.');
   }));
 
   $('#del-product')?.addEventListener('click', async () => {
@@ -411,6 +433,8 @@ function openSubmission(id) {
         </div>` : ''}
         ${s.checklist?.length ? `<h3 style="margin-top:12px">Your checklist</h3><ul class="small">${s.checklist.map((c) => `<li>${esc(c)}</li>`).join('')}</ul>` : ''}
         ${s.notes ? `<p class="muted small">${esc(s.notes)}</p>` : ''}
+        ${kit.length ? (s.styleIssues?.length ? `<div class="callout small" style="margin-top:8px"><b>Style check:</b> ${s.styleIssues.map(esc).join(' · ')}</div>` : '<p class="small" style="margin-top:8px"><span class="badge ok">Style check passed</span> <span class="muted">no filler words, dashes or over-limit fields</span></p>') : ''}
+        ${!p?.factSheet ? '<div class="callout small" style="margin-top:8px">Crawl your site on the Product profile page first. Listings written from a full crawl are far more specific.</div>' : ''}
       </div>
       <div class="step"><h3>Fill it in the browser</h3>
         <p class="muted small">Opens ${esc(d.name)} in a real Chromium window, logs in${cred ? ` as <b>${esc(cred.emailMasked)}</b>` : ' (no saved login: <a href="#" data-go-close="vault">add one</a>)'}, and fills every field. CAPTCHAs, email verification${d.manualOnly ? ' and the final click' : ''} stay with you.</p>

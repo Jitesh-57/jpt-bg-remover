@@ -2,6 +2,7 @@
 // directory's submission form, writing listing copy per platform, and
 // searching the web for new directories.
 import Anthropic from '@anthropic-ai/sdk';
+import { WRITING_RULES, lintCopy } from './style.js';
 
 const MODEL = process.env.LAUNCHPILOT_MODEL || 'claude-opus-5-5';
 let client;
@@ -16,9 +17,10 @@ function getClient() {
   return client;
 }
 
-const SYSTEM = `You are LaunchPilot, an expert at launching software products and getting them listed on directories, review sites and launch platforms.
-You write listing copy that is specific, benefit-led and honest: no invented features, numbers, awards, reviews or customers. Only use facts from the product profile.
-Match each platform's tone and limits exactly (character limits are hard limits). Avoid hype words like "revolutionary" or "game-changing".`;
+const SYSTEM = `You are LaunchPilot, an experienced launch marketer who gets software products listed on directories, review sites and launch platforms.
+You write the way a careful human copywriter does: specific, plain, and true to the product's own facts.
+
+${WRITING_RULES}`;
 
 function requestBase(effort) {
   // fallbacks: "default" lets the API re-run a request a safety classifier
@@ -64,24 +66,46 @@ const PROFILE_SCHEMA = obj({
   useCases: strArr,
   audience: str,
   competitors: strArr,
+  factSheet: str,
 });
 
-export async function profileFromWebsite(url, page) {
-  return askJSON({
-    prompt: `Build a product profile from this website for directory listings.
-- tagline: max 60 chars. shortDescription: max 160 chars. longDescription: 500-900 chars, 2-3 short paragraphs.
-- categories: 2-4 broad directory categories (e.g. "Design Tools", "Productivity", "AI"). tags: 6-12 lowercase keywords.
-- competitors: well-known products this is an alternative to (only if clear from the site or obvious from the category).
-- Use empty strings/arrays when the site doesn't say.
+// Reads every crawled page and writes (1) a fact sheet, the single source of
+// truth every listing is written from, and (2) a first draft of the profile.
+export async function buildFactSheet(url, crawlText, pageCount) {
+  const stream = getClient().beta.messages.stream({
+    ...requestBase('high'),
+    max_tokens: 32000,
+    system: SYSTEM,
+    output_config: { effort: 'high', format: { type: 'json_schema', schema: PROFILE_SCHEMA } },
+    messages: [{
+      role: 'user',
+      content: `Below are ${pageCount} pages crawled from ${url}. Read all of them, then return:
 
-URL: ${url}
-Title: ${page.title}
-Meta description: ${page.metaDescription}
+factSheet: a plain-text fact sheet in Markdown with these sections, using only what the pages say (quote numbers, names and prices exactly; write "Not stated" when a section has nothing):
+## What it is (2-3 sentences)
+## Who it's for
+## Products and tools (every distinct tool, app or feature, one line each: name - what it does - any limit or detail, e.g. formats, max size, speed, count)
+## Pricing (every plan or pack with its exact price, what's included, free tier details, refund or expiry rules)
+## What makes it different (only differences the site itself claims or that are obvious from the facts, e.g. no watermark, no sign-up, runs in the browser)
+## Proof points (numbers the site states: counts of tools, prompts, users, formats; no invented numbers)
+## Common questions (the site's own FAQ answers, shortened)
+## Tone of the site (how it talks: casual or formal, words it uses, words it avoids)
+## Pages read (the URLs)
 
-Visible page text:
-${page.text.slice(0, 15000)}`,
-    schema: PROFILE_SCHEMA,
+Then the profile fields, written from the fact sheet:
+- name: the product's current brand name as the site uses it.
+- tagline: max 60 characters. shortDescription: max 160 characters. longDescription: 600-1000 characters, 2-3 short paragraphs separated by a blank line.
+- categories: 2-4 directory categories. tags: 8-12 lowercase keywords people search for. features: 6-12 items, each "Name: what it does".
+- competitors: well-known products it is an alternative to (from the site's own comparison pages if it has them).
+- pricingDetails: one or two plain sentences with the real prices.
+
+Crawled pages:
+${crawlText}`,
+    }],
   });
+  const message = await stream.finalMessage();
+  if (message.stop_reason === 'max_tokens') throw new Error('The fact sheet was cut off; try crawling fewer pages.');
+  return JSON.parse(textOf(message));
 }
 
 const FIELD_ROLES = ['product_name', 'website_url', 'tagline', 'short_description', 'long_description', 'category', 'tags', 'pricing',
@@ -133,34 +157,63 @@ const LISTING_SCHEMA = obj({
   notes: str,
 });
 
-// Writes the actual copy for one platform. With analyzed form fields the
-// values map 1:1 to those fields; without, it writes a standard listing kit.
+const PLATFORM_VOICE = {
+  launch: 'Launch platform: written by the maker in first person ("I built", "we added"). Warm and direct, like a post to a community you belong to. Mention what you would like feedback on.',
+  ai: 'AI tool directory: readers compare dozens of tools. Say exactly which AI tasks it does, what you upload and what you get back, and what is free.',
+  review: 'Software review site: neutral, factual, third person, like a product spec. Buyers want features, pricing and who it fits.',
+  startup: 'Startup directory: short company-style summary. What it is, who it serves, pricing model, stage.',
+  dev: 'Developer community: plain and technical. How it works, what it runs on, limits. No marketing at all.',
+  community: 'Community post: personal and modest, a person sharing something they made and asking for honest feedback.',
+  business: 'Business profile: clear, factual company description.',
+};
+
+// Writes the actual copy for one platform, checks it against the house style,
+// and sends it back for one revision if the checker finds problems.
 export async function writeListing(product, directory, formFields = []) {
   const fillable = formFields.filter((f) => !['password', 'ignore', 'logo', 'screenshot', 'search', 'terms_checkbox', 'newsletter_optin'].includes(f.role));
   const target = fillable.length
-    ? `Write a value for each of these form fields. Use the field's fid as "key". Respect maxChars (0 = no limit). For selects, the value must be exactly one of the options. For email/name/social fields use the product's maker details.
+    ? `Write a value for each of these form fields. Use the field's fid as "key". Respect maxChars (0 = no limit). For selects, the value must be exactly one of the options. For email, name and social fields use the maker details from the profile.
 ${JSON.stringify(fillable.map((f) => ({ key: f.fid, label: f.label || f.name || f.placeholder, role: f.role, maxChars: f.maxChars || f.maxLength || 0, options: f.options, guidance: f.guidance })), null, 1)}`
-    : `There's no captured form, so write a complete listing kit with these keys: name, tagline, short_description, long_description, category, tags, ${directory.launch ? 'first_comment (the maker\'s launch-day comment: personal story, what it does, an ask for feedback; 120-200 words), ' : ''}alternatives.${directory.limits ? ` Platform limits: ${JSON.stringify(directory.limits)}.` : ''}`;
+    : `There's no captured form, so write a complete listing kit with these keys: name, tagline (max 60), short_description (max 160), long_description (600-1000 characters, short paragraphs), key_features (5-8 lines, each "Name: what it does"), pricing (one or two sentences with real prices), category, tags (comma separated), alternatives${directory.launch ? ', first_comment (the maker\'s launch-day comment: why you built it, what it does, what is free, and one specific thing you want feedback on; 120-200 words, first person)' : ''}.${directory.limits ? ` Platform limits: ${JSON.stringify(directory.limits)}.` : ''}`;
 
-  return askJSON({
-    effort: 'high',
-    prompt: `Write the listing for ${product.name} on ${directory.name} (${directory.url}).
-Platform type: ${directory.category}. ${directory.launchTips ? `Platform notes: ${directory.launchTips}` : ''}
-Tailor tone to the platform: Product Hunt / launch sites = conversational and maker-led; review sites = clear and factual; AI directories = lead with what the AI does; Hacker News = plain, technical, no marketing.
-Make the copy different from other directories (paraphrase rather than repeating the same sentences) so listings aren't duplicate content.
+  const prompt = `Write the listing for ${product.name} on ${directory.name} (${directory.url}).
+${PLATFORM_VOICE[directory.category] || ''}${directory.launchTips ? `\nPlatform notes: ${directory.launchTips}` : ''}${directory.slug === 'hacker-news' ? '\nThe title must start with "Show HN:" and be plain, no adjectives.' : ''}
 
 ${target}
 
-Also return: checklist = concrete steps the user must do themselves on this platform (e.g. upload a 240x240 logo, verify email, pick launch date); notes = 1-3 sentences of advice for this platform.
+Also return: checklist = concrete steps the user must do on this platform (e.g. upload a 240x240 logo, verify email, pick launch date); notes = 1-2 sentences of advice for this platform.
 
-Product profile:
-${JSON.stringify(productForPrompt(product), null, 1)}`,
-    schema: LISTING_SCHEMA,
-  });
+Fact sheet (the only source of facts):
+${product.factSheet || '(no crawl yet; use the profile below)'}
+
+Profile:
+${JSON.stringify(productForPrompt(product), null, 1)}`;
+
+  const maxFor = (key) => {
+    const f = fillable.find((x) => x.fid === key);
+    return f?.maxChars || f?.maxLength || directory.limits?.[key] || { tagline: 60, short_description: 160 }[key] || 0;
+  };
+  let result = await askJSON({ effort: 'high', prompt, schema: LISTING_SCHEMA });
+  let issues = lintCopy(result.fields.map((f) => ({ ...f, max: maxFor(f.key) })));
+  if (issues.length) {
+    result = await askJSON({
+      effort: 'medium',
+      schema: LISTING_SCHEMA,
+      prompt: `${prompt}
+
+Here is your draft:
+${JSON.stringify(result, null, 1)}
+
+An editor flagged these problems. Fix every one, change nothing else, and return the full corrected listing in the same shape:
+${issues.map((i) => `- ${i}`).join('\n')}`,
+    });
+    issues = lintCopy(result.fields.map((f) => ({ ...f, max: maxFor(f.key) })));
+  }
+  return { ...result, styleIssues: issues };
 }
 
 function productForPrompt(p) {
-  const { id, createdAt, updatedAt, logoPath, screenshotPaths, ...rest } = p;
+  const { id, createdAt, updatedAt, logoPath, screenshotPaths, factSheet, crawledPages, plan, ...rest } = p;
   return rest;
 }
 

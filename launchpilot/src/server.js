@@ -15,6 +15,7 @@ const vault = await import('./vault.js');
 const ai = await import('./ai.js');
 const { inspectPage, checkUrl, closeInspector, guessRoles } = await import('./inspect.js');
 const automation = await import('./automation.js');
+const { crawlSite, crawlToText } = await import('./crawl.js');
 const { startScheduler, stopScheduler } = await import('./scheduler.js');
 const { CATEGORIES } = await import('./catalog.js');
 
@@ -98,7 +99,7 @@ app.get('/api/activity', (req, res) => res.json(db.all('activity').slice(0, 100)
 // --- Products -----------------------------------------------------------------
 const PRODUCT_FIELDS = ['name', 'url', 'tagline', 'shortDescription', 'longDescription', 'categories', 'tags', 'pricing', 'pricingDetails',
   'features', 'useCases', 'audience', 'competitors', 'makerName', 'makerEmail', 'companyName', 'twitter', 'linkedin', 'github', 'videoUrl',
-  'logoPath', 'screenshotPaths', 'country', 'foundedYear'];
+  'logoPath', 'screenshotPaths', 'country', 'foundedYear', 'factSheet', 'crawledPages', 'crawledAt'];
 const pick = (obj, keys) => Object.fromEntries(keys.filter((k) => obj[k] !== undefined).map((k) => [k, obj[k]]));
 
 app.get('/api/products', (req, res) => res.json(db.all('products')));
@@ -113,13 +114,40 @@ app.delete('/api/products/:id', (req, res) => {
   res.json({ ok: db.remove('products', req.params.id) });
 });
 
-// Reads the product's website and drafts a full profile.
+// Crawls the product's whole website, then writes a fact sheet and a draft
+// profile. Runs in the background; the UI polls /api/crawls/:id for progress.
+const crawls = new Map();
+
 app.post('/api/products/autofill', wrap(async (req, res) => {
   const url = normalizeUrl(req.body.url);
-  const page = await inspectPage(url);
-  const profile = await ai.profileFromWebsite(url, page);
-  res.json({ ...profile, url, iconUrl: page.icon, ogImage: page.ogImage });
+  if (!ai.aiConfigured()) throw Object.assign(new Error('Crawling and fact sheets need ANTHROPIC_API_KEY in .env.'), { status: 400 });
+  const maxPages = Math.min(Math.max(Number(req.body.maxPages) || 40, 5), 80);
+  const id = db.newId();
+  const job = { id, url, status: 'crawling', done: 0, total: maxPages, current: '', startedAt: db.now() };
+  crawls.set(id, job);
+  (async () => {
+    try {
+      const crawl = await crawlSite(url, { maxPages, onProgress: (p) => { if (p.phase === 'page') Object.assign(job, { done: p.done, current: p.url }); } });
+      if (!crawl.pages.length) throw new Error('No readable pages found. Check the URL, or the site may block crawlers.');
+      Object.assign(job, { status: 'writing', done: crawl.pages.length, current: '' });
+      const profile = await ai.buildFactSheet(url, crawlToText(crawl), crawl.pages.length);
+      Object.assign(job, {
+        status: 'done',
+        result: { ...profile, url, crawledPages: crawl.pages.map((p) => ({ url: p.url, title: p.title })), crawledAt: db.now() },
+      });
+      db.logActivity(`Crawled ${crawl.pages.length} pages of ${url} and wrote a fact sheet`);
+    } catch (e) {
+      Object.assign(job, { status: 'failed', error: e.message });
+    }
+  })();
+  res.json({ id });
 }));
+
+app.get('/api/crawls/:id', (req, res) => {
+  const job = crawls.get(req.params.id);
+  if (!job) return res.status(404).json({ error: 'Crawl not found' });
+  res.json(job);
+});
 
 // Uploads: { productId, kind: 'logo'|'screenshot', filename, dataBase64 }
 app.post('/api/uploads', wrap(async (req, res) => {
@@ -317,7 +345,7 @@ app.post('/api/submissions/:id/write', wrap(async (req, res) => {
   const values = { ...s.values };
   for (const f of result.fields) if (byFid.has(f.key)) values[f.key] = f.value;
   const row = db.update('submissions', s.id, {
-    kit: result.fields, values, checklist: result.checklist, notes: result.notes,
+    kit: result.fields, values, checklist: result.checklist, notes: result.notes, styleIssues: result.styleIssues,
     status: ['draft', 'written'].includes(s.status) ? 'written' : s.status, writtenAt: db.now(),
   });
   db.logActivity(`Wrote listing for ${directory.name}`, { submissionId: s.id });

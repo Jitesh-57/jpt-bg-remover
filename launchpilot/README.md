@@ -3,8 +3,9 @@
 LaunchPilot gets a product listed on launch platforms and directories (Product Hunt, BetaList,
 AlternativeTo, G2, AI tool directories and more) without doing every form by hand.
 
-1. **Product profile.** Paste your website URL. The agent reads the site and drafts the name, tagline,
-   descriptions, categories, tags and competitors.
+1. **Website crawl and fact sheet.** Paste your website URL. The agent reads your sitemap and up to 80
+   pages (pricing, features, tools and FAQ first), then writes a fact sheet with your real tool names,
+   prices and limits, plus a draft profile. Every listing is written from the fact sheet, and you can edit it.
 2. **Listing sites.** Start from 70 built-in platforms, filtered by type, price and authority tier.
    - **Add any site by URL.** The agent opens it, follows "Submit" links if needed, and works out what
      each form field is for.
@@ -13,8 +14,10 @@ AlternativeTo, G2, AI tool directories and more) without doing every form by han
    - **Check links.** Flags directories that have gone offline.
 3. **Per-site workflow** (Launches → click a site):
    - **Analyze form.** Maps every field to a role (tagline, description, category…) and reads its character limit.
-   - **Write listing.** Writes copy for that platform's audience and limits, worded differently on each
-     site so the listings don't duplicate each other. You can edit it, and each field has a Copy button.
+   - **Write listing.** Writes copy in that platform's voice (maker-led on launch sites, factual on review
+     sites) using only facts from the fact sheet. A style check then flags filler words ("unlock",
+     "seamless"…), dashes, exclamation marks, long sentences, repeated openings and over-limit fields, and
+     the draft goes back for a revision. Each field has a Copy button.
    - **Fill in browser.** Opens a real Chromium window, logs in (or signs up) with your saved login,
      fills every field and uploads your logo and screenshots.
    - **Schedule.** Pick a date and time. At that time the agent fills the form, or reminds you to.
@@ -84,7 +87,9 @@ Everything lives in `launchpilot/data/` (git-ignored):
 
 ```
 src/server.js      Express API + static UI
-src/ai.js          Claude calls: site → profile, form analysis, listing copy, launch plan, web discovery
+src/crawl.js       Website crawler: sitemap + links, ranks pages, extracts headings, prices, FAQs
+src/style.js       House writing rules and the style checker
+src/ai.js          Claude calls: fact sheet, form analysis, listing copy, launch plan, web discovery
 src/inspect.js     Reads pages: visible text, form fields with labels/limits/selectors, login walls, CAPTCHAs
 src/automation.js  Playwright: persistent per-site profiles, login/sign-up, form filling, submit
 src/scheduler.js   Runs scheduled fills and reminders
