@@ -37,9 +37,19 @@ marked **You post**. LaunchPilot writes the copy and fills the form there, but i
 button and never creates accounts on them by itself. That keeps your accounts safe. Elsewhere,
 auto-submit is off by default and you turn it on per run.
 
+## Web version (no install)
+
+`web/launchpilot-web.html` is a hosted version of the dashboard, published at
+https://claude.ai/artifact/2SaXPccNZq5Gqyja46w3SZ. It has the site catalog, AI listing writer,
+launch tracker, launch calendar (.ics export) and CSV export. It can't log in to sites or fill
+their forms, because browsers don't let a web page control other websites. That needs the desktop app below.
+
 ## Setup
 
-Requires Node.js 20+.
+**Windows:** install Node.js and Git, clone the repo, then double-click `Start LaunchPilot.bat`. It
+installs everything the first time, asks for your API key, and opens the dashboard.
+
+Other systems (Node.js 20+):
 
 ```bash
 cd launchpilot
