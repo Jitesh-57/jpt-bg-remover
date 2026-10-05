@@ -3,7 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
-import { DATA_DIR } from './db.js';
+import { DATA_DIR, currentUserId } from './db.js';
 
 let key;
 
@@ -18,7 +18,16 @@ function masterSecret() {
   return fs.readFileSync(file, 'utf8').trim();
 }
 
+const userKeys = new Map();
+
 function getKey() {
+  // Hosted: each user's passwords use their own key, derived from the server secret.
+  const userId = currentUserId();
+  if (userId) {
+    if (!process.env.LAUNCHPILOT_SECRET) throw new Error('LAUNCHPILOT_SECRET is not set on the server.');
+    if (!userKeys.has(userId)) userKeys.set(userId, crypto.scryptSync(process.env.LAUNCHPILOT_SECRET, `vault:${userId}`, 32));
+    return userKeys.get(userId);
+  }
   if (key) return key;
   const saltFile = path.join(DATA_DIR, '.vault.salt');
   if (!fs.existsSync(saltFile)) fs.writeFileSync(saltFile, crypto.randomBytes(16), { mode: 0o600 });

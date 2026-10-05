@@ -1,6 +1,6 @@
-// Runs scheduled jobs while the app is open. Jobs survive restarts because
-// they live in db.json; anything that came due while the app was closed runs
-// on the next start.
+// Runs scheduled jobs. Desktop: every 30 seconds while the app is open; jobs
+// live in db.json, so anything that came due while it was closed runs on the
+// next start. Hosted: Vercel Cron calls /api/cron/run.
 import * as db from './db.js';
 import { autopilot } from './automation.js';
 
@@ -26,13 +26,18 @@ async function runJob(job) {
   }
 }
 
+/** Runs every job that is due, one at a time (each may open a browser). */
+export async function runDueJobs() {
+  const due = db.all('jobs').filter((j) => j.status === 'scheduled' && new Date(j.runAt) <= new Date());
+  for (const job of due) await runJob(job);
+  return due.length;
+}
+
 async function tick() {
   if (running) return;
   running = true;
   try {
-    const due = db.all('jobs').filter((j) => j.status === 'scheduled' && new Date(j.runAt) <= new Date());
-    // One at a time: each submission may open a browser window.
-    for (const job of due) await runJob(job);
+    await runDueJobs();
   } catch (e) {
     // Never let a scheduler error take the app down.
     console.error('[scheduler]', e);

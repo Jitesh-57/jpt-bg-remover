@@ -8,16 +8,31 @@
 // click. That keeps accounts safe and respects each platform's rules.
 import path from 'node:path';
 import fs from 'node:fs';
+import os from 'node:os';
 import { chromium } from 'playwright';
 import * as db from './db.js';
 import { decrypt } from './vault.js';
 import { launchOptions, readPage, inspectPage, guessRoles } from './inspect.js';
+import { isHosted, openHostedSiteSession, releaseBrowserbaseSession } from './browser.js';
+import { getJson, setJson } from './store.js';
 import { aiConfigured, analyzeSubmitPage, writeListing } from './ai.js';
 
-const contexts = new Map(); // slug -> BrowserContext
+const contexts = new Map(); // slug -> BrowserContext (desktop)
+// Hosted: slug -> browser session, kept per request (one server may serve several people at once).
+const hostedSessionsMap = () => {
+  const bag = db.requestBag();
+  if (!bag) return new Map();
+  bag.sessions ??= new Map();
+  return bag.sessions;
+};
 const headless = () => String(process.env.LAUNCHPILOT_HEADLESS || 'false') === 'true';
 
 async function contextFor(slug) {
+  if (isHosted()) {
+    const sessions = hostedSessionsMap();
+    if (!sessions.has(slug)) sessions.set(slug, await openHostedSiteSession(slug));
+    return sessions.get(slug).context;
+  }
   const existing = contexts.get(slug);
   if (existing) {
     try {
@@ -36,7 +51,32 @@ async function contextFor(slug) {
 }
 
 export async function closeAll() {
+  if (isHosted()) {
+    const sessions = hostedSessionsMap();
+    await Promise.all([...sessions.values()].map((s) => s.close().catch(() => {})));
+    sessions.clear();
+    return;
+  }
   await Promise.all([...contexts.values()].map((c) => c.close().catch(() => {})));
+}
+
+// Hosted: end a site's browser session after a request. When autopilot is
+// waiting for the person (CAPTCHA, email link), a Browserbase session stays
+// open and its live view link is saved on the launch.
+async function finishHostedSession(slug, submissionId) {
+  const sessions = hostedSessionsMap();
+  const session = sessions.get(slug);
+  if (!session) return;
+  sessions.delete(slug);
+  const sub = db.get('submissions', submissionId);
+  if (sub?.status === 'needs_human' && session.sessionId) {
+    const liveViewUrl = await session.liveViewUrl().catch(() => null);
+    db.update('submissions', submissionId, { liveViewUrl, bbSessionId: session.sessionId });
+    await session.close({ keepAlive: true });
+  } else {
+    db.update('submissions', submissionId, { liveViewUrl: null, bbSessionId: null });
+    await session.close();
+  }
 }
 
 function log(submission, message, status) {
@@ -116,11 +156,23 @@ async function fillCredentials(page, cred, { signup, product }) {
   return (await pageState(page)).captcha ? 'captcha' : 'ok';
 }
 
+// Hosted uploads live in the store as "kv:<productId>/<name>"; copy to /tmp for the file input.
+async function localFile(ref) {
+  if (!ref || !String(ref).startsWith('kv:')) return ref;
+  const [productId, name] = ref.slice(3).split('/');
+  const data = await getJson(`lp:upload:${db.currentUserId()}:${productId}:${name}`);
+  if (!data) return null;
+  const file = path.join(os.tmpdir(), 'launchpilot-uploads', `${productId}-${name}`);
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, Buffer.from(data, 'base64'));
+  return file;
+}
+
 async function fillField(page, field, value, product) {
   const loc = page.locator(field.selector).first();
   if (!(await loc.count())) return false;
   if (field.type === 'file') {
-    const file = field.role === 'logo' ? product.logoPath : (product.screenshotPaths || [])[0];
+    const file = await localFile(field.role === 'logo' ? product.logoPath : (product.screenshotPaths || [])[0]);
     if (!file || !fs.existsSync(file)) return false;
     await loc.setInputFiles(file);
     return true;
@@ -303,10 +355,21 @@ export async function runSubmission(submissionId, opts = {}) {
 
 // Opens the platform's window without doing anything, e.g. to log in by hand.
 export async function openWindow(directory, url) {
+  if (isHosted()) {
+    // Hosted: a live browser view (Browserbase) is the only way to "open" a site.
+    const session = await openHostedSiteSession(directory.slug);
+    const page = await newPage(session.context);
+    await goto(page, url || directory.url);
+    const liveViewUrl = await session.liveViewUrl().catch(() => null);
+    await session.close({ keepAlive: Boolean(liveViewUrl) });
+    if (!liveViewUrl) throw Object.assign(new Error('Opening a live browser needs a Browserbase key on the server. Open the site in your own browser instead.'), { status: 400 });
+    return { liveViewUrl };
+  }
   const ctx = await contextFor(directory.slug);
   const page = await newPage(ctx);
   await goto(page, url || directory.url);
   await page.bringToFront().catch(() => {});
+  return {};
 }
 
 // Reads a page using the platform's logged-in browser profile, for submit
@@ -475,10 +538,16 @@ function productSlug(product) {
 // After submitting: the listing's own link if the site shows one, and a screenshot.
 async function captureResult(page, submission, product, submitUrl) {
   await page.waitForTimeout(3000);
-  const dir = path.join(db.DATA_DIR, 'screens');
-  fs.mkdirSync(dir, { recursive: true });
-  const file = `${submission.id}-${Date.now()}.png`;
-  await page.screenshot({ path: path.join(dir, file), fullPage: false }).catch(() => {});
+  let file = `${submission.id}-${Date.now()}.png`;
+  if (isHosted()) {
+    file = `${submission.id}-${Date.now()}.jpg`;
+    const buf = await page.screenshot({ type: 'jpeg', quality: 55, fullPage: false }).catch(() => null);
+    if (buf) await setJson(`lp:screen:${db.currentUserId()}:${file}`, buf.toString('base64')).catch(() => {});
+  } else {
+    const dir = path.join(db.DATA_DIR, 'screens');
+    fs.mkdirSync(dir, { recursive: true });
+    await page.screenshot({ path: path.join(dir, file), fullPage: false }).catch(() => {});
+  }
   const slug = productSlug(product);
   const name = String(product.name || '').toLowerCase();
   const found = await page.evaluate(({ slug, name }) => {
@@ -498,9 +567,26 @@ async function captureResult(page, submission, product, submitUrl) {
   return { listingUrl, confirm: found.confirm };
 }
 
-export async function autopilot(submissionId, { autoSubmit = true } = {}) {
+export async function autopilot(submissionId, opts = {}) {
+  const first = db.get('submissions', submissionId);
+  if (!first) throw new Error('Submission not found');
+  const slug = db.get('directories', first.directoryId).slug;
+  if (isHosted() && first.bbSessionId) {
+    // The person finished in the live view: release that session so the
+    // sign-in is saved to the site's context, then carry on in a fresh one.
+    await releaseBrowserbaseSession(first.bbSessionId);
+    db.update('submissions', submissionId, { bbSessionId: null, liveViewUrl: null });
+    await new Promise((r) => setTimeout(r, 4000));
+  }
+  try {
+    return await runAutopilot(submissionId, opts);
+  } finally {
+    if (isHosted()) await finishHostedSession(slug, submissionId).catch(() => {});
+  }
+}
+
+async function runAutopilot(submissionId, { autoSubmit = true } = {}) {
   let submission = db.get('submissions', submissionId);
-  if (!submission) throw new Error('Submission not found');
   const directory = db.get('directories', submission.directoryId);
   const product = db.get('products', submission.productId);
   const ctx = await contextFor(directory.slug);

@@ -11,8 +11,12 @@
   <div id="login" class="login hidden">
     <form class="card login-card" id="login-form">
       <div class="brand"><span class="logo">↗</span> LaunchPilot</div>
-      <label>Password <input type="password" name="password" autofocus required /></label>
-      <button class="btn primary" type="submit">Sign in</button>
+      <p class="muted small cloud-only hidden" id="login-intro">List your product on launch platforms and directories. Claude writes each listing from your site; autopilot creates the accounts and submits.</p>
+      <label class="cloud-only hidden">Email <input type="email" name="email" autocomplete="username" /></label>
+      <label>Password <input type="password" name="password" autofocus required autocomplete="current-password" /></label>
+      <label class="signup-only hidden">Invite code <input name="invite" autocomplete="off" /></label>
+      <button class="btn primary" type="submit" id="login-submit">Sign in</button>
+      <p class="small cloud-only hidden" id="login-toggle"><a href="#" id="login-switch">New here? Create an account</a></p>
       <p class="error" id="login-error"></p>
     </form>
   </div>

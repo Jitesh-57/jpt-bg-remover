@@ -273,3 +273,39 @@ Return up to 25 results as a JSON array in a \`\`\`json fenced block, each item:
   const items = JSON.parse(match[1]);
   return Array.isArray(items) ? items : [];
 }
+
+// Finds the public page for a product on one directory, using web search.
+// Returns { url, note }; url is '' when nothing was found. The caller checks
+// the page really shows the product before saving it.
+export async function findListing(product, directory) {
+  const host = new URL(directory.url).hostname.replace(/^www\./, '');
+  const messages = [{
+    role: 'user',
+    content: `Find the public listing page for the product "${product.name}" (${product.url}) on ${directory.name} (${host}).
+Search the web, for example: site:${host} "${product.name}". The listing is the page on ${host} that is about this product (not a search page, category page or the site's homepage). Product pages on directories often contain the product's name in the URL.
+If you can't find one, say so; never guess a URL.
+Reply with a JSON object in a \`\`\`json fenced block: {"url": "the listing URL or empty string", "note": "one short sentence on what you found"}`,
+  }];
+  let message;
+  for (let i = 0; i < 4; i++) {
+    message = await getClient().beta.messages.stream({
+      ...requestBase('low'),
+      max_tokens: 8000,
+      system: SYSTEM,
+      tools: [{ type: 'web_search_20260209', name: 'web_search', max_uses: 5, allowed_domains: [host] }],
+      messages,
+    }).finalMessage();
+    if (message.stop_reason !== 'pause_turn') break;
+    messages.push({ role: 'assistant', content: message.content });
+  }
+  const text = textOf(message);
+  const match = text.match(/```json\s*([\s\S]*?)```/) || text.match(/(\{[\s\S]*\})/);
+  if (!match) return { url: '', note: 'No listing found yet.' };
+  try {
+    const r = JSON.parse(match[1]);
+    const url = String(r.url || '');
+    return { url: url && new URL(url).hostname.endsWith(host) ? url : '', note: String(r.note || '') };
+  } catch {
+    return { url: '', note: 'No listing found yet.' };
+  }
+}

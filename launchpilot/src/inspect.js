@@ -1,18 +1,14 @@
 // Opens a page in Chromium and reads what an agent needs: visible text, the
 // form fields (with labels, limits and a stable selector), whether it's behind
 // a login, and whether there's a CAPTCHA.
-import { chromium } from 'playwright';
+import { launchBrowser, localLaunchOptions, guardContext, assertPublicUrl } from './browser.js';
 
 let browser;
 
-export function launchOptions(headless = true) {
-  const opts = { headless };
-  if (process.env.CHROMIUM_PATH) opts.executablePath = process.env.CHROMIUM_PATH;
-  return opts;
-}
+export const launchOptions = localLaunchOptions;
 
 async function getBrowser() {
-  if (!browser || !browser.isConnected()) browser = await chromium.launch(launchOptions(true));
+  if (!browser || !browser.isConnected()) browser = await launchBrowser();
   return browser;
 }
 
@@ -103,9 +99,14 @@ function readPage() {
 }
 
 export async function inspectPage(url, { context } = {}) {
-  const ctx = context || (await (await getBrowser()).newContext({
-    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0 Safari/537.36',
-  }));
+  await assertPublicUrl(url);
+  let ctx = context;
+  if (!ctx) {
+    ctx = await (await getBrowser()).newContext({
+      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0 Safari/537.36',
+    });
+    await guardContext(ctx);
+  }
   const page = await ctx.newPage();
   try {
     const res = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 45000 });
@@ -122,6 +123,11 @@ export { readPage };
 
 // Fast liveness check without a browser.
 export async function checkUrl(url) {
+  try {
+    await assertPublicUrl(url);
+  } catch (e) {
+    return { ok: false, status: null, error: e.message };
+  }
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), 15000);
   try {

@@ -22,6 +22,9 @@ AlternativeTo, G2, AI tool directories and more) without doing every form by han
      fills every field and uploads your logo and screenshots.
    - **Schedule.** Pick a date and time. At that time the agent fills the form, or reminds you to.
    - **Track.** Not started → Needs you → Submitted → Live, with the live URL. Export everything to CSV.
+   - **Find live listing.** Searches the directory's own site with Claude for your product's page, opens
+     it, and checks it really shows your product. If it does, the launch moves to **Live** with that URL.
+     "Find live listings" on the Launches page checks every submitted site at once.
 4. **AI launch plan.** A week-by-week order for your sites: long queues first, then the big launch day,
    then the long tail.
 5. **Logins vault.** Email and password per platform (or one default), encrypted with AES-256-GCM.
@@ -57,14 +60,57 @@ marked **You post**. LaunchPilot writes the copy and fills the form there, but i
 button and never creates accounts on them by itself. That keeps your accounts safe. Elsewhere,
 auto-submit is off by default and you turn it on per run.
 
-## Web version (no install)
+## Hosted version on Vercel (anyone can use it)
 
-`web/launchpilot-web.html` is a hosted version of the dashboard, published at
+The same app runs as a website: people sign up with an email and password, and each account gets its own
+products, launches, vault and site sign-ins. Autopilot runs in a browser on the server.
+
+**Deploy (about 5 minutes):**
+
+1. In Vercel: **Add New → Project**, import this repository, set **Root Directory** to `launchpilot`,
+   Framework Preset **Other**. Deploy it as its own project (not the sjpt.io project).
+2. In the new project: **Storage → Marketplace → Upstash (Redis)** → create and connect. This adds
+   `KV_REST_API_URL` and `KV_REST_API_TOKEN`.
+3. **Settings → Environment Variables:**
+
+   | Variable | Value |
+   |---|---|
+   | `ANTHROPIC_API_KEY` | Your Claude API key. |
+   | `LAUNCHPILOT_SECRET` | A long random string (signs sessions and derives each user's vault key). Never change it after launch, or saved passwords can't be decrypted. |
+   | `CRON_SECRET` | Any random string; lets Vercel Cron run scheduled launches. |
+   | `LAUNCHPILOT_INVITE_CODE` | Optional. If set, sign-up needs this code. |
+   | `LAUNCHPILOT_DAILY_AI_LIMIT` | Optional. AI and browser actions per account per day (default 150). |
+   | `BROWSERBASE_API_KEY`, `BROWSERBASE_PROJECT_ID` | Optional but recommended. Cloud browsers with a **live view**: when a site shows a CAPTCHA or needs a click, the launch shows "Open live browser" so the person can finish it from their own browser. |
+
+4. Redeploy. Open `https://<project>.vercel.app` and create the first account.
+
+**How it differs from the desktop app:**
+
+- **Crawl** uses HTTP (sitemaps plus up to 100 pages) instead of a browser, so it fits in one request.
+- **Autopilot** runs one site per request (up to 5 minutes each). "Launch on N sites" steps through the
+  list from the open tab.
+- **Sign-ins to listing sites** are saved per account: Browserbase contexts, or the browser's cookies in
+  storage without Browserbase.
+- **CAPTCHAs and email links.** Without Browserbase there is no window to hand over, so those sites stop at
+  **Needs you**; finish them on the site yourself and mark the launch submitted.
+- **Scheduled launches** run from Vercel Cron (`vercel.json`, daily at 06:00 UTC on the Hobby plan; on Pro
+  change it to hourly, `0 * * * *`).
+- **Safety.** The server refuses private and internal addresses, every account has a daily action limit,
+  and site passwords are encrypted with a key unique to each account.
+
+Test the hosted mode locally without Vercel:
+
+```bash
+LAUNCHPILOT_CLOUD=1 LAUNCHPILOT_STORE_DIR=./data/store LAUNCHPILOT_SECRET=dev-secret npm start
+```
+
+## Claude artifact version
+
+`web/launchpilot-web.html` is a lighter single-page version published at
 https://claude.ai/artifact/2SaXPccNZq5Gqyja46w3SZ. It has the site catalog, AI listing writer,
-launch tracker, launch calendar (.ics export) and CSV export. It can't log in to sites or fill
-their forms, because browsers don't let a web page control other websites. That needs the desktop app below.
+launch tracker, launch calendar (.ics export) and CSV export, but no autopilot.
 
-## Setup
+## Desktop setup
 
 **Windows:** install Node.js and Git, clone the repo, then double-click `Start LaunchPilot.bat`. It
 installs everything the first time, asks for your API key, and opens the dashboard.
@@ -103,7 +149,14 @@ Everything lives in `launchpilot/data/` (git-ignored):
 ## Project layout
 
 ```
-src/server.js      Express API + static UI
+src/app.js         Express API + static UI (desktop and hosted)
+src/server.js      Desktop entry point (listens locally, runs the scheduler)
+api/index.js       Vercel entry point
+vercel.json        Vercel routing, function limits and cron
+src/auth.js        Hosted accounts: sign-up, login, signed session cookie
+src/store.js       Hosted storage (Upstash Redis)
+src/browser.js     Where the browser runs: local, serverless Chromium or Browserbase; private-address guard
+src/crawl-fetch.js Hosted crawler (HTTP, no browser)
 src/crawl.js       Website crawler: sitemap + links, ranks pages, extracts headings, prices, FAQs
 src/style.js       House writing rules and the style checker
 src/ai.js          Claude calls: fact sheet, form analysis, listing copy, launch plan, web discovery
@@ -112,7 +165,7 @@ src/automation.js  Playwright: persistent per-site profiles, login/sign-up, form
 src/scheduler.js   Runs scheduled fills and reminders
 src/vault.js       AES-256-GCM password encryption
 src/catalog.js     Built-in directory catalog (edit to add your own defaults)
-src/db.js          JSON-file store
+src/db.js          JSON-file store (desktop) or one document per account (hosted)
 public/            Dashboard (vanilla JS, no build step)
 ```
 
@@ -120,6 +173,9 @@ public/            Dashboard (vanilla JS, no build step)
 
 The app is self-contained and white-label friendly. To package it for customers:
 
+- **Hosted (SaaS).** Deploy to Vercel as above and give people the link. Use `LAUNCHPILOT_INVITE_CODE`
+  while testing, and `LAUNCHPILOT_DAILY_AI_LIMIT` to cap Claude spend per account. Add billing in front of
+  sign-up when you start charging.
 - **Self-hosted or desktop.** Each customer runs their own copy. Their logins, browser sessions and API
   key stay on their machine. This is the simplest model to sell and the safest for credentials. Wrap it
   in Electron or Tauri for a one-click desktop app.

@@ -21,6 +21,7 @@ const state = {
   status: null, products: [], directories: [], submissions: [], jobs: [], credentials: [], activity: [],
   filters: { q: '', category: '', pricing: '', tier: '', show: 'active' },
   selected: new Set(),
+  hosted: false, me: null, signup: false,
 };
 
 // ---------------------------------------------------------------- API helpers
@@ -30,7 +31,7 @@ async function api(path, opts = {}) {
     headers: opts.body ? { 'content-type': 'application/json' } : {},
     body: opts.body ? JSON.stringify(opts.body) : undefined,
   });
-  if (res.status === 401) {
+  if (res.status === 401 && !/^\/(auth\/|login)/.test(path)) {
     showLogin();
     throw new Error('Please sign in');
   }
@@ -68,7 +69,9 @@ async function busy(btn, label, fn) {
 
 async function refresh(...keys) {
   const all = { products: '/products', directories: '/directories', submissions: '/submissions', jobs: '/jobs', credentials: '/credentials', activity: '/activity', status: '/status', account: '/account', autopilot: '/autopilot/status' };
-  await Promise.all((keys.length ? keys : Object.keys(all)).map(async (k) => { state[k] = await api(all[k]); }));
+  // Hosted: autopilot runs are driven from this page (one site per request), so their status lives here.
+  if (state.hosted) delete all.autopilot;
+  await Promise.all((keys.length ? keys : Object.keys(all)).filter((k) => all[k]).map(async (k) => { state[k] = await api(all[k]); }));
   if (!state.products.find((p) => p.id === state.productId)) state.productId = state.products[0]?.id || null;
 }
 
@@ -83,6 +86,15 @@ const uploadUrl = (p) => (p ? `/api/uploads/${encodeURIComponent(p.split(/[\\/]/
 function showLogin() {
   $('#app').classList.add('hidden');
   $('#login').classList.remove('hidden');
+  $$('.cloud-only').forEach((x) => x.classList.toggle('hidden', !state.hosted));
+  $$('.signup-only').forEach((x) => x.classList.toggle('hidden', !(state.hosted && state.signup && state.me?.inviteOnly)));
+  const form = $('#login-form');
+  if (state.hosted) {
+    form.email.required = true;
+    form.password.autocomplete = state.signup ? 'new-password' : 'current-password';
+    $('#login-submit').textContent = state.signup ? 'Create account' : 'Sign in';
+    $('#login-switch').textContent = state.signup ? 'Have an account? Sign in' : 'New here? Create an account';
+  }
 }
 
 function renderChrome() {
@@ -92,9 +104,9 @@ function renderChrome() {
     : '<option value="__new">+ Add your first product</option>';
   $$('#nav a').forEach((a) => a.classList.toggle('active', a.dataset.view === state.view));
   const s = state.status;
-  $('#ai-status').innerHTML = s
-    ? `${s.aiConfigured ? `AI: <b>${esc(s.model)}</b>` : '<span class="badge bad">AI off: set ANTHROPIC_API_KEY</span>'}<br>Browser: ${s.headless ? 'hidden (headless)' : 'visible window'}`
-    : '';
+  $('#ai-status').innerHTML = !s ? '' : state.hosted
+    ? `${s.aiConfigured ? `AI: <b>${esc(s.model)}</b>` : '<span class="badge bad">AI is off on this server</span>'}<br>Browser: cloud${s.liveBrowser ? ' (with live view)' : ''}<br>${esc(state.me?.email || '')} · <a href="#" id="sign-out">Sign out</a>`
+    : `${s.aiConfigured ? `AI: <b>${esc(s.model)}</b>` : '<span class="badge bad">AI off: set ANTHROPIC_API_KEY</span>'}<br>Browser: ${s.headless ? 'hidden (headless)' : 'visible window'}`;
 }
 
 function go(view) {
@@ -115,7 +127,7 @@ function accountCard() {
   const a = state.account;
   return `<form class="card stack" id="account-form" style="margin-bottom:16px">
     <div class="row"><h2 style="margin:0">Your launch account</h2>${a ? `<span class="badge ok">Saved: ${esc(a.emailMasked)}</span>` : '<span class="badge warn">Not set</span>'}</div>
-    <p class="muted small">Autopilot uses this email and password on every listing site: it signs in, or creates the account if you don't have one there yet. If a site already has an account for this email with a different password, it asks you for that one. Stored encrypted on this computer.</p>
+    <p class="muted small">Autopilot uses this email and password on every listing site: it signs in, or creates the account if you don't have one there yet. If a site already has an account for this email with a different password, it asks you for that one. Stored encrypted${state.hosted ? ' with a key unique to your LaunchPilot account' : ' on this computer'}.</p>
     <div class="row"><input id="acct-email" type="email" placeholder="you@example.com" value="${esc(a?.email || '')}" style="flex:1;min-width:200px" autocomplete="off" />
       <input id="acct-password" type="password" placeholder="${a ? 'New password (leave blank to keep)' : 'Password for listing sites'}" style="flex:1;min-width:200px" autocomplete="new-password" />
       <button class="btn primary" type="submit">${a ? 'Update' : 'Save'}</button></div>
@@ -242,9 +254,12 @@ function viewProduct(el) {
 
   $('#autofill').addEventListener('click', (e) => busy(e.currentTarget, 'Crawling…', async () => {
     const status = $('#crawl-status');
-    const { id } = await api('/products/autofill', { body: { url: $('#autofill-url').value, maxPages: $('#crawl-pages').value } });
-    let job;
-    for (;;) {
+    if (state.hosted) status.textContent = 'Reading your site and every sitemap, then writing the fact sheet. This takes a minute or two…';
+    const first = await api('/products/autofill', { body: { url: $('#autofill-url').value, maxPages: $('#crawl-pages').value } });
+    const { id } = first;
+    // Hosted replies with the finished result; desktop runs in the background and is polled.
+    let job = first.status ? first : null;
+    while (!job || !['done', 'failed'].includes(job.status)) {
       await new Promise((r) => setTimeout(r, 2000));
       job = await api(`/crawls/${id}`);
       status.textContent = job.status === 'crawling'
@@ -408,24 +423,67 @@ function autopilotPanel(subs) {
     return `<div class="card stack" style="margin-bottom:16px"><div class="row"><h2 style="margin:0">Autopilot is running</h2><span class="spacer"></span><button class="btn sm danger" id="ap-stop">Stop after this site</button></div>
       <p><span class="spinner"></span>${esc(nameOf(run.current))} · ${run.done.length} of ${total} done</p>
       ${run.done.length ? `<div class="list">${run.done.map((r) => `<div class="list-item clickable" data-open-sub="${r.id}">${badge(r.status)}<b>${esc(nameOf(r.id))}</b><span class="spacer"></span>${r.listingUrl ? `<a class="btn sm" href="${esc(r.listingUrl)}" target="_blank" rel="noopener" data-stop>View listing ↗</a>` : `<span class="muted small">${esc(r.message.slice(0, 80))}</span>`}</div>`).join('')}</div>` : ''}
-      <p class="muted small">A browser window opens for each site. If one needs you (CAPTCHA, email link, password), it's skipped and listed under Needs you; the rest keep going.</p></div>`;
+      <p class="muted small">${state.hosted ? 'Each site runs in a cloud browser. Keep this tab open until it finishes.' : 'A browser window opens for each site.'} If one needs you (CAPTCHA, email link, password), it's skipped and listed under Needs you; the rest keep going.</p></div>`;
   }
   return `<div class="card stack" style="margin-bottom:16px">
     <div class="row"><h2 style="margin:0">Autopilot</h2><span class="spacer"></span>
       <button class="btn primary" id="ap-run" ${todo.length && state.account ? '' : 'disabled'}>Launch on ${todo.length} site${todo.length === 1 ? '' : 's'}</button></div>
     <p class="muted small">For each site: signs in with your launch account (or creates one), finds the submit page, writes the listing with Claude from your fact sheet, fills every field, submits, and saves the listing link and a screenshot. ${state.account ? '' : '<b>Save your launch account on the Dashboard first.</b>'}</p>
     ${run.done?.length ? `<p class="small">Last run: ${run.done.filter((r) => r.status === 'submitted').length} submitted, ${run.done.filter((r) => r.status !== 'submitted').length} need you.</p>` : ''}
+    ${subs.some(waitingForLive) ? `<div class="row"><span class="small muted">${subs.filter(waitingForLive).length} submitted listing${subs.filter(waitingForLive).length === 1 ? ' is' : 's are'} waiting to go live.</span><span class="spacer"></span><button class="btn sm" id="find-all">Find live listings</button></div>` : ''}
   </div>`;
 }
+
+// Submitted (or found earlier) but not confirmed live yet.
+const waitingForLive = (s) => s.status === 'submitted';
 
 function bindAutopilot() {
   $('#ap-run')?.addEventListener('click', (e) => busy(e.currentTarget, 'Starting…', async () => {
     const ids = subsForProduct().filter((s) => AUTOPILOT_READY.includes(s.status)).map((s) => s.id);
+    if (state.hosted) return runAutopilotHere(ids);
     state.autopilot = await api('/autopilot/run', { body: { ids } });
     render();
     pollAutopilot();
   }));
-  $('#ap-stop')?.addEventListener('click', async () => { state.autopilot = await api('/autopilot/stop', { body: {} }); toast('Autopilot stops after the current site'); });
+  $('#ap-stop')?.addEventListener('click', async () => {
+    if (state.hosted) state.autopilot.queue = [];
+    else state.autopilot = await api('/autopilot/stop', { body: {} });
+    toast('Autopilot stops after the current site');
+  });
+  $('#find-all')?.addEventListener('click', (e) => { const btn = e.currentTarget; busy(btn, 'Searching…', async () => {
+    const subs = subsForProduct().filter(waitingForLive);
+    let live = 0;
+    for (const [i, s] of subs.entries()) {
+      btn.innerHTML = `<span class="spinner"></span>Checking ${i + 1} of ${subs.length}`;
+      const r = await api(`/submissions/${s.id}/find-listing`, { body: {} }).catch(() => null);
+      if (r?.status === 'live') live++;
+    }
+    await refresh('submissions', 'activity');
+    render();
+    toast(live ? `${live} listing${live === 1 ? '' : 's'} live. Links are on each site.` : 'None are live yet. Directories usually publish after review; check again in a few days.', 8000);
+  }); });
+}
+
+// Hosted: run sites one request at a time from this tab.
+async function runAutopilotHere(ids) {
+  state.autopilot = { running: true, queue: [...ids], current: null, done: [], startedAt: new Date().toISOString() };
+  render();
+  const run = state.autopilot;
+  while (run.queue.length) {
+    run.current = run.queue.shift();
+    if (state.view === 'launches' && $('#drawer').classList.contains('hidden')) render();
+    try {
+      const r = await api(`/submissions/${run.current}/autopilot`, { body: {} });
+      run.done.push({ id: run.current, status: r.status, listingUrl: r.listingUrl || '', message: (r.log || []).slice(-1)[0]?.message || '' });
+    } catch (e) {
+      run.done.push({ id: run.current, status: 'needs_human', message: e.message });
+      if (/Daily limit/.test(e.message)) run.queue = [];
+    }
+    await refresh('submissions', 'activity').catch(() => {});
+  }
+  Object.assign(run, { running: false, current: null });
+  render();
+  toast('Autopilot finished');
 }
 
 let polling = false;
@@ -470,7 +528,7 @@ function viewLaunches(el) {
       </div></div>`;
     }).join('') : '<div class="card empty">No sites yet. <a href="#" data-go="directories">Pick listing sites</a> to start.</div>'}`;
   bindAutopilot();
-  if (state.autopilot?.running) pollAutopilot();
+  if (state.autopilot?.running && !state.hosted) pollAutopilot();
 }
 
 function openSubmission(id) {
@@ -498,7 +556,10 @@ function openSubmission(id) {
       ${s.accountStatus ? `<p class="small">Account: <b>${esc({ created: 'created by autopilot', signed_in: 'signed in', verify_email: 'waiting for email verification' }[s.accountStatus] || s.accountStatus)}</b>${s.accountEmail ? ` (${esc(s.accountEmail)})` : ''}</p>` : ''}
       ${s.needsPassword ? `<div class="callout stack"><b>Your ${esc(d.name)} password</b><span class="small">An account for ${esc(s.accountEmail || state.account?.email || 'your email')} already exists on ${esc(d.name)} with a different password. Enter it once; it's saved encrypted for this site.</span>
         <div class="row"><input id="site-pw" type="password" autocomplete="off" style="flex:1;min-width:180px" placeholder="Password for ${esc(d.name)}" /><button class="btn primary" id="site-pw-save">Save and continue</button></div></div>` : ''}
-      ${s.listingUrl ? `<div class="callout info"><b>Listing link:</b> <a href="${esc(s.listingUrl)}" target="_blank" rel="noopener">${esc(s.listingUrl)}</a><div class="small">Many directories review submissions first, so the page may go live later.</div></div>` : ''}
+      ${s.liveViewUrl && s.status === 'needs_human' ? `<div class="callout stack"><b>${esc(d.name)} is waiting for you</b><span class="small">Finish the step in the live browser (CAPTCHA or sign-in), then come back and press Continue.</span><div><a class="btn primary" href="${esc(s.liveViewUrl)}" target="_blank" rel="noopener">Open live browser ↗</a></div></div>` : ''}
+      ${s.status === 'live' && (s.liveUrl || s.listingUrl) ? `<div class="callout info"><b>Live listing:</b> <a href="${esc(s.liveUrl || s.listingUrl)}" target="_blank" rel="noopener">${esc(s.liveUrl || s.listingUrl)}</a></div>`
+        : s.listingUrl ? `<div class="callout info"><b>Listing link:</b> <a href="${esc(s.listingUrl)}" target="_blank" rel="noopener">${esc(s.listingUrl)}</a><div class="small">Many directories review submissions first, so the page may go live later.</div></div>` : ''}
+      ${['submitted', 'live'].includes(s.status) ? `<div class="row"><button class="btn sm" id="find-listing">${s.status === 'live' ? 'Check listing again' : 'Find live listing'}</button><span class="muted small">${s.listingCheckedAt ? `Last checked ${fmt(s.listingCheckedAt)}` : 'Searches ' + esc(d.name) + ' for your product page and checks it is up.'}</span></div>` : ''}
       ${s.confirmation ? `<p class="small muted">${esc(d.name)} said: “${esc(s.confirmation)}”</p>` : ''}
       ${s.screenshot ? `<details><summary class="small">Confirmation screenshot</summary><a href="/api/screens/${encodeURIComponent(s.screenshot)}" target="_blank" rel="noopener"><img src="/api/screens/${encodeURIComponent(s.screenshot)}" alt="Confirmation page" style="width:100%;border:1px solid var(--border);border-radius:8px;margin-top:8px" /></a></details>` : ''}
     </div>
@@ -529,7 +590,7 @@ function openSubmission(id) {
         ${!p?.factSheet ? '<div class="callout small" style="margin-top:8px">Crawl your site on the Product profile page first. Listings written from a full crawl are far more specific.</div>' : ''}
       </div>
       <div class="step"><h3>Fill it in the browser</h3>
-        <p class="muted small">Opens ${esc(d.name)} in a real Chromium window, logs in${cred ? ` as <b>${esc(cred.emailMasked)}</b>` : ' (no saved login: <a href="#" data-go-close="vault">add one</a>)'}, and fills every field. CAPTCHAs, email verification${d.manualOnly ? ' and the final click' : ''} stay with you.</p>
+        <p class="muted small">Opens ${esc(d.name)} in ${state.hosted ? 'a cloud browser' : 'a real Chromium window'}, logs in${cred ? ` as <b>${esc(cred.emailMasked)}</b>` : ' (no saved login: <a href="#" data-go-close="vault">add one</a>)'}, and fills every field. CAPTCHAs, email verification${d.manualOnly ? ' and the final click' : ''} stay with you.</p>
         <div class="stack">
           <label class="check"><input type="checkbox" id="opt-signup" /> Create a new account first with my saved login</label>
           <label class="check"><input type="checkbox" id="opt-auto" ${d.manualOnly ? 'disabled' : ''} /> Click Submit for me when there's no CAPTCHA${d.manualOnly ? ' (not allowed here)' : ''}</label>
@@ -613,6 +674,11 @@ function openSubmission(id) {
     toast((r.log || []).slice(-1)[0]?.message || 'Done', 9000);
     reload();
   }));
+  $('#find-listing')?.addEventListener('click', (e) => busy(e.currentTarget, 'Searching…', async () => {
+    const r = await api(`/submissions/${s.id}/find-listing`, { body: {} });
+    toast(r.note, 9000);
+    reload();
+  }));
   $('#run').addEventListener('click', (e) => busy(e.currentTarget, 'Agent working…', async () => {
     await saveSubmitUrl();
     const r = await api(`/submissions/${s.id}/run`, { body: { createAccount: $('#opt-signup').checked, autoSubmit: $('#opt-auto').checked } });
@@ -620,14 +686,15 @@ function openSubmission(id) {
     reload();
   }));
   $('#open-window').addEventListener('click', (e) => busy(e.currentTarget, 'Opening…', async () => {
-    await api(`/submissions/${s.id}/open`, { body: {} });
-    toast('Opened in the LaunchPilot browser window');
+    const r = await api(`/submissions/${s.id}/open`, { body: {} });
+    if (r.liveViewUrl) window.open(r.liveViewUrl, '_blank', 'noopener');
+    else toast('Opened in the LaunchPilot browser window');
   }));
   $('#schedule').addEventListener('click', (e) => busy(e.currentTarget, 'Scheduling', async () => {
     const at = $('#sched-at').value;
     if (!at) throw new Error('Pick a date and time');
     await api(`/submissions/${s.id}/schedule`, { body: { runAt: new Date(at).toISOString(), type: $('#sched-type').value, autoSubmit: $('#sched-auto')?.checked } });
-    toast('Scheduled. Keep LaunchPilot running so it can fire on time.');
+    toast(state.hosted ? 'Scheduled. The server runs it at its next scheduled check after that time.' : 'Scheduled. Keep LaunchPilot running so it can fire on time.');
     reload();
   }));
   $('#cancel-job')?.addEventListener('click', async () => {
@@ -725,21 +792,24 @@ function viewHelp(el) {
         <p>LaunchPilot never solves CAPTCHAs or bypasses verification. When a site shows one, the window stays open and the launch moves to <b>Needs you</b>. Solve it, then press <b>Continue</b>.</p>
         <p>Launch platforms with strict rules (Product Hunt, Hacker News, Reddit…) are marked <span class="badge">You post</span>: the agent prepares everything but you click the final button. That protects your accounts from bans.</p>
         <p>Follow each platform's terms. Don't create multiple accounts on one platform or ask for upvotes.</p></div>
-      <div class="card"><h2>Scheduling</h2><p>Scheduled jobs run while the app is open (keep the terminal running, or run it on an always-on machine). If the computer was off, due jobs run on the next start.</p></div>
-      <div class="card"><h2>Your data</h2><p>Everything lives in <code>launchpilot/data/</code> on this machine: the database, uploads, encrypted logins and browser profiles. Back up <code>data/.master.key</code> (or your <code>LAUNCHPILOT_MASTER_KEY</code>); without it saved passwords can't be decrypted.</p></div>
+      ${state.hosted ? `<div class="card"><h2>Scheduling</h2><p>Scheduled launches run on the server at its next scheduled check after the time you pick, even with this tab closed.</p></div>
+      <div class="card"><h2>Your data</h2><p>Your products, listings and launch history are private to your account. Site passwords are encrypted with a key unique to you. Sign-ins to listing sites are kept so autopilot stays logged in.</p></div>`
+      : `<div class="card"><h2>Scheduling</h2><p>Scheduled jobs run while the app is open (keep the terminal running, or run it on an always-on machine). If the computer was off, due jobs run on the next start.</p></div>
+      <div class="card"><h2>Your data</h2><p>Everything lives in <code>launchpilot/data/</code> on this machine: the database, uploads, encrypted logins and browser profiles. Back up <code>data/.master.key</code> (or your <code>LAUNCHPILOT_MASTER_KEY</code>); without it saved passwords can't be decrypted.</p></div>`}
     </div>`;
 }
 
 // ------------------------------------------------------------------ Bootstrap
 document.addEventListener('click', (e) => {
   if (e.target.closest('[data-stop]')) return; // plain links inside clickable rows
-  const t = e.target.closest('[data-go], [data-go-close], [data-open-sub], [data-close], [data-dismiss], #nav a');
+  const t = e.target.closest('[data-go], [data-go-close], [data-open-sub], [data-close], [data-dismiss], #nav a, #sign-out');
   if (!t) return;
   if (t.matches('#nav a')) return go(t.dataset.view);
   if (t.dataset.go) { e.preventDefault(); return go(t.dataset.go); }
   if (t.dataset.goClose) { e.preventDefault(); $('#drawer').classList.add('hidden'); return go(t.dataset.goClose); }
   if (t.dataset.openSub) return openSubmission(t.dataset.openSub);
   if (t.hasAttribute('data-close')) return closeDrawer();
+  if (t.id === 'sign-out') { e.preventDefault(); return api('/auth/logout', { body: {} }).then(() => location.reload()); }
   if (t.dataset.dismiss) return api(`/jobs/${t.dataset.dismiss}/dismiss`, { body: {} }).then(() => refresh('jobs')).then(render);
 });
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('#drawer').classList.contains('hidden')) closeDrawer(); });
@@ -754,10 +824,22 @@ $('#product-select').addEventListener('change', (e) => {
   render();
 });
 
+$('#login-switch').addEventListener('click', (e) => {
+  e.preventDefault();
+  state.signup = !state.signup;
+  $('#login-error').textContent = '';
+  showLogin();
+});
+
 $('#login-form').addEventListener('submit', async (e) => {
   e.preventDefault();
+  const f = e.target;
   try {
-    await api('/login', { body: { password: e.target.password.value } });
+    if (state.hosted) {
+      state.me = { ...state.me, ...(await api(state.signup ? '/auth/signup' : '/auth/login', { body: { email: f.email.value, password: f.password.value, invite: f.invite.value } })) };
+    } else {
+      await api('/login', { body: { password: f.password.value } });
+    }
     await start();
   } catch (err) {
     $('#login-error').textContent = err.message;
@@ -765,6 +847,13 @@ $('#login-form').addEventListener('submit', async (e) => {
 });
 
 async function start() {
+  // Hosted (Vercel) build: sign in with an email account first.
+  const me = await fetch('/api/auth/me').then((r) => (r.ok ? r.json() : null)).catch(() => null);
+  if (me?.hosted) {
+    state.hosted = true;
+    state.me = me;
+    if (!me.email) return showLogin();
+  }
   try {
     await refresh();
   } catch {

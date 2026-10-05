@@ -166,7 +166,7 @@ export async function crawlSite(startUrl, { maxPages = 40, onProgress = () => {}
 // Every URL in the sitemaps, grouped by top-level section with readable
 // example names, so the fact sheet covers the whole site, not just the pages
 // that were opened.
-function summarizeSitemap(urls, origin) {
+export function summarizeSitemap(urls, origin) {
   const groups = new Map();
   for (const u of urls) {
     let url;
