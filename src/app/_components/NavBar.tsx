@@ -274,7 +274,7 @@ export default function NavBar() {
 
   const purchased = hasPurchased(user);
 
-  if (pathname?.startsWith("/lp/") || pathname?.startsWith("/app") || pathname?.startsWith("/launchpilot")) return null;
+  if (pathname?.startsWith("/lp/") || pathname?.startsWith("/app")) return null;
 
   return (
     <>
