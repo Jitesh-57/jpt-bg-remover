@@ -127,7 +127,17 @@ async function fillField(page, field, value, product) {
   }
   if (value === undefined || value === null || value === '') return false;
   if (field.tag === 'select') {
-    await loc.selectOption({ label: String(value) }).catch(() => loc.selectOption(String(value)));
+    // Exact option first, then the option that shares the most words with the value.
+    const options = await loc.locator('option').evaluateAll((os) => os.map((o) => ({ label: o.textContent.trim(), value: o.value })));
+    const want = String(value).toLowerCase();
+    let pickOpt = options.find((o) => o.label.toLowerCase() === want || o.value.toLowerCase() === want);
+    if (!pickOpt) {
+      const words = want.split(/\W+/).filter((w) => w.length > 2);
+      const scored = options.filter((o) => o.value).map((o) => ({ o, n: words.filter((w) => o.label.toLowerCase().includes(w)).length })).sort((a, b) => b.n - a.n);
+      if (scored[0]?.n) pickOpt = scored[0].o;
+    }
+    if (!pickOpt) return false;
+    await loc.selectOption({ value: pickOpt.value });
     return true;
   }
   if (field.type === 'checkbox' || field.type === 'radio') {
@@ -145,8 +155,12 @@ async function fillField(page, field, value, product) {
 
 // Value for a form field: the AI-written copy if present, otherwise a direct
 // mapping from the product profile.
+// Facts that must be exact (links, email, names) always come from the profile;
+// written copy comes from the AI listing when there is one.
+const EXACT_ROLES = new Set(['product_name', 'website_url', 'email', 'maker_name', 'company_name', 'twitter', 'linkedin', 'github', 'video_url']);
+
 function valueFor(field, submission, product, cred) {
-  if (submission.values && submission.values[field.fid] !== undefined) return submission.values[field.fid];
+  if (!EXACT_ROLES.has(field.role) && submission.values && submission.values[field.fid] !== undefined) return submission.values[field.fid];
   switch (field.role) {
     case 'product_name': return product.name;
     case 'website_url': return product.url;
@@ -256,8 +270,22 @@ export async function runSubmission(submissionId, opts = {}) {
   }
 
   if (opts.autoSubmit && !directory.manualOnly) {
+    // The browser refuses to send a form with invalid fields (a bad URL, an
+    // empty required field), so check before claiming it was submitted.
+    const invalid = await page.evaluate(() => [...document.querySelectorAll('input:invalid, textarea:invalid, select:invalid')]
+      .map((el) => (el.labels?.[0]?.innerText || el.getAttribute('aria-label') || el.name || el.placeholder || el.type).trim()).slice(0, 8));
+    if (invalid.length) {
+      log(submission, `Not submitted: these fields need fixing first: ${invalid.join(', ')}. Fix them in the window, then click Submit.`, 'needs_human');
+      return submission;
+    }
+    const before = page.url();
     const clicked = await clickPrimary(page, ['submit', 'publish', 'launch', 'add (tool|product|startup)', 'list (it|my)', 'send', 'save']);
     await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
+    const stillInvalid = clicked && page.url() === before && await page.evaluate(() => document.querySelectorAll('input:invalid, textarea:invalid, select:invalid').length).catch(() => 0);
+    if (stillInvalid) {
+      log(submission, 'The site rejected some fields after clicking Submit. Check the window, fix them and submit.', 'needs_human');
+      return submission;
+    }
     if (clicked) {
       log(submission, 'Clicked Submit. Check the window for a confirmation, then add the live URL when it\'s approved.', 'submitted');
       db.update('submissions', submission.id, { submittedAt: db.now() });

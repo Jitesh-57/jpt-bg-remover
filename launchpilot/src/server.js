@@ -341,9 +341,17 @@ app.post('/api/submissions/:id/write', wrap(async (req, res) => {
   const { s, product, directory } = loadSubmission(req.params.id);
   if (!ai.aiConfigured()) throw Object.assign(new Error('AI writing needs ANTHROPIC_API_KEY. Without it, "Fill in browser" still fills fields straight from your product profile.'), { status: 400 });
   const result = await ai.writeListing(product, directory, s.fields || []);
-  const byFid = new Set((s.fields || []).map((f) => f.fid));
+  // One entry per field: if a key comes back twice, keep the last version.
+  result.fields = [...new Map(result.fields.map((f) => [f.key, f])).values()];
+  const byFid = new Map((s.fields || []).map((f) => [f.fid, f]));
   const values = { ...s.values };
-  for (const f of result.fields) if (byFid.has(f.key)) values[f.key] = f.value;
+  for (const f of result.fields) {
+    const field = byFid.get(f.key);
+    if (!field) continue;
+    values[f.key] = f.value;
+    // Show the form's own label ("Tool name"), never the internal field id.
+    f.label = field.label || field.placeholder || field.name || f.label;
+  }
   const row = db.update('submissions', s.id, {
     kit: result.fields, values, checklist: result.checklist, notes: result.notes, styleIssues: result.styleIssues,
     status: ['draft', 'written'].includes(s.status) ? 'written' : s.status, writtenAt: db.now(),
