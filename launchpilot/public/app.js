@@ -67,7 +67,7 @@ async function busy(btn, label, fn) {
 }
 
 async function refresh(...keys) {
-  const all = { products: '/products', directories: '/directories', submissions: '/submissions', jobs: '/jobs', credentials: '/credentials', activity: '/activity', status: '/status' };
+  const all = { products: '/products', directories: '/directories', submissions: '/submissions', jobs: '/jobs', credentials: '/credentials', activity: '/activity', status: '/status', account: '/account', autopilot: '/autopilot/status' };
   await Promise.all((keys.length ? keys : Object.keys(all)).map(async (k) => { state[k] = await api(all[k]); }));
   if (!state.products.find((p) => p.id === state.productId)) state.productId = state.products[0]?.id || null;
 }
@@ -110,6 +110,33 @@ function render() {
 }
 
 // ------------------------------------------------------------------ Dashboard
+// One email and password for every listing site.
+function accountCard() {
+  const a = state.account;
+  return `<form class="card stack" id="account-form" style="margin-bottom:16px">
+    <div class="row"><h2 style="margin:0">Your launch account</h2>${a ? `<span class="badge ok">Saved: ${esc(a.emailMasked)}</span>` : '<span class="badge warn">Not set</span>'}</div>
+    <p class="muted small">Autopilot uses this email and password on every listing site: it signs in, or creates the account if you don't have one there yet. If a site already has an account for this email with a different password, it asks you for that one. Stored encrypted on this computer.</p>
+    <div class="row"><input id="acct-email" type="email" placeholder="you@example.com" value="${esc(a?.email || '')}" style="flex:1;min-width:200px" autocomplete="off" />
+      <input id="acct-password" type="password" placeholder="${a ? 'New password (leave blank to keep)' : 'Password for listing sites'}" style="flex:1;min-width:200px" autocomplete="new-password" />
+      <button class="btn primary" type="submit">${a ? 'Update' : 'Save'}</button></div>
+  </form>`;
+}
+
+function bindAccountForm() {
+  $('#account-form')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = $('#acct-email').value.trim();
+    const password = $('#acct-password').value;
+    if (!password && state.account?.email === email) return toast('Nothing changed');
+    busy(e.submitter, 'Saving', async () => {
+      await api('/account', { body: { email, password } });
+      await refresh('account', 'credentials');
+      toast('Launch account saved (encrypted)');
+      render();
+    });
+  });
+}
+
 function viewDashboard(el) {
   const p = product();
   const subs = subsForProduct();
@@ -124,6 +151,7 @@ function viewDashboard(el) {
       <div class="row">${p ? '<button class="btn" data-go="directories">Add listing sites</button><button class="btn primary" data-go="launches">Open launches</button>' : '<button class="btn primary" data-go="products">Add your product</button>'}</div>
     </div>
     ${!state.status.aiConfigured ? '<div class="callout" style="margin-bottom:16px">AI is off. Add <code>ANTHROPIC_API_KEY</code> to <code>.env</code> and restart to enable auto-fill, form analysis, copywriting and site discovery.</div>' : ''}
+    ${accountCard()}
     ${!p ? `<div class="card stack"><h2>Get started in 4 steps</h2><ol class="muted">
         <li>Add your product: paste its URL and the agent drafts your profile.</li>
         <li>Pick listing sites from ${state.directories.length}+ built-in platforms, or paste any site's URL.</li>
@@ -143,6 +171,7 @@ function viewDashboard(el) {
       <div class="card"><h2>Coming up</h2>${upcoming.length ? `<div class="list">${upcoming.map((j) => `<div class="list-item clickable" data-open-sub="${j.submissionId}"><span class="badge scheduled">${fmt(j.runAt)}</span><span>${esc(j.title)}</span></div>`).join('')}</div>` : '<p class="muted">No scheduled launches. Open a launch and pick a date.</p>'}</div>
     </div>`}
     <div class="card" style="margin-top:16px"><h2>Recent activity</h2>${state.activity.length ? `<div class="log">${state.activity.slice(0, 30).map((a) => `<div><span class="muted">${fmt(a.at)}</span> ${esc(a.message)}</div>`).join('')}</div>` : '<p class="muted">No activity yet.</p>'}</div>`;
+  bindAccountForm();
 }
 
 // -------------------------------------------------------------------- Product
@@ -368,6 +397,54 @@ function viewDirectories(el) {
 }
 
 // ------------------------------------------------------------------- Launches
+const AUTOPILOT_READY = ['draft', 'written', 'needs_human', 'ready_for_review', 'scheduled'];
+
+function autopilotPanel(subs) {
+  const run = state.autopilot || {};
+  const todo = subs.filter((s) => AUTOPILOT_READY.includes(s.status));
+  const nameOf = (id) => dirById(state.submissions.find((x) => x.id === id)?.directoryId)?.name || '';
+  if (run.running) {
+    const total = run.done.length + run.queue.length + (run.current ? 1 : 0);
+    return `<div class="card stack" style="margin-bottom:16px"><div class="row"><h2 style="margin:0">Autopilot is running</h2><span class="spacer"></span><button class="btn sm danger" id="ap-stop">Stop after this site</button></div>
+      <p><span class="spinner"></span>${esc(nameOf(run.current))} · ${run.done.length} of ${total} done</p>
+      ${run.done.length ? `<div class="list">${run.done.map((r) => `<div class="list-item clickable" data-open-sub="${r.id}">${badge(r.status)}<b>${esc(nameOf(r.id))}</b><span class="spacer"></span>${r.listingUrl ? `<a class="btn sm" href="${esc(r.listingUrl)}" target="_blank" rel="noopener" data-stop>View listing ↗</a>` : `<span class="muted small">${esc(r.message.slice(0, 80))}</span>`}</div>`).join('')}</div>` : ''}
+      <p class="muted small">A browser window opens for each site. If one needs you (CAPTCHA, email link, password), it's skipped and listed under Needs you; the rest keep going.</p></div>`;
+  }
+  return `<div class="card stack" style="margin-bottom:16px">
+    <div class="row"><h2 style="margin:0">Autopilot</h2><span class="spacer"></span>
+      <button class="btn primary" id="ap-run" ${todo.length && state.account ? '' : 'disabled'}>Launch on ${todo.length} site${todo.length === 1 ? '' : 's'}</button></div>
+    <p class="muted small">For each site: signs in with your launch account (or creates one), finds the submit page, writes the listing with Claude from your fact sheet, fills every field, submits, and saves the listing link and a screenshot. ${state.account ? '' : '<b>Save your launch account on the Dashboard first.</b>'}</p>
+    ${run.done?.length ? `<p class="small">Last run: ${run.done.filter((r) => r.status === 'submitted').length} submitted, ${run.done.filter((r) => r.status !== 'submitted').length} need you.</p>` : ''}
+  </div>`;
+}
+
+function bindAutopilot() {
+  $('#ap-run')?.addEventListener('click', (e) => busy(e.currentTarget, 'Starting…', async () => {
+    const ids = subsForProduct().filter((s) => AUTOPILOT_READY.includes(s.status)).map((s) => s.id);
+    state.autopilot = await api('/autopilot/run', { body: { ids } });
+    render();
+    pollAutopilot();
+  }));
+  $('#ap-stop')?.addEventListener('click', async () => { state.autopilot = await api('/autopilot/stop', { body: {} }); toast('Autopilot stops after the current site'); });
+}
+
+let polling = false;
+async function pollAutopilot() {
+  if (polling) return;
+  polling = true;
+  try {
+    while (true) {
+      await new Promise((r) => setTimeout(r, 2500));
+      await refresh('autopilot', 'submissions', 'activity');
+      if (state.view === 'launches' && $('#drawer').classList.contains('hidden')) render();
+      if (!state.autopilot.running) break;
+    }
+    toast('Autopilot finished');
+  } finally {
+    polling = false;
+  }
+}
+
 function viewLaunches(el) {
   if (!product()) return go('products');
   const subs = subsForProduct();
@@ -380,16 +457,20 @@ function viewLaunches(el) {
   ];
   el.innerHTML = `
     <div class="page-head"><div><h1>Launches</h1><p class="muted">Click a site to analyze its form, write the listing, fill it in the browser and schedule it.</p></div>
-      <div class="row"><a class="btn" href="/api/export.csv">Export CSV</a><button class="btn primary" data-go="directories">Add sites</button></div></div>
+      <div class="row"><a class="btn" href="/api/export.csv">Export CSV</a><button class="btn" data-go="directories">Add sites</button></div></div>
+    ${subs.length ? autopilotPanel(subs) : ''}
     ${subs.length ? groups.map(([title, sts]) => {
       const items = subs.filter((s) => sts.includes(s.status)).map((s) => ({ s, d: dirById(s.directoryId) })).filter((x) => x.d).sort((a, b) => a.d.tier - b.d.tier);
       if (!items.length) return '';
       return `<div class="card" style="margin-bottom:16px"><h2>${title} <span class="muted">(${items.length})</span></h2><div class="list">
         ${items.map(({ s, d }) => `<div class="list-item clickable" data-open-sub="${s.id}">${badge(s.status)}<b>${esc(d.name)}</b>
           ${d.launch ? '<span class="badge warn">Launch day</span>' : ''}<span class="spacer"></span>
-          <span class="muted small">${s.launchAt ? `Launch ${fmt(s.launchAt)}` : s.liveUrl ? esc(s.liveUrl) : esc(d.pricing)}</span></div>`).join('')}
+          ${s.listingUrl || s.liveUrl ? `<a class="btn sm" href="${esc(s.listingUrl || s.liveUrl)}" target="_blank" rel="noopener" data-stop>View listing ↗</a>` : ''}
+          <span class="muted small">${s.needsPassword ? 'Needs your password' : s.accountStatus === 'verify_email' ? 'Verify your email' : s.launchAt ? `Launch ${fmt(s.launchAt)}` : esc(d.pricing)}</span></div>`).join('')}
       </div></div>`;
     }).join('') : '<div class="card empty">No sites yet. <a href="#" data-go="directories">Pick listing sites</a> to start.</div>'}`;
+  bindAutopilot();
+  if (state.autopilot?.running) pollAutopilot();
 }
 
 function openSubmission(id) {
@@ -411,7 +492,18 @@ function openSubmission(id) {
     ${d.launchTips ? `<div class="callout info" style="margin-bottom:14px">${esc(d.launchTips)}</div>` : ''}
     ${d.manualOnly ? '<div class="callout" style="margin-bottom:14px">This platform needs a human to post. LaunchPilot prepares the copy and fills the form; you click the final button.</div>' : ''}
     ${s.suggestedSubmitUrl ? `<div class="callout" style="margin-bottom:14px">This may not be the submit page. Suggested: <a href="#" id="use-suggested">${esc(s.suggestedSubmitUrl)}</a></div>` : ''}
-    <div class="steps">
+    <div class="card stack" style="margin-bottom:14px">
+      <div class="row"><h2 style="margin:0">Autopilot</h2><span class="spacer"></span><button class="btn primary" id="ap-one">${['needs_human', 'ready_for_review'].includes(s.status) ? 'Continue' : 'Run autopilot on this site'}</button></div>
+      <p class="muted small">Signs in${state.account ? ` as <b>${esc(state.account.emailMasked)}</b>` : ''} or creates your account, writes and fills the listing, submits it and saves the link.${d.manualOnly ? ' On this platform you click the final button yourself.' : ''}</p>
+      ${s.accountStatus ? `<p class="small">Account: <b>${esc({ created: 'created by autopilot', signed_in: 'signed in', verify_email: 'waiting for email verification' }[s.accountStatus] || s.accountStatus)}</b>${s.accountEmail ? ` (${esc(s.accountEmail)})` : ''}</p>` : ''}
+      ${s.needsPassword ? `<div class="callout stack"><b>Your ${esc(d.name)} password</b><span class="small">An account for ${esc(s.accountEmail || state.account?.email || 'your email')} already exists on ${esc(d.name)} with a different password. Enter it once; it's saved encrypted for this site.</span>
+        <div class="row"><input id="site-pw" type="password" autocomplete="off" style="flex:1;min-width:180px" placeholder="Password for ${esc(d.name)}" /><button class="btn primary" id="site-pw-save">Save and continue</button></div></div>` : ''}
+      ${s.listingUrl ? `<div class="callout info"><b>Listing link:</b> <a href="${esc(s.listingUrl)}" target="_blank" rel="noopener">${esc(s.listingUrl)}</a><div class="small">Many directories review submissions first, so the page may go live later.</div></div>` : ''}
+      ${s.confirmation ? `<p class="small muted">${esc(d.name)} said: “${esc(s.confirmation)}”</p>` : ''}
+      ${s.screenshot ? `<details><summary class="small">Confirmation screenshot</summary><a href="/api/screens/${encodeURIComponent(s.screenshot)}" target="_blank" rel="noopener"><img src="/api/screens/${encodeURIComponent(s.screenshot)}" alt="Confirmation page" style="width:100%;border:1px solid var(--border);border-radius:8px;margin-top:8px" /></a></details>` : ''}
+    </div>
+    <details style="margin-bottom:14px"><summary class="small">Step by step (manual)</summary>
+    <div class="steps" style="margin-top:12px">
       <div class="step"><h3>Read the submission form</h3>
         <p class="muted small">${fields.length ? `${fields.length} fields mapped${s.analyzedAt ? ` · ${fmt(s.analyzedAt)}` : ''}${s.requiresAccount ? ' · needs an account' : ''}${s.captcha ? ' · has CAPTCHA' : ''}` : 'The agent opens the page and works out what each field is for and its character limits.'}</p>
         <div class="row"><button class="btn" id="analyze">${fields.length ? 'Re-analyze form' : 'Analyze form'}</button>
@@ -461,11 +553,12 @@ function openSubmission(id) {
         </div>
         <div class="row" style="margin-top:10px"><button class="btn" id="save-track">Save</button><span class="spacer"></span><button class="btn danger sm" id="remove-sub">Remove from launches</button></div>
       </div>
+    </details>
       ${s.log?.length ? `<div class="step"><h3>Agent log</h3><div class="log">${s.log.slice().reverse().map((l) => `<div><span class="muted">${fmt(l.at)}</span> ${esc(l.message)}</div>`).join('')}</div></div>` : ''}
     </div>`;
 
   $('#drawer').classList.remove('hidden');
-  const reload = async () => { await refresh('submissions', 'jobs', 'activity'); openSubmission(id); };
+  const reload = async () => { await refresh('submissions', 'jobs', 'activity', 'credentials', 'directories'); openSubmission(id); };
   const counters = () => $$('.counter', panel).forEach((c) => {
     const ta = c.closest('.kit-field').querySelector('textarea');
     c.textContent = `${ta.value.length}/${c.dataset.max}`;
@@ -505,6 +598,19 @@ function openSubmission(id) {
     });
     await api(`/submissions/${s.id}`, { method: 'PATCH', body: { kit: newKit, values } });
     toast('Saved');
+    reload();
+  }));
+  $('#ap-one').addEventListener('click', (e) => busy(e.currentTarget, 'Autopilot working…', async () => {
+    const r = await api(`/submissions/${s.id}/autopilot`, { body: {} });
+    toast((r.log || []).slice(-1)[0]?.message || 'Done', 9000);
+    reload();
+  }));
+  $('#site-pw-save')?.addEventListener('click', (e) => busy(e.currentTarget, 'Continuing…', async () => {
+    const password = $('#site-pw').value;
+    if (!password) throw new Error('Enter the password');
+    await api(`/submissions/${s.id}/password`, { body: { password } });
+    const r = await api(`/submissions/${s.id}/autopilot`, { body: {} });
+    toast((r.log || []).slice(-1)[0]?.message || 'Done', 9000);
     reload();
   }));
   $('#run').addEventListener('click', (e) => busy(e.currentTarget, 'Agent working…', async () => {
@@ -626,6 +732,7 @@ function viewHelp(el) {
 
 // ------------------------------------------------------------------ Bootstrap
 document.addEventListener('click', (e) => {
+  if (e.target.closest('[data-stop]')) return; // plain links inside clickable rows
   const t = e.target.closest('[data-go], [data-go-close], [data-open-sub], [data-close], [data-dismiss], #nav a');
   if (!t) return;
   if (t.matches('#nav a')) return go(t.dataset.view);

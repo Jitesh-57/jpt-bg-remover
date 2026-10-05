@@ -29,6 +29,23 @@ AlternativeTo, G2, AI tool directories and more) without doing every form by han
 6. **Multiple products.** Switch products from the sidebar. Every product has its own profile, launches
    and schedule.
 
+## Autopilot
+
+Save one email and password as your **launch account** on the Dashboard. Then press **Launch on N sites** on
+the Launches page, or **Run autopilot on this site** inside any site. For each site, Autopilot:
+
+1. Opens the submit page. If the saved link is dead, it finds the real one from the site's homepage.
+2. Signs in with your launch account. If there's no account for your email, it signs up with the same
+   email and password. If an account exists with a different password, it stops and asks you for that
+   site's password once (saved encrypted for that site).
+3. Reads the live form, writes the listing for exactly those fields with Claude from your fact sheet, fills
+   every field and submits.
+4. Saves the listing link, the site's confirmation message and a screenshot. Many directories review
+   submissions first, so the link may go live later.
+
+When a site needs you (CAPTCHA, email verification link, Google-only sign-in), it's moved to **Needs you**
+and the run continues with the next site. Press **Continue** on it when you're done.
+
 ## What stays with a human
 
 LaunchPilot does **not** solve CAPTCHAs or get around email or phone verification. When a site shows

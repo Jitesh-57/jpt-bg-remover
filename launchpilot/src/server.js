@@ -362,7 +362,7 @@ app.post('/api/submissions/:id/write', wrap(async (req, res) => {
 
 app.patch('/api/submissions/:id', wrap((req, res) => {
   const { s } = loadSubmission(req.params.id);
-  const patch = pick(req.body, ['values', 'kit', 'liveUrl', 'notes', 'submitUrl', 'launchAt']);
+  const patch = pick(req.body, ['values', 'kit', 'liveUrl', 'listingUrl', 'notes', 'submitUrl', 'launchAt']);
   if (req.body.status) {
     if (!STATUSES.includes(req.body.status)) throw Object.assign(new Error('Bad status'), { status: 400 });
     patch.status = req.body.status;
@@ -382,6 +382,69 @@ app.post('/api/submissions/:id/run', wrap(async (req, res) => {
   const { s } = loadSubmission(req.params.id);
   const row = await automation.runSubmission(s.id, { autoSubmit: !!req.body.autoSubmit, createAccount: !!req.body.createAccount });
   res.json(row);
+}));
+
+// Autopilot for one site: account, listing, submit, link.
+app.post('/api/submissions/:id/autopilot', wrap(async (req, res) => {
+  const { s } = loadSubmission(req.params.id);
+  res.json(await automation.autopilot(s.id, { autoSubmit: req.body.autoSubmit !== false }));
+}));
+
+// The site's own password, when your launch password doesn't work there.
+app.post('/api/submissions/:id/password', wrap((req, res) => {
+  const { s, directory } = loadSubmission(req.params.id);
+  const def = db.find('credentials', (c) => c.isDefault);
+  const email = String(req.body.email || s.accountEmail || def?.email || '').trim();
+  if (!email || !req.body.password) throw Object.assign(new Error('Enter the password'), { status: 400 });
+  db.all('credentials').filter((c) => c.directoryId === directory.id).forEach((c) => db.remove('credentials', c.id));
+  db.insert('credentials', { email, passwordEnc: vault.encrypt(req.body.password), directoryId: directory.id, domain: null, label: `${directory.name} password`, isDefault: false });
+  res.json(db.update('submissions', s.id, { needsPassword: false }));
+}));
+
+// Runs autopilot on many sites, one after another, in the background.
+const autopilotRun = { running: false, queue: [], current: null, done: [], startedAt: null };
+app.get('/api/autopilot/status', (req, res) => res.json(autopilotRun));
+app.post('/api/autopilot/run', wrap((req, res) => {
+  if (autopilotRun.running) throw Object.assign(new Error('Autopilot is already running'), { status: 409 });
+  const ids = (req.body.ids || []).filter((id) => db.get('submissions', id));
+  if (!ids.length) throw Object.assign(new Error('Pick at least one site'), { status: 400 });
+  Object.assign(autopilotRun, { running: true, queue: [...ids], current: null, done: [], startedAt: db.now() });
+  (async () => {
+    while (autopilotRun.queue.length) {
+      const id = autopilotRun.queue.shift();
+      autopilotRun.current = id;
+      try {
+        const r = await automation.autopilot(id, { autoSubmit: req.body.autoSubmit !== false });
+        autopilotRun.done.push({ id, status: r.status, listingUrl: r.listingUrl || '', message: (r.log || []).slice(-1)[0]?.message || '' });
+      } catch (e) {
+        db.update('submissions', id, { status: 'needs_human' });
+        autopilotRun.done.push({ id, status: 'error', message: e.message });
+      }
+    }
+    Object.assign(autopilotRun, { running: false, current: null });
+    db.logActivity(`Autopilot finished ${autopilotRun.done.length} sites`);
+  })();
+  res.json(autopilotRun);
+}));
+app.post('/api/autopilot/stop', (req, res) => { autopilotRun.queue = []; res.json(autopilotRun); });
+
+app.get('/api/screens/:file', (req, res) => {
+  const file = path.join(db.DATA_DIR, 'screens', path.basename(req.params.file));
+  if (!fs.existsSync(file)) return res.status(404).end();
+  res.sendFile(file);
+});
+
+// Your launch account: one email and password used on every site.
+app.get('/api/account', (req, res) => {
+  const c = db.find('credentials', (x) => x.isDefault);
+  res.json(c ? { email: c.email, emailMasked: vault.mask(c.email), id: c.id } : null);
+});
+app.post('/api/account', wrap((req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) throw Object.assign(new Error('Enter your email and password'), { status: 400 });
+  db.all('credentials').filter((c) => c.isDefault).forEach((c) => db.remove('credentials', c.id));
+  db.insert('credentials', { email: String(email).trim(), passwordEnc: vault.encrypt(password), directoryId: null, domain: null, label: 'Launch account', isDefault: true });
+  res.json({ ok: true });
 }));
 
 app.post('/api/submissions/:id/open', wrap(async (req, res) => {

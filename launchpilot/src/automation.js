@@ -12,7 +12,7 @@ import { chromium } from 'playwright';
 import * as db from './db.js';
 import { decrypt } from './vault.js';
 import { launchOptions, readPage, inspectPage, guessRoles } from './inspect.js';
-import { aiConfigured, analyzeSubmitPage } from './ai.js';
+import { aiConfigured, analyzeSubmitPage, writeListing } from './ai.js';
 
 const contexts = new Map(); // slug -> BrowserContext
 const headless = () => String(process.env.LAUNCHPILOT_HEADLESS || 'false') === 'true';
@@ -191,10 +191,10 @@ export async function runSubmission(submissionId, opts = {}) {
   const product = db.get('products', submission.productId);
   const cred = credentialFor(directory);
   const ctx = await contextFor(directory.slug);
-  const page = await newPage(ctx);
+  const page = opts.page || await newPage(ctx);
   await page.bringToFront().catch(() => {});
 
-  log(submission, `Opening ${directory.name}`, 'running');
+  if (!opts.page) log(submission, `Opening ${directory.name}`, 'running');
   const submitUrl = submission.submitUrl || directory.submitUrl;
 
   if (opts.createAccount) {
@@ -212,7 +212,7 @@ export async function runSubmission(submissionId, opts = {}) {
     else log(submission, 'Sign-up submitted. Check your inbox if the platform asks you to verify your email.');
   }
 
-  await goto(page, submitUrl);
+  if (!opts.page) await goto(page, submitUrl);
   let state = await pageState(page);
 
   if (state.loginWall || /login|signin|sign-in|auth/i.test(new URL(page.url()).pathname)) {
@@ -317,4 +317,244 @@ export async function inspectLoggedIn(directory, url) {
 
 export function hasProfile(directory) {
   return contexts.has(directory.slug) || fs.existsSync(path.join(db.DATA_DIR, 'browser-profiles', directory.slug));
+}
+
+// ---------------------------------------------------------------------------
+// Autopilot: account, listing and link for one site, start to finish.
+//
+// 1. Opens the submit page; if the saved link is dead, finds the real one from
+//    the homepage.
+// 2. Makes sure you're signed in: logs in with your launch account, signs up
+//    with the same email and password when there's no account yet, and stops to
+//    ask for the site's own password when the account exists with another one.
+// 3. Maps the live form, writes the listing with Claude, fills and submits it.
+// 4. Records the listing link and a screenshot of the confirmation page.
+// It stops for CAPTCHAs, email verification and sites that only offer Google or
+// GitHub sign-in; pressing Continue picks up where it stopped.
+
+const SIGNUP_RE = /sign ?up|register|create (an |your )?account|join( now| free)?|get started/i;
+const LOGIN_RE = /log ?in|sign ?in/i;
+
+async function visibleText(page) {
+  return page.evaluate(() => (document.body?.innerText || '').slice(0, 20000)).catch(() => '');
+}
+
+async function hasVisiblePassword(page) {
+  const pw = page.locator('input[type="password"]');
+  const n = await pw.count();
+  for (let i = 0; i < n; i++) if (await pw.nth(i).isVisible().catch(() => false)) return true;
+  return false;
+}
+
+async function clickLink(page, re) {
+  const link = page.locator('a, button, [role="button"]').filter({ hasText: re }).first();
+  if (!(await link.count())) return false;
+  await link.click({ timeout: 5000 }).catch(() => {});
+  await page.waitForLoadState('domcontentloaded', { timeout: 15000 }).catch(() => {});
+  await page.waitForLoadState('networkidle', { timeout: 6000 }).catch(() => {});
+  return true;
+}
+
+function looksDead(status, text) {
+  return (status && status >= 400) || /\b(404|page not found|this page (doesn.t|does not) exist|we can.t find this page)\b/i.test(text.slice(0, 2000));
+}
+
+// Finds a working submit page, starting from the saved link.
+async function openSubmitPage(page, submission, directory) {
+  const saved = submission.submitUrl || directory.submitUrl || directory.url;
+  const res = await page.goto(saved, { waitUntil: 'domcontentloaded', timeout: 60000 }).catch(() => null);
+  await page.waitForLoadState('networkidle', { timeout: 8000 }).catch(() => {});
+  if (!looksDead(res?.status(), await visibleText(page))) return saved;
+
+  log(submission, `The saved submit link is broken (${saved}). Looking for the real one on ${directory.name}'s homepage.`);
+  await goto(page, directory.url);
+  const state = await pageState(page);
+  let next = state.submitLinks.find((l) => new URL(l.href).origin === new URL(directory.url).origin)?.href;
+  if (!next && aiConfigured()) {
+    const analysis = await analyzeSubmitPage(page.url(), { ...state, finalUrl: page.url() }).catch(() => null);
+    next = analysis?.betterSubmitUrl || '';
+  }
+  if (next) {
+    await goto(page, next);
+    if (!looksDead(null, await visibleText(page))) {
+      db.update('submissions', submission.id, { submitUrl: next });
+      if (!directory.userEdited) db.update('directories', directory.id, { submitUrl: next });
+      log(submission, `Found the submit page: ${next}`);
+      return next;
+    }
+  }
+  // Stay on the homepage; logging in often reveals the submit option.
+  await goto(page, directory.url);
+  return directory.url;
+}
+
+async function needsLogin(page) {
+  const path = new URL(page.url()).pathname;
+  if (/login|signin|sign-in|auth|account\/new|register|signup/i.test(path)) return true;
+  if (await hasVisiblePassword(page)) return true;
+  const text = (await visibleText(page)).slice(0, 4000);
+  return /(sign|log) ?in to (submit|continue|add|post|list)|you (must|need to) (be )?(log|sign)/i.test(text);
+}
+
+// Returns 'ok' | 'captcha' | 'no_account' | 'wrong_password' | 'exists' | 'verify_email' | 'no_form' | 'unclear'
+async function authOutcome(page, mode) {
+  const state = await pageState(page);
+  if (state.captcha) return 'captcha';
+  const text = (await visibleText(page)).toLowerCase();
+  if (/verify your email|check your (email|inbox)|confirmation (email|link)|we.ve sent|activate your account|confirm your email/.test(text)) return 'verify_email';
+  if (/already (exists|registered|in use|taken|have an account)|email (is )?(already )?(taken|in use|registered)|account with this email/.test(text)) return 'exists';
+  if (mode === 'login' && /no account|not found|doesn.t exist|does not exist|not registered|no user|couldn.t find (your|an) account|sign up first/.test(text)) return 'no_account';
+  if (mode === 'login' && /incorrect|invalid (email|password|credentials|login)|wrong password|password (is )?(incorrect|wrong)|try again/.test(text)) return 'wrong_password';
+  if (await hasVisiblePassword(page)) return 'unclear';
+  return 'ok';
+}
+
+async function signUp(page, cred, directory, product) {
+  if (directory.signupUrl) await goto(page, directory.signupUrl);
+  else if (!(await clickLink(page, SIGNUP_RE))) return 'no_form';
+  const result = await fillCredentials(page, cred, { signup: true, product });
+  if (result === 'no-form') return 'no_form';
+  await page.waitForTimeout(2000);
+  return authOutcome(page, 'signup');
+}
+
+// Makes sure the browser profile is signed in. Returns true when it is.
+async function ensureAccount(page, submission, directory, product) {
+  if (!(await needsLogin(page))) return true;
+  const cred = credentialFor(directory);
+  if (!cred) {
+    log(submission, `${directory.name} needs an account. Save your launch email and password on the Dashboard, then press Continue.`, 'needs_human');
+    return false;
+  }
+  const backTo = page.url();
+  log(submission, `Signing in to ${directory.name} as ${cred.email}`);
+  if (!(await hasVisiblePassword(page)) && !(await firstVisible(page, EMAIL_SELECTORS))) {
+    if (directory.loginUrl) await goto(page, directory.loginUrl);
+    else await clickLink(page, LOGIN_RE);
+  }
+  const filled = await fillCredentials(page, cred, { signup: false, product });
+  let outcome = filled === 'no-form' ? 'no_form' : filled === 'captcha' ? 'captcha' : await authOutcome(page, 'login');
+
+  if (outcome === 'no_account' || (outcome === 'unclear' && !cred.directoryId)) {
+    log(submission, `No ${directory.name} account for ${cred.email} yet. Creating one with your launch email and password.`);
+    outcome = await signUp(page, cred, directory, product);
+    if (outcome === 'ok') {
+      db.update('submissions', submission.id, { accountStatus: 'created', accountEmail: cred.email });
+      log(submission, `Created your ${directory.name} account.`);
+    }
+  }
+
+  const stop = (message, extra = {}) => {
+    db.update('submissions', submission.id, extra);
+    log(submission, message, 'needs_human');
+    return false;
+  };
+  switch (outcome) {
+    case 'ok':
+      db.update('submissions', submission.id, { accountEmail: cred.email, accountStatus: submission.accountStatus === 'created' ? 'created' : 'signed_in', needsPassword: false });
+      if (page.url() !== backTo) await goto(page, backTo);
+      return true;
+    case 'captcha':
+      return stop(`${directory.name} shows a CAPTCHA. Solve it in the window, then press Continue.`);
+    case 'verify_email':
+      return stop(`${directory.name} sent a verification email to ${cred.email}. Click the link in that email, then press Continue.`, { accountStatus: 'verify_email', accountEmail: cred.email });
+    case 'exists':
+    case 'wrong_password':
+      return stop(`You already have an account on ${directory.name} for ${cred.email}, with a different password. Enter that password below and press Continue.`, { needsPassword: true, accountEmail: cred.email });
+    case 'no_form':
+      return stop(`${directory.name} only offers Google/GitHub sign-in or an unusual login page. Sign in once in the window (it stays signed in), then press Continue.`);
+    default:
+      return stop(`Couldn't confirm the sign-in on ${directory.name}. Check the window, sign in if needed, then press Continue.`);
+  }
+}
+
+function productSlug(product) {
+  return String(product.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+// After submitting: the listing's own link if the site shows one, and a screenshot.
+async function captureResult(page, submission, product, submitUrl) {
+  await page.waitForTimeout(3000);
+  const dir = path.join(db.DATA_DIR, 'screens');
+  fs.mkdirSync(dir, { recursive: true });
+  const file = `${submission.id}-${Date.now()}.png`;
+  await page.screenshot({ path: path.join(dir, file), fullPage: false }).catch(() => {});
+  const slug = productSlug(product);
+  const name = String(product.name || '').toLowerCase();
+  const found = await page.evaluate(({ slug, name }) => {
+    const links = [...document.querySelectorAll('a[href]')].map((a) => ({ href: a.href, text: (a.innerText || '').trim().toLowerCase() }));
+    const same = links.filter((l) => l.href.startsWith(location.origin));
+    const hit = same.find((l) => slug && l.href.toLowerCase().includes(slug)) || same.find((l) => name && l.text.includes(name) && !/edit|delete/.test(l.text));
+    // Read the main content line by line so menus don't end up in the message.
+    const root = document.querySelector('main, [role="main"], article') || document.body;
+    const lines = (root?.innerText || '').split(/\n+|(?<=[.!?])\s+/).map((l) => l.trim()).filter(Boolean);
+    const confirm = lines.filter((l) => /thank|submitted|received|under review|pending|approved|live|published|success/i.test(l)).slice(0, 2).join(' ');
+    return { link: hit?.href || '', confirm: confirm.slice(0, 240) };
+  }, { slug, name }).catch(() => ({ link: '', confirm: '' }));
+  const current = page.url();
+  const moved = current !== submitUrl && !/submit|new|add|create|login|signin/i.test(new URL(current).pathname);
+  const listingUrl = found.link || (moved ? current : '');
+  db.update('submissions', submission.id, { listingUrl, confirmation: found.confirm, screenshot: file, submittedAt: db.now() });
+  return { listingUrl, confirm: found.confirm };
+}
+
+export async function autopilot(submissionId, { autoSubmit = true } = {}) {
+  let submission = db.get('submissions', submissionId);
+  if (!submission) throw new Error('Submission not found');
+  const directory = db.get('directories', submission.directoryId);
+  const product = db.get('products', submission.productId);
+  const ctx = await contextFor(directory.slug);
+  const page = await newPage(ctx);
+  await page.bringToFront().catch(() => {});
+  log(submission, `Autopilot started on ${directory.name}`, 'running');
+
+  let submitUrl = await openSubmitPage(page, submission, directory);
+  if (!(await ensureAccount(page, submission, directory, product))) return db.get('submissions', submissionId);
+
+  // Signed in: the submit page may only appear now.
+  submission = db.get('submissions', submissionId);
+  if (submitUrl === directory.url || submission.submitUrl !== submitUrl) {
+    submitUrl = await openSubmitPage(page, submission, directory);
+  } else if (!page.url().startsWith(submitUrl)) {
+    await goto(page, submitUrl);
+  }
+  if (await needsLogin(page)) {
+    if (!(await ensureAccount(page, submission, directory, product))) return db.get('submissions', submissionId);
+    await goto(page, submitUrl);
+  }
+
+  let state = await pageState(page);
+  if (!state.fields.length) {
+    log(submission, `Couldn't find a submission form on ${page.url()}. Open the right page in the window (or set the submit URL), then press Continue.`, 'needs_human');
+    return db.get('submissions', submissionId);
+  }
+
+  // Map the live form and write the listing for exactly these fields.
+  let fields = guessRoles(state.fields);
+  if (aiConfigured()) {
+    const analysis = await analyzeSubmitPage(page.url(), { ...state, finalUrl: page.url() });
+    const roles = new Map(analysis.fields.map((f) => [f.fid, f]));
+    fields = fields.map((f) => (roles.has(f.fid) ? { ...f, role: roles.get(f.fid).role, maxChars: roles.get(f.fid).maxChars || f.maxLength || 0, guidance: roles.get(f.fid).guidance } : f));
+  }
+  const sameForm = submission.fields?.length === fields.length && submission.fields.every((f, i) => f.selector === fields[i].selector);
+  let values = sameForm ? submission.values || {} : {};
+  if (aiConfigured() && (!sameForm || !Object.keys(values).length)) {
+    log(submission, 'Writing the listing for this form with Claude…');
+    const result = await writeListing(product, directory, fields);
+    const byFid = new Map(fields.map((f) => [f.fid, f]));
+    const kit = [...new Map(result.fields.map((f) => [f.key, f])).values()].map((f) => ({ ...f, label: byFid.get(f.key)?.label || byFid.get(f.key)?.placeholder || f.label }));
+    values = Object.fromEntries(kit.filter((f) => byFid.has(f.key)).map((f) => [f.key, f.value]));
+    db.update('submissions', submission.id, { kit, checklist: result.checklist, notes: result.notes, styleIssues: result.styleIssues, writtenAt: db.now() });
+  }
+  submission = db.update('submissions', submission.id, { fields, values, analyzedAt: db.now(), submitUrl: page.url() });
+
+  const result = await runSubmission(submissionId, { autoSubmit, page });
+  if (result.status === 'submitted') {
+    const out = await captureResult(page, result, product, submitUrl);
+    const fresh = db.get('submissions', submissionId);
+    log(fresh, out.listingUrl
+      ? `Submitted. Listing link: ${out.listingUrl}${out.confirm ? ` (the site says: "${out.confirm}")` : ''}`
+      : `Submitted.${out.confirm ? ` The site says: "${out.confirm}".` : ''} No listing link yet; most directories publish it after review. A screenshot of the confirmation is saved.`);
+  }
+  return db.get('submissions', submissionId);
 }

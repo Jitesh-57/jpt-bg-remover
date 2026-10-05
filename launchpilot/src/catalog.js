@@ -78,7 +78,7 @@ export const CATALOG = [
   // Software review / comparison sites
   d('g2', 'G2', 'https://www.g2.com', 'https://www.g2.com/products/new', 'review', 'free', 1),
   d('capterra', 'Capterra (+ GetApp, Software Advice)', 'https://www.capterra.com', 'https://www.capterra.com/vendors/sign-up', 'review', 'free', 1, { launchTips: 'One Gartner Digital Markets vendor account lists you on Capterra, GetApp and Software Advice.' }),
-  d('alternativeto', 'AlternativeTo', 'https://alternativeto.net', 'https://alternativeto.net/manage-app/', 'review', 'free', 1, { launchTips: 'List yourself as an alternative to the 3-5 best-known competitors.' }),
+  d('alternativeto', 'AlternativeTo', 'https://alternativeto.net', 'https://alternativeto.net/', 'review', 'free', 1, { launchTips: 'Sign in, then add your app from the account menu. List yourself as an alternative to the 3-5 best-known competitors.' }),
   d('saashub', 'SaaSHub', 'https://www.saashub.com', 'https://www.saashub.com/submit', 'review', 'freemium', 1),
   d('saasworthy', 'SaaSworthy', 'https://www.saasworthy.com', 'https://www.saasworthy.com/submit-product', 'review', 'free', 2),
   d('sourceforge', 'SourceForge', 'https://sourceforge.net', 'https://sourceforge.net/software/vendors/new', 'review', 'free', 1),

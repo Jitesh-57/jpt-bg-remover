@@ -2,7 +2,7 @@
 // they live in db.json; anything that came due while the app was closed runs
 // on the next start.
 import * as db from './db.js';
-import { runSubmission } from './automation.js';
+import { autopilot } from './automation.js';
 
 const TICK_MS = 30_000;
 let timer;
@@ -12,7 +12,7 @@ async function runJob(job) {
   db.update('jobs', job.id, { status: 'running', startedAt: db.now() });
   try {
     if (job.type === 'submit') {
-      await runSubmission(job.submissionId, { autoSubmit: job.autoSubmit, createAccount: job.createAccount });
+      await autopilot(job.submissionId, { autoSubmit: job.autoSubmit !== false });
       db.update('jobs', job.id, { status: 'done', finishedAt: db.now() });
     } else {
       // Reminders are shown in the dashboard's "Due now" list.
