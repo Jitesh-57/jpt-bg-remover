@@ -155,9 +155,9 @@ function viewProduct(el) {
     <div class="card stack" style="margin-bottom:16px">
       <h2>Crawl your whole website</h2>
       <div class="row"><input id="autofill-url" placeholder="https://yourproduct.com" value="${esc(v.url || '')}" style="flex:1;min-width:220px" />
-        <select id="crawl-pages" style="width:auto">${[20, 40, 60, 80].map((n) => `<option value="${n}" ${n === 40 ? 'selected' : ''}>${n} pages</option>`).join('')}</select>
+        <select id="crawl-pages" style="width:auto">${[30, 60, 100, 150].map((n) => `<option value="${n}" ${n === 60 ? 'selected' : ''}>${n} pages</option>`).join('')}</select>
         <button class="btn primary" id="autofill">${v.factSheet ? 'Crawl again' : 'Crawl my site'}</button></div>
-      <p class="muted small" id="crawl-status">The agent reads your sitemap and pages (pricing, features, tools, FAQ first), then writes a fact sheet with your real tool names, prices and limits. Every listing is written from it. Takes 1-3 minutes.</p>
+      <p class="muted small" id="crawl-status">The agent maps every URL in your sitemaps, reads the most important pages in full (pricing, features, tools, FAQ first), then writes a fact sheet with your real tool names, counts, prices and limits. Every listing is written from it. Takes 2-5 minutes.</p>
     </div>
     <form class="card" id="product-form">
       <div class="form-grid">
@@ -220,7 +220,7 @@ function viewProduct(el) {
       job = await api(`/crawls/${id}`);
       status.textContent = job.status === 'crawling'
         ? `Reading page ${job.done} of up to ${job.total}${job.current ? `: ${job.current}` : ''}`
-        : job.status === 'writing' ? `Read ${job.done} pages. Writing the fact sheet…` : '';
+        : job.status === 'writing' ? `Read ${job.done} pages${job.sitemapUrls ? ` and mapped all ${job.sitemapUrls} sitemap URLs` : ''}. Writing the fact sheet…` : '';
       if (job.status === 'done' || job.status === 'failed') break;
     }
     if (job.status === 'failed') throw new Error(job.error);
@@ -231,7 +231,7 @@ function viewProduct(el) {
     form.elements.factSheet.value = draft.factSheet || '';
     form.elements.factSheet.style.minHeight = '360px';
     pendingCrawl = { crawledPages: draft.crawledPages, crawledAt: draft.crawledAt };
-    status.textContent = `Read ${draft.crawledPages.length} pages. Review the profile and fact sheet below, then save.`;
+    status.textContent = `Read ${draft.crawledPages.length} pages${draft.sitemapUrls ? ` and mapped all ${draft.sitemapUrls} sitemap URLs` : ''}. Review the profile and fact sheet below, then save.`;
     updateCounters();
     toast('Fact sheet ready. Review it and save.');
   }));

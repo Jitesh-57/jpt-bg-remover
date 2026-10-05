@@ -106,7 +106,8 @@ function extract() {
 export async function crawlSite(startUrl, { maxPages = 40, onProgress = () => {} } = {}) {
   const origin = new URL(startUrl).origin;
   const candidates = new Set([normalize(startUrl, startUrl) || origin, origin]);
-  for (const u of await sitemapUrls(origin)) {
+  const allSitemapUrls = await sitemapUrls(origin);
+  for (const u of allSitemapUrls) {
     const n = normalize(u, origin);
     if (n && new URL(n).origin === origin && !SKIP.test(n)) candidates.add(n);
   }
@@ -122,14 +123,15 @@ export async function crawlSite(startUrl, { maxPages = 40, onProgress = () => {}
     if (next) visited.add(next);
     return next;
   };
-  // Keep a variety of sections: at most 6 pages under any one top-level folder.
+  // Keep a variety of sections: a cap per top-level folder that grows with the budget.
+  const sectionCap = Math.max(6, Math.ceil(maxPages / 8));
   const perSection = new Map();
   const section = (u) => new URL(u).pathname.split('/').filter(Boolean)[0] || '/';
 
   async function worker() {
     for (let url = pick(); url && pages.length < maxPages; url = pick()) {
       const sec = section(url);
-      if ((perSection.get(sec) || 0) >= 6 && sec !== '/') continue;
+      if ((perSection.get(sec) || 0) >= sectionCap && sec !== '/') continue;
       const page = await ctx.newPage();
       try {
         const res = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
@@ -158,12 +160,40 @@ export async function crawlSite(startUrl, { maxPages = 40, onProgress = () => {}
     await browser.close().catch(() => {});
   }
   pages.sort((a, b) => score(b.url, origin) - score(a.url, origin));
-  return { origin, pages };
+  return { origin, pages, siteMap: summarizeSitemap(allSitemapUrls, origin) };
+}
+
+// Every URL in the sitemaps, grouped by top-level section with readable
+// example names, so the fact sheet covers the whole site, not just the pages
+// that were opened.
+function summarizeSitemap(urls, origin) {
+  const groups = new Map();
+  for (const u of urls) {
+    let url;
+    try { url = new URL(u); } catch { continue; }
+    if (url.origin !== origin || url.search) continue;
+    const parts = url.pathname.split('/').filter(Boolean);
+    const sec = parts[0] || '/';
+    if (!groups.has(sec)) groups.set(sec, []);
+    const leaf = decodeURIComponent(parts[parts.length - 1] || 'home').replace(/[-_]+/g, ' ').replace(/\b[0-9a-f]{6,}\b/g, '').replace(/(\s+\d+)+$/, '').trim();
+    groups.get(sec).push(leaf);
+  }
+  return {
+    total: urls.length,
+    sections: [...groups.entries()]
+      .map(([section, names]) => ({ section, count: names.length, examples: [...new Set(names)].slice(0, 60) }))
+      .sort((a, b) => b.count - a.count),
+  };
 }
 
 // Compact text version of a crawl for the AI.
-export function crawlToText(crawl, budget = 220000) {
+export function crawlToText(crawl, budget = 260000) {
   let out = '';
+  if (crawl.siteMap?.total) {
+    out += `## Site map overview: ${crawl.siteMap.total} URLs in the sitemaps\n`;
+    for (const s of crawl.siteMap.sections) out += `/${s.section === '/' ? '' : s.section}: ${s.count} pages. Examples: ${s.examples.join('; ')}\n`;
+    out = out.slice(0, 40000) + '\n';
+  }
   for (const p of crawl.pages) {
     const block = [
       `### ${p.url}`,

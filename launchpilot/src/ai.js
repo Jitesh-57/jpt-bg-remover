@@ -79,15 +79,15 @@ export async function buildFactSheet(url, crawlText, pageCount) {
     output_config: { effort: 'high', format: { type: 'json_schema', schema: PROFILE_SCHEMA } },
     messages: [{
       role: 'user',
-      content: `Below are ${pageCount} pages crawled from ${url}. Read all of them, then return:
+      content: `Below are ${pageCount} pages crawled from ${url}, plus an overview of every URL in its sitemaps. Read all of it, then return:
 
 factSheet: a plain-text fact sheet in Markdown with these sections, using only what the pages say (quote numbers, names and prices exactly; write "Not stated" when a section has nothing):
 ## What it is (2-3 sentences)
 ## Who it's for
-## Products and tools (every distinct tool, app or feature, one line each: name - what it does - any limit or detail, e.g. formats, max size, speed, count)
+## Products and tools (every distinct tool, app or feature, one line each: name - what it does - any limit or detail, e.g. formats, max size, speed, count. Use the site map overview to cover the whole site: when a section holds many similar pages, such as 200 apps, 600 prompts or 50 converters, give the count and group them with named examples instead of listing every one)
 ## Pricing (every plan or pack with its exact price, what's included, free tier details, refund or expiry rules)
 ## What makes it different (only differences the site itself claims or that are obvious from the facts, e.g. no watermark, no sign-up, runs in the browser)
-## Proof points (numbers the site states: counts of tools, prompts, users, formats; no invented numbers)
+## Proof points (numbers the site states, plus counts you can read off the site map overview, such as number of apps, prompts, tutorials or comparison pages; no invented numbers)
 ## Common questions (the site's own FAQ answers, shortened)
 ## Tone of the site (how it talks: casual or formal, words it uses, words it avoids)
 ## Pages read (the URLs)
@@ -182,6 +182,11 @@ ${PLATFORM_VOICE[directory.category] || ''}${directory.launchTips ? `\nPlatform 
 ${target}
 
 Also return: checklist = concrete steps the user must do on this platform (e.g. upload a 240x240 logo, verify email, pick launch date); notes = 1-2 sentences of advice for this platform.
+
+How to choose what to say:
+- First decide the angle for this platform's readers. Pick the 3-5 facts from the fact sheet that matter most to them (AI directories: the AI features and what they produce; review sites: features, pricing and who it fits; launch sites: the story and what's new; startup directories: what it is and the business model).
+- Lead with the flagship capability that fits this platform, then show breadth with real counts and 4-6 named examples. Don't list everything.
+- Use exact names, numbers and prices from the fact sheet. Never invent a fact.
 
 Fact sheet (the only source of facts):
 ${product.factSheet || '(no crawl yet; use the profile below)'}

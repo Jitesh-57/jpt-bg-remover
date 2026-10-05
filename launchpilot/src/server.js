@@ -121,7 +121,7 @@ const crawls = new Map();
 app.post('/api/products/autofill', wrap(async (req, res) => {
   const url = normalizeUrl(req.body.url);
   if (!ai.aiConfigured()) throw Object.assign(new Error('Crawling and fact sheets need ANTHROPIC_API_KEY in .env.'), { status: 400 });
-  const maxPages = Math.min(Math.max(Number(req.body.maxPages) || 40, 5), 80);
+  const maxPages = Math.min(Math.max(Number(req.body.maxPages) || 60, 5), 150);
   const id = db.newId();
   const job = { id, url, status: 'crawling', done: 0, total: maxPages, current: '', startedAt: db.now() };
   crawls.set(id, job);
@@ -129,11 +129,11 @@ app.post('/api/products/autofill', wrap(async (req, res) => {
     try {
       const crawl = await crawlSite(url, { maxPages, onProgress: (p) => { if (p.phase === 'page') Object.assign(job, { done: p.done, current: p.url }); } });
       if (!crawl.pages.length) throw new Error('No readable pages found. Check the URL, or the site may block crawlers.');
-      Object.assign(job, { status: 'writing', done: crawl.pages.length, current: '' });
+      Object.assign(job, { status: 'writing', done: crawl.pages.length, current: '', sitemapUrls: crawl.siteMap?.total || 0 });
       const profile = await ai.buildFactSheet(url, crawlToText(crawl), crawl.pages.length);
       Object.assign(job, {
         status: 'done',
-        result: { ...profile, url, crawledPages: crawl.pages.map((p) => ({ url: p.url, title: p.title })), crawledAt: db.now() },
+        result: { ...profile, url, crawledPages: crawl.pages.map((p) => ({ url: p.url, title: p.title })), sitemapUrls: crawl.siteMap?.total || 0, crawledAt: db.now() },
       });
       db.logActivity(`Crawled ${crawl.pages.length} pages of ${url} and wrote a fact sheet`);
     } catch (e) {
