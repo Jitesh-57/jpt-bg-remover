@@ -11,6 +11,12 @@ const nextConfig = {
       // 301 to the home page so old sitemap/crawled URLs don't 404.
       { source: '/instagram-video-downloader', destination: '/', permanent: true },
       { source: '/youtube-video-downloader', destination: '/', permanent: true },
+      // Removed for AdSense policy: tools that strip other people's watermarks,
+      // download TikTok videos, or strip AI-provenance (C2PA) marks count as
+      // enabling copyright infringement / dishonest behaviour.
+      { source: '/tiktok-watermark-remover', destination: '/tools', permanent: true },
+      { source: '/watermark-remover', destination: '/tools', permanent: true },
+      { source: '/invisible-watermark-remover', destination: '/tools', permanent: true },
       // /upscale is its own landing page again — the homepage now has its own
       // identity, so there is no duplicate to consolidate.
     ];
