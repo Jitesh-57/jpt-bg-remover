@@ -12,7 +12,7 @@ export default function PrivacyPage() {
     <main style={{ fontFamily: "var(--font)", color: "var(--text)", background: "var(--surface)", minHeight: "100vh" }}>
       <div style={{ maxWidth: 780, margin: "0 auto", padding: "60px 24px 80px" }}>
         <h1 style={{ fontSize: 36, fontWeight: 900, marginBottom: 8 }}>Privacy Policy</h1>
-        <p style={{ color: "var(--text-muted)", fontSize: 14, marginBottom: 48 }}>Last updated: June 23, 2025</p>
+        <p style={{ color: "var(--text-muted)", fontSize: 14, marginBottom: 48 }}>Last updated: October 7, 2026</p>
 
         <Section title="1. Introduction">
           Pixel Shine (&quot;we&quot;, &quot;our&quot;, or &quot;us&quot;) operates the website{" "}
@@ -53,6 +53,8 @@ export default function PrivacyPage() {
             <li><b>Google Gemini</b> — AI image processing</li>
             <li><b>Razorpay</b> — payment processing</li>
             <li><b>Vercel</b> — hosting and infrastructure</li>
+            <li><b>Google AdSense</b> — advertising on some pages (see Cookies and Advertising below)</li>
+            <li><b>Google Analytics / Google Tag Manager</b> — anonymous usage statistics</li>
           </ul>
           Each of these services has their own Privacy Policy and we encourage you to review them.
         </Section>
@@ -73,8 +75,20 @@ export default function PrivacyPage() {
           <a href="mailto:support@sjpt.io" style={{ color: "var(--accent)" }}>support@sjpt.io</a>.
         </Section>
 
-        <Section title="8. Cookies">
-          We use essential cookies only — for session authentication and keeping you logged in. We do not use tracking or advertising cookies.
+        <Section title="8. Cookies and Advertising">
+          We use essential cookies to keep you signed in, and analytics cookies (Google Analytics, through Google Tag Manager) to understand how the site is used.
+          <br /><br />
+          We use Google AdSense to show ads on some pages. Third-party vendors, including Google, use cookies to serve ads based on your prior visits to this website or other websites. Google&apos;s use of advertising cookies enables it and its partners to serve ads to you based on your visits to this site and/or other sites on the Internet.
+          <br /><br />
+          You may opt out of personalized advertising by visiting Google&apos;s{" "}
+          <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)" }}>Ads Settings</a>. You can also opt out of a third-party vendor&apos;s use of cookies for personalized advertising at{" "}
+          <a href="https://www.aboutads.info/choices" target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)" }}>www.aboutads.info</a>
+          {" "}(or{" "}
+          <a href="https://www.youronlinechoices.eu" target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)" }}>youronlinechoices.eu</a>
+          {" "}in the EU). To learn how Google uses data from sites that use its services, see{" "}
+          <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)" }}>How Google uses information from sites or apps that use our services</a>.
+          <br /><br />
+          Where the law requires it (for example in the EEA, the UK and Switzerland), we ask for your consent before personalized ads or non-essential cookies are used. You can block or delete cookies in your browser settings at any time; signing in requires essential cookies.
         </Section>
 
         <Section title="9. Children's Privacy">

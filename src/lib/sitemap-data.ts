@@ -24,8 +24,6 @@ import { CROPS } from "@/lib/crops";
 import { ALTERNATIVES } from "@/lib/alternatives";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
 import { PROMPTS as LIBRARY_PROMPTS, PROMPT_COUNT as LIBRARY_COUNT } from "@/lib/prompt-library";
-import { ALL as DATASET_PROMPTS, MODELS as PROMPT_MODELS, allFacets } from "@/lib/prompts/data";
-import { PACKS } from "@/lib/prompts/packs";
 import { pageHref } from "@/lib/prompts/page-href";
 
 export const BASE = "https://www.sjpt.io";
@@ -65,6 +63,8 @@ export function pagesUrls(): SitemapUrl[] {
   const out: SitemapUrl[] = [
     { url: BASE },
     { url: `${BASE}/tools` },
+    { url: `${BASE}/about` },
+    { url: `${BASE}/contact` },
     { url: `${BASE}/privacy` },
     { url: `${BASE}/terms` },
     { url: `${BASE}/80s-ai-photo-prompts` },
@@ -93,9 +93,6 @@ export function toolsUrls(): SitemapUrl[] {
     { url: `${BASE}/watermark-image` },
     { url: `${BASE}/meme-generator` },
     { url: `${BASE}/image-to-pdf` },
-    { url: `${BASE}/tiktok-watermark-remover` },
-    { url: `${BASE}/watermark-remover` },
-    { url: `${BASE}/invisible-watermark-remover` },
     { url: `${BASE}/alternatives` },
     ...ALTERNATIVES.map((a) => ({ url: `${BASE}/alternatives/${a.slug}` })),
     ...CONVERSIONS.map((c) => ({ url: `${BASE}/convert/${c.slug}` })),
@@ -124,23 +121,13 @@ export function blogUrls(): SitemapUrl[] {
 // ── prompts (the hub, the image dataset, the originals, models, packs) ─────
 
 export function promptsUrls(): SitemapUrl[] {
-  const imageFacets = allFacets("image");
-  const imageModels = PROMPT_MODELS.filter((m) => m.media === "image");
+  // Only our own prompts. The third-party dataset pages (YouMind OpenLab) are
+  // noindex — see src/lib/ad-policy.ts — so they stay out of the sitemap too.
   const out: SitemapUrl[] = [
     { url: `${BASE}/prompts` },
-    { url: `${BASE}/prompts/image` },
     { url: `${BASE}/prompts/originals` },
     ...paginationUrls("/prompts/originals", LIBRARY_COUNT, LIBRARY_PAGE_SIZE),
     ...LIBRARY_PROMPTS.map((p) => ({ url: `${BASE}/prompts/${p.slug}` })),
-    ...DATASET_PROMPTS.filter((p) => p.media === "image").map((p) => ({
-      url: `${BASE}/prompts/${p.uid}`,
-      ...(p.publishedAt ? { lastModified: p.publishedAt } : {}),
-    })),
-    ...imageModels.map((m) => ({ url: `${BASE}/${m.slug}-prompts` })),
-    ...imageModels.flatMap((m) => paginationUrls(`/${m.slug}-prompts`, m.count)),
-    ...imageFacets.map((f) => ({ url: `${BASE}/prompts/image/${f.facet.slug}` })),
-    ...imageFacets.flatMap((f) => paginationUrls(`/prompts/image/${f.facet.slug}`, f.facet.count)),
-    ...PACKS.map((p) => ({ url: `${BASE}/prompts-pack/${p.slug}` })),
   ];
   return dedupe(out);
 }
@@ -148,20 +135,8 @@ export function promptsUrls(): SitemapUrl[] {
 // ── video prompts ────────────────────────────────────────────────────────
 
 export function videoPromptsUrls(): SitemapUrl[] {
-  const videoFacets = allFacets("video");
-  const videoModels = PROMPT_MODELS.filter((m) => m.media === "video");
-  const out: SitemapUrl[] = [
-    { url: `${BASE}/prompts/video` },
-    ...DATASET_PROMPTS.filter((p) => p.media === "video").map((p) => ({
-      url: `${BASE}/video-prompts/${p.uid}`,
-      ...(p.publishedAt ? { lastModified: p.publishedAt } : {}),
-    })),
-    ...videoModels.map((m) => ({ url: `${BASE}/${m.slug}-prompts` })),
-    ...videoModels.flatMap((m) => paginationUrls(`/${m.slug}-prompts`, m.count)),
-    ...videoFacets.map((f) => ({ url: `${BASE}/prompts/video/${f.facet.slug}` })),
-    ...videoFacets.flatMap((f) => paginationUrls(`/prompts/video/${f.facet.slug}`, f.facet.count)),
-  ];
-  return dedupe(out);
+  // Every video prompt comes from the third-party dataset, so none are listed.
+  return [];
 }
 
 // ── creative ─────────────────────────────────────────────────────────────

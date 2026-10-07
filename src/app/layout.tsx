@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import AdSenseLoader from "./_components/AdSenseLoader";
 import Script from "next/script";
 import "./globals.css";
 import { Inter } from "next/font/google";
@@ -123,14 +124,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <meta name="google-adsense-account" content="ca-pub-6299138657923728" />
         {/* Machine-readable site guide for AI/search crawlers. */}
         <link rel="alternate" type="text/plain" href="/llms.txt" title="Pixel Shine AI-readable site guide" />
-        {/* Google AdSense loader — placed as a raw <script> in <head> exactly
-            where the AdSense crawler and the "code snippet" site-verification
-            look for it. Auto ads serves units from this single loader. */}
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6299138657923728"
-          crossOrigin="anonymous"
-        />
+        {/* AdSense loads per page through <AdSenseLoader /> — see src/lib/ad-policy.ts. */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
@@ -155,6 +149,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </noscript>
         {/* End Google Tag Manager (noscript) */}
         <Analytics />
+        <AdSenseLoader />
         {/* Support chatbot — signed-in users only; see SupportChat. */}
         <SupportChat />
         <LanguageProvider>

@@ -50,8 +50,6 @@ export const UTILITY_TOOLS: DashboardTool[] = [
   { slug: "rotate-image",     name: "Rotate & Flip",     blurb: "Any angle, mirror either way",    href: "/rotate-image",     emoji: "🔄", credits: 0, category: "utility" },
   { slug: "blur-image",       name: "Blur Image",        blurb: "Hide faces and details",          href: "/blur-image",       emoji: "🫥", credits: 0, category: "utility" },
   { slug: "watermark-image",  name: "Add Watermark",     blurb: "Text watermark, any position",    href: "/watermark-image",  emoji: "🔖", credits: 0, category: "utility" },
-  { slug: "watermark-remover",name: "Watermark Remover", blurb: "Lift a watermark off a photo",    href: "/watermark-remover",emoji: "🩹", credits: 0, category: "utility" },
-  { slug: "invisible-watermark-remover", name: "Metadata Remover", blurb: "Strip EXIF, GPS and hidden text", href: "/invisible-watermark-remover", emoji: "🧼", credits: 0, category: "utility" },
   { slug: "meme-generator",   name: "Meme Generator",    blurb: "Top and bottom captions",         href: "/meme-generator",   emoji: "😂", credits: 0, category: "utility" },
   { slug: "image-to-pdf",     name: "Image to PDF",      blurb: "Combine images into one PDF",     href: "/image-to-pdf",     emoji: "📄", credits: 0, category: "utility" },
   { slug: "qr-code-generator",name: "QR Code Generator", blurb: "Link or text to QR",              href: "/qr-code-generator",emoji: "🔳", credits: 0, category: "utility" },

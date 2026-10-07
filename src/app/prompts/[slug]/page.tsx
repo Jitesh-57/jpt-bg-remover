@@ -46,6 +46,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       description,
       keywords: [ds.model, "ai prompt", ds.useCase, ...ds.styles, ...ds.subjects].filter(Boolean).join(", "),
       alternates: { canonical: url },
+      // Third-party dataset record (YouMind OpenLab) — usable, but not indexed.
+      robots: { index: false, follow: true },
       openGraph: {
         title: ds.title, description, url, type: "article", siteName: BRAND,
         ...(ds.images[0] ? { images: [ds.images[0]] } : {}),

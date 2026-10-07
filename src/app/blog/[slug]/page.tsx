@@ -50,7 +50,6 @@ const FREE_TOOL_LINKS = [
   { icon: "↔️", label: "Resize Image", href: "/resize-image" },
   { icon: "🫥", label: "Blur Image", href: "/blur-image" },
   { icon: "🔳", label: "QR Code Generator", href: "/qr-code-generator" },
-  { icon: "🎬", label: "TikTok No-Watermark", href: "/tiktok-watermark-remover" },
 ];
 
 function renderBody(body: string) {
