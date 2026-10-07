@@ -45,7 +45,26 @@ function isEnglish(r: PromptRecord): boolean {
   opens on real results.
 */
 const hasVisual = (r: PromptRecord) => !!(r.media === "video" ? r.videoThumbnail || r.images[0] : r.images[0]);
-const english = DB.records.filter(isEnglish);
+/*
+  Records withheld for AdSense / content policy: real people, trademarked
+  characters, and anything sexualised or that could read as depicting minors.
+  Matching by keyword on the title and prompt means new dataset imports are
+  screened too. Add uids to BLOCKED_UIDS for anything the pattern misses.
+*/
+const BLOCKED_TERMS = /\b(elon|musk|trump|modi|biden|obama|anya taylor|taylor swift|zuckerberg|harry potter|hogwarts|disney|pixar|mickey|barbie|marvel|spider-?man|batman|superman|pok[eé]mon|pikachu|ghibli|nick and judy|judy and nick|zootopia|lolita|schoolgirl|school ?girl|teen|teenage|naked|nude|sexy|seductive|sensual|cleavage|lingerie|bikini|underwear|busty)\b/i;
+const BLOCKED_UIDS = new Set<string>([
+  "realistic-bedroom-selfie-portrait-2fd63a",
+  "anime-losing-heroines-classroom-still-d47f32",
+  "anime-classroom-losing-heroines-key-visual-ab38b3",
+  "anime-classroom-losing-heroines-key-visual-c2306a",
+  "anime-classroom-promo-key-visual-8c562d",
+  "anime-school-rom-com-key-visual-7fe274",
+  "tesla-optimus-robot-showroom-exit-889ae1",
+]);
+const allowed = (r: PromptRecord) =>
+  !BLOCKED_UIDS.has(r.uid) && !BLOCKED_TERMS.test(`${r.title} ${r.description ?? ""} ${r.prompt}`);
+
+const english = DB.records.filter(isEnglish).filter(allowed);
 export const ALL: PromptRecord[] = [...english.filter(hasVisual), ...english.filter((r) => !hasVisual(r))];
 
 const countWhere = (pred: (r: PromptRecord) => boolean) => ALL.reduce((n, r) => n + (pred(r) ? 1 : 0), 0);
