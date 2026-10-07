@@ -65,7 +65,11 @@ auto-submit is off by default and you turn it on per run.
 The same app runs as a website: people sign up with an email and password, and each account gets its own
 products, launches, vault and site sign-ins. Autopilot runs in a browser on the server.
 
-**Deploy (about 5 minutes):**
+**One click:** [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FJitesh-57%2Fjpt-bg-remover%2Ftree%2Fmain%2Flaunchpilot&project-name=launchpilot&repository-name=launchpilot&env=ANTHROPIC_API_KEY,LAUNCHPILOT_SECRET,CRON_SECRET&envDescription=Claude%20API%20key%3B%20any%20long%20random%20string%20for%20LAUNCHPILOT_SECRET%20%28never%20change%20it%20later%29%3B%20any%20random%20string%20for%20CRON_SECRET&envLink=https%3A%2F%2Fgithub.com%2FJitesh-57%2Fjpt-bg-remover%2Ftree%2Fmain%2Flaunchpilot%23hosted-version-on-vercel-anyone-can-use-it&stores=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22upstash%22%2C%22productSlug%22%3A%22upstash-kv%22%7D%5D)
+This creates a separate `launchpilot` repo and Vercel project, adds Upstash Redis, and asks for the three
+required variables. Add the optional ones below afterwards.
+
+**Or by hand (about 5 minutes):**
 
 1. In Vercel: **Add New → Project**, import this repository, set **Root Directory** to `launchpilot`,
    Framework Preset **Other**. Deploy it as its own project (not the sjpt.io project).
