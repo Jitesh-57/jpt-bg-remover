@@ -1,0 +1,694 @@
+From ce797783592bb18fe5845ae4b470997c45b28eb8 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Wed, 7 Oct 2026 17:31:56 +0000
+Subject: [PATCH] Fix AdSense policy violations
+
+- Remove TikTok downloader, watermark remover and C2PA/metadata stripper
+  (301 to /tools) plus 24 blog posts promoting them
+- Load AdSense only on content pages (home, blog, guides, about, contact)
+- Noindex the third-party YouMind prompt dataset pages and drop them
+  from the sitemaps; keep our own originals indexed
+- Filter real-person, trademarked-character and sexualised prompts
+- Add /about and /contact pages, link them in the footer
+- Privacy policy: disclose AdSense / Google ad cookies and opt-outs
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01DKgCvSmtgfiKVyzCha2Jo1
+---
+ next.config.mjs                       |  6 +++
+ src/app/_components/AdSenseLoader.tsx | 28 ++++++++++
+ src/app/_components/Footer.tsx        |  5 +-
+ src/app/_components/MegaMenu.tsx      |  1 -
+ src/app/_components/NavBar.tsx        |  3 --
+ src/app/about/page.tsx                | 75 +++++++++++++++++++++++++++
+ src/app/blog/[slug]/page.tsx          |  1 -
+ src/app/blog/_data/posts.ts           | 10 +++-
+ src/app/contact/page.tsx              | 52 +++++++++++++++++++
+ src/app/layout.tsx                    | 11 ++--
+ src/app/llms.txt/route.ts             |  3 --
+ src/app/privacy/page.tsx              | 20 +++++--
+ src/app/prompts/[slug]/page.tsx       |  2 +
+ src/app/sitemap.xml/route.ts          |  1 -
+ src/app/tools/page.tsx                |  3 --
+ src/lib/ad-policy.ts                  | 56 ++++++++++++++++++++
+ src/lib/app-catalog.ts                |  1 -
+ src/lib/dashboard-catalog.ts          |  2 -
+ src/lib/prompts/data.ts               | 21 +++++++-
+ src/lib/sitemap-data.ts               | 37 +++----------
+ src/middleware.ts                     |  4 ++
+ 21 files changed, 280 insertions(+), 62 deletions(-)
+ create mode 100644 src/app/_components/AdSenseLoader.tsx
+ create mode 100644 src/app/about/page.tsx
+ create mode 100644 src/app/contact/page.tsx
+ create mode 100644 src/lib/ad-policy.ts
+
+diff --git a/next.config.mjs b/next.config.mjs
+index c3dccce..8c34c42 100644
+--- a/next.config.mjs
++++ b/next.config.mjs
+@@ -11,6 +11,12 @@ const nextConfig = {
+       // 301 to the home page so old sitemap/crawled URLs don't 404.
+       { source: '/instagram-video-downloader', destination: '/', permanent: true },
+       { source: '/youtube-video-downloader', destination: '/', permanent: true },
++      // Removed for AdSense policy: tools that strip other people's watermarks,
++      // download TikTok videos, or strip AI-provenance (C2PA) marks count as
++      // enabling copyright infringement / dishonest behaviour.
++      { source: '/tiktok-watermark-remover', destination: '/tools', permanent: true },
++      { source: '/watermark-remover', destination: '/tools', permanent: true },
++      { source: '/invisible-watermark-remover', destination: '/tools', permanent: true },
+       // /upscale is its own landing page again — the homepage now has its own
+       // identity, so there is no duplicate to consolidate.
+     ];
+diff --git a/src/app/_components/AdSenseLoader.tsx b/src/app/_components/AdSenseLoader.tsx
+new file mode 100644
+index 0000000..b21061c
+--- /dev/null
++++ b/src/app/_components/AdSenseLoader.tsx
+@@ -0,0 +1,28 @@
++"use client";
++
++import { useEffect } from "react";
++import { usePathname } from "next/navigation";
++import { adsAllowed } from "@/lib/ad-policy";
++
++const SRC = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6299138657923728";
++
++/**
++ * Loads the AdSense (Auto ads) script only on pages allowed by ad-policy.ts.
++ * Site ownership stays verified through the google-adsense-account meta tag
++ * in the root layout, which is on every page.
++ */
++export default function AdSenseLoader() {
++  const pathname = usePathname();
++
++  useEffect(() => {
++    if (!adsAllowed(pathname)) return;
++    if (document.querySelector(`script[src^="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"]`)) return;
++    const s = document.createElement("script");
++    s.async = true;
++    s.src = SRC;
++    s.crossOrigin = "anonymous";
++    document.head.appendChild(s);
++  }, [pathname]);
++
++  return null;
++}
+diff --git a/src/app/_components/Footer.tsx b/src/app/_components/Footer.tsx
+index cab130c..2a0a0d0 100644
+--- a/src/app/_components/Footer.tsx
++++ b/src/app/_components/Footer.tsx
+@@ -35,8 +35,6 @@ const FREE_TOOLS = [
+   { labelKey: "Add Watermark",    href: "/watermark-image" },
+   { labelKey: "Meme Generator",   href: "/meme-generator" },
+   { labelKey: "Image to PDF",     href: "/image-to-pdf" },
+-  { labelKey: "TikTok Watermark Remover", href: "/tiktok-watermark-remover" },
+-  { labelKey: "Metadata Remover", href: "/invisible-watermark-remover" },
+ ];
+ 
+ const ALL_COMPANY = [
+@@ -47,7 +45,8 @@ const ALL_COMPANY = [
+   { labelKey: "Pricing", href: "/pricing" },
+   { labelKey: "Blog",    href: "/blog" },
+   { labelKey: "AI Guide", href: "/answers" },
+-  { labelKey: "Contact", href: "mailto:patil.jitesh866@gmail.com" },
++  { labelKey: "About", href: "/about" },
++  { labelKey: "Contact", href: "/contact" },
+ ];
+ 
+ // In free-only mode drop the paid links (My Generations, Pricing). The Blog
+diff --git a/src/app/_components/MegaMenu.tsx b/src/app/_components/MegaMenu.tsx
+index 8928a15..29dfd5d 100644
+--- a/src/app/_components/MegaMenu.tsx
++++ b/src/app/_components/MegaMenu.tsx
+@@ -29,7 +29,6 @@ const FEATURES = [
+   { label: "Upscale Image", href: "/upscale" },
+   { label: "Prompt to Edit", href: "/app/editor" },
+   { label: "AI Image Generator", href: "/app/create" },
+-  { label: "Remove Watermark", href: "/watermark-remover" },
+   { label: "Resize Image", href: "/resize-image" },
+   { label: "Crop Image", href: "/crop-image" },
+   { label: "Compress Image", href: "/compress-image" },
+diff --git a/src/app/_components/NavBar.tsx b/src/app/_components/NavBar.tsx
+index 70f0523..d3f175c 100644
+--- a/src/app/_components/NavBar.tsx
++++ b/src/app/_components/NavBar.tsx
+@@ -66,9 +66,6 @@ const FREE_IMAGE_TOOLS = [
+   { icon: "🔖", label: "Add Watermark",   desc: "Text watermark on photos",      href: "/watermark-image", free: true },
+   { icon: "😂", label: "Meme Generator",  desc: "Top & bottom meme text",        href: "/meme-generator", free: true },
+   { icon: "📄", label: "Image to PDF",    desc: "JPG & PNG to PDF",              href: "/image-to-pdf", free: true },
+-  { icon: "🎬", label: "TikTok No-Watermark", desc: "Download TikTok, no watermark", href: "/tiktok-watermark-remover", free: true },
+-  { icon: "🪄", label: "Watermark Remover", desc: "Erase watermarks from photos", href: "/watermark-remover", free: true },
+-  { icon: "🧼", label: "Invisible Watermark Remover", desc: "Strip metadata & hidden text", href: "/invisible-watermark-remover", free: true },
+ ];
+ 
+ // In free-only mode show the free image tools + the editor. In paid mode keep
+diff --git a/src/app/about/page.tsx b/src/app/about/page.tsx
+new file mode 100644
+index 0000000..9f491a6
+--- /dev/null
++++ b/src/app/about/page.tsx
+@@ -0,0 +1,75 @@
++import type { Metadata } from "next";
++
++export const metadata: Metadata = {
++  title: { absolute: "About Pixel Shine — Who We Are | Pixel Shine" },
++  description: "Pixel Shine is an independent, browser-based photo editor with free image tools and pay-as-you-go AI features. Learn who builds it and how it works.",
++  alternates: { canonical: "https://www.sjpt.io/about" },
++  robots: { index: true, follow: true },
++};
++
++export default function AboutPage() {
++  return (
++    <main style={{ fontFamily: "var(--font)", color: "var(--text)", background: "var(--surface)", minHeight: "100vh" }}>
++      <div style={{ maxWidth: 780, margin: "0 auto", padding: "60px 24px 80px" }}>
++        <h1 style={{ fontSize: 36, fontWeight: 900, marginBottom: 8 }}>About Pixel Shine</h1>
++        <p style={{ color: "var(--text-muted)", fontSize: 16, lineHeight: 1.8, marginBottom: 48 }}>
++          Pixel Shine is an independent photo editor that runs in your browser. It started as a single
++          image upscaler and grew into a set of everyday image tools plus a small number of AI features
++          for people who want more than a filter.
++        </p>
++
++        <Section title="Who builds it">
++          Pixel Shine is designed, built and run by Jitesh, an independent developer based in India.
++          There is no large company behind it: the tools, the guides on the blog and the support inbox
++          are handled by the same small team. If something is broken or unclear, your message reaches
++          the person who can fix it.
++        </Section>
++
++        <Section title="What you can do here">
++          The free tools — upscaling, compressing, converting, cropping, resizing, rotating, blurring,
++          watermarking your own images, making memes, QR codes and PDFs — run on your own device. Your
++          files are not uploaded for these tools, there is no sign-up and there is no watermark on the
++          result.
++          <br /><br />
++          The AI tools (image generation, AI photo editing, headshots and creative styles) run on
++          credits you buy once. Credits never expire and nothing renews automatically.
++        </Section>
++
++        <Section title="How we write our guides">
++          The articles on the <a href="/blog" style={{ color: "var(--accent)" }}>blog</a> and in the{" "}
++          <a href="/answers" style={{ color: "var(--accent)" }}>AI guide</a> explain how to get better
++          results from photo editing — fixing old photos, preparing profile pictures, sizing images for
++          the web. We update or remove articles when a tool changes.
++        </Section>
++
++        <Section title="What we won't build">
++          We don't offer tools for downloading other people&apos;s videos, removing watermarks or
++          content credentials from work you don&apos;t own, or creating images of real people without
++          their consent, and sexual content is not allowed on the AI tools. See our <a href="/terms" style={{ color: "var(--accent)" }}>Terms of Service</a> for the full rules.
++        </Section>
++
++        <Section title="Advertising">
++          Some articles show ads served by Google AdSense. Ads help keep the free tools free. They never
++          appear inside the editors or in the middle of a task. Read our{" "}
++          <a href="/privacy" style={{ color: "var(--accent)" }}>Privacy Policy</a> to learn how ad
++          cookies work and how to opt out of personalised ads.
++        </Section>
++
++        <Section title="Get in touch">
++          Questions, feedback, bug reports or a takedown request — visit the{" "}
++          <a href="/contact" style={{ color: "var(--accent)" }}>contact page</a>. We usually reply
++          within two working days.
++        </Section>
++      </div>
++    </main>
++  );
++}
++
++function Section({ title, children }: { title: string; children: React.ReactNode }) {
++  return (
++    <section style={{ marginBottom: 36 }}>
++      <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 12, color: "var(--text)" }}>{title}</h2>
++      <div style={{ fontSize: 15, lineHeight: 1.8, color: "var(--text-muted)" }}>{children}</div>
++    </section>
++  );
++}
+diff --git a/src/app/blog/[slug]/page.tsx b/src/app/blog/[slug]/page.tsx
+index 0ded573..f52d4e9 100644
+--- a/src/app/blog/[slug]/page.tsx
++++ b/src/app/blog/[slug]/page.tsx
+@@ -50,7 +50,6 @@ const FREE_TOOL_LINKS = [
+   { icon: "↔️", label: "Resize Image", href: "/resize-image" },
+   { icon: "🫥", label: "Blur Image", href: "/blur-image" },
+   { icon: "🔳", label: "QR Code Generator", href: "/qr-code-generator" },
+-  { icon: "🎬", label: "TikTok No-Watermark", href: "/tiktok-watermark-remover" },
+ ];
+ 
+ function renderBody(body: string) {
+diff --git a/src/app/blog/_data/posts.ts b/src/app/blog/_data/posts.ts
+index 8a4107a..556064b 100644
+--- a/src/app/blog/_data/posts.ts
++++ b/src/app/blog/_data/posts.ts
+@@ -14373,7 +14373,7 @@ Ready to make your listings shine? Head to Pixel Shine's AI Editor at Pixel Shin
+ const LIVE_TOOL_PREFIXES = [
+   "/upscale", "/compress-image", "/convert-image", "/crop-image",
+   "/rotate-image", "/watermark-image", "/meme-generator", "/image-to-pdf",
+-  "/tiktok-watermark-remover", "/watermark-remover", "/batch-editor",
++  "/batch-editor",
+   // Browser tools that had no blog coverage at all until now.
+   "/resize-image", "/qr-code-generator", "/blur-image",
+   // The AI apps. Live since paid features were switched on.
+@@ -14395,6 +14395,13 @@ const LIVE_TOOL_PREFIXES = [
+   once its copy has been rewritten — that is the only thing standing between
+   these and the blog.
+ */
++/*
++  Posts withdrawn for AdSense: guides to downloading TikTok videos or removing
++  watermarks count as helping people infringe copyright, and AdSense reviews the
++  whole site. Their tools are gone too (see the redirects in next.config.mjs).
++*/
++const ADSENSE_BLOCKED = /tiktok|watermark-remov|remove-watermark|without-watermark|no-watermark|remove-logo/;
++
+ const STALE_PRICING_COPY = new Set([
+   "ai-3d-figurine-from-photo",
+   "ai-anime-style-photo-filter-free",
+@@ -14445,6 +14452,7 @@ const STALE_PRICING_COPY = new Set([
+ export const POSTS: BlogPost[] = [...RAW_POSTS, ...UPSCALE_POSTS, ...UPSCALE_FREE_POSTS, ...UPSCALE_FREE_POSTS_2, ...TOOL_FREE_POSTS, ...TIKTOK_POSTS, ...SEO_POSTS, ...SEO_POSTS_2, ...SEO_POSTS_3, ...SEO_POSTS_4, ...SEO_POSTS_5, ...SEO_POSTS_6, ...SEO_POSTS_7, ...SEO_POSTS_8, ...SEO_POSTS_9, ...SEO_POSTS_10, ...TOOL_POSTS_2, ...APP_POSTS]
+   .filter((p) => LIVE_TOOL_PREFIXES.some((pre) => p.toolHref.startsWith(pre)))
+   .filter((p) => !STALE_PRICING_COPY.has(p.slug))
++  .filter((p) => !ADSENSE_BLOCKED.test(p.slug))
+   .map((p) => ({ ...p, image: p.image || blogImageUrl(p.slug) }))
+   .sort((a, b) => (a.date < b.date ? 1 : -1));
+ 
+diff --git a/src/app/contact/page.tsx b/src/app/contact/page.tsx
+new file mode 100644
+index 0000000..e5f0525
+--- /dev/null
++++ b/src/app/contact/page.tsx
+@@ -0,0 +1,52 @@
++import type { Metadata } from "next";
++
++export const metadata: Metadata = {
++  title: { absolute: "Contact Pixel Shine | Pixel Shine" },
++  description: "Contact the Pixel Shine team for support, billing questions, feedback, partnerships or copyright and takedown requests.",
++  alternates: { canonical: "https://www.sjpt.io/contact" },
++  robots: { index: true, follow: true },
++};
++
++const EMAIL = "support@sjpt.io";
++
++const TOPICS: { title: string; body: string; subject: string }[] = [
++  { title: "Help with a tool", body: "Something didn't work, a download failed or a result looks wrong. Tell us which tool you used, your browser and what you expected.", subject: "Support request" },
++  { title: "Credits and payments", body: "Questions about a purchase, a missing credit pack or an invoice. Include the email on your account and the payment ID if you have it.", subject: "Billing question" },
++  { title: "Copyright or takedown", body: "If you believe content on sjpt.io uses your work without permission, send the page URL and proof of ownership. We act on valid requests quickly.", subject: "Copyright / takedown request" },
++  { title: "Privacy and data", body: "Ask for a copy of your data, correct it, or delete your account and everything linked to it.", subject: "Privacy request" },
++  { title: "Feedback and partnerships", body: "Ideas for new tools, corrections to an article, or business enquiries.", subject: "Feedback" },
++];
++
++export default function ContactPage() {
++  return (
++    <main style={{ fontFamily: "var(--font)", color: "var(--text)", background: "var(--surface)", minHeight: "100vh" }}>
++      <div style={{ maxWidth: 780, margin: "0 auto", padding: "60px 24px 80px" }}>
++        <h1 style={{ fontSize: 36, fontWeight: 900, marginBottom: 8 }}>Contact us</h1>
++        <p style={{ color: "var(--text-muted)", fontSize: 16, lineHeight: 1.8, marginBottom: 32 }}>
++          The quickest way to reach Pixel Shine is email. Write to{" "}
++          <a href={`mailto:${EMAIL}`} style={{ color: "var(--accent)", fontWeight: 700 }}>{EMAIL}</a>{" "}
++          and we&apos;ll usually reply within two working days (Monday to Friday, India Standard Time).
++        </p>
++
++        <div style={{ display: "grid", gap: 16, marginBottom: 40 }}>
++          {TOPICS.map((t) => (
++            <a key={t.title} href={`mailto:${EMAIL}?subject=${encodeURIComponent(t.subject)}`}
++              style={{ display: "block", padding: "20px 22px", borderRadius: 14, border: "1px solid var(--border, rgba(127,127,127,0.25))", textDecoration: "none", color: "inherit" }}>
++              <div style={{ fontSize: 17, fontWeight: 800, marginBottom: 6, color: "var(--text)" }}>{t.title}</div>
++              <div style={{ fontSize: 15, lineHeight: 1.7, color: "var(--text-muted)" }}>{t.body}</div>
++            </a>
++          ))}
++        </div>
++
++        <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 12 }}>Operator</h2>
++        <p style={{ fontSize: 15, lineHeight: 1.8, color: "var(--text-muted)", margin: 0 }}>
++          Pixel Shine (www.sjpt.io) is operated by Jitesh Patil, India.<br />
++          Email: <a href={`mailto:${EMAIL}`} style={{ color: "var(--accent)" }}>{EMAIL}</a><br />
++          More about us: <a href="/about" style={{ color: "var(--accent)" }}>About Pixel Shine</a> ·{" "}
++          <a href="/privacy" style={{ color: "var(--accent)" }}>Privacy Policy</a> ·{" "}
++          <a href="/terms" style={{ color: "var(--accent)" }}>Terms of Service</a>
++        </p>
++      </div>
++    </main>
++  );
++}
+diff --git a/src/app/layout.tsx b/src/app/layout.tsx
+index 18d8355..56ccad0 100644
+--- a/src/app/layout.tsx
++++ b/src/app/layout.tsx
+@@ -1,4 +1,5 @@
+ import type { Metadata } from "next";
++import AdSenseLoader from "./_components/AdSenseLoader";
+ import Script from "next/script";
+ import "./globals.css";
+ import { Inter } from "next/font/google";
+@@ -123,14 +124,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
+         <meta name="google-adsense-account" content="ca-pub-6299138657923728" />
+         {/* Machine-readable site guide for AI/search crawlers. */}
+         <link rel="alternate" type="text/plain" href="/llms.txt" title="Pixel Shine AI-readable site guide" />
+-        {/* Google AdSense loader — placed as a raw <script> in <head> exactly
+-            where the AdSense crawler and the "code snippet" site-verification
+-            look for it. Auto ads serves units from this single loader. */}
+-        <script
+-          async
+-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6299138657923728"
+-          crossOrigin="anonymous"
+-        />
++        {/* AdSense loads per page through <AdSenseLoader /> — see src/lib/ad-policy.ts. */}
+         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
+         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
+         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+@@ -155,6 +149,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+         </noscript>
+         {/* End Google Tag Manager (noscript) */}
+         <Analytics />
++        <AdSenseLoader />
+         {/* Support chatbot — signed-in users only; see SupportChat. */}
+         <SupportChat />
+         <LanguageProvider>
+diff --git a/src/app/llms.txt/route.ts b/src/app/llms.txt/route.ts
+index 59fd2b6..fa7b970 100644
+--- a/src/app/llms.txt/route.ts
++++ b/src/app/llms.txt/route.ts
+@@ -24,9 +24,6 @@ const FREE_TOOLS: [string, string, string][] = [
+   ["Add Watermark", "/watermark-image", "Add a text watermark with control over position, size and opacity."],
+   ["Meme Generator", "/meme-generator", "Add top and bottom meme captions to any image. Free, no watermark."],
+   ["Image to PDF", "/image-to-pdf", "Combine JPG and PNG images into a single PDF. Free and unlimited."],
+-  ["Watermark Remover", "/watermark-remover", "Remove watermarks, logos and text from photos you own."],
+-  ["Invisible Watermark & Metadata Remover", "/invisible-watermark-remover", "Strip EXIF, GPS, XMP, C2PA Content Credentials and AI prompts from images, PDFs, Office and audio files, and zero-width characters from text. Lossless, runs in the browser."],
+-  ["TikTok Watermark Remover", "/tiktok-watermark-remover", "Download TikTok videos without the watermark."],
+   ["Batch Editor", "/batch-editor", "Apply the same edit to up to 100 images at once."],
+   ["80s AI Photo Prompts", "/80s-ai-photo-prompts", "100 free copy-paste prompts for the viral 80s AI photo trend, with a reference image for each. Works in ChatGPT and Gemini."],
+   ["Prompt library", "/prompts", "A library of free AI image prompts — portraits, film looks, YouTube thumbnails, social covers, product shots, ads and photo restoration — each written in full and composed for a stated aspect ratio. Every prompt has its own page."],
+diff --git a/src/app/privacy/page.tsx b/src/app/privacy/page.tsx
+index 2d3105b..f4c9034 100644
+--- a/src/app/privacy/page.tsx
++++ b/src/app/privacy/page.tsx
+@@ -12,7 +12,7 @@ export default function PrivacyPage() {
+     <main style={{ fontFamily: "var(--font)", color: "var(--text)", background: "var(--surface)", minHeight: "100vh" }}>
+       <div style={{ maxWidth: 780, margin: "0 auto", padding: "60px 24px 80px" }}>
+         <h1 style={{ fontSize: 36, fontWeight: 900, marginBottom: 8 }}>Privacy Policy</h1>
+-        <p style={{ color: "var(--text-muted)", fontSize: 14, marginBottom: 48 }}>Last updated: June 23, 2025</p>
++        <p style={{ color: "var(--text-muted)", fontSize: 14, marginBottom: 48 }}>Last updated: October 7, 2026</p>
+ 
+         <Section title="1. Introduction">
+           Pixel Shine (&quot;we&quot;, &quot;our&quot;, or &quot;us&quot;) operates the website{" "}
+@@ -53,6 +53,8 @@ export default function PrivacyPage() {
+             <li><b>Google Gemini</b> — AI image processing</li>
+             <li><b>Razorpay</b> — payment processing</li>
+             <li><b>Vercel</b> — hosting and infrastructure</li>
++            <li><b>Google AdSense</b> — advertising on some pages (see Cookies and Advertising below)</li>
++            <li><b>Google Analytics / Google Tag Manager</b> — anonymous usage statistics</li>
+           </ul>
+           Each of these services has their own Privacy Policy and we encourage you to review them.
+         </Section>
+@@ -73,8 +75,20 @@ export default function PrivacyPage() {
+           <a href="mailto:support@sjpt.io" style={{ color: "var(--accent)" }}>support@sjpt.io</a>.
+         </Section>
+ 
+-        <Section title="8. Cookies">
+-          We use essential cookies only — for session authentication and keeping you logged in. We do not use tracking or advertising cookies.
++        <Section title="8. Cookies and Advertising">
++          We use essential cookies to keep you signed in, and analytics cookies (Google Analytics, through Google Tag Manager) to understand how the site is used.
++          <br /><br />
++          We use Google AdSense to show ads on some pages. Third-party vendors, including Google, use cookies to serve ads based on your prior visits to this website or other websites. Google&apos;s use of advertising cookies enables it and its partners to serve ads to you based on your visits to this site and/or other sites on the Internet.
++          <br /><br />
++          You may opt out of personalized advertising by visiting Google&apos;s{" "}
++          <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)" }}>Ads Settings</a>. You can also opt out of a third-party vendor&apos;s use of cookies for personalized advertising at{" "}
++          <a href="https://www.aboutads.info/choices" target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)" }}>www.aboutads.info</a>
++          {" "}(or{" "}
++          <a href="https://www.youronlinechoices.eu" target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)" }}>youronlinechoices.eu</a>
++          {" "}in the EU). To learn how Google uses data from sites that use its services, see{" "}
++          <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)" }}>How Google uses information from sites or apps that use our services</a>.
++          <br /><br />
++          Where the law requires it (for example in the EEA, the UK and Switzerland), we ask for your consent before personalized ads or non-essential cookies are used. You can block or delete cookies in your browser settings at any time; signing in requires essential cookies.
+         </Section>
+ 
+         <Section title="9. Children's Privacy">
+diff --git a/src/app/prompts/[slug]/page.tsx b/src/app/prompts/[slug]/page.tsx
+index d3b1e08..212f214 100644
+--- a/src/app/prompts/[slug]/page.tsx
++++ b/src/app/prompts/[slug]/page.tsx
+@@ -46,6 +46,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
+       description,
+       keywords: [ds.model, "ai prompt", ds.useCase, ...ds.styles, ...ds.subjects].filter(Boolean).join(", "),
+       alternates: { canonical: url },
++      // Third-party dataset record (YouMind OpenLab) — usable, but not indexed.
++      robots: { index: false, follow: true },
+       openGraph: {
+         title: ds.title, description, url, type: "article", siteName: BRAND,
+         ...(ds.images[0] ? { images: [ds.images[0]] } : {}),
+diff --git a/src/app/sitemap.xml/route.ts b/src/app/sitemap.xml/route.ts
+index 6ebe7d3..7d90b8e 100644
+--- a/src/app/sitemap.xml/route.ts
++++ b/src/app/sitemap.xml/route.ts
+@@ -17,7 +17,6 @@ export async function GET() {
+     `${BASE}/sitemap-tools.xml`,
+     `${BASE}/sitemap-blog.xml`,
+     `${BASE}/sitemap-prompts.xml`,
+-    `${BASE}/sitemap-video-prompts.xml`,
+     `${BASE}/sitemap-creative.xml`,
+     `${BASE}/sitemap-growth.xml`,
+   ]));
+diff --git a/src/app/tools/page.tsx b/src/app/tools/page.tsx
+index ce98968..657450a 100644
+--- a/src/app/tools/page.tsx
++++ b/src/app/tools/page.tsx
+@@ -30,9 +30,6 @@ const CORE_TOOLS = [
+   { icon: "🔖", name: "Add Watermark", desc: "Text watermark on photos", href: "/watermark-image" },
+   { icon: "😂", name: "Meme Generator", desc: "Top & bottom meme text", href: "/meme-generator" },
+   { icon: "📄", name: "Image to PDF", desc: "JPG & PNG to PDF", href: "/image-to-pdf" },
+-  { icon: "🎬", name: "TikTok No-Watermark", desc: "Download TikTok videos clean", href: "/tiktok-watermark-remover" },
+-  { icon: "🪄", name: "Watermark Remover", desc: "Erase watermarks from photos", href: "/watermark-remover" },
+-  { icon: "🧼", name: "Invisible Watermark Remover", desc: "Strip EXIF, GPS, C2PA & hidden text", href: "/invisible-watermark-remover" },
+   { icon: "🧩", name: "Batch Editor", desc: "Process many images at once", href: "/batch-editor" },
+ ];
+ 
+diff --git a/src/lib/ad-policy.ts b/src/lib/ad-policy.ts
+new file mode 100644
+index 0000000..c5960e9
+--- /dev/null
++++ b/src/lib/ad-policy.ts
+@@ -0,0 +1,56 @@
++/**
++ * ad-policy.ts — which pages may carry AdSense ads, and which pages search
++ * engines should not index.
++ *
++ * AdSense rejected sjpt.io with "We found some policy violations". The review
++ * looks at the whole site, so two rules keep it clean:
++ *
++ *  1. Ads load only on pages whose main purpose is original written content
++ *     (home, blog, guides). Upload widgets, editors, account screens and the
++ *     third-party prompt gallery are "screens without publisher content" in
++ *     AdSense terms, so the loader never runs there.
++ *
++ *  2. The prompt gallery republished from an outside dataset (YouMind OpenLab,
++ *     CC BY 4.0) is kept for users but marked noindex. Republished content is
++ *     "copied content" to Google even when the licence allows it. Our own
++ *     originals (/prompts/originals and their detail pages) stay indexed.
++ *
++ * To put ads on a new section, add its prefix to AD_ALLOWED_PREFIXES — only
++ * after it has real, original text on the page.
++ */
++
++/** Exact paths that may show ads. */
++const AD_ALLOWED_EXACT = new Set<string>(["/", "/about", "/contact"]);
++
++/** Path prefixes (the path itself and anything under it) that may show ads. */
++const AD_ALLOWED_PREFIXES = ["/blog", "/answers", "/ai", "/use-cases", "/alternatives", "/docs"];
++
++function underPrefix(path: string, prefix: string): boolean {
++  return path === prefix || path.startsWith(prefix + "/");
++}
++
++export function adsAllowed(path: string | null | undefined): boolean {
++  if (!path) return false;
++  const p = path.length > 1 ? path.replace(/\/+$/, "") : path;
++  if (AD_ALLOWED_EXACT.has(p)) return true;
++  // "/ai" must not match "/ai-editor" or "/ai-headshot" — underPrefix handles that.
++  return AD_ALLOWED_PREFIXES.some((pre) => underPrefix(p, pre));
++}
++
++/**
++ * Third-party dataset pages: noindex, follow. Detail pages under /prompts/<slug>
++ * are handled in their own generateMetadata, because originals and dataset
++ * records share that route.
++ */
++const NOINDEX_PREFIXES = ["/video-prompts", "/prompts/image", "/prompts/video", "/prompts-pack"];
++const MODEL_PROMPT_PAGE = /^\/[a-z0-9-]+-prompts(\/|$)/;
++const OWN_PROMPT_PAGES = new Set(["/80s-ai-photo-prompts"]);
++
++export function shouldNoindex(path: string): boolean {
++  if (NOINDEX_PREFIXES.some((pre) => underPrefix(path, pre))) return true;
++  if (MODEL_PROMPT_PAGE.test(path)) {
++    const root = "/" + path.split("/")[1];
++    return !OWN_PROMPT_PAGES.has(root);
++  }
++  return false;
++}
+diff --git a/src/lib/app-catalog.ts b/src/lib/app-catalog.ts
+index b58ded0..c42fe67 100644
+--- a/src/lib/app-catalog.ts
++++ b/src/lib/app-catalog.ts
+@@ -213,7 +213,6 @@ export const CATALOG_ROWS: Row[] = [
+   // ── Clean up ──────────────────────────────────────────────────────────────
+   ["object-remover", "AI Object Remover", "🧽", "remove", "Erase anything and rebuild behind it.", "Remove the unwanted object — the one named below, or whatever is most obviously out of place if none is — and reconstruct what was behind it consistently with the surrounding texture, perspective and lighting, leaving no smear, ghost or repeated pattern."],
+   ["remove-people-from-photo", "Remove People from Photos", "🚶", "remove", "Clear the background crowd.", "Remove the unwanted people and rebuild the scene behind them: continue the architecture, ground and background texture correctly through the gap, matching perspective and light."],
+-  ["watermark-remover-ai", "AI Watermark Remover", "🪄", "remove", "Clear marks from photos you own.", "Remove the watermark, logo or stamp and reconstruct the image underneath it at the pixel level, matching texture, colour and light so no blur, smear or outline remains. For images you own or are licensed to edit."],
+   ["remove-text-from-image", "Text Remover", "🔤", "remove", "Take text off an image cleanly.", "Remove the text from this image and rebuild the surface beneath it, continuing the underlying pattern, texture and gradient so there is no trace of where it was."],
+   ["emoji-remover", "Emoji & Sticker Remover", "🙈", "remove", "Uncover what a sticker was hiding.", "Remove the emoji, sticker or overlay and reconstruct the covered area plausibly from the surrounding image, matching texture, tone and lighting."],
+   ["remove-shadow-from-photo", "Shadow Remover", "🌤️", "remove", "Fix harsh or uneven shadows.", "Remove the unwanted shadow and even out the lighting across the surface, recovering the true colour and detail in the shadowed area without flattening the image's natural depth."],
+diff --git a/src/lib/dashboard-catalog.ts b/src/lib/dashboard-catalog.ts
+index fe6a60a..59518cd 100644
+--- a/src/lib/dashboard-catalog.ts
++++ b/src/lib/dashboard-catalog.ts
+@@ -50,8 +50,6 @@ export const UTILITY_TOOLS: DashboardTool[] = [
+   { slug: "rotate-image",     name: "Rotate & Flip",     blurb: "Any angle, mirror either way",    href: "/rotate-image",     emoji: "🔄", credits: 0, category: "utility" },
+   { slug: "blur-image",       name: "Blur Image",        blurb: "Hide faces and details",          href: "/blur-image",       emoji: "🫥", credits: 0, category: "utility" },
+   { slug: "watermark-image",  name: "Add Watermark",     blurb: "Text watermark, any position",    href: "/watermark-image",  emoji: "🔖", credits: 0, category: "utility" },
+-  { slug: "watermark-remover",name: "Watermark Remover", blurb: "Lift a watermark off a photo",    href: "/watermark-remover",emoji: "🩹", credits: 0, category: "utility" },
+-  { slug: "invisible-watermark-remover", name: "Metadata Remover", blurb: "Strip EXIF, GPS and hidden text", href: "/invisible-watermark-remover", emoji: "🧼", credits: 0, category: "utility" },
+   { slug: "meme-generator",   name: "Meme Generator",    blurb: "Top and bottom captions",         href: "/meme-generator",   emoji: "😂", credits: 0, category: "utility" },
+   { slug: "image-to-pdf",     name: "Image to PDF",      blurb: "Combine images into one PDF",     href: "/image-to-pdf",     emoji: "📄", credits: 0, category: "utility" },
+   { slug: "qr-code-generator",name: "QR Code Generator", blurb: "Link or text to QR",              href: "/qr-code-generator",emoji: "🔳", credits: 0, category: "utility" },
+diff --git a/src/lib/prompts/data.ts b/src/lib/prompts/data.ts
+index d359734..626a6ab 100644
+--- a/src/lib/prompts/data.ts
++++ b/src/lib/prompts/data.ts
+@@ -45,7 +45,26 @@ function isEnglish(r: PromptRecord): boolean {
+   opens on real results.
+ */
+ const hasVisual = (r: PromptRecord) => !!(r.media === "video" ? r.videoThumbnail || r.images[0] : r.images[0]);
+-const english = DB.records.filter(isEnglish);
++/*
++  Records withheld for AdSense / content policy: real people, trademarked
++  characters, and anything sexualised or that could read as depicting minors.
++  Matching by keyword on the title and prompt means new dataset imports are
++  screened too. Add uids to BLOCKED_UIDS for anything the pattern misses.
++*/
++const BLOCKED_TERMS = /\b(elon|musk|trump|modi|biden|obama|anya taylor|taylor swift|zuckerberg|harry potter|hogwarts|disney|pixar|mickey|barbie|marvel|spider-?man|batman|superman|pok[eé]mon|pikachu|ghibli|nick and judy|judy and nick|zootopia|lolita|schoolgirl|school ?girl|teen|teenage|naked|nude|sexy|seductive|sensual|cleavage|lingerie|bikini|underwear|busty)\b/i;
++const BLOCKED_UIDS = new Set<string>([
++  "realistic-bedroom-selfie-portrait-2fd63a",
++  "anime-losing-heroines-classroom-still-d47f32",
++  "anime-classroom-losing-heroines-key-visual-ab38b3",
++  "anime-classroom-losing-heroines-key-visual-c2306a",
++  "anime-classroom-promo-key-visual-8c562d",
++  "anime-school-rom-com-key-visual-7fe274",
++  "tesla-optimus-robot-showroom-exit-889ae1",
++]);
++const allowed = (r: PromptRecord) =>
++  !BLOCKED_UIDS.has(r.uid) && !BLOCKED_TERMS.test(`${r.title} ${r.description ?? ""} ${r.prompt}`);
++
++const english = DB.records.filter(isEnglish).filter(allowed);
+ export const ALL: PromptRecord[] = [...english.filter(hasVisual), ...english.filter((r) => !hasVisual(r))];
+ 
+ const countWhere = (pred: (r: PromptRecord) => boolean) => ALL.reduce((n, r) => n + (pred(r) ? 1 : 0), 0);
+diff --git a/src/lib/sitemap-data.ts b/src/lib/sitemap-data.ts
+index 6f9b03e..d6f08fd 100644
+--- a/src/lib/sitemap-data.ts
++++ b/src/lib/sitemap-data.ts
+@@ -24,8 +24,6 @@ import { CROPS } from "@/lib/crops";
+ import { ALTERNATIVES } from "@/lib/alternatives";
+ import { PAID_FEATURES_ENABLED } from "@/lib/features";
+ import { PROMPTS as LIBRARY_PROMPTS, PROMPT_COUNT as LIBRARY_COUNT } from "@/lib/prompt-library";
+-import { ALL as DATASET_PROMPTS, MODELS as PROMPT_MODELS, allFacets } from "@/lib/prompts/data";
+-import { PACKS } from "@/lib/prompts/packs";
+ import { pageHref } from "@/lib/prompts/page-href";
+ 
+ export const BASE = "https://www.sjpt.io";
+@@ -65,6 +63,8 @@ export function pagesUrls(): SitemapUrl[] {
+   const out: SitemapUrl[] = [
+     { url: BASE },
+     { url: `${BASE}/tools` },
++    { url: `${BASE}/about` },
++    { url: `${BASE}/contact` },
+     { url: `${BASE}/privacy` },
+     { url: `${BASE}/terms` },
+     { url: `${BASE}/80s-ai-photo-prompts` },
+@@ -93,9 +93,6 @@ export function toolsUrls(): SitemapUrl[] {
+     { url: `${BASE}/watermark-image` },
+     { url: `${BASE}/meme-generator` },
+     { url: `${BASE}/image-to-pdf` },
+-    { url: `${BASE}/tiktok-watermark-remover` },
+-    { url: `${BASE}/watermark-remover` },
+-    { url: `${BASE}/invisible-watermark-remover` },
+     { url: `${BASE}/alternatives` },
+     ...ALTERNATIVES.map((a) => ({ url: `${BASE}/alternatives/${a.slug}` })),
+     ...CONVERSIONS.map((c) => ({ url: `${BASE}/convert/${c.slug}` })),
+@@ -124,23 +121,13 @@ export function blogUrls(): SitemapUrl[] {
+ // ── prompts (the hub, the image dataset, the originals, models, packs) ─────
+ 
+ export function promptsUrls(): SitemapUrl[] {
+-  const imageFacets = allFacets("image");
+-  const imageModels = PROMPT_MODELS.filter((m) => m.media === "image");
++  // Only our own prompts. The third-party dataset pages (YouMind OpenLab) are
++  // noindex — see src/lib/ad-policy.ts — so they stay out of the sitemap too.
+   const out: SitemapUrl[] = [
+     { url: `${BASE}/prompts` },
+-    { url: `${BASE}/prompts/image` },
+     { url: `${BASE}/prompts/originals` },
+     ...paginationUrls("/prompts/originals", LIBRARY_COUNT, LIBRARY_PAGE_SIZE),
+     ...LIBRARY_PROMPTS.map((p) => ({ url: `${BASE}/prompts/${p.slug}` })),
+-    ...DATASET_PROMPTS.filter((p) => p.media === "image").map((p) => ({
+-      url: `${BASE}/prompts/${p.uid}`,
+-      ...(p.publishedAt ? { lastModified: p.publishedAt } : {}),
+-    })),
+-    ...imageModels.map((m) => ({ url: `${BASE}/${m.slug}-prompts` })),
+-    ...imageModels.flatMap((m) => paginationUrls(`/${m.slug}-prompts`, m.count)),
+-    ...imageFacets.map((f) => ({ url: `${BASE}/prompts/image/${f.facet.slug}` })),
+-    ...imageFacets.flatMap((f) => paginationUrls(`/prompts/image/${f.facet.slug}`, f.facet.count)),
+-    ...PACKS.map((p) => ({ url: `${BASE}/prompts-pack/${p.slug}` })),
+   ];
+   return dedupe(out);
+ }
+@@ -148,20 +135,8 @@ export function promptsUrls(): SitemapUrl[] {
+ // ── video prompts ────────────────────────────────────────────────────────
+ 
+ export function videoPromptsUrls(): SitemapUrl[] {
+-  const videoFacets = allFacets("video");
+-  const videoModels = PROMPT_MODELS.filter((m) => m.media === "video");
+-  const out: SitemapUrl[] = [
+-    { url: `${BASE}/prompts/video` },
+-    ...DATASET_PROMPTS.filter((p) => p.media === "video").map((p) => ({
+-      url: `${BASE}/video-prompts/${p.uid}`,
+-      ...(p.publishedAt ? { lastModified: p.publishedAt } : {}),
+-    })),
+-    ...videoModels.map((m) => ({ url: `${BASE}/${m.slug}-prompts` })),
+-    ...videoModels.flatMap((m) => paginationUrls(`/${m.slug}-prompts`, m.count)),
+-    ...videoFacets.map((f) => ({ url: `${BASE}/prompts/video/${f.facet.slug}` })),
+-    ...videoFacets.flatMap((f) => paginationUrls(`/prompts/video/${f.facet.slug}`, f.facet.count)),
+-  ];
+-  return dedupe(out);
++  // Every video prompt comes from the third-party dataset, so none are listed.
++  return [];
+ }
+ 
+ // ── creative ─────────────────────────────────────────────────────────────
+diff --git a/src/middleware.ts b/src/middleware.ts
+index 07e205d..8cb563a 100644
+--- a/src/middleware.ts
++++ b/src/middleware.ts
+@@ -1,6 +1,7 @@
+ import { createServerClient } from "@supabase/ssr";
+ import { NextResponse, type NextRequest } from "next/server";
+ import { PAID_FEATURES_ENABLED, PAID_ROUTE_PREFIXES } from "@/lib/features";
++import { shouldNoindex } from "@/lib/ad-policy";
+ 
+ // In-memory rate limiter (per serverless instance — good enough for burst protection)
+ const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+@@ -92,6 +93,7 @@ export async function middleware(request: NextRequest) {
+   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+     const res = NextResponse.next({ request });
+     if (country) res.cookies.set("jpt_country", country, { path: "/", maxAge: 86400, httpOnly: false });
++    if (shouldNoindex(path)) res.headers.set("X-Robots-Tag", "noindex, follow");
+     return res;
+   }
+ 
+@@ -115,6 +117,8 @@ export async function middleware(request: NextRequest) {
+ 
+   await supabase.auth.getUser();
+   if (country) supabaseResponse.cookies.set("jpt_country", country, { path: "/", maxAge: 86400, httpOnly: false });
++  // Third-party prompt dataset pages stay usable but out of Google's index (AdSense copied-content rule).
++  if (shouldNoindex(path)) supabaseResponse.headers.set("X-Robots-Tag", "noindex, follow");
+   return supabaseResponse;
+ }
+ 
+-- 
+2.43.0
+
