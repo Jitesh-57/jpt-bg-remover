@@ -14373,7 +14373,7 @@ Ready to make your listings shine? Head to Pixel Shine's AI Editor at Pixel Shin
 const LIVE_TOOL_PREFIXES = [
   "/upscale", "/compress-image", "/convert-image", "/crop-image",
   "/rotate-image", "/watermark-image", "/meme-generator", "/image-to-pdf",
-  "/tiktok-watermark-remover", "/watermark-remover", "/batch-editor",
+  "/batch-editor",
   // Browser tools that had no blog coverage at all until now.
   "/resize-image", "/qr-code-generator", "/blur-image",
   // The AI apps. Live since paid features were switched on.
@@ -14395,6 +14395,13 @@ const LIVE_TOOL_PREFIXES = [
   once its copy has been rewritten — that is the only thing standing between
   these and the blog.
 */
+/*
+  Posts withdrawn for AdSense: guides to downloading TikTok videos or removing
+  watermarks count as helping people infringe copyright, and AdSense reviews the
+  whole site. Their tools are gone too (see the redirects in next.config.mjs).
+*/
+const ADSENSE_BLOCKED = /tiktok|watermark-remov|remove-watermark|without-watermark|no-watermark|remove-logo/;
+
 const STALE_PRICING_COPY = new Set([
   "ai-3d-figurine-from-photo",
   "ai-anime-style-photo-filter-free",
@@ -14445,6 +14452,7 @@ const STALE_PRICING_COPY = new Set([
 export const POSTS: BlogPost[] = [...RAW_POSTS, ...UPSCALE_POSTS, ...UPSCALE_FREE_POSTS, ...UPSCALE_FREE_POSTS_2, ...TOOL_FREE_POSTS, ...TIKTOK_POSTS, ...SEO_POSTS, ...SEO_POSTS_2, ...SEO_POSTS_3, ...SEO_POSTS_4, ...SEO_POSTS_5, ...SEO_POSTS_6, ...SEO_POSTS_7, ...SEO_POSTS_8, ...SEO_POSTS_9, ...SEO_POSTS_10, ...TOOL_POSTS_2, ...APP_POSTS]
   .filter((p) => LIVE_TOOL_PREFIXES.some((pre) => p.toolHref.startsWith(pre)))
   .filter((p) => !STALE_PRICING_COPY.has(p.slug))
+  .filter((p) => !ADSENSE_BLOCKED.test(p.slug))
   .map((p) => ({ ...p, image: p.image || blogImageUrl(p.slug) }))
   .sort((a, b) => (a.date < b.date ? 1 : -1));
 
