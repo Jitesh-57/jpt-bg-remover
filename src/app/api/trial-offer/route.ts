@@ -35,6 +35,16 @@ export async function GET(req: NextRequest) {
     if (!error) cache.set(country, hit);
   }
 
+  /*
+    Dev-preview test offer for India, which has no live trial: lets the copy
+    be checked from a phone there. VERCEL_ENV is "production" on sjpt.io, so
+    this can never run in production. Display only: the signup grant
+    (claimSignupTrial) does not know about it and gives no credits for it.
+  */
+  if (!hit.credits && process.env.VERCEL_ENV === "preview" && country === "IN") {
+    return NextResponse.json({ offer: { credits: 2, generations: 1, country, preview: true } }, { headers });
+  }
+
   const credits = hit.credits;
   if (!credits) return NextResponse.json({ offer: null }, { headers });
   return NextResponse.json({
