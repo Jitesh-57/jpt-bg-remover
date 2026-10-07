@@ -29,7 +29,6 @@ const FEATURES = [
   { label: "Upscale Image", href: "/upscale" },
   { label: "Prompt to Edit", href: "/app/editor" },
   { label: "AI Image Generator", href: "/app/create" },
-  { label: "Remove Watermark", href: "/watermark-remover" },
   { label: "Resize Image", href: "/resize-image" },
   { label: "Crop Image", href: "/crop-image" },
   { label: "Compress Image", href: "/compress-image" },

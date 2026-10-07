@@ -35,8 +35,6 @@ const FREE_TOOLS = [
   { labelKey: "Add Watermark",    href: "/watermark-image" },
   { labelKey: "Meme Generator",   href: "/meme-generator" },
   { labelKey: "Image to PDF",     href: "/image-to-pdf" },
-  { labelKey: "TikTok Watermark Remover", href: "/tiktok-watermark-remover" },
-  { labelKey: "Metadata Remover", href: "/invisible-watermark-remover" },
 ];
 
 const ALL_COMPANY = [
@@ -47,7 +45,8 @@ const ALL_COMPANY = [
   { labelKey: "Pricing", href: "/pricing" },
   { labelKey: "Blog",    href: "/blog" },
   { labelKey: "AI Guide", href: "/answers" },
-  { labelKey: "Contact", href: "mailto:patil.jitesh866@gmail.com" },
+  { labelKey: "About", href: "/about" },
+  { labelKey: "Contact", href: "/contact" },
 ];
 
 // In free-only mode drop the paid links (My Generations, Pricing). The Blog
