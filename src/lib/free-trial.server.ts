@@ -97,6 +97,27 @@ export async function readTrialLog(): Promise<TrialAttempt[]> {
 }
 
 /**
+ * The trial a new account from `country` would get right now, or null.
+ *
+ * The one place the rule is decided, shared by the grant below and by the
+ * public offer (/api/trial-offer), so what a visitor is promised and what
+ * their new account receives can never disagree: the country's own row wins,
+ * live or stopped; the worldwide row covers every country without one.
+ */
+export async function trialRuleFor(
+  country: string,
+  db: ReturnType<typeof createAdminSupabase> = createAdminSupabase(),
+): Promise<{ rule: { country: string; credits: number; worldwide: boolean } | null; error?: string }> {
+  if (!/^[A-Z]{2}$/.test(country)) return { rule: null };
+  const { data: rules, error } = await db.from("trial_countries").select("country, credits, live").in("country", [country, WORLDWIDE]) as
+    { data: { country: string; credits: number; live: boolean }[] | null; error: { message: string } | null };
+  if (error) return { rule: null, error: error.message };
+  const r = rules?.find((x) => x.country === country) ?? rules?.find((x) => x.country === WORLDWIDE);
+  if (!r || !r.live || !(r.credits > 0)) return { rule: null };
+  return { rule: { country, credits: r.credits, worldwide: r.country === WORLDWIDE } };
+}
+
+/**
  * Grants the trial if this user qualifies. Returns the credits granted (0 when not).
  *
  * Done as separate steps rather than one database function: the function also
@@ -120,12 +141,9 @@ export async function claimSignupTrial(user: Pick<User, "id" | "email" | "create
 
     const db = createAdminSupabase();
 
-    // The country's own rule wins, live or stopped; the worldwide rule covers every country without one.
-    const { data: rules, error: ruleErr } = await db.from("trial_countries").select("country, credits, live").in("country", [country, WORLDWIDE]) as
-      { data: { country: string; credits: number; live: boolean }[] | null; error: { message: string } | null };
-    if (ruleErr) { await note("error", { detail: `rules: ${ruleErr.message}` }); return 0; }
-    const rule = rules?.find((r) => r.country === country) ?? rules?.find((r) => r.country === WORLDWIDE);
-    if (!rule || !rule.live || !(rule.credits > 0)) { await note("no-live-rule"); return 0; }
+    const { rule, error: ruleErr } = await trialRuleFor(country, db);
+    if (ruleErr) { await note("error", { detail: `rules: ${ruleErr}` }); return 0; }
+    if (!rule) { await note("no-live-rule"); return 0; }
     const credits = rule.credits;
 
     // Already had it (the common case on later page loads): nothing to do or log.
@@ -155,7 +173,7 @@ export async function claimSignupTrial(user: Pick<User, "id" | "email" | "create
       return 0;
     }
 
-    await recordCredits({ userId: user.id, delta: credits, balanceAfter: balance, reason: "signup_grant", note: `Free trial: ${country}${rule.country === WORLDWIDE ? " (worldwide)" : ""}` });
+    await recordCredits({ userId: user.id, delta: credits, balanceAfter: balance, reason: "signup_grant", note: `Free trial: ${country}${rule.worldwide ? " (worldwide)" : ""}` });
     await note("granted", { credits });
     console.log(`[free-trial] +${credits} credits to ${user.id} (${country})`);
     return credits;

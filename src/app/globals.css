@@ -740,3 +740,58 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   .jpt-bento-tile, .jpt-bento-stage > * { transition: none; animation: none !important; }
   .jpt-bento-tile:hover { transform: none; }
 }
+
+/* ── Signup free trial (TrialOffer.tsx) ───────────────────────────────────── */
+.jpt-trial-bar { position: relative; z-index: 60; color: #fff; overflow: hidden;
+  background:
+    radial-gradient(60% 140% at 50% -40%, color-mix(in srgb, var(--accent) 38%, transparent), transparent 70%),
+    linear-gradient(90deg, #17120f, #1b1216 50%, #17120f);
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 28%, transparent); }
+.jpt-trial-bar::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(100deg, transparent 30%, rgba(255,255,255,.07) 50%, transparent 70%); background-size: 250% 100%;
+  animation: jptTrialSheen 7s ease-in-out infinite; }
+.jpt-trial-bar-inner { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 8px 48px 8px 16px;
+  display: flex; align-items: center; justify-content: center; gap: 12px; min-height: 40px; box-sizing: border-box; }
+.jpt-trial-bar-icon { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 8px; flex-shrink: 0;
+  color: #fff; background: var(--grad-strong, linear-gradient(135deg, #FF8A3D, #E11D74)); box-shadow: 0 4px 14px -4px var(--accent); }
+.jpt-trial-bar-text { margin: 0; font-size: 13.5px; line-height: 1.4; color: rgba(255,255,255,.78); min-width: 0; }
+.jpt-trial-bar-text strong { color: #fff; font-weight: 600; }
+.jpt-trial-bar-cta { flex-shrink: 0; font: inherit; font-size: 13px; font-weight: 600; color: #fff; cursor: pointer; white-space: nowrap;
+  padding: 6px 13px; border-radius: 999px; border: 0; background: var(--grad-strong, linear-gradient(135deg, #FF8A3D, #E11D74));
+  box-shadow: 0 6px 16px -8px var(--accent); transition: transform .15s ease, box-shadow .2s ease; }
+.jpt-trial-bar-cta:hover { transform: translateY(-1px); box-shadow: 0 10px 22px -8px var(--accent); }
+.jpt-trial-bar-cta:focus-visible, .jpt-trial-bar-close:focus-visible, .jpt-trial-pill:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.jpt-trial-bar-close { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); width: 28px; height: 28px; border-radius: 8px;
+  display: inline-flex; align-items: center; justify-content: center; border: 0; background: transparent; color: rgba(255,255,255,.55); cursor: pointer; }
+.jpt-trial-bar-close:hover { color: #fff; background: rgba(255,255,255,.08); }
+@media (max-width: 720px) {
+  .jpt-trial-bar-long { display: none; }
+  .jpt-trial-bar-inner { justify-content: flex-start; padding-right: 44px; gap: 10px; }
+  .jpt-trial-bar-text { flex: 1; }
+}
+
+.jpt-trial-pill { display: inline-flex; align-items: center; gap: 10px; max-width: 100%; font: inherit; text-align: left; cursor: pointer;
+  padding: 6px 6px 6px 7px; border-radius: 999px; color: var(--text); background: var(--surface);
+  border: 1px solid var(--accent-border, rgba(255,138,61,.35)); box-shadow: 0 8px 26px -18px var(--accent);
+  position: relative; overflow: hidden; transition: transform .18s ease, border-color .2s ease, box-shadow .2s ease; }
+.jpt-trial-pill::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(100deg, transparent 30%, color-mix(in srgb, var(--accent) 14%, transparent) 50%, transparent 70%); background-size: 250% 100%;
+  animation: jptTrialSheen 6s ease-in-out infinite; }
+.jpt-trial-pill:hover { transform: translateY(-1px); border-color: var(--accent); box-shadow: 0 12px 30px -16px var(--accent); }
+.jpt-trial-pill strong { font-weight: 600; font-size: 13.5px; }
+.jpt-trial-pill-muted { font-size: 13.5px; color: var(--text-muted); }
+.jpt-trial-pill-icon { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 999px; flex-shrink: 0;
+  color: #fff; background: var(--grad-strong, linear-gradient(135deg, #FF8A3D, #E11D74)); }
+.jpt-trial-pill-cta { flex-shrink: 0; font-size: 12.5px; font-weight: 600; color: var(--accent); padding: 5px 11px; border-radius: 999px;
+  background: var(--accent-soft, rgba(255,138,61,.12)); }
+@media (max-width: 480px) { .jpt-trial-pill-muted { display: none; } }
+
+.jpt-trial-modal-head { text-align: center; margin-bottom: 22px; }
+.jpt-trial-modal-icon { display: inline-flex; align-items: center; justify-content: center; width: 52px; height: 52px; border-radius: 16px; color: #fff;
+  background: var(--grad-strong, linear-gradient(135deg, #FF8A3D, #E11D74)); box-shadow: 0 14px 34px -14px var(--accent), inset 0 1px 0 rgba(255,255,255,.3); }
+
+@keyframes jptTrialSheen { 0%, 55% { background-position: 120% 0; } 100% { background-position: -120% 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .jpt-trial-bar::after, .jpt-trial-pill::after { animation: none; }
+  .jpt-trial-bar-cta, .jpt-trial-pill { transition: none; }
+}

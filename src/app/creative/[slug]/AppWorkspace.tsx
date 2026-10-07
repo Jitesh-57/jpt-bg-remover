@@ -19,6 +19,7 @@ import { trackEvent } from "@/lib/analytics";
 import GeneratingFx from "./GeneratingFx";
 import { savePendingContext, loadPendingContext, clearPendingContext } from "@/lib/pending-image";
 import { beginGoogleSignIn } from "@/lib/auth-return";
+import { useTrialOffer, openTrialSignIn } from "@/lib/trial-offer";
 import { prepareDataUrl, parseJsonResponse } from "@/lib/upload-prep";
 import Image from "next/image";
 import { userMessage } from "@/lib/user-message";
@@ -71,6 +72,8 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
   const [err, setErr] = useState<string | null>(null);
   const [credits, setCredits] = useState<number | null>(null);
   const [loggedIn, setLoggedIn] = useState(false);
+  // A live signup trial for this visitor's country turns "sign in" into "try it free".
+  const trial = useTrialOffer();
   /** True once a pack has been bought; `plan` only leaves "free" on purchase. */
   const [purchased, setPurchased] = useState(false);
 
@@ -546,7 +549,7 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
           const off = loggedIn && !short && !canApply;
           return (
             <button
-              onClick={!loggedIn ? signIn : short ? () => openPricing(app.h1) : apply}
+              onClick={!loggedIn ? (trial ? () => openTrialSignIn(`app:${app.slug}`) : signIn) : short ? () => openPricing(app.h1) : apply}
               disabled={off}
               style={{
                 width: "100%", padding: "15px", borderRadius: 13, border: "none",
@@ -557,7 +560,7 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
                 boxShadow: off ? "none" : "var(--glow)",
               }}
             >
-              {!loggedIn ? "Sign in to generate"
+              {!loggedIn ? (trial ? "Try it free — sign up" : "Sign in to generate")
                 : short ? "Get credits to generate"
                 : busy ? "Generating…"
                 : textOnly || original ? "Generate"
@@ -567,7 +570,9 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
         })()}
 
         <div style={{ fontSize: 12, color: "var(--text-faint)", textAlign: "center", marginTop: 10, lineHeight: 1.6 }}>
-          {CREDIT_COST} credits per generation
+          {!loggedIn && trial
+            ? <>Your first generation is free for new accounts</>
+            : <>{CREDIT_COST} credits per generation</>}
           {/* Only shown once a pack has been bought — see `purchased`. */}
           {purchased && credits !== null && <> · you have {credits}</>}
         </div>

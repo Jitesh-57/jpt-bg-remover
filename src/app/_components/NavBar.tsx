@@ -8,6 +8,8 @@ import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
 import { persistAuthContext } from "@/lib/pending-image";
 import { beginGoogleSignIn } from "@/lib/auth-return";
+import { useTrialOffer } from "@/lib/trial-offer";
+import { GiftIcon, TrialModalHead } from "./TrialOffer";
 import ToolIcon, { iconKeyForHref } from "@/app/editor/ToolIcon";
 import MegaMenu from "./MegaMenu";
 import ResourcesMenu from "./ResourcesMenu";
@@ -188,6 +190,8 @@ export default function NavBar() {
   const [name, setName] = useState("");
   const [authError, setAuthError] = useState("");
   const [authLoading, setAuthLoading] = useState(false);
+  // The signup free trial for this visitor's country, if one is live (null when signed in).
+  const offer = useTrialOffer();
 
   useEffect(() => {
     const supabase = createSupabaseClient();
@@ -233,10 +237,19 @@ export default function NavBar() {
           const plan = d.plan ?? "free";
           setUser({ userId: d.userId!, email: d.email, name: d.name!, picture: d.picture, credits: d.credits ?? 0, plan });
           setAnalyticsUser({ id: d.userId!, plan });
+          // Every "free trial" line on the page is for signed-out visitors only.
+          window.dispatchEvent(new Event("jpt:signed-in"));
         }
       }).catch(() => null);
 
-  const openModal = () => { trackSignInClicked("modal_open"); setShowModal(true); setTab("google"); setMode("login"); setEmail(""); setPassword(""); setName(""); setAuthError(""); };
+  const openModal = () => { trackSignInClicked("modal_open"); setShowModal(true); setTab("google"); setMode(offer ? "signup" : "login"); setEmail(""); setPassword(""); setName(""); setAuthError(""); };
+
+  // "Claim it" buttons anywhere on the page open this modal on its create-account side.
+  useEffect(() => {
+    const open = () => { trackSignInClicked("trial_claim"); setShowModal(true); setTab("google"); setMode("signup"); setAuthError(""); };
+    window.addEventListener("jpt:open-signin", open);
+    return () => window.removeEventListener("jpt:open-signin", open);
+  }, []);
   const closeModal = () => { setShowModal(false); setAuthError(""); };
   // Let the current page (e.g. the editor) persist its in-memory context
   // (uploaded image + active tool) so it survives the sign-in round-trip.
@@ -602,8 +615,8 @@ export default function NavBar() {
               {/* Sign in and Get Started open the same modal, so on a small
                   phone the second one is redundant and was being clipped off
                   the right edge. See .jpt-nav-cta. */}
-              <button onClick={openModal} className="jpt-nav-cta" style={{ padding: "7px 16px", background: "var(--accent-fill)", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer", boxShadow: "0 2px 8px rgba(255,106,26,0.40)" }}>
-                {t.getStarted}
+              <button onClick={openModal} className="jpt-nav-cta" style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "7px 16px", background: "var(--accent-fill)", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer", boxShadow: "0 2px 8px rgba(255,106,26,0.40)" }}>
+                {offer ? <><GiftIcon size={14} />Claim free trial</> : t.getStarted}
               </button>
             </div>
           )}
@@ -626,11 +639,13 @@ export default function NavBar() {
       {showModal && (
         <div onClick={closeModal} style={{ position: "fixed", inset: 0, zIndex: 9999, background: "rgba(0,0,0,0.55)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20, backdropFilter: "blur(4px)" }}>
           <div onClick={e => e.stopPropagation()} style={{ background: "var(--surface)", borderRadius: 20, padding: 32, maxWidth: 440, width: "100%", boxShadow: "0 24px 80px rgba(0,0,0,0.3)" }}>
-            <div style={{ textAlign: "center", marginBottom: 24 }}>
-              <div style={{ fontSize: 44, marginBottom: 8 }}>✨</div>
-              <div style={{ fontWeight: 900, fontSize: 22, color: "var(--text)", marginBottom: 6 }}>Sign in to Pixel Shine</div>
-              <p style={{ fontSize: 14, color: "var(--text-muted)", margin: 0 }}><strong>Unlimited free tools</strong>, and your edits saved to your account</p>
-            </div>
+            {offer ? <TrialModalHead offer={offer} /> : (
+              <div style={{ textAlign: "center", marginBottom: 24 }}>
+                <div style={{ fontSize: 44, marginBottom: 8 }}>✨</div>
+                <div style={{ fontWeight: 900, fontSize: 22, color: "var(--text)", marginBottom: 6 }}>Sign in to Pixel Shine</div>
+                <p style={{ fontSize: 14, color: "var(--text-muted)", margin: 0 }}><strong>Unlimited free tools</strong>, and your edits saved to your account</p>
+              </div>
+            )}
             <div style={{ display: "flex", background: "var(--surface-2)", borderRadius: 10, padding: 3, marginBottom: 22 }}>
               {(["google", "email"] as const).map(t => (
                 <button key={t} onClick={() => { setTab(t); setAuthError(""); }}

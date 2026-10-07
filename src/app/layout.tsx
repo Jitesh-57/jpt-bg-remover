@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
 import { Inter } from "next/font/google";
+import { TrialBar } from "./_components/TrialOffer";
 import NavBar from "./_components/NavBar";
 import Footer from "./_components/Footer";
 import PricingModalHost from "./_components/PricingModalHost";
@@ -157,6 +158,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         {/* Support chatbot — signed-in users only; see SupportChat. */}
         <SupportChat />
         <LanguageProvider>
+          {/* The signup free trial, only where it is live for this visitor. */}
+          <TrialBar />
           <NavBar />
           {children}
           <PageGallery galleries={galleries} titles={titles} />

@@ -1,5 +1,6 @@
 "use client";
 
+import { TrialPill } from "./TrialOffer";
 import Link from "next/link";
 import { PACKS, CREDIT_COST } from "@/lib/plans";
 
@@ -25,6 +26,7 @@ export default function PricingSection({ toolName }: { toolName?: string }) {
             Credits are only for the AI features — {CREDIT_COST} credits per generation, one-time payment, and they never expire.
           </p>
         </div>
+        <div style={{ marginTop: 22 }}><TrialPill source="pricing" /></div>
 
         <div
           style={{
