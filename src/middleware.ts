@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { PAID_FEATURES_ENABLED, PAID_ROUTE_PREFIXES } from "@/lib/features";
+import { shouldNoindex } from "@/lib/ad-policy";
 
 // In-memory rate limiter (per serverless instance — good enough for burst protection)
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
@@ -92,6 +93,7 @@ export async function middleware(request: NextRequest) {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     const res = NextResponse.next({ request });
     if (country) res.cookies.set("jpt_country", country, { path: "/", maxAge: 86400, httpOnly: false });
+    if (shouldNoindex(path)) res.headers.set("X-Robots-Tag", "noindex, follow");
     return res;
   }
 
@@ -115,6 +117,8 @@ export async function middleware(request: NextRequest) {
 
   await supabase.auth.getUser();
   if (country) supabaseResponse.cookies.set("jpt_country", country, { path: "/", maxAge: 86400, httpOnly: false });
+  // Third-party prompt dataset pages stay usable but out of Google's index (AdSense copied-content rule).
+  if (shouldNoindex(path)) supabaseResponse.headers.set("X-Robots-Tag", "noindex, follow");
   return supabaseResponse;
 }
 
