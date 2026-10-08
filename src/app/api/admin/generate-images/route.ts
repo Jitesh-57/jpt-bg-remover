@@ -105,10 +105,11 @@ export async function GET(req: NextRequest) {
     });
   }
 
-  if (!falConfigured() && q.get("allowFallback") !== "1") {
+  // Images are made on fal only; without its key nothing can be generated.
+  if (!falConfigured()) {
     return NextResponse.json({
-      error: "FAL_KEY is not set on this deployment, so generation would fall back to Gemini.",
-      hint: "Add FAL_KEY in Vercel, Settings, Environment Variables, then redeploy. Pass allowFallback=1 to run on Gemini anyway.",
+      error: "FAL_KEY is not set on this deployment, so no image can be generated.",
+      hint: "Add FAL_KEY in Vercel, Settings, Environment Variables, then redeploy.",
     }, { status: 412 });
   }
 
@@ -118,10 +119,8 @@ export async function GET(req: NextRequest) {
   for (const job of batch) {
     const key = `${job.bucket}/${job.path}`;
     try {
-      // strict: report fal's own error rather than Gemini's rate-limit message,
-      // which is what the fallback substitutes and which names the wrong
-      // provider, the wrong cause and the wrong remedy.
-      const strict = q.get("allowFallback") !== "1";
+      // strict: report fal's own error as-is, which names the real cause.
+      const strict = true;
       const dataUrl = job.editOf
         ? await editImage(publicUrl(job.bucket, job.editOf), job.prompt, model, job.aspect, {
             strict, raw: true, budgetMs: 120_000,

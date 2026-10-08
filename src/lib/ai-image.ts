@@ -1,25 +1,18 @@
 /**
  * ai-image.ts — the single entry point every AI route uses for image work.
  *
- * Routing: fal.ai is the primary backend (it is where the account's credit
- * sits). Gemini's direct API stays as an automatic fallback so a fal outage or
- * a missing FAL_KEY degrades instead of failing outright.
+ * Routing: fal.ai is the only image backend — it is where the account's
+ * credit and the chosen models are. Google's Gemini API is never called
+ * directly for images; Nano Banana Pro is reached through fal.
  *
- * Routes should import from here, never from fal.ts or gemini.ts directly, so
- * the provider can be switched in one place.
+ * Routes should import from here, never from fal.ts directly, so the provider
+ * can be switched in one place.
  */
 
 import {
   falConfigured, falEditImage, falEndpoint, falGenerateImage, falModelIds, falModelSpec,
   falRemoveBackground, FalError, type FalModel,
 } from "@/lib/fal";
-import {
-  geminiEditImage,
-  geminiGenerateBg,
-  geminiRemoveBg,
-  geminiUpscale,
-  geminiGenerateFromText,
-} from "@/lib/gemini";
 import { editorDirective } from "@/lib/staging";
 
 export type { FalModel };
@@ -70,46 +63,38 @@ export class ProviderUnavailableError extends Error {
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-/** Attempts against fal before considering the other provider. */
+/**
+ * How long the one-shot tools (background, upscale, remove-bg fallback) wait
+ * on fal. Nano Banana Pro at 2K can take over a minute; their routes allow 300s.
+ */
+const SLOW_BUDGET_MS = 240_000;
+
+/** Attempts against fal before giving up. */
 const FAL_ATTEMPTS = 3;
 
 /**
- * Runs the fal path, falling back to Gemini when fal cannot serve the request.
+ * Runs a generation on fal — the only image provider. Every image is made on
+ * fal.ai, never by calling Google's Gemini API directly: that is where the
+ * balance and the chosen models are, and a second provider meant a result
+ * could quietly come from a different model than the one the visitor picked.
  *
- * Only the interactive routes come through here — the bulk generator passes
- * `strict` and bypasses it, so it still stops dead on a bad key rather than
- * quietly spending a different provider's quota.
- *
- * A credentials failure used to be rethrown, on the reasoning that a real
- * misconfiguration deserves to be visible rather than papered over. That is
- * right for a batch job and wrong here: it left every AI tool showing
- * "The image service rejected our credentials" and doing nothing, when the
- * other provider was sitting there able to serve the request. The visibility
- * argument is satisfied by logging it loudly — which reaches the operator,
- * where it belongs — instead of by breaking the product for the visitor.
- *
- * An empty balance is the exception: Gemini cannot fix that, the account
- * owner has to, and quietly moving the cost to another provider hides the one
- * thing they need to know.
+ * A throttle is retried (it clears within seconds). Anything that is ours to
+ * fix — no FAL_KEY, a rejected key, an exhausted balance — reaches the visitor
+ * as one plain sentence (ProviderUnavailableError) and the operator as the
+ * real reason in the log. Anything about the request itself (a timeout, a
+ * prompt the model refused) is passed through for userMessage() to explain.
  */
-async function viaFal(
-  run: () => Promise<string>,
-  fallback: () => Promise<string>,
-  label: string
-): Promise<string> {
-  if (!falConfigured()) return fallback();
+async function viaFal(run: () => Promise<string>, label: string): Promise<string> {
+  if (!falConfigured()) {
+    console.error(`[ai-image] ${label}: FAL_KEY is not configured; no image can be generated.`);
+    throw new ProviderUnavailableError("FAL_KEY is not configured");
+  }
 
   let last: unknown;
   /*
-    fal is the engine; Gemini is the safety net.
-
     A throttle is the most common failure in production — a burst of
     generations trips fal's rate limit, which it reports as 429 or as a 403
-    with a rate-limit reason — and it clears within seconds. Falling back on
-    the first refusal meant a momentary throttle silently moved the work to
-    the other provider, so the result came from a different model than the one
-    the user picked. Retrying fal first keeps generations on fal, which is
-    where the balance and the chosen models are.
+    with a rate-limit reason — and it clears within seconds, so it is retried.
   */
   for (let attempt = 0; attempt < FAL_ATTEMPTS; attempt++) {
     try {
@@ -147,28 +132,13 @@ async function viaFal(
   }
 
   if (status === 401 || status === 403 || /rejected our key|refused this request/i.test(msg)) {
-    console.error(
-      `[ai-image] fal ${label} refused the request (${status}) after ${FAL_ATTEMPTS} attempts. ` +
-      `Serving from Gemini instead. fal said: ${msg}`
-    );
-  } else {
-    console.warn(`[ai-image] fal ${label} failed, falling back to Gemini:`, msg);
+    console.error(`[ai-image] fal ${label} refused the request (${status}) after ${FAL_ATTEMPTS} attempts: ${msg}`);
+    throw new ProviderUnavailableError(msg);
   }
 
-  try {
-    return await fallback();
-  } catch (g) {
-    /*
-      Both providers are down. Report that, rather than only the second
-      one's message — "temporarily unavailable due to high demand" names
-      Gemini's rate limit and hides the fact that fal refused first, which
-      sends anyone reading it to the wrong service entirely.
-    */
-    const gmsg = g instanceof Error ? g.message : String(g);
-    console.error(`[ai-image] ${label}: both providers failed. fal: ${msg} | gemini: ${gmsg}`);
-    throw new ProviderUnavailableError(`fal: ${msg} | gemini: ${gmsg}`);
-  }
-  }
+  console.warn(`[ai-image] fal ${label} failed:`, msg);
+  throw e;
+}
 
 
 /**
@@ -249,18 +219,13 @@ export async function editImage(
     if (!falConfigured()) throw new Error("FAL_KEY is not configured.");
     return falEditImage(src, text, m, aspectRatio, opts.budgetMs);
   }
-  return viaFal(
-    () => falEditImage(src, text, m, aspectRatio, opts?.budgetMs),
-    () => geminiEditImage(src, prompt),
-    "edit"
-  );
+  return viaFal(() => falEditImage(src, text, m, aspectRatio, opts?.budgetMs), "edit");
 }
 
 export function generateBackground(src: string, prompt: string, model?: string): Promise<string> {
   const m = resolveModel(model);
   return viaFal(
-    () => falEditImage(src, `Replace the background of this image with: ${prompt}. Keep the subject exactly as-is — same pose, clothing, appearance. Only change the background.`, m),
-    () => geminiGenerateBg(src, prompt),
+    () => falEditImage(src, `Replace the background of this image with: ${prompt}. Keep the subject exactly as-is — same pose, clothing, appearance. Only change the background.`, m, undefined, SLOW_BUDGET_MS),
     "generate-bg"
   );
 }
@@ -286,17 +251,16 @@ export function removeBackground(src: string, model?: string): Promise<string> {
         const msg = e instanceof Error ? e.message : String(e);
         const status = e instanceof FalError ? e.status : 0;
         // A rejected key or an empty balance will fail the edit model in the
-        // same breath, so hand those straight up to viaFal, which decides
-        // between Gemini and surfacing them. A 403 is different: the key
+        // same breath, so hand those straight up to viaFal, which surfaces
+        // them. A 403 is different: the key
         // works and it is this endpoint the account cannot reach, so the
         // edit model is worth trying.
         const fal = e instanceof FalError ? e : null;
         if (status === 401 || fal?.billingBlocked || /out of credit/i.test(msg)) throw e;
         console.warn("[ai-image] background-removal model failed, trying the edit model:", msg);
-        return falEditImage(src, "Remove the background from this image completely. Make it transparent. Keep the subject with clean edges. Return only the resulting PNG image.", m);
+        return falEditImage(src, "Remove the background from this image completely. Make it transparent. Keep the subject with clean edges. Return only the resulting PNG image.", m, undefined, SLOW_BUDGET_MS);
       }
     },
-    () => geminiRemoveBg(src),
     "remove-bg"
   );
 }
@@ -304,8 +268,7 @@ export function removeBackground(src: string, model?: string): Promise<string> {
 export function upscaleImage(src: string, scale: "2x" | "4x", model?: string): Promise<string> {
   const m = resolveModel(model);
   return viaFal(
-    () => falEditImage(src, `Enhance this image to ${scale} resolution. Increase sharpness, detail, and clarity. Improve hair strands, skin texture, fabric detail. Remove noise and artifacts. Keep the subject identical.`, m),
-    () => geminiUpscale(src, scale),
+    () => falEditImage(src, `Enhance this image to ${scale} resolution. Increase sharpness, detail, and clarity. Improve hair strands, skin texture, fabric detail. Remove noise and artifacts. Keep the subject identical.`, m, undefined, SLOW_BUDGET_MS),
     "upscale"
   );
 }
@@ -344,7 +307,7 @@ export function generateFromText(
     if (!falConfigured()) throw new Error("FAL_KEY is not configured.");
     return run();
   }
-  return viaFal(run, () => geminiGenerateFromText(prompt, opts), "text-to-image");
+  return viaFal(run, "text-to-image");
 }
 
 /* ────────────────────────────────────────────────────────────────────────────
@@ -419,8 +382,8 @@ export async function editImageGptFirst(
     : gptCascade();
 
   if (!falConfigured()) {
-    const dataUrl = await geminiEditImage(src, prompt);
-    return { dataUrl, engine: "nano-banana", downgradeReason: "FAL_KEY is not set" };
+    console.error(`[ai-image] ${label}: FAL_KEY is not configured; no image can be generated.`);
+    throw new ProviderUnavailableError("FAL_KEY is not configured");
   }
 
   for (const model of order) {
@@ -469,10 +432,6 @@ export async function editImageGptFirst(
 
   const why = reasons.join(" | ");
   console.warn(`[ai-image] ${label}: no GPT model could serve this; falling back to Nano Banana. ${why}`);
-  const dataUrl = await viaFal(
-    () => falEditImage(src, prompt, "nano-banana", opts?.aspectRatio, opts?.budgetMs),
-    () => geminiEditImage(src, prompt),
-    label
-  );
+  const dataUrl = await viaFal(() => falEditImage(src, prompt, "nano-banana", opts?.aspectRatio, opts?.budgetMs), label);
   return { dataUrl, engine: "nano-banana", downgradeReason: why };
 }

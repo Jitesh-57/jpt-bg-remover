@@ -42,7 +42,7 @@ export default function PrivacyPage() {
         </Section>
 
         <Section title="4. Data Storage and Security">
-          Your account data (name, email, credits, plan) is stored securely in Supabase, a trusted cloud database provider. Images you process are temporarily handled by Google Gemini (our AI processing partner) and are not permanently stored after your session. We use HTTPS encryption for all data in transit.
+          Your account data (name, email, credits, plan) is stored securely in Supabase, a trusted cloud database provider. Images you process with our AI tools are sent to fal.ai, our AI processing partner, which runs the image models (such as Google's Nano Banana Pro). The images you create are saved to your account so you can find them in My Creations, and you can delete them there at any time. We use HTTPS encryption for all data in transit.
         </Section>
 
         <Section title="5. Third-Party Services">
@@ -50,7 +50,7 @@ export default function PrivacyPage() {
           <ul style={{ paddingLeft: 20, lineHeight: 2 }}>
             <li><b>Google OAuth</b> — for sign-in (email, name, profile picture only)</li>
             <li><b>Supabase</b> — secure database and authentication</li>
-            <li><b>Google Gemini</b> — AI image processing</li>
+            <li><b>fal.ai</b> — AI image processing</li>
             <li><b>Razorpay</b> — payment processing</li>
             <li><b>Vercel</b> — hosting and infrastructure</li>
           </ul>

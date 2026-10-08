@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin, adminToken } from "@/lib/admin-token";
 import { createAdminSupabase } from "@/lib/auth";
 import { editImage, generateFromText } from "@/lib/ai-image";
-import { geminiGenerateFromText } from "@/lib/gemini";
 import { falConfigured, FalError } from "@/lib/fal";
 import { IMAGE_JOBS, type ImageJob } from "@/lib/image-jobs";
 
@@ -75,7 +74,7 @@ const LANDING_BUCKET = "landing";
  * on the stuck cluster before the chain gets a chance to rotate past it. Runs
  * 7 and 8 both produced nothing for exactly this reason.
  *
- * So a job that fal's checker refuses *and* Gemini cannot produce is marked
+ * So a job that fal's checker refuses, even as a fresh generation, is marked
  * here, and later runs drop it from the queue entirely. The marker is a real
  * file in the bucket, which means it is inspectable and, more importantly,
  * deletable: removing it puts the job back in the queue, so this is a skip
@@ -223,11 +222,6 @@ export async function GET(req: NextRequest) {
   const results: Record<string, string> = {};
   let made = 0;
   let failed = 0;
-  // Once Gemini reports its quota is gone it will report the same for every
-  // subsequent job, so stop asking. Without this, marking the thirteen stuck
-  // jobs costs a pointless Gemini round-trip each and eats the whole budget
-  // again — which is what happened on runs 7 and 8.
-  let geminiExhausted = false;
   /** Set when a fal error will repeat for every job, to end the run. */
   type Fatal = { status: number; detail: string };
   const fatalRef: { current: Fatal | null } = { current: null };
@@ -302,10 +296,11 @@ export async function GET(req: NextRequest) {
      *     what the model objected to, and the prompt on its own is fine. The
      *     card then shows an imagined result rather than a real edit of the
      *     stored source, which is a fair trade for having artwork at all.
-     *  2. Gemini, which has a different checker.
-     *  3. The skip list, so later runs spend no time on it.
+     *  2. The skip list, so later runs spend no time on it. Images are made on
+     *     fal only — Google's Gemini API is never called directly.
      */
     async function onPromptRejected(why: string): Promise<void> {
+      let second = "";
       if (source) {
         try {
           const dataUrl = await generateFromText(job.prompt, {
@@ -315,30 +310,19 @@ export async function GET(req: NextRequest) {
           });
           await store(bytesOfDataUrl(dataUrl), "ok as a fresh generation — fal refused the edit");
           return;
-        } catch {
-          // Fall through to Gemini.
+        } catch (g) {
+          second = ` | as a fresh generation: ${(g as Error).message}`;
         }
       }
-      try {
-        if (geminiExhausted) throw new Error("Gemini quota already exhausted this run");
-        const viaGemini = await geminiGenerateFromText(job.prompt, { aspect_ratio: job.aspect });
-        const res = await fetch(viaGemini);
-        if (!res.ok) throw new Error(`fetch ${res.status}`);
-        await store(Buffer.from(await res.arrayBuffer()), "ok via Gemini — fal refused this prompt");
-        return;
-      } catch (g) {
-        const gm = (g as Error).message;
-        if (/high demand|quota|exhausted/i.test(gm)) geminiExhausted = true;
-        results[key] = `SKIPPED: fal refused it (${why}) and Gemini failed too (${gm})`;
-        await supabase.storage
-          .from(LANDING_BUCKET)
-          .upload(
-            refusedMarker(job.bucket, job.path),
-            Buffer.from(`${new Date().toISOString()} fal: ${why} | gemini: ${gm}`),
-            { contentType: "text/plain", upsert: true }
-          )
-          .catch(() => {});
-      }
+      results[key] = `SKIPPED: fal refused it (${why}${second})`;
+      await supabase.storage
+        .from(LANDING_BUCKET)
+        .upload(
+          refusedMarker(job.bucket, job.path),
+          Buffer.from(`${new Date().toISOString()} fal: ${why}${second}`),
+          { contentType: "text/plain", upsert: true }
+        )
+        .catch(() => {});
     }
 
     let lastError = "";
