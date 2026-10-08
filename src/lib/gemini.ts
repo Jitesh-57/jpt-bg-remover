@@ -1,9 +1,14 @@
 // Gemini image generation via direct REST (v1beta supports responseModalities).
-// This is the sole AI image backend for the app (Google "Nano Banana" /
-// gemini-2.5-flash-image). Set GEMINI_API_KEY in the environment.
+// Google's Nano Banana Pro (gemini-3-pro-image-preview) at 2K, used when fal is
+// unavailable and by the site-image jobs. Set GEMINI_API_KEY in the environment.
 const API_KEY = () => process.env.GEMINI_API_KEY || "";
-const MODEL = "gemini-2.5-flash-image";
-const ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
+export const MODEL = "gemini-3-pro-image-preview";
+/** The original Nano Banana, tried only if Google answers 404 for MODEL. */
+const LEGACY_MODEL = "gemini-2.5-flash-image";
+const endpointFor = (model: string) => `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+
+/** Pro's output size; the legacy model takes no imageSize, so it is dropped there. */
+const IMAGE_SIZE = "2K";
 
 function dataUrlToPart(dataUrl: string) {
   const match = dataUrl.match(/^data:([^;]+);base64,(.+)$/);
@@ -41,13 +46,28 @@ function retryDelayMs(body: string, attempt: number): number {
   return Math.min(Math.max(suggested, backoff), 6000);
 }
 
+type GeminiBody = { contents: object[]; generationConfig: { responseModalities: string[]; imageConfig?: Record<string, string> } };
+
 // POST to Gemini with automatic retry on transient rate-limit/overload (429/503).
-async function postGemini(body: object): Promise<Response> {
+// Nano Banana Pro first; a 404 (model name unknown to this key or retired)
+// falls back to the original Nano Banana rather than failing, and says so.
+async function postGemini(body: GeminiBody): Promise<Response> {
   assertKey();
+  const pro: GeminiBody = {
+    ...body,
+    generationConfig: { ...body.generationConfig, imageConfig: { ...body.generationConfig.imageConfig, imageSize: IMAGE_SIZE } },
+  };
+  const res = await postModel(MODEL, pro);
+  if (res.status !== 404) return res;
+  console.warn(`[gemini] ${MODEL} answered 404; serving this request with ${LEGACY_MODEL}.`);
+  return postModel(LEGACY_MODEL, body);
+}
+
+async function postModel(model: string, body: GeminiBody): Promise<Response> {
   const MAX_ATTEMPTS = 3;
   let res: Response | null = null;
   for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
-    res = await fetch(`${ENDPOINT}?key=${API_KEY()}`, {
+    res = await fetch(`${endpointFor(model)}?key=${API_KEY()}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
@@ -151,7 +171,8 @@ export async function geminiGenerateFromText(
         ],
       },
     ],
-    generationConfig: { responseModalities: ["TEXT", "IMAGE"] },
+    // The ratio in the prompt is kept for the legacy model, which has no imageConfig ratio.
+    generationConfig: { responseModalities: ["TEXT", "IMAGE"], imageConfig: { aspectRatio: aspect } },
   });
 
   if (!res.ok) {

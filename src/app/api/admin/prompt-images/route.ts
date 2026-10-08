@@ -28,8 +28,10 @@ export const maxDuration = 300;
  */
 
 /** Small enough to finish inside maxDuration with room for a slow queue. */
-const DEFAULT_BATCH = 4;
-const MAX_BATCH = 8;
+// Nano Banana Pro takes longer per image, so 3 (up to 4) × PER_IMAGE_MS stays inside 300s.
+const DEFAULT_BATCH = 3;
+const MAX_BATCH = 4;
+const PER_IMAGE_MS = 70_000;
 
 /** fal's accepted ratios. A library ratio outside this list is nudged home. */
 const RATIO_MAP: Record<string, string> = {
@@ -124,7 +126,7 @@ export async function GET(req: NextRequest) {
       const url = await generateFromText(examplePromptFor(p), {
         aspect_ratio: RATIO_MAP[p.ratio] || "1:1",
         strict: true,
-        budgetMs: 55_000,
+        budgetMs: PER_IMAGE_MS,
       });
       const res = await fetch(url);
       if (!res.ok) throw new Error(`could not download the generated image (${res.status})`);

@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { checkAuth, withCredits } from "@/lib/google-drive";
 import { checkEntitlement } from "@/lib/auth";
 import { userMessage } from "@/lib/user-message";
+import { geminiGenerateFromText } from "@/lib/gemini";
 
 export const runtime = "nodejs";
-export const maxDuration = 60;
+export const maxDuration = 120;
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY!;
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
@@ -109,31 +110,12 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Fallback: Gemini 2.5 flash image
-    const geminiRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${GEMINI_API_KEY}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: `Generate a photorealistic background image: ${fullPrompt}` }] }],
-          generationConfig: { responseModalities: ["IMAGE"] },
-        }),
-      }
-    );
+    // Fallback: Nano Banana Pro, through the shared Gemini client (2K, with its retries).
+    const dataUrl = await geminiGenerateFromText(`Photorealistic background image: ${fullPrompt}`, { aspect_ratio: "1:1" }).catch(() => null);
+    const m = dataUrl?.match(/^data:([^;]+);base64,(.+)$/);
+    if (!m) return NextResponse.json({ error: "The AI could not make that background. Try describing it differently." }, { status: 500 });
 
-    if (!geminiRes.ok) {
-      return NextResponse.json({ error: "The AI could not make that background. Try describing it differently." }, { status: 500 });
-    }
-
-    const geminiData = (await geminiRes.json()) as {
-      candidates?: { content?: { parts?: { inlineData?: { mimeType: string; data: string } }[] } }[];
-    };
-
-    const inlineData = geminiData.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData;
-    if (!inlineData) return NextResponse.json({ error: "The AI could not make that background. Try describing it differently." }, { status: 500 });
-
-    return await withCredits({ data: inlineData.data, mimeType: inlineData.mimeType }, session!, "ai", req, "ai-background");
+    return await withCredits({ data: m[2], mimeType: m[1] }, session!, "ai", req, "ai-background");
   } catch (err) {
     console.error("ai-background error:", err);
     return NextResponse.json({ error: userMessage(err) }, { status: 500 });

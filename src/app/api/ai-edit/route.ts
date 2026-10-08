@@ -5,7 +5,8 @@ import { editImage } from "@/lib/ai-image";
 import { userMessage } from "@/lib/user-message";
 
 export const runtime = "nodejs";
-export const maxDuration = 60;
+// Nano Banana Pro at 2K can take well over a minute; matches the other image routes.
+export const maxDuration = 300;
 
 export async function POST(req: NextRequest) {
   const { session, error } = await checkAuth(req);
@@ -23,7 +24,7 @@ export async function POST(req: NextRequest) {
   if (blocked) return blocked;
 
   try {
-    const resultDataUrl = await editImage(src, prompt, model);
+    const resultDataUrl = await editImage(src, prompt, model, undefined, { budgetMs: 240_000 });
     const saved = await fileCreation({ userId: session!.userId, tool: "ai-edit", label: prompt.trim().slice(0, 60) || "AI Edit", result: resultDataUrl, prompt, creditsSpent: CREDIT_COST });
     return withCredits({ dataUrl: resultDataUrl, saved }, session!, "ai", req, "ai-edit");
   } catch (e) {
