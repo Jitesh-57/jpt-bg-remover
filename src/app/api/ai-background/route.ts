@@ -2,11 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { checkAuth, withCredits } from "@/lib/google-drive";
 import { checkEntitlement } from "@/lib/auth";
 import { userMessage } from "@/lib/user-message";
+import { generateFromText } from "@/lib/ai-image";
 
 export const runtime = "nodejs";
-export const maxDuration = 60;
+export const maxDuration = 300;
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY!;
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 
 const BG_SUFFIX =
@@ -14,33 +14,8 @@ const BG_SUFFIX =
   "Suitable as a portrait or product photography background. " +
   "No text, no watermarks, no people, no logos.";
 
-// Enhance prompt using Gemini text (with GPT-4o fallback via GitHub Models)
+// Enhance the prompt with GPT-4o via GitHub Models; Google's API is not called directly.
 async function enhancePrompt(prompt: string): Promise<string> {
-  // Try Gemini text first
-  if (GEMINI_API_KEY) {
-    try {
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{
-              parts: [{ text: `You are a professional photographer and prompt engineer. Enhance this background description for high-quality photorealistic image generation. Add specific lighting, atmosphere, depth, and professional photography details. Return ONLY the enhanced prompt, nothing else. Max 150 words.\n\nBackground: "${prompt}"` }],
-            }],
-            generationConfig: { responseModalities: ["TEXT"] },
-          }),
-        }
-      );
-      if (res.ok) {
-        const d = (await res.json()) as { candidates?: { content?: { parts?: { text?: string }[] } }[] };
-        const text = d.candidates?.[0]?.content?.parts?.find(p => p.text)?.text?.trim();
-        if (text) return text;
-      }
-    } catch {}
-  }
-
-  // Fallback: GPT-4o via GitHub Models
   if (GITHUB_TOKEN) {
     try {
       const res = await fetch("https://models.inference.ai.azure.com/chat/completions", {
@@ -88,52 +63,12 @@ export async function POST(req: NextRequest) {
     const enhancedPrompt = await enhancePrompt(prompt.trim());
     const fullPrompt = `${enhancedPrompt}. ${BG_SUFFIX}`;
 
-    // Try Imagen 4 first (best quality)
-    const imagenRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${GEMINI_API_KEY}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          instances: [{ prompt: fullPrompt }],
-          parameters: { sampleCount: 1, aspectRatio: "1:1", safetyFilterLevel: "BLOCK_ONLY_HIGH", personGeneration: "DONT_ALLOW" },
-        }),
-      }
-    );
+    // Made on fal (Nano Banana Pro, 2K) — never through Google's APIs directly.
+    const dataUrl = await generateFromText(`Photorealistic background image: ${fullPrompt}`, { aspect_ratio: "1:1", budgetMs: 240_000 });
+    const m = dataUrl.match(/^data:([^;]+);base64,(.+)$/);
+    if (!m) return NextResponse.json({ error: "The AI could not make that background. Try describing it differently." }, { status: 500 });
 
-    if (imagenRes.ok) {
-      const imagenData = (await imagenRes.json()) as { predictions?: { bytesBase64Encoded?: string; mimeType?: string }[] };
-      const pred = imagenData.predictions?.[0];
-      if (pred?.bytesBase64Encoded) {
-        return await withCredits({ data: pred.bytesBase64Encoded, mimeType: pred.mimeType || "image/png" }, session!, "ai", req, "ai-background");
-      }
-    }
-
-    // Fallback: Gemini 2.5 flash image
-    const geminiRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${GEMINI_API_KEY}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: `Generate a photorealistic background image: ${fullPrompt}` }] }],
-          generationConfig: { responseModalities: ["IMAGE"] },
-        }),
-      }
-    );
-
-    if (!geminiRes.ok) {
-      return NextResponse.json({ error: "The AI could not make that background. Try describing it differently." }, { status: 500 });
-    }
-
-    const geminiData = (await geminiRes.json()) as {
-      candidates?: { content?: { parts?: { inlineData?: { mimeType: string; data: string } }[] } }[];
-    };
-
-    const inlineData = geminiData.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData;
-    if (!inlineData) return NextResponse.json({ error: "The AI could not make that background. Try describing it differently." }, { status: 500 });
-
-    return await withCredits({ data: inlineData.data, mimeType: inlineData.mimeType }, session!, "ai", req, "ai-background");
+    return await withCredits({ data: m[2], mimeType: m[1] }, session!, "ai", req, "ai-background");
   } catch (err) {
     console.error("ai-background error:", err);
     return NextResponse.json({ error: userMessage(err) }, { status: 500 });

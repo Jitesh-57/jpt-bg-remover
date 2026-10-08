@@ -2,8 +2,8 @@
  * fal.ts — image generation and editing through fal.ai.
  *
  * Two model families are exposed:
- *   nano-banana  → Google Gemini 2.5 Flash Image ("nano banana"). Fast, cheap,
- *                  very strong at identity-preserving edits. The default.
+ *   nano-banana  → Google Nano Banana Pro (Gemini 3 Pro Image), at 2K. The
+ *                  strongest at identity-preserving edits. The default.
  *   gpt-image    → OpenAI GPT Image. Slower and pricier, better at text inside
  *                  the image and at following long, literal instructions.
  *
@@ -49,7 +49,7 @@ export function falKeyShape(): { configured: boolean; length: number; hasColon: 
  */
 export async function falProbe(): Promise<{ status: number; body: string }> {
   const res = await fetch(
-    "https://queue.fal.run/fal-ai/nano-banana/requests/00000000-0000-0000-0000-000000000000/status",
+    "https://queue.fal.run/fal-ai/nano-banana-pro/requests/00000000-0000-0000-0000-000000000000/status",
     { headers: authHeaders() }
   );
   return { status: res.status, body: (await res.text()).slice(0, 200) };
@@ -61,8 +61,11 @@ export async function falProbe(): Promise<{ status: number; body: string }> {
  * Two families, which differ in the input they take and in what they are good
  * at, not merely in name:
  *
- *   nano-banana  → Google Gemini 2.5 Flash Image. Fast, cheap, very strong at
- *                  identity-preserving edits. The default everywhere.
+ *   nano-banana  → Google Nano Banana Pro (Gemini 3 Pro Image), at 2K. The
+ *                  strongest at identity-preserving edits. The default
+ *                  everywhere. The id stays "nano-banana" so every picker,
+ *                  saved preference and admin URL followed the upgrade from
+ *                  the original Gemini 2.5 Flash Image without a change.
  *   gpt-image-*  → OpenAI's image models, hosted by fal. Slower and pricier,
  *                  better at text inside the image, at long literal
  *                  instructions, and at photorealism.
@@ -123,11 +126,13 @@ interface ModelSpec {
 }
 
 const MODEL_SPECS: Record<FalModel, ModelSpec> = {
+  // Nano Banana Pro (Gemini 3 Pro Image). The original fal-ai/nano-banana
+  // (Gemini 2.5 Flash Image) is kept only as a last-resort address below.
   "nano-banana": {
-    edit: "fal-ai/nano-banana/edit",
-    generate: "fal-ai/nano-banana",
+    edit: "fal-ai/nano-banana-pro/edit",
+    generate: "fal-ai/nano-banana-pro",
     family: "nano",
-    label: "Nano Banana",
+    label: "Nano Banana Pro",
     sizeStyle: "named",
   },
   // ByteDance Seedream 4.5: strong multi-image editing and high-resolution
@@ -190,6 +195,12 @@ const MODEL_SPECS: Record<FalModel, ModelSpec> = {
  * invented at runtime.
  */
 const PATH_VARIANTS: Partial<Record<FalModel, { edit: string[]; generate: string[] }>> = {
+  // Only if Pro's address ever 404s: the original Nano Banana rather than a
+  // failed generation. runQueued logs it, so a downgrade is never silent.
+  "nano-banana": {
+    edit: ["fal-ai/nano-banana-pro/edit", "fal-ai/nano-banana/edit"],
+    generate: ["fal-ai/nano-banana-pro", "fal-ai/nano-banana"],
+  },
   // fal lists Seedream both with and without the "fal-ai/" owner prefix.
   "seedream-v45": {
     edit: ["fal-ai/bytedance/seedream/v4.5/edit", "bytedance/seedream/v4.5/edit"],
@@ -276,6 +287,14 @@ export function falEndpointTable(): Record<string, { edit: string; generate: str
 }
 
 export const DEFAULT_MODEL: FalModel = "nano-banana";
+
+/**
+ * Nano Banana Pro's output size: "1K", "2K" or "4K". 2K is sharp enough to
+ * print or crop at the standard price; 4K doubles the cost per image. An
+ * endpoint that does not know the field answers 422, and runQueued then
+ * retries with prompt and image alone, so this can never cost a generation.
+ */
+const NANO_RESOLUTION = "2K";
 
 /**
  * The background-removal model, as asked for.
@@ -727,7 +746,7 @@ export async function falEditImage(
   // the GPT models take image_size. Omitted means "keep the source framing".
   const input =
     falModelSpec(model).family === "nano"
-      ? { prompt, image_urls: [imageUrl], num_images: 1, output_format: "png",
+      ? { prompt, image_urls: [imageUrl], num_images: 1, output_format: "png", resolution: NANO_RESOLUTION,
           ...(aspectRatio ? { aspect_ratio: aspectRatio } : {}) }
       : falModelSpec(model).family === "seedream"
       ? { prompt, image_urls: [await uploadImageToFalStorage(imageUrl)] }
@@ -760,7 +779,7 @@ export async function falEditImages(
 
   const input =
     falModelSpec(model).family === "nano"
-      ? { prompt, image_urls: imageUrls, num_images: 1, output_format: "png" }
+      ? { prompt, image_urls: imageUrls, num_images: 1, output_format: "png", resolution: NANO_RESOLUTION }
       : falModelSpec(model).family === "seedream"
       ? { prompt, image_urls: await Promise.all(imageUrls.map(uploadImageToFalStorage)) }
       : { prompt, image_urls: imageUrls, num_images: 1, image_size: "auto", quality: "high" };
@@ -798,7 +817,7 @@ export async function falGenerateImage(
 
   const input =
     falModelSpec(model).family === "nano"
-      ? { prompt, num_images: 1, output_format: "png",
+      ? { prompt, num_images: 1, output_format: "png", resolution: NANO_RESOLUTION,
           ...(aspectRatio ? { aspect_ratio: aspectRatio } : {}) }
       : falModelSpec(model).family === "seedream"
       // Seedream's text-to-image endpoint also documents prompt as the only

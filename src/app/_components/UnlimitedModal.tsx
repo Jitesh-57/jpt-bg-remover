@@ -198,7 +198,7 @@ export default function UnlimitedModal({ onClose, loggedIn, reason, prefillUser,
             <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 9 }}>
               {[
                 `${selected.generations} AI generations with this pack`,
-                "Nano Banana, GPT Image and Seedream 4.5 included",
+                "Nano Banana Pro, GPT Image and Seedream 4.5 included",
                 "Full resolution, no watermark, yours to use commercially",
                 "Every free tool stays unlimited and free — no account needed",
                 "Nothing to install — works on phone and laptop",

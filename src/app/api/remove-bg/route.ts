@@ -5,9 +5,10 @@ import { removeBackground } from "@/lib/ai-image";
 import { userMessage } from "@/lib/user-message";
 
 export const runtime = "nodejs";
-export const maxDuration = 60;
+// Nano Banana Pro at 2K can take over a minute.
+export const maxDuration = 300;
 
-// Remove BG is an AI (Gemini) tool: paid-plan users spend 2 credits; free users
+// Remove BG is an AI tool (fal): paid-plan users spend 2 credits; free users
 // get the upgrade popup (gated by checkEntitlement / AI_TOOLS_PAID_ONLY).
 export async function POST(req: NextRequest) {
   const { session, error } = await checkAuth(req);

@@ -4,7 +4,8 @@ import { generateBackground } from "@/lib/ai-image";
 import { userMessage } from "@/lib/user-message";
 
 export const runtime = "nodejs";
-export const maxDuration = 60;
+// Nano Banana Pro at 2K can take over a minute.
+export const maxDuration = 300;
 
 export async function POST(req: NextRequest) {
   const { session, error: authError } = await checkAuth(req);

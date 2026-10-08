@@ -4,7 +4,8 @@ import { editImage } from "@/lib/ai-image";
 import { userMessage } from "@/lib/user-message";
 
 export const runtime = "nodejs";
-export const maxDuration = 120;
+// Nano Banana Pro at 2K can take well over a minute; matches the other image routes.
+export const maxDuration = 300;
 
 const COLOR_NAMES: Record<string, string> = {
   "#ffffff": "pure white",
@@ -51,7 +52,7 @@ export async function POST(req: NextRequest) {
     const blocked = await checkEntitlement(session!, "ai", "headshot-edit-bg");
     if (blocked) return blocked;
 
-    const resultDataUrl = await editImage(imageUrl, prompt);
+    const resultDataUrl = await editImage(imageUrl, prompt, undefined, undefined, { budgetMs: 240_000 });
 
     return withCredits({ url: resultDataUrl }, session!, "ai", req, "headshot-edit-bg");
   } catch (e) {

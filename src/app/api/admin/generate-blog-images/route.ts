@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin-token";
 import { createAdminSupabase } from "@/lib/auth";
-import { geminiGenerateFromText } from "@/lib/gemini";
+// Made on fal (Nano Banana Pro), never through Google's Gemini API directly.
+import { generateFromText } from "@/lib/ai-image";
 import { deriveBlogPrompt } from "@/lib/blog-images";
 import { POSTS } from "@/app/blog/_data/posts";
 
@@ -33,8 +34,14 @@ export async function GET(req: NextRequest) {
   const slice = POSTS.slice(offset, offset + limit);
   const results: Record<string, string> = {};
 
+  // One at a time inside maxDuration: each image gets what is left of the run
+  // (capped), and no new one starts without room to finish.
+  const started = Date.now();
+  const timeLeft = () => 280_000 - (Date.now() - started);
+
   for (const post of slice) {
     const path = `blog/${post.slug}.png`;
+    if (timeLeft() < 40_000) { results[post.slug] = "not started (out of time; run again)"; continue; }
     try {
       if (!force) {
         const { data: existing } = await supabase.storage.from(BUCKET).list("blog", { search: `${post.slug}.png` });
@@ -44,7 +51,7 @@ export async function GET(req: NextRequest) {
         }
       }
       const prompt = deriveBlogPrompt(post.title, post.category);
-      const url = await geminiGenerateFromText(prompt, { aspect_ratio: "16:9" });
+      const url = await generateFromText(prompt, { aspect_ratio: "16:9", strict: true, budgetMs: Math.min(120_000, timeLeft() - 10_000) });
       const res = await fetch(url);
       if (!res.ok) throw new Error(`fetch result ${res.status}`);
       const bytes = Buffer.from(await res.arrayBuffer());

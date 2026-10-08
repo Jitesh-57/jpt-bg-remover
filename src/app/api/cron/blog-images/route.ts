@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin-token";
 import { createAdminSupabase } from "@/lib/auth";
-import { geminiGenerateFromText } from "@/lib/gemini";
+// Made on fal (Nano Banana Pro), never through Google's Gemini API directly.
+import { generateFromText } from "@/lib/ai-image";
 import { deriveBlogPrompt } from "@/lib/blog-images";
 import { POSTS } from "@/app/blog/_data/posts";
 
 export const runtime = "nodejs";
-export const maxDuration = 60;
+export const maxDuration = 300;
 
 /**
  * Blog-image generator.
@@ -61,7 +62,7 @@ export async function GET(req: NextRequest) {
     batch.map(async (post) => {
       try {
         const prompt = deriveBlogPrompt(post.title, post.category);
-        const url = await geminiGenerateFromText(prompt, { aspect_ratio: "16:9" });
+        const url = await generateFromText(prompt, { aspect_ratio: "16:9", strict: true, budgetMs: 240_000 });
         const res = await fetch(url);
         if (!res.ok) throw new Error(`fetch ${res.status}`);
         const bytes = Buffer.from(await res.arrayBuffer());

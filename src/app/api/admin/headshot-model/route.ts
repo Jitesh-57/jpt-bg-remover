@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
   const out: Record<string, unknown> = {
     key,
     cascade: cascade.map((m) => ({ model: m, endpoint: endpoints[m]?.edit, overridden: endpoints[m]?.overridden })),
-    fallback: "nano-banana, then Gemini. Never announced to the customer; look for the engine in the log.",
+    fallback: "nano-banana (Nano Banana Pro on fal). Never announced to the customer; look for the engine in the log.",
     endpoints,
     overrides: {
       HEADSHOT_MODELS: "Comma-separated model ids to change the cascade or its order.",
@@ -45,7 +45,7 @@ export async function GET(req: NextRequest) {
   if (!key.configured) {
     return NextResponse.json({
       ...out, ok: false,
-      verdict: "FAL_KEY is not set on this deployment, so every headshot falls back to Gemini.",
+      verdict: "FAL_KEY is not set on this deployment, so no headshot can be generated.",
       fix: "Add FAL_KEY in the Vercel project's environment variables, then redeploy.",
     });
   }

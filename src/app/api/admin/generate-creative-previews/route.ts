@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin-token";
 import { createAdminSupabase } from "@/lib/auth";
-import { geminiGenerateFromText } from "@/lib/gemini";
+// Made on fal (Nano Banana Pro), never through Google's Gemini API directly.
+import { generateFromText } from "@/lib/ai-image";
 import { CREATIVE_APPS } from "@/lib/creative-apps";
 
 export const runtime = "nodejs";
-export const maxDuration = 120;
+export const maxDuration = 300;
 
 /**
  * One-time: generate a true before/after comparison preview image for a
@@ -58,14 +59,20 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: `Unknown slug: ${onlySlug}` }, { status: 400 });
   }
 
+  // One at a time inside maxDuration: each image gets what is left of the run
+  // (capped), and no new one starts without room to finish.
+  const started = Date.now();
+  const timeLeft = () => 280_000 - (Date.now() - started);
+
   for (const app of targets) {
     const name = `${app.slug}.png`;
+    if (timeLeft() < 40_000) { results[app.slug] = "not started (out of time; run again)"; continue; }
     const before = BEFORE_SUBJECT[app.slug];
     if (!before) { results[app.slug] = "skipped (no before-subject configured)"; continue; }
     try {
       if (!force && have.has(name)) { results[app.slug] = "skipped (exists)"; continue; }
       const prompt = buildPrompt(app.slug, app.prompt, before);
-      const cdnUrl = await geminiGenerateFromText(prompt, { aspect_ratio: "16:9" });
+      const cdnUrl = await generateFromText(prompt, { aspect_ratio: "16:9", strict: true, budgetMs: Math.min(120_000, timeLeft() - 10_000) });
       const res = await fetch(cdnUrl);
       if (!res.ok) throw new Error(`fetch ${res.status}`);
       const bytes = Buffer.from(await res.arrayBuffer());

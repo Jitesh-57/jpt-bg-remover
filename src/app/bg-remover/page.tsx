@@ -116,7 +116,7 @@ export default function BgRemoverPage() {
               <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); e.target.value = '' }} />
             </div>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginTop: 32 }}>
-              {['✨ Gemini AI quality', '🎯 AI-powered precision', '⚡ Results in seconds', '🖼️ Transparent PNG output', '🔓 Included in paid plans'].map(f => (
+              {['✨ Pro AI quality', '🎯 AI-powered precision', '⚡ Results in seconds', '🖼️ Transparent PNG output', '🔓 Included in paid plans'].map(f => (
                 <div key={f} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 20, padding: '8px 16px', fontSize: 13, color: 'var(--text-muted)', fontWeight: 600 }}>{f}</div>
               ))}
             </div>

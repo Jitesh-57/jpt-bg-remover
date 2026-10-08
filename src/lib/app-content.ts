@@ -156,7 +156,7 @@ export function categoryOf(app: CreativeApp): string {
 const SHARED_BENEFITS: Item[] = [
   { t: "Nothing to install", d: "It works on a phone or a laptop. No desktop app, no plugin, no account needed to look around." },
   { t: "No subscription", d: "Credits are a one-time purchase, they never expire, and nothing renews on its own. Buy once and use them whenever." },
-  { t: "Three models to choose from", d: "Nano Banana, GPT Image and Seedream 4.5 handle the same job differently. If one result is not right, another model often is." },
+  { t: "Three models to choose from", d: "Nano Banana Pro, GPT Image and Seedream 4.5 handle the same job differently. If one result is not right, another model often is." },
   { t: "Every aspect ratio", d: "Square, 4:5, 9:16, 16:9 and more, chosen before generating so nothing important gets cropped away afterwards." },
   { t: "Full resolution, no watermark", d: "The download is the full generated image with nothing overlaid — usable in print, in a listing or commercially." },
   { t: "The free tools stay free", d: "Compress, convert, crop, resize, rotate and the rest are unlimited, with no account and no credit cost." },
@@ -172,7 +172,7 @@ const SHARED_PROMPTS: Item[] = [
   { t: "Name the framing", d: "Close-up, head and shoulders, full body, centred, offset. Framing decides what the image is actually of." },
   { t: "Avoid asking for text in the image", d: "Generated lettering is still unreliable. Ask for empty space where the text should go and add real type afterwards." },
   { t: "Pick the ratio first", d: "Generating square and cropping to vertical throws away part of the frame. Choose the shape before you generate." },
-  { t: "Try another model", d: "If a prompt is being ignored, switching between Nano Banana, GPT Image and Seedream 4.5 often resolves it faster than rewording." },
+  { t: "Try another model", d: "If a prompt is being ignored, switching between Nano Banana Pro, GPT Image and Seedream 4.5 often resolves it faster than rewording." },
   { t: "Describe the light", d: "Direction, softness and colour temperature. Light does more to how a photograph feels than any other single thing you can specify." },
   { t: "Re-run before rewriting", d: "Generation is not deterministic. The same prompt twice gives two different results, and the second is sometimes simply better." },
 ];

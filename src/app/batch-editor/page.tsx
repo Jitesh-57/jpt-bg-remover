@@ -48,8 +48,8 @@ const ALL_TRANSFORMS: { id: TransformType; label: string; icon: string; desc: st
   { id: "compress",    label: "Compress",     icon: "🗜️", desc: "Shrink file size (JPEG quality)",           creditsEach: 0 },
   { id: "convert",     label: "Convert",      icon: "🔀", desc: "JPG · PNG · WEBP",                          creditsEach: 0 },
   { id: "upscale",     label: "Upscale",      icon: "🔍", desc: "2× or 4× super-resolution",                 creditsEach: 1 },
-  { id: "ai-edit",     label: "AI Edit",      icon: "✨", desc: "Transform with a text prompt — Nano Banana, ChatGPT or Seedream 4.5",     creditsEach: 2, aiOnly: true },
-  { id: "remove-bg",   label: "Remove BG",    icon: "🪄", desc: "Remove background via Gemini AI",           creditsEach: 2, aiOnly: true },
+  { id: "ai-edit",     label: "AI Edit",      icon: "✨", desc: "Transform with a text prompt — Nano Banana Pro, ChatGPT or Seedream 4.5",     creditsEach: 2, aiOnly: true },
+  { id: "remove-bg",   label: "Remove BG",    icon: "🪄", desc: "Remove the background with AI",           creditsEach: 2, aiOnly: true },
   { id: "generate-bg", label: "Generate BG",  icon: "🌅", desc: "Replace background with AI scene",          creditsEach: 2, aiOnly: true },
 ];
 

@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin-token";
 import { createAdminSupabase } from "@/lib/auth";
-import { geminiGenerateFromText } from "@/lib/gemini";
+// Made on fal (Nano Banana Pro), never through Google's Gemini API directly.
+import { generateFromText } from "@/lib/ai-image";
 import { MEN_STYLES, WOMEN_STYLES } from "@/lib/headshot-prompts";
 import { deriveHeadshotThumbPrompt, HeadshotGender } from "@/lib/headshot-thumbs";
 
 export const runtime = "nodejs";
-export const maxDuration = 60;
+export const maxDuration = 300;
 
 /**
  * Generates a preview thumbnail for each AI Headshot style (men + women) with
@@ -61,7 +62,7 @@ export async function GET(req: NextRequest) {
       const key = `${it.gender}-${it.id}`;
       try {
         const prompt = deriveHeadshotThumbPrompt(it.prompt, it.gender);
-        const url = await geminiGenerateFromText(prompt, { aspect_ratio: "1:1" });
+        const url = await generateFromText(prompt, { aspect_ratio: "1:1", strict: true, budgetMs: 240_000 });
         const res = await fetch(url);
         if (!res.ok) throw new Error(`fetch ${res.status}`);
         const bytes = Buffer.from(await res.arrayBuffer());
