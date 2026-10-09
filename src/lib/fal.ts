@@ -24,6 +24,11 @@
  * though the key itself is correct. Quotes around the value and an
  * accidentally-included "Key " prefix are stripped for the same reason.
  */
+// fal documents this flag for Seedream. Disabling it is effective only when
+// the fal account has been explicitly authorized by fal.ai; otherwise fal
+// continues checking requests regardless of this value.
+const FAL_ENABLE_SAFETY_CHECKER = process.env.FAL_ENABLE_SAFETY_CHECKER !== "false";
+
 const KEY = () =>
   (process.env.FAL_KEY || process.env.FAL_API_KEY || process.env.FAL_AI_KEY || process.env.FALAI_API_KEY ||
     (process.env.FAL_KEY_ID && process.env.FAL_KEY_SECRET ? `${process.env.FAL_KEY_ID}:${process.env.FAL_KEY_SECRET}` : ""))
@@ -749,7 +754,7 @@ export async function falEditImage(
       ? { prompt, image_urls: [imageUrl], num_images: 1, output_format: "png", resolution: NANO_RESOLUTION,
           ...(aspectRatio ? { aspect_ratio: aspectRatio } : {}) }
       : falModelSpec(model).family === "seedream"
-      ? { prompt, image_urls: [await uploadImageToFalStorage(imageUrl)] }
+      ? { prompt, image_urls: [await uploadImageToFalStorage(imageUrl)], enable_safety_checker: FAL_ENABLE_SAFETY_CHECKER }
       : { prompt, image_urls: [imageUrl], num_images: 1, quality: "high",
           image_size: imageSizeFor(falModelSpec(model).sizeStyle, aspectRatio) };
 
@@ -759,7 +764,7 @@ export async function falEditImage(
     // rejected *option* is a poor reason to lose the generation — so the
     // retry drops to prompt and image alone. See runQueued.
     minimalInput: falModelSpec(model).family === "seedream"
-      ? { prompt, image_urls: [await uploadImageToFalStorage(imageUrl)] }
+      ? { prompt, image_urls: [await uploadImageToFalStorage(imageUrl)], enable_safety_checker: FAL_ENABLE_SAFETY_CHECKER }
       : { prompt, image_urls: [imageUrl], num_images: 1 },
     paths: falPathVariants(model, "edit"),
   });
@@ -781,12 +786,12 @@ export async function falEditImages(
     falModelSpec(model).family === "nano"
       ? { prompt, image_urls: imageUrls, num_images: 1, output_format: "png", resolution: NANO_RESOLUTION }
       : falModelSpec(model).family === "seedream"
-      ? { prompt, image_urls: await Promise.all(imageUrls.map(uploadImageToFalStorage)) }
+      ? { prompt, image_urls: await Promise.all(imageUrls.map(uploadImageToFalStorage)), enable_safety_checker: FAL_ENABLE_SAFETY_CHECKER }
       : { prompt, image_urls: imageUrls, num_images: 1, image_size: "auto", quality: "high" };
 
   const result = await runQueued(endpoint, input, budgetMs, {
     minimalInput: falModelSpec(model).family === "seedream"
-      ? { prompt, image_urls: await Promise.all(imageUrls.map(uploadImageToFalStorage)) }
+      ? { prompt, image_urls: await Promise.all(imageUrls.map(uploadImageToFalStorage)), enable_safety_checker: FAL_ENABLE_SAFETY_CHECKER }
       : { prompt, image_urls: imageUrls, num_images: 1 },
     paths: falPathVariants(model, "edit"),
   });
@@ -822,7 +827,7 @@ export async function falGenerateImage(
       : falModelSpec(model).family === "seedream"
       // Seedream's text-to-image endpoint also documents prompt as the only
       // required input. Let fal choose its native output size.
-      ? { prompt }
+      ? { prompt, enable_safety_checker: FAL_ENABLE_SAFETY_CHECKER }
       : { prompt, num_images: 1, quality: "high",
           image_size: imageSizeFor(falModelSpec(model).sizeStyle, aspectRatio) };
 
