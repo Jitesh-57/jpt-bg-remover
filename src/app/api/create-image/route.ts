@@ -45,7 +45,15 @@ export async function POST(req: NextRequest) {
   if (prompt.length > MAX_PROMPT) {
     return NextResponse.json({ error: `That description is too long — keep it under ${MAX_PROMPT} characters.` }, { status: 400 });
   }
-  const model = typeof body.model === "string" && MODEL_IDS.has(body.model) ? body.model : MODELS[0].id;
+  // Auto-select Seedream for non-explicit mature/editorial requests where it is a better fit.
+  // This is model selection only: provider content checks remain authoritative and are never bypassed.
+  const promptLower = prompt.toLowerCase();
+  const matureEditorialRequest =
+    /\\b(adult portrait|mature portrait|boudoir portrait|sensual portrait|romantic couple portrait|intimate fashion editorial|mature fashion editorial)\\b/i.test(prompt);
+  const requestedModel = typeof body.model === "string" && MODEL_IDS.has(body.model) ? body.model : MODELS[0].id;
+  const model = matureEditorialRequest && (requestedModel === "nano-banana" || requestedModel === "gpt-image")
+    ? "seedream-v45"
+    : requestedModel;
   const aspectRatio = typeof body.aspectRatio === "string" && RATIOS.has(body.aspectRatio) ? body.aspectRatio : "1:1";
   const isImage = (v: unknown): v is string => typeof v === "string" && (/^https:\/\//.test(v) || /^data:image\/(png|jpeg|webp);base64,/.test(v));
   const image = isImage(body.image) ? body.image : null;
@@ -99,6 +107,15 @@ export async function POST(req: NextRequest) {
       durationMs: Date.now() - startedAt,
     });
     console.error("[create-image]", e);
-    return NextResponse.json({ error: userMessage(e) }, { status: 500 });
+    const providerStatus = e && typeof e === "object" && "status" in e
+      ? Number((e as { status?: unknown }).status)
+      : 0;
+    // Preserve the provider's validation status so the client can distinguish
+    // a rejected prompt from a server failure. Never retry policy rejections
+    // through another model as a way around provider safeguards.
+    return NextResponse.json(
+      { error: userMessage(e) },
+      { status: providerStatus === 422 ? 422 : 500 }
+    );
   }
 }
