@@ -47,9 +47,12 @@ export async function POST(req: NextRequest) {
   }
   // Auto-select Seedream for non-explicit mature/editorial requests where it is a better fit.
   // This is model selection only: provider content checks remain authoritative and are never bypassed.
-  const promptLower = prompt.toLowerCase();
+  // Model choice only: fal's own moderation/policy remains authoritative.
+  // Seedream supports enable_safety_checker; disabling it is effective only
+  // after fal has authorized this account for that capability.
   const matureEditorialRequest =
-    /\\b(adult portrait|mature portrait|boudoir portrait|sensual portrait|romantic couple portrait|intimate fashion editorial|mature fashion editorial)\\b/i.test(prompt);
+    /\b(adult|mature|boudoir|lingerie|sensual|intimate fashion|implied nudity|artistic nude|romantic couple|fashion editorial)\b/i.test(prompt) &&
+    !/\b(minor|underage|child|teen|schoolgirl|schoolboy)\b/i.test(prompt);
   const requestedModel = typeof body.model === "string" && MODEL_IDS.has(body.model) ? body.model : MODELS[0].id;
   const model = matureEditorialRequest && (requestedModel === "nano-banana" || requestedModel === "gpt-image")
     ? "seedream-v45"
