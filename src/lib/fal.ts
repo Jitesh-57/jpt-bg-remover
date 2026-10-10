@@ -118,8 +118,16 @@ export type FalModel =
 /** Which input shape an endpoint expects. */
 type Family = "nano" | "gpt" | "seedream";
 
-/** Which spelling of image_size the endpoint validates against. */
-type SizeStyle = "named" | "pixels";
+/**
+ * Which spelling of image_size the endpoint validates against.
+ *
+ *   named   fal's presets (square_hd, landscape_16_9…), about 1–1.5K
+ *   pixels  "1536x1024" strings, for the BYOK wrapper that hands it to OpenAI
+ *   2k      an explicit { width, height } on a 2048 long edge, for fal's
+ *           GPT Image 2 / 2.5 endpoints (multiples of 16, max edge 3840,
+ *           ratio ≤ 3:1). Rejected → the 422 retry drops it, never the image.
+ */
+type SizeStyle = "named" | "pixels" | "2k";
 
 interface ModelSpec {
   edit: string;
@@ -157,7 +165,7 @@ const MODEL_SPECS: Record<FalModel, ModelSpec> = {
     generate: "openai/gpt-image-2.5/sunburst/text-to-image",
     family: "gpt",
     label: "GPT Image 2.5 Sunburst",
-    sizeStyle: "named",
+    sizeStyle: "2k",
   },
   // OpenAI's default for most applications: fast, high-quality, natural
   // lighting and rich textures.
@@ -166,14 +174,14 @@ const MODEL_SPECS: Record<FalModel, ModelSpec> = {
     generate: "openai/gpt-image-2.5/flare/text-to-image",
     family: "gpt",
     label: "GPT Image 2.5 Flare",
-    sizeStyle: "named",
+    sizeStyle: "2k",
   },
   "gpt-image-2": {
     edit: "openai/gpt-image-2/edit",
     generate: "openai/gpt-image-2",
     family: "gpt",
     label: "GPT Image 2",
-    sizeStyle: "named",
+    sizeStyle: "2k",
   },
   "gpt-image-1-byok": {
     edit: "fal-ai/gpt-image-1/edit-image/byok",
@@ -707,7 +715,24 @@ async function urlToDataUrl(url: string): Promise<string> {
  * the named sizes; the OpenAI BYOK wrapper passes OpenAI's pixel strings
  * straight through. So the model decides, not the caller.
  */
-function imageSizeFor(style: SizeStyle, aspectRatio?: string): string {
+/** 2048 on the long edge, every side a multiple of 16, for the GPT Image 2 / 2.5 endpoints. */
+const GPT_2K: Record<string, { width: number; height: number }> = {
+  "1:1": { width: 2048, height: 2048 },
+  "4:5": { width: 1632, height: 2048 },
+  "3:4": { width: 1536, height: 2048 },
+  "2:3": { width: 1360, height: 2048 },
+  "9:16": { width: 1152, height: 2048 },
+  "5:4": { width: 2048, height: 1632 },
+  "4:3": { width: 2048, height: 1536 },
+  "3:2": { width: 2048, height: 1360 },
+  "16:10": { width: 2048, height: 1280 },
+  "16:9": { width: 2048, height: 1152 },
+  "21:9": { width: 2048, height: 880 },
+};
+
+function imageSizeFor(style: SizeStyle, aspectRatio?: string): string | { width: number; height: number } {
+  // No ratio asked for: "auto" keeps the photo's own framing.
+  if (style === "2k") return (aspectRatio && GPT_2K[aspectRatio]) || "auto";
   if (style === "pixels") {
     switch (aspectRatio) {
       case "16:9": case "3:2": case "21:9": case "16:10": return "1536x1024";
@@ -731,7 +756,7 @@ function imageSizeFor(style: SizeStyle, aspectRatio?: string): string {
  * auto_2K (or auto_4K), not plain "auto" — that one it rejects.
  */
 function seedreamSize(aspectRatio?: string): string {
-  const named = imageSizeFor("named", aspectRatio);
+  const named = imageSizeFor("named", aspectRatio) as string; // "named" is always a string
   return named === "auto" ? "auto_2K" : named;
 }
 

@@ -24,13 +24,17 @@ export type { FalModel };
  * existing picker, saved preference and admin URL sends, and it used to mean
  * the BYOK GPT Image 1 endpoint. Mapping it to the current default GPT model
  * upgrades all of them at once instead of stranding them on a name.
+ *
+ * ChatGPT (GPT Image 2.5 Flare, 2K) is the default: a request that names no
+ * model, or one this build does not know, gets it. A GPT model that cannot
+ * serve a request still drops to Nano Banana Pro (see withModelFallback and
+ * editImageGptFirst), so the default can never dead-end a visitor.
  */
 export const DEFAULT_GPT_MODEL: FalModel = "gpt-image-2.5-flare";
 
 export function resolveModel(requested?: string): FalModel {
-  if (!requested) return "nano-banana";
-  if (requested === "gpt-image") return DEFAULT_GPT_MODEL;
-  return (falModelIds() as string[]).includes(requested) ? (requested as FalModel) : "nano-banana";
+  if (!requested || requested === "gpt-image") return DEFAULT_GPT_MODEL;
+  return (falModelIds() as string[]).includes(requested) ? (requested as FalModel) : DEFAULT_GPT_MODEL;
 }
 
 /** True for any of OpenAI's models, whichever one was picked. */
@@ -225,13 +229,21 @@ export async function editImage(
 export function generateBackground(src: string, prompt: string, model?: string): Promise<string> {
   const m = resolveModel(model);
   return viaFal(
-    () => falEditImage(src, `Replace the background of this image with: ${prompt}. Keep the subject exactly as-is — same pose, clothing, appearance. Only change the background.`, m, undefined, SLOW_BUDGET_MS),
+    () => withModelFallback(m, (mm) =>
+      falEditImage(src, `Replace the background of this image with: ${prompt}. Keep the subject exactly as-is — same pose, clothing, appearance. Only change the background.`, mm, undefined, SLOW_BUDGET_MS)),
     "generate-bg"
   );
 }
 
+/*
+  Upscale and the background-removal fallback stay on Nano Banana Pro unless a
+  model is named. Both must keep the photo pixel-faithful ("keep the subject
+  identical"), which is what it is best at; a GPT model redraws the image.
+*/
+const FAITHFUL_MODEL: FalModel = "nano-banana";
+
 export function removeBackground(src: string, model?: string): Promise<string> {
-  const m = resolveModel(model);
+  const m = model ? resolveModel(model) : FAITHFUL_MODEL;
   return viaFal(
     /*
       A dedicated segmentation model, not a prompt.
@@ -266,7 +278,7 @@ export function removeBackground(src: string, model?: string): Promise<string> {
 }
 
 export function upscaleImage(src: string, scale: "2x" | "4x", model?: string): Promise<string> {
-  const m = resolveModel(model);
+  const m = model ? resolveModel(model) : FAITHFUL_MODEL;
   return viaFal(
     () => falEditImage(src, `Enhance this image to ${scale} resolution. Increase sharpness, detail, and clarity. Improve hair strands, skin texture, fabric detail. Remove noise and artifacts. Keep the subject identical.`, m, undefined, SLOW_BUDGET_MS),
     "upscale"

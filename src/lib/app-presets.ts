@@ -244,9 +244,10 @@ export type AspectRatio = (typeof ASPECT_RATIOS)[number];
  * failing, and the substitution is logged with the endpoint that refused it —
  * so a model here can never dead-end a visitor.
  */
+// The first entry is the default in every picker and API (MODELS[0]): ChatGPT.
 export const MODELS = [
+  { id: "gpt-image",   label: "ChatGPT",     hint: "OpenAI's GPT Image 2.5, in 2K — rich light and texture, and the best at text in images" },
   { id: "nano-banana", label: "Nano Banana Pro", hint: "Google's best image model, in 2K — sharpest detail, and best at keeping your face exactly as it is" },
-  { id: "gpt-image",   label: "ChatGPT",     hint: "OpenAI's image model — richer light and texture, slower" },
   { id: "seedream-v45", label: "Seedream 4.5", hint: "ByteDance Seedream 4.5 — advanced multi-image editing and high-resolution results" },
 ] as const;
 
