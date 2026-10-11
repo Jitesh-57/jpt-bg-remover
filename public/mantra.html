@@ -6,10 +6,12 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="theme-color" content="#1a0f08">
 <title>Mantra Jaap Counter</title>
+<meta name="description" content="Count your mantra jaap — chant aloud and it counts automatically, or chant in your mind and tap.">
 <style>
   :root {
     --bg: #1a0f08;
     --panel: #2a1a0e;
+    --panel2: #3a2414;
     --ink: #fbeedd;
     --muted: #c9a982;
     --saffron: #ff9933;
@@ -19,36 +21,76 @@
     --warn: #ff6b5b;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body { margin: 0; height: 100%; }
+  html, body { margin: 0; min-height: 100%; }
   body {
-    background: radial-gradient(circle at 50% 30%, #3a210f 0%, var(--bg) 70%);
+    background: radial-gradient(circle at 50% 20%, #3a210f 0%, var(--bg) 70%) fixed;
     color: var(--ink);
     font-family: "Noto Sans Devanagari", "Mangal", system-ui, -apple-system, sans-serif;
     display: flex; flex-direction: column; align-items: center;
     padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
-    user-select: none;
   }
   .wrap { width: 100%; max-width: 480px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .hidden { display: none !important; }
+  h1 { margin: 4px 0 0; font-size: 24px; color: var(--gold); text-align: center; }
+  h3 { margin: 0; font-size: 14px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; align-self: flex-start; }
+  .card { width: 100%; background: var(--panel); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+  textarea, input[type=number] {
+    width: 100%; font: inherit; color: var(--ink); background: var(--bg);
+    border: 1px solid var(--bead); border-radius: 10px; padding: 10px 12px;
+  }
+  textarea { font-size: 18px; min-height: 64px; resize: vertical; line-height: 1.5; }
+  textarea:focus, input:focus { outline: 2px solid var(--saffron); outline-offset: 1px; }
+  button {
+    font: inherit; border: 0; border-radius: 12px; padding: 12px 14px; cursor: pointer;
+    background: var(--panel2); color: var(--ink);
+  }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+  button.primary { background: var(--saffron); color: #1a0f08; font-weight: 700; font-size: 18px; width: 100%; padding: 15px; }
+  button.primary.on { background: var(--warn); color: #fff; }
+  button.ghost { background: transparent; color: var(--muted); padding: 8px 10px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { padding: 8px 12px; border-radius: 999px; background: var(--panel2); color: var(--ink); font-size: 15px; }
+  .chip.sel { background: var(--saffron); color: #1a0f08; font-weight: 700; }
+  .saved { display: flex; flex-direction: column; gap: 8px; }
+  .saved-item { display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--bead); border-radius: 10px; padding: 4px 4px 4px 12px; }
+  .saved-item.sel { border-color: var(--saffron); }
+  .saved-item .txt { flex: 1; min-width: 0; text-align: left; background: none; padding: 8px 0; font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .saved-item .n { color: var(--gold); font-size: 13px; white-space: nowrap; }
+  .saved-item .del { background: none; color: var(--muted); padding: 8px 10px; }
+  .empty { color: var(--muted); font-size: 14px; }
+  .row { display: flex; gap: 10px; width: 100%; align-items: center; }
+  .row > * { flex: 1; }
+  .modes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
+  .mode {
+    display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center;
+    padding: 16px 10px; border: 2px solid transparent; background: var(--panel2); border-radius: 14px;
+  }
+  .mode .ic { font-size: 30px; }
+  .mode b { font-size: 16px; }
+  .mode span { font-size: 12px; color: var(--muted); line-height: 1.4; }
+  .mode.sel { border-color: var(--saffron); background: #4a2c14; }
+  .hint { font-size: 13px; color: var(--muted); line-height: 1.5; text-align: center; margin: 0; }
+
+  /* counter */
+  .topbar { display: flex; width: 100%; align-items: center; justify-content: space-between; }
+  .badge { font-size: 13px; color: var(--muted); background: var(--panel); padding: 6px 10px; border-radius: 999px; }
   .mantra {
     text-align: center; font-size: clamp(20px, 6vw, 28px); line-height: 1.5;
-    color: var(--gold); font-weight: 600; padding: 8px 4px 0;
+    color: var(--gold); font-weight: 600; padding: 0 4px; overflow-wrap: anywhere;
     text-shadow: 0 0 18px rgba(244,196,48,.25);
   }
-  .ring-box { position: relative; width: min(88vw, 360px); aspect-ratio: 1; cursor: pointer; }
+  .ring-box { position: relative; width: min(80vw, 340px); aspect-ratio: 1; cursor: pointer; user-select: none; }
   .ring-box svg { width: 100%; height: 100%; display: block; }
-  .bead { fill: var(--bead); transition: fill .25s, r .25s; }
+  .bead { fill: var(--bead); transition: fill .25s; }
   .bead.done { fill: var(--saffron); }
   .bead.current { fill: var(--gold); }
   .bead.meru { fill: #b33; }
-  .center {
-    position: absolute; inset: 0; display: flex; flex-direction: column;
-    align-items: center; justify-content: center; pointer-events: none;
-  }
-  .om { font-size: 34px; color: var(--saffron); opacity: .8; line-height: 1; }
-  .count { font-size: clamp(64px, 22vw, 96px); font-weight: 700; line-height: 1.05; font-variant-numeric: tabular-nums; }
+  .center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
+  .om { font-size: 32px; color: var(--saffron); opacity: .8; line-height: 1; }
+  .count { font-size: clamp(56px, 20vw, 92px); font-weight: 700; line-height: 1.05; font-variant-numeric: tabular-nums; }
   .of { color: var(--muted); font-size: 16px; }
-  .count.bump { animation: bump .35s ease; }
-  @keyframes bump { 0% { transform: scale(1); } 40% { transform: scale(1.15); color: var(--gold); } 100% { transform: scale(1); } }
+  .count.bump { animation: bump .3s ease; }
+  @keyframes bump { 0% { transform: scale(1); } 40% { transform: scale(1.12); color: var(--gold); } 100% { transform: scale(1); } }
   .stats { display: flex; gap: 10px; width: 100%; }
   .stat { flex: 1; background: var(--panel); border-radius: 12px; padding: 10px; text-align: center; }
   .stat b { display: block; font-size: 22px; color: var(--gold); font-variant-numeric: tabular-nums; }
@@ -56,132 +98,321 @@
   .status { min-height: 22px; font-size: 14px; color: var(--muted); text-align: center; }
   .status.live { color: var(--ok); }
   .status.err { color: var(--warn); }
-  .heard { min-height: 20px; font-size: 13px; color: var(--muted); opacity: .8; text-align: center; overflow-wrap: anywhere; }
   .meter { width: 100%; height: 8px; background: var(--panel); border-radius: 4px; overflow: hidden; position: relative; }
-  .meter i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: linear-gradient(90deg, var(--saffron), var(--gold)); transition: width .05s; }
+  .meter i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: linear-gradient(90deg, var(--saffron), var(--gold)); }
   .meter u { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--ink); opacity: .6; }
-  button {
-    font: inherit; border: 0; border-radius: 12px; padding: 14px 16px; cursor: pointer;
-    background: var(--panel); color: var(--ink);
+  .tapbtn {
+    width: 100%; min-height: 150px; border-radius: 20px; font-size: 26px; font-weight: 700;
+    background: linear-gradient(180deg, var(--saffron), #e07a12); color: #1a0f08;
+    box-shadow: 0 6px 0 #9a520c; touch-action: manipulation; user-select: none;
   }
-  button.primary { background: var(--saffron); color: #1a0f08; font-weight: 700; font-size: 18px; width: 100%; }
-  button.primary.on { background: var(--warn); color: #fff; }
-  .row { display: flex; gap: 10px; width: 100%; }
-  .row button { flex: 1; }
-  .modes { display: flex; width: 100%; background: var(--panel); border-radius: 12px; padding: 4px; }
-  .modes button { flex: 1; padding: 10px 6px; font-size: 14px; background: transparent; color: var(--muted); }
-  .modes button.sel { background: var(--bead); color: var(--ink); }
-  .hint { font-size: 13px; color: var(--muted); line-height: 1.5; text-align: center; }
-  label.slider { width: 100%; font-size: 13px; color: var(--muted); display: flex; flex-direction: column; gap: 4px; }
+  .tapbtn:active { transform: translateY(4px); box-shadow: 0 2px 0 #9a520c; }
+  .tapbtn small { display: block; font-size: 14px; font-weight: 500; opacity: .8; margin-top: 4px; }
+  details { width: 100%; }
+  summary { cursor: pointer; color: var(--muted); font-size: 14px; padding: 6px 0; }
+  label.slider { width: 100%; font-size: 13px; color: var(--muted); display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
   input[type=range] { width: 100%; accent-color: var(--saffron); }
-  .hidden { display: none !important; }
-  .done-banner {
-    position: fixed; inset: 0; background: rgba(26,15,8,.92); display: flex; flex-direction: column;
-    align-items: center; justify-content: center; gap: 18px; text-align: center; padding: 24px; z-index: 10;
+  .toast {
+    position: fixed; left: 50%; top: max(20px, env(safe-area-inset-top)); transform: translateX(-50%);
+    background: var(--gold); color: #1a0f08; font-weight: 700; padding: 14px 20px; border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.4); z-index: 20; text-align: center; max-width: calc(100% - 32px);
+    transition: opacity .3s;
   }
-  .done-banner h2 { color: var(--gold); font-size: 30px; margin: 0; }
-  .done-banner p { color: var(--muted); margin: 0; }
+  .toast.off { opacity: 0; pointer-events: none; }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="mantra">ॐ श्री देवकृष्णाय उर्ध्वान्तकाय नमः ।</div>
 
-  <div class="ring-box" id="ring" title="Tap to add one count">
+<!-- ================= SETUP ================= -->
+<div class="wrap" id="setup">
+  <h1>ॐ Mantra Jaap</h1>
+
+  <div class="card">
+    <h3>My mantras</h3>
+    <div class="saved" id="savedList"></div>
+  </div>
+
+  <div class="card">
+    <h3>Mantra</h3>
+    <textarea id="mantraInput" placeholder="Type or paste your mantra"></textarea>
+    <h3>Number of jaap</h3>
+    <div class="chips" id="targetChips"></div>
+    <div class="row">
+      <input type="number" id="targetInput" min="1" max="100000" inputmode="numeric" placeholder="Custom count">
+      <button id="saveMantra">＋ Save to my mantras</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>How will you chant?</h3>
+    <div class="modes">
+      <button class="mode" data-mode="auto">
+        <div class="ic">🎙</div><b>Auto counting</b>
+        <span>Chant aloud — the mic counts each mantra</span>
+      </button>
+      <button class="mode" data-mode="tap">
+        <div class="ic">👆</div><b>Tap counting</b>
+        <span>Chant in your mind — tap once per mantra</span>
+      </button>
+    </div>
+  </div>
+
+  <button class="primary" id="begin" disabled>Select a counting option</button>
+  <button class="ghost" id="shareSetup">🔗 Share link to this mantra</button>
+</div>
+
+<!-- ================= COUNTER ================= -->
+<div class="wrap hidden" id="counter">
+  <div class="topbar">
+    <button class="ghost" id="back">← Change</button>
+    <span class="badge" id="modeBadge"></span>
+    <button class="ghost" id="shareCounter">🔗 Share</button>
+  </div>
+
+  <div class="mantra" id="mantraText"></div>
+
+  <div class="ring-box" id="ring">
     <svg viewBox="0 0 200 200" id="beads"></svg>
     <div class="center">
       <div class="om">ॐ</div>
       <div class="count" id="count">0</div>
-      <div class="of">/ 108</div>
+      <div class="of" id="of">/ 108</div>
     </div>
   </div>
 
   <div class="stats">
-    <div class="stat"><b id="malas">0</b><span>Malas today</span></div>
+    <div class="stat"><b id="rounds">0</b><span>Rounds done</span></div>
     <div class="stat"><b id="today">0</b><span>Jaap today</span></div>
     <div class="stat"><b id="total">0</b><span>All-time</span></div>
   </div>
 
-  <div class="modes" id="modes">
-    <button data-mode="voice" class="sel">🎙 Voice rhythm</button>
-    <button data-mode="words">🗣 Word match</button>
-    <button data-mode="tap">👆 Tap only</button>
+  <!-- auto mode -->
+  <div class="wrap" id="autoBox" style="gap:10px">
+    <div class="meter"><i id="meter"></i><u id="thresh"></u></div>
+    <div class="status" id="status"></div>
+    <button class="primary" id="start">▶ Start listening</button>
+    <details>
+      <summary>Adjust auto counting</summary>
+      <label class="slider">
+        <span>Pause between mantras: <b id="gapVal"></b> s (raise if it counts too early)</span>
+        <input type="range" id="gap" min="0.3" max="2.5" step="0.1">
+      </label>
+      <label class="slider">
+        <span>Mic sensitivity: <b id="sensVal"></b> (raise if it misses mantras)</span>
+        <input type="range" id="sens" min="1" max="10" step="1">
+      </label>
+      <label class="slider">
+        <span>Shortest mantra length: <b id="minVal"></b> s</span>
+        <input type="range" id="minLen" min="0.4" max="6" step="0.2">
+      </label>
+    </details>
   </div>
 
-  <div class="meter" id="meterBox"><i id="meter"></i><u id="thresh"></u></div>
-  <div class="status" id="status">Press Start and begin chanting.</div>
-  <div class="heard" id="heard"></div>
-
-  <button class="primary" id="start">▶ Start listening</button>
-
-  <label class="slider" id="sensBox">
-    <span>Pause between mantras: <b id="gapVal">0.7</b> s</span>
-    <input type="range" id="gap" min="0.3" max="2" step="0.1" value="0.7">
-  </label>
-  <label class="slider" id="sensBox2">
-    <span>Mic sensitivity: <b id="sensVal">5</b></span>
-    <input type="range" id="sens" min="1" max="10" step="1" value="5">
-  </label>
+  <!-- tap mode -->
+  <button class="tapbtn hidden" id="tapBtn">TAP<small>once after each mantra</small></button>
 
   <div class="row">
     <button id="minus">− 1</button>
-    <button id="plus">+ 1</button>
-    <button id="reset">↺ Reset</button>
+    <button id="reset">↺ Reset count</button>
   </div>
-
   <p class="hint" id="hint"></p>
 </div>
 
-<div class="done-banner hidden" id="doneBanner">
-  <div class="om" style="font-size:64px">ॐ</div>
-  <h2>108 पूर्ण 🙏</h2>
-  <p id="doneText">One mala complete.</p>
-  <button class="primary" id="nextMala" style="max-width:280px">Start next mala</button>
-</div>
+<div class="toast off" id="toast"></div>
 
 <script>
 (() => {
-  const GOAL = 108;
-  const STORE = 'mantra-jaap-v1';
+  const STORE = 'mantra-jaap-v2';
+  const DEFAULT_MANTRA = 'ॐ श्री देवकृष्णाय उर्ध्वान्तकाय नमः ।';
+  const PRESETS = [11, 21, 27, 54, 108, 1008];
+  const SHARE_FALLBACK = 'https://www.sjpt.io/mantra';
   const $ = (id) => document.getElementById(id);
 
   // ---------- persisted state ----------
   const todayKey = () => new Date().toISOString().slice(0, 10);
-  let state = { count: 0, total: 0, day: todayKey(), todayCount: 0, malas: 0, mode: 'voice', gap: 0.7, sens: 5 };
-  try { Object.assign(state, JSON.parse(localStorage.getItem(STORE) || '{}')); } catch (e) {}
-  if (state.day !== todayKey()) { state.day = todayKey(); state.todayCount = 0; state.malas = 0; }
+  let state = {
+    saved: [{ text: DEFAULT_MANTRA, target: 108 }],
+    mantra: DEFAULT_MANTRA, target: 108, mode: null,
+    count: 0, rounds: 0,
+    day: todayKey(), todayCount: 0, total: 0,
+    gap: 0.7, sens: 5, minLen: 1.2,
+  };
+  try {
+    const old = JSON.parse(localStorage.getItem('mantra-jaap-v1') || 'null');
+    if (old) { state.total = old.total || 0; }
+    Object.assign(state, JSON.parse(localStorage.getItem(STORE) || '{}'));
+  } catch (e) {}
+  if (state.day !== todayKey()) { state.day = todayKey(); state.todayCount = 0; }
   const save = () => { try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) {} };
 
-  // ---------- beads ----------
-  const svg = $('beads');
-  const beads = [];
-  for (let i = 0; i < GOAL; i++) {
-    const a = (i / GOAL) * Math.PI * 2 - Math.PI / 2;
-    const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    c.setAttribute('cx', 100 + 90 * Math.cos(a));
-    c.setAttribute('cy', 100 + 90 * Math.sin(a));
-    c.setAttribute('r', 2.6);
-    c.setAttribute('class', 'bead');
-    svg.appendChild(c);
-    beads.push(c);
+  // A shared link (?m=mantra&n=count) opens that mantra
+  const params = new URLSearchParams(location.search);
+  if (params.get('m')) {
+    const m = params.get('m').trim().slice(0, 500);
+    const n = clampTarget(params.get('n'));
+    if (m && (m !== state.mantra || n !== state.target)) {
+      state.mantra = m; state.target = n; state.count = 0; state.rounds = 0;
+    }
   }
-  const meru = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-  meru.setAttribute('cx', 100); meru.setAttribute('cy', 3.5); meru.setAttribute('r', 4);
-  meru.setAttribute('class', 'bead meru');
-  svg.appendChild(meru);
+
+  function clampTarget(v) {
+    const n = Math.round(Number(v));
+    return Number.isFinite(n) && n >= 1 ? Math.min(n, 100000) : 108;
+  }
+
+  // ================= SETUP SCREEN =================
+  function renderSaved() {
+    const list = $('savedList');
+    list.innerHTML = '';
+    if (!state.saved.length) {
+      const p = document.createElement('div');
+      p.className = 'empty'; p.textContent = 'No saved mantras yet. Type one below and tap “Save”.';
+      list.appendChild(p);
+      return;
+    }
+    state.saved.forEach((s, i) => {
+      const item = document.createElement('div');
+      item.className = 'saved-item' + (s.text === $('mantraInput').value.trim() && s.target === currentTarget() ? ' sel' : '');
+      const t = document.createElement('button'); t.className = 'txt'; t.textContent = s.text;
+      const n = document.createElement('span'); n.className = 'n'; n.textContent = '× ' + s.target;
+      const d = document.createElement('button'); d.className = 'del'; d.textContent = '✕'; d.title = 'Remove';
+      t.onclick = () => { $('mantraInput').value = s.text; setTarget(s.target); renderSaved(); };
+      d.onclick = () => { if (confirm('Remove this mantra from your list?')) { state.saved.splice(i, 1); save(); renderSaved(); } };
+      item.append(t, n, d);
+      list.appendChild(item);
+    });
+  }
+
+  function currentTarget() { return clampTarget($('targetInput').value || state.target); }
+  function setTarget(n) {
+    $('targetInput').value = n;
+    document.querySelectorAll('#targetChips .chip').forEach((c) => c.classList.toggle('sel', +c.dataset.n === n));
+  }
+  PRESETS.forEach((n) => {
+    const c = document.createElement('button');
+    c.className = 'chip'; c.dataset.n = n; c.textContent = n;
+    c.onclick = () => { setTarget(n); renderSaved(); };
+    $('targetChips').appendChild(c);
+  });
+  $('targetInput').addEventListener('input', () => { setTarget(currentTarget()); renderSaved(); });
+  $('mantraInput').addEventListener('input', () => { renderSaved(); updateBegin(); });
+
+  $('saveMantra').onclick = () => {
+    const text = $('mantraInput').value.trim();
+    if (!text) { $('mantraInput').focus(); return; }
+    const target = currentTarget();
+    const existing = state.saved.find((s) => s.text === text);
+    if (existing) existing.target = target; else state.saved.unshift({ text, target });
+    save(); renderSaved(); toast('Saved to my mantras 🙏');
+  };
+
+  function selectMode(m) {
+    state.mode = m; save();
+    document.querySelectorAll('.mode').forEach((b) => b.classList.toggle('sel', b.dataset.mode === m));
+    updateBegin();
+  }
+  document.querySelectorAll('.mode').forEach((b) => { b.onclick = () => selectMode(b.dataset.mode); });
+
+  function updateBegin() {
+    const ok = state.mode && $('mantraInput').value.trim();
+    $('begin').disabled = !ok;
+    $('begin').textContent = !state.mode ? 'Select a counting option'
+      : !$('mantraInput').value.trim() ? 'Enter a mantra'
+      : '🙏 Begin jaap';
+  }
+
+  $('begin').onclick = () => {
+    const text = $('mantraInput').value.trim();
+    const target = currentTarget();
+    if (text !== state.mantra || target !== state.target) { state.count = 0; state.rounds = 0; }
+    state.mantra = text; state.target = target;
+    save();
+    showCounter();
+  };
+
+  function showSetup() {
+    stopListening();
+    $('counter').classList.add('hidden');
+    $('setup').classList.remove('hidden');
+    $('mantraInput').value = state.mantra;
+    setTarget(state.target);
+    // Ask for the counting option each time before starting
+    state.mode = null;
+    document.querySelectorAll('.mode').forEach((b) => b.classList.remove('sel'));
+    renderSaved(); updateBegin();
+    window.scrollTo(0, 0);
+  }
+
+  // ---------- share ----------
+  function shareUrl(text, target) {
+    const base = location.protocol.startsWith('http') ? location.origin + location.pathname.replace(/\.html$/, '') : SHARE_FALLBACK;
+    return base + '?m=' + encodeURIComponent(text) + '&n=' + target;
+  }
+  async function share(text, target) {
+    if (!text) return;
+    const url = shareUrl(text, target);
+    const data = { title: 'Mantra Jaap', text: `${text} — ${target} jaap`, url };
+    try {
+      if (navigator.share) { await navigator.share(data); return; }
+    } catch (e) { if (e && e.name === 'AbortError') return; }
+    try { await navigator.clipboard.writeText(url); toast('Link copied — paste it to share'); }
+    catch (e) { prompt('Copy this link:', url); }
+  }
+  $('shareSetup').onclick = () => share($('mantraInput').value.trim(), currentTarget());
+  $('shareCounter').onclick = () => share(state.mantra, state.target);
+
+  // ================= COUNTER SCREEN =================
+  const svg = $('beads');
+  let beads = [];
+  function buildBeads() {
+    svg.innerHTML = '';
+    beads = [];
+    const n = Math.min(state.target, 108);
+    const r = n > 60 ? 2.6 : n > 30 ? 3.6 : 5;
+    for (let i = 0; i < n; i++) {
+      // half-step offset leaves a gap at the top for the meru bead
+      const a = ((i + 0.5) / n) * Math.PI * 2 - Math.PI / 2;
+      const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      c.setAttribute('cx', 100 + 90 * Math.cos(a));
+      c.setAttribute('cy', 100 + 90 * Math.sin(a));
+      c.setAttribute('r', r);
+      c.setAttribute('class', 'bead');
+      svg.appendChild(c);
+      beads.push(c);
+    }
+    const meru = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    meru.setAttribute('cx', 100); meru.setAttribute('cy', 3.5); meru.setAttribute('r', r + 1.4);
+    meru.setAttribute('class', 'bead meru');
+    svg.appendChild(meru);
+  }
 
   function render(bump) {
     $('count').textContent = state.count;
-    $('malas').textContent = state.malas;
+    $('of').textContent = '/ ' + state.target;
+    $('rounds').textContent = state.rounds;
     $('today').textContent = state.todayCount;
     $('total').textContent = state.total;
-    beads.forEach((b, i) => {
-      b.setAttribute('class', 'bead' + (i < state.count ? ' done' : '') + (i === state.count - 1 ? ' current' : ''));
-    });
-    if (bump) {
-      const el = $('count');
-      el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump');
-    }
+    // with more than 108 jaap, each bead stands for a share of the target
+    const lit = Math.floor((state.count / state.target) * beads.length);
+    beads.forEach((b, i) => b.setAttribute('class', 'bead' + (i < lit ? ' done' : '') + (i === lit - 1 ? ' current' : '')));
+    if (bump) { const el = $('count'); el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); }
+  }
+
+  function showCounter() {
+    $('setup').classList.add('hidden');
+    $('counter').classList.remove('hidden');
+    $('mantraText').textContent = state.mantra;
+    const auto = state.mode === 'auto';
+    $('modeBadge').textContent = auto ? '🎙 Auto counting' : '👆 Tap counting';
+    $('autoBox').classList.toggle('hidden', !auto);
+    $('tapBtn').classList.toggle('hidden', auto);
+    $('hint').textContent = auto
+      ? 'Chant aloud and take a short breath between mantras — each mantra + pause counts as one. You can also tap the mala to add one.'
+      : 'Chant in your mind and tap the button (or the mala, or press Space) after each mantra. Keep tapping as long as you like — rounds keep adding up.';
+    setStatus('Press Start and begin chanting.', '');
+    buildBeads();
+    render();
+    window.scrollTo(0, 0);
   }
 
   // ---------- sound / haptics ----------
@@ -199,41 +430,48 @@
   }
   const vibrate = (p) => { try { navigator.vibrate && navigator.vibrate(p); } catch (e) {} };
 
+  let toastTimer;
+  function toast(msg) {
+    const t = $('toast');
+    t.textContent = msg; t.classList.remove('off');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.add('off'), 3000);
+  }
+
   // ---------- counting ----------
-  function add(n = 1) {
-    if (!$('doneBanner').classList.contains('hidden')) return;
-    for (let k = 0; k < n; k++) {
-      if (state.count >= GOAL) break;
-      state.count++; state.total++; state.todayCount++;
-    }
-    if (state.count >= GOAL) {
-      state.malas++;
+  function add() {
+    state.count++; state.total++; state.todayCount++;
+    if (state.count >= state.target) {
+      state.rounds++;
+      state.count = 0;
       save(); render(true);
       tone(528, 1.6, 0.25); setTimeout(() => tone(792, 1.8, 0.2), 250);
       vibrate([200, 100, 200, 100, 400]);
-      $('doneText').textContent = `Mala ${state.malas} complete today · ${state.todayCount} jaap today`;
-      $('doneBanner').classList.remove('hidden');
-      stopListening();
+      toast(`${state.target} पूर्ण 🙏 Round ${state.rounds} complete — keep going`);
+      // show the full ring briefly before it starts again
+      beads.forEach((b) => b.setAttribute('class', 'bead done'));
+      $('count').textContent = state.target;
+      setTimeout(() => render(), 1200);
       return;
     }
     save(); render(true);
-    tone(state.count % 27 === 0 ? 660 : 440, 0.18, 0.06);
-    vibrate(30);
+    tone(440, 0.15, 0.05);
+    vibrate(25);
   }
   function minus() {
-    if (state.count > 0) { state.count--; state.total = Math.max(0, state.total - 1); state.todayCount = Math.max(0, state.todayCount - 1); save(); render(); }
+    if (state.count > 0) {
+      state.count--; state.total = Math.max(0, state.total - 1); state.todayCount = Math.max(0, state.todayCount - 1);
+      save(); render();
+    }
   }
 
-  // ---------- mode 1: voice rhythm (works offline, any browser) ----------
-  // Each mantra = a stretch of voice followed by a short pause.
+  // ---------- auto counting: voice + pause detection (works offline, any language) ----------
   let stream, analyser, raf, audioCtx;
   let noiseFloor = 0.01, calibrating = 0, calSamples = [];
   let voiced = false, voiceStart = 0, lastLoud = 0, voicedMs = 0, lastTick = 0;
-  const MIN_MANTRA_MS = 1200; // mantra takes at least ~1.2 s to chant
 
   function threshold() {
-    // higher sensitivity => lower threshold
-    const mult = 1.5 + (10 - state.sens) * 0.6;
+    const mult = 1.5 + (10 - state.sens) * 0.6; // higher sensitivity => lower threshold
     return Math.max(noiseFloor * mult, 0.004);
   }
 
@@ -266,95 +504,29 @@
           calibrating = 0;
           setStatus('Listening… chant at your own pace 🙏', 'live');
         }
-      } else {
-        const th = threshold();
-        if (rms > th) {
-          if (!voiced) { voiced = true; voiceStart = now; voicedMs = 0; }
-          lastLoud = now;
-          voicedMs += dt;
-        } else if (voiced && now - lastLoud > state.gap * 1000) {
-          // end of a phrase
-          const span = lastLoud - voiceStart;
-          voiced = false;
-          if (span >= MIN_MANTRA_MS && voicedMs >= MIN_MANTRA_MS * 0.4) add(1);
-        }
+      } else if (rms > threshold()) {
+        if (!voiced) { voiced = true; voiceStart = now; voicedMs = 0; }
+        lastLoud = now;
+        voicedMs += dt;
+      } else if (voiced && now - lastLoud > state.gap * 1000) {
+        voiced = false;
+        const minMs = state.minLen * 1000;
+        if (lastLoud - voiceStart >= minMs && voicedMs >= minMs * 0.4) add();
       }
-      // meter
-      const th = threshold();
-      const scale = th * 3;
+      const th = threshold(), scale = th * 3;
       $('meter').style.width = Math.min(100, (rms / scale) * 100) + '%';
       $('thresh').style.left = Math.min(100, (th / scale) * 100) + '%';
       raf = requestAnimationFrame(loop);
     };
     loop();
   }
-  function stopVoice() {
-    cancelAnimationFrame(raf);
-    if (stream) stream.getTracks().forEach((t) => t.stop());
-    if (audioCtx) audioCtx.close().catch(() => {});
-    stream = null; audioCtx = null;
-    $('meter').style.width = '0%';
-  }
 
-  // ---------- mode 2: word match (speech recognition, needs Chrome/Edge/Safari + internet) ----------
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  let rec, recWanted = false, lastFinalAt = 0;
-  // Ending word of the mantra and how recognisers tend to write it
-  const END_RE = /(नमः|नमह|नमहा|नम:|नमो|नमन|नमस|\bnamah?a?\b|\bnamaha\b|\bnamo\b|\bnamaḥ\b)/gi;
-  const MID_RE = /(उर्ध्व|ऊर्ध्व|ऊर्ध|उर्ध|कृष्ण|देवकृष्ण|krishna|urdhva|urdhvantak)/gi;
-
-  function startWords() {
-    if (!SR) throw new Error('no-sr');
-    rec = new SR();
-    rec.lang = 'hi-IN';
-    rec.continuous = true;
-    rec.interimResults = true;
-    rec.maxAlternatives = 1;
-    rec.onresult = (ev) => {
-      let interim = '';
-      for (let i = ev.resultIndex; i < ev.results.length; i++) {
-        const r = ev.results[i];
-        const text = r[0].transcript;
-        if (r.isFinal) {
-          let n = (text.match(END_RE) || []).length;
-          // If the recogniser dropped "नमः" but caught the body of the mantra, count that once
-          if (n === 0 && (text.match(MID_RE) || []).length > 0) n = 1;
-          if (n > 0) add(n);
-          lastFinalAt = performance.now();
-          $('heard').textContent = '“' + text.trim() + '”';
-        } else {
-          interim += text;
-        }
-      }
-      if (interim) $('heard').textContent = '… ' + interim.trim();
-    };
-    rec.onerror = (e) => {
-      if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
-        recWanted = false;
-        setStatus('Microphone permission denied. Allow mic access in browser settings.', 'err');
-        setRunning(false);
-      } else if (e.error === 'network') {
-        setStatus('Word match needs internet. Try "Voice rhythm" mode offline.', 'err');
-      }
-    };
-    rec.onend = () => { if (recWanted) { try { rec.start(); } catch (e) {} } };
-    recWanted = true;
-    rec.start();
-    setStatus('Listening for “…नमः” 🙏', 'live');
-  }
-  function stopWords() {
-    recWanted = false;
-    if (rec) { try { rec.stop(); } catch (e) {} rec = null; }
-  }
-
-  // ---------- controls ----------
   let running = false, wakeLock = null;
   function setStatus(t, cls) { const s = $('status'); s.textContent = t; s.className = 'status ' + (cls || ''); }
   function setRunning(on) {
     running = on;
-    const b = $('start');
-    b.textContent = on ? '■ Stop listening' : '▶ Start listening';
-    b.classList.toggle('on', on);
+    $('start').textContent = on ? '■ Stop listening' : '▶ Start listening';
+    $('start').classList.toggle('on', on);
   }
   async function keepAwake(on) {
     try {
@@ -362,78 +534,53 @@
       else if (!on && wakeLock) { await wakeLock.release(); wakeLock = null; }
     } catch (e) {}
   }
-
   async function startListening() {
-    if (state.mode === 'tap') return;
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      setStatus('Microphone not available here. Open this page over https in Chrome/Safari.', 'err');
+      setStatus('Microphone not available here. Open the https link in Chrome or Safari, or use Tap counting.', 'err');
       return;
     }
     try {
-      if (state.mode === 'voice') await startVoice();
-      else startWords();
+      await startVoice();
       setRunning(true);
       keepAwake(true);
     } catch (e) {
-      stopVoice(); stopWords();
-      if (e && e.message === 'no-sr') setStatus('Word match isn’t supported in this browser. Use Voice rhythm.', 'err');
-      else setStatus('Could not access the microphone. Please allow mic access and try again.', 'err');
-      setRunning(false);
+      stopListening();
+      setStatus('Could not access the microphone. Allow mic access and try again, or use Tap counting.', 'err');
     }
   }
   function stopListening() {
-    stopVoice(); stopWords();
+    cancelAnimationFrame(raf);
+    if (stream) stream.getTracks().forEach((t) => t.stop());
+    if (audioCtx) audioCtx.close().catch(() => {});
+    stream = null; audioCtx = null;
+    $('meter').style.width = '0%';
     if (running) setStatus('Paused. Press Start to continue.', '');
     setRunning(false);
     keepAwake(false);
   }
 
-  function applyMode() {
-    document.querySelectorAll('#modes button').forEach((b) => b.classList.toggle('sel', b.dataset.mode === state.mode));
-    const voice = state.mode === 'voice', tap = state.mode === 'tap';
-    $('meterBox').classList.toggle('hidden', !voice);
-    $('sensBox').classList.toggle('hidden', !voice);
-    $('sensBox2').classList.toggle('hidden', !voice);
-    $('start').classList.toggle('hidden', tap);
-    $('heard').textContent = '';
-    $('hint').innerHTML = voice
-      ? 'Counts each recitation by your voice + the pause after it. Take a short breath between mantras. Use a quiet place; adjust the pause slider if it counts too early or too late.'
-      : state.mode === 'words'
-        ? 'Uses speech recognition (Hindi) and counts each time it hears “नमः” at the end. Works best in Chrome with internet. Speak clearly.'
-        : 'Tap the mala circle (or press Space) once per mantra.';
-    setStatus(tap ? 'Tap the mala for each mantra.' : 'Press Start and begin chanting.', '');
-  }
-
-  $('modes').addEventListener('click', (e) => {
-    const m = e.target.closest('button'); if (!m) return;
-    stopListening();
-    state.mode = m.dataset.mode; save(); applyMode();
-  });
-  $('start').addEventListener('click', () => { running ? stopListening() : startListening(); });
-  $('ring').addEventListener('click', () => add(1));
-  $('plus').addEventListener('click', () => add(1));
-  $('minus').addEventListener('click', minus);
-  $('reset').addEventListener('click', () => {
-    if (state.count === 0 || confirm('Reset this mala count to 0?')) { state.count = 0; save(); render(); }
-  });
-  $('nextMala').addEventListener('click', () => {
-    state.count = 0; save(); render();
-    $('doneBanner').classList.add('hidden');
-    setStatus('Press Start for the next mala.', '');
-  });
+  // ---------- controls ----------
+  $('start').onclick = () => { running ? stopListening() : startListening(); };
+  $('back').onclick = showSetup;
+  $('ring').onclick = add;
+  $('tapBtn').addEventListener('pointerdown', (e) => { e.preventDefault(); add(); });
+  $('minus').onclick = minus;
+  $('reset').onclick = () => {
+    if (state.count === 0 && state.rounds === 0) return;
+    if (confirm('Reset the count and rounds for this mantra to 0?')) { state.count = 0; state.rounds = 0; save(); render(); }
+  };
   document.addEventListener('keydown', (e) => {
-    if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); add(1); }
+    if ($('counter').classList.contains('hidden')) return;
+    if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); add(); }
     else if (e.code === 'Backspace') { e.preventDefault(); minus(); }
   });
-  $('gap').value = state.gap; $('gapVal').textContent = state.gap;
-  $('sens').value = state.sens; $('sensVal').textContent = state.sens;
-  $('gap').addEventListener('input', (e) => { state.gap = +e.target.value; $('gapVal').textContent = state.gap; save(); });
-  $('sens').addEventListener('input', (e) => { state.sens = +e.target.value; $('sensVal').textContent = state.sens; save(); });
+  [['gap', 'gapVal'], ['sens', 'sensVal'], ['minLen', 'minVal']].forEach(([k, v]) => {
+    $(k).value = state[k]; $(v).textContent = state[k];
+    $(k).addEventListener('input', (e) => { state[k] = +e.target.value; $(v).textContent = state[k]; save(); });
+  });
   document.addEventListener('visibilitychange', () => { if (!document.hidden && running) keepAwake(true); });
 
-  if (state.count >= GOAL) state.count = 0;
-  applyMode();
-  render();
+  showSetup();
 })();
 </script>
 </body>

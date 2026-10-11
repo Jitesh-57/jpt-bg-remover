@@ -15,6 +15,12 @@ const nextConfig = {
       // identity, so there is no duplicate to consolidate.
     ];
   },
+  async rewrites() {
+    return [
+      // Clean, shareable URL for the static mantra jaap counter in public/.
+      { source: '/mantra', destination: '/mantra.html' },
+    ];
+  },
   webpack: (config) => {
     // onnxruntime-web ships .mjs files with import.meta.url — tell webpack to
     // treat them as proper ES modules instead of trying to parse as CommonJS.
