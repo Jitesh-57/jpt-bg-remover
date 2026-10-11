@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#1a0f08">
+<title>Mantra Jaap Counter</title>
+<style>
+  :root {
+    --bg: #1a0f08;
+    --panel: #2a1a0e;
+    --ink: #fbeedd;
+    --muted: #c9a982;
+    --saffron: #ff9933;
+    --gold: #f4c430;
+    --bead: #5a3a1e;
+    --ok: #7bd389;
+    --warn: #ff6b5b;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: radial-gradient(circle at 50% 30%, #3a210f 0%, var(--bg) 70%);
+    color: var(--ink);
+    font-family: "Noto Sans Devanagari", "Mangal", system-ui, -apple-system, sans-serif;
+    display: flex; flex-direction: column; align-items: center;
+    padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+    user-select: none;
+  }
+  .wrap { width: 100%; max-width: 480px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .mantra {
+    text-align: center; font-size: clamp(20px, 6vw, 28px); line-height: 1.5;
+    color: var(--gold); font-weight: 600; padding: 8px 4px 0;
+    text-shadow: 0 0 18px rgba(244,196,48,.25);
+  }
+  .ring-box { position: relative; width: min(88vw, 360px); aspect-ratio: 1; cursor: pointer; }
+  .ring-box svg { width: 100%; height: 100%; display: block; }
+  .bead { fill: var(--bead); transition: fill .25s, r .25s; }
+  .bead.done { fill: var(--saffron); }
+  .bead.current { fill: var(--gold); }
+  .bead.meru { fill: #b33; }
+  .center {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; pointer-events: none;
+  }
+  .om { font-size: 34px; color: var(--saffron); opacity: .8; line-height: 1; }
+  .count { font-size: clamp(64px, 22vw, 96px); font-weight: 700; line-height: 1.05; font-variant-numeric: tabular-nums; }
+  .of { color: var(--muted); font-size: 16px; }
+  .count.bump { animation: bump .35s ease; }
+  @keyframes bump { 0% { transform: scale(1); } 40% { transform: scale(1.15); color: var(--gold); } 100% { transform: scale(1); } }
+  .stats { display: flex; gap: 10px; width: 100%; }
+  .stat { flex: 1; background: var(--panel); border-radius: 12px; padding: 10px; text-align: center; }
+  .stat b { display: block; font-size: 22px; color: var(--gold); font-variant-numeric: tabular-nums; }
+  .stat span { font-size: 12px; color: var(--muted); }
+  .status { min-height: 22px; font-size: 14px; color: var(--muted); text-align: center; }
+  .status.live { color: var(--ok); }
+  .status.err { color: var(--warn); }
+  .heard { min-height: 20px; font-size: 13px; color: var(--muted); opacity: .8; text-align: center; overflow-wrap: anywhere; }
+  .meter { width: 100%; height: 8px; background: var(--panel); border-radius: 4px; overflow: hidden; position: relative; }
+  .meter i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: linear-gradient(90deg, var(--saffron), var(--gold)); transition: width .05s; }
+  .meter u { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--ink); opacity: .6; }
+  button {
+    font: inherit; border: 0; border-radius: 12px; padding: 14px 16px; cursor: pointer;
+    background: var(--panel); color: var(--ink);
+  }
+  button.primary { background: var(--saffron); color: #1a0f08; font-weight: 700; font-size: 18px; width: 100%; }
+  button.primary.on { background: var(--warn); color: #fff; }
+  .row { display: flex; gap: 10px; width: 100%; }
+  .row button { flex: 1; }
+  .modes { display: flex; width: 100%; background: var(--panel); border-radius: 12px; padding: 4px; }
+  .modes button { flex: 1; padding: 10px 6px; font-size: 14px; background: transparent; color: var(--muted); }
+  .modes button.sel { background: var(--bead); color: var(--ink); }
+  .hint { font-size: 13px; color: var(--muted); line-height: 1.5; text-align: center; }
+  label.slider { width: 100%; font-size: 13px; color: var(--muted); display: flex; flex-direction: column; gap: 4px; }
+  input[type=range] { width: 100%; accent-color: var(--saffron); }
+  .hidden { display: none !important; }
+  .done-banner {
+    position: fixed; inset: 0; background: rgba(26,15,8,.92); display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 18px; text-align: center; padding: 24px; z-index: 10;
+  }
+  .done-banner h2 { color: var(--gold); font-size: 30px; margin: 0; }
+  .done-banner p { color: var(--muted); margin: 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="mantra">ॐ श्री देवकृष्णाय उर्ध्वान्तकाय नमः ।</div>
+
+  <div class="ring-box" id="ring" title="Tap to add one count">
+    <svg viewBox="0 0 200 200" id="beads"></svg>
+    <div class="center">
+      <div class="om">ॐ</div>
+      <div class="count" id="count">0</div>
+      <div class="of">/ 108</div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><b id="malas">0</b><span>Malas today</span></div>
+    <div class="stat"><b id="today">0</b><span>Jaap today</span></div>
+    <div class="stat"><b id="total">0</b><span>All-time</span></div>
+  </div>
+
+  <div class="modes" id="modes">
+    <button data-mode="voice" class="sel">🎙 Voice rhythm</button>
+    <button data-mode="words">🗣 Word match</button>
+    <button data-mode="tap">👆 Tap only</button>
+  </div>
+
+  <div class="meter" id="meterBox"><i id="meter"></i><u id="thresh"></u></div>
+  <div class="status" id="status">Press Start and begin chanting.</div>
+  <div class="heard" id="heard"></div>
+
+  <button class="primary" id="start">▶ Start listening</button>
+
+  <label class="slider" id="sensBox">
+    <span>Pause between mantras: <b id="gapVal">0.7</b> s</span>
+    <input type="range" id="gap" min="0.3" max="2" step="0.1" value="0.7">
+  </label>
+  <label class="slider" id="sensBox2">
+    <span>Mic sensitivity: <b id="sensVal">5</b></span>
+    <input type="range" id="sens" min="1" max="10" step="1" value="5">
+  </label>
+
+  <div class="row">
+    <button id="minus">− 1</button>
+    <button id="plus">+ 1</button>
+    <button id="reset">↺ Reset</button>
+  </div>
+
+  <p class="hint" id="hint"></p>
+</div>
+
+<div class="done-banner hidden" id="doneBanner">
+  <div class="om" style="font-size:64px">ॐ</div>
+  <h2>108 पूर्ण 🙏</h2>
+  <p id="doneText">One mala complete.</p>
+  <button class="primary" id="nextMala" style="max-width:280px">Start next mala</button>
+</div>
+
+<script>
+(() => {
+  const GOAL = 108;
+  const STORE = 'mantra-jaap-v1';
+  const $ = (id) => document.getElementById(id);
+
+  // ---------- persisted state ----------
+  const todayKey = () => new Date().toISOString().slice(0, 10);
+  let state = { count: 0, total: 0, day: todayKey(), todayCount: 0, malas: 0, mode: 'voice', gap: 0.7, sens: 5 };
+  try { Object.assign(state, JSON.parse(localStorage.getItem(STORE) || '{}')); } catch (e) {}
+  if (state.day !== todayKey()) { state.day = todayKey(); state.todayCount = 0; state.malas = 0; }
+  const save = () => { try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) {} };
+
+  // ---------- beads ----------
+  const svg = $('beads');
+  const beads = [];
+  for (let i = 0; i < GOAL; i++) {
+    const a = (i / GOAL) * Math.PI * 2 - Math.PI / 2;
+    const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    c.setAttribute('cx', 100 + 90 * Math.cos(a));
+    c.setAttribute('cy', 100 + 90 * Math.sin(a));
+    c.setAttribute('r', 2.6);
+    c.setAttribute('class', 'bead');
+    svg.appendChild(c);
+    beads.push(c);
+  }
+  const meru = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  meru.setAttribute('cx', 100); meru.setAttribute('cy', 3.5); meru.setAttribute('r', 4);
+  meru.setAttribute('class', 'bead meru');
+  svg.appendChild(meru);
+
+  function render(bump) {
+    $('count').textContent = state.count;
+    $('malas').textContent = state.malas;
+    $('today').textContent = state.todayCount;
+    $('total').textContent = state.total;
+    beads.forEach((b, i) => {
+      b.setAttribute('class', 'bead' + (i < state.count ? ' done' : '') + (i === state.count - 1 ? ' current' : ''));
+    });
+    if (bump) {
+      const el = $('count');
+      el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump');
+    }
+  }
+
+  // ---------- sound / haptics ----------
+  let actx;
+  function tone(freq, dur, vol) {
+    try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      const o = actx.createOscillator(), g = actx.createGain();
+      o.type = 'sine'; o.frequency.value = freq;
+      g.gain.setValueAtTime(vol, actx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime + dur);
+      o.connect(g).connect(actx.destination);
+      o.start(); o.stop(actx.currentTime + dur);
+    } catch (e) {}
+  }
+  const vibrate = (p) => { try { navigator.vibrate && navigator.vibrate(p); } catch (e) {} };
+
+  // ---------- counting ----------
+  function add(n = 1) {
+    if (!$('doneBanner').classList.contains('hidden')) return;
+    for (let k = 0; k < n; k++) {
+      if (state.count >= GOAL) break;
+      state.count++; state.total++; state.todayCount++;
+    }
+    if (state.count >= GOAL) {
+      state.malas++;
+      save(); render(true);
+      tone(528, 1.6, 0.25); setTimeout(() => tone(792, 1.8, 0.2), 250);
+      vibrate([200, 100, 200, 100, 400]);
+      $('doneText').textContent = `Mala ${state.malas} complete today · ${state.todayCount} jaap today`;
+      $('doneBanner').classList.remove('hidden');
+      stopListening();
+      return;
+    }
+    save(); render(true);
+    tone(state.count % 27 === 0 ? 660 : 440, 0.18, 0.06);
+    vibrate(30);
+  }
+  function minus() {
+    if (state.count > 0) { state.count--; state.total = Math.max(0, state.total - 1); state.todayCount = Math.max(0, state.todayCount - 1); save(); render(); }
+  }
+
+  // ---------- mode 1: voice rhythm (works offline, any browser) ----------
+  // Each mantra = a stretch of voice followed by a short pause.
+  let stream, analyser, raf, audioCtx;
+  let noiseFloor = 0.01, calibrating = 0, calSamples = [];
+  let voiced = false, voiceStart = 0, lastLoud = 0, voicedMs = 0, lastTick = 0;
+  const MIN_MANTRA_MS = 1200; // mantra takes at least ~1.2 s to chant
+
+  function threshold() {
+    // higher sensitivity => lower threshold
+    const mult = 1.5 + (10 - state.sens) * 0.6;
+    return Math.max(noiseFloor * mult, 0.004);
+  }
+
+  async function startVoice() {
+    stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const src = audioCtx.createMediaStreamSource(stream);
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 2048;
+    src.connect(analyser);
+    const buf = new Float32Array(analyser.fftSize);
+    calibrating = performance.now(); calSamples = [];
+    voiced = false; voicedMs = 0;
+    setStatus('Calibrating… stay silent for a moment', '');
+    lastTick = performance.now();
+
+    const loop = () => {
+      analyser.getFloatTimeDomainData(buf);
+      let sum = 0;
+      for (let i = 0; i < buf.length; i++) sum += buf[i] * buf[i];
+      const rms = Math.sqrt(sum / buf.length);
+      const now = performance.now();
+      const dt = now - lastTick; lastTick = now;
+
+      if (calibrating) {
+        calSamples.push(rms);
+        if (now - calibrating > 1200) {
+          calSamples.sort((a, b) => a - b);
+          noiseFloor = Math.max(calSamples[Math.floor(calSamples.length * 0.6)] || 0.005, 0.002);
+          calibrating = 0;
+          setStatus('Listening… chant at your own pace 🙏', 'live');
+        }
+      } else {
+        const th = threshold();
+        if (rms > th) {
+          if (!voiced) { voiced = true; voiceStart = now; voicedMs = 0; }
+          lastLoud = now;
+          voicedMs += dt;
+        } else if (voiced && now - lastLoud > state.gap * 1000) {
+          // end of a phrase
+          const span = lastLoud - voiceStart;
+          voiced = false;
+          if (span >= MIN_MANTRA_MS && voicedMs >= MIN_MANTRA_MS * 0.4) add(1);
+        }
+      }
+      // meter
+      const th = threshold();
+      const scale = th * 3;
+      $('meter').style.width = Math.min(100, (rms / scale) * 100) + '%';
+      $('thresh').style.left = Math.min(100, (th / scale) * 100) + '%';
+      raf = requestAnimationFrame(loop);
+    };
+    loop();
+  }
+  function stopVoice() {
+    cancelAnimationFrame(raf);
+    if (stream) stream.getTracks().forEach((t) => t.stop());
+    if (audioCtx) audioCtx.close().catch(() => {});
+    stream = null; audioCtx = null;
+    $('meter').style.width = '0%';
+  }
+
+  // ---------- mode 2: word match (speech recognition, needs Chrome/Edge/Safari + internet) ----------
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  let rec, recWanted = false, lastFinalAt = 0;
+  // Ending word of the mantra and how recognisers tend to write it
+  const END_RE = /(नमः|नमह|नमहा|नम:|नमो|नमन|नमस|\bnamah?a?\b|\bnamaha\b|\bnamo\b|\bnamaḥ\b)/gi;
+  const MID_RE = /(उर्ध्व|ऊर्ध्व|ऊर्ध|उर्ध|कृष्ण|देवकृष्ण|krishna|urdhva|urdhvantak)/gi;
+
+  function startWords() {
+    if (!SR) throw new Error('no-sr');
+    rec = new SR();
+    rec.lang = 'hi-IN';
+    rec.continuous = true;
+    rec.interimResults = true;
+    rec.maxAlternatives = 1;
+    rec.onresult = (ev) => {
+      let interim = '';
+      for (let i = ev.resultIndex; i < ev.results.length; i++) {
+        const r = ev.results[i];
+        const text = r[0].transcript;
+        if (r.isFinal) {
+          let n = (text.match(END_RE) || []).length;
+          // If the recogniser dropped "नमः" but caught the body of the mantra, count that once
+          if (n === 0 && (text.match(MID_RE) || []).length > 0) n = 1;
+          if (n > 0) add(n);
+          lastFinalAt = performance.now();
+          $('heard').textContent = '“' + text.trim() + '”';
+        } else {
+          interim += text;
+        }
+      }
+      if (interim) $('heard').textContent = '… ' + interim.trim();
+    };
+    rec.onerror = (e) => {
+      if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+        recWanted = false;
+        setStatus('Microphone permission denied. Allow mic access in browser settings.', 'err');
+        setRunning(false);
+      } else if (e.error === 'network') {
+        setStatus('Word match needs internet. Try "Voice rhythm" mode offline.', 'err');
+      }
+    };
+    rec.onend = () => { if (recWanted) { try { rec.start(); } catch (e) {} } };
+    recWanted = true;
+    rec.start();
+    setStatus('Listening for “…नमः” 🙏', 'live');
+  }
+  function stopWords() {
+    recWanted = false;
+    if (rec) { try { rec.stop(); } catch (e) {} rec = null; }
+  }
+
+  // ---------- controls ----------
+  let running = false, wakeLock = null;
+  function setStatus(t, cls) { const s = $('status'); s.textContent = t; s.className = 'status ' + (cls || ''); }
+  function setRunning(on) {
+    running = on;
+    const b = $('start');
+    b.textContent = on ? '■ Stop listening' : '▶ Start listening';
+    b.classList.toggle('on', on);
+  }
+  async function keepAwake(on) {
+    try {
+      if (on && 'wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen');
+      else if (!on && wakeLock) { await wakeLock.release(); wakeLock = null; }
+    } catch (e) {}
+  }
+
+  async function startListening() {
+    if (state.mode === 'tap') return;
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      setStatus('Microphone not available here. Open this page over https in Chrome/Safari.', 'err');
+      return;
+    }
+    try {
+      if (state.mode === 'voice') await startVoice();
+      else startWords();
+      setRunning(true);
+      keepAwake(true);
+    } catch (e) {
+      stopVoice(); stopWords();
+      if (e && e.message === 'no-sr') setStatus('Word match isn’t supported in this browser. Use Voice rhythm.', 'err');
+      else setStatus('Could not access the microphone. Please allow mic access and try again.', 'err');
+      setRunning(false);
+    }
+  }
+  function stopListening() {
+    stopVoice(); stopWords();
+    if (running) setStatus('Paused. Press Start to continue.', '');
+    setRunning(false);
+    keepAwake(false);
+  }
+
+  function applyMode() {
+    document.querySelectorAll('#modes button').forEach((b) => b.classList.toggle('sel', b.dataset.mode === state.mode));
+    const voice = state.mode === 'voice', tap = state.mode === 'tap';
+    $('meterBox').classList.toggle('hidden', !voice);
+    $('sensBox').classList.toggle('hidden', !voice);
+    $('sensBox2').classList.toggle('hidden', !voice);
+    $('start').classList.toggle('hidden', tap);
+    $('heard').textContent = '';
+    $('hint').innerHTML = voice
+      ? 'Counts each recitation by your voice + the pause after it. Take a short breath between mantras. Use a quiet place; adjust the pause slider if it counts too early or too late.'
+      : state.mode === 'words'
+        ? 'Uses speech recognition (Hindi) and counts each time it hears “नमः” at the end. Works best in Chrome with internet. Speak clearly.'
+        : 'Tap the mala circle (or press Space) once per mantra.';
+    setStatus(tap ? 'Tap the mala for each mantra.' : 'Press Start and begin chanting.', '');
+  }
+
+  $('modes').addEventListener('click', (e) => {
+    const m = e.target.closest('button'); if (!m) return;
+    stopListening();
+    state.mode = m.dataset.mode; save(); applyMode();
+  });
+  $('start').addEventListener('click', () => { running ? stopListening() : startListening(); });
+  $('ring').addEventListener('click', () => add(1));
+  $('plus').addEventListener('click', () => add(1));
+  $('minus').addEventListener('click', minus);
+  $('reset').addEventListener('click', () => {
+    if (state.count === 0 || confirm('Reset this mala count to 0?')) { state.count = 0; save(); render(); }
+  });
+  $('nextMala').addEventListener('click', () => {
+    state.count = 0; save(); render();
+    $('doneBanner').classList.add('hidden');
+    setStatus('Press Start for the next mala.', '');
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); add(1); }
+    else if (e.code === 'Backspace') { e.preventDefault(); minus(); }
+  });
+  $('gap').value = state.gap; $('gapVal').textContent = state.gap;
+  $('sens').value = state.sens; $('sensVal').textContent = state.sens;
+  $('gap').addEventListener('input', (e) => { state.gap = +e.target.value; $('gapVal').textContent = state.gap; save(); });
+  $('sens').addEventListener('input', (e) => { state.sens = +e.target.value; $('sensVal').textContent = state.sens; save(); });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && running) keepAwake(true); });
+
+  if (state.count >= GOAL) state.count = 0;
+  applyMode();
+  render();
+})();
+</script>
+</body>
+</html>
