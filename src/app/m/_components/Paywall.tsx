@@ -151,7 +151,7 @@ export default function Paywall({ unit, signedIn, balance, prefill, next, onClos
           <li><Check /> Pay once, no renewal</li>
           <li><Check /> Credits never expire</li>
           <li><Check /> 2K, no watermark</li>
-          <li><Check /> Works on sjpt.io too</li>
+          <li><Check /> Ready in under a minute</li>
         </ul>
       </main>
 

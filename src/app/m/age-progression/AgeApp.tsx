@@ -38,6 +38,8 @@ type Shot = { id: string; age: number; after: string; before?: string; at: numbe
 const TOOL = "m-age-progression";
 const WELCOMED = "jpt-m-age-welcomed";
 const HISTORY = "jpt-m-age-history";
+/** Where in the app a Google sign-in started, so the round-trip lands back there. */
+const RETURN_TO = "jpt-m-age-return";
 const ACCEPT = "image/jpeg,image/jpg,image/png,image/webp";
 
 const QUICK_AGES = [
@@ -78,11 +80,19 @@ const I = {
   gift: "M3 8h18v4H3zM12 8v13M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7M7.5 8a2.5 2.5 0 0 1 0-5C10 3 12 8 12 8s2-5 4.5-5a2.5 2.5 0 0 1 0 5",
 };
 
+/**
+ * onError for a server-rendered <img>: one that failed before hydration never
+ * fires the handler, so the ref checks for that case as well.
+ */
+function failedRef(onError?: () => void) {
+  return (el: HTMLImageElement | null) => { if (el && el.complete && el.naturalWidth === 0) onError?.(); };
+}
+
 /** One half of a side-by-side before|after creative. */
 function Half({ src, side, onError }: { src: string; side: "before" | "after"; onError?: () => void }) {
   return (
     // eslint-disable-next-line @next/next/no-img-element
-    <img src={src} alt="" className="mapp-half" onError={onError} style={{ left: side === "after" ? "-100%" : 0 }} />
+    <img ref={failedRef(onError)} src={src} alt="" className="mapp-half" onError={onError} style={{ left: side === "after" ? "-100%" : 0 }} />
   );
 }
 
@@ -141,6 +151,7 @@ export default function AgeApp({ app, example }: { app: CreativeApp; example: Ex
   const [result, setResult] = useState<Shot | null>(null);
   const [history, setHistory] = useState<Shot[]>([]);
   const [err, setErr] = useState<string | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
   // The screen the pack screen returns to when it closes.
   const [payFrom, setPayFrom] = useState<Screen>("home");
   const trial = useTrialOffer();
@@ -151,9 +162,45 @@ export default function AgeApp({ app, example }: { app: CreativeApp; example: Ex
   useEffect(() => {
     try { if (!localStorage.getItem(WELCOMED)) setScreen("welcome"); } catch { /* blocked */ }
     setHistory(readHistory());
+
+    /*
+      Back from Google sign-in: the auth callback returns to this page (and
+      AuthReturn steps in if its cookie was lost), so the app picks up where it
+      left off — the same tab, the same age, the photo restored below — rather
+      than the user landing anywhere on the website.
+    */
+    let back: { screen?: Screen; age?: number } | null = null;
+    try {
+      back = JSON.parse(sessionStorage.getItem(RETURN_TO) || "null");
+      sessionStorage.removeItem(RETURN_TO);
+    } catch { /* blocked */ }
+    const params = new URLSearchParams(window.location.search);
+    const authError = params.get("error");
+    // Keep the app's address clean of a failed sign-in's message. (A `code`
+    // is left alone: AuthReturn, in the layout, still has to finish that one.)
+    if (authError) window.history.replaceState(null, "", window.location.pathname);
+    if (back) {
+      try { localStorage.setItem(WELCOMED, "1"); } catch { /* blocked */ }
+      if (typeof back.age === "number") setAge(back.age);
+      if (back.screen === "account" || back.screen === "photos") setScreen(back.screen);
+      else setScreen("home");
+      if (authError) setErr("Sign-in didn't finish. Please try again.");
+    }
+
     fetch("/api/auth/google/me").then((r) => r.json())
-      .then((d: { authenticated?: boolean; credits?: number; name?: string; email?: string; picture?: string }) => {
-        if (d.authenticated) setSession({ signedIn: true, credits: typeof d.credits === "number" ? d.credits : null, name: d.name, email: d.email, picture: d.picture });
+      .then((d: { authenticated?: boolean; credits?: number; name?: string; email?: string; picture?: string; trialGranted?: number }) => {
+        if (!d.authenticated) return;
+        setSession({ signedIn: true, credits: typeof d.credits === "number" ? d.credits : null, name: d.name, email: d.email, picture: d.picture });
+        // A new account's free trial, announced here rather than on the website's dashboard.
+        const m = document.cookie.match(/(?:^|; )jpt_trial=(\d+)/);
+        const granted = d.trialGranted || (m ? Number(m[1]) : 0);
+        if (m) document.cookie = "jpt_trial=; path=/; max-age=0";
+        if (granted > 0) {
+          const n = Math.floor(granted / CREDIT_COST);
+          setToast(`Welcome! Your first ${n > 1 ? `${n} age photos are` : "age photo is"} on us.`);
+        } else if (back) {
+          setToast(`Signed in${d.name ? ` as ${d.name}` : ""}`);
+        }
       }).catch(() => {});
     // A photo kept across the Google sign-in comes back ready to age.
     void loadPendingContext().then((ctx) => {
@@ -164,6 +211,12 @@ export default function AgeApp({ app, example }: { app: CreativeApp; example: Ex
       }
     });
   }, []);
+
+  useEffect(() => {
+    if (!toast) return;
+    const t = setTimeout(() => setToast(null), 5000);
+    return () => clearTimeout(t);
+  }, [toast]);
 
   // A screen that has lost its data (age with no photo, result with none) goes home.
   useEffect(() => {
@@ -209,7 +262,9 @@ export default function AgeApp({ app, example }: { app: CreativeApp; example: Ex
   }, []);
 
   const signIn = async () => {
+    try { sessionStorage.setItem(RETURN_TO, JSON.stringify({ screen: screen === "credits" ? payFrom : screen, age })); } catch { /* blocked */ }
     if (photo) await savePendingContext({ image: photo, tool: TOOL });
+    // Back to this app, never the website: see the return handling on mount.
     await beginGoogleSignIn("/m/age-progression");
   };
 
@@ -316,7 +371,7 @@ export default function AgeApp({ app, example }: { app: CreativeApp; example: Ex
     ? <Compare split={example.split} auto labels={["Before", "After"]} />
     : example.after[0] && !afterBroken
       // eslint-disable-next-line @next/next/no-img-element
-      ? <div className="mapp-compare"><img src={example.after[0]} alt="" className="mapp-img" onError={() => setAfterBroken(true)} /></div>
+      ? <div className="mapp-compare"><img ref={failedRef(() => setAfterBroken(true))} src={example.after[0]} alt="" className="mapp-img" onError={() => setAfterBroken(true)} /></div>
       : <ExamplePlaceholder />;
 
   /* ── Screens ── */
@@ -429,7 +484,7 @@ export default function AgeApp({ app, example }: { app: CreativeApp; example: Ex
         <Header title={`You at ${result.age}`} back={() => setScreen("age")} />
         <main className="mapp-scroll">
           <Compare before={result.before || photo || undefined} after={result.after} labels={["Now", `${result.age}`]} />
-          <p className="mapp-sub" style={{ textAlign: "center" }}>Drag to compare. Saved in My Photos and My Creations.</p>
+          <p className="mapp-sub" style={{ textAlign: "center" }}>Drag to compare. Saved in My Photos.</p>
           <div className="mapp-row">
             <button className="mapp-secondary" onClick={() => void save(result)}><Icon d={I.save} /> Save</button>
             <button className="mapp-secondary" onClick={() => void share(result)}><Icon d={I.share} /> Share</button>
@@ -495,14 +550,12 @@ export default function AgeApp({ app, example }: { app: CreativeApp; example: Ex
                 <div><strong>{session.name || "Signed in"}</strong><span>{session.credits ?? 0} credits · {Math.floor((session.credits ?? 0) / CREDIT_COST)} age photos</span></div>
               </div>
               <button className="mapp-primary" onClick={openPaywall}>Buy credits</button>
-              <a className="mapp-secondary" href="/app/library">All my creations</a>
-              <a className="mapp-secondary" href="/">Open Pixel Shine</a>
               <button className="mapp-link" onClick={() => void signOut()}>Sign out</button>
             </>
           ) : (
             <div className="mapp-card">
               <strong style={{ fontSize: 17 }}>Sign in to save your photos</strong>
-              <p className="mapp-sub">One account works here and on sjpt.io.{trial ? " New accounts get their first age photo free." : ""}</p>
+              <p className="mapp-sub">Your photos and credits stay with your Google account.{trial ? " New accounts get their first age photo free." : ""}</p>
               <button className="mapp-primary" onClick={() => void signIn()}>Continue with Google</button>
             </div>
           )}
@@ -517,6 +570,7 @@ export default function AgeApp({ app, example }: { app: CreativeApp; example: Ex
       <div className="mapp-phone">
         {pickers}
         <div className="mapp-screen">{body}</div>
+        {toast && <div className="mapp-toast" role="status" onClick={() => setToast(null)}>{toast}</div>}
         {showTabs && (
           <nav className="mapp-tabs" aria-label="App">
             <button className={tab === "home" ? "on" : ""} onClick={() => setScreen("home")}><Icon d={I.home} />Home</button>
