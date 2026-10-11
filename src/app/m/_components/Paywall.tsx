@@ -1,18 +1,26 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { PACKS, CREDIT_COST, inrPerCredit, type Pack } from "@/lib/plans";
+import { PACKS, CREDIT_COST, type Pack } from "@/lib/plans";
 import { buyPack } from "@/lib/checkout";
+import { buyOnPlay, type PlayStore } from "@/lib/play-billing.client";
 import { trackEvent } from "@/lib/analytics";
 
 /**
  * The credit-pack screen for the /m/* mobile apps.
  *
- * Same packs and the same Razorpay flow as the site (lib/plans, lib/checkout),
- * laid out as an app paywall: packs counted in the app's own unit ("10 age
+ * Laid out as an app paywall: packs counted in the app's own unit ("10 age
  * photos") rather than credits, the per-photo price and saving on each, one
  * pack pre-selected, and a pinned buy button. It is a screen inside the phone
- * frame, not the site's modal, so it looks right in the Android wrapper too.
+ * frame, not the site's modal.
+ *
+ * Two ways to pay, same packs (lib/plans):
+ *   · inside the Android app from Google Play — Google Play Billing, at the
+ *     prices set in Play Console (lib/play-billing.client); Play's own sheet
+ *     opens over the app and closes when the payment is done
+ *   · anywhere else — Razorpay, in rupees, as on the website (lib/checkout)
+ * Inside the Play app Razorpay is never offered: Play requires its own billing
+ * for digital goods, so if Play Billing can't be reached the screen says so.
  */
 
 export interface PaywallProps {
@@ -23,6 +31,12 @@ export interface PaywallProps {
   prefill?: { name?: string; email?: string };
   /** The photo waiting to be generated, if any, and what it will become. */
   next?: { photo: string; label: string } | null;
+  /**
+   * Google Play, when running inside the Play app: the app's key in PLAY_APPS,
+   * whether this is the Play app, and the store (undefined while connecting,
+   * null when Play Billing is unavailable).
+   */
+  play?: { app: string; inApp: boolean; store: PlayStore | null | undefined };
   onClose: () => void;
   onSignIn: () => void;
   /** Called with the new balance once a payment is verified. */
@@ -32,9 +46,20 @@ export interface PaywallProps {
   continueLabel?: string;
 }
 
+/** A pack with the price this buyer pays, in whichever currency they pay it. */
+interface Offer { pack: Pack; amount: number; currency: string; label: string }
+
 const photosIn = (p: Pack) => Math.floor(p.credits / CREDIT_COST);
-const perPhoto = (p: Pack) => inrPerCredit(p) * CREDIT_COST;
-const money = (n: number) => (Number.isInteger(n) ? `${n}` : n.toFixed(1));
+
+function format(value: number, currency: string): string {
+  try {
+    return new Intl.NumberFormat(currency === "INR" ? "en-IN" : undefined, {
+      style: "currency", currency, minimumFractionDigits: 0, maximumFractionDigits: Number.isInteger(value) ? 0 : 1,
+    }).format(value);
+  } catch {
+    return `${currency} ${value}`;
+  }
+}
 
 /** Display only: a phone set to Indian time doesn't need the dollar estimate. */
 function looksIndian(): boolean {
@@ -49,30 +74,50 @@ function Check({ size = 16 }: { size?: number }) {
   );
 }
 
-export default function Paywall({ unit, signedIn, balance, prefill, next, onClose, onSignIn, onPurchased, onContinue, continueLabel }: PaywallProps) {
-  const [selected, setSelected] = useState<Pack>(PACKS.find((p) => p.popular) || PACKS[0]);
+export default function Paywall({ unit, signedIn, balance, prefill, next, play, onClose, onSignIn, onPurchased, onContinue, continueLabel }: PaywallProps) {
+  const viaPlay = !!play?.store;
+  const [selectedId, setSelectedId] = useState<string>((PACKS.find((p) => p.popular) || PACKS[0]).id);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const [bought, setBought] = useState<{ pack: Pack; credits: number | null } | null>(null);
   const [showUsd] = useState(() => !looksIndian());
 
-  // The saving is measured against the smallest pack's per-credit price, so it is exact, not marketing.
-  const base = inrPerCredit(PACKS[0]);
-  const bestValue = useMemo(() => PACKS.reduce((a, b) => (inrPerCredit(b) < inrPerCredit(a) ? b : a)), []);
+  // Play's prices when buying through Play (only the packs set up there), else rupees.
+  const offers: Offer[] = useMemo(() => {
+    if (play?.store) {
+      return PACKS.flatMap((pack) => {
+        const pr = play.store!.prices[pack.id];
+        return pr ? [{ pack, amount: pr.amount, currency: pr.currency, label: pr.label }] : [];
+      });
+    }
+    return PACKS.map((pack) => ({ pack, amount: pack.inr, currency: "INR", label: format(pack.inr, "INR") }));
+  }, [play?.store]);
+
+  const selected = offers.find((o) => o.pack.id === selectedId) ?? offers[0];
+  // Savings are measured against the smallest pack's per-credit price, so they are exact, not marketing.
+  const baseRate = offers[0] ? offers[0].amount / offers[0].pack.credits : 0;
+  const bestValue = offers.reduce<Offer | null>((a, b) => (!a || b.amount / b.pack.credits < a.amount / a.pack.credits ? b : a), null);
   const label = (n: number) => `${n} ${n === 1 ? unit.one : unit.many}`;
 
-  useEffect(() => { trackEvent("m_paywall_view", { balance: balance ?? -1 }); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { trackEvent("m_paywall_view", { balance: balance ?? -1, store: play?.inApp ? "play" : "razorpay" }); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const buy = async () => {
     if (!signedIn) { onSignIn(); return; }
+    if (!selected) return;
     setBusy(true);
     setError(null);
-    const r = await buyPack(selected, prefill);
+    setNotice(null);
+    const r = viaPlay && play
+      ? await buyOnPlay(play.app, selected.pack)
+      : await buyPack(selected.pack, prefill);
     setBusy(false);
     if (r.ok) {
       const credits = typeof r.credits === "number" ? r.credits : null;
-      setBought({ pack: selected, credits });
+      setBought({ pack: selected.pack, credits });
       onPurchased(credits);
+    } else if ("pending" in r && r.pending) {
+      setNotice(r.text);
     } else if (!/cancel/i.test(r.text)) {
       setError(r.text);
     }
@@ -98,6 +143,9 @@ export default function Paywall({ unit, signedIn, balance, prefill, next, onClos
   }
 
   const short = balance !== null && balance < CREDIT_COST;
+  // Inside the Play app, only Play Billing may sell: wait for it, or say it's unavailable.
+  const playWaiting = !!play?.inApp && play.store === undefined;
+  const playMissing = !!play?.inApp && (play.store === null || (play.store !== undefined && offers.length === 0));
 
   return (
     <div className="mapp-pay">
@@ -125,48 +173,62 @@ export default function Paywall({ unit, signedIn, balance, prefill, next, onClos
           </div>
         )}
 
-        <div className="mapp-pay-packs" role="radiogroup" aria-label="Packs">
-          {PACKS.map((p) => {
-            const on = p.id === selected.id;
-            const save = Math.floor((1 - inrPerCredit(p) / base) * 100);
-            const badge = p.popular ? "Most popular" : p.id === bestValue.id ? "Best value" : null;
-            return (
-              <button key={p.id} role="radio" aria-checked={on} className={`mapp-pack${on ? " on" : ""}`} onClick={() => setSelected(p)}>
-                {badge && <span className={`mapp-pack-badge${p.popular ? " hot" : ""}`}>{badge}</span>}
-                <span className="mapp-pack-radio" aria-hidden>{on && <Check size={13} />}</span>
-                <span className="mapp-pack-main">
-                  <strong>{label(photosIn(p))}</strong>
-                  <span>{p.credits} credits · ₹{money(perPhoto(p))} per photo</span>
-                </span>
-                <span className="mapp-pack-price">
-                  <strong>₹{p.inr}</strong>
-                  {save > 0 ? <em>Save {save}%</em> : showUsd ? <span>≈ ${p.usd}</span> : null}
-                </span>
-              </button>
-            );
-          })}
-        </div>
+        {playWaiting ? (
+          <div className="mapp-pay-wait"><span className="mapp-spin" aria-hidden /> Loading prices from Google Play…</div>
+        ) : playMissing ? (
+          <div className="mapp-card">
+            <strong>Purchases aren&apos;t available right now</strong>
+            <p className="mapp-sub">Make sure Google Play is up to date and you&apos;re signed in to it, then try again.</p>
+          </div>
+        ) : (
+          <div className="mapp-pay-packs" role="radiogroup" aria-label="Packs">
+            {offers.map((o) => {
+              const on = o.pack.id === selected?.pack.id;
+              const save = baseRate ? Math.floor((1 - o.amount / o.pack.credits / baseRate) * 100) : 0;
+              const badge = o.pack.popular ? "Most popular" : o.pack.id === bestValue?.pack.id && offers.length > 1 ? "Best value" : null;
+              return (
+                <button key={o.pack.id} role="radio" aria-checked={on} className={`mapp-pack${on ? " on" : ""}`} onClick={() => setSelectedId(o.pack.id)}>
+                  {badge && <span className={`mapp-pack-badge${o.pack.popular ? " hot" : ""}`}>{badge}</span>}
+                  <span className="mapp-pack-radio" aria-hidden>{on && <Check size={13} />}</span>
+                  <span className="mapp-pack-main">
+                    <strong>{label(photosIn(o.pack))}</strong>
+                    <span>{o.pack.credits} credits · {format(o.amount / o.pack.credits * CREDIT_COST, o.currency)} per photo</span>
+                  </span>
+                  <span className="mapp-pack-price">
+                    <strong>{o.label}</strong>
+                    {save > 0 ? <em>Save {save}%</em> : !viaPlay && showUsd ? <span>≈ ${o.pack.usd}</span> : null}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        )}
 
         <ul className="mapp-pay-perks">
           <li><Check /> Pay once, no renewal</li>
           <li><Check /> Credits never expire</li>
           <li><Check /> 2K, no watermark</li>
-          <li><Check /> Ready in under a minute</li>
+          <li><Check /> Ready in a minute</li>
         </ul>
       </main>
 
       <footer className="mapp-cta">
         {error && <div className="mapp-error" role="alert">{error}</div>}
-        <button className="mapp-primary" onClick={() => void buy()} disabled={busy} aria-busy={busy}>
+        {notice && <div className="mapp-note" role="status">{notice}</div>}
+        <button className="mapp-primary" onClick={() => void buy()} disabled={busy || playWaiting || playMissing || !selected} aria-busy={busy}>
           {busy
-            ? <><span className="mapp-spin" aria-hidden /> Opening secure checkout…</>
-            : signedIn
-              ? <>Get {label(photosIn(selected))} · ₹{selected.inr}</>
-              : "Sign in with Google to buy"}
+            ? <><span className="mapp-spin" aria-hidden /> {viaPlay ? "Opening Google Play…" : "Opening secure checkout…"}</>
+            : !signedIn
+              ? "Sign in with Google to buy"
+              : selected && !playMissing
+                ? <>Get {label(photosIn(selected.pack))} · {selected.label}</>
+                : "Get credits"}
         </button>
         <p className="mapp-pay-fine">
           <svg width={12} height={12} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" aria-hidden><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>
-          Secure payment by Razorpay · charged once in INR{showUsd ? ` (≈ $${selected.usd})` : ""}
+          {viaPlay || play?.inApp
+            ? "Secure payment by Google Play · one-time purchase"
+            : <>Secure payment by Razorpay · charged once in INR{showUsd && selected ? ` (≈ $${selected.pack.usd})` : ""}</>}
         </p>
       </footer>
     </div>

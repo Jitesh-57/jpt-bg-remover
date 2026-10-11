@@ -172,6 +172,7 @@
 .mapp-pay-fine { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 4px 0 0;
   font-size: 11.5px; color: rgba(255,255,255,.45); text-align: center; }
 .mapp-primary:disabled { opacity: .75; cursor: wait; transform: none; }
+.mapp-primary:disabled:not([aria-busy="true"]) { opacity: .4; cursor: not-allowed; box-shadow: none; }
 .mapp-spin { width: 18px; height: 18px; border-radius: 50%; border: 2.5px solid rgba(255,255,255,.35); border-top-color: #fff;
   animation: mapp-turn .8s linear infinite; }
 @keyframes mapp-turn { to { transform: rotate(360deg); } }
@@ -194,3 +195,7 @@
   animation: mapp-drop .3s cubic-bezier(.2,.8,.2,1); }
 @keyframes mapp-drop { from { transform: translateY(-12px); opacity: 0; } to { transform: none; opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .mapp-toast { animation: none; } }
+
+/* Paywall: a pending Play payment, and prices still loading from Play */
+.mapp-note { font-size: 14px; color: #FFD2B0; background: rgba(255,122,47,.10); border: 1px solid rgba(255,122,47,.3); border-radius: 12px; padding: 10px 12px; }
+.mapp-pay-wait { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 28px 0; font-size: 14px; color: rgba(255,255,255,.65); }

@@ -14,6 +14,7 @@ import { userMessage } from "@/lib/user-message";
 import { trackEvent } from "@/lib/analytics";
 import GeneratingFx from "@/app/creative/[slug]/GeneratingFx";
 import Paywall from "../_components/Paywall";
+import { usePlayStore, recoverPlayPurchases } from "@/lib/play-billing.client";
 
 /**
  * AI Age Progression — the mobile app, web version.
@@ -36,6 +37,8 @@ type Session = { signedIn: boolean; credits: number | null; name?: string; email
 type Shot = { id: string; age: number; after: string; before?: string; at: number };
 
 const TOOL = "m-age-progression";
+/** This app's key in PLAY_APPS (lib/play-billing). */
+const PLAY_APP = "age-progression";
 const WELCOMED = "jpt-m-age-welcomed";
 const HISTORY = "jpt-m-age-history";
 /** Where in the app a Google sign-in started, so the round-trip lands back there. */
@@ -155,6 +158,7 @@ export default function AgeApp({ app, example }: { app: CreativeApp; example: Ex
   // The screen the pack screen returns to when it closes.
   const [payFrom, setPayFrom] = useState<Screen>("home");
   const trial = useTrialOffer();
+  const play = usePlayStore();
   const cameraRef = useRef<HTMLInputElement>(null);
   const galleryRef = useRef<HTMLInputElement>(null);
 
@@ -211,6 +215,16 @@ export default function AgeApp({ app, example }: { app: CreativeApp; example: Ex
       }
     });
   }, []);
+
+  // In the Play app: credit any purchase that was paid but not confirmed (app closed mid-way, a pending payment cleared).
+  useEffect(() => {
+    if (!play.store || !session.signedIn) return;
+    void recoverPlayPurchases(play.store, PLAY_APP).then((credits) => {
+      if (credits === null) return;
+      setSession((s) => (s.credits !== null && credits > s.credits ? { ...s, credits } : s));
+      publishCredits(credits);
+    });
+  }, [play.store, session.signedIn]);
 
   useEffect(() => {
     if (!toast) return;
@@ -504,6 +518,7 @@ export default function AgeApp({ app, example }: { app: CreativeApp; example: Ex
         signedIn={session.signedIn}
         balance={session.credits}
         prefill={{ name: session.name, email: session.email }}
+        play={{ app: PLAY_APP, inApp: play.inApp, store: play.store }}
         next={backToAge && photo ? { photo, label: `Next up: you at ${age}` } : null}
         onClose={() => setScreen(payFrom)}
         onSignIn={() => void signIn()}
