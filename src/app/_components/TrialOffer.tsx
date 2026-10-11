@@ -26,7 +26,8 @@ export function GiftIcon({ size = 16 }: { size?: number }) {
 }
 
 /** Pages where the bar would be noise: the signed-in workspace, admin, auth round-trips. */
-const NO_BAR = /^\/(app|admin|auth|invoices)(\/|$)/;
+// /m/* are the standalone mobile apps, which show the offer in their own UI.
+const NO_BAR = /^\/(app|admin|auth|invoices|m)(\/|$)/;
 const DISMISS_KEY = "jpt-trial-bar-dismissed";
 
 /**

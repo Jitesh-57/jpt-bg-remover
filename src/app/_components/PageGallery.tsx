@@ -39,7 +39,8 @@ export default function PageGallery({
   titles: Record<string, string>;
 }) {
   const pathname = usePathname();
-  const key = pathname ? pageKeyFromPath(pathname) : "";
+  // The standalone mobile apps (/m/*) carry no site gallery.
+  const key = pathname && !pathname.startsWith("/m/") ? pageKeyFromPath(pathname) : "";
   const images = (key && galleries[key]) || [];
   if (!images.length) return null;
 
