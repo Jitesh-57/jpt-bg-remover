@@ -124,3 +124,64 @@
 @media (prefers-reduced-motion: reduce) {
   .mapp-dots span { transition: none; }
 }
+
+/* Credit packs (the paywall) */
+.mapp-pay { flex: 1; min-height: 0; display: flex; flex-direction: column; animation: mapp-rise .28s cubic-bezier(.2,.8,.2,1);
+  background: radial-gradient(90% 45% at 50% 0%, rgba(255,122,47,.16), transparent 70%); }
+@keyframes mapp-rise { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+.mapp-pay-top { display: flex; align-items: center; justify-content: space-between; padding: calc(12px + env(safe-area-inset-top, 0px)) 16px 4px; }
+.mapp-pay-bal { font-size: 12.5px; font-weight: 600; color: rgba(255,255,255,.7); padding: 6px 11px; border-radius: 999px;
+  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); font-variant-numeric: tabular-nums; }
+.mapp-pay-body { gap: 12px; }
+.mapp-pay-body .mapp-h1 { margin: 0; }
+.mapp-pay-eyebrow { align-self: flex-start; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  color: #FFB067; background: rgba(255,122,47,.12); border: 1px solid rgba(255,122,47,.3); border-radius: 999px; padding: 5px 10px; }
+.mapp-pay-next { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 16px;
+  background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); }
+.mapp-pay-next img { width: 48px; height: 48px; border-radius: 12px; object-fit: cover; flex-shrink: 0; }
+.mapp-pay-next div { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.mapp-pay-next strong { font-size: 14px; font-weight: 600; }
+.mapp-pay-next span { font-size: 13px; color: #FFB067; }
+
+.mapp-pay-packs { display: flex; flex-direction: column; gap: 12px; margin-top: 6px; }
+.mapp-pack { position: relative; font: inherit; color: #fff; text-align: left; cursor: pointer; width: 100%;
+  display: flex; align-items: center; gap: 12px; padding: 16px 14px; border-radius: 18px;
+  background: rgba(255,255,255,.045); border: 1.5px solid rgba(255,255,255,.1);
+  transition: border-color .15s ease, background .15s ease, transform .15s ease; }
+.mapp-pack:active { transform: scale(.985); }
+.mapp-pack.on { background: linear-gradient(135deg, rgba(255,138,61,.16), rgba(225,29,116,.10)); border-color: #FF8A3D;
+  box-shadow: 0 14px 34px -18px rgba(255,106,26,.75); }
+.mapp-pack-badge { position: absolute; top: -10px; left: 14px; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  padding: 3px 9px; border-radius: 999px; color: #FFD2B0; background: #1c1720; border: 1px solid rgba(255,122,47,.45); }
+.mapp-pack-badge.hot { color: #fff; border-color: transparent; background: var(--grad-strong, linear-gradient(135deg, #FF8A3D, #E11D74)); }
+.mapp-pack-radio { width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center;
+  border: 2px solid rgba(255,255,255,.28); color: #fff; }
+.mapp-pack.on .mapp-pack-radio { border-color: transparent; background: var(--grad-strong, linear-gradient(135deg, #FF8A3D, #E11D74)); }
+.mapp-pack-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.mapp-pack-main strong { font-size: 16.5px; font-weight: 700; letter-spacing: -.01em; }
+.mapp-pack-main span { font-size: 12.5px; color: rgba(255,255,255,.55); }
+.mapp-pack-price { flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.mapp-pack-price strong { font-size: 19px; font-weight: 700; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.mapp-pack-price em { font-style: normal; font-size: 11px; font-weight: 700; color: #4ade80; background: rgba(74,222,128,.12);
+  border-radius: 6px; padding: 2px 6px; }
+.mapp-pack-price span { font-size: 11.5px; color: rgba(255,255,255,.45); }
+
+.mapp-pay-perks { list-style: none; margin: 4px 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.mapp-pay-perks li { display: flex; align-items: center; gap: 7px; font-size: 13px; color: rgba(255,255,255,.72); min-width: 0; }
+.mapp-pay-perks svg { color: #FF8A3D; flex-shrink: 0; }
+.mapp-pay-fine { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 4px 0 0;
+  font-size: 11.5px; color: rgba(255,255,255,.45); text-align: center; }
+.mapp-primary:disabled { opacity: .75; cursor: wait; transform: none; }
+.mapp-spin { width: 18px; height: 18px; border-radius: 50%; border: 2.5px solid rgba(255,255,255,.35); border-top-color: #fff;
+  animation: mapp-turn .8s linear infinite; }
+@keyframes mapp-turn { to { transform: rotate(360deg); } }
+
+.mapp-pay-done { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; text-align: center; padding: 24px 28px; }
+.mapp-pay-tick { width: 88px; height: 88px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #fff;
+  background: var(--grad-strong, linear-gradient(135deg, #FF8A3D, #E11D74)); box-shadow: 0 0 0 10px rgba(255,122,47,.12), 0 20px 50px -16px rgba(255,106,26,.8);
+  animation: mapp-pop .45s cubic-bezier(.2,1.4,.4,1); margin-bottom: 8px; }
+@keyframes mapp-pop { from { transform: scale(.4); opacity: 0; } to { transform: none; opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .mapp-pay, .mapp-pay-tick, .mapp-spin { animation: none; }
+}

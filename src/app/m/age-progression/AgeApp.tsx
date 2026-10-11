@@ -6,7 +6,6 @@ import { buildPrompt, MODELS } from "@/lib/app-presets";
 import { optionsFor, defaultValues, optionPhrases, optionSummary } from "@/lib/app-options";
 import { CREDIT_COST } from "@/lib/plans";
 import { publishCredits } from "@/lib/credits";
-import { openPricing } from "@/lib/pricing-modal";
 import { beginGoogleSignIn } from "@/lib/auth-return";
 import { useTrialOffer } from "@/lib/trial-offer";
 import { prepareDataUrl, parseJsonResponse } from "@/lib/upload-prep";
@@ -14,6 +13,7 @@ import { savePendingContext, loadPendingContext, clearPendingContext } from "@/l
 import { userMessage } from "@/lib/user-message";
 import { trackEvent } from "@/lib/analytics";
 import GeneratingFx from "@/app/creative/[slug]/GeneratingFx";
+import Paywall from "../_components/Paywall";
 
 /**
  * AI Age Progression — the mobile app, web version.
@@ -22,6 +22,7 @@ import GeneratingFx from "@/app/creative/[slug]/GeneratingFx";
  * app (no page loads between steps) and wraps cleanly for Android later.
  *
  *   welcome → home → age → generating → result      (tabs: Home · My Photos · Account)
+ *   credits — the pack screen, over whichever screen raised it
  *
  * Generation is the site's own: the age-progression app's prompt and its
  * 1–100 age option, sent to /api/creative-edit, which charges credits and
@@ -30,8 +31,8 @@ import GeneratingFx from "@/app/creative/[slug]/GeneratingFx";
  */
 
 type Example = { split: string | null; after: string[] };
-type Screen = "welcome" | "home" | "age" | "generating" | "result" | "photos" | "account";
-type Session = { signedIn: boolean; credits: number | null; name?: string; picture?: string };
+type Screen = "welcome" | "home" | "age" | "generating" | "result" | "photos" | "account" | "credits";
+type Session = { signedIn: boolean; credits: number | null; name?: string; email?: string; picture?: string };
 type Shot = { id: string; age: number; after: string; before?: string; at: number };
 
 const TOOL = "m-age-progression";
@@ -140,6 +141,8 @@ export default function AgeApp({ app, example }: { app: CreativeApp; example: Ex
   const [result, setResult] = useState<Shot | null>(null);
   const [history, setHistory] = useState<Shot[]>([]);
   const [err, setErr] = useState<string | null>(null);
+  // The screen the pack screen returns to when it closes.
+  const [payFrom, setPayFrom] = useState<Screen>("home");
   const trial = useTrialOffer();
   const cameraRef = useRef<HTMLInputElement>(null);
   const galleryRef = useRef<HTMLInputElement>(null);
@@ -149,8 +152,8 @@ export default function AgeApp({ app, example }: { app: CreativeApp; example: Ex
     try { if (!localStorage.getItem(WELCOMED)) setScreen("welcome"); } catch { /* blocked */ }
     setHistory(readHistory());
     fetch("/api/auth/google/me").then((r) => r.json())
-      .then((d: { authenticated?: boolean; credits?: number; name?: string; picture?: string }) => {
-        if (d.authenticated) setSession({ signedIn: true, credits: typeof d.credits === "number" ? d.credits : null, name: d.name, picture: d.picture });
+      .then((d: { authenticated?: boolean; credits?: number; name?: string; email?: string; picture?: string }) => {
+        if (d.authenticated) setSession({ signedIn: true, credits: typeof d.credits === "number" ? d.credits : null, name: d.name, email: d.email, picture: d.picture });
       }).catch(() => {});
     // A photo kept across the Google sign-in comes back ready to age.
     void loadPendingContext().then((ctx) => {
@@ -166,6 +169,25 @@ export default function AgeApp({ app, example }: { app: CreativeApp; example: Ex
   useEffect(() => {
     if ((screen === "age" && !photo) || (screen === "result" && !result)) setScreen("home");
   }, [screen, photo, result]);
+
+  const openPaywall = () => {
+    // Not mid-generation: its result would land on top of the pack screen.
+    if (screen === "generating" || screen === "credits") return;
+    setPayFrom(screen);
+    setScreen("credits");
+  };
+
+  const refreshCredits = (credits: number | null) => {
+    if (credits !== null) {
+      setSession((s) => ({ ...s, credits }));
+      publishCredits(credits);
+      return;
+    }
+    // The payment verified without a balance in the reply: read it back.
+    fetch("/api/auth/google/me").then((r) => r.json())
+      .then((d: { credits?: number }) => { if (typeof d.credits === "number") refreshCredits(d.credits); })
+      .catch(() => {});
+  };
 
   const finishWelcome = () => {
     try { localStorage.setItem(WELCOMED, "1"); } catch { /* blocked */ }
@@ -194,7 +216,7 @@ export default function AgeApp({ app, example }: { app: CreativeApp; example: Ex
   const generate = async () => {
     if (!photo) return;
     if (!session.signedIn) { await signIn(); return; }
-    if (session.credits !== null && session.credits < CREDIT_COST) { openPricing(app.h1); return; }
+    if (session.credits !== null && session.credits < CREDIT_COST) { openPaywall(); return; }
 
     setErr(null);
     setScreen("generating");
@@ -232,7 +254,7 @@ export default function AgeApp({ app, example }: { app: CreativeApp; example: Ex
         publishCredits(data.credits);
       }
       if (res.status === 401) { await signIn(); return; }
-      if (res.status === 402 || res.status === 403 || data.upgradeRequired) { setScreen("age"); openPricing(app.h1); return; }
+      if (res.status === 402 || res.status === 403 || data.upgradeRequired) { setPayFrom("age"); setScreen("credits"); return; }
       if (!res.ok || !data.dataUrl) {
         setErr(userMessage(data.error, "That didn't work. Please try again."));
         setScreen("age");
@@ -304,7 +326,7 @@ export default function AgeApp({ app, example }: { app: CreativeApp; example: Ex
       {back ? <button className="mapp-iconbtn" onClick={back} aria-label="Back"><Icon d={I.back} /></button> : <span className="mapp-logo"><Icon d={I.spark} size={18} /></span>}
       <span className="mapp-title">{title}</span>
       {session.signedIn && session.credits !== null
-        ? <button className="mapp-credits" onClick={() => openPricing(app.h1)}>{session.credits} credits</button>
+        ? <button className="mapp-credits" onClick={openPaywall}>{session.credits} credits</button>
         : <span style={{ width: 40 }} />}
     </header>
   );
@@ -419,6 +441,22 @@ export default function AgeApp({ app, example }: { app: CreativeApp; example: Ex
         </footer>
       </>
     );
+  } else if (screen === "credits") {
+    const backToAge = payFrom === "age" && !!photo;
+    body = (
+      <Paywall
+        unit={{ one: "age photo", many: "age photos" }}
+        signedIn={session.signedIn}
+        balance={session.credits}
+        prefill={{ name: session.name, email: session.email }}
+        next={backToAge && photo ? { photo, label: `Next up: you at ${age}` } : null}
+        onClose={() => setScreen(payFrom)}
+        onSignIn={() => void signIn()}
+        onPurchased={refreshCredits}
+        onContinue={backToAge ? () => { setScreen("age"); void generate(); } : () => setScreen("home")}
+        continueLabel={backToAge ? `Show me at ${age}` : "Start aging"}
+      />
+    );
   } else if (screen === "photos") {
     body = (
       <>
@@ -456,7 +494,7 @@ export default function AgeApp({ app, example }: { app: CreativeApp; example: Ex
                 {session.picture ? <img src={session.picture} alt="" /> : <span className="mapp-avatar"><Icon d={I.user} /></span>}
                 <div><strong>{session.name || "Signed in"}</strong><span>{session.credits ?? 0} credits · {Math.floor((session.credits ?? 0) / CREDIT_COST)} age photos</span></div>
               </div>
-              <button className="mapp-primary" onClick={() => openPricing(app.h1)}>Buy credits</button>
+              <button className="mapp-primary" onClick={openPaywall}>Buy credits</button>
               <a className="mapp-secondary" href="/app/library">All my creations</a>
               <a className="mapp-secondary" href="/">Open Pixel Shine</a>
               <button className="mapp-link" onClick={() => void signOut()}>Sign out</button>
