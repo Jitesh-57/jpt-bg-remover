@@ -20,7 +20,7 @@ interface Payload {
   worldwide?: Rule | null;
   stats?: Record<string, { users: number; credits: number }>;
   recent?: { country: string; email: string | null; credits: number; granted_at: string }[];
-  log?: { at: string; why: string; country: string; email: string; credits?: number; detail?: string }[];
+  log?: { at: string; why: string; country: string; email: string; credits?: number; detail?: string; rule?: "own" | "worldwide"; since?: string }[];
   warnings?: string[];
   needsSetup?: boolean;
   error?: string;
@@ -155,10 +155,22 @@ export default function TrialsAdmin() {
                     ? `● Live worldwide${liveCount ? ` · ${liveCount} listed` : ""}`
                     : liveCount ? `● Live in ${liveCount} ${liveCount === 1 ? "country" : "countries"}` : "○ All trials stopped"}
                 </div>
+                {/* Named, so a country switched on by mistake can't hide behind a count. */}
+                {liveCount > 0 && (
+                  <div style={{ fontSize: 12.5, color: "var(--text-muted)", marginTop: 4, lineHeight: 1.5 }}>
+                    {rules.filter((r) => r.live).map((r) => names(r.country)).sort().join(", ")}
+                  </div>
+                )}
               </div>
               <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                 {stoppedCount > 0 && (
-                  <button disabled={busy} onClick={() => act(() => call("POST", { action: "start-all" }), `All ${rules.length} listed countries are live.`)}
+                  <button disabled={busy} onClick={() => {
+                    // Every stopped country comes back on, including ones stopped on purpose — so name them first.
+                    const stopped = rules.filter((r) => !r.live).map((r) => names(r.country)).sort();
+                    if (confirm(`This switches free trials on in ${stopped.length} ${stopped.length === 1 ? "country" : "countries"}:\n\n${stopped.join(", ")}\n\nContinue?`)) {
+                      void act(() => call("POST", { action: "start-all" }), `All ${rules.length} listed countries are live.`);
+                    }
+                  }}
                     style={{ ...chip, background: "var(--success)", color: "#fff", border: "none", padding: "11px 18px", fontSize: 14 }}>
                     ▶ Start all listed ({stoppedCount})
                   </button>
@@ -406,7 +418,17 @@ export default function TrialsAdmin() {
                 const [label, color] = WHY[l.why] ?? [l.why, "var(--text-muted)"];
                 return (
                   <div key={i} style={{ display: "flex", justifyContent: "space-between", gap: 10, flexWrap: "wrap", fontSize: 13, padding: "7px 0", borderTop: i ? "1px solid var(--border)" : "none" }}>
-                    <span><strong style={{ color }}>{label}</strong> · {l.email} · {l.country === "?" ? "country unknown" : names(l.country)}{l.detail ? <span style={{ color: "var(--text-faint)" }}> · {l.detail}</span> : null}</span>
+                    <span>
+                      <strong style={{ color }}>{label}</strong> · {l.email} · {l.country === "?" ? "country unknown" : names(l.country)}
+                      {l.detail ? <span style={{ color: "var(--text-faint)" }}> · {l.detail}</span> : null}
+                      {/* Which switch gave it, so an unexpected trial can be traced to its rule. */}
+                      {l.why === "granted" && l.rule && (
+                        <span style={{ color: "var(--text-faint)" }}>
+                          {" · "}by {l.rule === "worldwide" ? "the Worldwide trial" : `${names(l.country)}'s own trial`}
+                          {l.since ? `, last changed ${new Date(l.since).toLocaleString()}` : ""}
+                        </span>
+                      )}
+                    </span>
                     <span style={{ color: "var(--text-faint)" }}>{new Date(l.at).toLocaleString()}</span>
                   </div>
                 );
@@ -439,6 +461,7 @@ export default function TrialsAdmin() {
 const WHY: Record<string, [string, string]> = {
   granted: ["✓ Trial given", "var(--success)"],
   "no-live-rule": ["No live trial for this country", "var(--text-muted)"],
+  "email-provider": ["Email not eligible for a trial", "var(--text-muted)"],
   "already-claimed": ["Already had a trial", "var(--text-muted)"],
   "no-country": ["Country not detected", "var(--danger)"],
   "email-unconfirmed": ["Email not confirmed yet", "var(--text-muted)"],

@@ -8,6 +8,7 @@ import { CREDIT_COST } from "@/lib/plans";
 import { publishCredits } from "@/lib/credits";
 import { beginGoogleSignIn } from "@/lib/auth-return";
 import { useTrialOffer } from "@/lib/trial-offer";
+import { TRIAL_PROVIDERS_LABEL } from "@/lib/trial-email";
 import { prepareDataUrl, parseJsonResponse } from "@/lib/upload-prep";
 import { savePendingContext, loadPendingContext, clearPendingContext } from "@/lib/pending-image";
 import { userMessage } from "@/lib/user-message";
@@ -570,7 +571,7 @@ export default function AgeApp({ app, example }: { app: CreativeApp; example: Ex
           ) : (
             <div className="mapp-card">
               <strong style={{ fontSize: 17 }}>Sign in to save your photos</strong>
-              <p className="mapp-sub">Your photos and credits stay with your Google account.{trial ? " New accounts get their first age photo free." : ""}</p>
+              <p className="mapp-sub">Your photos and credits stay with your Google account.{trial ? ` New ${TRIAL_PROVIDERS_LABEL} accounts get their first age photo free.` : ""}</p>
               <button className="mapp-primary" onClick={() => void signIn()}>Continue with Google</button>
             </div>
           )}

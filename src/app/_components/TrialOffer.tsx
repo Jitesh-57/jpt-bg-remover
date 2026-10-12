@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useTrialOffer, countryName, openTrialSignIn, type TrialOffer } from "@/lib/trial-offer";
+import { TRIAL_PROVIDERS_LABEL } from "@/lib/trial-email";
 
 /**
  * The signup free trial, told to the visitors who would actually get it.
@@ -102,7 +103,7 @@ export function TrialModalHead({ offer }: { offer: TrialOffer }) {
         Create your account and we add <strong style={{ color: "var(--text)" }}>{offer.credits} credits</strong>, enough for {offer.generations} AI generation{offer.generations === 1 ? "" : "s"}. No card needed.
       </p>
       <div style={{ fontSize: 12, color: "var(--text-faint)", marginTop: 8 }}>
-        One per person · new accounts in {countryName(offer.country)}
+        One per person · new accounts in {countryName(offer.country)} · {TRIAL_PROVIDERS_LABEL} email
       </div>
     </div>
   );
