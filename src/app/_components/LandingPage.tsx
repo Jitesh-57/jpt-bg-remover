@@ -13,6 +13,8 @@ interface LandingPageProps {
   toolHref: string
   pageId: string
   isHome?: boolean
+  /** The "Guides" block (GuidesBlock), rendered by the server page: blog data stays out of this client bundle. */
+  guides?: React.ReactNode
   /**
    * The other use-case pages under this same tool, e.g. /remove-bg/signature
    * next to /remove-bg/product-photos. Passed as plain {slug, h1} rather than
@@ -364,7 +366,7 @@ const PAGE_VISUALS: Record<string, { before: string; after: string; label: strin
   },
 }
 
-export default function LandingPage({ config, toolHref, pageId, isHome, relatedVariants, currentSlug }: LandingPageProps) {
+export default function LandingPage({ config, toolHref, pageId, isHome, relatedVariants, currentSlug, guides }: LandingPageProps) {
   // ── Structured data (rich results) ──────────────────────────────────────────
   // FAQ schema → the "People also ask"-style expandable answers in Google.
   const faqLd = config.faq?.length
@@ -989,6 +991,8 @@ export default function LandingPage({ config, toolHref, pageId, isHome, relatedV
           </div>
         </section>
       )}
+
+      {guides}
 
       {FREE_TOOL_LINKS.some(l => l.id === pageId) && (
         <section style={{ padding: '72px 24px', background: 'linear-gradient(160deg, var(--surface-2) 0%, var(--accent-soft) 100%)' }}>

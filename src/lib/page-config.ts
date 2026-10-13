@@ -33,9 +33,10 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
   // door — and made /upscale a duplicate that had to be redirected away.
   home: {
     page_id: 'home',
-    title: 'Pixel Shine — Free AI Photo Editor, Upscaler & 40+ AI Photo Apps',
+    // Brand and the names people actually search for ("sjpt", "jpt ai") first, then the benefit.
+    title: 'Pixel Shine (SJPT): Free AI Photo Editor & 4K Upscaler',
     meta_description:
-      'Free AI photo editor online. Upscale to 4K, remove backgrounds, generate AI headshots and run 40+ one-tap AI photo apps. Browser tools are free and unlimited — no sign-up, no watermark.',
+      'Free AI photo editor: upscale photos to 4K, remove backgrounds, make AI headshots and try 40+ one-tap photo styles. Free tools need no signup and add no watermark.',
     og_title: 'Pixel Shine — Free AI Photo Editor & 40+ AI Photo Apps',
     og_description:
       'Upscale, compress, crop, convert and restyle photos free online. Plus 40+ AI photo apps — saree portraits, 3D figurines, Ghibli, headshots and more.',

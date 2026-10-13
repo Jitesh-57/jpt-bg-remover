@@ -3,7 +3,7 @@ import Gallery from "./Gallery";
 import PromptBlock from "./PromptBlock";
 import PromptCard from "./PromptCard";
 import { PromptCredit } from "./Attribution";
-import { facetList, related, toCards } from "@/lib/prompts/data";
+import { facetHref, facetList, related, toCards } from "@/lib/prompts/data";
 import type { MediaResolver } from "@/lib/prompts/media";
 import type { PromptRecord } from "@/lib/prompts/types";
 
@@ -156,15 +156,12 @@ export default function DatasetDetail({
 
       {tags.length > 0 && (
         <div style={{ display: "flex", gap: 7, flexWrap: "wrap", marginTop: 16 }}>
-          {tags.map((t) => (
-            <Link
-              key={t}
-              href={`/prompts/${p.media}/${t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")}`}
-              style={{ fontSize: 12.5, fontWeight: 600, color: "var(--text-muted)", background: "var(--surface-2)", border: "1px solid var(--border)", padding: "5px 12px", borderRadius: 999, textDecoration: "none" }}
-            >
-              {t}
-            </Link>
-          ))}
+          {tags.map((t) => {
+            const style = { fontSize: 12.5, fontWeight: 600, color: "var(--text-muted)", background: "var(--surface-2)", border: "1px solid var(--border)", padding: "5px 12px", borderRadius: 999, textDecoration: "none" } as const;
+            const href = facetHref(p.media, t);
+            // Only tags with a category page are links, so no tag can point at a 404.
+            return href ? <Link key={t} href={href} style={style}>{t}</Link> : <span key={t} style={style}>{t}</span>;
+          })}
         </div>
       )}
 

@@ -1,3 +1,4 @@
+import { brandedTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -19,7 +20,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const ct = buildCompressContent(c);
   const url = `${BASE}/compress/${slug}`;
   return {
-    title: { absolute: ct.title },
+    title: { absolute: brandedTitle(ct.title) },
     description: ct.metaDescription,
     keywords: ct.keywords,
     alternates: { canonical: url },

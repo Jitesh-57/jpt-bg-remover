@@ -1,3 +1,5 @@
+import { brandedTitle } from "@/lib/seo/title";
+import GuidesBlock from "@/app/_components/GuidesBlock";
 import { Metadata } from 'next'
 import { getPageConfig } from '@/lib/page-config'
 import LandingPage from '../_components/LandingPage'
@@ -6,7 +8,7 @@ import { variantsFor, PARENT_META } from '@/lib/landing-variants'
 export async function generateMetadata(): Promise<Metadata> {
   const config = await getPageConfig('upscale')
   return {
-    title: { absolute: config.title },
+    title: { absolute: brandedTitle(config.title) },
     description: config.meta_description,
     keywords: config.keywords,
     openGraph: {
@@ -45,7 +47,7 @@ export default async function UpscalePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <LandingPage config={config} toolHref="/editor?tool=upscale" pageId="upscale" relatedVariants={relatedVariants} />
+      <LandingPage guides={<GuidesBlock path="/upscale" />} config={config} toolHref="/editor?tool=upscale" pageId="upscale" relatedVariants={relatedVariants} />
     </>
   )
 }

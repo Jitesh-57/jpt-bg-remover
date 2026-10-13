@@ -1,3 +1,4 @@
+import { brandedTitle } from "@/lib/seo/title";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
@@ -10,7 +11,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Your invoices — Pixel Shine",
+  title: { absolute: brandedTitle("Your invoices — Pixel Shine") },
   description: "Every credit pack you have bought, with a printable invoice for each.",
   robots: { index: false, follow: false },
 };

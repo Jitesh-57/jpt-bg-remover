@@ -540,7 +540,8 @@ export default function BatchEditorPage() {
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <a href="/" style={{ display: "inline-flex", alignItems: "center", textDecoration: "none" }}><BrandLogo height={28} variant="wordmark" /></a>
           <span style={{ color: "var(--text-muted)" }}>|</span>
-          <span style={{ fontWeight: 800, fontSize: 15, color: "var(--text)" }}>⚡ Batch Editor</span>
+          {/* The page's one H1: the tool's name, styled as before. */}
+          <h1 style={{ fontWeight: 800, fontSize: 15, color: "var(--text)", margin: 0 }}>⚡ Batch Image Editor</h1>
           <span style={{ background: "var(--accent-soft)", color: "var(--accent)", fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 20 }}>Up to 100 images</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>

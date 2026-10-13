@@ -1,7 +1,8 @@
+import { brandedTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: { absolute: "Terms of Service | Pixel Shine" },
+  title: { absolute: brandedTitle("Terms of Service | Pixel Shine") },
   description: "Terms of Service for Pixel Shine — rules and conditions for using our AI image editing tools.",
   alternates: { canonical: "https://www.sjpt.io/terms" },
   robots: { index: true, follow: true },

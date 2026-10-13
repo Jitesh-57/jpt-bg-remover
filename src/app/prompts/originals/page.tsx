@@ -1,3 +1,4 @@
+import { brandedTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -22,7 +23,7 @@ export async function generateMetadata(
   const page = parsePage(await searchParams);
   const canonical = canonicalFor(URL, page);
   return {
-    title: { absolute: `${PROMPT_COUNT} Pixel Shine Photo Prompts — Written In-House${pageSuffix(page)} | ${BRAND}` },
+    title: { absolute: brandedTitle(`${PROMPT_COUNT} Pixel Shine Photo Prompts — Written In-House${pageSuffix(page)} | ${BRAND}`) },
     description:
       `A library of ${PROMPT_COUNT} free AI image prompts you can copy: headshots, film looks, YouTube thumbnails, Instagram covers, product shots, ads and restoration. Sized for Instagram, TikTok, X, Facebook, LinkedIn, YouTube and Pinterest.`,
     keywords:

@@ -1,3 +1,4 @@
+import { brandedTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import ModelLanding from "@/app/prompts/_components/ModelLanding";
 import { getModel } from "@/lib/prompts/data";
@@ -26,7 +27,7 @@ export async function generateMetadata(
   const canonical = canonicalFor(URL, page);
   const description = `${m.count} free ${m.name} prompts, each credited to the creator who wrote it and linked to their original post. Copy, fill in the blanks, generate.`;
   return {
-    title: { absolute: `${m.name} Prompts — ${m.count} Free, Credited Prompts${pageSuffix(page)} | ${BRAND}` },
+    title: { absolute: brandedTitle(`${m.name} Prompts — ${m.count} Free, Credited Prompts${pageSuffix(page)} | ${BRAND}`) },
     description,
     keywords: `${m.name.toLowerCase()} prompts, ${m.name.toLowerCase()} prompt examples, free ${m.name.toLowerCase()} prompts, ai video prompts`,
     alternates: { canonical },

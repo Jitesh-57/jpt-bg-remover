@@ -1,3 +1,5 @@
+import { brandedTitle } from "@/lib/seo/title";
+import GuidesBlock from "@/app/_components/GuidesBlock";
 import type { Metadata } from "next";
 import VideoWatermarkRemover from "./VideoWatermarkRemover";
 
@@ -5,9 +7,9 @@ const BASE = "https://www.sjpt.io";
 const URL = `${BASE}/tiktok-watermark-remover`;
 
 export const metadata: Metadata = {
-  title: { absolute: "Free TikTok Watermark Remover — Download Video No Watermark | Pixel Shine" },
+  title: { absolute: brandedTitle("TikTok Watermark Remover — Free HD Download, No App") },
   description:
-    "Remove the TikTok watermark and download videos free online. Paste a TikTok link and get a clean, no-watermark HD MP4 (or MP3 audio) — no app, no sign-up.",
+    "Paste a TikTok link and download the video in HD with no watermark, or save the MP3. Free, no app, no sign-up — works in any browser.",
   keywords:
     "tiktok watermark remover, remove tiktok watermark free, download tiktok without watermark, tiktok video downloader no watermark, save tiktok no watermark",
   openGraph: {
@@ -52,6 +54,7 @@ export default function Page() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(appLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
       <VideoWatermarkRemover />
+      <GuidesBlock path="/tiktok-watermark-remover" />
     </>
   );
 }

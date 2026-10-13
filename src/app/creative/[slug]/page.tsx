@@ -1,3 +1,5 @@
+import { brandedTitle } from "@/lib/seo/title";
+import GuidesBlock from "@/app/_components/GuidesBlock";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import FAQAccordion from "@/app/_components/FAQAccordion";
@@ -13,6 +15,7 @@ import { sourceFor, sourceImageUrl } from "@/lib/image-jobs";
 import { creativeSources, localAfter, uploadedCreative } from "@/lib/app-creatives";
 import { SHOW_PRESET_TABS } from "@/lib/workspace-config";
 import { applyOverride, creativeKey, readOverrides } from "@/lib/overrides";
+import { creativeIndexable, NOINDEX } from "@/lib/seo/index-policy";
 
 export const revalidate = 300;
 
@@ -32,10 +35,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const a = applyOverride(base, o.pages[creativeKey(slug)]);
   const url = `${BASE}${CREATIVE_BASE}/${slug}`;
   return {
-    title: { absolute: a.title },
+    title: { absolute: brandedTitle(a.title) },
     description: a.metaDescription,
     keywords: a.keywords,
     alternates: { canonical: url },
+    // Catalog-generated apps stay usable but out of the index (lib/seo/index-policy).
+    ...(creativeIndexable(slug) ? {} : { robots: NOINDEX }),
     openGraph: { title: a.h1, description: a.metaDescription, url },
     twitter: { card: "summary_large_image", title: a.h1, description: a.metaDescription },
   };
@@ -439,6 +444,8 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
             </div>
           </div>
         </section>
+
+        <GuidesBlock path={`${CREATIVE_BASE}/${slug}`} />
 
         {/* Related creative apps */}
         <section style={{ padding: "0 24px 80px", background: "var(--surface)" }}>

@@ -1,3 +1,4 @@
+import { brandedTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import { getPageConfig } from "@/lib/page-config";
 import HomePage from "./_components/HomePage";
@@ -10,7 +11,7 @@ const BASE = "https://www.sjpt.io";
 export async function generateMetadata(): Promise<Metadata> {
   const config = await getPageConfig("home");
   return {
-    title: { absolute: config.title },
+    title: { absolute: brandedTitle(config.title) },
     description: config.meta_description,
     keywords: config.keywords,
     openGraph: {

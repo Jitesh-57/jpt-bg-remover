@@ -6,6 +6,7 @@ import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { LANGUAGES } from "@/lib/i18n/translations";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
 import BrandLogo from "./BrandLogo";
+import { BLOG_TOPICS, topicHref } from "@/lib/blog-topics";
 
 const AI_TOOLS = [
   { labelKey: "AI Upscale",         href: "/upscale" },
@@ -111,6 +112,21 @@ export default function Footer() {
                   onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")}
                   onMouseLeave={e => (e.currentTarget.style.color = "var(--text-muted)")}>
                   {l.labelKey}
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Guides — the blog's topic hubs, linked sitewide so every post is two clicks from any page. */}
+          <div>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 16 }}>Guides</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {[...BLOG_TOPICS.map((t) => ({ href: topicHref(t), label: t.name })), { href: "/guides", label: "All guides" }].map(l => (
+                <a key={l.href} href={l.href}
+                  style={{ fontSize: 14, color: "var(--text-muted)", textDecoration: "none", transition: "color 0.15s" }}
+                  onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")}
+                  onMouseLeave={e => (e.currentTarget.style.color = "var(--text-muted)")}>
+                  {l.label}
                 </a>
               ))}
             </div>

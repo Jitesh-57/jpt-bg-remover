@@ -64,6 +64,8 @@ const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "Pixel Shine",
+  // What people type to find us: the domain and the older JPT name.
+  alternateName: ["SJPT", "sjpt.io", "JPT AI"],
   url: BASE,
   logo: LOGO_URL,
   sameAs: ["https://twitter.com/jptai"],
@@ -74,6 +76,7 @@ const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   name: "Pixel Shine",
+  alternateName: ["SJPT", "sjpt.io", "JPT AI"],
   url: BASE,
   potentialAction: {
     "@type": "SearchAction",

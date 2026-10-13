@@ -5,7 +5,7 @@ import { appCards } from "@/lib/dashboard-feed.server";
 import AgeApp from "./AgeApp";
 
 export const metadata: Metadata = {
-  title: "Age Progression · Pixel Shine",
+  title: { absolute: "Age Progression · Pixel Shine" },
   description: "See yourself at any age from 1 to 100.",
   robots: { index: false, follow: false },
 };

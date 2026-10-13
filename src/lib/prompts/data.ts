@@ -69,13 +69,36 @@ function recount(media: Media, list: Facet[], has: (r: PromptRecord, name: strin
     .map((f) => ({ ...f, count: countWhere((r) => r.media === media && has(r, f.name)) }))
     .filter((f) => f.count > 0);
 }
+/*
+  The dataset's facet lists are per medium and miss a few tags its records
+  use — 19 video prompts are tagged "Vehicle", but the video list has no
+  Vehicle, so /prompts/video/vehicle 404'd while 18 pages linked to it. Any tag
+  the records carry but the list lacks is added, so every tag has a page.
+*/
+const slugify = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+function withMissing(media: Media, list: Facet[], values: (r: PromptRecord) => string[]): Facet[] {
+  const known = new Set(list.map((f) => f.name));
+  const extra = new Map<string, number>();
+  for (const r of ALL) {
+    if (r.media !== media) continue;
+    for (const v of values(r)) if (v && !known.has(v)) extra.set(v, (extra.get(v) || 0) + 1);
+  }
+  return [...list, ...Array.from(extra, ([name]) => ({ name, slug: slugify(name), count: 0 }))];
+}
 export const FACETS: Dataset["facets"] = Object.fromEntries(
   (Object.keys(DB.facets) as Media[]).map((media) => [media, {
-    useCases: recount(media, DB.facets[media].useCases, (r, n) => r.useCase === n),
-    styles: recount(media, DB.facets[media].styles, (r, n) => r.styles.includes(n)),
-    subjects: recount(media, DB.facets[media].subjects, (r, n) => r.subjects.includes(n)),
+    useCases: recount(media, withMissing(media, DB.facets[media].useCases, (r) => (r.useCase ? [r.useCase] : [])), (r, n) => r.useCase === n),
+    styles: recount(media, withMissing(media, DB.facets[media].styles, (r) => r.styles), (r, n) => r.styles.includes(n)),
+    subjects: recount(media, withMissing(media, DB.facets[media].subjects, (r) => r.subjects), (r, n) => r.subjects.includes(n)),
   }]),
 ) as Dataset["facets"];
+
+/** The page for a tag, if one exists — only those are linked. */
+export function facetHref(media: Media, tag: string): string | null {
+  const slug = slugify(tag);
+  const f = FACETS[media];
+  return [...f.useCases, ...f.styles, ...f.subjects].some((x) => x.slug === slug) ? `/prompts/${media}/${slug}` : null;
+}
 export const GENERATED_AT = DB.generatedAt;
 
 const BY_UID = new Map(ALL.map((r) => [r.uid, r]));

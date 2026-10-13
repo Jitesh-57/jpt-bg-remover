@@ -1,7 +1,8 @@
+import { brandedTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: { absolute: "Privacy Policy | Pixel Shine" },
+  title: { absolute: brandedTitle("Privacy Policy | Pixel Shine") },
   description: "Privacy Policy for Pixel Shine — how we collect, use, and protect your data.",
   alternates: { canonical: "https://www.sjpt.io/privacy" },
   robots: { index: true, follow: true },

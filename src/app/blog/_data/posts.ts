@@ -33,6 +33,7 @@ import { SEO_POSTS_9 } from "./seo-posts-9";
 import { SEO_POSTS_10 } from "./seo-posts-10";
 import { TOOL_POSTS_2 } from "./tool-posts-2";
 import { APP_POSTS } from "./app-posts";
+import BLOG_REDIRECTS from "../../../../config/redirects.json";
 
 const RAW_POSTS: BlogPost[] = [
   {
@@ -2470,7 +2471,7 @@ The **Normal upscale mode is completely free, unlimited, and requires no sign-up
 
 **2. Upload your blurry photo.** Click the upload area or drag your image directly onto it. Pixel Shine accepts standard formats including JPG, PNG, and WebP. For best results, upload the highest-quality version of the file you have — never a screenshot of a screenshot.
 
-**3. Choose your enhancement mode.** Select Normal upscale for free, unlimited fixes that work beautifully on most everyday blur. If your image is severely degraded or you need maximum detail recovery for print, switch to Pro AI mode, which uses credits (new users get 5 free trials to test it).
+**3. Choose your enhancement mode.** Select Normal upscale for free, unlimited fixes that work beautifully on most everyday blur. If your image is severely degraded or you need maximum detail recovery for print, switch to Pro AI mode, which uses credits.
 
 **4. Set your output scale.** Pick 2x or 4x depending on how large you need the final image. Even if you don't need a bigger file, upscaling helps the AI reconstruct sharper detail.
 
@@ -2490,7 +2491,7 @@ The **Normal upscale mode is completely free, unlimited, and requires no sign-up
 
 **For faces, check the eyes and teeth.** These are the areas people notice most. If the eyes look sharp and natural after processing, the whole portrait will read as fixed.
 
-**Try both modes on important photos.** Run the free Normal mode first; if a treasured photo needs more, spend one of your free Pro trials to compare. The difference on heavily damaged images can be dramatic.
+**Try both modes on important photos.** Run the free Normal mode first; if a treasured photo needs more, run it through Pro AI mode to compare. The difference on heavily damaged images can be dramatic.
 
 **Deblur old scans at high resolution.** When digitizing prints, scan at 600 DPI or higher, then let the AI clean up the softness — you'll preserve far more detail than fixing a low-res scan.`,
       },
@@ -2535,9 +2536,31 @@ Desktop tools like Photoshop offer powerful manual control, but they cost a subs
         body: "A surprisingly broad range of people reach for AI deblurring. **Parents and families** restore soft snapshots of milestones they can never recreate. **Online sellers and small-business owners** sharpen product photos to look professional without hiring a photographer. **Real estate agents** clean up dim, soft interior shots to make listings shine. **Content creators and social media managers** keep their feeds crisp and consistent. **Students and remote workers** salvage blurry photos of notes, slides, and documents so they're readable again. **Genealogy and history enthusiasts** revive faded, out-of-focus scans of old family prints. What unites them is the same goal: recovering a usable, clear image from one that seemed beyond saving — quickly, freely, and without watermarks getting in the way of the final result.",
       },
       {
+        heading: "Fixing Blurry Wedding and Event Photos",
+        body: `Weddings are, paradoxically, one of the hardest environments to photograph well — which is exactly why so many wedding pictures end up soft. Understanding the causes helps you set the right expectations when you go to fix them.
+
+**Low light is the biggest villain.** Receptions are dim by design, full of candlelight and mood lighting. To capture anything, cameras slow their shutter and raise ISO, which introduces motion blur and grainy softness. Even professionals fight this constantly.
+
+**Movement is everywhere.** People dancing, walking down the aisle, tossing bouquets, and clinking glasses are all in motion, and any movement during a slow exposure smears detail.
+
+**Guest phone photos** often capture unrepeatable candid moments but with limited cameras, shaky hands, and poor lighting — resulting in soft, noisy images.
+
+**Old wedding photos** from previous generations bring their own problems: film grain, fading, physical damage, and the softness introduced when prints are scanned or photographed. A grandparent's wedding portrait may be the only copy in existence.
+
+Because these images are irreplaceable — you cannot restage a wedding — recovering them matters far more than fixing an ordinary snapshot. And AI is remarkably good at exactly the kinds of blur weddings produce: low-light softness, compression damage, and focus errors.`,
+      },
+      {
+        heading: "Enhancing Photos Without a Watermark",
+        body: `To appreciate a truly watermark-free enhancer, it helps to understand why watermarks are so common in the first place. AI image enhancement isn't free to run — every image processed consumes real computing power on expensive servers. Companies have to recover that cost somehow, and watermarks are the most common lever they pull.
+
+The typical playbook works like this: a tool lets you enhance an image and preview a beautiful result, but the free download is either watermarked, capped at a low resolution, or blocked entirely until you subscribe. The watermark isn't there to protect anyone — it's a hostage tactic designed to convert you into a paying customer. Some tools go further, requiring an account and email before you can even see your result, then bombarding you with upgrade prompts.
+
+Others use subtler tricks: a small watermark you don't notice until you zoom in, resolution limits that make the free output useless for print, or a limited number of free enhancements before the paywall drops. The result is a frustrating experience where \"free\" comes with strings attached. A tool that genuinely enhances images with no watermark — and lets you download the full-resolution result without an account — is doing something meaningfully different, and it's worth knowing how to spot it.`,
+      },
+      {
         heading: "Frequently Asked Questions",
         body: `**Can you really fix a blurry photo for free?**
-Yes. Pixel Shine's Normal upscale mode fixes blurry photos completely free, with no usage limits and no sign-up required. You only need credits if you choose the more aggressive Pro AI mode for severely damaged images, and new users get 5 free Pro trials to start.
+Yes. Pixel Shine's Normal upscale mode fixes blurry photos completely free, with no usage limits and no sign-up required. You only need credits if you choose the more aggressive Pro AI mode for severely damaged images.
 
 **Will there be a watermark on my fixed photo?**
 No. Pixel Shine never adds a watermark to your output. Whatever image you download is clean and ready to print, post, or sell.
@@ -2562,7 +2585,7 @@ Simply re-upload and choose a lower scale factor, like 2x instead of 4x. A gentl
       },
       {
         heading: "Key Takeaways",
-        body: `Fixing a blurry photo online no longer requires expensive software or technical skill. Modern AI can reconstruct lost detail, sharpen soft edges, and enlarge images all at once — turning a shot you thought was ruined into something clear and usable. Pixel Shine makes this genuinely free with its Normal upscale mode: no watermarks, no forced sign-up, and no usage caps, plus 5 free Pro trials for images that need extra muscle.
+        body: `Fixing a blurry photo online no longer requires expensive software or technical skill. Modern AI can reconstruct lost detail, sharpen soft edges, and enlarge images all at once — turning a shot you thought was ruined into something clear and usable. Pixel Shine makes this genuinely free with its Normal upscale mode: no watermarks, no forced sign-up, and no usage caps, with a credit-based Pro AI mode for images that need extra muscle.
 
 The best part is how little effort it takes. Upload, choose your mode, and download a sharper result in about a minute. Whether it's a treasured memory or a product photo, your blurry image deserves a second chance. Try it free at Pixel Shine and see how much detail AI can bring back.`,
       },
@@ -5087,7 +5110,7 @@ Pixel Shine offers two modes. The Normal upscale is completely free, unlimited, 
 
 **6. Compare and download.** Review the before-and-after preview. If faces look sharper and detail has returned, download the full-resolution result. There's no watermark, so the file is print-ready.
 
-**7. Reprocess if needed.** For stubbornly damaged photos, try the Pro AI mode using your free trial credits for deeper reconstruction. New users get 5 free trials to test premium quality.
+**7. Reprocess if needed.** For stubbornly damaged photos, try the Pro AI mode, which uses credits, for deeper reconstruction.
 
 **8. Save a backup.** Store both the original scan and the restored version so you always keep the archival source.`,
       },
@@ -5154,9 +5177,51 @@ Pixel Shine offers two modes. The Normal upscale is completely free, unlimited, 
 **Content creators and documentary makers** restore archival footage stills and old photos to include in videos, family history channels, and heritage projects where visual clarity matters. Across all these groups, the shared motivation is the same: recovering irreplaceable visual history quickly and affordably.`,
       },
       {
+        heading: "What AI Can (and Can't) Restore in Old Photos",
+        body: `Setting realistic expectations helps you get the best results and know when to reach for the Pro tier.
+
+**What AI does exceptionally well.** AI upscaling shines at increasing resolution while reconstructing detail — turning a small, soft scan into a larger, sharper image. It reduces the grain and noise common in old film scans and early digital photos, and it sharpens faces and edges that time and low resolution had blurred. For the vast majority of old photos, this alone produces a dramatic before-and-after improvement.
+
+**What AI handles well with the Pro tier.** Heavily degraded images — very low resolution, significant softness, or serious noise — benefit from the more advanced Pro AI upscale, which reconstructs finer detail and copes better with difficult sources. This is where a barely-usable photo can become genuinely presentable.
+
+**What has limits.** AI reconstructs based on what it learned from millions of images, so it recovers plausible detail — but it can't invent information that's entirely gone. A face that's a featureless blur can be sharpened and enlarged, but tiny details that were never captured can't be perfectly resurrected. Extreme physical damage like large tears may need dedicated repair.
+
+**The realistic takeaway:** for the overwhelming majority of faded, small, grainy, or soft old photos, AI upscaling produces a transformation that feels like magic — sharper, cleaner, larger, and ready to reprint. Just approach it as enhancement and reconstruction, not literal time travel.`,
+      },
+      {
+        heading: "Preparing Your Old Photos for Restoration",
+        body: `The quality of your input dramatically affects your results, so a little prep goes a long way — especially with physical prints.
+
+**Scan physical photos at high resolution.** If you're working from a printed photo, scan it at a high DPI (600 DPI or more for small prints) rather than snapping it with your phone. A clean, high-resolution scan gives the AI far more real detail to work with than a phone photo taken at an angle with glare.
+
+**Scan flat and evenly lit.** Place the photo flat on the scanner glass to avoid distortion, and make sure it's clean and dust-free. For photos you must photograph instead, use even, indirect lighting to avoid glare and shadows.
+
+**Capture the full detail you have.** Don't crop tightly or compress heavily before restoring — start from the most complete, highest-quality digital version of the photo you can produce. You can always crop later.
+
+**Work from the original, not a copy of a copy.** Each time an image is re-saved as a compressed JPG, it loses a little quality. Start from the closest thing to the original you have.
+
+**Organize before you start.** If you're restoring a batch of family photos, gather and scan them all first, then process them together. This is a great weekend project for digitizing a whole box of memories.
+
+Good preparation ensures the AI has the richest possible source to reconstruct from — and it's the single biggest factor you control in the final quality.`,
+      },
+      {
+        heading: "Advanced Techniques for Stubborn Photos",
+        body: `Some old photos resist a single enhancement pass. Here are advanced approaches for the difficult cases.
+
+**Two-stage enhancement.** For extremely small, low-quality scans, run the Normal mode at 2x first, download the result, then run that improved image through again. This staged approach can produce cleaner results than a single aggressive 4x pass because each stage works with progressively better input.
+
+**Switch to Pro AI for severe degradation.** When a photo is badly faded, heavily grained, or very soft, the Pro AI mode's deeper generative reconstruction often recovers detail the Normal mode can't. These hardest cases are where credits are best spent.
+
+**Isolate and enhance faces separately.** For treasured group portraits, crop each important face into its own image and enhance individually. This focuses the AI's face-reconstruction on one subject at a time, then you can reassemble or use the sharpened crops for individual keepsakes.
+
+**Pre-clean before uploading.** If your scan has obvious dust specks or a strong color cast, a quick basic cleanup before enhancement can help the AI focus on real detail rather than treating dust as content.
+
+**Compare modes side by side.** Run the same image through both Normal and Pro, then choose whichever looks most natural. Sometimes Normal's lighter touch actually looks better on already-decent photos, while Pro wins on the roughest scans.`,
+      },
+      {
         heading: "Frequently Asked Questions",
         body: `**Is AI photo restoration really free online?**
-Yes. Pixel Shine's Normal upscale and restoration mode is completely free, unlimited, and requires no sign-up. You can restore as many photos as you like without a watermark. The Pro AI mode uses credits for deeper reconstruction, and new users get 5 free trials to test it.
+Yes. Pixel Shine's Normal upscale and restoration mode is completely free, unlimited, and requires no sign-up. You can restore as many photos as you like without a watermark. The Pro AI mode uses credits for deeper reconstruction.
 
 **Can AI fix a torn or scratched photo?**
 AI restoration excellently handles scratches, noise, fading, and softness. For small tears and creases, it often reduces their visibility significantly. For large physically missing sections, AI enhances what remains but can't perfectly reconstruct content that no longer exists in the image.
@@ -5190,14 +5255,14 @@ Pixel Shine makes this accessible to everyone with free, unlimited, watermark-fr
   {
     slug: "4k-image-upscaler-free",
     title: "Free 4K Image Upscaler — AI Tool for Ultra-HD Photo Quality",
-    metaTitle: "4K Image Upscaler Free | Pixel Shine",
-    metaDescription: "Upscale images to 4K resolution free with Pixel Shine. Our AI 4K upscaler produces ultra-HD quality from any photo — no watermark, no software, no limits.",
+    metaTitle: "Free 4K Image Upscaler — No Signup, No Watermark",
+    metaDescription: "Upscale any photo to 4K free in your browser. AI adds real detail, no signup, no watermark, no limits. See how to hit 3840×2160 from small images.",
     excerpt: "A free 4K image upscaler that actually delivers: Pixel Shine uses AI super-resolution to enlarge any photo to near-4K quality with genuine detail improvement.",
     date: "2025-11-15",
     readTime: "11 min read",
     category: "Guide",
     keywords: ["4k image upscaler free", "free 4k upscale tool", "upscale to 4k ai free", "ai 4k photo upscaler"],
-    toolHref: "/upscale",
+    toolHref: "/upscale/4k",
     toolLabel: "Free 4K Upscaler",
     image: "https://images.pexels.com/photos/3623578/pexels-photo-3623578.jpeg?auto=compress&cs=tinysrgb&w=1200",
         sections: [
@@ -5226,7 +5291,7 @@ In this guide, we'll break down how a free 4K upscaler online should work, why P
 
 **Free Normal mode** covers the bulk of 4K needs: wallpapers, display images, and general enhancement — free, unlimited, and with no sign-up. For the toughest jobs — detailed portraits, degraded originals bound for large 4K print — **Pro AI mode** applies a stronger, credit-based model that maximizes detail recovery.
 
-**Clean output, no gatekeeping.** Pixel Shine never watermarks results and requires no account for Normal upscaling, so your 4K-ready file is immediately usable for wallpapers, client work, and print. Five free trials let new users experience the Pro AI quality before committing. The result is a free 4K image enhancer that behaves like professional software: real reconstruction, clean files, and none of the friction that makes other free upscalers frustrating.`,
+**Clean output, no gatekeeping.** Pixel Shine never watermarks results and requires no account for Normal upscaling, so your 4K-ready file is immediately usable for wallpapers, client work, and print. The result is a free 4K image enhancer that behaves like professional software: real reconstruction, clean files, and none of the friction that makes other free upscalers frustrating.`,
       },
       {
         heading: "Step-by-Step: Using the Free 4K Upscaler",
@@ -5302,13 +5367,49 @@ In this guide, we'll break down how a free 4K upscaler online should work, why P
 
 **Versus paid desktop apps** like Topaz Gigapixel, Pixel Shine offers the same class of AI super-resolution without the upfront purchase, heavy install, or hardware requirements — everything runs online.
 
-**Versus other online AI tools,** Pixel Shine's combination of unlimited free Normal upscaling, a powerful credit-based Pro AI mode for the hardest 4K jobs, and five free trials for new users gives you both an accessible everyday path and a professional ceiling. For anyone who needs genuine 4K enhancement without cost or complexity, that balance is hard to beat.`,
+**Versus other online AI tools,** Pixel Shine's combination of unlimited free Normal upscaling and a powerful credit-based Pro AI mode for the hardest 4K jobs gives you both an accessible everyday path and a professional ceiling. For anyone who needs genuine 4K enhancement without cost or complexity, that balance is hard to beat.`,
       },
       {
         heading: "Who Uses a Free 4K Upscaler",
         body: `The users reaching for a 4K image upscaler come from every visual discipline. **Wallpaper and design fans** enlarge images to fill 4K monitors and phones crisply. **Photographers and print sellers** upscale to 4K-plus for posters, canvases, and gallery prints that stay sharp. **Video editors and content creators** boost stills to match 4K timelines and backgrounds.
 
 **Marketers and businesses** prepare ultra-HD imagery for 4K signage, ads, and premium web pages. **E-commerce sellers** upscale product photos for detailed, zoomable 4K views. **Presenters and educators** ensure images on 4K displays look polished, not pixelated. In every case, the objective is identical: satisfy the heavy pixel demands of modern ultra-HD screens and large print with images that look truly sharp — without paying for expensive software or accepting a soft, stretched result that undermines the whole point of going 4K.`,
+      },
+      {
+        heading: "Compression vs. Upscaling: What Each Does to Quality",
+        body: `To choose correctly, you first need to understand what these operations really do to the pixels in your image.
+
+**Compression reduces file size.** There are two kinds. Lossless compression (like PNG) shrinks the file with zero quality loss by storing data more efficiently. Lossy compression (like JPEG) achieves much smaller files by discarding detail your eye is less likely to notice, but push it too far and you get visible blocky artifacts, halos around edges, and muddy detail.
+
+**Upscaling increases dimensions and, with AI, adds detail.** Basic upscaling (bicubic resizing) just stretches existing pixels, making an image larger but blurrier. AI upscaling is fundamentally different: it reconstructs believable new detail as it enlarges, producing a bigger image that's actually sharper, not softer.
+
+**Resolution vs. file size are different things.** A common confusion: resolution is how many pixels the image contains (e.g. 2000x1500), while file size is how many bytes it takes to store (e.g. 800 KB). You can have a high-resolution image with a small file size (well compressed) or a low-resolution image with a large file size (poorly compressed).
+
+**Quality is the perception of detail and clarity.** Both operations affect perceived quality: over-compression destroys it, while AI upscaling can restore or enhance it. Knowing which lever to pull depends entirely on your goal, size or sharpness.`,
+      },
+      {
+        heading: "Going Beyond 4K",
+        body: `Sometimes you need to go beyond a single 4K pass, and a few advanced approaches help.
+
+**Staged upscaling for extreme sizes.** If you need output well beyond 4K — say for a large banner — running two 2x passes can sometimes yield smoother results than one aggressive jump, because each step gives the model a more manageable reconstruction task. Start from your cleanest source each time.
+
+**Combine with restoration for old images.** For vintage or degraded photos headed to 4K, use Pro AI mode so noise reduction and detail recovery happen alongside the enlargement, rather than upscaling flaws to a larger, more visible size.
+
+**Match output to print DPI.** For print, 4K pixels translate to specific physical sizes at 300 DPI. Knowing your target print dimensions helps you choose a factor that delivers enough resolution without unnecessary over-enlargement.
+
+**Upscale then downsample for maximum crispness.** Enlarging slightly beyond your target and then scaling down to exact dimensions can produce an exceptionally clean, sharp final image — a technique print professionals use to squeeze out extra perceived detail from an ultra-HD upscale.`,
+      },
+      {
+        heading: "Upscaling Many Images to 4K at Once",
+        body: `The case for batch processing comes down to three multipliers: time, consistency, and sanity.
+
+**Time savings compound fast.** Processing images individually means repeating the same five clicks — upload, select settings, process, preview, download — for every single file. At even 30 seconds of hands-on time per image, 100 images eats 50 minutes of your day. Batch processing collapses that into one upload and one download. You set it once and walk away.
+
+**Consistency across the set.** When you process images one by one, it's easy to accidentally use 2x on some and 4x on others, or forget a setting halfway through. Batch processing applies identical settings to every image, so your entire product catalog, gallery, or content library looks uniform. For e-commerce especially, visual consistency across listings looks professional and builds trust.
+
+**Reduced error and fatigue.** Manual repetition breeds mistakes. By the 60th image, you're tired, clicking on autopilot, and more likely to skip files or misapply settings. Automation eliminates that human error entirely.
+
+The bottom line: if you regularly upscale more than a handful of images, batch processing isn't a nice-to-have — it's the only sensible way to work. Pixel Shine's [batch editor](/batch-editor) is built precisely for this, letting you upscale multiple images at once without the one-by-one grind.`,
       },
       {
         heading: "Frequently Asked Questions",
@@ -5331,7 +5432,7 @@ A source near 1000 pixels wide hits 4K at 4x; a 1920-pixel source reaches exactl
 No. Pixel Shine runs entirely online at Pixel Shine on any device, with nothing to install.
 
 **When is Pro AI mode worth using for 4K?**
-Use it for large 4K prints, critical portraits, or heavily degraded sources needing maximum detail recovery. Five free trials let new users test it first.
+Use it for large 4K prints, critical portraits, or heavily degraded sources needing maximum detail recovery.
 
 **Can I upscale above 4K?**
 Yes. Higher factors or additional passes from the source let you push resolution beyond 4K for very large prints and displays.`,
@@ -7844,27 +7945,6 @@ No. The AI replaces both — it isolates your subject and fills perfect white au
 
 Ready for clean, professional white-background photos? Visit Pixel Shine, upload your image to the free Background Remover, and download a crisp white-background photo in seconds — no watermark, no sign-in, unlimited standard use.`,
       },
-    ],
-  },
-  {
-    image: "https://images.pexels.com/photos/669996/pexels-photo-669996.jpeg?auto=compress&cs=tinysrgb&w=1200",
-    slug: "increase-image-resolution-free",
-    title: "How to Increase Image Resolution Without Losing Quality (Free)",
-    metaTitle: "Increase Image Resolution Free Without Losing Quality | Pixel Shine",
-    metaDescription: "Increase image resolution free with AI without losing quality. Upscale photos 2× or 4× with sharp, natural detail online — no watermark.",
-    excerpt: "Need a higher-resolution version of an image? AI can increase resolution while keeping it sharp — here's how to do it free.",
-    date: "2025-06-24",
-    readTime: "5 min read",
-    category: "Guide",
-    keywords: ["increase image resolution free", "increase resolution without losing quality", "image resolution enhancer free", "make image higher resolution"],
-    toolHref: "/upscale",
-    toolLabel: "Increase Resolution Free →",
-    sections: [
-      { body: "Increasing resolution by stretching pixels just creates blur. AI super-resolution adds genuine detail, so you can enlarge images 2× or 4× and keep them looking sharp and natural." },
-      { heading: "Resolution vs. quality", body: "Resolution is pixel count; quality is how much real detail those pixels hold. Naive resizing adds pixels but no detail. AI predicts realistic detail, raising both resolution and perceived quality." },
-      { heading: "How to increase resolution", body: "**1.** Upload your image.\n**2.** Choose 2× or 4×.\n**3.** The AI reconstructs detail as it enlarges.\n**4.** Download the higher-resolution image free." },
-      { heading: "Where it helps", body: "**Printing** at larger sizes.\n**Marketing** assets for high-res screens.\n**Restoring** small or old images.\n**Preparing** AI art for production." },
-      { heading: "Frequently Asked Questions", body: "**Will quality drop when I enlarge?**\nNo — AI reconstruction keeps it sharp, unlike basic resizing.\n\n**Is it free?**\nYes — your first try is a free trial, no watermark. You get 5 free trials total across any of our tools.\n\n**How big can I go?**\nUp to 4× and large output dimensions." },
     ],
   },
   {
@@ -14442,9 +14522,22 @@ const STALE_PRICING_COPY = new Set([
   "white-background-photo-free",
 ]);
 
+/*
+  Posts whose URL now redirects (config/redirects.json, served as 301s by
+  next.config): held-back posts pointed at their tool, and posts merged into a
+  stronger one on the same topic. Never rendered, so a URL can't be both a live
+  page and a redirect.
+*/
+const REDIRECTED = new Set(
+  Object.keys(BLOG_REDIRECTS as Record<string, string>)
+    .filter((from) => from.startsWith("/blog/"))
+    .map((from) => from.slice("/blog/".length)),
+);
+
 export const POSTS: BlogPost[] = [...RAW_POSTS, ...UPSCALE_POSTS, ...UPSCALE_FREE_POSTS, ...UPSCALE_FREE_POSTS_2, ...TOOL_FREE_POSTS, ...TIKTOK_POSTS, ...SEO_POSTS, ...SEO_POSTS_2, ...SEO_POSTS_3, ...SEO_POSTS_4, ...SEO_POSTS_5, ...SEO_POSTS_6, ...SEO_POSTS_7, ...SEO_POSTS_8, ...SEO_POSTS_9, ...SEO_POSTS_10, ...TOOL_POSTS_2, ...APP_POSTS]
   .filter((p) => LIVE_TOOL_PREFIXES.some((pre) => p.toolHref.startsWith(pre)))
   .filter((p) => !STALE_PRICING_COPY.has(p.slug))
+  .filter((p) => !REDIRECTED.has(p.slug))
   .map((p) => ({ ...p, image: p.image || blogImageUrl(p.slug) }))
   .sort((a, b) => (a.date < b.date ? 1 : -1));
 

@@ -1,3 +1,4 @@
+import { fitTitle, stripBrand } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -7,6 +8,9 @@ import { readOverrides } from "@/lib/overrides";
 import { POSTS } from "../_data/posts";
 import { editedPost, editedPosts } from "@/lib/blog-edits.server";
 import BlogStickyBar from "../_components/BlogStickyBar";
+import { blogIndexable, NOINDEX } from "@/lib/seo/index-policy";
+import { relatedSlugs } from "@/lib/blog-links";
+import { TOPIC_BY_SLUG, topicOf, topicHref } from "@/lib/blog-topics";
 
 export async function generateStaticParams() {
   return POSTS.map((p) => ({ slug: p.slug }));
@@ -17,10 +21,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const post = await editedPost(slug);
   if (!post) return {};
   return {
-    title: { absolute: post.metaTitle },
+    title: { absolute: fitTitle([post.metaTitle, stripBrand(post.metaTitle), post.title]) },
     description: post.metaDescription,
     keywords: post.keywords,
     alternates: { canonical: `https://www.sjpt.io/blog/${post.slug}` },
+    // Short posts stay readable and linked, but out of the index (lib/seo/index-policy).
+    ...(blogIndexable(post) ? {} : { robots: NOINDEX }),
     openGraph: {
       title: post.title,
       description: post.metaDescription,
@@ -166,18 +172,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       }
     : null;
 
-  // Related posts — build a topic cluster: same tool first (e.g. all TikTok
-  // posts link to each other), then same category, then fill with others.
-  // Strong internal linking of a cluster is a ranking signal.
-  const others = visible.filter((p) => p.slug !== post.slug);
-  const seen = new Set<string>();
-  const related = [
-    ...others.filter((p) => p.toolHref === post.toolHref),
-    ...others.filter((p) => p.category === post.category),
-    ...others,
-  ]
-    .filter((p) => (seen.has(p.slug) ? false : (seen.add(p.slug), true)))
-    .slice(0, 3);
+  // Related guides — from the site-wide link graph (lib/blog-links), which
+  // gives every post at least two links in from other posts. Posts hidden in
+  // /admin/blog are dropped here so no link points at a 404.
+  const bySlug = new Map(visible.map((p) => [p.slug, p]));
+  const related = relatedSlugs(post.slug).map((s) => bySlug.get(s)).filter((p): p is NonNullable<typeof p> => !!p);
+  const topic = TOPIC_BY_SLUG[topicOf(post)];
 
   const CATEGORY_COLORS: Record<string, string> = {
     Tutorial: "var(--accent)",
@@ -283,12 +283,19 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             </div>
           </div>
 
-          {/* Related articles — internal linking for SEO + engagement */}
+          {/* Related guides — internal linking for SEO + engagement */}
           {related.length > 0 && (
             <div style={{ marginTop: 56 }}>
-              <h2 style={{ fontSize: 22, fontWeight: 800, color: "var(--text)", margin: "0 0 24px", letterSpacing: "-0.3px" }}>
-                Related articles
-              </h2>
+              <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 12, flexWrap: "wrap", margin: "0 0 24px" }}>
+                <h2 style={{ fontSize: 22, fontWeight: 800, color: "var(--text)", margin: 0, letterSpacing: "-0.3px" }}>
+                  Related guides
+                </h2>
+                {topic && (
+                  <Link href={topicHref(topic)} style={{ fontSize: 14, fontWeight: 700, color: "var(--accent)", textDecoration: "none" }}>
+                    All {topic.name.toLowerCase()} guides →
+                  </Link>
+                )}
+              </div>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 18 }}>
                 {related.map((r) => (
                   <Link key={r.slug} href={`/blog/${r.slug}`} className="jpt-hover" style={{ textDecoration: "none", display: "block", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 14, overflow: "hidden" }}>

@@ -1,3 +1,4 @@
+import { brandedTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CONVERSIONS, buildContent } from "@/lib/conversions";
@@ -10,7 +11,7 @@ const BASE = "https://www.sjpt.io";
 const URL = `${BASE}/tools`;
 
 export const metadata: Metadata = {
-  title: { absolute: "All Free Image Tools — Convert, Compress, Crop, Upscale & More | Pixel Shine" },
+  title: { absolute: brandedTitle("All Free Image Tools — Convert, Compress, Crop, Upscale & More | Pixel Shine") },
   description:
     "Every free Pixel Shine image tool in one place: upscale, compress, convert (PNG, JPG, WebP), crop, rotate, watermark, meme maker, image to PDF, and TikTok downloader. No watermark, no sign-up.",
   keywords: "free image tools, online image tools, image converter, image compressor, crop image, upscale image, free photo tools",

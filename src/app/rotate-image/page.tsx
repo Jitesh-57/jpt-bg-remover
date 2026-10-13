@@ -1,3 +1,5 @@
+import { brandedTitle } from "@/lib/seo/title";
+import GuidesBlock from "@/app/_components/GuidesBlock";
 import { Metadata } from 'next'
 import { getPageConfig } from '@/lib/page-config'
 import LandingPage from '../_components/LandingPage'
@@ -5,7 +7,7 @@ import LandingPage from '../_components/LandingPage'
 export async function generateMetadata(): Promise<Metadata> {
   const config = await getPageConfig('rotate-image')
   return {
-    title: { absolute: config.title },
+    title: { absolute: brandedTitle(config.title) },
     description: config.meta_description,
     keywords: config.keywords,
     openGraph: {
@@ -43,7 +45,7 @@ export default async function Page() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <LandingPage config={config} toolHref="/editor?tool=rotate" pageId="rotate-image" />
+      <LandingPage guides={<GuidesBlock path="/rotate-image" />} config={config} toolHref="/editor?tool=rotate" pageId="rotate-image" />
     </>
   )
 }

@@ -1,10 +1,11 @@
+import { brandedTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import Link from "next/link";
 
 const BASE = "https://www.sjpt.io";
 
 export const metadata: Metadata = {
-  title: "AI Image Tools & Creative Apps | Pixel Shine",
+  title: { absolute: brandedTitle("AI Image Tools & Creative Apps | Pixel Shine") },
   description:
     "Explore Pixel Shine's AI image editor, upscaler, background tools, creative apps, restoration tools, and free image utilities in one discoverable hub.",
   alternates: { canonical: "/ai-discovery" },
