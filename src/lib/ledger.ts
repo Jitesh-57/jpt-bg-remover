@@ -12,7 +12,7 @@ import { createAdminSupabase } from "@/lib/auth";
  * tables un-writable by the people they describe.
  */
 
-export type CreditReason = "purchase" | "generation" | "signup_grant" | "admin_adjust" | "refund";
+export type CreditReason = "purchase" | "subscription" | "expired" | "generation" | "signup_grant" | "admin_adjust" | "refund";
 
 /**
  * Records a movement of credits and the balance it left behind.

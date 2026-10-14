@@ -109,11 +109,14 @@ export async function POST(req: NextRequest) {
   }
 
   // 3. The credits.
+  // Add-on credits go to the never-expiring balance; the total reported back
+  // also counts any monthly-plan credits.
+  const newBase = (session!.baseCredits ?? session!.credits) + pack.credits;
   const newCredits = session!.credits + pack.credits;
   const { error: dbErr } = await admin.from("profiles").upsert({
     id: userId,
     plan: pack.id,
-    credits: newCredits,
+    credits: newBase,
     daily_credits_reset_at: null,
   }, { onConflict: "id" });
   if (dbErr) {

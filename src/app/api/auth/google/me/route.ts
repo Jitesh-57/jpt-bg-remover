@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { resolveUnlimited } from "@/lib/auth";
 import { claimSignupTrial, isFreshSignup, rememberCountry } from "@/lib/free-trial.server";
+import { monthlyBuckets, sumBuckets } from "@/lib/credit-buckets.server";
 
 export const runtime = "nodejs";
 
@@ -38,7 +39,10 @@ export async function GET(req: NextRequest) {
   const trial = isFreshSignup(user)
     ? (await Promise.all([claimSignupTrial(user, req), rememberCountry(user.id, req)]))[0]
     : 0;
-  const credits = (profile ? (profile.credits ?? 0) : 0) + trial;
+  const baseCredits = (profile ? (profile.credits ?? 0) : 0) + trial;
+  // Monthly-plan credits, readable through the user's own session (RLS: read own).
+  const monthlyCredits = sumBuckets(await monthlyBuckets(supabase, user.id));
+  const credits = baseCredits + monthlyCredits;
   // Honour "unlimited" only while its 30-day window is open, else fall to free.
   const { plan, expiresAt: planExpiresAt } = resolveUnlimited(profile?.plan, user.user_metadata);
 
@@ -49,6 +53,8 @@ export async function GET(req: NextRequest) {
     name: profile?.name || user.user_metadata?.name || user.email?.split("@")[0],
     picture: profile?.picture || user.user_metadata?.avatar_url,
     credits,
+    baseCredits,
+    monthlyCredits,
     plan,
     planExpiresAt,
     ...(trial > 0 ? { trialGranted: trial } : {}),

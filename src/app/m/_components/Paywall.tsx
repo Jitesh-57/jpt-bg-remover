@@ -185,10 +185,11 @@ export default function Paywall({ unit, signedIn, balance, prefill, next, play, 
             {offers.map((o) => {
               const on = o.pack.id === selected?.pack.id;
               const save = baseRate ? Math.floor((1 - o.amount / o.pack.credits / baseRate) * 100) : 0;
-              const badge = o.pack.popular ? "Most popular" : o.pack.id === bestValue?.pack.id && offers.length > 1 ? "Best value" : null;
+              // Only a badge that is true of the prices actually shown: Play may price the packs differently.
+              const badge = o.pack.id === bestValue?.pack.id && offers.length > 1 ? "Best value" : null;
               return (
                 <button key={o.pack.id} role="radio" aria-checked={on} className={`mapp-pack${on ? " on" : ""}`} onClick={() => setSelectedId(o.pack.id)}>
-                  {badge && <span className={`mapp-pack-badge${o.pack.popular ? " hot" : ""}`}>{badge}</span>}
+                  {badge && <span className="mapp-pack-badge hot">{badge}</span>}
                   <span className="mapp-pack-radio" aria-hidden>{on && <Check size={13} />}</span>
                   <span className="mapp-pack-main">
                     <strong>{label(photosIn(o.pack))}</strong>

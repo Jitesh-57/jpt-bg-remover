@@ -1,4 +1,4 @@
-import { PACKS, CREDIT_COST } from "@/lib/plans";
+import { PACKS, MONTHLY_PLANS, CREDIT_COST } from "@/lib/plans";
 import { CONVERSIONS } from "@/lib/conversions";
 import { COMPRESSIONS } from "@/lib/compressions";
 import { CROPS } from "@/lib/crops";
@@ -34,6 +34,7 @@ const FREE_TOOLS: [string, string, string][] = [
 
 export function GET() {
   const packLine = PACKS.map((p) => `₹${p.inr} (≈ $${p.usd}) for ${p.credits} credits (${p.generations} generations)`).join(", ");
+  const monthlyLine = MONTHLY_PLANS.map((p) => `₹${p.inr}/month (≈ $${p.usd}) for ${p.credits} credits a month`).join(", ");
 
   const body = `# Pixel Shine
 
@@ -45,11 +46,12 @@ export function GET() {
 
 ## Pricing
 
-Credits are sold in one-time packs: ${packLine}. Credits never expire and there
-is no subscription. Each AI generation costs ${CREDIT_COST} credits. The
-free tools listed below are unlimited regardless of credits.
+Credits come two ways. Monthly plans renew every month and can be cancelled at
+any time: ${monthlyLine}; unused monthly credits do not carry over. One-time
+add-on packs never expire: ${packLine}. Each AI generation costs ${CREDIT_COST}
+credits. The free tools listed below are unlimited regardless of credits.
 
-- [Pricing](${BASE}/pricing): One-time credit packs for the AI features. No subscription, no expiry.
+- [Pricing](${BASE}/pricing): Monthly credit plans (cancel any time) and one-time add-on packs for the AI features.
 
 ## Free browser tools
 

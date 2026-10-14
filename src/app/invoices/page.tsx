@@ -68,7 +68,7 @@ export default async function InvoicesPage() {
           Your invoices
         </h1>
         <p style={{ color: "var(--text-muted)", fontSize: 15, margin: "0 0 28px", lineHeight: 1.7 }}>
-          One for every credit pack you have bought. Credits never expire, so these are one-off purchases — there is nothing recurring to cancel.
+          One for every credit pack you have bought and every month of a monthly plan. Monthly plans can be cancelled in Settings.
         </p>
         {children}
       </div>

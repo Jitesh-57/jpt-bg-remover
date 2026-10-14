@@ -14,11 +14,13 @@ import UnlimitedModal from "./UnlimitedModal";
 export default function PricingModalHost() {
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState<string | undefined>();
+  const [tab, setTab] = useState<PricingRequest["tab"]>();
   const [user, setUser] = useState<{ name?: string; email?: string } | null>(null);
 
   const onOpen = useCallback((e: Event) => {
     const detail = (e as CustomEvent<PricingRequest>).detail;
     setReason(detail?.reason);
+    setTab(detail?.tab);
     setOpen(true);
     // Read the session lazily: knowing whether to show "Sign in to continue"
     // or the buy button only matters once the modal is actually open.
@@ -39,6 +41,7 @@ export default function PricingModalHost() {
       onClose={() => setOpen(false)}
       loggedIn={!!user?.email}
       reason={reason}
+      tab={tab}
       prefillUser={user ?? undefined}
       onSuccess={() => setOpen(false)}
     />

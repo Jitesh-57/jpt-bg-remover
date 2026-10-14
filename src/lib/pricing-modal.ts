@@ -15,12 +15,14 @@ export const PRICING_EVENT = "jpt:open-pricing";
 export interface PricingRequest {
   /** What the user was trying to do, shown in the modal's heading. */
   reason?: string;
+  /** Which list opens first: monthly plans (the default) or one-time add-ons. */
+  tab?: "monthly" | "addons";
 }
 
-/** Opens the credit-pack modal. Safe to call during SSR (it does nothing). */
-export function openPricing(reason?: string): void {
+/** Opens the pricing modal. Safe to call during SSR (it does nothing). */
+export function openPricing(reason?: string, tab?: "monthly" | "addons"): void {
   if (typeof window === "undefined") return;
-  window.dispatchEvent(new CustomEvent<PricingRequest>(PRICING_EVENT, { detail: { reason } }));
+  window.dispatchEvent(new CustomEvent<PricingRequest>(PRICING_EVENT, { detail: { reason, tab } }));
 }
 
 /**

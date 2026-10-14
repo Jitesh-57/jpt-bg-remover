@@ -1,7 +1,7 @@
 import { brandedTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CREDIT_COST, PACKS } from "@/lib/plans";
+import { CREDIT_COST, PACKS, MONTHLY_PLANS, formatInr } from "@/lib/plans";
 
 export const metadata: Metadata = {
   title: { absolute: brandedTitle("Docs — How Pixel Shine Works | Pixel Shine") },
@@ -44,17 +44,28 @@ const SECTIONS: Section[] = [
     title: "Credits and pricing",
     body: (
       <>
-        <P>Every AI generation costs <strong style={{ color: "var(--text)" }}>{CREDIT_COST} credits</strong>. Credits come in one-time packs — there is no subscription, and credits never expire.</P>
+        <P>Every AI generation costs <strong style={{ color: "var(--text)" }}>{CREDIT_COST} credits</strong>. There are two ways to get them, and you can combine both.</P>
+        <P><strong style={{ color: "var(--text)" }}>Monthly plans</strong> renew every month and give you a fresh set of credits each time, at the lowest price per credit. Unused monthly credits don&apos;t carry over to the next month. You can hold more than one plan, and cancel any of them in <L href="/app/settings">Settings</L> — Razorpay stops charging, and the month you paid for runs to its end.</P>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 12, margin: "4px 0 18px" }}>
+          {MONTHLY_PLANS.map((p) => (
+            <div key={p.id} style={{ border: `1px solid ${p.popular ? "var(--accent-border)" : "var(--border)"}`, background: p.popular ? "var(--accent-soft)" : "var(--surface)", borderRadius: 14, padding: "14px 16px" }}>
+              <div style={{ fontSize: 13, fontWeight: 800, color: "var(--text-faint)", textTransform: "uppercase", letterSpacing: "0.08em" }}>{p.label} · monthly</div>
+              <div style={{ fontSize: 22, fontWeight: 900, color: "var(--text)", margin: "4px 0 2px", fontVariantNumeric: "tabular-nums" }}>{p.credits} credits</div>
+              <div style={{ fontSize: 13.5, color: "var(--text-muted)" }}>₹{formatInr(p.inr)}/month (about ${p.usd}) · {p.generations} generations</div>
+            </div>
+          ))}
+        </div>
+        <P><strong style={{ color: "var(--text)" }}>Add-on packs</strong> are a single payment, and their credits never expire. Monthly credits are always spent first, so the ones that would lapse are used before your add-ons.</P>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 12, margin: "4px 0 18px" }}>
           {PACKS.map((p) => (
             <div key={p.id} style={{ border: `1px solid ${p.popular ? "var(--accent-border)" : "var(--border)"}`, background: p.popular ? "var(--accent-soft)" : "var(--surface)", borderRadius: 14, padding: "14px 16px" }}>
               <div style={{ fontSize: 13, fontWeight: 800, color: "var(--text-faint)", textTransform: "uppercase", letterSpacing: "0.08em" }}>{p.label}</div>
               <div style={{ fontSize: 22, fontWeight: 900, color: "var(--text)", margin: "4px 0 2px", fontVariantNumeric: "tabular-nums" }}>{p.credits} credits</div>
-              <div style={{ fontSize: 13.5, color: "var(--text-muted)" }}>₹{p.inr} (about ${p.usd}) · {p.generations} generations</div>
+              <div style={{ fontSize: 13.5, color: "var(--text-muted)" }}>₹{formatInr(p.inr)} (about ${p.usd}) · {p.generations} generations</div>
             </div>
           ))}
         </div>
-        <P>Buy credits from <L href="/pricing">Pricing</L> or the <strong style={{ color: "var(--text)" }}>Buy credits</strong> button. Payments are handled by Razorpay and charged in Indian rupees. Your balance shows next to your name and in <L href="/app/credits">Credits</L>, with a history of every purchase and generation.</P>
+        <P>Get a plan or a pack from <L href="/pricing">Pricing</L> or the <strong style={{ color: "var(--text)" }}>Buy credits</strong> button. Payments are handled by Razorpay and charged in Indian rupees. Your balance shows next to your name and in <L href="/app/credits">Credits</L>, with a history of every purchase and generation.</P>
         <P>Some new accounts get a small free trial, depending on where they sign up. If you get one, a message tells you when you first sign in.</P>
       </>
     ),

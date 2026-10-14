@@ -1,9 +1,10 @@
 /**
  * auth.ts — credit system.
  *
- * Pure credit model (see lib/plans.ts): credits are bought in one-time packs,
- * never expire, and are spent per AI generation. There is no free trial for AI
- * features and no subscription.
+ * Credit model (see lib/plans.ts): credits come from one-time add-on packs,
+ * which never expire, and from monthly plans, whose credits last until the
+ * plan's month ends. They are spent per AI generation, monthly credits first
+ * (lib/credit-buckets.server.ts).
  *
  * Costs:
  *   resize / color-adjust / basic-upscale → 0 credits, unlimited, no account needed
@@ -27,6 +28,7 @@ export const FREE_CREDITS = 0;
 export { CREDIT_COST } from "@/lib/plans";
 import { CREDIT_COST } from "@/lib/plans";
 import { recordCredits } from "@/lib/ledger";
+import { monthlyBuckets, sumBuckets, takeFromBase, takeFromMonthly } from "@/lib/credit-buckets.server";
 export const BASIC_UPSCALE_COST = 1;
 export const FREE_TOOLS = ["resize", "color-adjust"];
 
@@ -71,7 +73,14 @@ export interface KVUser {
 
 export interface SessionPayload {
   userId: string; email: string; name: string; picture?: string;
-  provider: "google" | "email"; credits: number; plan: Plan;
+  provider: "google" | "email";
+  /** Everything spendable right now: baseCredits + monthlyCredits. */
+  credits: number;
+  plan: Plan;
+  /** profiles.credits — add-on packs, trial and legacy credits. Never expire. */
+  baseCredits?: number;
+  /** Unexpired credits across the user's monthly plans. */
+  monthlyCredits?: number;
   planExpiresAt?: string | null;
   iat: number; exp: number;
 }
@@ -147,6 +156,8 @@ export async function checkAuth(req: NextRequest): Promise<
     credits = profile.credits ?? 0;
   }
 
+  const monthly = profile ? sumBuckets(await monthlyBuckets(admin, user.id)) : 0;
+
   return {
     session: {
       userId: user.id,
@@ -154,7 +165,9 @@ export async function checkAuth(req: NextRequest): Promise<
       name: profile?.name || user.user_metadata?.name || user.email!.split("@")[0],
       picture: profile?.picture || user.user_metadata?.avatar_url,
       provider: (user.app_metadata?.provider || "email") as "google" | "email",
-      credits,
+      credits: credits + monthly,
+      baseCredits: credits,
+      monthlyCredits: monthly,
       plan,
       planExpiresAt,
       iat: 0, exp: 0,
@@ -190,16 +203,32 @@ export async function withCredits(
     const cost = CREDIT_COST;
     const newCredits = Math.max(0, session.credits - cost);
     const admin = createAdminSupabase();
-    const { error: adminErr } = await admin
-      .from("profiles")
-      .upsert({ id: session.userId, credits: newCredits }, { onConflict: "id" });
-    if (adminErr && req) {
-      console.warn("[withCredits] admin upsert failed, retrying with user auth:", adminErr.message);
-      const userClient = createRequestSupabase(req);
-      const { error: userErr } = await userClient
-        .from("profiles")
-        .upsert({ id: session.userId, credits: newCredits }, { onConflict: "id" });
-      if (userErr) console.error("[withCredits] user-auth upsert also failed:", userErr.message);
+
+    // Monthly credits first: they lapse when the plan's month ends, add-on
+    // credits never do. The buckets are re-read here rather than trusted from
+    // the session, which was loaded before the generation ran.
+    const fromMonthly = session.monthlyCredits
+      ? await takeFromMonthly(admin, await monthlyBuckets(admin, session.userId), cost)
+      : 0;
+    const fromBase = cost - fromMonthly;
+
+    if (fromBase > 0) {
+      const base = session.baseCredits ?? session.credits;
+      const newBase = Math.max(0, base - fromBase);
+      // A conditional write first, so racing generations cannot spend the same
+      // credit; if the database refuses it, the original upsert path below.
+      const taken = await takeFromBase(admin, session.userId, base, fromBase);
+      const { error: adminErr } = taken !== null
+        ? { error: null }
+        : await admin.from("profiles").upsert({ id: session.userId, credits: newBase }, { onConflict: "id" });
+      if (adminErr && req) {
+        console.warn("[withCredits] admin upsert failed, retrying with user auth:", adminErr.message);
+        const userClient = createRequestSupabase(req);
+        const { error: userErr } = await userClient
+          .from("profiles")
+          .upsert({ id: session.userId, credits: newBase }, { onConflict: "id" });
+        if (userErr) console.error("[withCredits] user-auth upsert also failed:", userErr.message);
+      }
     }
     /*
       The spend is written down as well as applied.
@@ -216,6 +245,7 @@ export async function withCredits(
       balanceAfter: newCredits,
       reason: "generation",
       tool: toolId ?? null,
+      note: fromMonthly ? `${fromMonthly} from monthly plan${fromBase ? `, ${fromBase} from add-on credits` : ""}` : null,
     });
 
     return NextResponse.json({ ...body, credits: newCredits });
@@ -235,7 +265,7 @@ export async function withCredits(
   return NextResponse.json({
     error: session.credits > 0
       ? `You need ${CREDIT_COST} credits for this. Top up to continue.`
-      : "AI features run on credits. Grab a pack to start — from ₹166, and they never expire.",
+      : "AI features run on credits. Pick a monthly plan or a one-time pack to start — from ₹166.",
     upgradeRequired: true,
     credits: session.credits,
   }, { status: 402 });
@@ -277,7 +307,7 @@ export async function checkEntitlement(
   return NextResponse.json({
     error: session.credits > 0
       ? `You need ${CREDIT_COST} credits for this. Top up to continue.`
-      : "AI features run on credits. Grab a pack to start — from ₹166, and they never expire.",
+      : "AI features run on credits. Pick a monthly plan or a one-time pack to start — from ₹166.",
     upgradeRequired: true,
     credits: session.credits,
   }, { status: 402 });
