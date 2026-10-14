@@ -13,7 +13,7 @@ export default function TermsPage() {
     <main style={{ fontFamily: "var(--font)", color: "var(--text)", background: "var(--surface)", minHeight: "100vh" }}>
       <div style={{ maxWidth: 780, margin: "0 auto", padding: "60px 24px 80px" }}>
         <h1 style={{ fontSize: 36, fontWeight: 900, marginBottom: 8 }}>Terms of Service</h1>
-        <p style={{ color: "var(--text-muted)", fontSize: 14, marginBottom: 48 }}>Last updated: June 23, 2025</p>
+        <p style={{ color: "var(--text-muted)", fontSize: 14, marginBottom: 48 }}>Last updated: October 14, 2026</p>
 
         <Section title="1. Acceptance of Terms">
           By accessing or using Pixel Shine (&quot;the Service&quot;) at{" "}
@@ -29,7 +29,7 @@ export default function TermsPage() {
         </Section>
 
         <Section title="4. Credits and Payments">
-          <b>Free trials:</b> New users receive 5 free trials in total, usable on any 5 distinct tools or Creative Apps (a maximum of one free trial per distinct tool). Basic, non-AI tools such as Resize, Color Adjust and the standard Upscale are always free and unlimited, with no trial or credit required.
+          <b>Free trial:</b> New accounts in selected countries may receive a one-time free AI generation, added as credits when the account is created. Eligibility (country, email provider, one per person) is shown at sign-up and may change or end at any time. Basic, non-AI tools such as Resize, Color Adjust and the standard Upscale are always free and unlimited, with no trial or credit required.
           <br /><br />
           <b>Paid plans:</b> Credits can be purchased through one-time payments processed by Razorpay. Purchased credits do not expire and are non-refundable except as required by applicable law.
           <br /><br />
