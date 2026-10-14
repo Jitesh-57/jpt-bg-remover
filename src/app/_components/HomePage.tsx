@@ -112,7 +112,7 @@ export default function HomePage({
           <div style={{ display: "flex", flexWrap: "wrap", gap: "10px 22px", justifyContent: "center", fontSize: 13.5, color: "var(--text-muted)", fontWeight: 600, marginTop: 22 }}>
             <span>✓ No sign-up for free tools</span>
             <span>✓ Nothing to install</span>
-            <span>✓ Credits never expire</span>
+            <span>✓ Cancel plans any time</span>
           </div>
         </section>
 
@@ -147,7 +147,7 @@ export default function HomePage({
         {/* ── PRO TOOLS ────────────────────────────────────────────────────── */}
         <section style={{ padding: "0 24px 88px" }}>
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
-            {sectionHead("Pro tools", "The AI tools, on credits", `Server-side AI at ${CREDIT_COST} credits a generation. Buy a pack once from $2 — it never expires and nothing auto-renews.`)}
+            {sectionHead("Pro tools", "The AI tools, on credits", `Server-side AI at ${CREDIT_COST} credits a generation. Go monthly from $5 and cancel any time, or buy a pack once from $2 that never expires.`)}
             <TrialPill source="home-ai-tools" />
             {/* Search-intent names on photo tiles, each opening its new /app workspace. */}
             <HomeToolsBento features={features ?? []} />

@@ -6,15 +6,13 @@ import { useRef, useState, useCallback, useEffect } from "react";
 import {
   trackImageUploaded, trackImageUploadFailed, trackTransformButtonClicked, trackImageTransformed,
   trackImageTransformedFailed, trackGenerateButtonClicked, trackImageGenerated, trackImageGenerationFailed,
-  trackPaymentPopupTriggered, trackBuyButtonClicked, trackDownloadButtonClicked, setAnalyticsUser,
-  trackBeginCheckout, trackPurchase, trackPaymentFailed,
+  trackPaymentPopupTriggered, trackDownloadButtonClicked, setAnalyticsUser,
 } from "@/lib/analytics";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
-import { CREDIT_COST, PACKS, inrPerCredit } from "@/lib/plans";
+import { CREDIT_COST } from "@/lib/plans";
 import { MODELS } from "@/lib/app-presets";
 import { publishCredits } from "@/lib/credits";
 import { parseJsonResponse } from "@/lib/upload-prep";
-import { explainPaymentFailure } from "@/lib/pricing-modal";
 import { savePendingContext, loadPendingContext, clearPendingContext } from "@/lib/pending-image";
 import { applyWatermark, renderMeme, type WatermarkPosition } from "@/lib/tools-canvas";
 import ToolIcon from "./ToolIcon";
@@ -114,12 +112,6 @@ const STICKER_PACKS: { name: string; emojis: string[] }[] = [
   { name: "Love", emojis: ["❤️","🧡","💛","💚","💙","💜","🖤","🤍","🤎","💕","💞","💓","💗","💖","💘","💝","💟","❣️","💔","❤️‍🔥","💯","💥","💫","⭐","🌟","✨","⚡","🔥","🎉","🎊","🎈","👑","💎","🏆","🥇","🌈"] },
   { name: "Fun", emojis: ["😺","😸","😹","😻","🙀","🐶","🐱","🦄","🐼","🐸","🐵","🙈","🙉","🙊","🦁","🐯","🍕","🍔","🍟","🌭","🍩","🍦","☕","🍺","🎮","🎧","📸","💩","🤡","👻","💀","☠️","👽","👾","🤖","🎃","👋"] },
 ];
-
-const AI_TOOL_DESCRIPTIONS: Record<string, string> = {
-  "ai-edit": "AI Edit lets you transform images with text prompts — change backgrounds, add effects, relight scenes and more.",
-  "generate-bg": "Generate Background creates stunning AI-generated backgrounds behind your subject automatically.",
-  "upscale": "AI Upscale enhances your image to 2× or 4× resolution using super-resolution AI — crystal clear results.",
-};
 
 const SESSION_KEY = "jpt_editor_session";
 const SESSION_TTL = 24 * 60 * 60 * 1000;
@@ -594,89 +586,6 @@ export default function ImageEditorPage() {
     else if (!user) setAnalyticsUser(null);
   }, [user]);
 
-  // Analytics value for a pack, in rupees — the amount actually charged.
-  const PLAN_PRICES: Record<string, number> =
-    Object.fromEntries(PACKS.map((pk) => [pk.id, pk.inr]));
-
-  async function handleBuyPlan(planKey: string) {
-    const planValue = PLAN_PRICES[planKey] || 0;
-    trackBuyButtonClicked(planKey, planValue);
-    setBuyingPlan(planKey);
-    try {
-      if (!window.Razorpay) {
-        await new Promise<void>((resolve, reject) => {
-          const s = document.createElement("script");
-          s.src = "https://checkout.razorpay.com/v1/checkout.js";
-          s.onload = () => resolve();
-          s.onerror = () => reject(new Error("The payment window could not load. Check your connection and try again."));
-          document.head.appendChild(s);
-        });
-      }
-      const orderRes = await fetch("/api/create-order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan: planKey }),
-      });
-      const orderData = await orderRes.json() as { order_id?: string; amount?: number; currency?: string; credits?: number; error?: string };
-      if (!orderRes.ok || !orderData.order_id) {
-        trackPaymentFailed(planKey, orderData.error || "order_creation_failed");
-        setBuyingPlan(null);
-        return;
-      }
-      trackBeginCheckout(planKey, planValue);
-      const rzp = new window.Razorpay({
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-        order_id: orderData.order_id,
-        amount: orderData.amount,
-        currency: orderData.currency || "INR",
-        name: "Pixel Shine",
-        description: `${planKey.charAt(0).toUpperCase() + planKey.slice(1)} Plan — ${orderData.credits} credits`,
-        // A literal hex, not var(--accent): Razorpay's checkout renders in its
-        // own document and cannot resolve our CSS custom properties, so the
-        // variable was silently ignored and checkout fell back to its default
-        // blue.
-        theme: { color: "#FF7A2F" },
-        modal: { ondismiss() { trackPaymentFailed(planKey, "cancelled_by_user"); setBuyingPlan(null); } },
-        handler: async (response: { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string }) => {
-          try {
-            const verifyRes = await fetch("/api/verify-payment", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ ...response, plan: planKey }),
-            });
-            const data = await verifyRes.json() as { success?: boolean; credits?: number };
-            if (data.success && data.credits) {
-              setUser(u => u ? { ...u, credits: data.credits!, plan: planKey } : u);
-              publishCredits(data.credits);
-              setShowUpgradeModal(false);
-              setBlockedTool(null);
-              trackPurchase(planKey, planValue, data.credits);
-            } else {
-              trackPaymentFailed(planKey, "verification_failed");
-            }
-          } catch {
-            trackPaymentFailed(planKey, "verification_request_failed");
-          }
-          setBuyingPlan(null);
-        },
-        prefill: { name: user?.name || "", email: user?.email || "" },
-      });
-      // A rejected payment (a card decline, or Razorpay refusing the origin)
-      // arrives here; without it the editor just cleared the spinner and left
-      // the buyer with no idea why nothing happened.
-      rzp.on?.("payment.failed", (resp: RazorpayFailure) => {
-        trackPaymentFailed(planKey, resp?.error?.reason || "payment_failed");
-        console.error("[editor] razorpay payment.failed:", JSON.stringify(resp?.error || {}));
-        setError(explainPaymentFailure(resp?.error?.description, resp?.error?.reason));
-        setBuyingPlan(null);
-      });
-
-      rzp.open();
-    } catch (e) {
-      trackPaymentFailed(planKey, (e as Error).message || "unknown_error");
-      setBuyingPlan(null);
-    }
-  }
 
   // (Sign-in form state now lives in the shared SignInModal component.)
 
@@ -2824,8 +2733,8 @@ export default function ImageEditorPage() {
             <div style={s.modalTitle}>No credits remaining</div>
 
             <div style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.6, marginBottom: 16, textAlign: "center" as const }}>
-              You&apos;ve used up your purchased credits. <strong>Buy more to keep using AI features</strong> —<br />
-              your credits never expire.
+              You&apos;ve used up your credits. <strong>Pick a monthly plan or a one-time pack</strong><br />
+              to keep using the AI features.
             </div>
 
             <div style={s.noCreditsInfo}>
@@ -2861,111 +2770,15 @@ export default function ImageEditorPage() {
         tool={activeTool || "editor"}
       />
 
-      {/* ── Upgrade Modal ─────────────────────────────────────────────────── */}
+      {/* ── Upgrade Modal: the shared pricing popup ─────────────────────── */}
       {showUpgradeModal && (
-        <div style={s.modalOverlay} onClick={() => { setShowUpgradeModal(false); setBlockedTool(null); }}>
-          <div style={{ background: "var(--surface)", borderRadius: 24, width: "100%", maxWidth: 580, maxHeight: "90vh", overflowY: "auto" as const, boxShadow: "0 24px 80px rgba(0,0,0,0.22)", position: "relative" }} onClick={(e) => e.stopPropagation()}>
-
-            {/* Gradient header */}
-            <div style={{ background: "linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 50%, #A78BFA 100%)", borderRadius: "24px 24px 0 0", padding: "32px 32px 28px", color: "#fff", position: "relative" }}>
-              <button onClick={() => { setShowUpgradeModal(false); setBlockedTool(null); }} style={{ position: "absolute", top: 16, right: 16, background: "rgba(255,255,255,0.2)", border: "none", borderRadius: "50%", width: 32, height: 32, cursor: "pointer", color: "#fff", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center" }}>×</button>
-
-              {blockedTool && (
-                <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.15)", borderRadius: 20, padding: "6px 14px", fontSize: 13, fontWeight: 600, marginBottom: 14 }}>
-                  <span>{blockedTool.icon}</span>
-                  <span>{blockedTool.label} requires AI credits</span>
-                </div>
-              )}
-
-              <div style={{ fontSize: 28, fontWeight: 900, marginBottom: 8, lineHeight: 1.2 }}>
-                {blockedTool ? `Unlock ${blockedTool.label}` : "Unlock AI Features"}
-              </div>
-              <div style={{ fontSize: 15, opacity: 0.9, lineHeight: 1.5 }}>
-                {blockedTool
-                  ? (blockedTool.id ? AI_TOOL_DESCRIPTIONS[blockedTool.id] : null) || "This AI tool requires a paid plan."
-                  : "You're on the free plan. Upgrade to access all AI transformations."}
-              </div>
-
-              {/* Free vs Paid comparison */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 20 }}>
-                <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: 12, padding: "12px 14px" }}>
-                  <div style={{ fontWeight: 800, fontSize: 12, marginBottom: 8, opacity: 0.8 }}>✅ FREE (Your Plan)</div>
-                  {["↔️ Resize", "🎨 Color Adjust", "🔢 Basic Crop", "🔍 Unlimited Basic Upscale", "🔓 Every free tool, unlimited"].map(f => (
-                    <div key={f} style={{ fontSize: 12, opacity: 0.9, marginBottom: 4 }}>{f}</div>
-                  ))}
-                </div>
-                <div style={{ background: "rgba(255,255,255,0.18)", borderRadius: 12, padding: "12px 14px", border: "1px solid rgba(255,255,255,0.3)" }}>
-                  <div style={{ fontWeight: 800, fontSize: 12, marginBottom: 8 }}>🚀 PAID PLANS</div>
-                  {["✨ AI Edit (prompts)", "🌅 Generate BG", "🗑️ Remove BG", "⬆️ AI Upscale (4K)"].map(f => (
-                    <div key={f} style={{ fontSize: 12, marginBottom: 4 }}>{f}</div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Pricing cards */}
-            <div style={{ padding: "24px 28px 28px" }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: "var(--text-faint)", textAlign: "center" as const, marginBottom: 16, textTransform: "uppercase" as const, letterSpacing: 1 }}>Choose a plan · one-time payment · credits never expire</div>
-
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 12, marginBottom: 20 }}>
-                {/*
-                  Built from PACKS rather than typed out. These cards used to
-                  offer starter/creator/pro at ₹499/₹999/₹2499 — prices and
-                  credit counts that no longer exist, and plan ids that
-                  /api/create-order rejects with "Invalid plan", so every
-                  Buy Now here returned 400 and silently did nothing.
-                */}
-                {PACKS.map((pk) => {
-                  const plan = {
-                    name: pk.label,
-                    planKey: pk.id,
-                    price: `₹${pk.inr}`,
-                    credits: pk.credits,
-                    perCredit: `₹${inrPerCredit(pk).toFixed(1)}`,
-                    color: pk.popular ? "var(--accent-strong)" : "var(--accent)",
-                    popular: pk.popular,
-                    features: [
-                      `${pk.credits} AI credits`,
-                      `≈ ${pk.generations} generations`,
-                      "All AI tools",
-                      "Never expires",
-                    ],
-                  };
-                  return (
-                  <div key={plan.name} style={{ border: `2px solid ${plan.popular ? plan.color : "var(--text-muted)"}`, borderRadius: 16, padding: "18px 14px", textAlign: "center" as const, position: "relative", background: plan.popular ? "var(--surface-2)" : "var(--surface-2)", transition: "transform 0.1s" }}>
-                    {plan.popular && (
-                      <div style={{ position: "absolute", top: -11, left: "50%", transform: "translateX(-50%)", background: plan.color, color: "#fff", fontSize: 9, fontWeight: 900, padding: "3px 12px", borderRadius: 20, whiteSpace: "nowrap" as const, letterSpacing: 0.5 }}>
-                        ✦ MOST POPULAR
-                      </div>
-                    )}
-                    <div style={{ fontWeight: 800, fontSize: 13, color: plan.popular ? plan.color : "var(--text-muted)", marginBottom: 6 }}>{plan.name}</div>
-                    <div style={{ fontWeight: 900, fontSize: 30, color: "var(--text)", lineHeight: 1 }}>{plan.price}</div>
-                    <div style={{ fontSize: 11, color: "var(--text-faint)", marginBottom: 10 }}>{plan.perCredit}/credit</div>
-                    <div style={{ fontWeight: 800, fontSize: 20, color: plan.color, marginBottom: 4 }}>{plan.credits}</div>
-                    <div style={{ fontSize: 11, color: "var(--text-faint)", marginBottom: 14 }}>AI Credits</div>
-                    {plan.features.map(f => (
-                      <div key={f} style={{ fontSize: 11, color: "var(--text-muted)", marginBottom: 3, textAlign: "left" as const }}>✓ {f}</div>
-                    ))}
-                    <button
-                      onClick={() => handleBuyPlan(plan.planKey)}
-                      disabled={buyingPlan !== null}
-                      style={{ display: "block", width: "100%", marginTop: 14, background: buyingPlan === plan.planKey ? "var(--text-faint)" : plan.popular ? plan.color : "var(--text)", color: "#fff", borderRadius: 10, padding: "10px 0", fontSize: 13, fontWeight: 700, border: "none", cursor: buyingPlan !== null ? "not-allowed" : "pointer" }}
-                    >
-                      {buyingPlan === plan.planKey ? "Processing…" : "Buy Now →"}
-                    </button>
-                  </div>
-                  );
-                })}
-              </div>
-
-              <div style={{ textAlign: "center" as const }}>
-                <button style={{ background: "none", border: "none", color: "var(--text-faint)", fontSize: 13, cursor: "pointer", textDecoration: "underline" }} onClick={() => { setShowUpgradeModal(false); setBlockedTool(null); }}>
-                  Maybe later — stay on free plan
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <UnlimitedModal
+          onClose={() => { setShowUpgradeModal(false); setBlockedTool(null); }}
+          loggedIn={!!user}
+          reason={blockedTool?.label}
+          prefillUser={{ name: user?.name, email: user?.email }}
+          onSuccess={() => { setShowUpgradeModal(false); setBlockedTool(null); }}
+        />
       )}
     </div>
   );

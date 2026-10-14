@@ -44,13 +44,16 @@ export async function POST(req: NextRequest) {
 
   // Assign plan + add credits to user profile
   const { credits: planCredits } = PLAN_CREDITS[plan];
+  // Add-on credits go to the never-expiring balance (profiles.credits); the
+  // total reported back also counts any monthly-plan credits.
+  const newBase = (session!.baseCredits ?? session!.credits) + planCredits;
   const newCredits = session!.credits + planCredits;
 
   const admin = createAdminSupabase();
   const { error: dbErr } = await admin.from("profiles").upsert({
     id: session!.userId,
     plan,
-    credits: newCredits,
+    credits: newBase,
     daily_credits_reset_at: null, // paid users don't reset daily
   }, { onConflict: "id" });
 

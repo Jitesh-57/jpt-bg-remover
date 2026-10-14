@@ -16,7 +16,7 @@ offered even if Play Billing fails to load. The screen says so instead.
 ```
 Paywall (src/app/m/_components/Paywall.tsx)
   └─ buyOnPlay()                        src/lib/play-billing.client.ts
-       PaymentRequest("https://play.google.com/billing", { sku: "credits_20" })
+       PaymentRequest("https://play.google.com/billing", { sku: "credits_15" })
        → Google Play sheet → purchaseToken
   └─ POST /api/play/verify              src/app/api/play/verify/route.ts
        1. token checked with Google      src/lib/google-play.server.ts
@@ -37,13 +37,16 @@ purchase that isn't consumed within three days, so this retry matters.
 ### 1. Products in Play Console
 
 In each app: **Monetize → Products → In-app products → Create product**. Make
-three products. They are consumable; there is no subscription.
+four products, one per add-on pack. They are consumable. The website's monthly
+plans are not sold in the Play app: a subscription there would have to be a Play
+subscription, which is a separate piece of work.
 
-| Product ID   | Gives      | Suggested price (India) |
-|--------------|------------|-------------------------|
-| `credits_5`  | 5 credits  | ₹179                    |
-| `credits_20` | 20 credits | ₹449                    |
-| `credits_50` | 50 credits | ₹899                    |
+| Product ID   | Gives      | Website price | Suggested Play price (India) |
+|--------------|------------|---------------|------------------------------|
+| `credits_5`  | 5 credits  | ₹166          | ₹179                         |
+| `credits_15` | 15 credits | ₹830          | ₹899                         |
+| `credits_25` | 25 credits | ₹1,660        | ₹1,799                       |
+| `credits_35` | 35 credits | ₹2,490        | ₹2,699                       |
 
 Play sets the price the buyer sees, in their own currency. The app reads it
 from Play and never hard-codes it. Google keeps 15% of the first $1M a year,

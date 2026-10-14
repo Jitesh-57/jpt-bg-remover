@@ -67,7 +67,7 @@ export function invoiceNumber(seq: number, when: Date): string {
 export interface Purchase {
   id?: string | number;
   user_id: string;
-  razorpay_order_id: string;
+  razorpay_order_id: string | null;
   razorpay_payment_id: string;
   plan: string;
   credits_added: number;
@@ -115,9 +115,11 @@ export function buildInvoice(p: Purchase, buyer: Buyer): Invoice {
   const date = p.created_at ? new Date(p.created_at) : new Date();
   const s = seller();
 
-  const description = pack
-    ? `${pack.label} credit pack — ${pack.credits} AI credits (${pack.generations} generations)`
-    : `Credit pack — ${p.credits_added} AI credits`;
+  const description = pack?.monthly
+    ? `${pack.label} monthly plan — ${pack.credits} AI credits for one month (${pack.generations} generations)`
+    : pack
+      ? `${pack.label} credit pack — ${pack.credits} AI credits (${pack.generations} generations)`
+      : `Credit pack — ${p.credits_added} AI credits`;
 
   const invoice: Invoice = {
     number: p.invoice_no || invoiceNumber(0, date),
@@ -125,7 +127,7 @@ export function buildInvoice(p: Purchase, buyer: Buyer): Invoice {
     seller: s,
     buyer,
     paymentId: p.razorpay_payment_id,
-    orderId: p.razorpay_order_id,
+    orderId: p.razorpay_order_id || "",
     lines: [{ description, qty: 1, rate: total, amount: total }],
     total,
   };

@@ -1,13 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDashboardUser } from "../_components/DashboardUser";
 import { signOut } from "../_components/UserMenu";
+import MyPlans from "../_components/MyPlans";
 import { CREDIT_COST } from "@/lib/plans";
+import { onCreditsChanged } from "@/lib/credits";
 
 export default function SettingsPage() {
   const user = useDashboardUser();
   const [signingOut, setSigningOut] = useState(false);
+  const [credits, setCredits] = useState(user.credits);
+  const [monthly, setMonthly] = useState(0);
+  useEffect(() => onCreditsChanged(setCredits), []);
+  const onTotals = useCallback((m: number) => setMonthly(m), []);
+  const addon = Math.max(0, credits - monthly);
 
   const handleSignOut = async () => {
     setSigningOut(true);
@@ -34,10 +41,17 @@ export default function SettingsPage() {
 
         <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 18, padding: "20px 26px", marginBottom: 20, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
           <div>
-            <div style={{ fontSize: 14, fontWeight: 700, color: "var(--text)" }}>⚡ {user.credits} credits</div>
-            <div style={{ fontSize: 12.5, color: "var(--text-muted)", marginTop: 3 }}>{Math.floor(user.credits / CREDIT_COST)} generations left · never expire</div>
+            <div style={{ fontSize: 14, fontWeight: 700, color: "var(--text)" }}>⚡ {credits} credits</div>
+            <div style={{ fontSize: 12.5, color: "var(--text-muted)", marginTop: 3 }}>
+              {Math.floor(credits / CREDIT_COST)} generations left
+              {monthly > 0 ? ` · ${monthly} monthly (refresh each renewal) + ${addon} add-on (never expire)` : " · add-on credits never expire"}
+            </div>
           </div>
           <a href="/app/credits" style={{ padding: "9px 16px", borderRadius: 10, background: "var(--surface-2)", border: "1px solid var(--border-strong)", color: "var(--text)", fontWeight: 700, fontSize: 13, textDecoration: "none", whiteSpace: "nowrap" }}>Manage credits</a>
+        </div>
+
+        <div style={{ marginBottom: 20 }}>
+          <MyPlans onTotals={onTotals} />
         </div>
 
         <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 18, padding: "20px 26px" }}>

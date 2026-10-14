@@ -1,8 +1,9 @@
 "use client";
 
 /**
- * checkout.ts — the one Razorpay checkout flow, used by both /pricing and
- * /app/credits.
+ * checkout.ts — the Razorpay checkout flows: buyPack() for one-time add-on
+ * packs and subscribe() for monthly plans. Used by the pricing popup, /pricing
+ * and /app/credits.
  *
  * Extracted rather than duplicated: this is the code that moves money, and
  * a payment flow copy-pasted into two places is two places a fix can miss.
@@ -34,21 +35,25 @@ export interface CheckoutResult {
   credits?: number;
 }
 
+async function loadRazorpay(): Promise<void> {
+  if (window.Razorpay) return;
+  await new Promise<void>((resolve, reject) => {
+    const s = document.createElement("script");
+    s.src = "https://checkout.razorpay.com/v1/checkout.js";
+    s.onload = () => resolve();
+    s.onerror = () => reject(new Error("The payment window could not load. Check your connection and try again."));
+    document.head.appendChild(s);
+  });
+}
+
 /** Buys one pack. Resolves once the flow is fully done (success, failure or cancel). */
 export async function buyPack(p: Pack, prefill?: { name?: string; email?: string }): Promise<CheckoutResult> {
+  if (p.monthly) return subscribe(p, prefill);
   trackBuyButtonClicked(p.id, p.usd);
   trackBeginCheckout(p.id, p.usd);
 
   try {
-    if (!window.Razorpay) {
-      await new Promise<void>((resolve, reject) => {
-        const s = document.createElement("script");
-        s.src = "https://checkout.razorpay.com/v1/checkout.js";
-        s.onload = () => resolve();
-        s.onerror = () => reject(new Error("The payment window could not load. Check your connection and try again."));
-        document.head.appendChild(s);
-      });
-    }
+    await loadRazorpay();
 
     const orderRes = await fetch("/api/create-order", {
       method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ plan: p.id }),
@@ -107,6 +112,76 @@ export async function buyPack(p: Pack, prefill?: { name?: string; email?: string
         const why = explainPaymentFailure(resp?.error?.description, resp?.error?.reason);
         trackPaymentFailed(p.id, resp?.error?.reason || "payment_failed");
         console.error("[checkout] razorpay payment.failed:", JSON.stringify(resp?.error || {}));
+        resolve({ ok: false, text: why });
+      });
+
+      rzp.open();
+    });
+  } catch (e) {
+    trackPaymentFailed(p.id, String(e));
+    return { ok: false, text: String(e) };
+  }
+}
+
+/**
+ * Starts a monthly plan: /api/subscriptions/create makes the Razorpay
+ * subscription, Checkout takes the first month's payment and saves the card or
+ * UPI mandate for renewals, and /api/subscriptions/verify grants the month's
+ * credits. Same shape and failure handling as buyPack.
+ */
+export async function subscribe(p: Pack, prefill?: { name?: string; email?: string }): Promise<CheckoutResult> {
+  trackBuyButtonClicked(p.id, p.usd);
+  trackBeginCheckout(p.id, p.usd);
+
+  try {
+    await loadRazorpay();
+
+    const res = await fetch("/api/subscriptions/create", {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ plan: p.id }),
+    });
+    const data = (await res.json()) as { subscription_id?: string; error?: string };
+    if (!res.ok || !data.subscription_id) {
+      trackPaymentFailed(p.id, data.error || "subscription_creation_failed");
+      return { ok: false, text: data.error || "Checkout could not be started. Please try again." };
+    }
+
+    return await new Promise<CheckoutResult>((resolve) => {
+      const rzp = new window.Razorpay({
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        subscription_id: data.subscription_id,
+        name: "Pixel Shine",
+        description: `${p.label} plan — ${p.credits} credits every month`,
+        theme: { color: "#FF7A2F" },
+        modal: {
+          ondismiss() {
+            trackPaymentFailed(p.id, "cancelled_by_user");
+            resolve({ ok: false, text: "Payment cancelled. You have not been charged." });
+          },
+        },
+        handler: async (response: { razorpay_payment_id: string; razorpay_subscription_id: string; razorpay_signature: string }) => {
+          try {
+            const verifyRes = await fetch("/api/subscriptions/verify", {
+              method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(response),
+            });
+            const v = (await verifyRes.json()) as { success?: boolean; error?: string; credits?: number };
+            if (v.success) {
+              trackPurchase(p.id, p.usd, 0);
+              resolve({ ok: true, text: `🎉 You're on the ${p.label} plan — ${p.credits} credits added for this month.`, credits: v.credits });
+            } else {
+              trackPaymentFailed(p.id, v.error || "verification_failed");
+              resolve({ ok: false, text: v.error || "Verification failed" });
+            }
+          } catch {
+            resolve({ ok: false, text: "Verification request failed" });
+          }
+        },
+        prefill: { name: prefill?.name || "", email: prefill?.email || "" },
+      });
+
+      rzp.on?.("payment.failed", (resp) => {
+        const why = explainPaymentFailure(resp?.error?.description, resp?.error?.reason);
+        trackPaymentFailed(p.id, resp?.error?.reason || "payment_failed");
+        console.error("[checkout] razorpay subscription payment.failed:", JSON.stringify(resp?.error || {}));
         resolve({ ok: false, text: why });
       });
 

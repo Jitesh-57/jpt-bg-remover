@@ -3,7 +3,7 @@
 import { useRef, useState, useEffect, DragEvent } from 'react'
 import { useTrialOffer } from '@/lib/trial-offer'
 import PricingSection from '@/app/_components/PricingSection'
-import { PACKS, CREDIT_COST } from '@/lib/plans'
+import { PACKS, MONTHLY_PLANS, CREDIT_COST } from '@/lib/plans'
 import FAQAccordion from './FAQAccordion'
 import { PageSEO } from '@/lib/page-config'
 import { PAGE_IMAGES, PAGE_BEFORE_AFTER } from '@/lib/landing-images'
@@ -423,8 +423,8 @@ export default function LandingPage({ config, toolHref, pageId, isHome, relatedV
       // currency the offer is actually made in.
       priceCurrency: 'INR',
       lowPrice: '0',
-      highPrice: String(PACKS[PACKS.length - 1].inr),
-      offerCount: String(PACKS.length + 1),
+      highPrice: String(Math.max(...PACKS.map((p) => p.inr), ...MONTHLY_PLANS.map((p) => p.inr))),
+      offerCount: String(PACKS.length + MONTHLY_PLANS.length + 1),
     },
   }
 
@@ -1038,8 +1038,8 @@ export default function LandingPage({ config, toolHref, pageId, isHome, relatedV
           <p style={{ fontSize: 16, color: 'var(--text-muted)', lineHeight: 1.8, margin: 0 }}>
             Nothing is uploaded for the browser-based tools — the work happens on your own device, which is
             why they are free and have no per-image limit. The AI features do run on a server, and those are
-            the ones that use credits: {CREDIT_COST} credits a generation, bought once, never expiring. There
-            is no subscription on Pixel Shine and no watermark on anything you export.
+            the ones that use credits: {CREDIT_COST} credits a generation, from a one-time pack that never
+            expires or a monthly plan you can cancel any time. There is no watermark on anything you export.
           </p>
         </div>
       </section>

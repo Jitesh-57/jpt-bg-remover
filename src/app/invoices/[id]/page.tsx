@@ -126,7 +126,7 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
               <div style={label}>Payment</div>
               <div style={{ ...value, marginTop: 6, color: "#374151" }}>
                 <div>Razorpay · {inv.paymentId}</div>
-                <div>Order {inv.orderId}</div>
+                {inv.orderId && <div>Order {inv.orderId}</div>}
               </div>
             </div>
           </section>

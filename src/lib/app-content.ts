@@ -155,7 +155,7 @@ export function categoryOf(app: CreativeApp): string {
 
 const SHARED_BENEFITS: Item[] = [
   { t: "Nothing to install", d: "It works on a phone or a laptop. No desktop app, no plugin, no account needed to look around." },
-  { t: "No subscription", d: "Credits are a one-time purchase, they never expire, and nothing renews on its own. Buy once and use them whenever." },
+  { t: "No subscription needed", d: "Buy a one-time pack whose credits never expire, or go monthly for the lowest price per credit and cancel any time." },
   { t: "Three models to choose from", d: "Nano Banana Pro, GPT Image and Seedream 4.5 handle the same job differently. If one result is not right, another model often is." },
   { t: "Every aspect ratio", d: "Square, 4:5, 9:16, 16:9 and more, chosen before generating so nothing important gets cropped away afterwards." },
   { t: "Full resolution, no watermark", d: "The download is the full generated image with nothing overlaid — usable in print, in a listing or commercially." },
@@ -326,7 +326,7 @@ const portrait: Bank = {
     { t: "Works from an ordinary phone photo", d: "A good selfie in soft light is enough. It does not need a camera, a lens or a lighting kit." },
     { t: "Several looks from one photo", d: "Generate three styles from the same upload and choose per platform rather than reusing one picture everywhere." },
     { t: "Ready for print", d: "Resolution holds for an invitation, a framed print or a gift, not only for a screen." },
-    { t: "Nothing recurring", d: "Credits are bought once and never expire. There is no subscription to cancel and nothing renews on its own." },
+    { t: "Pay your way", d: "One-time packs never expire. Monthly plans cost less per credit and can be cancelled any time in Settings." },
     { t: "Easy for anyone", d: "No editing skill, no layers, no prompt engineering. Upload, pick, generate." },
   ],
   useCases: [
@@ -415,7 +415,7 @@ const style: Bank = {
     { t: "Nothing to learn", d: "No illustration software, no tablet, no understanding of layers or masks." },
     { t: "Keeps the likeness", d: "The point of a portrait is that it is of someone. Identity preservation is applied to every person-editing prompt." },
     { t: "Full resolution and no watermark", d: "Print it, frame it, use it commercially. Nothing is stamped on the result." },
-    { t: "No subscription", d: "Credits are a one-time purchase and never expire. Nothing renews." },
+    { t: "No subscription needed", d: "One-time packs never expire. Monthly plans are optional and cancel any time." },
     { t: "Works on a phone", d: "The whole flow runs in a mobile browser, which is where the source photo already is." },
   ],
   useCases: [
@@ -594,7 +594,7 @@ const restore: Bank = {
     { t: "Reprintable output", d: "Resolution sufficient to reprint at a useful size and frame it." },
     { t: "Shareable with family immediately", d: "The usual reason for restoring a photo is to send it to relatives who have never seen it clearly." },
     { t: "Colour and monochrome versions", d: "Colourise for impact, keep the monochrome for accuracy. There is no need to choose one." },
-    { t: "No subscription", d: "A one-time credit pack, credits that never expire, and no renewal." },
+    { t: "No subscription needed", d: "A one-time pack whose credits never expire — or a monthly plan if you edit often." },
   ],
   useCases: [
     { t: "Family photos from a loft box", d: "The most common case by a wide margin: a shoebox of prints nobody has looked at in twenty years." },
@@ -950,7 +950,7 @@ const product: Bank = {
     { t: "Several backgrounds per product", d: "Test which background converts rather than committing to whatever the studio shot." },
     { t: "Consistent catalogue", d: "Every product on the same background, which no sequence of separate shoots ever quite achieves." },
     { t: "Works for one-off and second-hand items", d: "Resale listings get the same treatment as new stock, which is where the difference shows most." },
-    { t: "No subscription", d: "Credits bought once, no renewal, nothing expiring." },
+    { t: "No subscription needed", d: "One-time packs never expire; monthly plans are optional." },
   ],
   useCases: [
     { t: "Amazon and marketplace listings", d: "The white main image, generated to specification rather than argued with after a rejection." },
@@ -1127,7 +1127,7 @@ const fun: Bank = {
     { t: "Costs almost nothing", d: "A pack starts at $2 and covers several attempts." },
     { t: "No skill required", d: "No editing, no prompt craft, no software." },
     { t: "Works on a phone", d: "Which is where the photo and the group chat both already are." },
-    { t: "No subscription", d: "Nothing renews. Credits sit there until the next idea." },
+    { t: "No subscription needed", d: "One-time pack credits sit there until the next idea. Monthly plans are optional." },
     { t: "Full resolution", d: "Good enough to print the ones that deserve it." },
   ],
   useCases: [

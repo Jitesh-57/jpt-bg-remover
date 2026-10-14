@@ -76,7 +76,9 @@ export async function middleware(request: NextRequest) {
   const country = request.headers.get("x-vercel-ip-country") || "";
 
   // Rate limiting for API routes
-  if (path.startsWith("/api/")) {
+  // Razorpay's webhook deliveries come from a few shared IPs and are signed;
+  // rate-limiting them would only make Razorpay retry, so they are let through.
+  if (path.startsWith("/api/") && !path.startsWith("/api/razorpay/webhook")) {
     maybeCleanup();
     const isAiRoute = AI_ROUTES.some(r => path.startsWith(r));
 

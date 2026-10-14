@@ -49,7 +49,7 @@ export default function CreditPill({ initialCredits }: { initialCredits: number 
             <span style={{ fontSize: 13, color: "var(--text-muted)" }}>credits</span>
           </div>
           <div style={{ fontSize: 12.5, color: "var(--text-muted)", marginTop: 4 }}>
-            {gens > 0 ? `Enough for ${gens} AI generation${gens === 1 ? "" : "s"}` : "Not enough for an AI generation"} · never expire
+            {gens > 0 ? `Enough for ${gens} AI generation${gens === 1 ? "" : "s"}` : "Not enough for an AI generation"}
           </div>
           <button
             onClick={() => { setOpen(false); openPricing("Buy credits"); }}

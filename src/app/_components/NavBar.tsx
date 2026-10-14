@@ -155,7 +155,7 @@ function AccountPanel({
       <div style={body}>
         {out
           ? "You have used every credit. Top up to keep generating — the free tools stay free and unlimited."
-          : `About ${Math.floor(credits / CREDIT_COST)} more ${Math.floor(credits / CREDIT_COST) === 1 ? "generation" : "generations"} at ${CREDIT_COST} credits each. Credits never expire.`}
+          : `About ${Math.floor(credits / CREDIT_COST)} more ${Math.floor(credits / CREDIT_COST) === 1 ? "generation" : "generations"} at ${CREDIT_COST} credits each.`}
       </div>
       <button onClick={onBuy} style={button}>{out ? "Top up credits" : "Buy more credits"}</button>
     </div>

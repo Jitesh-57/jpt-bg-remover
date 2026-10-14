@@ -198,7 +198,7 @@ export default function HomeView({ features, popular, showcase, categories, comm
 
             {user.credits < CREDIT_COST && (
               <div className="jpt-a-up" style={{ ["--d" as string]: "260ms", display: "inline-flex", alignItems: "center", gap: 10, marginTop: 18, padding: "8px 8px 8px 14px", borderRadius: 999, background: "var(--surface)", border: "1px solid var(--border)", fontSize: 13, color: "var(--text-muted)" }}>
-                You&apos;re out of credits — packs start at ₹166, and never expire.
+                You&apos;re out of credits — monthly plans from ₹415, or one-time packs from ₹166.
                 <button onClick={() => openPricing("Get credits")} style={{ padding: "6px 12px", borderRadius: 999, border: "none", background: "var(--grad-strong)", color: "#fff", fontWeight: 800, fontSize: 12.5, fontFamily: "inherit", cursor: "pointer" }}>Get credits</button>
               </div>
             )}

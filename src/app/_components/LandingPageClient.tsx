@@ -162,7 +162,7 @@ const COMPARISON = [
 const FAQS = [
   {
     q: "Is Pixel Shine free to use?",
-    a: "The free tools — crop, resize, compress, convert, watermark and the rest — are free and unlimited, with no account needed. The AI apps run on credits, sold in one-off packs from \u20b9166; credits never expire and there is nothing recurring to cancel.",
+    a: "The free tools — crop, resize, compress, convert, watermark and the rest — are free and unlimited, with no account needed. The AI apps run on credits: monthly plans from \u20b9415 that you can cancel any time, or one-off packs from \u20b9166 whose credits never expire.",
   },
   {
     q: "Will my results have a watermark?",

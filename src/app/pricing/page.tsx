@@ -1,33 +1,33 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { PACKS, CREDIT_COST, type Pack } from "@/lib/plans";
-import { beginGoogleSignIn } from "@/lib/auth-return";
-import { buyPack } from "@/lib/checkout";
-
-const GRAD = "linear-gradient(135deg,var(--accent),var(--accent-2))";
+import { PACKS, MONTHLY_PLANS, CREDIT_COST, formatInr } from "@/lib/plans";
+import PlanPurchase, { MONTHLY_SAVING } from "@/app/_components/PlanPurchase";
+import BeforeAfterWipe from "@/app/_components/BeforeAfterWipe";
+import { onCreditsChanged } from "@/lib/credits";
 
 const INCLUDED = [
-  "Every AI tool — editor, headshots, background swap, 4× upscale",
-  "Credits never expire — use them today or next year",
-  "One-time payment. No subscription, no auto-renew",
-  "Full-resolution downloads, no watermark",
+  "Every AI tool — editor, headshots, background swap, creative apps, 4× upscale",
+  "Full-resolution downloads, no watermark, yours to use commercially",
+  "Monthly plans: fresh credits every month, cancel any time from Settings",
+  "Add-on packs: a one-time payment, and the credits never expire",
 ];
 
+const lowest = (list: typeof PACKS) => list.reduce((a, b) => (a.inr / a.credits <= b.inr / b.credits ? a : b));
+
 const FAQS = [
-  { q: "Do my credits expire?", a: "No. Credits are yours permanently — there is no monthly reset and no expiry date. Buy once, use them whenever you like." },
-  { q: "How many credits does one image cost?", a: `Every AI generation costs ${CREDIT_COST} credits. A $2 pack is ${PACKS[0].generations} generations, $5 is ${PACKS[1].generations}, and $10 is ${PACKS[2].generations}.` },
+  { q: "What's the difference between a monthly plan and an add-on pack?", a: `A monthly plan renews every month and gives you a fresh set of credits each time — up to ${MONTHLY_SAVING}% less per credit than a pack. An add-on pack is a single payment whose credits never expire. You can have both, and even several monthly plans at once.` },
+  { q: "How do I cancel a monthly plan?", a: "Open Settings → Your plans and press Cancel plan. Razorpay stops the subscription, so you are not charged again, and the credits for the month you already paid for stay usable until it ends." },
+  { q: "Do unused monthly credits carry over?", a: "No — each renewal resets the plan's monthly credits to the full amount, and any left from the month before expire. Add-on credits never expire, and the app always spends monthly credits first so the ones that would expire are used up before your add-ons." },
+  { q: "How many credits does one image cost?", a: `Every AI generation costs ${CREDIT_COST} credits. The ${lowest(MONTHLY_PLANS).label} plan's ${lowest(MONTHLY_PLANS).credits} monthly credits make ${lowest(MONTHLY_PLANS).generations} generations; a ₹${formatInr(PACKS[0].inr)} add-on is ${PACKS[0].generations}.` },
   { q: "Is anything still free?", a: "Yes. Compress, convert, crop, resize, rotate, blur, watermark, meme text, image-to-PDF, the QR generator and normal upscaling all stay free and unlimited, with no account needed. Credits are only for the AI tools." },
-  { q: "Is this a subscription?", a: "No. Each pack is a single one-time payment. Nothing auto-renews and no card is stored for future charges." },
-  { q: "What if I run out mid-project?", a: "Buy another pack at any time — credits stack onto your existing balance." },
+  { q: "How am I charged?", a: "In Indian rupees, through Razorpay — UPI, cards and netbanking. The dollar figures are approximate. Monthly plans save your card or UPI mandate with Razorpay for the renewals; add-on packs store nothing." },
 ];
 
 export default function PricingPage() {
-  const [loadingPack, setLoadingPack] = useState<string | null>(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const [credits, setCredits] = useState<number | null>(null);
-  const [statusMsg, setStatusMsg] = useState<{ text: string; ok: boolean } | null>(null);
-  const [prefillUser, setPrefillUser] = useState<{ name?: string; email?: string } | null>(null);
+  const [prefillUser, setPrefillUser] = useState<{ name?: string; email?: string } | undefined>();
 
   useEffect(() => {
     fetch("/api/auth/google/me")
@@ -41,140 +41,44 @@ export default function PricingPage() {
       })
       .catch(() => {});
   }, []);
-
-  function signInWithGoogle() {
-    void beginGoogleSignIn("/pricing");
-  }
-
-  async function handleBuy(p: Pack) {
-    setLoadingPack(p.id);
-    setStatusMsg(null);
-    const result = await buyPack(p, prefillUser ?? undefined);
-    if (result.ok && typeof result.credits === "number") setCredits(result.credits);
-    setStatusMsg({ text: result.text, ok: result.ok });
-    setLoadingPack(null);
-  }
+  useEffect(() => onCreditsChanged(setCredits), []);
 
   return (
     <main style={{ minHeight: "100vh", background: "var(--bg)", padding: "56px 20px 80px" }}>
       {/* HERO */}
-      <div style={{ textAlign: "center", maxWidth: 680, margin: "0 auto 14px" }}>
-        <div className="jpt-pill" style={{ marginBottom: 18 }}>💎 One-time packs · never expire</div>
-        <h1 className="jpt-h1">
-          Simple <span className="jpt-grad-text">credit packs</span>
-        </h1>
-        <p className="jpt-lead" style={{ maxWidth: 560, margin: "0 auto" }}>
-          Pay once for the AI tools. {CREDIT_COST} credits per generation, no subscription, and
-          your credits never expire. The free tools stay free forever.
-        </p>
+      <div className="jpt-pricing-hero">
+        <div style={{ minWidth: 0 }}>
+          <div className="jpt-pill" style={{ marginBottom: 18 }}>Monthly plans · one-time add-ons</div>
+          <h1 className="jpt-h1" style={{ textAlign: "left" }}>
+            Pricing that <span className="jpt-grad-text">fits how you create</span>
+          </h1>
+          <p className="jpt-lead" style={{ maxWidth: 520, margin: 0, textAlign: "left" }}>
+            Go monthly for fresh credits every month at the lowest price per credit, or top up once with
+            an add-on that never expires. {CREDIT_COST} credits per AI generation. The free tools stay free forever.
+          </p>
+          {credits !== null && (
+            <p style={{ fontSize: 15, fontWeight: 700, color: "var(--accent-strong)", margin: "16px 0 0" }}>
+              You have {credits} credit{credits === 1 ? "" : "s"} · {Math.floor(credits / CREDIT_COST)} generation
+              {Math.floor(credits / CREDIT_COST) === 1 ? "" : "s"} left
+            </p>
+          )}
+        </div>
+        <BeforeAfterWipe
+          before="/pricing/before.webp"
+          after="/pricing/after.webp"
+          alt="Before: an office selfie. After: the same person in a styled outdoor fashion shoot."
+          className="jpt-pricing-hero-wipe"
+        />
       </div>
 
-      {credits !== null && (
-        <p style={{ textAlign: "center", fontSize: 15, fontWeight: 700, color: "var(--accent-strong)", margin: "0 0 8px" }}>
-          You have {credits} credit{credits === 1 ? "" : "s"} · {Math.floor(credits / CREDIT_COST)} generation
-          {Math.floor(credits / CREDIT_COST) === 1 ? "" : "s"} left
-        </p>
-      )}
-
-      {statusMsg && (
-        <div
-          style={{
-            margin: "22px auto 0", maxWidth: 480, padding: "14px 24px", borderRadius: 12,
-            background: statusMsg.ok ? "var(--success-soft)" : "var(--danger-soft)",
-            color: statusMsg.ok ? "var(--accent-strong)" : "var(--danger)",
-            fontSize: 15, fontWeight: 600, textAlign: "center",
-          }}
-        >
-          {statusMsg.text}
-        </div>
-      )}
-
-      {/* PACKS */}
-      <div
-        style={{
-          display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(270px, 100%), 1fr))",
-          gap: 20, maxWidth: 940, margin: "38px auto 0", alignItems: "stretch",
-        }}
-      >
-        {PACKS.map((p) => (
-          <div
-            key={p.id}
-            className="jpt-hover"
-            style={{
-              position: "relative", display: "flex", flexDirection: "column",
-              background: "var(--surface)",
-              border: `${p.popular ? 2 : 1}px solid ${p.popular ? "var(--accent)" : "var(--border)"}`,
-              borderRadius: 20, padding: "32px 26px 26px",
-              boxShadow: p.popular ? "0 20px 60px var(--accent-soft)" : "var(--shadow-sm)",
-            }}
-          >
-            {p.popular && (
-              <div
-                style={{
-                  position: "absolute", top: -13, left: "50%", transform: "translateX(-50%)",
-                  background: "var(--grad-strong)", color: "#fff", fontWeight: 800, fontSize: 11.5,
-                  borderRadius: 20, padding: "5px 14px", letterSpacing: "0.06em",
-                  textTransform: "uppercase", whiteSpace: "nowrap",
-                }}
-              >
-                Most popular
-              </div>
-            )}
-
-            <div style={{ fontSize: 12.5, fontWeight: 800, color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 10 }}>
-              {p.label}
-            </div>
-
-            <div style={{ display: "flex", alignItems: "baseline", gap: 4, flexWrap: "wrap" }}>
-              <span style={{ fontSize: 48, fontWeight: 900, color: "var(--text)", letterSpacing: "-0.03em", lineHeight: 1 }}>₹{p.inr}</span>
-              <span style={{ fontSize: 14.5, color: "var(--text-faint)", fontWeight: 600 }}>one time</span>
-            </div>
-            <div style={{ fontSize: 13, color: "var(--text-faint)", marginTop: 5 }}>≈ ${p.usd} · charged in INR via Razorpay</div>
-
-            <div style={{ marginTop: 12, fontSize: 17, fontWeight: 800, color: "var(--text)" }}>{p.credits} credits</div>
-            <div style={{ fontSize: 14, color: "var(--text-muted)", marginTop: 2 }}>
-              ≈ {p.generations} AI generations
-            </div>
-            <p style={{ fontSize: 14, color: "var(--text-muted)", margin: "12px 0 0", lineHeight: 1.6 }}>{p.blurb}</p>
-
-            <div style={{ marginTop: "auto", paddingTop: 22 }}>
-              {loggedIn ? (
-                <button
-                  onClick={() => handleBuy(p)}
-                  disabled={loadingPack !== null}
-                  style={{
-                    width: "100%", padding: "14px", border: "none", borderRadius: 12,
-                    background: loadingPack === p.id ? "var(--text-faint)" : p.popular ? GRAD : "var(--surface-3)",
-                    color: loadingPack === p.id ? "#fff" : p.popular ? "#fff" : "var(--accent-strong)",
-                    fontWeight: 800, fontSize: 15.5, fontFamily: "inherit",
-                    cursor: loadingPack !== null ? "not-allowed" : "pointer",
-                  }}
-                >
-                  {loadingPack === p.id ? "Processing…" : `Get ${p.credits} credits`}
-                </button>
-              ) : (
-                <button
-                  onClick={signInWithGoogle}
-                  style={{
-                    width: "100%", padding: "14px", borderRadius: 12,
-                    background: "var(--surface)", color: "var(--text-muted)",
-                    border: "1.5px solid var(--border)", fontWeight: 800, fontSize: 15,
-                    fontFamily: "inherit", cursor: "pointer",
-                    display: "flex", alignItems: "center", justifyContent: "center", gap: 9,
-                  }}
-                >
-                  <svg width="17" height="17" viewBox="0 0 24 24" aria-hidden><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.27-4.74 3.27-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.84 14.1a6.6 6.6 0 0 1 0-4.2V7.06H2.18a11 11 0 0 0 0 9.88l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1A11 11 0 0 0 2.18 7.06l3.66 2.84C6.71 7.3 9.14 5.38 12 5.38z"/></svg>
-                  Sign in to buy
-                </button>
-              )}
-            </div>
-          </div>
-        ))}
+      {/* PLANS */}
+      <div style={{ maxWidth: 1080, margin: "40px auto 0" }}>
+        <PlanPurchase layout="grid" loggedIn={loggedIn} prefillUser={prefillUser} />
       </div>
 
       {/* WHAT'S INCLUDED */}
       <div style={{ maxWidth: 700, margin: "46px auto 0", background: "var(--surface-2)", border: "1px solid var(--border)", borderRadius: 18, padding: "26px 28px" }}>
-        <h2 style={{ margin: "0 0 16px", fontSize: 17, fontWeight: 800, color: "var(--text)" }}>Every pack includes</h2>
+        <h2 style={{ margin: "0 0 16px", fontSize: 17, fontWeight: 800, color: "var(--text)" }}>Every plan and pack includes</h2>
         <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 11 }}>
           {INCLUDED.map((f) => (
             <li key={f} style={{ display: "flex", alignItems: "flex-start", gap: 11, fontSize: 15, color: "var(--text-muted)", fontWeight: 600, lineHeight: 1.55 }}>
