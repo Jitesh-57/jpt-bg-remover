@@ -3,6 +3,14 @@ import { createRequire } from 'node:module';
 /** Shared with app-creatives.ts so the allowed hosts cannot drift apart. */
 const { hosts: imageHosts } = createRequire(import.meta.url)('./config/image-hosts.json');
 
+/*
+  Permanent redirects for retired URLs: blog posts held back or merged into
+  another (see src/app/blog/_data/posts.ts, which never renders a source listed
+  here). A true 301 rather than Next's default 308 for `permanent`: both mean
+  "moved for good" to Google, but audit tools and older crawlers expect 301.
+*/
+const blogRedirects = createRequire(import.meta.url)('./config/redirects.json');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   async redirects() {
@@ -11,6 +19,7 @@ const nextConfig = {
       // 301 to the home page so old sitemap/crawled URLs don't 404.
       { source: '/instagram-video-downloader', destination: '/', permanent: true },
       { source: '/youtube-video-downloader', destination: '/', permanent: true },
+      ...Object.entries(blogRedirects).map(([source, destination]) => ({ source, destination, statusCode: 301 })),
       // /upscale is its own landing page again — the homepage now has its own
       // identity, so there is no duplicate to consolidate.
     ];

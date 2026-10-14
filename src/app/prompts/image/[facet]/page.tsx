@@ -1,8 +1,10 @@
+import { fitTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import CategoryPage from "@/app/prompts/_components/CategoryPage";
 import { allFacets, findFacet } from "@/lib/prompts/data";
 import { canonicalFor, pageSuffix, parsePage } from "@/lib/prompts/pagination";
 import { BRAND } from "@/lib/brand";
+import { facetIndexable, NOINDEX } from "@/lib/seo/index-policy";
 
 export const revalidate = 300;
 
@@ -24,9 +26,10 @@ export async function generateMetadata(
   const name = found.facet.name;
   const description = `${found.facet.count} free ${name.toLowerCase()} AI ${MEDIA} prompts, each credited to its author and linked to the original post. Copy, edit the placeholders, generate.`;
   return {
-    title: { absolute: `${name} AI Image Prompts (${found.facet.count})${pageSuffix(page)} | ${BRAND}` },
+    title: { absolute: fitTitle([`${name} AI Image Prompts (${found.facet.count})${pageSuffix(page)} | ${BRAND}`, `${name} AI Image Prompts (${found.facet.count})${pageSuffix(page)}`]) },
     description,
     alternates: { canonical: url },
+    ...(facetIndexable(found.facet.count) ? {} : { robots: NOINDEX }),
     openGraph: { title: `${name} AI ${MEDIA} prompts`, description, url, siteName: BRAND },
   };
 }

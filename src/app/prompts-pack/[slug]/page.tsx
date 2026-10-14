@@ -1,3 +1,4 @@
+import { brandedTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -24,7 +25,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const n = packPrompts(pack).length;
   const description = `${n} hand-picked AI prompts: ${pack.subtitle} Every prompt credited to its author and free to copy.`;
   return {
-    title: { absolute: `${pack.title} — ${n} AI Prompts | ${BRAND}` },
+    title: { absolute: brandedTitle(`${pack.title} — ${n} AI Prompts | ${BRAND}`) },
     description,
     alternates: { canonical: url },
     openGraph: { title: pack.title, description, url, siteName: BRAND },

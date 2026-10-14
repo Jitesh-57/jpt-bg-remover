@@ -1,3 +1,4 @@
+import { brandedTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ALTERNATIVES, TOOLS, type ToolKey } from "@/lib/alternatives";
@@ -7,7 +8,7 @@ const BASE = "https://www.sjpt.io";
 const GRAD = "linear-gradient(120deg,var(--accent),var(--accent-2))";
 
 export const metadata: Metadata = {
-  title: { absolute: "Free Alternatives to Popular Image Tools (No Watermark) | Pixel Shine" },
+  title: { absolute: brandedTitle("Free Alternatives to Popular Image Tools (No Watermark) | Pixel Shine") },
   description:
     "Free, no-watermark, no-sign-up alternatives to Remove.bg, Canva, PhotoRoom, Photoshop, TinyPNG and more. Remove backgrounds, upscale, compress and convert images online.",
   keywords:

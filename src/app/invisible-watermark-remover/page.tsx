@@ -1,3 +1,5 @@
+import { brandedTitle } from "@/lib/seo/title";
+import GuidesBlock from "@/app/_components/GuidesBlock";
 import type { Metadata } from "next";
 import Link from "next/link";
 import HiddenMarksTool from "./HiddenMarksTool";
@@ -7,7 +9,7 @@ const URL = `${BASE}/invisible-watermark-remover`;
 const GRAD = "linear-gradient(120deg,var(--accent),var(--accent-2))";
 
 export const metadata: Metadata = {
-  title: { absolute: "Invisible Watermark & Metadata Remover — Strip EXIF, GPS, C2PA & Hidden Characters | Pixel Shine" },
+  title: { absolute: brandedTitle("Invisible Watermark & Metadata Remover — Strip EXIF, GPS, C2PA & Hidden Characters | Pixel Shine") },
   description:
     "Remove hidden metadata from photos, PDFs and documents: EXIF, GPS location, XMP, C2PA Content Credentials, AI prompts and author names. Clean zero-width and hidden Unicode characters from text. Free, private, runs in your browser.",
   keywords:
@@ -157,6 +159,7 @@ export default function Page() {
           </div>
         </section>
       </div>
+      <GuidesBlock path="/invisible-watermark-remover" />
     </>
   );
 }

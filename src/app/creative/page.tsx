@@ -1,3 +1,4 @@
+import { brandedTitle } from "@/lib/seo/title";
 import { Metadata } from "next";
 import SmartImage from "@/app/_components/SmartImage";
 import { CREATIVE_APPS, CREATIVE_BASE, previewUrl } from "@/lib/creative-apps";
@@ -11,7 +12,7 @@ const BASE = "https://www.sjpt.io";
 const URL = `${BASE}${CREATIVE_BASE}`;
 
 export const metadata: Metadata = {
-  title: { absolute: "Pixel Shine Creative Apps — 200+ AI Photo Generators Online | Pixel Shine" },
+  title: { absolute: brandedTitle("Pixel Shine Creative Apps — 200+ AI Photo Generators Online | Pixel Shine") },
   description:
     "Explore 200+ Pixel Shine AI creative apps — saree photoshoots, 3D figurines, retro portraits, pet art, anime and more. Upload a photo, choose a look and generate on the page. No app to install, no watermark.",
   keywords: "ai creative apps, ai photo generator, ai photoshoot online, ai photo trends, ai photo editor, one tap ai photo apps",

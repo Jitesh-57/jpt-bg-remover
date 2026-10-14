@@ -1,3 +1,5 @@
+import { brandedTitle } from "@/lib/seo/title";
+import GuidesBlock from "@/app/_components/GuidesBlock";
 import type { Metadata } from "next";
 import Link from "next/link";
 import QrGenerator from "./QrGenerator";
@@ -10,7 +12,7 @@ const URL = `${BASE}/qr-code-generator`;
 const GRAD = "linear-gradient(120deg,var(--accent),var(--accent-2))";
 
 export const metadata: Metadata = {
-  title: { absolute: "Free QR Code Generator — Create a QR Code Online | Pixel Shine" },
+  title: { absolute: brandedTitle("Free QR Code Generator — Create a QR Code Online | Pixel Shine") },
   description:
     "Free online QR code generator. Turn any link or text into a QR code and download it as a PNG or SVG — custom colours, no watermark, no sign-up, completely private.",
   keywords:
@@ -145,6 +147,7 @@ export default function Page() {
           </div>
         </section>
       </div>
+      <GuidesBlock path="/qr-code-generator" />
     </>
   );
 }

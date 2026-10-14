@@ -1,8 +1,9 @@
+import { brandedTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 
 // Private per-user history page — never indexed.
 export const metadata: Metadata = {
-  title: "Your History — Pixel Shine",
+  title: { absolute: brandedTitle("Your History — Pixel Shine") },
   robots: { index: false, follow: false },
 };
 

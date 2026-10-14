@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { createSupabaseClient } from "@/lib/supabase";
 
 const WIDGET_SRC = "https://sjpt-chat.vercel.app/widget.js";
@@ -47,8 +48,12 @@ export default function SupportChat() {
     late may never run at all. Appending the tag ourselves has no such timing
     dependency, and `async` keeps it off the render path.
   */
+  // Not in the standalone mobile apps (/m/*): the bubble would cover their tab bar.
+  const pathname = usePathname() || "";
+  const inMobileApp = pathname.startsWith("/m/");
+
   useEffect(() => {
-    if (!signedIn) return;
+    if (!signedIn || inMobileApp) return;
     if (document.querySelector(`script[src="${WIDGET_SRC}"]`)) return;
     const s = document.createElement("script");
     s.src = WIDGET_SRC;
@@ -58,7 +63,7 @@ export default function SupportChat() {
     // Deliberately not removed on unmount: the widget builds its own DOM and
     // holds its own state, and pulling the tag out would not clean that up.
     // Signing out reloads the page, which is what actually removes it.
-  }, [signedIn]);
+  }, [signedIn, inMobileApp]);
 
   return null;
 }

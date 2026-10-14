@@ -1,8 +1,9 @@
+import { brandedTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import BlogIndex from "./_components/BlogIndex";
 
 export const metadata: Metadata = {
-  title: { absolute: "Image Upscaling Blog — Tips, Tutorials & Guides | Pixel Shine" },
+  title: { absolute: brandedTitle("Image Upscaling Blog — Tips, Tutorials & Guides | Pixel Shine") },
   description:
     "Learn how to upscale images, enhance photo quality, fix blurry pictures, and get print-ready resolution. Free upscaling tutorials and guides from Pixel Shine.",
   keywords: [

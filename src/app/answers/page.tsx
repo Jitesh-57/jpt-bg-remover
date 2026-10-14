@@ -1,7 +1,8 @@
+import { brandedTitle } from "@/lib/seo/title";
 import Link from "next/link";
 import { QUERY_PAGES } from "@/lib/query-pages";
 export const revalidate=300;
-export const metadata={title:"AI Photo Editing Answers | Pixel Shine",description:"Practical answers to common AI photo editing questions, with direct Pixel Shine tools for each task.",alternates:{canonical:"https://www.sjpt.io/answers"}};
+export const metadata={title:{absolute:brandedTitle("AI Photo Editing Answers | Pixel Shine")},description:"Practical answers to common AI photo editing questions, with direct Pixel Shine tools for each task.",alternates:{canonical:"https://www.sjpt.io/answers"}};
 export default function Answers(){
  return <main style={{padding:"70px 24px 90px",background:"var(--bg)",color:"var(--text)",fontFamily:"var(--font)"}}>
   <div style={{maxWidth:1100,margin:"0 auto"}}>

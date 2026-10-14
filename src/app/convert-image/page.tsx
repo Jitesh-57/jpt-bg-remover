@@ -1,3 +1,5 @@
+import { brandedTitle } from "@/lib/seo/title";
+import GuidesBlock from "@/app/_components/GuidesBlock";
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { getPageConfig } from '@/lib/page-config'
@@ -7,7 +9,7 @@ import { CONVERSIONS, buildContent } from '@/lib/conversions'
 export async function generateMetadata(): Promise<Metadata> {
   const config = await getPageConfig('convert-image')
   return {
-    title: { absolute: config.title },
+    title: { absolute: brandedTitle(config.title) },
     description: config.meta_description,
     keywords: config.keywords,
     openGraph: {
@@ -45,7 +47,7 @@ export default async function Page() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <LandingPage config={config} toolHref="/editor?tool=convert" pageId="convert-image" />
+      <LandingPage guides={<GuidesBlock path="/convert-image" />} config={config} toolHref="/editor?tool=convert" pageId="convert-image" />
 
       {/* Popular conversions — internal links to the per-format landing pages */}
       <section style={{ background: 'var(--surface)', padding: '56px 24px 72px' }}>

@@ -1,3 +1,4 @@
+import { brandedTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import Link from "next/link";
 import PromptCard from "./_components/PromptCard";
@@ -23,7 +24,7 @@ const URL = `${BASE}/prompts`;
 const TOTAL = COUNTS.total + ORIGINALS_COUNT;
 
 export const metadata: Metadata = {
-  title: { absolute: `${TOTAL} AI Prompts — Free Image & Video Prompt Library | ${BRAND}` },
+  title: { absolute: brandedTitle(`${TOTAL} AI Prompts — Free Image & Video Prompt Library | ${BRAND}`) },
   description:
     `A free library of ${TOTAL} AI prompts for ${MODELS.map((m) => m.name).join(", ")} and more. Browse by model, medium, use case or style. Every prompt credits the creator who wrote it.`,
   keywords:

@@ -1,3 +1,5 @@
+import { brandedTitle } from "@/lib/seo/title";
+import GuidesBlock from "@/app/_components/GuidesBlock";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { blogCreative } from "@/lib/creative-images";
@@ -10,7 +12,7 @@ const URL = `${BASE}/watermark-remover`;
 const GRAD = "linear-gradient(120deg,var(--accent),var(--accent-2))";
 
 export const metadata: Metadata = {
-  title: { absolute: "Best Free Watermark Remover — Remove Watermark From Photos Online | Pixel Shine" },
+  title: { absolute: brandedTitle("Best Free Watermark Remover — Remove Watermark From Photos Online | Pixel Shine") },
   description:
     "Remove watermarks from photos free — just paint over the watermark and AI erases it. Logos, text, timestamps and signatures. 100% free, no sign-up, runs privately in your browser.",
   keywords:
@@ -258,6 +260,7 @@ export default function Page() {
           </div>
         </section>
       </div>
+      <GuidesBlock path="/watermark-remover" />
     </>
   );
 }

@@ -1,3 +1,4 @@
+import { brandedTitle } from "@/lib/seo/title";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -11,7 +12,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Invoice — Pixel Shine",
+  title: { absolute: brandedTitle("Invoice — Pixel Shine") },
   robots: { index: false, follow: false },
 };
 

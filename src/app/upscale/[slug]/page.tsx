@@ -1,3 +1,5 @@
+import { brandedTitle } from "@/lib/seo/title";
+import GuidesBlock from "@/app/_components/GuidesBlock";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import LandingPage from "@/app/_components/LandingPage";
@@ -22,7 +24,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!v) return {};
   const url = `${BASE}${PARENT_META[PARENT].base}/${slug}`;
   return {
-    title: { absolute: v.title },
+    title: { absolute: brandedTitle(v.title) },
     description: v.metaDescription,
     keywords: v.keywords,
     alternates: { canonical: url },
@@ -64,7 +66,7 @@ export default async function VariantPage({ params }: { params: Promise<{ slug: 
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
-      <LandingPage config={config} toolHref={PARENT_META[PARENT].toolHref} pageId={PARENT_PAGE_ID[PARENT]} relatedVariants={relatedVariants} currentSlug={slug} />
+      <LandingPage guides={<GuidesBlock path={`/upscale/${slug}`} />} config={config} toolHref={PARENT_META[PARENT].toolHref} pageId={PARENT_PAGE_ID[PARENT]} relatedVariants={relatedVariants} currentSlug={slug} />
     </>
   );
 }

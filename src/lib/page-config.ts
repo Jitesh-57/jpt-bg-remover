@@ -33,9 +33,10 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
   // door — and made /upscale a duplicate that had to be redirected away.
   home: {
     page_id: 'home',
-    title: 'Pixel Shine — Free AI Photo Editor, Upscaler & 40+ AI Photo Apps',
+    // Brand and the names people actually search for ("sjpt", "jpt ai") first, then the benefit.
+    title: 'Pixel Shine (SJPT): Free AI Photo Editor & 4K Upscaler',
     meta_description:
-      'Free AI photo editor online. Upscale to 4K, remove backgrounds, generate AI headshots and run 40+ one-tap AI photo apps. Browser tools are free and unlimited — no sign-up, no watermark.',
+      'Free AI photo editor: upscale photos to 4K, remove backgrounds, make AI headshots and try 40+ one-tap photo styles. Free tools need no signup and add no watermark.',
     og_title: 'Pixel Shine — Free AI Photo Editor & 40+ AI Photo Apps',
     og_description:
       'Upscale, compress, crop, convert and restyle photos free online. Plus 40+ AI photo apps — saree portraits, 3D figurines, Ghibli, headshots and more.',
@@ -90,7 +91,7 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
     ],
     faq: [
       { q: 'How does AI upscaling work?', a: 'Our AI uses deep learning super-resolution to predict and reconstruct fine detail when enlarging images — unlike traditional upscaling which just stretches pixels and creates blur. The result looks sharp and natural at 2× or 4× the original size.' },
-      { q: 'Can I upscale images to 4K online for free?', a: 'Yes. Basic upscale is completely free and unlimited for everyone, no sign-up limits. Pro AI upscale (4K, higher quality) gives you one free trial, then a paid plan to continue — no credit card required to start.' },
+      { q: 'Can I upscale images to 4K online for free?', a: 'Yes. Basic upscale is completely free and unlimited for everyone, no sign-up limits. Pro AI upscale (4K, higher quality) uses credits, and new accounts in selected countries get a free AI generation to try it — no credit card required.' },
       { q: "What's the maximum upscale size?", a: 'You can upscale images up to 4× their original dimensions. Starting images up to 1024px are supported for AI super-resolution processing.' },
       { q: 'Is there a watermark on the output?', a: 'No watermarks, ever. Your upscaled image downloads clean and ready to use — on both free and paid plans.' },
       { q: 'Does AI upscaling work on old blurry photos?', a: 'Yes — AI upscaling is especially effective on old or low-resolution photos. The model recovers detail, reduces noise, and sharpens edges that were lost in the original.' },
@@ -135,7 +136,7 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
       { q: 'Does it work on hair and fine edges?', a: 'Yes. The AI model is specifically trained to handle fine hair strands, fur, and complex edges that trip up most background removers.' },
       { q: 'Will the output have a watermark?', a: 'No watermarks, ever. Your transparent PNG downloads clean and full-resolution on both free and paid plans.' },
       { q: 'What format does it output?', a: 'Always outputs as a transparent PNG, ready to place on any background or use in any design tool.' },
-      { q: 'Is it free to remove backgrounds online?', a: 'Yes. Sign in with Google to get a free trial on this tool — no credit card required. You get 5 free trials total across any of our tools.' },
+      { q: 'Is it free to remove backgrounds online?', a: 'The AI background remover uses credits, bought once with no subscription, and new accounts in selected countries get a free AI generation to try it — no credit card required.' },
       { q: 'Can I use it for e-commerce product photos?', a: 'Absolutely. Pixel Shine is ideal for creating clean white-background product photos for Amazon, Shopify, Flipkart, and any marketplace. Process multiple images quickly.' },
       { q: 'Can I use the result commercially?', a: 'Yes. All outputs are yours to use for personal, professional, or commercial purposes — no attribution required.' },
       { q: 'Do I need to install anything?', a: 'No. The background remover works entirely online — no downloads, no Photoshop, no plugins.' },
@@ -214,7 +215,7 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
       { q: 'What kinds of edits can I make with text prompts?', a: 'You can change backgrounds, apply cinematic or artistic styles, adjust lighting, remove objects, replace colours, and more. Just describe the edit in plain English — no Photoshop skills needed.' },
       { q: 'Do I need design skills to use Pixel Shine?', a: 'No. Just type what you want changed and the AI handles the technical work. If you can describe it, Pixel Shine can do it.' },
       { q: 'Is there a watermark on the edited image?', a: 'No watermarks, ever. Your edited image downloads clean and ready to use on both free and paid plans.' },
-      { q: 'Is Pixel Shine free to use for photo editing?', a: 'Yes. Sign in with Google to get a free trial on this tool — no credit card required to start. You get 5 free trials total across any of our tools.' },
+      { q: 'Is Pixel Shine free to use for photo editing?', a: 'Yes — the browser tools are free and unlimited. AI edits use credits, bought once with no subscription, and new accounts in selected countries get a free AI generation to try it.' },
       { q: 'Can I use edited images commercially?', a: 'Yes. All outputs are yours to use for personal, professional, or commercial purposes with no attribution required.' },
       { q: 'How fast are the AI edits?', a: 'Most edits complete in 5–15 seconds. Background generation and style transfers typically take 10–20 seconds.' },
       { q: 'Do I need to install anything?', a: 'No. Pixel Shine runs entirely online — no downloads, no plugins, no desktop software required.' },

@@ -3,6 +3,7 @@ import type { User } from "@supabase/supabase-js";
 import { createAdminSupabase } from "@/lib/auth";
 import { recordCredits } from "@/lib/ledger";
 import { WORLDWIDE } from "@/lib/trial-batches";
+import { trialEmailOk, emailDomain } from "@/lib/trial-email";
 
 /**
  * free-trial.server.ts — the one-time signup credit grant, per country.
@@ -14,6 +15,8 @@ import { WORLDWIDE } from "@/lib/trial-batches";
  *   · a new account: created within the last TRIAL_WINDOW_MIN minutes, so
  *     existing users never get it when a country is switched on;
  *   · a confirmed email, so a made-up address can't collect credits;
+ *   · an address at a big provider (Gmail, Outlook, Yahoo, iCloud — see
+ *     lib/trial-email), so a fresh throwaway inbox per account can't either;
  *   · a country from Vercel's own geo header. Never from a cookie or the
  *     request body, which the visitor controls.
  *
@@ -40,9 +43,13 @@ export function requestCountry(req: NextRequest | Request): string {
 
 type Why =
   | "granted" | "no-email" | "email-unconfirmed" | "not-new" | "no-country"
-  | "no-live-rule" | "already-claimed" | "error";
+  | "no-live-rule" | "email-provider" | "already-claimed" | "error";
 
-export interface TrialAttempt { at: string; why: Why; country: string; email: string; credits?: number; detail?: string }
+export interface TrialAttempt {
+  at: string; why: Why; country: string; email: string; credits?: number; detail?: string;
+  /** On a grant: which switch gave it — the country's own rule or the worldwide one — and when it was last switched. */
+  rule?: "own" | "worldwide"; since?: string;
+}
 
 const LOG_PATH = "overrides/trial-log.json";
 const LOG_KEEP = 40;
@@ -107,14 +114,14 @@ export async function readTrialLog(): Promise<TrialAttempt[]> {
 export async function trialRuleFor(
   country: string,
   db: ReturnType<typeof createAdminSupabase> = createAdminSupabase(),
-): Promise<{ rule: { country: string; credits: number; worldwide: boolean } | null; error?: string }> {
+): Promise<{ rule: { country: string; credits: number; worldwide: boolean; since?: string } | null; error?: string }> {
   if (!/^[A-Z]{2}$/.test(country)) return { rule: null };
-  const { data: rules, error } = await db.from("trial_countries").select("country, credits, live").in("country", [country, WORLDWIDE]) as
-    { data: { country: string; credits: number; live: boolean }[] | null; error: { message: string } | null };
+  const { data: rules, error } = await db.from("trial_countries").select("country, credits, live, updated_at").in("country", [country, WORLDWIDE]) as
+    { data: { country: string; credits: number; live: boolean; updated_at?: string | null }[] | null; error: { message: string } | null };
   if (error) return { rule: null, error: error.message };
   const r = rules?.find((x) => x.country === country) ?? rules?.find((x) => x.country === WORLDWIDE);
   if (!r || !r.live || !(r.credits > 0)) return { rule: null };
-  return { rule: { country, credits: r.credits, worldwide: r.country === WORLDWIDE } };
+  return { rule: { country, credits: r.credits, worldwide: r.country === WORLDWIDE, since: r.updated_at ?? undefined } };
 }
 
 /**
@@ -144,6 +151,8 @@ export async function claimSignupTrial(user: Pick<User, "id" | "email" | "create
     const { rule, error: ruleErr } = await trialRuleFor(country, db);
     if (ruleErr) { await note("error", { detail: `rules: ${ruleErr}` }); return 0; }
     if (!rule) { await note("no-live-rule"); return 0; }
+    // Checked before the claim, so a refused address uses up nothing.
+    if (!trialEmailOk(email)) { await note("email-provider", { detail: emailDomain(email) }); return 0; }
     const credits = rule.credits;
 
     // Already had it (the common case on later page loads): nothing to do or log.
@@ -174,7 +183,7 @@ export async function claimSignupTrial(user: Pick<User, "id" | "email" | "create
     }
 
     await recordCredits({ userId: user.id, delta: credits, balanceAfter: balance, reason: "signup_grant", note: `Free trial: ${country}${rule.worldwide ? " (worldwide)" : ""}` });
-    await note("granted", { credits });
+    await note("granted", { credits, rule: rule.worldwide ? "worldwide" : "own", since: rule.since });
     console.log(`[free-trial] +${credits} credits to ${user.id} (${country})`);
     return credits;
   } catch (e) {

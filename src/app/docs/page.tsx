@@ -1,9 +1,10 @@
+import { brandedTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CREDIT_COST, PACKS } from "@/lib/plans";
 
 export const metadata: Metadata = {
-  title: { absolute: "Docs — How Pixel Shine Works | Pixel Shine" },
+  title: { absolute: brandedTitle("Docs — How Pixel Shine Works | Pixel Shine") },
   description: "How Pixel Shine works: credits and pricing, AI Studio, creative apps, the AI image editor, free browser tools, prompts and your account.",
   alternates: { canonical: "https://www.sjpt.io/docs" },
   openGraph: { title: "Pixel Shine Docs", description: "Everything about using Pixel Shine, in one place.", url: "https://www.sjpt.io/docs", type: "website" },

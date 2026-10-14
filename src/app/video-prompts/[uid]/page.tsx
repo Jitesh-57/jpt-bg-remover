@@ -1,9 +1,11 @@
+import { fitTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import DatasetDetail from "@/app/prompts/_components/DatasetDetail";
 import { getPrompt, byMedia, excerpt } from "@/lib/prompts/data";
 import { mediaResolver } from "@/lib/prompts/media";
 import { BRAND } from "@/lib/brand";
+import { videoPromptIndexable, NOINDEX } from "@/lib/seo/index-policy";
 
 export const revalidate = 300;
 
@@ -28,10 +30,11 @@ export async function generateMetadata({ params }: { params: Promise<{ uid: stri
   const url = `${BASE}/video-prompts/${uid}`;
   const description = p.description || excerpt(p, 155);
   return {
-    title: { absolute: `${p.title} — ${p.model} Video Prompt | ${BRAND}` },
+    title: { absolute: fitTitle([`${p.title} — ${p.model} Video Prompt | ${BRAND}`, `${p.title} — ${p.model} Video Prompt`, `${p.title} Video Prompt`, p.title]) },
     description,
     keywords: [p.model, "ai video prompt", p.useCase, ...p.styles, ...p.subjects].filter(Boolean).join(", "),
     alternates: { canonical: url },
+    ...(videoPromptIndexable(uid) ? {} : { robots: NOINDEX }),
     openGraph: {
       title: p.title, description, url, type: "article", siteName: BRAND,
       ...(p.videoThumbnail ? { images: [p.videoThumbnail] } : {}),

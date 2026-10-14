@@ -1,3 +1,4 @@
+import { brandedTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 import BlogIndex, { blogPageCount } from "../../_components/BlogIndex";
@@ -14,7 +15,7 @@ export async function generateMetadata({ params }: { params: Promise<{ n: string
   const { n } = await params;
   const url = `https://www.sjpt.io/blog/page/${n}`;
   return {
-    title: { absolute: `Image Upscaling Blog — Page ${n} | Pixel Shine` },
+    title: { absolute: brandedTitle(`Image Upscaling Blog — Page ${n} | Pixel Shine`) },
     description: `Tips, tutorials and guides for upscaling, enhancing and editing photos with AI — page ${n} of the Pixel Shine blog.`,
     alternates: { canonical: url },
     openGraph: { title: `Pixel Shine Blog — Page ${n}`, type: "website", url },

@@ -182,7 +182,7 @@ const FAQS = [
   },
   {
     q: "Can I upscale images to 4K online for free?",
-    a: "Yes. Basic upscale is free and unlimited for everyone. Pro AI upscale to 4K gives you one free trial, then upgrade for unlimited 4K upscaling.",
+    a: "Yes. Basic upscale is free and unlimited for everyone. Pro AI upscale to 4K uses credits, and new accounts in selected countries get a free AI generation to try it.",
   },
   {
     q: "Is this good for e-commerce product photos?",

@@ -1,3 +1,4 @@
+import { brandedTitle } from "@/lib/seo/title";
 import Link from "next/link";
 import SmartImage from "@/app/_components/SmartImage";
 import { USE_CASES } from "@/lib/growth-pages";
@@ -6,7 +7,7 @@ import { creativeSources, uploadedCreative } from "@/lib/app-creatives";
 import { readOverrides } from "@/lib/overrides";
 
 export const metadata = {
-  title: "AI Image Editing Use Cases | Pixel Shine",
+  title: { absolute: brandedTitle("AI Image Editing Use Cases | Pixel Shine") },
   description: "Explore Pixel Shine AI image tools by use case: LinkedIn, social media, ecommerce, real estate, photography, creators and weddings.",
   alternates: { canonical: "https://www.sjpt.io/use-cases" },
 };

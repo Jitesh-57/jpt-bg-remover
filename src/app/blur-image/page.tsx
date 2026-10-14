@@ -1,3 +1,5 @@
+import { brandedTitle } from "@/lib/seo/title";
+import GuidesBlock from "@/app/_components/GuidesBlock";
 import type { Metadata } from "next";
 import Link from "next/link";
 import BlurTool from "./BlurTool";
@@ -10,7 +12,7 @@ const URL = `${BASE}/blur-image`;
 const GRAD = "linear-gradient(120deg,var(--accent),var(--accent-2))";
 
 export const metadata: Metadata = {
-  title: { absolute: "Free Blur Image Tool — Blur or Pixelate Part of a Photo | Pixel Shine" },
+  title: { absolute: brandedTitle("Free Blur Image Tool — Blur or Pixelate Part of a Photo | Pixel Shine") },
   description:
     "Blur or pixelate part of an image free online. Hide faces, licence plates, addresses and sensitive info — drag a box to censor it. No watermark, no sign-up, completely private.",
   keywords:
@@ -145,6 +147,7 @@ export default function Page() {
           </div>
         </section>
       </div>
+      <GuidesBlock path="/blur-image" />
     </>
   );
 }

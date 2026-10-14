@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useTrialOffer, countryName, openTrialSignIn, type TrialOffer } from "@/lib/trial-offer";
+import { TRIAL_PROVIDERS_LABEL } from "@/lib/trial-email";
 
 /**
  * The signup free trial, told to the visitors who would actually get it.
@@ -26,7 +27,8 @@ export function GiftIcon({ size = 16 }: { size?: number }) {
 }
 
 /** Pages where the bar would be noise: the signed-in workspace, admin, auth round-trips. */
-const NO_BAR = /^\/(app|admin|auth|invoices)(\/|$)/;
+// /m/* are the standalone mobile apps, which show the offer in their own UI.
+const NO_BAR = /^\/(app|admin|auth|invoices|m)(\/|$)/;
 const DISMISS_KEY = "jpt-trial-bar-dismissed";
 
 /**
@@ -101,8 +103,47 @@ export function TrialModalHead({ offer }: { offer: TrialOffer }) {
         Create your account and we add <strong style={{ color: "var(--text)" }}>{offer.credits} credits</strong>, enough for {offer.generations} AI generation{offer.generations === 1 ? "" : "s"}. No card needed.
       </p>
       <div style={{ fontSize: 12, color: "var(--text-faint)", marginTop: 8 }}>
-        One per person · new accounts in {countryName(offer.country)}
+        One per person · new accounts in {countryName(offer.country)} · {TRIAL_PROVIDERS_LABEL} email
       </div>
     </div>
+  );
+}
+
+/**
+ * One sentence inside running text — what a blog post's `{{trial}}` token
+ * becomes: "New accounts get 1 free AI generation. Claim it →". Renders
+ * nothing (not even a space) where there is no live trial, so the sentence
+ * around it still reads cleanly.
+ */
+export function TrialLine({ source = "line" }: { source?: string }) {
+  const offer = useTrialOffer();
+  if (!offer) return null;
+  return (
+    <span className="jpt-trial-line">
+      {" "}New accounts get <strong>{offer.generations} free AI generation{offer.generations === 1 ? "" : "s"}</strong>.{" "}
+      <button type="button" onClick={() => openTrialSignIn(source)}>Claim it <span aria-hidden>→</span></button>
+    </span>
+  );
+}
+
+/**
+ * A boxed offer for the top of a blog post or an AI app page: the trial,
+ * what it buys, and a button straight into sign-up.
+ */
+export function TrialCallout({ source = "callout", what = "AI generation" }: { source?: string; what?: string }) {
+  const offer = useTrialOffer();
+  if (!offer) return null;
+  const n = offer.generations;
+  return (
+    <aside className="jpt-trial-callout" aria-label="Free trial offer">
+      <span className="jpt-trial-callout-icon"><GiftIcon size={20} /></span>
+      <div className="jpt-trial-callout-text">
+        <strong>{n === 1 ? `Your first ${what} is free` : `Your first ${n} ${what}s are free`}</strong>
+        <span>Create a free account and we add {offer.credits} credits. No card needed · new accounts in {countryName(offer.country)}.</span>
+      </div>
+      <button type="button" className="jpt-trial-callout-cta" onClick={() => openTrialSignIn(source)}>
+        Claim it free <span aria-hidden>→</span>
+      </button>
+    </aside>
   );
 }

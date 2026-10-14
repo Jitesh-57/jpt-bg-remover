@@ -1,3 +1,4 @@
+import { fitTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -13,6 +14,7 @@ import { getPrompt, byMedia, excerpt } from "@/lib/prompts/data";
 import { mediaResolver } from "@/lib/prompts/media";
 import { getCreativeApp, CREATIVE_BASE } from "@/lib/creative-apps";
 import { BRAND } from "@/lib/brand";
+import { imagePromptIndexable, NOINDEX } from "@/lib/seo/index-policy";
 
 export const revalidate = 300;
 
@@ -42,10 +44,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (ds && ds.media === "image") {
     const description = ds.description || excerpt(ds, 155);
     return {
-      title: { absolute: `${ds.title} — ${ds.model} Prompt | ${BRAND}` },
+      title: { absolute: fitTitle([`${ds.title} — ${ds.model} Prompt | ${BRAND}`, `${ds.title} — ${ds.model} Prompt`, `${ds.title} AI Prompt`, ds.title]) },
       description,
       keywords: [ds.model, "ai prompt", ds.useCase, ...ds.styles, ...ds.subjects].filter(Boolean).join(", "),
       alternates: { canonical: url },
+      ...(imagePromptIndexable(slug) ? {} : { robots: NOINDEX }),
       openGraph: {
         title: ds.title, description, url, type: "article", siteName: BRAND,
         ...(ds.images[0] ? { images: [ds.images[0]] } : {}),
@@ -59,10 +62,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const cat = CATEGORY_BY_ID[p.category];
   const description = `${p.text.slice(0, 150).trim()}… A free ${cat.name.toLowerCase()} prompt, composed for ${p.ratio}. Copy it, or run it on your own photo.`;
   return {
-    title: { absolute: `${p.title} — AI Photo Prompt (Free, Copy & Paste) | ${BRAND}` },
+    title: { absolute: fitTitle([`${p.title} — Free AI Photo Prompt | ${BRAND}`, `${p.title} — Free AI Photo Prompt`, `${p.title} AI Prompt`, p.title]) },
     description,
     keywords: [...p.tags, "ai prompt", `${p.title.toLowerCase()} prompt`].join(", "),
     alternates: { canonical: url },
+    ...(imagePromptIndexable(slug) ? {} : { robots: NOINDEX }),
     openGraph: { title: p.title, description, url, type: "article", siteName: BRAND },
     twitter: { card: "summary_large_image", title: p.title, description },
   };

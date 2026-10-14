@@ -1,3 +1,4 @@
+import { brandedTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import Link from "next/link";
 import PromptBrowser from "./PromptBrowser";
@@ -12,7 +13,7 @@ const BASE = "https://www.sjpt.io";
 const URL = `${BASE}/80s-ai-photo-prompts`;
 
 export const metadata: Metadata = {
-  title: { absolute: "100 Free 80s AI Photo Prompts (Copy & Paste) — ChatGPT & Gemini | Pixel Shine" },
+  title: { absolute: brandedTitle("100 Free 80s AI Photo Prompts (Copy & Paste) — ChatGPT & Gemini | Pixel Shine") },
   description:
     "100 free copy-paste prompts for the viral 80s AI photo trend. Motorcycle and classic-car portraits, rainy streets, weddings, disco nights and family albums — all written to keep your real face. Works in ChatGPT and Gemini.",
   keywords:
