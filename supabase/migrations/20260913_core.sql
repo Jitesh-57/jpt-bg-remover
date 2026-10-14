@@ -66,6 +66,40 @@ create table if not exists public.purchases (
   created_at          timestamptz not null default now()
 );
 
+-- Columns the app writes, for a purchases table that predates this file.
+-- Added nullable so they can never fail against rows that already exist.
+alter table public.purchases add column if not exists user_id             uuid;
+alter table public.purchases add column if not exists razorpay_order_id   text;
+alter table public.purchases add column if not exists razorpay_payment_id text;
+alter table public.purchases add column if not exists plan                text;
+alter table public.purchases add column if not exists credits_added       integer;
+alter table public.purchases add column if not exists amount_paise        integer;
+alter table public.purchases add column if not exists invoice_no          text;
+alter table public.purchases add column if not exists created_at          timestamptz not null default now();
+
+-- One row per payment, one payment per invoice number. The payment id being
+-- unique is what makes crediting exactly-once (a repeat insert is refused), so
+-- an older table without the rule gets it — unless it already holds duplicates,
+-- which are reported and left for a person to look at rather than deleted.
+do $$
+declare
+  col text;
+begin
+  foreach col in array array['razorpay_payment_id', 'invoice_no'] loop
+    if not exists (
+      select 1 from pg_index i
+        join pg_attribute a on a.attrelid = i.indrelid and a.attnum = i.indkey[0]
+       where i.indrelid = 'public.purchases'::regclass and i.indisunique and i.indnatts = 1 and a.attname = col
+    ) then
+      begin
+        execute format('create unique index purchases_%s_key on public.purchases (%I)', col, col);
+      exception when others then
+        raise notice 'purchases.% is not unique yet: %', col, sqlerrm;
+      end;
+    end if;
+  end loop;
+end $$;
+
 create index if not exists purchases_user_created_idx
   on public.purchases (user_id, created_at desc);
 
@@ -92,6 +126,9 @@ create table if not exists public.generations (
 
 -- What the original table could not answer: which photo this came from, which
 -- model made it, what it was asked for, and what it cost.
+alter table public.generations add column if not exists user_id       uuid;
+alter table public.generations add column if not exists created_at    timestamptz not null default now();
+alter table public.generations add column if not exists thumb         text;
 alter table public.generations add column if not exists source_url    text;
 alter table public.generations add column if not exists result_url    text;
 alter table public.generations add column if not exists app_slug      text;
@@ -134,19 +171,60 @@ create policy "generations: delete own" on public.generations
 -- query, not a guess.
 --
 -- `delta` is signed: +5 for a purchase, -2 for a generation.
-create table if not exists public.credit_ledger (
-  id            bigserial primary key,
-  user_id       uuid        not null references auth.users (id) on delete cascade,
-  delta         integer     not null,
-  balance_after integer     not null,
-  -- purchase | generation | signup_grant | admin_adjust | refund
-  reason        text        not null,
-  tool          text,
-  purchase_id   bigint references public.purchases (id) on delete set null,
-  generation_id bigint references public.generations (id) on delete set null,
-  note          text,
-  created_at    timestamptz not null default now()
-);
+--
+-- purchase_id and generation_id take the type of the id they point at. The
+-- live purchases and generations tables predate this file and were made with
+-- uuid ids, not the bigserial the create statements above would give a new
+-- database; a bigint column cannot reference a uuid, and that mismatch failed
+-- this whole migration. Reading the real type keeps both kinds of database
+-- working.
+do $$
+declare
+  purchase_id_type   text;
+  generation_id_type text;
+begin
+  select format_type(a.atttypid, a.atttypmod) into purchase_id_type
+    from pg_attribute a
+   where a.attrelid = 'public.purchases'::regclass and a.attname = 'id' and not a.attisdropped;
+  select format_type(a.atttypid, a.atttypmod) into generation_id_type
+    from pg_attribute a
+   where a.attrelid = 'public.generations'::regclass and a.attname = 'id' and not a.attisdropped;
+
+  execute format($ddl$
+    create table if not exists public.credit_ledger (
+      id            bigserial primary key,
+      user_id       uuid        not null references auth.users (id) on delete cascade,
+      delta         integer     not null,
+      balance_after integer     not null,
+      -- purchase | subscription | expired | generation | signup_grant | admin_adjust | refund
+      reason        text        not null,
+      tool          text,
+      purchase_id   %s,
+      generation_id %s,
+      note          text,
+      created_at    timestamptz not null default now()
+    )$ddl$, coalesce(purchase_id_type, 'bigint'), coalesce(generation_id_type, 'bigint'));
+
+  -- The links, added only where the types allow one. A ledger row must never
+  -- fail to be written because its link cannot be made, so a link that cannot
+  -- be made is left out rather than failing the migration.
+  if not exists (select 1 from pg_constraint where conname = 'credit_ledger_purchase_id_fkey') then
+    begin
+      alter table public.credit_ledger add constraint credit_ledger_purchase_id_fkey
+        foreign key (purchase_id) references public.purchases (id) on delete set null;
+    exception when others then
+      raise notice 'credit_ledger.purchase_id left without a foreign key: %', sqlerrm;
+    end;
+  end if;
+  if not exists (select 1 from pg_constraint where conname = 'credit_ledger_generation_id_fkey') then
+    begin
+      alter table public.credit_ledger add constraint credit_ledger_generation_id_fkey
+        foreign key (generation_id) references public.generations (id) on delete set null;
+    exception when others then
+      raise notice 'credit_ledger.generation_id left without a foreign key: %', sqlerrm;
+    end;
+  end if;
+end $$;
 
 create index if not exists credit_ledger_user_created_idx
   on public.credit_ledger (user_id, created_at desc);
