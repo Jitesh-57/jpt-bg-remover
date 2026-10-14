@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { checkAuth, checkEntitlement, withCredits } from "@/lib/auth";
+import { checkAuth, checkEntitlement, withCredits, CREDIT_COST } from "@/lib/auth";
+import { fileCreation, fileFailure, keepSource } from "@/lib/file-creation";
 import { editImage } from "@/lib/ai-image";
 import { userMessage } from "@/lib/user-message";
 
@@ -31,6 +32,11 @@ export async function POST(req: NextRequest) {
   const { imageUrl, bgType, bgColor, bgLabel, bgImageUrl, customPrompt } = await req.json();
   if (!imageUrl) return NextResponse.json({ error: "No photo was received. Please pick an image and try again." }, { status: 400 });
 
+  // What was asked for, kept for the record: the user's own words for a
+  // prompt edit, otherwise the background they picked.
+  let asked: { label: string; prompt: string | null; preset: string } | null = null;
+  let source: Promise<string | null> | null = null;
+  const started = Date.now();
   try {
     let prompt: string;
 
@@ -52,11 +58,23 @@ export async function POST(req: NextRequest) {
     const blocked = await checkEntitlement(session!, "ai", "headshot-edit-bg");
     if (blocked) return blocked;
 
+    asked = bgType === "prompt"
+      ? { label: "AI Edit", prompt: String(customPrompt).trim(), preset: "prompt" }
+      : bgType === "color"
+        ? { label: bgLabel || bgColor || "Color", prompt, preset: `color:${bgColor || bgLabel || ""}` }
+        : { label: "Custom BG", prompt, preset: `image:${String(bgImageUrl).slice(0, 300)}` };
+    source = keepSource(imageUrl, "headshot-edit", session!.userId);
+
     const resultDataUrl = await editImage(imageUrl, prompt, undefined, undefined, { budgetMs: 240_000 });
 
-    return withCredits({ url: resultDataUrl }, session!, "ai", req, "headshot-edit-bg");
+    const saved = await fileCreation({
+      userId: session!.userId, tool: "headshot-edit", ...asked, result: resultDataUrl, source,
+      durationMs: Date.now() - started, creditsSpent: CREDIT_COST,
+    });
+    return withCredits({ url: resultDataUrl, saved }, session!, "ai", req, "headshot-edit-bg");
   } catch (e) {
     console.error("[headshot/edit-bg]", e);
+    if (asked) await fileFailure({ userId: session!.userId, tool: "headshot-edit", ...asked, source, error: e, durationMs: Date.now() - started });
     return NextResponse.json({ error: userMessage(e) }, { status: 500 });
   }
 }

@@ -60,7 +60,7 @@ export const VARIANTS: LandingVariant[] = [
     faq: [
       { q: "How do I make my signature background transparent?", a: "Take a photo or scan of your signature on white paper, upload it, and the AI removes the white background — leaving a transparent PNG you can drop onto any document." },
       { q: "What format is the signature saved in?", a: "A transparent PNG, which preserves the transparency so your signature blends onto any document or background." },
-      { q: "Is my signature stored or shared?", a: "No. Images are processed securely, never used for training, and automatically deleted after your session." },
+      { q: "Is my signature stored or shared?", a: "It is never shared or used for AI training. The result is saved to your account so you can download it again, and you can delete it from My Creations or ask us to remove it at any time." },
     ],
   },
   {

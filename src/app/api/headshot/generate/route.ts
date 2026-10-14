@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { checkAuth, checkEntitlement, withCredits } from "@/lib/auth";
+import { checkAuth, checkEntitlement, withCredits, CREDIT_COST } from "@/lib/auth";
+import { fileCreation, fileFailure, keepSource } from "@/lib/file-creation";
 import { editImageGptFirst, type Engine } from "@/lib/ai-image";
 import { photographOutputDirective } from "@/lib/staging";
 import { WOMEN_STYLES, MEN_STYLES } from "@/lib/headshot-prompts";
@@ -61,6 +62,8 @@ export async function POST(req: NextRequest) {
     // apps get. A studio would hand you one photograph per style.
     photographOutputDirective();
 
+  const source = keepSource(imageUrl, "headshot", session!.userId);
+  const started = Date.now();
   const results = await Promise.allSettled(
     selectedStyles.map(async (style) => {
       const { dataUrl, engine, downgradeReason } = await editImageGptFirst(
@@ -113,6 +116,26 @@ export async function POST(req: NextRequest) {
   const engines = Array.from(new Set(images.map((i) => i.engine)));
   console.log(`Headshot engines used: ${engines.join(", ")}`);
 
+  /*
+    Each style is filed on its own: the photo that went in, the style asked
+    for and the headshot that came out, or why it failed. The request is
+    charged once, so the credits sit on the first headshot.
+  */
+  const durationMs = Date.now() - started;
+  let charged = false;
+  const filed = await Promise.all(results.map((r, i) => {
+    const style = selectedStyles[i];
+    const asked = {
+      userId: session!.userId, tool: "headshot", label: style.name, source,
+      prompt: style.prompt, preset: `${gender}:${style.id}`, durationMs,
+    };
+    if (r.status === "rejected") return fileFailure({ ...asked, error: r.reason }).then(() => false);
+    const creditsSpent = charged ? 0 : CREDIT_COST;
+    charged = true;
+    return fileCreation({ ...asked, result: r.value.url, model: r.value.engine, aspectRatio: "3:4", creditsSpent });
+  }));
+  const savedIds = new Set(selectedStyles.filter((_, i) => filed[i]).map((s) => s.id));
+
   // Charge credits for each successfully generated headshot (2 credits each like other AI tools)
   if (images.length === 0) {
     return NextResponse.json({ images, errors }, { status: 500 });
@@ -122,7 +145,8 @@ export async function POST(req: NextRequest) {
     {
       // Only what the page renders. The engine and the reason behind it name
       // our suppliers and belong in the server log, not in a browser.
-      images: images.map((i) => ({ id: i.id, name: i.name, tag: i.tag, url: i.url })),
+      // `saved`: already in My Creations, so the page need not file it again.
+      images: images.map((i) => ({ id: i.id, name: i.name, tag: i.tag, url: i.url, saved: savedIds.has(i.id) })),
       errors,
     },
     session!,

@@ -3,6 +3,7 @@ import { createServerClient } from "@supabase/ssr";
 import { resolveUnlimited } from "@/lib/auth";
 import { claimSignupTrial, isFreshSignup, rememberCountry } from "@/lib/free-trial.server";
 import { monthlyBuckets, sumBuckets } from "@/lib/credit-buckets.server";
+import { linkVisitor, recordAcquisition } from "@/lib/acquisition.server";
 
 export const runtime = "nodejs";
 
@@ -37,7 +38,7 @@ export async function GET(req: NextRequest) {
     first hour of an account's life; the claim itself is once-only.
   */
   const trial = isFreshSignup(user)
-    ? (await Promise.all([claimSignupTrial(user, req), rememberCountry(user.id, req)]))[0]
+    ? (await Promise.all([claimSignupTrial(user, req), rememberCountry(user.id, req), recordAcquisition(user, req), linkVisitor(user.id, req)]))[0]
     : 0;
   const baseCredits = (profile ? (profile.credits ?? 0) : 0) + trial;
   // Monthly-plan credits, readable through the user's own session (RLS: read own).

@@ -884,7 +884,7 @@ export default function ImageEditorPage() {
       setEditHistory(prev => working ? [...prev, working] : prev);
       setWorking(data.dataUrl);
       trackImageGenerated("generate-bg");
-      autoSaveToDrive(data.dataUrl, "generate-bg", templateOrPrompt.slice(0, 60));
+      autoSaveToDrive(data.dataUrl, "generate-bg", templateOrPrompt.slice(0, 60), data.saved);
     } catch (e) {
       setUser(u => u ? { ...u, credits: prevCreditsGBg } : u); // rollback on error
       trackImageGenerationFailed("generate-bg", (e as Error).message);

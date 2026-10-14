@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { PAID_FEATURES_ENABLED, PAID_ROUTE_PREFIXES } from "@/lib/features";
+import { FIRST_TOUCH_COOKIE, LAST_TOUCH_COOKIE, TOUCH_KEYS, VISITOR_COOKIE, encodeTouch, type Touch } from "@/lib/touch";
 
 // In-memory rate limiter (per serverless instance — good enough for burst protection)
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
@@ -53,6 +54,49 @@ const REDIRECT_HOSTS = new Set(["sjpt.io"]);
 */
 const HOST_NEUTRAL = new Set(["/ads.txt"]);
 
+// ── Visitor and source cookies ──────────────────────────────────────────────
+// Where a visitor came from is only knowable on the first page they open: the
+// referrer and the UTM tags are on that request and gone by the next one. So
+// the first page view is stamped here, on the server, before any script runs
+// (lib/touch.ts; read at signup by lib/acquisition.server.ts).
+const YEAR_S = 60 * 60 * 24 * 365;
+
+/** A real page load: a document request, not an API call, asset or prefetch. */
+function isPageLoad(request: NextRequest): boolean {
+  if (request.method !== "GET") return false;
+  const path = request.nextUrl.pathname;
+  if (path.startsWith("/api/") || path.startsWith("/_next/")) return false;
+  if (request.headers.get("rsc") || request.headers.get("next-router-prefetch")) return false;
+  const purpose = request.headers.get("sec-purpose") || request.headers.get("purpose") || "";
+  if (/prefetch/i.test(purpose)) return false;
+  return (request.headers.get("accept") || "").includes("text/html");
+}
+
+function stampVisitor(request: NextRequest, res: NextResponse): void {
+  if (!isPageLoad(request)) return;
+  const url = request.nextUrl;
+  const cookie = { path: "/", maxAge: YEAR_S, sameSite: "lax" as const, httpOnly: true, secure: url.protocol === "https:" };
+
+  if (!request.cookies.get(VISITOR_COOKIE)) res.cookies.set(VISITOR_COOKIE, crypto.randomUUID(), cookie);
+
+  const touch: Touch = {};
+  for (const k of TOUCH_KEYS) {
+    const v = url.searchParams.get(k);
+    if (v) touch[k] = v.slice(0, 150);
+  }
+  const tagged = Object.keys(touch).length > 0;
+
+  if (!request.cookies.get(FIRST_TOUCH_COOKIE)) {
+    const ref = request.headers.get("referer") || "";
+    let external = "";
+    try { if (ref && new URL(ref).host !== url.host) external = ref.slice(0, 300); } catch { /* not a URL */ }
+    res.cookies.set(FIRST_TOUCH_COOKIE, encodeTouch({ ...touch, r: external, l: url.pathname.slice(0, 200), t: Date.now() }), cookie);
+  }
+  if (tagged) {
+    res.cookies.set(LAST_TOUCH_COOKIE, encodeTouch({ ...touch, l: url.pathname.slice(0, 200), t: Date.now() }), cookie);
+  }
+}
+
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
@@ -94,6 +138,7 @@ export async function middleware(request: NextRequest) {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     const res = NextResponse.next({ request });
     if (country) res.cookies.set("jpt_country", country, { path: "/", maxAge: 86400, httpOnly: false });
+    stampVisitor(request, res);
     return res;
   }
 
@@ -117,6 +162,7 @@ export async function middleware(request: NextRequest) {
 
   await supabase.auth.getUser();
   if (country) supabaseResponse.cookies.set("jpt_country", country, { path: "/", maxAge: 86400, httpOnly: false });
+  stampVisitor(request, supabaseResponse);
   return supabaseResponse;
 }
 

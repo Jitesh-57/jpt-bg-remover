@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkAuth, withCredits } from "@/lib/google-drive";
-import { checkEntitlement } from "@/lib/auth";
+import { checkEntitlement, CREDIT_COST } from "@/lib/auth";
+import { fileCreation, fileFailure } from "@/lib/file-creation";
 import { userMessage } from "@/lib/user-message";
 import { generateFromText } from "@/lib/ai-image";
 
@@ -56,21 +57,31 @@ export async function POST(req: NextRequest) {
   const blocked = await checkEntitlement(session!, "ai", "ai-background");
   if (blocked) return blocked;
 
+  let asked = "";
+  const started = Date.now();
   try {
     const { prompt } = (await req.json()) as { prompt: string };
     if (!prompt?.trim()) return NextResponse.json({ error: "Describe the background you want, then try again." }, { status: 400 });
+    asked = prompt.trim();
 
-    const enhancedPrompt = await enhancePrompt(prompt.trim());
+    const enhancedPrompt = await enhancePrompt(asked);
     const fullPrompt = `${enhancedPrompt}. ${BG_SUFFIX}`;
 
     // Made on fal (Nano Banana Pro, 2K) — never through Google's APIs directly.
     const dataUrl = await generateFromText(`Photorealistic background image: ${fullPrompt}`, { aspect_ratio: "1:1", budgetMs: 240_000 });
     const m = dataUrl.match(/^data:([^;]+);base64,(.+)$/);
-    if (!m) return NextResponse.json({ error: "The AI could not make that background. Try describing it differently." }, { status: 500 });
+    if (!m) throw new Error("The AI could not make that background. Try describing it differently.");
 
-    return await withCredits({ data: m[2], mimeType: m[1] }, session!, "ai", req, "ai-background");
+    // The user's own words are the prompt on record; the enhanced one is what the model saw.
+    const saved = await fileCreation({
+      userId: session!.userId, tool: "ai-background", label: asked.slice(0, 60) || "AI background",
+      result: dataUrl, prompt: asked, preset: fullPrompt.slice(0, 200), aspectRatio: "1:1",
+      durationMs: Date.now() - started, creditsSpent: CREDIT_COST,
+    });
+    return await withCredits({ data: m[2], mimeType: m[1], saved }, session!, "ai", req, "ai-background");
   } catch (err) {
     console.error("ai-background error:", err);
+    if (asked) await fileFailure({ userId: session!.userId, tool: "ai-background", label: asked.slice(0, 60), prompt: asked, error: err, durationMs: Date.now() - started });
     return NextResponse.json({ error: userMessage(err) }, { status: 500 });
   }
 }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
-import { claimSignupTrial, rememberCountry } from "@/lib/free-trial.server";
+import { claimSignupTrial, isFreshSignup, rememberCountry } from "@/lib/free-trial.server";
+import { linkVisitor, recordAcquisition } from "@/lib/acquisition.server";
 
 export const runtime = "nodejs";
 
@@ -88,7 +89,14 @@ export async function GET(request: NextRequest) {
       }).eq("id", user.id);
     }
     // A new account from a country with a live free trial gets its one-time credits.
-    const [granted] = await Promise.all([claimSignupTrial(user, request), rememberCountry(user.id, request)]);
+    // Where a new account came from (first touch, location, device), and this
+    // browser's earlier anonymous activity, now that we know whose it is.
+    const [granted] = await Promise.all([
+      claimSignupTrial(user, request),
+      rememberCountry(user.id, request),
+      isFreshSignup(user) ? recordAcquisition(user, request) : Promise.resolve(),
+      linkVisitor(user.id, request),
+    ]);
     // Read once by the dashboard to say "you got N free credits".
     if (granted > 0) response.cookies.set("jpt_trial", String(granted), { path: "/", maxAge: 600, httpOnly: false, sameSite: "lax" });
   }

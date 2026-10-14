@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { checkAuth, checkEntitlement, withCredits } from "@/lib/auth";
+import { checkAuth, checkEntitlement, withCredits, CREDIT_COST } from "@/lib/auth";
+import { fileCreation, fileFailure, keepSource } from "@/lib/file-creation";
 import { generateBackground } from "@/lib/ai-image";
 import { userMessage } from "@/lib/user-message";
 
@@ -19,11 +20,15 @@ export async function POST(req: NextRequest) {
   const blocked = await checkEntitlement(session!, "ai", "generate-bg");
   if (blocked) return blocked;
 
+  const source = keepSource(src, "generate-bg", session!.userId);
+  const started = Date.now();
   try {
     const resultDataUrl = await generateBackground(src, prompt.trim());
-    return withCredits({ dataUrl: resultDataUrl }, session!, "ai", req, "generate-bg");
+    const saved = await fileCreation({ userId: session!.userId, tool: "generate-bg", label: prompt.trim().slice(0, 60) || "New background", result: resultDataUrl, source, prompt: prompt.trim(), durationMs: Date.now() - started, creditsSpent: CREDIT_COST });
+    return withCredits({ dataUrl: resultDataUrl, saved }, session!, "ai", req, "generate-bg");
   } catch (e) {
     console.error("[generate-bg]", e);
+    await fileFailure({ userId: session!.userId, tool: "generate-bg", label: prompt.trim().slice(0, 60) || "New background", source, prompt: prompt.trim(), error: e, durationMs: Date.now() - started });
     return NextResponse.json({ error: userMessage(e) }, { status: 500 });
   }
 }
