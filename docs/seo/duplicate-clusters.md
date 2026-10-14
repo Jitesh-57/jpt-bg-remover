@@ -66,13 +66,18 @@ Most merge-ins are under 400 words, so `src/lib/seo/index-policy.ts` already kee
 | `how-to-add-watermark-to-photos` (530) | `add-watermark-to-photos-free` (204) |
 | `how-to-remove-a-watermark-from-a-photo` (456) | `how-to-remove-a-watermark-from-a-picture-online` (317) |
 
-## Also worth fixing
+## Restored posts that overlap (brought back on 2026-10-14)
 
-**Outdated free-trial claims.** 25 live posts still tell readers new accounts get "5 free trials", an offer that no longer exists. For example:
-- `enhance-portrait-photos-ai-free`
-- `enhance-product-images-free`
-- `upscale-image-on-phone-free`
-- `best-free-ai-photo-enhancer-2025`
-- `upscale-image-without-losing-quality-free`
+The 44 posts held back for their old free-trial wording are live again: the wording is now country-aware. A few of them cover the same ground as a post that was already live:
 
-The 3 merged posts above were corrected. The rest need the same sentence-by-sentence rewrite.
+| Keep | Merge in |
+|---|---|
+| `remove-background-from-image-online-free` (2,050) | `how-to-remove-background-without-photoshop` (362) |
+| `remove-background-from-product-photo-free` (2,097) | `remove-background-product-photos-amazon` (2,035, **indexed**) |
+| `change-photo-background-with-ai-free` (2,050) | `change-background-ai-editor` (2,113, **indexed**), `how-to-change-photo-background-online-free` (1,936, **indexed**), `change-photo-background-ai-scene` (312) |
+| `ai-professional-headshot-from-selfie-free` (1,942) | `ai-professional-headshot-from-selfie` (283) |
+| `remove-object-from-photo-free` (2,017) | `how-to-remove-an-object-from-a-photo` (317) |
+
+Close, but different enough to keep apart:
+- `ai-photo-editor-vs-photoshop` vs `ai-photo-editor-no-photoshop-free`: a comparison vs a how-to;
+- `white-background-photo-free` vs `passport-photo-white-background-free`: general vs passport rules.

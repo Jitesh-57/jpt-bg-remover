@@ -8,6 +8,7 @@ import { readOverrides } from "@/lib/overrides";
 import { POSTS } from "../_data/posts";
 import { editedPost, editedPosts } from "@/lib/blog-edits.server";
 import BlogStickyBar from "../_components/BlogStickyBar";
+import { TrialCallout, TrialLine } from "@/app/_components/TrialOffer";
 import { blogIndexable, NOINDEX } from "@/lib/seo/index-policy";
 import { relatedSlugs } from "@/lib/blog-links";
 import { TOPIC_BY_SLUG, topicOf, topicHref } from "@/lib/blog-topics";
@@ -82,10 +83,17 @@ function safeHref(href: string): string | null {
   return null;
 }
 
-/** **bold** and [words](link) inside one line of a post. */
+/**
+ * **bold**, [words](link) and {{trial}} inside one line of a post.
+ *
+ * {{trial}} is the free-trial sentence, filled in per visitor: it reads
+ * "New accounts get 1 free AI generation" only where a trial is live for
+ * their country, and is empty everywhere else (see TrialLine).
+ */
 function renderInline(line: string): React.ReactNode[] {
-  const parts = line.split(/(\*\*[^*]+\*\*|\[[^\]]+\]\([^)\s]+\))/g);
+  const parts = line.split(/(\*\*[^*]+\*\*|\[[^\]]+\]\([^)\s]+\)|\{\{trial\}\})/g);
   return parts.map((part, j) => {
+    if (part === "{{trial}}") return <TrialLine key={j} source="blog-inline" />;
     if (part.startsWith("**") && part.endsWith("**")) {
       return <strong key={j} style={{ color: "var(--text)", fontWeight: 700 }}>{part.replace(/\*\*/g, "")}</strong>;
     }
@@ -155,7 +163,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       const m = block.match(/^\*\*(.+?)\*\*\s*\n?([\s\S]*)$/);
       if (m) {
         const q = m[1].trim();
-        const a = m[2].replace(/\*\*/g, "").replace(/\[([^\]]+)\]\([^)\s]+\)/g, "$1").trim();
+        // Structured data is the same for every visitor, so the per-country trial sentence is left out.
+        const a = m[2].replace(/\{\{trial\}\}/g, "").replace(/\*\*/g, "").replace(/\[([^\]]+)\]\([^)\s]+\)/g, "$1").replace(/\s{2,}/g, " ").trim();
         if (q && a) faqPairs.push({ q, a });
       }
     }
@@ -247,6 +256,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                     style={{ width: `${section.imageWidth ?? 100}%`, height: "auto", borderRadius: 14, margin: "4px auto 18px", display: "block", border: "1px solid var(--border)" }} />
                 )}
                 {renderBody(section.body)}
+                {/* After the intro: the free trial, only where it is live (TrialCallout). */}
+                {i === 0 && <TrialCallout source="blog" />}
               </div>
             ))}
           </article>

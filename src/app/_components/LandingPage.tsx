@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef, useState, useEffect, DragEvent } from 'react'
+import { useTrialOffer } from '@/lib/trial-offer'
 import PricingSection from '@/app/_components/PricingSection'
 import { PACKS, CREDIT_COST } from '@/lib/plans'
 import FAQAccordion from './FAQAccordion'
@@ -367,6 +368,8 @@ const PAGE_VISUALS: Record<string, { before: string; after: string; label: strin
 }
 
 export default function LandingPage({ config, toolHref, pageId, isHome, relatedVariants, currentSlug, guides }: LandingPageProps) {
+  // The signup trial, only where it is live for this visitor (lib/trial-offer).
+  const trialOffer = useTrialOffer()
   // ── Structured data (rich results) ──────────────────────────────────────────
   // FAQ schema → the "People also ask"-style expandable answers in Google.
   const faqLd = config.faq?.length
@@ -654,7 +657,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome, relatedV
                 {config.cta_text || 'Try It Free'} →
               </button>
               <div style={{ fontSize: 13, color: 'var(--text-faint)', marginTop: 12 }}>
-                No credit card required · 5 free trials included
+                {trialOffer ? 'No credit card required · Your first AI generation is free' : 'No credit card required'}
               </div>
             </>
           )}

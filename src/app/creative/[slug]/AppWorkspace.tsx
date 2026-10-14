@@ -20,6 +20,7 @@ import GeneratingFx from "./GeneratingFx";
 import { savePendingContext, loadPendingContext, clearPendingContext } from "@/lib/pending-image";
 import { beginGoogleSignIn } from "@/lib/auth-return";
 import { useTrialOffer, openTrialSignIn } from "@/lib/trial-offer";
+import { TrialCallout } from "@/app/_components/TrialOffer";
 import { prepareDataUrl, parseJsonResponse } from "@/lib/upload-prep";
 import Image from "next/image";
 import { userMessage } from "@/lib/user-message";
@@ -591,6 +592,9 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
             {app.tagline}
           </p>
         </div>
+
+        {/* The free trial, above the fold, only where it is live for this visitor. */}
+        {!loggedIn && <div style={{ textAlign: "left" }}><TrialCallout source={`app-hero:${app.slug}`} what="AI photo" /></div>}
 
         <div
           style={{
