@@ -1,3 +1,4 @@
+import { seoJson, withSeoMeta } from "@/lib/seo/brand";
 import { fitTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -23,7 +24,7 @@ export function generateStaticParams() {
   return byMedia("video").map((r) => ({ uid: r.uid }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ uid: string }> }): Promise<Metadata> {
+async function generateMetadataBase({ params }: { params: Promise<{ uid: string }> }): Promise<Metadata> {
   const { uid } = await params;
   const p = getPrompt(uid);
   if (!p || p.media !== "video") return {};
@@ -77,8 +78,8 @@ export default async function VideoPromptDetail({ params }: { params: Promise<{ 
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(workLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(breadcrumbLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(workLd) }} />
       <div style={{ background: "var(--bg)", color: "var(--text)" }}>
         <div style={{ maxWidth: 900, margin: "0 auto", padding: "26px 24px 70px" }}>
           {/*
@@ -93,3 +94,5 @@ export default async function VideoPromptDetail({ params }: { params: Promise<{ 
     </>
   );
 }
+
+export const generateMetadata = withSeoMeta(generateMetadataBase);

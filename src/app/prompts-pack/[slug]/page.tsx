@@ -1,3 +1,4 @@
+import { seoJson, withSeoMeta } from "@/lib/seo/brand";
 import { brandedTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -17,7 +18,7 @@ export function generateStaticParams() {
   return PACKS.map((p) => ({ slug: p.slug }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+async function generateMetadataBase({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const pack = PACK_BY_SLUG[slug];
   if (!pack) return {};
@@ -62,7 +63,7 @@ export default async function PackPage({ params }: { params: Promise<{ slug: str
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(ld) }} />
       <div style={{ background: "var(--bg)", color: "var(--text)" }}>
         <div style={{ maxWidth: 1180, margin: "0 auto", padding: "34px 24px 80px" }}>
           <nav aria-label="Breadcrumb" style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: "0.07em", textTransform: "uppercase", color: "var(--text-faint)", marginBottom: 16, display: "flex", gap: 8 }}>
@@ -139,3 +140,5 @@ export default async function PackPage({ params }: { params: Promise<{ slug: str
     </>
   );
 }
+
+export const generateMetadata = withSeoMeta(generateMetadataBase);

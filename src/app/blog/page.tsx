@@ -1,8 +1,9 @@
+import { seoMeta } from "@/lib/seo/brand";
 import { brandedTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import BlogIndex from "./_components/BlogIndex";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = seoMeta({
   title: { absolute: brandedTitle("Image Upscaling Blog — Tips, Tutorials & Guides | Pixel Shine") },
   description:
     "Learn how to upscale images, enhance photo quality, fix blurry pictures, and get print-ready resolution. Free upscaling tutorials and guides from Pixel Shine.",
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
     description: "Tutorials, guides and tips for upscaling and enhancing images for free.",
     type: "website",
   },
-};
+});
 
 /* Covers follow the creatives uploaded in /admin, re-read with the creative gallery's cadence. */
 export const revalidate = 300;

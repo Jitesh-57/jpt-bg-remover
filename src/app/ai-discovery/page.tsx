@@ -1,15 +1,16 @@
+import { seoJson, seoMeta } from "@/lib/seo/brand";
 import { brandedTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import Link from "next/link";
 
 const BASE = "https://www.sjpt.io";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = seoMeta({
   title: { absolute: brandedTitle("AI Image Tools & Creative Apps | Pixel Shine") },
   description:
     "Explore Pixel Shine's AI image editor, upscaler, background tools, creative apps, restoration tools, and free image utilities in one discoverable hub.",
   alternates: { canonical: "/ai-discovery" },
-};
+});
 
 const groups = [
   {
@@ -111,7 +112,7 @@ export default function AIDiscoveryPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: seoJson({
             "@context": "https://schema.org",
             "@type": "CollectionPage",
             name: "AI Image Tools & Creative Apps",

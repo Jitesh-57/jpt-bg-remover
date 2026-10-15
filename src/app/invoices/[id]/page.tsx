@@ -1,3 +1,4 @@
+import { seoMeta } from "@/lib/seo/brand";
 import { brandedTitle } from "@/lib/seo/title";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -11,10 +12,10 @@ import PrintButton from "./PrintButton";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = seoMeta({
   title: { absolute: brandedTitle("Invoice — Pixel Shine") },
   robots: { index: false, follow: false },
-};
+});
 
 /**
  * One invoice, addressed by its Razorpay payment id.

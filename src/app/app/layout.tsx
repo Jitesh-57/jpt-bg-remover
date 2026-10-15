@@ -1,10 +1,11 @@
+import { seoMeta } from "@/lib/seo/brand";
 import type { Metadata } from "next";
 import AppShell from "./_components/AppShell";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = seoMeta({
   title: "Dashboard",
   robots: { index: false, follow: false },
-};
+});
 
 /**
  * The logged-in app shell. Everything under /app renders inside AppShell —

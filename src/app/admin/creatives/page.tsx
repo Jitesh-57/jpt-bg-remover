@@ -1,8 +1,9 @@
+import { seoMeta } from "@/lib/seo/brand";
 import type { Metadata } from "next";
 import { CREATIVE_APPS } from "@/lib/creative-apps";
 import AdminShell from "./AdminShell";
 
-export const metadata: Metadata = { title: "Admin", robots: { index: false, follow: false } };
+export const metadata: Metadata = seoMeta({ title: "Admin", robots: { index: false, follow: false } });
 export const dynamic = "force-dynamic";
 
 /**

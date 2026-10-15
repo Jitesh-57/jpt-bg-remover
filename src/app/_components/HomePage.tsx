@@ -1,3 +1,4 @@
+import { seoJson } from "@/lib/seo/brand";
 import Link from "next/link";
 import HomeHero from "@/app/_components/HomeHero";
 import SmartImage from "@/app/_components/SmartImage";
@@ -93,8 +94,8 @@ export default function HomePage({
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(faqLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(webPageLd) }} />
       <ScrollReveal />
 
       <div style={{ background: "var(--bg)", color: "var(--text)" }}>

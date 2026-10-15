@@ -1,3 +1,4 @@
+import { seoMeta } from "@/lib/seo/brand";
 import { brandedTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -11,11 +12,11 @@ export const revalidate = 300;
 
 const BASE = "https://www.sjpt.io";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = seoMeta({
   title: { absolute: brandedTitle("Photo Editing Guides by Topic | Pixel Shine") },
   description: "Free guides to upscaling, background removal, headshots, restoring old photos, resizing, converting and AI photo effects, grouped by topic.",
   alternates: { canonical: `${BASE}/guides` },
-};
+});
 
 export default async function GuidesIndex() {
   const posts = await editedPosts();

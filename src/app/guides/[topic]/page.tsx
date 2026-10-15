@@ -1,3 +1,4 @@
+import { seoJson, withSeoMeta } from "@/lib/seo/brand";
 import { brandedTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -20,7 +21,7 @@ export function generateStaticParams() {
   return BLOG_TOPICS.map((t) => ({ topic: t.slug }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ topic: string }> }): Promise<Metadata> {
+async function generateMetadataBase({ params }: { params: Promise<{ topic: string }> }): Promise<Metadata> {
   const { topic } = await params;
   const t = TOPIC_BY_SLUG[topic];
   if (!t) return {};
@@ -69,7 +70,7 @@ export default async function TopicHub({ params }: { params: Promise<{ topic: st
 
   return (
     <main style={{ background: "var(--surface-2)", minHeight: "100vh", padding: "48px 24px 80px" }}>
-      {ld.map((x, i) => <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(x) }} />)}
+      {ld.map((x, i) => <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(x) }} />)}
       <div style={{ maxWidth: 900, margin: "0 auto" }}>
         <nav aria-label="Breadcrumb" style={{ fontSize: 13, color: "var(--text-faint)", marginBottom: 24 }}>
           <Link href="/" style={{ color: "var(--text-faint)", textDecoration: "none" }}>Home</Link>
@@ -122,3 +123,5 @@ export default async function TopicHub({ params }: { params: Promise<{ topic: st
     </main>
   );
 }
+
+export const generateMetadata = withSeoMeta(generateMetadataBase);

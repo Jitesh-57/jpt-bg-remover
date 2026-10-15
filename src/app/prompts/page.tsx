@@ -1,3 +1,4 @@
+import { seoJson, seoMeta } from "@/lib/seo/brand";
 import { brandedTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -23,7 +24,7 @@ const URL = `${BASE}/prompts`;
 
 const TOTAL = COUNTS.total + ORIGINALS_COUNT;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = seoMeta({
   title: { absolute: brandedTitle(`${TOTAL} AI Prompts — Free Image & Video Prompt Library | ${BRAND}`) },
   description:
     `A free library of ${TOTAL} AI prompts for ${MODELS.map((m) => m.name).join(", ")} and more. Browse by model, medium, use case or style. Every prompt credits the creator who wrote it.`,
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
     url: URL, type: "website", siteName: BRAND,
   },
   twitter: { card: "summary_large_image", title: `${TOTAL} free AI prompts`, description: "Browse by model, medium, use case or style. Free to copy." },
-};
+});
 
 function H2({ children, sub, href, hrefLabel }: { children: React.ReactNode; sub?: string; href?: string; hrefLabel?: string }) {
   return (
@@ -108,8 +109,8 @@ export default async function PromptsHub() {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(faqLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(itemListLd) }} />
 
       <div style={{ background: "var(--bg)", color: "var(--text)" }}>
         <div style={{ maxWidth: 1180, margin: "0 auto", padding: "46px 24px 80px" }}>

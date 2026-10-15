@@ -1,3 +1,4 @@
+import { seoJson } from "@/lib/seo/brand";
 import Link from "next/link";
 import type { GrowthPage } from "@/lib/growth-pages";
 import { appsForPage } from "@/lib/growth-pages";
@@ -43,7 +44,7 @@ export default function GrowthPage({page}:{page:GrowthPage}) {
     <Link href={CREATIVE_BASE} className="jpt-btn jpt-btn-primary" style={{textDecoration:"none"}}>Browse Creative Apps →</Link><Link href="/answers" className="jpt-btn" style={{textDecoration:"none"}}>Browse AI answers →</Link>
    </div>
   </section>
-  <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(faqLd)}}/>
-  <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(itemLd)}}/>
+  <script type="application/ld+json" dangerouslySetInnerHTML={{__html: seoJson(faqLd)}}/>
+  <script type="application/ld+json" dangerouslySetInnerHTML={{__html: seoJson(itemLd)}}/>
  </main>
 }

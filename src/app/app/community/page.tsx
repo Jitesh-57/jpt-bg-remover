@@ -1,8 +1,9 @@
+import { seoMeta } from "@/lib/seo/brand";
 import type { Metadata } from "next";
 import CommunityFeed from "./CommunityFeed";
 import { chosenFeed, communityFeed } from "@/lib/dashboard-feed.server";
 
-export const metadata: Metadata = { title: "Community", robots: { index: false, follow: false } };
+export const metadata: Metadata = seoMeta({ title: "Community", robots: { index: false, follow: false } });
 export const revalidate = 300;
 
 const FEATURED = "E-commerce Main Image";

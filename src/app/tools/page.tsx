@@ -1,3 +1,4 @@
+import { seoJson, seoMeta } from "@/lib/seo/brand";
 import { brandedTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -10,14 +11,14 @@ import ScrollReveal from "@/app/_components/ScrollReveal";
 const BASE = "https://www.sjpt.io";
 const URL = `${BASE}/tools`;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = seoMeta({
   title: { absolute: brandedTitle("All Free Image Tools — Convert, Compress, Crop, Upscale & More | Pixel Shine") },
   description:
     "Every free Pixel Shine image tool in one place: upscale, compress, convert (PNG, JPG, WebP), crop, rotate, watermark, meme maker, image to PDF, and TikTok downloader. No watermark, no sign-up.",
   keywords: "free image tools, online image tools, image converter, image compressor, crop image, upscale image, free photo tools",
   alternates: { canonical: URL },
   openGraph: { title: "All Free Image Tools | Pixel Shine", description: "Every free Pixel Shine image tool in one place — no watermark, no sign-up.", url: URL, type: "website", siteName: "Pixel Shine" },
-};
+});
 
 const CORE_TOOLS = [
   { icon: "🔍", name: "Image Upscaler", desc: "Enhance resolution up to 4×", href: "/upscale" },
@@ -93,8 +94,8 @@ export default function ToolsPage() {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(collectionLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(breadcrumbLd) }} />
       <ScrollReveal />
 
       <div style={{ fontFamily: "var(--font)", color: "var(--text)", background: "var(--surface)" }}>

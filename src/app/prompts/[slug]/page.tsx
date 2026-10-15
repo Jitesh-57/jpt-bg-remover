@@ -1,3 +1,4 @@
+import { seoJson, withSeoMeta } from "@/lib/seo/brand";
 import { fitTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -36,7 +37,7 @@ export function generateStaticParams() {
   ];
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+async function generateMetadataBase({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const url = `${BASE}/prompts/${slug}`;
 
@@ -114,8 +115,8 @@ export default async function PromptDetail({ params }: { params: Promise<{ slug:
     };
     return (
       <>
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(workLd) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(breadcrumbLd) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(workLd) }} />
         <div style={{ background: "var(--bg)", color: "var(--text)" }}>
           <div style={{ maxWidth: 900, margin: "0 auto", padding: "26px 24px 70px" }}>
             <DatasetDetail p={ds} resolve={resolve} />
@@ -155,8 +156,8 @@ export default async function PromptDetail({ params }: { params: Promise<{ slug:
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(workLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(breadcrumbLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(workLd) }} />
 
       <div style={{ background: "var(--bg)", color: "var(--text)" }}>
         <div style={{ maxWidth: 860, margin: "0 auto", padding: "26px 24px 70px" }}>
@@ -270,3 +271,5 @@ export default async function PromptDetail({ params }: { params: Promise<{ slug:
     </>
   );
 }
+
+export const generateMetadata = withSeoMeta(generateMetadataBase);

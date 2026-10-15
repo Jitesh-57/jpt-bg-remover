@@ -1,3 +1,4 @@
+import { seoJson, withSeoMeta } from "@/lib/seo/brand";
 import { fitTitle, stripBrand } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -17,7 +18,7 @@ export async function generateStaticParams() {
   return POSTS.map((p) => ({ slug: p.slug }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+async function generateMetadataBase({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const post = await editedPost(slug);
   if (!post) return {};
@@ -196,9 +197,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
-      {faqLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(breadcrumbLd) }} />
+      {faqLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(faqLd) }} />}
 
       <main style={{ background: "var(--surface-2)", minHeight: "100vh", padding: "48px 24px 80px" }}>
         <div style={{ maxWidth: 780, margin: "0 auto" }}>
@@ -335,3 +336,5 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     </>
   );
 }
+
+export const generateMetadata = withSeoMeta(generateMetadataBase);

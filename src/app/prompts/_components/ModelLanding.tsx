@@ -1,3 +1,4 @@
+import { seoJson } from "@/lib/seo/brand";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import PromptCard from "./PromptCard";
@@ -141,7 +142,7 @@ export default async function ModelLanding({ slug, page = 1 }: { slug: string; p
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(faqLd) }} />
 
       <div style={{ background: "var(--bg)", color: "var(--text)" }}>
         <div style={{ maxWidth: 1180, margin: "0 auto", padding: "34px 24px 80px" }}>

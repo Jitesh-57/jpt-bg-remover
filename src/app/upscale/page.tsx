@@ -1,3 +1,4 @@
+import { seoJson, withSeoMeta } from "@/lib/seo/brand";
 import { brandedTitle } from "@/lib/seo/title";
 import GuidesBlock from "@/app/_components/GuidesBlock";
 import { Metadata } from 'next'
@@ -5,7 +6,7 @@ import { getPageConfig } from '@/lib/page-config'
 import LandingPage from '../_components/LandingPage'
 import { variantsFor, PARENT_META } from '@/lib/landing-variants'
 
-export async function generateMetadata(): Promise<Metadata> {
+async function generateMetadataBase(): Promise<Metadata> {
   const config = await getPageConfig('upscale')
   return {
     title: { absolute: brandedTitle(config.title) },
@@ -45,9 +46,11 @@ export default async function UpscalePage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: seoJson(jsonLd) }}
       />
       <LandingPage guides={<GuidesBlock path="/upscale" />} config={config} toolHref="/editor?tool=upscale" pageId="upscale" relatedVariants={relatedVariants} />
     </>
   )
 }
+
+export const generateMetadata = withSeoMeta(generateMetadataBase);

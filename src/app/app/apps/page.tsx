@@ -1,10 +1,11 @@
+import { seoMeta } from "@/lib/seo/brand";
 import type { Metadata } from "next";
 import AppsGallery from "./AppsGallery";
 import { appCards, APP_CATEGORIES } from "@/lib/dashboard-feed.server";
 import { UTILITY_TOOLS } from "@/lib/dashboard-catalog";
 import { curateApps, readPlacements } from "@/lib/placements.server";
 
-export const metadata: Metadata = { title: "AI Apps", robots: { index: false, follow: false } };
+export const metadata: Metadata = seoMeta({ title: "AI Apps", robots: { index: false, follow: false } });
 export const revalidate = 300;
 
 export default async function AppsPage() {

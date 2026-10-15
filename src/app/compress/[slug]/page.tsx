@@ -1,3 +1,4 @@
+import { seoJson, withSeoMeta } from "@/lib/seo/brand";
 import { brandedTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -13,7 +14,7 @@ export function generateStaticParams() {
   return COMPRESSIONS.map((c) => ({ slug: c.slug }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+async function generateMetadataBase({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const c = getCompression(slug);
   if (!c) return {};
@@ -50,9 +51,9 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(appLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(appLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(faqLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(breadcrumbLd) }} />
       <ScrollReveal />
 
       <div style={{ fontFamily: "var(--font)", color: "var(--text)", background: "var(--surface)" }}>
@@ -135,3 +136,5 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     </>
   );
 }
+
+export const generateMetadata = withSeoMeta(generateMetadataBase);

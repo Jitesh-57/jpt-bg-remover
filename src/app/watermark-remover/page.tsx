@@ -1,3 +1,4 @@
+import { seoJson, seoMeta } from "@/lib/seo/brand";
 import { brandedTitle } from "@/lib/seo/title";
 import GuidesBlock from "@/app/_components/GuidesBlock";
 import type { Metadata } from "next";
@@ -11,7 +12,7 @@ const BASE = "https://www.sjpt.io";
 const URL = `${BASE}/watermark-remover`;
 const GRAD = "linear-gradient(120deg,var(--accent),var(--accent-2))";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = seoMeta({
   title: { absolute: brandedTitle("Best Free Watermark Remover — Remove Watermark From Photos Online | Pixel Shine") },
   description:
     "Remove watermarks from photos free — just paint over the watermark and AI erases it. Logos, text, timestamps and signatures. 100% free, no sign-up, runs privately in your browser.",
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
     title: "Best Free Watermark Remover | Pixel Shine",
     description: "Paint over a watermark and AI erases it. 100% free, no sign-up, runs in your browser.",
   },
-};
+});
 
 const FAQS = [
   { q: "How do I remove a watermark from an image for free?", a: "Upload your image, paint over the watermark with the brush and click Remove Painted Area. The AI rebuilds what was behind it — drag the slider to compare, then click Download." },
@@ -123,9 +124,9 @@ export default function Page() {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(appLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(appLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(faqLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(breadcrumbLd) }} />
       <ScrollReveal />
 
       <div style={{ fontFamily: "var(--font)", color: "var(--text)", background: "var(--surface)" }}>

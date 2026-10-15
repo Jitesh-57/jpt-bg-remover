@@ -1,3 +1,4 @@
+import { withSeoMeta } from "@/lib/seo/brand";
 import { fitTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import CategoryPage from "@/app/prompts/_components/CategoryPage";
@@ -15,7 +16,7 @@ export function generateStaticParams() {
   return allFacets(MEDIA).map((f) => ({ facet: f.facet.slug }));
 }
 
-export async function generateMetadata(
+async function generateMetadataBase(
   { params, searchParams }: { params: Promise<{ facet: string }>; searchParams: Promise<{ page?: string }> }
 ): Promise<Metadata> {
   const { facet } = await params;
@@ -41,3 +42,5 @@ export default async function Page(
   const page = parsePage(await searchParams);
   return <CategoryPage media={MEDIA} facetSlug={facet} page={page} />;
 }
+
+export const generateMetadata = withSeoMeta(generateMetadataBase);

@@ -1,3 +1,4 @@
+import { seoJson, withSeoMeta } from "@/lib/seo/brand";
 import { brandedTitle } from "@/lib/seo/title";
 import GuidesBlock from "@/app/_components/GuidesBlock";
 import { Metadata } from "next";
@@ -18,7 +19,7 @@ export function generateStaticParams() {
   return variantsFor(PARENT).map((v) => ({ slug: v.slug }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+async function generateMetadataBase({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const v = getVariant(PARENT, slug);
   if (!v) return {};
@@ -64,9 +65,11 @@ export default async function VariantPage({ params }: { params: Promise<{ slug: 
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(faqLd) }} />
       <LandingPage guides={<GuidesBlock path={`/ai-editor/${slug}`} />} config={config} toolHref={PARENT_META[PARENT].toolHref} pageId={PARENT_PAGE_ID[PARENT]} relatedVariants={relatedVariants} currentSlug={slug} />
     </>
   );
 }
+
+export const generateMetadata = withSeoMeta(generateMetadataBase);

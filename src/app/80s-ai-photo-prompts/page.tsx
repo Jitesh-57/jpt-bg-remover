@@ -1,3 +1,4 @@
+import { seoJson, seoMeta } from "@/lib/seo/brand";
 import { brandedTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -12,7 +13,7 @@ export const revalidate = 300;
 const BASE = "https://www.sjpt.io";
 const URL = `${BASE}/80s-ai-photo-prompts`;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = seoMeta({
   title: { absolute: brandedTitle("100 Free 80s AI Photo Prompts (Copy & Paste) — ChatGPT & Gemini | Pixel Shine") },
   description:
     "100 free copy-paste prompts for the viral 80s AI photo trend. Motorcycle and classic-car portraits, rainy streets, weddings, disco nights and family albums — all written to keep your real face. Works in ChatGPT and Gemini.",
@@ -32,7 +33,7 @@ export const metadata: Metadata = {
     title: "100 Free 80s AI Photo Prompts",
     description: "Copy-paste prompts for the viral 80s AI photo trend — works in ChatGPT and Gemini.",
   },
-};
+});
 
 const FAQS = [
   { q: "What is the 80s AI photo trend?", a: "It's a viral trend where people use ChatGPT or Gemini to restyle a normal photo of themselves as an authentic-looking 1980s picture — big hair, shoulder pads, studio lighting and film grain. The prompts here cover motorcycle and classic-car portraits, rainy streets and tea stalls, cafés and park benches, weddings and receptions, disco floors, village roads, and formal family studio portraits." },
@@ -71,8 +72,8 @@ export default async function Page() {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(faqLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(breadcrumbLd) }} />
       <ScrollReveal />
 
       <div style={{ background: "var(--bg)", color: "var(--text)" }}>
