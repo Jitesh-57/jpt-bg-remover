@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CreativeApp } from "@/lib/creative-apps";
 import {
-  TABS, presetsFor, buildPrompt, ASPECT_RATIOS, MODELS,
+  TABS, presetsFor, buildPrompt, ASPECT_RATIOS, MODELS, defaultRatioFor,
   type PresetTab, type Preset, type AspectRatio,
 } from "@/lib/app-presets";
 import { CREDIT_COST } from "@/lib/plans";
@@ -41,7 +41,7 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
   const [preset, setPreset] = useState<Preset | null>(null);
   const [custom, setCustom] = useState("");
   const [model, setModel] = useState<string>(MODELS[0].id);
-  const [ratio, setRatio] = useState<AspectRatio>("1:1");
+  const [ratio, setRatio] = useState<AspectRatio>(() => defaultRatioFor(app.slug));
 
   /*
     The app's own settings — the target age, the beard style, what to remove.
@@ -82,6 +82,8 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
   const [dragging, setDragging] = useState(false);
 
   const fileRef = useRef<HTMLInputElement>(null);
+  /** The before/after panel — brought on screen when a generation starts on a phone. */
+  const viewerRef = useRef<HTMLDivElement>(null);
   const presets = useMemo(() => presetsFor(app, tab), [app, tab]);
 
   useEffect(() => {
@@ -193,6 +195,19 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
     setErr(null);
     trackEvent("app_generate", { app: app.slug, tab, preset: preset?.id, model, ratio, ...optValues });
 
+    /*
+      Show the transformation as it happens.
+
+      Below 980px the viewer stacks under the controls, the heading and the
+      description, so the progress animation played off-screen and people had
+      to scroll down to find out whether anything was happening. Brought up
+      the moment Generate is pressed; on desktop it is already beside the rail.
+    */
+    if (typeof window !== "undefined" && window.matchMedia("(max-width: 980px)").matches) {
+      const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      requestAnimationFrame(() => viewerRef.current?.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" }));
+    }
+
     try {
       /*
         Send a URL when we can get one.
@@ -300,7 +315,8 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
           type="file"
           accept={ACCEPT}
           hidden
-          onChange={(e) => { const f = e.target.files?.[0]; if (f) void onFile(f); }}
+          // Cleared after each pick so choosing the same file again (after "Change image") still registers.
+          onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ""; if (f) void onFile(f); }}
         />
 
         {/* Upload — text-only apps never take a photo, so there's nothing to drop here. */}
@@ -310,23 +326,53 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
           onDrop={(e) => { e.preventDefault(); const f = e.dataTransfer.files?.[0]; if (f) void onFile(f); }}
           style={{
             border: "1.5px dashed var(--border-strong)", borderRadius: 16,
-            padding: "22px 18px", textAlign: "center", marginBottom: 16,
+            padding: original ? "12px" : "22px 18px", textAlign: "center", marginBottom: 16,
             background: "var(--surface-2)",
           }}
         >
-          <button
-            onClick={() => fileRef.current?.click()}
-            style={{
-              width: "100%", padding: "13px", borderRadius: 999, border: "none",
-              background: "var(--grad-strong)", color: "#fff", fontWeight: 800,
-              fontSize: 15, fontFamily: "inherit", cursor: "pointer", boxShadow: "var(--glow)",
-            }}
-          >
-            + Upload image
-          </button>
-          <div style={{ fontSize: 12, color: "var(--text-faint)", marginTop: 9 }}>
-            JPG · PNG · WEBP, up to {MAX_MB}MB
-          </div>
+          {original ? (
+            /*
+              The photo that will be used, where it was chosen.
+
+              On a phone the viewer sits below the controls, the heading and the
+              description, so an upload used to vanish off-screen the moment it
+              was picked: the box still said "Upload image" and nothing showed
+              that it had worked. It now shows the photo, and changing it is
+              one tap from the same place.
+            */
+            <>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={original} alt="Your photo" className="jpt-upload-preview" />
+              <button
+                onClick={() => fileRef.current?.click()}
+                disabled={busy}
+                style={{
+                  width: "100%", marginTop: 10, padding: "11px", borderRadius: 999,
+                  border: "1px solid var(--border-strong)", background: "var(--surface)",
+                  color: "var(--text)", fontWeight: 800, fontSize: 14.5, fontFamily: "inherit",
+                  cursor: busy ? "not-allowed" : "pointer", opacity: busy ? 0.6 : 1,
+                }}
+              >
+                ↻ Change image
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => fileRef.current?.click()}
+                style={{
+                  width: "100%", padding: "13px", borderRadius: 999, border: "none",
+                  background: "var(--grad-strong)", color: "#fff", fontWeight: 800,
+                  fontSize: 15, fontFamily: "inherit", cursor: "pointer", boxShadow: "var(--glow)",
+                }}
+              >
+                + Upload image
+              </button>
+              <div style={{ fontSize: 12, color: "var(--text-faint)", marginTop: 9 }}>
+                JPG · PNG · WEBP, up to {MAX_MB}MB
+              </div>
+            </>
+          )}
         </div>
         )}
 
@@ -597,9 +643,12 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
         {!loggedIn && <div style={{ textAlign: "left" }}><TrialCallout source={`app-hero:${app.slug}`} what="AI photo" /></div>}
 
         <div
+          ref={viewerRef}
           style={{
             background: "var(--surface)", border: "1px solid var(--border)",
             borderRadius: 20, padding: 12, minHeight: 340,
+            // Clears the sticky site header when scrolled into view.
+            scrollMarginTop: 80,
           }}
         >
           {!original && !result ? (

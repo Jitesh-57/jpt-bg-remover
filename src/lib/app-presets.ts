@@ -227,6 +227,20 @@ export const ASPECT_RATIOS = ["1:1", "4:5", "3:4", "16:9", "9:16", "3:2"] as con
 export type AspectRatio = (typeof ASPECT_RATIOS)[number];
 
 /**
+ * The ratio an app opens with, where square is the wrong shape for what it
+ * makes. A full-length photoshoot in 1:1 leaves the person small between two
+ * empty margins; its example is a portrait frame. Everything else stays 1:1,
+ * and the picker can still change it.
+ */
+const DEFAULT_RATIO: Record<string, AspectRatio> = {
+  "ai-photoshoot": "3:4",
+};
+
+export function defaultRatioFor(slug: string): AspectRatio {
+  return DEFAULT_RATIO[slug] ?? "1:1";
+}
+
+/**
  * The models offered in the picker.
  *
  * Three, because that is the choice people actually have an opinion about:

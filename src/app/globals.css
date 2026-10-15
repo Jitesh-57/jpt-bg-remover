@@ -339,10 +339,17 @@ a { color: inherit; }
   padding-right: 4px;
 }
 .jpt-compare { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+/* The chosen photo in the upload box: whole image, never cropped. Small beside
+   the viewer on desktop, larger once the viewer has moved below on a phone. */
+.jpt-upload-preview {
+  display: block; width: 100%; height: 132px; object-fit: contain;
+  border-radius: 12px; background: var(--surface);
+}
 
 @media (max-width: 980px) {
   .jpt-workspace { grid-template-columns: minmax(0, 1fr); gap: 22px; }
   .jpt-rail { position: static; top: auto; }
+  .jpt-upload-preview { height: clamp(180px, 34vh, 280px); }
   .jpt-preset-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); max-height: none; overflow-y: visible; }
 }
 @media (max-width: 560px) {
