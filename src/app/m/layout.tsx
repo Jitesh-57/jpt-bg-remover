@@ -1,3 +1,4 @@
+import { seoMeta } from "@/lib/seo/brand";
 import type { Metadata, Viewport } from "next";
 import "./m.css";
 
@@ -9,9 +10,9 @@ import "./m.css";
  * paths (see NavBar, Footer, TrialOffer, PageGallery, SupportChat), so each
  * reads as its own app. Not indexed: they are app shells, not landing pages.
  */
-export const metadata: Metadata = {
+export const metadata: Metadata = seoMeta({
   robots: { index: false, follow: false },
-};
+});
 
 export const viewport: Viewport = {
   themeColor: "#0b0b10",

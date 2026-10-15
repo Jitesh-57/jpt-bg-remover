@@ -108,7 +108,8 @@ await pool(urls, async (url) => {
   if (h1s !== 1) fail("page", `${h1s} H1s: ${url}`);
   const title = decode((/<title>([^<]*)<\/title>/i.exec(head) || [])[1] || "");
   titles.push({ url, title });
-  if ((title.match(/Pixel Shine/g) || []).length > 1) fail("title", `brand twice: "${title}" ${url}`);
+  if ((title.match(/Pixel ?Shine/gi) || []).length > 1) fail("title", `brand twice: "${title}" ${url}`);
+  if (/Pixel Shine/.test(title)) fail("title", `search spelling is PixelShine: "${title}" ${url}`);
   if (title.length > TITLE_WARN) warn("title", `${title.length} chars: "${title}" ${url}`);
 
   const from = pathOf(url);

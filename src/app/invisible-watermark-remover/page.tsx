@@ -1,3 +1,4 @@
+import { seoJson, seoMeta } from "@/lib/seo/brand";
 import { brandedTitle } from "@/lib/seo/title";
 import GuidesBlock from "@/app/_components/GuidesBlock";
 import type { Metadata } from "next";
@@ -8,7 +9,7 @@ const BASE = "https://www.sjpt.io";
 const URL = `${BASE}/invisible-watermark-remover`;
 const GRAD = "linear-gradient(120deg,var(--accent),var(--accent-2))";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = seoMeta({
   title: { absolute: brandedTitle("Invisible Watermark & Metadata Remover — Strip EXIF, GPS, C2PA & Hidden Characters | Pixel Shine") },
   description:
     "Remove hidden metadata from photos, PDFs and documents: EXIF, GPS location, XMP, C2PA Content Credentials, AI prompts and author names. Clean zero-width and hidden Unicode characters from text. Free, private, runs in your browser.",
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
     title: "Invisible Watermark & Metadata Remover | Pixel Shine",
     description: "Remove hidden metadata and invisible characters — nothing is uploaded.",
   },
-};
+});
 
 const FAQS = [
   { q: "What does this tool remove?", a: "From files: EXIF (camera, serial number, dates), GPS location, XMP and IPTC records, C2PA Content Credentials manifests, AI generation prompts saved in PNGs, comments, thumbnails, document author and company names, and audio tags. From text: zero-width characters, direction-control characters, Unicode tag characters, stray variation selectors and look-alike spaces." },
@@ -71,8 +72,8 @@ export default function Page() {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(appLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(appLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(faqLd) }} />
 
       <div style={{ fontFamily: "var(--font)", color: "var(--text)", background: "var(--surface)" }}>
         {/* HERO + TOOL */}

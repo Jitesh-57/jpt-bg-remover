@@ -1,3 +1,4 @@
+import { seoMeta } from "@/lib/seo/brand";
 import type { Metadata } from "next";
 import { CREATIVE_APPS, CREATIVE_BASE, previewUrl } from "@/lib/creative-apps";
 import { creativeSources, mainSources } from "@/lib/app-creatives";
@@ -11,7 +12,7 @@ import CompareCard, { type CompareMode } from "@/app/_components/CompareCard";
  * real deploy before one of them replaces the homepage's static showcase —
  * delete this route once that choice is made.
  */
-export const metadata: Metadata = { robots: { index: false, follow: false } };
+export const metadata: Metadata = seoMeta({ robots: { index: false, follow: false } });
 export const revalidate = 0;
 
 const SLUGS = ["saree-photoshoot", "3d-figurine", "ghibli-style"];

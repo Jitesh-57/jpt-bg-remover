@@ -1,3 +1,4 @@
+import { seoJson, seoMeta } from "@/lib/seo/brand";
 import { brandedTitle } from "@/lib/seo/title";
 import GuidesBlock from "@/app/_components/GuidesBlock";
 import type { Metadata } from "next";
@@ -11,7 +12,7 @@ const BASE = "https://www.sjpt.io";
 const URL = `${BASE}/blur-image`;
 const GRAD = "linear-gradient(120deg,var(--accent),var(--accent-2))";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = seoMeta({
   title: { absolute: brandedTitle("Free Blur Image Tool — Blur or Pixelate Part of a Photo | Pixel Shine") },
   description:
     "Blur or pixelate part of an image free online. Hide faces, licence plates, addresses and sensitive info — drag a box to censor it. No watermark, no sign-up, completely private.",
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
     description: "Blur or pixelate part of a photo free — hide faces and sensitive info. No sign-up.",
   },
   alternates: { canonical: URL },
-};
+});
 
 const FAQS = [
   { q: "How do I blur part of an image?", a: "Upload your photo, then drag a box over the area you want to hide — it's blurred instantly. Repeat for as many areas as you like, then download." },
@@ -61,8 +62,8 @@ const RELATED = [
 export default function Page() {
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(appLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(appLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(faqLd) }} />
 
       <div style={{ fontFamily: "var(--font)", color: "var(--text)", background: "var(--surface)" }}>
         {/* HERO + TOOL */}

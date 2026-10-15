@@ -1,3 +1,4 @@
+import { withSeoMeta } from "@/lib/seo/brand";
 import { brandedTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
@@ -11,7 +12,7 @@ export async function generateStaticParams() {
   return Array.from({ length: Math.max(0, pages - 1) }, (_, i) => ({ n: String(i + 2) }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ n: string }> }): Promise<Metadata> {
+async function generateMetadataBase({ params }: { params: Promise<{ n: string }> }): Promise<Metadata> {
   const { n } = await params;
   const url = `https://www.sjpt.io/blog/page/${n}`;
   return {
@@ -30,3 +31,5 @@ export default async function BlogPage({ params }: { params: Promise<{ n: string
   if (page > (await blogPageCount())) notFound();
   return <BlogIndex page={page} />;
 }
+
+export const generateMetadata = withSeoMeta(generateMetadataBase);

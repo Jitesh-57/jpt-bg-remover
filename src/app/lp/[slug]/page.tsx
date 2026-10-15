@@ -1,3 +1,4 @@
+import { withSeoMeta } from "@/lib/seo/brand";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { AD_LANDINGS, getAdLanding } from "@/lib/ad-landing";
@@ -10,7 +11,7 @@ export function generateStaticParams() {
   return AD_LANDINGS.map((l) => ({ slug: l.slug }));
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+async function generateMetadataBase({ params }: { params: { slug: string } }): Promise<Metadata> {
   const lp = getAdLanding(params.slug);
   if (!lp) return {};
   return {
@@ -77,3 +78,5 @@ export default function AdLandingPage({ params }: { params: { slug: string } }) 
     </main>
   );
 }
+
+export const generateMetadata = withSeoMeta(generateMetadataBase);

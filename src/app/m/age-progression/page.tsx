@@ -1,14 +1,15 @@
+import { seoMeta } from "@/lib/seo/brand";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CREATIVE_APPS } from "@/lib/creative-apps";
 import { appCards } from "@/lib/dashboard-feed.server";
 import AgeApp from "./AgeApp";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = seoMeta({
   title: { absolute: "Age Progression · Pixel Shine" },
   description: "See yourself at any age from 1 to 100.",
   robots: { index: false, follow: false },
-};
+});
 
 export const revalidate = 300;
 

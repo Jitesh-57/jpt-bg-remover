@@ -1,3 +1,4 @@
+import { seoJson, seoMeta } from "@/lib/seo/brand";
 import { brandedTitle } from "@/lib/seo/title";
 import { Metadata } from "next";
 import SmartImage from "@/app/_components/SmartImage";
@@ -11,14 +12,14 @@ import type { CreativeApp } from "@/lib/creative-apps";
 const BASE = "https://www.sjpt.io";
 const URL = `${BASE}${CREATIVE_BASE}`;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = seoMeta({
   title: { absolute: brandedTitle("Pixel Shine Creative Apps — 200+ AI Photo Generators Online | Pixel Shine") },
   description:
     "Explore 200+ Pixel Shine AI creative apps — saree photoshoots, 3D figurines, retro portraits, pet art, anime and more. Upload a photo, choose a look and generate on the page. No app to install, no watermark.",
   keywords: "ai creative apps, ai photo generator, ai photoshoot online, ai photo trends, ai photo editor, one tap ai photo apps",
   alternates: { canonical: URL },
   openGraph: { title: "Pixel Shine Creative Apps — 200+ AI Photo Generators", description: "Upload a photo and get AI results right on the page. No app to install and no watermark.", url: URL },
-};
+});
 
 /*
   Built from the rendered order, not the raw list, so the positions a crawler
@@ -117,7 +118,7 @@ export default async function CreativeHub() {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd(flat)) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(itemListLd(flat)) }} />
       <main style={{ fontFamily: "var(--font)", color: "var(--text)", background: "var(--surface)" }}>
         <section style={{ background: "linear-gradient(160deg,var(--surface-2) 0%,var(--surface) 55%,var(--success-soft) 100%)", padding: "80px 24px 48px", textAlign: "center" }}>
           <div style={{ maxWidth: 800, margin: "0 auto" }}>

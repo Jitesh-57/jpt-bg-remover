@@ -1,8 +1,9 @@
+import { seoMeta } from "@/lib/seo/brand";
 import type { Metadata } from "next";
 import CreateStudio from "./CreateStudio";
 import { communityFeed } from "@/lib/dashboard-feed.server";
 
-export const metadata: Metadata = { title: "Create Image", robots: { index: false, follow: false } };
+export const metadata: Metadata = seoMeta({ title: "Create Image", robots: { index: false, follow: false } });
 export const revalidate = 300;
 
 export default async function CreatePage() {

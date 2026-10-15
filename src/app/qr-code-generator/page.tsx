@@ -1,3 +1,4 @@
+import { seoJson, seoMeta } from "@/lib/seo/brand";
 import { brandedTitle } from "@/lib/seo/title";
 import GuidesBlock from "@/app/_components/GuidesBlock";
 import type { Metadata } from "next";
@@ -11,7 +12,7 @@ const BASE = "https://www.sjpt.io";
 const URL = `${BASE}/qr-code-generator`;
 const GRAD = "linear-gradient(120deg,var(--accent),var(--accent-2))";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = seoMeta({
   title: { absolute: brandedTitle("Free QR Code Generator — Create a QR Code Online | Pixel Shine") },
   description:
     "Free online QR code generator. Turn any link or text into a QR code and download it as a PNG or SVG — custom colours, no watermark, no sign-up, completely private.",
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
     description: "Create a QR code from any link or text and download it free — PNG or SVG, no sign-up.",
   },
   alternates: { canonical: URL },
-};
+});
 
 const FAQS = [
   { q: "Is this QR code generator free?", a: "Yes — completely free with no sign-up, no watermark and no limit on how many QR codes you create." },
@@ -61,8 +62,8 @@ const RELATED = [
 export default function Page() {
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(appLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(appLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(faqLd) }} />
 
       <div style={{ fontFamily: "var(--font)", color: "var(--text)", background: "var(--surface)" }}>
         {/* HERO + TOOL */}

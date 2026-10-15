@@ -1,3 +1,4 @@
+import { seoJson, seoMeta } from "@/lib/seo/brand";
 import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
@@ -31,12 +32,12 @@ const LOGO_URL = `${SUPA_ORIGIN}/storage/v1/object/public/landing/logo.png`;
 // into a 32px box is an unreadable sliver.
 const MARK_URL = `${SUPA_ORIGIN}/storage/v1/object/public/landing/logo-mark.png`;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = seoMeta({
   title: {
-    default: "Pixel Shine — Free AI Image Editor | Remove Background, Upscale & Edit Photos Online",
+    default: "PixelShine — Your Own AI Creative Studio",
     template: "%s | Pixel Shine",
   },
-  description: "Free AI image editor online. Remove backgrounds in one click, upscale photos to 4K, generate AI backgrounds, and edit images with text prompts. No watermark, no software needed.",
+  description: "Create more, edit less. Bring your visual ideas to life with PixelShine AI — 40+ AI photo apps and free creative tools in one place.",
   keywords: ["ai image editor free", "remove background free", "image upscaler free", "ai photo editor online", "background remover free"],
   metadataBase: new URL(BASE),
   icons: { icon: MARK_URL, shortcut: MARK_URL, apple: MARK_URL },
@@ -45,20 +46,20 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "Pixel Shine",
-    title: "Pixel Shine — Free AI Image Editor Online",
-    description: "Remove backgrounds, upscale photos to 4K, and edit images with AI. Free to start — no credit card required.",
+    title: "PixelShine — Your Own AI Creative Studio",
+    description: "Create more, edit less. Bring your visual ideas to life with PixelShine AI — 40+ AI photo apps and free creative tools in one place.",
     url: BASE,
     images: [{ url: LOGO_URL }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Pixel Shine — Free AI Image Editor Online",
-    description: "Remove backgrounds, upscale photos, and edit images with AI. Free to start — no credit card required.",
+    title: "PixelShine — Your Own AI Creative Studio",
+    description: "Create more, edit less. Bring your visual ideas to life with PixelShine AI — 40+ AI photo apps and free creative tools in one place.",
     images: [LOGO_URL],
   },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
   verification: { google: "oaUjZEOCATyjaE5OvAHr6gXTXGjt6wJnk436SYbf1O4" },
-};
+});
 
 const organizationSchema = {
   "@context": "https://schema.org",
@@ -134,9 +135,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6299138657923728"
           crossOrigin="anonymous"
         />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(organizationSchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(websiteSchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(softwareSchema) }} />
       </head>
       <body style={{ margin: 0, padding: 0, fontFamily: "var(--font)" }}>
         {/* Google Tag Manager — deferred so it doesn't block first paint. */}

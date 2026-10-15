@@ -1,3 +1,4 @@
+import { withSeoMeta } from "@/lib/seo/brand";
 import { brandedTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import ModelLanding from "@/app/prompts/_components/ModelLanding";
@@ -18,7 +19,7 @@ const URL = "https://www.sjpt.io/seedance-2-0-prompts";
   of every future top-level path on the site. Seven small files are the boring
   option and the safe one.
 */
-export async function generateMetadata(
+async function generateMetadataBase(
   { searchParams }: { searchParams: Promise<{ page?: string }> }
 ): Promise<Metadata> {
   const m = getModel(SLUG);
@@ -40,3 +41,5 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
   const page = parsePage(await searchParams);
   return <ModelLanding slug={SLUG} page={page} />;
 }
+
+export const generateMetadata = withSeoMeta(generateMetadataBase);

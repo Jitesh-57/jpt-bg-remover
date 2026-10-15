@@ -1,3 +1,4 @@
+import { seoJson, withSeoMeta } from "@/lib/seo/brand";
 import { brandedTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -17,7 +18,7 @@ export const revalidate = 300;
 const BASE = "https://www.sjpt.io";
 const URL = `${BASE}/prompts/originals`;
 
-export async function generateMetadata(
+async function generateMetadataBase(
   { searchParams }: { searchParams: Promise<{ page?: string }> }
 ): Promise<Metadata> {
   const page = parsePage(await searchParams);
@@ -120,9 +121,9 @@ export default async function OriginalsPage(
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(itemListLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(faqLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(breadcrumbLd) }} />
       <ScrollReveal />
 
       <div style={{ background: "var(--bg)", color: "var(--text)" }}>
@@ -248,3 +249,5 @@ export default async function OriginalsPage(
     </>
   );
 }
+
+export const generateMetadata = withSeoMeta(generateMetadataBase);

@@ -1,3 +1,4 @@
+import { seoMeta } from "@/lib/seo/brand";
 import { brandedTitle } from "@/lib/seo/title";
 import Link from "next/link";
 import SmartImage from "@/app/_components/SmartImage";
@@ -6,11 +7,11 @@ import { CREATIVE_APPS, previewUrl } from "@/lib/creative-apps";
 import { creativeSources, uploadedCreative } from "@/lib/app-creatives";
 import { readOverrides } from "@/lib/overrides";
 
-export const metadata = {
+export const metadata = seoMeta({
   title: { absolute: brandedTitle("AI Image Editing Use Cases | Pixel Shine") },
   description: "Explore Pixel Shine AI image tools by use case: LinkedIn, social media, ecommerce, real estate, photography, creators and weddings.",
   alternates: { canonical: "https://www.sjpt.io/use-cases" },
-};
+});
 
 /* The pictures follow the creatives uploaded in /admin, on the creative gallery's cadence. */
 export const revalidate = 300;

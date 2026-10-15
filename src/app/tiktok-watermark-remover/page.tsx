@@ -1,3 +1,4 @@
+import { seoJson, seoMeta } from "@/lib/seo/brand";
 import { brandedTitle } from "@/lib/seo/title";
 import GuidesBlock from "@/app/_components/GuidesBlock";
 import type { Metadata } from "next";
@@ -6,7 +7,7 @@ import VideoWatermarkRemover from "./VideoWatermarkRemover";
 const BASE = "https://www.sjpt.io";
 const URL = `${BASE}/tiktok-watermark-remover`;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = seoMeta({
   title: { absolute: brandedTitle("TikTok Watermark Remover — Free HD Download, No App") },
   description:
     "Paste a TikTok link and download the video in HD with no watermark, or save the MP3. Free, no app, no sign-up — works in any browser.",
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
     description: "Download TikTok videos without the watermark — free, HD, no sign-up.",
   },
   alternates: { canonical: URL },
-};
+});
 
 const faqLd = {
   "@context": "https://schema.org",
@@ -51,8 +52,8 @@ const appLd = {
 export default function Page() {
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(appLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(appLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(faqLd) }} />
       <VideoWatermarkRemover />
       <GuidesBlock path="/tiktok-watermark-remover" />
     </>

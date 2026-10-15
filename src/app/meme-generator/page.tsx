@@ -1,10 +1,11 @@
+import { seoJson, withSeoMeta } from "@/lib/seo/brand";
 import { brandedTitle } from "@/lib/seo/title";
 import GuidesBlock from "@/app/_components/GuidesBlock";
 import { Metadata } from 'next'
 import { getPageConfig } from '@/lib/page-config'
 import LandingPage from '../_components/LandingPage'
 
-export async function generateMetadata(): Promise<Metadata> {
+async function generateMetadataBase(): Promise<Metadata> {
   const config = await getPageConfig('meme-generator')
   return {
     title: { absolute: brandedTitle(config.title) },
@@ -43,9 +44,11 @@ export default async function Page() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: seoJson(jsonLd) }}
       />
       <LandingPage guides={<GuidesBlock path="/meme-generator" />} config={config} toolHref="/editor?tool=meme" pageId="meme-generator" />
     </>
   )
 }
+
+export const generateMetadata = withSeoMeta(generateMetadataBase);

@@ -1,5 +1,6 @@
 'use client'
 
+import { seoJson } from "@/lib/seo/brand";
 import { useRef, useState, useEffect, DragEvent } from 'react'
 import { useTrialOffer } from '@/lib/trial-offer'
 import PricingSection from '@/app/_components/PricingSection'
@@ -526,11 +527,11 @@ export default function LandingPage({ config, toolHref, pageId, isHome, relatedV
     <div ref={rootRef} style={{ fontFamily: 'system-ui, -apple-system, sans-serif', color: 'var(--text)', background: 'var(--surface)' }}>
 
       {/* Structured data for rich results */}
-      {faqLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />}
-      {breadcrumbLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(appLd) }} />
-      {imageLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(imageLd) }} />}
+      {faqLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(faqLd) }} />}
+      {breadcrumbLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(breadcrumbLd) }} />}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(webPageLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(appLd) }} />
+      {imageLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(imageLd) }} />}
 
 
       {/* Animations: floating hero decor, scroll reveal, CTA shine */}

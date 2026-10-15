@@ -1,3 +1,4 @@
+import { seoJson, seoMeta } from "@/lib/seo/brand";
 import { brandedTitle } from "@/lib/seo/title";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -7,7 +8,7 @@ import ScrollReveal from "@/app/_components/ScrollReveal";
 const BASE = "https://www.sjpt.io";
 const GRAD = "linear-gradient(120deg,var(--accent),var(--accent-2))";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = seoMeta({
   title: { absolute: brandedTitle("Free Alternatives to Popular Image Tools (No Watermark) | Pixel Shine") },
   description:
     "Free, no-watermark, no-sign-up alternatives to Remove.bg, Canva, PhotoRoom, Photoshop, TinyPNG and more. Remove backgrounds, upscale, compress and convert images online.",
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Pixel Shine",
   },
-};
+});
 
 // Order the tool groups on the page.
 const GROUP_ORDER: ToolKey[] = ["remove-bg", "editor", "upscale", "compress", "convert", "pdf"];
@@ -46,7 +47,7 @@ export default function AlternativesIndex() {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(itemListLd) }} />
       <ScrollReveal />
 
       <div style={{ fontFamily: "var(--font)", color: "var(--text)", background: "var(--surface)" }}>
