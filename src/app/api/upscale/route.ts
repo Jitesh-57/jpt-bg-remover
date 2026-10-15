@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { checkAuth, checkEntitlement, withCredits } from "@/lib/auth";
+import { checkAuth, checkEntitlement, withCredits, CREDIT_COST } from "@/lib/auth";
+import { fileCreation, fileFailure, keepSource } from "@/lib/file-creation";
 import { upscaleImage } from "@/lib/ai-image";
 import { userMessage } from "@/lib/user-message";
 
@@ -26,11 +27,15 @@ export async function POST(req: NextRequest) {
   const blocked = await checkEntitlement(session!, "ai", "upscale");
   if (blocked) return blocked;
 
+  const source = keepSource(src, "upscale", session!.userId);
+  const started = Date.now();
   try {
     const resultDataUrl = await upscaleImage(src, "2x");
-    return withCredits({ dataUrl: resultDataUrl }, session!, "ai", req, "upscale");
+    const saved = await fileCreation({ userId: session!.userId, tool: "upscale", label: "2x Upscale", result: resultDataUrl, source, preset: "2x", durationMs: Date.now() - started, creditsSpent: CREDIT_COST });
+    return withCredits({ dataUrl: resultDataUrl, saved }, session!, "ai", req, "upscale");
   } catch (e) {
     console.error("[upscale]", e);
+    await fileFailure({ userId: session!.userId, tool: "upscale", label: "2x Upscale", source, preset: "2x", error: e, durationMs: Date.now() - started });
     return NextResponse.json({ error: userMessage(e) }, { status: 500 });
   }
 }

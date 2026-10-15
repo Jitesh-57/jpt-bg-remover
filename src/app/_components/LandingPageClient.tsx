@@ -190,7 +190,7 @@ const FAQS = [
   },
   {
     q: "What happens to my images? Are they stored?",
-    a: "Your images are processed securely and never used for AI training. Processed images are automatically deleted from our servers — you stay in full control.",
+    a: "Your images are processed securely, never used for AI training and never sold. AI results are saved to your account in My Creations, where you can delete them at any time, and you can ask us to delete everything.",
   },
   {
     q: "Can I edit images with just a text prompt?",

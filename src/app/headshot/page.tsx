@@ -25,7 +25,7 @@ const PRESET_COLORS = [
   { label: "Black", color: "#000000" },
 ];
 
-interface GeneratedImage { id: number; name: string; tag: string; url: string; }
+interface GeneratedImage { id: number; name: string; tag: string; url: string; saved?: boolean; }
 interface LibraryItem { id: string; url: string; name: string; tag: string; type: "generated" | "edited"; savedAt: number; }
 interface LightboxItem { url: string; name: string; tag: string; onEdit?: () => void; onDelete?: () => void; }
 interface PendingColor { color: string; label: string; }
@@ -34,6 +34,8 @@ type Step = "upload" | "styles" | "gallery" | "edit";
 /** What the headshot routes return; also covers their error payloads. */
 type HeadshotApiBody = {
   url?: string;
+  /** The server already filed it in My Creations. */
+  saved?: boolean;
   images?: GeneratedImage[];
   error?: string;
   errors?: string[];
@@ -195,7 +197,7 @@ export default function HeadshotPage() {
   const clearPending = () => { setPendingColor(null); setPendingBgFile(null); setPendingBgFileName(""); };
 
   // Save to My Generations (non-blocking — localStorage primary, EC best-effort)
-  const saveToGenerations = async (url: string, localId: string, tool: string, category: "generation" | "edit", label: string) => {
+  const saveToGenerations = async (url: string, localId: string, tool: string, category: "generation" | "edit", label: string, serverSaved = false) => {
     try {
       const [thumb, preview] = await Promise.all([makeThumbnail(url), makePreview(url)]);
       if (!thumb) return;
@@ -216,7 +218,8 @@ export default function HeadshotPage() {
         try { localStorage.setItem(`jpt_img_${id}`, preview); } catch { /* storage full */ }
       }
 
-      // 3. Also try EC (best-effort)
+      // 3. Also try EC (best-effort), unless the server already filed it
+      if (serverSaved) return;
       const full = await fullImagePayload(url);
       fetch("/api/generations/save", {
         method: "POST",
@@ -293,7 +296,7 @@ export default function HeadshotPage() {
       })));
       // Save every generated headshot to My Generations
       data.images.forEach((img: GeneratedImage) => {
-        saveToGenerations(img.url, String(img.id), "headshot", "generation", img.name || "Headshot");
+        saveToGenerations(img.url, String(img.id), "headshot", "generation", img.name || "Headshot", !!img.saved);
       });
     } catch (e) { setError(userMessage(e)); }
     finally { setGenerating(false); setProgress(""); }
@@ -319,10 +322,10 @@ export default function HeadshotPage() {
     setStep("edit");
   };
 
-  const persistEdit = (url: string, name: string, tag: string) => {
+  const persistEdit = (url: string, name: string, tag: string, serverSaved = false) => {
     const editId = `edit-${Date.now()}`;
     addToLibrary([{ id: editId, url, name, tag, type: "edited", savedAt: Date.now() }]);
-    saveToGenerations(url, editId, "headshot-edit", "edit", name);
+    saveToGenerations(url, editId, "headshot-edit", "edit", name, serverSaved);
   };
 
   const handleApplyBackground = async () => {
@@ -350,7 +353,7 @@ export default function HeadshotPage() {
         // preview to undefined and blank the panel silently.
         if (!data.url) throw new Error("The edit did not return an image. Please try again.");
         setEditedUrl(data.url);
-        persistEdit(data.url, `${selectedImage.name} · ${label}`, "Color Edit");
+        persistEdit(data.url, `${selectedImage.name} · ${label}`, "Color Edit", !!data.saved);
       } catch (e) { setError(userMessage(e)); }
     } else if (pendingBgFile) {
       const file = pendingBgFile;
@@ -376,7 +379,7 @@ export default function HeadshotPage() {
         // preview to undefined and blank the panel silently.
         if (!data.url) throw new Error("The edit did not return an image. Please try again.");
         setEditedUrl(data.url);
-        persistEdit(data.url, `${selectedImage.name} · Custom BG`, "Image Edit");
+        persistEdit(data.url, `${selectedImage.name} · Custom BG`, "Image Edit", !!data.saved);
       } catch (e) { setError(userMessage(e)); }
     }
     setEditingBg(false);
@@ -404,7 +407,7 @@ export default function HeadshotPage() {
       // preview to undefined and blank the panel silently.
       if (!data.url) throw new Error("The edit did not return an image. Please try again.");
       setEditedUrl(data.url);
-      persistEdit(data.url, `${selectedImage.name} · AI Edit`, "Prompt Edit");
+      persistEdit(data.url, `${selectedImage.name} · AI Edit`, "Prompt Edit", !!data.saved);
     } catch (e) { setError(userMessage(e)); }
     finally { setEditingBg(false); }
   };

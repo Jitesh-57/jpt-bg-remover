@@ -1,4 +1,5 @@
 import Razorpay from "razorpay";
+import { createAdminSupabase } from "@/lib/auth";
 import { financialYear, invoiceNumber, type Purchase } from "@/lib/invoice";
 import { PACK_BY_ID } from "@/lib/plans";
 
@@ -206,4 +207,71 @@ export function mergePurchases(fromTable: Purchase[], fromGateway: Purchase[]): 
   for (const p of fromGateway) byPayment.set(p.razorpay_payment_id, p);
   for (const p of fromTable) byPayment.set(p.razorpay_payment_id, p);
   return Array.from(byPayment.values()).sort((a, b) => (b.created_at || "").localeCompare(a.created_at || ""));
+}
+
+/**
+ * Writes the purchase row for a payment, with the next invoice number. Exactly
+ * once per payment: the unique payment id is the lock, so a second call for the
+ * same payment writes nothing and says `duplicate`. Callers claim first and move
+ * credits only after, which is what makes a replayed confirmation harmless.
+ *
+ * The number is one past the highest already issued this financial year (or
+ * the row count, if that is higher). Two sales at the same moment, or a gap
+ * left by a deleted row, used to hand out a number that was taken; the unique
+ * index then refused the insert and the sale was left with no row and no
+ * invoice. A taken number now moves on to the next one, and as a last resort
+ * the row is written without a number rather than not at all.
+ */
+export interface PurchaseClaim {
+  user_id: string;
+  razorpay_order_id: string | null;
+  razorpay_payment_id: string;
+  razorpay_subscription_id?: string | null;
+  plan: string;
+  credits_added: number;
+  amount_paise: number;
+}
+
+export type ClaimResult =
+  | { status: "claimed"; id: number | null; invoiceNo: string | null }
+  | { status: "duplicate" }
+  | { status: "failed"; error: string };
+
+type DbError = { code?: string; message: string; details?: string | null };
+
+async function nextInvoiceSeq(now: Date): Promise<number | null> {
+  try {
+    const db = createAdminSupabase();
+    const fy = financialYear(now);
+    const yearStart = new Date(Date.UTC(Number(fy.slice(0, 4)), 3, 1)).toISOString();
+    const prefix = invoiceNumber(0, now).replace(/0+$/, "");
+    const [{ count }, { data: last }] = await Promise.all([
+      db.from("purchases").select("id", { count: "exact", head: true }).gte("created_at", yearStart),
+      db.from("purchases").select("invoice_no").like("invoice_no", `${prefix}%`)
+        .order("invoice_no", { ascending: false }).limit(1),
+    ]) as [{ count: number | null }, { data: { invoice_no: string | null }[] | null }];
+    const highest = Number(String(last?.[0]?.invoice_no || "").slice(prefix.length)) || 0;
+    return Math.max(count ?? 0, highest) + 1;
+  } catch (e) {
+    console.warn("[purchases] could not number the invoice:", (e as Error).message);
+    return null;
+  }
+}
+
+export async function claimPurchase(row: PurchaseClaim, now = new Date()): Promise<ClaimResult> {
+  const db = createAdminSupabase();
+  const seq = await nextInvoiceSeq(now);
+  const TRIES = 5;
+  for (let i = 0; i <= TRIES; i++) {
+    const invoiceNo = seq !== null && i < TRIES ? invoiceNumber(seq + i, now) : null;
+    const { data, error } = await db.from("purchases")
+      .insert({ ...row, ...(invoiceNo ? { invoice_no: invoiceNo } : {}) })
+      .select("id").single() as { data: { id: number } | null; error: DbError | null };
+    if (!error) return { status: "claimed", id: data?.id ?? null, invoiceNo };
+    const clash = error.code === "23505";
+    if (clash && invoiceNo && /invoice/i.test(`${error.message} ${error.details || ""}`)) continue;
+    if (clash) return { status: "duplicate" };
+    return { status: "failed", error: error.message };
+  }
+  return { status: "failed", error: "no invoice number could be issued" };
 }

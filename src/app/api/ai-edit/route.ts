@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkAuth, checkEntitlement, withCredits, CREDIT_COST } from "@/lib/auth";
-import { fileCreation } from "@/lib/file-creation";
+import { fileCreation, fileFailure, keepSource } from "@/lib/file-creation";
 import { editImage } from "@/lib/ai-image";
 import { userMessage } from "@/lib/user-message";
 
@@ -23,12 +23,15 @@ export async function POST(req: NextRequest) {
   const blocked = await checkEntitlement(session!, "ai", "ai-edit");
   if (blocked) return blocked;
 
+  const source = keepSource(src, "ai-edit", session!.userId);
+  const started = Date.now();
   try {
     const resultDataUrl = await editImage(src, prompt, model, undefined, { budgetMs: 240_000 });
-    const saved = await fileCreation({ userId: session!.userId, tool: "ai-edit", label: prompt.trim().slice(0, 60) || "AI Edit", result: resultDataUrl, prompt, creditsSpent: CREDIT_COST });
+    const saved = await fileCreation({ userId: session!.userId, tool: "ai-edit", label: prompt.trim().slice(0, 60) || "AI Edit", result: resultDataUrl, source, prompt, model: model || null, durationMs: Date.now() - started, creditsSpent: CREDIT_COST });
     return withCredits({ dataUrl: resultDataUrl, saved }, session!, "ai", req, "ai-edit");
   } catch (e) {
     console.error("[ai-edit]", e);
+    await fileFailure({ userId: session!.userId, tool: "ai-edit", label: prompt.trim().slice(0, 60) || "AI Edit", source, prompt, model: model || null, error: e, durationMs: Date.now() - started });
     return NextResponse.json({ error: userMessage(e) }, { status: 500 });
   }
 }

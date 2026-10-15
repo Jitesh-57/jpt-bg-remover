@@ -2,16 +2,22 @@
 
 import Script from "next/script";
 import { useEffect } from "react";
-import { GA_ID, GOOGLE_ADS_ID, analyticsEnabled, captureUtm } from "@/lib/analytics";
+import { usePathname } from "next/navigation";
+import { GA_ID, GOOGLE_ADS_ID, analyticsEnabled, captureUtm, recordPageView } from "@/lib/analytics";
 
 /**
  * Loads GA4 + Google Ads gtag.js and captures UTM params on first load.
  * Renders nothing (and loads no scripts) until at least one ID env var is set.
  */
 export default function Analytics() {
+  const pathname = usePathname();
   useEffect(() => {
     captureUtm();
   }, []);
+  // Every page someone opens, for our own records (public.user_events).
+  useEffect(() => {
+    if (pathname) recordPageView(pathname);
+  }, [pathname]);
 
   if (!analyticsEnabled) return null;
 

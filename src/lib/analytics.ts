@@ -47,11 +47,73 @@ function getCountry(): string {
   return m ? decodeURIComponent(m[1]) : "";
 }
 
+// ─── First-party copy (/api/track) ─────────────────────────────────────────
+//
+// Every event is also queued for our own database (public.user_events), so
+// what people do sits next to their account rather than only in GA. Sent in
+// small batches with sendBeacon, which survives the page closing and never
+// delays anything on screen. The server attaches the account, the visitor id
+// cookie and the country; no email or name is ever sent.
+
+const TRACK_URL = "/api/track";
+const FLUSH_AT = 10;
+const FLUSH_MS = 10_000;
+type Queued = { n: string; p: string; d: Record<string, unknown>; t: number };
+let queue: Queued[] = [];
+let flushTimer: ReturnType<typeof setTimeout> | null = null;
+let listening = false;
+
+function sessionId(): string {
+  try {
+    let id = sessionStorage.getItem("jpt_sid");
+    if (!id) {
+      id = (crypto.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`);
+      sessionStorage.setItem("jpt_sid", id);
+    }
+    return id;
+  } catch {
+    return "";
+  }
+}
+
+/** Sends whatever is queued. Safe to call any time; does nothing when empty. */
+export function flushEvents(): void {
+  if (typeof window === "undefined" || !queue.length) return;
+  if (flushTimer) { clearTimeout(flushTimer); flushTimer = null; }
+  const now = Date.now();
+  while (queue.length) {
+    const batch = queue.splice(0, 20);
+    const body = JSON.stringify({ s: sessionId(), e: batch.map((q) => ({ n: q.n, p: q.p, d: q.d, a: now - q.t })) });
+    try {
+      const sent = navigator.sendBeacon?.(TRACK_URL, new Blob([body], { type: "application/json" }));
+      if (!sent) void fetch(TRACK_URL, { method: "POST", body, keepalive: true, headers: { "Content-Type": "application/json" } }).catch(() => {});
+    } catch { /* analytics never breaks the page */ }
+  }
+}
+
+function enqueue(name: string, params: Record<string, unknown>): void {
+  if (typeof window === "undefined") return;
+  if (!listening) {
+    listening = true;
+    window.addEventListener("pagehide", flushEvents);
+    document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") flushEvents(); });
+  }
+  queue.push({ n: name, p: window.location.pathname, d: params, t: Date.now() });
+  if (queue.length >= FLUSH_AT) flushEvents();
+  else if (!flushTimer) flushTimer = setTimeout(flushEvents, FLUSH_MS);
+}
+
+/** A page view for our own records only (GA counts its own page views). */
+export function recordPageView(path: string): void {
+  enqueue("page_view", { path });
+}
+
 // ─── Core event push ───────────────────────────────────────────────────────
 
 /** Fire a GA4 custom/standard event, auto-attaching user/country/UTM/page context. */
 export function trackEvent(name: string, params: Record<string, unknown> = {}) {
   if (typeof window === "undefined") return;
+  enqueue(name, params);
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({
     event: name,
