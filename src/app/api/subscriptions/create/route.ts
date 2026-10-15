@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { checkAuth, createAdminSupabase } from "@/lib/auth";
 import { MONTHLY_BY_ID, inrPaise } from "@/lib/plans";
 import { operatorDetail } from "@/lib/user-message";
-import { SubscriptionsUnavailable, razorpayClient, razorpayPlanId } from "@/lib/subscriptions.server";
+import { SubscriptionsUnavailable, noteSubscriptionOrders, razorpayClient, razorpayPlanId } from "@/lib/subscriptions.server";
 
 export const runtime = "nodejs";
 
@@ -59,6 +59,16 @@ export async function POST(req: NextRequest) {
       await rzp.subscriptions.cancel(sub.id, false).catch(() => {});
       return NextResponse.json({ error: NOT_READY }, { status: 503 });
     }
+
+    // Razorpay raises the first month's invoice, and its order, with the
+    // subscription. Note the buyer on it now, so an order left unpaid is still
+    // identifiable; capped so the checkout never waits long on it.
+    await Promise.race([
+      noteSubscriptionOrders(rzp, {
+        user_id: session!.userId, plan: plan.id, credits_per_cycle: plan.credits, razorpay_subscription_id: sub.id,
+      }),
+      new Promise((r) => setTimeout(r, 2500)),
+    ]);
 
     return NextResponse.json({ subscription_id: sub.id, plan: plan.id, amount: inrPaise(plan), credits: plan.credits });
   } catch (e) {

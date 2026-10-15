@@ -2,7 +2,7 @@ import Razorpay from "razorpay";
 import { createAdminSupabase } from "@/lib/auth";
 import { MONTHLY_BY_ID, PACK_BY_ID, formatInr, inrPaise, type Pack } from "@/lib/plans";
 import { recordCredits } from "@/lib/ledger";
-import { financialYear, invoiceNumber } from "@/lib/invoice";
+import { claimPurchase } from "@/lib/purchases.server";
 import { monthlyBuckets, sumBuckets } from "@/lib/credit-buckets.server";
 
 /**
@@ -111,20 +111,6 @@ async function totalCredits(userId: string): Promise<number> {
   return (data?.credits ?? 0) + sumBuckets(await monthlyBuckets(db, userId));
 }
 
-/** Invoice number for a new purchase row: sequential within the Indian financial year. */
-async function nextInvoiceNo(now: Date): Promise<string | null> {
-  try {
-    const db = createAdminSupabase();
-    const fy = financialYear(now);
-    const yearStart = new Date(Date.UTC(Number(fy.slice(0, 4)), 3, 1)).toISOString();
-    const { count } = await db.from("purchases").select("id", { count: "exact", head: true }).gte("created_at", yearStart);
-    return invoiceNumber((count ?? 0) + 1, now);
-  } catch (e) {
-    console.warn("[subscriptions] could not number the invoice:", (e as Error).message);
-    return null;
-  }
-}
-
 export interface Charge {
   paymentId: string;
   orderId?: string | null;
@@ -144,12 +130,10 @@ export interface Charge {
  * caller answers 500 and Razorpay retries.
  */
 export async function applyCharge(sub: SubscriptionRow, charge: Charge): Promise<boolean> {
-  const db = createAdminSupabase();
   const now = new Date();
-  const invoiceNo = await nextInvoiceNo(now);
 
   // 1. Claim the payment. The unique payment id is the lock.
-  const { data: purchase, error: claimErr } = await db.from("purchases").insert({
+  const claim = await claimPurchase({
     user_id: sub.user_id,
     razorpay_order_id: charge.orderId ?? null,
     razorpay_payment_id: charge.paymentId,
@@ -157,30 +141,57 @@ export async function applyCharge(sub: SubscriptionRow, charge: Charge): Promise
     plan: sub.plan,
     credits_added: sub.credits_per_cycle,
     amount_paise: charge.amountPaise,
-    ...(invoiceNo ? { invoice_no: invoiceNo } : {}),
-  }).select("id").single() as { data: { id: number } | null; error: { code?: string; message: string } | null };
+  }, now);
+  if (claim.status === "duplicate") return false; // already applied
+  if (claim.status === "failed") throw new Error(`purchase claim failed: ${claim.error}`);
 
-  if (claimErr) {
-    if (claimErr.code === "23505" && /payment/i.test(claimErr.message)) return false; // already applied
-    if (claimErr.code === "23505") {
-      // The invoice number collided with a concurrent purchase: claim without one.
-      const retry = await db.from("purchases").insert({
-        user_id: sub.user_id,
-        razorpay_order_id: charge.orderId ?? null,
-        razorpay_payment_id: charge.paymentId,
-        razorpay_subscription_id: sub.razorpay_subscription_id,
-        plan: sub.plan,
-        credits_added: sub.credits_per_cycle,
-        amount_paise: charge.amountPaise,
-      }).select("id").single() as { data: { id: number } | null; error: { code?: string; message: string } | null };
-      if (retry.error?.code === "23505") return false;
-      if (retry.error) throw new Error(`purchase claim failed: ${retry.error.message}`);
-      return grant(sub, charge, retry.data?.id ?? null, now);
+  // The month's order is Razorpay's own and carries no notes; give it ours.
+  const rzp = razorpayClient();
+  if (rzp && charge.orderId) await noteSubscriptionOrders(rzp, sub, [charge.orderId]);
+
+  return grant(sub, charge, claim.id, now);
+}
+
+/**
+ * Writes who bought what into the notes of a subscription's Razorpay orders.
+ *
+ * Razorpay makes these orders itself, one per monthly invoice, so they arrive
+ * with no receipt and no notes and cannot be told apart on the dashboard. A
+ * pack's order carries userId, plan and credits from create-order; this gives a
+ * monthly plan's orders the same, plus the subscription id. Razorpay lets notes
+ * be changed afterwards but not the receipt, which stays blank.
+ *
+ * With no order ids, every order on the subscription's invoices is noted.
+ * Best effort: returns how many were noted and never throws.
+ */
+export async function noteSubscriptionOrders(
+  rzp: Razorpay,
+  sub: Pick<SubscriptionRow, "user_id" | "plan" | "credits_per_cycle" | "razorpay_subscription_id">,
+  orderIds?: (string | null | undefined)[],
+): Promise<number> {
+  try {
+    let ids = (orderIds || []).filter((id): id is string => !!id);
+    if (!orderIds) {
+      const res = await rzp.invoices.all({ subscription_id: sub.razorpay_subscription_id, count: 24 } as never) as unknown as
+        { items?: { order_id?: string | null }[] };
+      ids = (res?.items || []).map((i) => i.order_id).filter((id): id is string => !!id);
     }
-    throw new Error(`purchase claim failed: ${claimErr.message}`);
+    const notes = {
+      userId: sub.user_id,
+      plan: sub.plan,
+      credits: String(sub.credits_per_cycle),
+      subscriptionId: sub.razorpay_subscription_id,
+    };
+    const done = await Promise.all(Array.from(new Set(ids)).map((id) =>
+      rzp.orders.edit(id, { notes }).then(() => true, (e: unknown) => {
+        console.warn(`[subscriptions] notes not written on ${id}:`, (e as { error?: { description?: string } })?.error?.description || (e as Error)?.message);
+        return false;
+      })));
+    return done.filter(Boolean).length;
+  } catch (e) {
+    console.warn(`[subscriptions] orders not noted for ${sub.razorpay_subscription_id}:`, (e as Error)?.message);
+    return 0;
   }
-
-  return grant(sub, charge, purchase?.id ?? null, now);
 }
 
 async function grant(sub: SubscriptionRow, charge: Charge, purchaseId: number | null, now: Date): Promise<boolean> {
