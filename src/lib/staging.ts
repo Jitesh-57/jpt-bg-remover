@@ -47,7 +47,27 @@ export type StagingMode = "restage" | "restyle" | "subject" | "scene" | "minimal
 const IDENTITY =
   "Keep the person's identity exactly: the same face, bone structure, eye shape, " +
   "nose, mouth, natural skin tone and ethnicity. It must be obviously the same " +
-  "person to someone who knows them.";
+  "person to someone who knows them. This is about who they are, not how the " +
+  "original photo framed or lit them.";
+
+/*
+  Only for the modes that rebuild the pose.
+
+  Told to keep "the same face" and nothing about the head, a model keeps the
+  face region as photographed — the selfie's tilt, its high phone angle, its
+  close-lens distortion, its office light — and grafts it onto a new body
+  standing on a sunlit terrace. Every feature is right and it still reads as
+  a face swap. Where the pose is kept (scene, subject, restyle) the head is
+  part of what is kept, so this is not said there.
+*/
+const REPOSE =
+  "Re-pose the head together with the body. In the new picture the head sits " +
+  "naturally on the neck, upright and turned to suit the new pose, seen from the " +
+  "new camera's height and distance — not with the tilt, the high or low phone " +
+  "angle, or the close wide-angle distortion of the original photo. Re-light the " +
+  "face with the new scene's light, so that face, neck and hands share one skin " +
+  "tone, one light direction, one colour grade and one level of sharpness, and keep " +
+  "the head in true proportion to the body.";
 
 /** IDENTITY for a drawing, a painting or a 3D character: recognisable, not photographic. */
 const LIKENESS =
@@ -122,7 +142,8 @@ const DIRECTIVE: Record<StagingMode, string> = {
     "that new scene. Do not keep the original outfit, background, pose or lighting " +
     "unless the description above specifically calls for them — a result that " +
     "leaves the person in their original clothes and surroundings with only the " +
-    "face altered has failed. " + IDENTITY,
+    "face altered has failed. " + REPOSE + " The person must look photographed in " +
+    "this scene, not like a face pasted onto another body. " + IDENTITY,
 
   subject:
     "Keep the subject exactly as photographed — for a person the same clothing, pose, " +
@@ -179,7 +200,8 @@ const ART_RESTAGE =
   "a filter over the photograph. Rebuild the whole picture around it: the clothing " +
   "and accessories, the hairstyle, the background and setting, the pose, the framing " +
   "and the light all belong to the new image. Keep only what the description above " +
-  "says to keep. " + LIKENESS;
+  "says to keep. " + REPOSE + " The person must look drawn as one figure in this " +
+  "scene, not like a face pasted on. " + LIKENESS;
 
 /*
   The restage directive for the designed objects. "The result is still one
