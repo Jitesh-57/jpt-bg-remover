@@ -149,9 +149,14 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
     return () => { alive = false; };
   }, [app.slug, textOnly]);
 
-  // Default to the first preset so Generate is never a no-op.
+  // Default to the first preset so Generate is never a no-op — but only while
+  // the picker is on screen. Hidden, the first preset was still being chosen
+  // and appended to every prompt, unseen: "studio, shoulders-up" on AI
+  // Photoshoot, "transparent background" on the Background Changer, "remove
+  // the people" on the Object Remover. Without the picker, the app's own
+  // prompt is the whole instruction (see lib/workspace-config.ts).
   useEffect(() => {
-    if (tab !== "custom" && !preset && presets.length) setPreset(presets[0]);
+    if (SHOW_STYLE_PICKER && tab !== "custom" && !preset && presets.length) setPreset(presets[0]);
   }, [tab, preset, presets]);
 
   // No photo to reach for — put the cursor straight in the description field.

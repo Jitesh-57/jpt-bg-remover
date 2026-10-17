@@ -165,7 +165,7 @@ export function presetsFor(app: CreativeApp, tab: PresetTab): Preset[] {
  * the thing it qualifies. See lib/app-options.ts.
  */
 import { stagingDirective, stagingModeFor, photorealDirective, stripOwnPhotoreal, outputDirective, outputFormFor } from "@/lib/staging";
-import { curatedCategory } from "@/lib/app-options";
+import { curatedCategory, isTextOnlyApp } from "@/lib/app-options";
 
 export function buildPrompt(
   app: CreativeApp,
@@ -208,8 +208,10 @@ export function buildPrompt(
     not what they asked for.
   */
   const mode = tab === "custom" && customText.trim() ? "minimal" : stagingModeFor(app, curatedCategory(app.slug));
-  parts.push(stagingDirective(mode));
-  parts.push(photorealDirective());
+  // An app that draws from a description alone has no photograph to stage,
+  // and "keep the person recognisable" would invent one.
+  if (!isTextOnlyApp(app.slug)) parts.push(stagingDirective(mode, app.slug));
+  parts.push(photorealDirective(app.slug));
   /*
     What shape the answer takes — one photograph, not a concept.
 
@@ -233,7 +235,23 @@ export type AspectRatio = (typeof ASPECT_RATIOS)[number];
  * and the picker can still change it.
  */
 const DEFAULT_RATIO: Record<string, AspectRatio> = {
+  // Full length, as in their examples: a square crop cuts off the feet.
   "ai-photoshoot": "3:4",
+  "aesthetic-photo-editor": "3:4",
+  "dress-photo-editor": "3:4",
+  "fashion-photo-editor": "3:4",
+  "fish-eye-pfp": "3:4",
+  "travel-photo-editor": "3:4",
+  // Covers, posters and cards are upright objects.
+  "movie-poster-generator": "3:4",
+  "book-cover-generator": "3:4",
+  "comic-book-cover": "3:4",
+  "tarot-card-portrait": "3:4",
+  // A banner and a thumbnail are wide by definition.
+  "linkedin-banner": "16:9",
+  "linkedin-banner-maker": "16:9",
+  "thumbnail-maker": "16:9",
+  "youtube-thumbnail-generator": "16:9",
 };
 
 export function defaultRatioFor(slug: string): AspectRatio {
