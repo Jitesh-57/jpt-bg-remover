@@ -226,6 +226,17 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
     }
     setBusy(true);
     setErr(null);
+    /*
+      Clear the last result so this run's animation plays in its place.
+
+      Left showing, it sat in the Transformed pane for the whole of a second
+      generation — the pane only animates when it is empty — so a re-run on
+      another model looked like nothing was happening. Kept aside rather than
+      dropped: a result that was paid for comes back if this run fails.
+    */
+    const previous = result;
+    let produced = false;
+    setResult(null);
     trackEvent("app_generate", { app: app.slug, tab, preset: preset?.id, model, ratio, ...optValues });
 
     /*
@@ -315,9 +326,11 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
         return;
       }
       setResult(data.dataUrl);
+      produced = true;
     } catch {
       setErr("Could not reach the server. Check your connection and try again.");
     } finally {
+      if (!produced) setResult(previous);
       setBusy(false);
     }
   };
@@ -686,7 +699,7 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
             scrollMarginTop: 80,
           }}
         >
-          {!original && !result ? (
+          {!original && !result && !busy ? (
             textOnly ? (
               /*
                 Nothing to drop in here — the whole app runs off the
