@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CreativeApp } from "@/lib/creative-apps";
 import {
-  TABS, presetsFor, buildPrompt, ASPECT_RATIOS, MODELS,
+  TABS, presetsFor, buildPrompt, ASPECT_RATIOS, MODELS, defaultRatioFor, defaultModelFor,
   type PresetTab, type Preset, type AspectRatio,
 } from "@/lib/app-presets";
 import { CREDIT_COST } from "@/lib/plans";
@@ -40,8 +40,8 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
   const [tab, setTab] = useState<PresetTab>("solo");
   const [preset, setPreset] = useState<Preset | null>(null);
   const [custom, setCustom] = useState("");
-  const [model, setModel] = useState<string>(MODELS[0].id);
-  const [ratio, setRatio] = useState<AspectRatio>("1:1");
+  const [model, setModel] = useState<string>(() => defaultModelFor(app));
+  const [ratio, setRatio] = useState<AspectRatio>(() => defaultRatioFor(app.slug));
 
   /*
     The app's own settings — the target age, the beard style, what to remove.
@@ -82,6 +82,35 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
   const [dragging, setDragging] = useState(false);
 
   const fileRef = useRef<HTMLInputElement>(null);
+  /** The before/after panel — brought on screen when a generation starts on a phone. */
+  const viewerRef = useRef<HTMLDivElement>(null);
+  /** The upload box and the Generate button — kept on screen together once a photo is chosen. */
+  const uploadBoxRef = useRef<HTMLDivElement>(null);
+  const actionRef = useRef<HTMLButtonElement>(null);
+
+  /*
+    After a photo is chosen on a phone: the photo at the top of the screen and
+    the Generate button in view below it.
+
+    The page used to stay where it was, so the photo sat under the heading and
+    breadcrumbs and the one button that mattered next was below the fold. The
+    upload box goes just under the sticky header; if the rail is too tall for
+    both to fit, the button wins and the top of the photo tucks under instead.
+  */
+  const revealUpload = useCallback(() => {
+    if (typeof window === "undefined" || !window.matchMedia("(max-width: 980px)").matches) return;
+    const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Twice: once for React to render the preview, once for the browser to lay it out.
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      const box = uploadBoxRef.current, btn = actionRef.current;
+      if (!box || !btn) return;
+      const HEADER = 56 + 10; // the sticky site header (NavBar) and a little air
+      const boxTop = box.getBoundingClientRect().top + window.scrollY - HEADER;
+      // The line under the button ("2 credits per generation") comes into view with it.
+      const btnBottom = btn.getBoundingClientRect().bottom + window.scrollY + 44 - window.innerHeight;
+      window.scrollTo({ top: Math.max(0, boxTop, btnBottom), behavior: smooth ? "smooth" : "auto" });
+    }));
+  }, []);
   const presets = useMemo(() => presetsFor(app, tab), [app, tab]);
 
   useEffect(() => {
@@ -120,9 +149,14 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
     return () => { alive = false; };
   }, [app.slug, textOnly]);
 
-  // Default to the first preset so Generate is never a no-op.
+  // Default to the first preset so Generate is never a no-op — but only while
+  // the picker is on screen. Hidden, the first preset was still being chosen
+  // and appended to every prompt, unseen: "studio, shoulders-up" on AI
+  // Photoshoot, "transparent background" on the Background Changer, "remove
+  // the people" on the Object Remover. Without the picker, the app's own
+  // prompt is the whole instruction (see lib/workspace-config.ts).
   useEffect(() => {
-    if (tab !== "custom" && !preset && presets.length) setPreset(presets[0]);
+    if (SHOW_STYLE_PICKER && tab !== "custom" && !preset && presets.length) setPreset(presets[0]);
   }, [tab, preset, presets]);
 
   // No photo to reach for — put the cursor straight in the description field.
@@ -155,9 +189,10 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
     const url = await prepareDataUrl(await readFile(file));
     setOriginal(url);
     setResult(null);
+    revealUpload();
     // Keep it if they end up signing in from here.
     void savePendingContext({ image: url, tool: `creative:${app.slug}` });
-  }, [app.slug]);
+  }, [app.slug, revealUpload]);
 
   const signIn = async () => {
     await beginGoogleSignIn();
@@ -191,7 +226,31 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
     }
     setBusy(true);
     setErr(null);
+    /*
+      Clear the last result so this run's animation plays in its place.
+
+      Left showing, it sat in the Transformed pane for the whole of a second
+      generation — the pane only animates when it is empty — so a re-run on
+      another model looked like nothing was happening. Kept aside rather than
+      dropped: a result that was paid for comes back if this run fails.
+    */
+    const previous = result;
+    let produced = false;
+    setResult(null);
     trackEvent("app_generate", { app: app.slug, tab, preset: preset?.id, model, ratio, ...optValues });
+
+    /*
+      Show the transformation as it happens.
+
+      Below 980px the viewer stacks under the controls, the heading and the
+      description, so the progress animation played off-screen and people had
+      to scroll down to find out whether anything was happening. Brought up
+      the moment Generate is pressed; on desktop it is already beside the rail.
+    */
+    if (typeof window !== "undefined" && window.matchMedia("(max-width: 980px)").matches) {
+      const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      requestAnimationFrame(() => viewerRef.current?.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" }));
+    }
 
     try {
       /*
@@ -223,7 +282,7 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...payload,
-          prompt: buildPrompt(app, tab, preset, custom, optionPhrases(options, optValues)),
+          prompt: buildPrompt(app, tab, preset, custom, optionPhrases(options, optValues), model),
           slug: app.slug,
           model,
           aspectRatio: ratio,
@@ -267,9 +326,11 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
         return;
       }
       setResult(data.dataUrl);
+      produced = true;
     } catch {
       setErr("Could not reach the server. Check your connection and try again.");
     } finally {
+      if (!produced) setResult(previous);
       setBusy(false);
     }
   };
@@ -300,33 +361,65 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
           type="file"
           accept={ACCEPT}
           hidden
-          onChange={(e) => { const f = e.target.files?.[0]; if (f) void onFile(f); }}
+          // Cleared after each pick so choosing the same file again (after "Change image") still registers.
+          onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ""; if (f) void onFile(f); }}
         />
 
         {/* Upload — text-only apps never take a photo, so there's nothing to drop here. */}
         {!textOnly && (
         <div
+          ref={uploadBoxRef}
           onDragOver={(e) => e.preventDefault()}
           onDrop={(e) => { e.preventDefault(); const f = e.dataTransfer.files?.[0]; if (f) void onFile(f); }}
           style={{
             border: "1.5px dashed var(--border-strong)", borderRadius: 16,
-            padding: "22px 18px", textAlign: "center", marginBottom: 16,
+            padding: original ? "12px" : "22px 18px", textAlign: "center", marginBottom: 16,
             background: "var(--surface-2)",
           }}
         >
-          <button
-            onClick={() => fileRef.current?.click()}
-            style={{
-              width: "100%", padding: "13px", borderRadius: 999, border: "none",
-              background: "var(--grad-strong)", color: "#fff", fontWeight: 800,
-              fontSize: 15, fontFamily: "inherit", cursor: "pointer", boxShadow: "var(--glow)",
-            }}
-          >
-            + Upload image
-          </button>
-          <div style={{ fontSize: 12, color: "var(--text-faint)", marginTop: 9 }}>
-            JPG · PNG · WEBP, up to {MAX_MB}MB
-          </div>
+          {original ? (
+            /*
+              The photo that will be used, where it was chosen.
+
+              On a phone the viewer sits below the controls, the heading and the
+              description, so an upload used to vanish off-screen the moment it
+              was picked: the box still said "Upload image" and nothing showed
+              that it had worked. It now shows the photo, and changing it is
+              one tap from the same place.
+            */
+            <>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={original} alt="Your photo" className="jpt-upload-preview" />
+              <button
+                onClick={() => fileRef.current?.click()}
+                disabled={busy}
+                style={{
+                  width: "100%", marginTop: 10, padding: "11px", borderRadius: 999,
+                  border: "1px solid var(--border-strong)", background: "var(--surface)",
+                  color: "var(--text)", fontWeight: 800, fontSize: 14.5, fontFamily: "inherit",
+                  cursor: busy ? "not-allowed" : "pointer", opacity: busy ? 0.6 : 1,
+                }}
+              >
+                ↻ Change image
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => fileRef.current?.click()}
+                style={{
+                  width: "100%", padding: "13px", borderRadius: 999, border: "none",
+                  background: "var(--grad-strong)", color: "#fff", fontWeight: 800,
+                  fontSize: 15, fontFamily: "inherit", cursor: "pointer", boxShadow: "var(--glow)",
+                }}
+              >
+                + Upload image
+              </button>
+              <div style={{ fontSize: 12, color: "var(--text-faint)", marginTop: 9 }}>
+                JPG · PNG · WEBP, up to {MAX_MB}MB
+              </div>
+            </>
+          )}
         </div>
         )}
 
@@ -337,7 +430,7 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
             {samples.slice(0, 3).map((src, i) => (
               <button
                 key={i}
-                onClick={() => { setOriginal(src); setResult(null); setErr(null); }}
+                onClick={() => { setOriginal(src); setResult(null); setErr(null); revealUpload(); }}
                 aria-label={`Use sample photo ${i + 1}`}
                 style={{
                   width: 40, height: 40, borderRadius: 9, overflow: "hidden", padding: 0,
@@ -550,6 +643,7 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
           const off = loggedIn && !short && !canApply;
           return (
             <button
+              ref={actionRef}
               onClick={!loggedIn ? (trial ? () => openTrialSignIn(`app:${app.slug}`) : signIn) : short ? () => openPricing(app.h1) : apply}
               disabled={off}
               style={{
@@ -597,12 +691,15 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
         {!loggedIn && <div style={{ textAlign: "left" }}><TrialCallout source={`app-hero:${app.slug}`} what="AI photo" /></div>}
 
         <div
+          ref={viewerRef}
           style={{
             background: "var(--surface)", border: "1px solid var(--border)",
             borderRadius: 20, padding: 12, minHeight: 340,
+            // Clears the sticky site header when scrolled into view.
+            scrollMarginTop: 80,
           }}
         >
-          {!original && !result ? (
+          {!original && !result && !busy ? (
             textOnly ? (
               /*
                 Nothing to drop in here — the whole app runs off the

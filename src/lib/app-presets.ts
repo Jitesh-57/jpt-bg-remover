@@ -164,17 +164,23 @@ export function presetsFor(app: CreativeApp, tab: PresetTab): Preset[] {
  * style" and the answer needs to arrive while the model is still reading about
  * the thing it qualifies. See lib/app-options.ts.
  */
-import { stagingDirective, stagingModeFor, photorealDirective, stripOwnPhotoreal, outputDirective, outputFormFor } from "@/lib/staging";
-import { curatedCategory } from "@/lib/app-options";
+import { stagingDirective, stagingModeFor, photorealDirective, stripOwnPhotoreal, outputDirective, outputFormFor, referenceDirective } from "@/lib/staging";
+import { curatedCategory, isTextOnlyApp } from "@/lib/app-options";
 
 export function buildPrompt(
   app: CreativeApp,
   tab: PresetTab,
   preset: Preset | null,
   customText: string,
-  extras: string[] = []
+  extras: string[] = [],
+  model?: string
 ): string {
   const parts: string[] = [];
+  const mode = tab === "custom" && customText.trim() ? "minimal" : stagingModeFor(app, curatedCategory(app.slug));
+
+  // OpenAI's models are told up front that the photo is a reference, not a
+  // picture to edit, wherever the pose is rebuilt — see referenceDirective().
+  if (mode === "restage" && isGptModel(model)) parts.push(referenceDirective());
 
   if (tab === "custom" && customText.trim()) {
     parts.push(customText.trim());
@@ -207,9 +213,10 @@ export function buildPrompt(
     instruction about this photograph, and rebuilding the scene around it is
     not what they asked for.
   */
-  const mode = tab === "custom" && customText.trim() ? "minimal" : stagingModeFor(app, curatedCategory(app.slug));
-  parts.push(stagingDirective(mode));
-  parts.push(photorealDirective());
+  // An app that draws from a description alone has no photograph to stage,
+  // and "keep the person recognisable" would invent one.
+  if (!isTextOnlyApp(app.slug)) parts.push(stagingDirective(mode, app.slug));
+  parts.push(photorealDirective(app.slug));
   /*
     What shape the answer takes — one photograph, not a concept.
 
@@ -225,6 +232,36 @@ export function buildPrompt(
 
 export const ASPECT_RATIOS = ["1:1", "4:5", "3:4", "16:9", "9:16", "3:2"] as const;
 export type AspectRatio = (typeof ASPECT_RATIOS)[number];
+
+/**
+ * The ratio an app opens with, where square is the wrong shape for what it
+ * makes. A full-length photoshoot in 1:1 leaves the person small between two
+ * empty margins; its example is a portrait frame. Everything else stays 1:1,
+ * and the picker can still change it.
+ */
+const DEFAULT_RATIO: Record<string, AspectRatio> = {
+  // Full length, as in their examples: a square crop cuts off the feet.
+  "ai-photoshoot": "3:4",
+  "aesthetic-photo-editor": "3:4",
+  "dress-photo-editor": "3:4",
+  "fashion-photo-editor": "3:4",
+  "fish-eye-pfp": "3:4",
+  "travel-photo-editor": "3:4",
+  // Covers, posters and cards are upright objects.
+  "movie-poster-generator": "3:4",
+  "book-cover-generator": "3:4",
+  "comic-book-cover": "3:4",
+  "tarot-card-portrait": "3:4",
+  // A banner and a thumbnail are wide by definition.
+  "linkedin-banner": "16:9",
+  "linkedin-banner-maker": "16:9",
+  "thumbnail-maker": "16:9",
+  "youtube-thumbnail-generator": "16:9",
+};
+
+export function defaultRatioFor(slug: string): AspectRatio {
+  return DEFAULT_RATIO[slug] ?? "1:1";
+}
 
 /**
  * The models offered in the picker.
@@ -245,11 +282,32 @@ export type AspectRatio = (typeof ASPECT_RATIOS)[number];
  * so a model here can never dead-end a visitor.
  */
 // The first entry is the default in every picker and API (MODELS[0]): ChatGPT.
+// The AI apps are the exception and open on defaultModelFor(app).
 export const MODELS = [
-  { id: "gpt-image",   label: "ChatGPT",     hint: "OpenAI's GPT Image 2.5, in 2K — rich light and texture, and the best at text in images" },
+  { id: "gpt-image",   label: "ChatGPT",     hint: "OpenAI's top model, GPT Image 2.5 Sunburst, in 2K — rich light and fine detail, and the best at text in images" },
   { id: "nano-banana", label: "Nano Banana Pro", hint: "Google's best image model, in 2K — sharpest detail, and best at keeping your face exactly as it is" },
   { id: "seedream-v45", label: "Seedream 4.5", hint: "ByteDance Seedream 4.5 — advanced multi-image editing and high-resolution results" },
 ] as const;
+
+/** True for the ChatGPT family, by picker id ("gpt-image") or endpoint id ("gpt-…"). */
+function isGptModel(model?: string): boolean {
+  return !!model && (model === "gpt-image" || model.startsWith("gpt-"));
+}
+
+/**
+ * The model an AI app opens with.
+ *
+ * Nano Banana Pro for apps whose result is a photograph of the person or the
+ * product: on a tilted selfie it re-posed the head with the body where
+ * ChatGPT kept the selfie's tilt on an upright body, and it holds a face and
+ * a label most faithfully. ChatGPT for the drawn, designed and lettered ones —
+ * anime, covers, thumbnails, logos — where its styles and text are the point.
+ * The picker can still change either.
+ */
+export function defaultModelFor(app: { slug: string; cat?: string }): string {
+  const form = outputFormFor(app);
+  return form === "photograph" || form === "product" ? "nano-banana" : MODELS[0].id;
+}
 
 /** Supabase bucket holding preset thumbnails, matched by name at runtime. */
 export const PRESET_IMAGE_BUCKET = "App preset images";

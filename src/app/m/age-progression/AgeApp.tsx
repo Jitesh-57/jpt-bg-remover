@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CreativeApp } from "@/lib/creative-apps";
-import { buildPrompt, MODELS } from "@/lib/app-presets";
+import { buildPrompt, defaultModelFor } from "@/lib/app-presets";
 import { optionsFor, defaultValues, optionPhrases, optionSummary } from "@/lib/app-options";
 import { CREDIT_COST } from "@/lib/plans";
 import { publishCredits } from "@/lib/credits";
@@ -309,9 +309,9 @@ export default function AgeApp({ app, example }: { app: CreativeApp; example: Ex
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...payload,
-          prompt: buildPrompt(app, "solo", null, "", optionPhrases(options, values)),
+          prompt: buildPrompt(app, "solo", null, "", optionPhrases(options, values), defaultModelFor(app)),
           slug: app.slug,
-          model: MODELS[0].id,
+          model: defaultModelFor(app),
           preset: optionSummary(options, values) || undefined,
         }),
       });

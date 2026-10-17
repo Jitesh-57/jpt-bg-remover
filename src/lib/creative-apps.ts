@@ -44,7 +44,7 @@ export const CURATED_APPS: CreativeApp[] = [
     h1: "AI Saree Photoshoot Maker",
     tagline: "Upload a selfie and get a cinematic vintage saree portrait — right here, in seconds. No watermark, no subscription.",
     intro: "Turn a selfie into a cinematic vintage saree portrait.",
-    prompt: "Transform this person into an elegant 90s vintage Bollywood saree portrait. Dress them in a richly detailed traditional silk saree with gold jewellery, warm cinematic lighting, soft film grain, and a tasteful studio backdrop. Keep the face and identity exactly the same. This must look like a real photograph — natural skin texture, realistic lighting and shadows, sharp photographic detail — not a painting, illustration, or cartoon.",
+    prompt: "Transform this person into an elegant 90s vintage Bollywood saree portrait: a deep red silk saree with a gold border, gold jhumka earrings, bangles, a small bindi and jasmine in their hair, resting their chin on one hand with a soft smile, inside a heritage palace interior lit by glowing brass diyas. Warm cinematic light and a gentle vintage warmth. Keep the face and identity exactly the same.",
     badge: "✨ Saree Portrait",
     faq: [
       { q: "How do I create an AI saree photoshoot?", a: "Upload a clear, front-facing selfie on this page and click Generate. The AI dresses you in a cinematic vintage saree look in seconds — no editing skills needed." },
@@ -82,7 +82,7 @@ export const CURATED_APPS: CreativeApp[] = [
     h1: "Retro 90s Bollywood Photo Editor",
     tagline: "Give any selfie the viral 90s Bollywood film look — warm tones, grain and drama. Generated right here, free.",
     intro: "Give any selfie the viral 90s Bollywood film look.",
-    prompt: "Restyle this photo as a 90s Bollywood film still with a warm cinematic colour grade, soft film grain, dramatic nostalgic lighting and a vintage poster feel. Keep the person's face and identity the same. This must look like a real photograph — natural skin texture, realistic lighting and shadows, sharp photographic detail — not a painting, illustration, or cartoon.",
+    prompt: "Restyle this photo as a 90s Bollywood film still: dress them in a red silk saree with a gold border, gold jhumka earrings, glass bangles and a small bindi — or a 90s film hero's outfit — resting their chin on one hand with a soft smile in front of a heritage palace with carved arches and blooming roses. Warm golden haze, soft film grain and a nostalgic cinematic colour grade. Keep the person's face and identity the same.",
     badge: "✨ Retro Film",
     faq: [
       { q: "How do I get the retro Bollywood look?", a: "Upload your photo on this page and click Generate. The AI restyles it with warm vintage tones, film grain and cinematic drama in seconds." },
@@ -101,7 +101,7 @@ export const CURATED_APPS: CreativeApp[] = [
     h1: "AI Polaroid Photo Maker",
     tagline: "Upload a photo and get a realistic retro polaroid-style shot — generated right here. Free and instant.",
     intro: "Create the viral retro polaroid selfie look.",
-    prompt: "Convert this photo into a realistic vintage polaroid: slight flash photography look, gentle blur, warm indoor tones, and a classic white polaroid border. Keep the person's face and identity the same. This must look like a real photograph — natural skin texture, realistic lighting and shadows, sharp photographic detail — not a painting, illustration, or cartoon.",
+    prompt: "Turn this photo into a real vintage instant-film print of the same moment: a slight flash-photography look, warm indoor tones, soft focus and gentle film grain, inside a classic white instant-film border with the wider margin at the bottom. Show the print lying on a wooden table, photographed from above. Keep the person's face and identity the same.",
     badge: "✨ Polaroid",
     faq: [
       { q: "How do I make an AI polaroid photo?", a: "Upload your photo on this page and click Generate. The AI produces a realistic retro polaroid-style shot with a white border in seconds." },
@@ -120,7 +120,7 @@ export const CURATED_APPS: CreativeApp[] = [
     h1: "AI Old Photo Restoration",
     tagline: "Upload an old or blurry photo and AI restores detail and clarity — right here on the page. Free and instant.",
     intro: "Bring faded, blurry family photos back to life.",
-    prompt: "Restore this old photograph: repair scratches and damage, sharpen and recover facial detail, reduce noise and fading, and gently enhance clarity while keeping it natural and true to the original people. This must look like a real restored photograph — natural skin texture, realistic lighting and shadows, sharp photographic detail — not a painting, illustration, or cartoon.",
+    prompt: "Restore this old photograph: repair scratches, tears and damage, sharpen and recover facial detail, reduce noise and fading, and gently enhance clarity while keeping it natural and true to the original people. Unless keeping it black and white is asked for below, bring a faded, sepia or black-and-white photo into natural, believable colour. Keep every face exactly as it is.",
     badge: "✨ Restored",
     faq: [
       { q: "Can AI restore my old photos?", a: "Yes. Upload a scanned or photographed old print on this page and click Generate — the AI recovers detail, sharpens faces and reduces damage in seconds." },
@@ -139,7 +139,7 @@ export const CURATED_APPS: CreativeApp[] = [
     h1: "AI Couple Photoshoot Maker",
     tagline: "Upload a couple photo and AI creates a cinematic pre-wedding portrait — right here, in seconds. Free.",
     intro: "Cinematic pre-wedding & couple portraits from a photo.",
-    prompt: "Transform this couple photo into a cinematic pre-wedding portrait: elegant coordinated outfits, golden-hour lighting, soft bokeh background and a romantic mood. Keep both faces and identities exactly the same. This must look like a real photograph — natural skin texture, realistic lighting and shadows, sharp photographic detail — not a painting, illustration, or cartoon.",
+    prompt: "Transform this couple photo into a cinematic Indian pre-wedding portrait: one in an ivory embroidered sherwani and the other in a dark-green embroidered lehenga with gold jhumkas — or coordinated outfits that suit them — standing close and affectionate in the arched courtyard of a sandstone heritage palace, in warm golden-hour light with soft bokeh. Keep both faces and identities exactly the same.",
     badge: "✨ Couple Portrait",
     faq: [
       { q: "How do I make a couple photoshoot with AI?", a: "Upload a clear photo of the couple on this page and click Generate. The AI creates a cinematic styled portrait in seconds." },
@@ -215,7 +215,7 @@ export const CURATED_APPS: CreativeApp[] = [
     h1: "AI Anime Style Photo Converter",
     tagline: "Upload a photo and AI converts it into dreamy hand-drawn anime art — right here, in seconds. Free.",
     intro: "Convert any photo into hand-drawn anime art.",
-    prompt: "Convert this photo into a beautiful hand-drawn anime illustration: soft pastel colours, expressive features, gentle cinematic lighting and a dreamy watercolour-style background. Keep the person's likeness recognisable.",
+    prompt: "Convert this photo into a beautiful hand-drawn anime illustration: soft colours, expressive features, gentle cinematic lighting and painterly detail. Keep the person's likeness recognisable.",
     badge: "✨ Anime",
     faq: [
       { q: "How do I convert a photo to anime style?", a: "Upload your photo on this page and click Generate. The AI redraws it as hand-drawn anime art in seconds." },
@@ -253,7 +253,7 @@ export const CURATED_APPS: CreativeApp[] = [
     h1: "AI Background Changer",
     tagline: "Upload your photo and AI swaps the background for a clean professional scene — right here, in seconds. Free.",
     intro: "Replace any photo background with a new scene.",
-    prompt: "Replace the background of this image with a clean, professional studio gradient backdrop with soft, flattering lighting. Keep the person or subject exactly as they are — same pose, appearance and clothing — only change the background behind them. This must look like a real photograph — natural skin texture, realistic lighting and shadows, sharp photographic detail — not a painting, illustration, or cartoon.",
+    prompt: "Replace the background of this image. Unless a background is given below, use a modern office interior softly out of focus — warm lighting under the shelves, a few plants and clean wooden surfaces — lit to match the person. Keep the person or subject exactly as they are — same pose, appearance and clothing — and change only the background behind them.",
     badge: "✨ New Background",
     faq: [
       { q: "How do I change a photo background with AI?", a: "Upload your photo on this page and click Generate. The AI removes the old background and blends in a clean new scene in seconds." },
@@ -272,7 +272,7 @@ export const CURATED_APPS: CreativeApp[] = [
     h1: "AI LinkedIn Banner Maker",
     tagline: "Upload a photo and AI generates a polished LinkedIn cover banner — right here, in seconds. Free.",
     intro: "Generate a professional LinkedIn banner from a photo.",
-    prompt: "Create a professional LinkedIn banner background image inspired by this photo: clean corporate gradient in deep blue tones, subtle abstract geometric shapes, professional and modern, wide banner composition with negative space for text overlay. Keep it tasteful and brand-safe. This must look like a real photographic/render composition — realistic lighting and material detail — not a flat illustration or cartoon.",
+    prompt: "Turn this photo into a professional LinkedIn banner: a wide composition with the person on the left third, framed from the chest up, smiling with confidence and dressed in a navy blazer over a white T-shirt or shirt. The right side opens out into a deep blue gradient with soft diagonal light streaks and subtle geometric shapes, blending into a softly blurred city skyline seen through office glass, leaving clear space for a headline. Unless text is given below, add no text. Keep the person's face and identity exactly the same.",
     badge: "✨ LinkedIn Banner",
     faq: [
       { q: "How do I make a LinkedIn banner with AI?", a: "Upload any photo or just a colour reference on this page and click Generate. The AI creates a polished, professional banner sized for LinkedIn in seconds." },
@@ -310,7 +310,7 @@ export const CURATED_APPS: CreativeApp[] = [
     h1: "AI Baby Photoshoot Maker",
     tagline: "Upload a photo and AI creates an adorable soft studio baby portrait — right here. Free and instant.",
     intro: "Turn a baby photo into a soft studio portrait.",
-    prompt: "Transform this photo into a soft, dreamy studio baby portrait: warm pastel tones, gentle diffused lighting, a cozy knitted wrap or outfit, and a clean minimal backdrop. Keep the baby's face and features exactly the same. This must look like a real photograph — natural skin texture, realistic lighting and shadows, sharp photographic detail — not a painting, illustration, or cartoon.",
+    prompt: "Transform this photo into a soft, dreamy baby photoshoot: the baby wearing a knitted bear-ear bonnet and a cream knit romper, sitting on a fluffy cream rug and holding a small teddy bear, surrounded by beige boho props like pampas grass and a little star-shaped light. Warm pastel tones and gentle diffused window light. Keep the baby's face and features exactly the same.",
     badge: "✨ Baby Portrait",
     faq: [
       { q: "How do I make a baby photoshoot with AI?", a: "Upload a clear photo of your baby on this page and click Generate. The AI creates a soft, professional studio-style portrait in seconds." },
@@ -348,7 +348,7 @@ export const CURATED_APPS: CreativeApp[] = [
     h1: "AI Gym Transformation Photo",
     tagline: "Upload a photo and AI shows a motivating, toned physique preview — right here. Free and instant.",
     intro: "Preview a leaner, more toned version of yourself for motivation.",
-    prompt: "Subtly restyle this photo for a fitness-motivation portrait: athletic gym lighting, a toned and energised look, workout attire, and a dynamic gym backdrop. Keep the person's face and identity exactly the same — this is a motivational style edit, not a medical depiction. This must look like a real photograph — natural skin texture, realistic lighting and shadows, sharp photographic detail — not a painting, illustration, or cartoon.",
+    prompt: "Transform this photo into a fitness-motivation photo of the same person, keeping their pose and framing: give them a toned, athletic, visibly fit physique, dressed in a black training tank top and shorts, in a modern gym with dumbbell racks and equipment behind, under dramatic gym lighting. Keep the person's face and identity exactly the same — this is a motivational style edit, not a medical depiction.",
     badge: "✨ Fitness",
     faq: [
       { q: "How does the gym transformation photo work?", a: "Upload a clear photo on this page and click Generate. The AI creates a motivating, gym-styled version of your photo in seconds." },
@@ -367,7 +367,7 @@ export const CURATED_APPS: CreativeApp[] = [
     h1: "AI Ghibli Style Photo Converter",
     tagline: "Upload a photo and AI redraws it in a dreamy, hand-painted studio anime style — free, instant.",
     intro: "Convert any photo into dreamy hand-painted anime art.",
-    prompt: "Convert this photo into a dreamy hand-painted Japanese animated film style: soft watercolour backgrounds, warm nostalgic lighting, gentle painterly textures and expressive simplified features. Keep the person's likeness recognisable.",
+    prompt: "Convert this photo into a dreamy hand-painted Japanese animated film style: soft watercolour skies and backgrounds, warm nostalgic lighting, gentle painterly textures and expressive simplified features, enriched with a few flowers and small charming details. Keep the person's likeness recognisable.",
     badge: "✨ Studio Anime",
     faq: [
       { q: "How do I convert a photo to Ghibli style?", a: "Upload your photo on this page and click Generate. The AI redraws it in a dreamy hand-painted animation style in seconds." },
@@ -405,7 +405,7 @@ export const CURATED_APPS: CreativeApp[] = [
     h1: "AI Wedding Invitation Photo Maker",
     tagline: "Upload a couple photo and AI creates an elegant portrait ready for your wedding invite — free, instant.",
     intro: "An elegant couple portrait styled for wedding invitations.",
-    prompt: "Transform this couple photo into an elegant wedding invitation portrait: refined formal attire, soft romantic lighting, a tasteful neutral or floral backdrop, and a timeless composition with space for text. Keep both faces and identities exactly the same. This must look like a real photograph — natural skin texture, realistic lighting and shadows, sharp photographic detail — not a painting, illustration, or cartoon.",
+    prompt: "Transform this couple photo into an elegant wedding portrait for an invitation. Keep their pose and closeness — if they are cheek to cheek, keep them cheek to cheek. Dress them in wedding attire that suits each of them — for example a black tuxedo with a bow tie and a white boutonniere, and an ivory lace gown with a bouquet of white and blush roses. Place them in a garden under an arch of white roses, with warm golden-hour sun behind them. Unless text is given below, add no text. Keep both faces and identities exactly the same.",
     badge: "✨ Invite Portrait",
     faq: [
       { q: "How do I make a wedding invite photo with AI?", a: "Upload a clear photo of the couple on this page and click Generate. The AI creates an elegant, invite-ready portrait in seconds." },
@@ -481,7 +481,7 @@ export const CURATED_APPS: CreativeApp[] = [
     h1: "AI Baby Predictor",
     tagline: "Upload a couple's photo and AI imagines a future baby's face — just for fun, free and instant.",
     intro: "A fun AI guess at what your future baby might look like.",
-    prompt: "Using the features of the people in this photo, imagine and generate a cute baby portrait that blends their facial features — soft studio baby-portrait lighting, warm pastel tones, a gentle smile. This is a playful, for-fun concept, not a scientific prediction. This must look like a real photograph — natural skin texture, realistic lighting and shadows, sharp photographic detail — not a painting, illustration, or cartoon.",
+    prompt: "Using the features of the people in this photo, imagine a cute baby who blends their facial features, at the age given below — sitting up with a big happy smile, wearing a cream knit cardigan — photographed in the same setting as the photo, softly blurred behind, in warm natural light. This is a playful, for-fun concept, not a scientific prediction.",
     badge: "✨ Baby Predictor",
     faq: [
       { q: "How does the AI baby predictor work?", a: "Upload a clear photo of the couple on this page and click Generate. The AI blends facial features into a fun, illustrative baby portrait in seconds." },
@@ -519,7 +519,7 @@ export const CURATED_APPS: CreativeApp[] = [
     h1: "AI Pixar Avatar Maker",
     tagline: "Upload a selfie and AI turns you into a 3D animated-movie-style character — free and instant.",
     intro: "Turn a selfie into a 3D animated-movie-style character.",
-    prompt: "Convert this photo into a 3D animated-movie-style character: large expressive eyes, smooth stylised features, warm cinematic studio lighting, soft rounded shading typical of modern 3D animated films. Keep the person's likeness recognisable in cartoon form.",
+    prompt: "Convert this photo into a 3D animated-movie-style character: large expressive eyes, smooth stylised features and the soft rounded shading of modern 3D animated films, with warm, soft cinematic light. Keep the person's likeness recognisable in cartoon form.",
     badge: "✨ 3D Avatar",
     faq: [
       { q: "How do I make a Pixar-style avatar?", a: "Upload your photo on this page and click Generate. The AI redraws it as a 3D animated-movie-style character in seconds." },
@@ -538,7 +538,7 @@ export const CURATED_APPS: CreativeApp[] = [
     h1: "AI Renaissance Portrait Maker",
     tagline: "Upload a selfie and AI turns you into a classic Renaissance-style oil painting — free, instant.",
     intro: "Turn a selfie into a museum-style oil painting portrait.",
-    prompt: "Transform this photo into a classic Renaissance oil painting portrait: rich dramatic chiaroscuro lighting, ornate period clothing, a dark museum-style background, visible brushwork texture and a gilded frame feel. Keep the person's face recognisable in painted form.",
+    prompt: "Transform this photo into a classic Renaissance oil painting portrait: rich dramatic chiaroscuro and ornate period clothing — a deep green velvet gown with gold embroidery, a pearl necklace and pearls in braided hair, or a velvet doublet with a lace collar — seated in a three-quarter pose beside a red drape and a vase of flowers against a dark background, with visible brushwork texture. Keep the person's face recognisable in painted form.",
     badge: "✨ Renaissance",
     faq: [
       { q: "How do I make a Renaissance-style portrait?", a: "Upload your photo on this page and click Generate. The AI repaints it as a classic oil-painting portrait in seconds." },
@@ -674,7 +674,7 @@ export const CURATED_APPS: CreativeApp[] = [
     h1: "AI Claymation Photo Maker",
     tagline: "Upload a selfie and AI turns it into a handmade stop-motion clay portrait — right here. Free and instant.",
     intro: "Turn a selfie into a stop-motion claymation character.",
-    prompt: "Convert this photo into a claymation stop-motion character: visible clay texture with soft fingerprint-like imperfections, slightly exaggerated rounded features, matte studio lighting like a stop-motion film set, and a miniature handcrafted set-style background. Keep the person's likeness recognisable in clay form.",
+    prompt: "Convert this photo into a claymation stop-motion scene: visible clay texture with soft fingerprint-like imperfections, slightly exaggerated rounded features and matte lighting like a stop-motion film set, with everything — the person, their clothes, what they are doing and the setting around them — modelled in clay. Keep the person's likeness recognisable in clay form.",
     badge: "✨ Claymation",
     faq: [
       { q: "How do I make a claymation photo with AI?", a: "Upload your photo on this page and click Generate. The AI restyles it as a handmade stop-motion clay character in seconds." },
@@ -693,7 +693,7 @@ export const CURATED_APPS: CreativeApp[] = [
     h1: "AI Comic Book Cover Maker",
     tagline: "Upload your photo and AI illustrates you on a bold comic book cover — right here. Free and instant.",
     intro: "Turn your photo into a bold comic book cover illustration.",
-    prompt: "Convert this photo into a bold comic book cover illustration: thick ink outlines, dramatic halftone shading, vivid primary colours, a dynamic action pose, an oversized stylised title-logo area at the top, and a classic superhero-comic composition. Keep the person's likeness recognisable in illustrated form.",
+    prompt: "Convert this photo into a bold comic book cover illustration: thick ink outlines, dramatic halftone shading and vivid colour. Unless a comic style is given below, make the person an original superhero in a red, gold and blue costume of their own design — an armoured suit or bodice, a tiara or mask and a flowing cape, not any existing character — standing confidently in front of a city skyline. Classic cover trade dress: a title area at the top, a small issue box in one corner and a bold caption burst. Keep the person's likeness recognisable in illustrated form.",
     badge: "✨ Comic Cover",
     faq: [
       { q: "How do I turn my photo into a comic book cover?", a: "Upload a clear photo on this page and click Generate. The AI illustrates a bold comic-cover version of you in seconds." },
@@ -750,7 +750,7 @@ export const CURATED_APPS: CreativeApp[] = [
     h1: "AI Prom Photo Maker",
     tagline: "Upload a selfie and AI styles a glam prom-night portrait — right here, in seconds. Free.",
     intro: "Get a glam, formal prom-night portrait from a selfie.",
-    prompt: "Transform this photo into a glamorous prom-night portrait: elegant formalwear, soft romantic studio lighting with gentle sparkle bokeh, polished hair and makeup styling, and a festive formal-event backdrop. Keep the person's face and identity exactly the same. This must look like a real photograph — natural skin texture, realistic lighting and shadows, sharp photographic detail — not a painting, illustration, or cartoon.",
+    prompt: "Transform this photo into a glamorous prom-night portrait, framed from the knees up: a burgundy sequinned corset gown with a thigh slit and a sparkly clutch, with hair in an elegant updo — or a sharp black tuxedo — standing in a grand ballroom with crystal chandeliers, candles, flowers and softly blurred guests, in warm romantic light with sparkle bokeh. Keep the person's face and identity exactly the same.",
     badge: "✨ Prom Glam",
     faq: [
       { q: "How do I make a prom photo with AI?", a: "Upload a clear photo on this page and click Generate. The AI styles a glam, formal prom-night portrait in seconds." },
@@ -807,7 +807,7 @@ export const CURATED_APPS: CreativeApp[] = [
     h1: "AI Astronaut Photo Maker",
     tagline: "Upload a selfie and AI puts you in a space suit against the stars — right here. Free and instant.",
     intro: "Turn a selfie into a dramatic astronaut space portrait.",
-    prompt: "Transform this person into an astronaut: a detailed realistic space suit with a reflective helmet visor, dramatic rim lighting, and a backdrop of stars, Earth, or a spacecraft interior. Keep the person's face and identity exactly the same. This must look like a real photograph — natural skin texture, realistic lighting and shadows, sharp photographic detail — not a painting, illustration, or cartoon.",
+    prompt: "Transform this person into an astronaut on a spacewalk: a detailed, realistic white space suit with the helmet's clear visor showing their face, giving a thumbs-up as they float in orbit with the Earth curving below, a bright sun flare and part of a space station's solar panels in the frame. Keep the person's face and identity exactly the same.",
     badge: "✨ Astronaut",
     faq: [
       { q: "How do I make an astronaut photo with AI?", a: "Upload a clear photo on this page and click Generate. The AI suits you up in a realistic space suit with a starry backdrop in seconds." },
@@ -826,7 +826,7 @@ export const CURATED_APPS: CreativeApp[] = [
     h1: "AI Pixel Art Avatar Maker",
     tagline: "Upload a selfie and AI turns it into a retro 8-bit pixel art avatar — right here. Free and instant.",
     intro: "Turn a selfie into a retro 8-bit pixel art avatar.",
-    prompt: "Convert this photo into a retro 8-bit pixel art character portrait: visible square pixel blocks, a limited retro video-game colour palette, simplified blocky facial features, and a flat solid-colour background like a classic arcade character-select screen. Keep the person's likeness recognisable in pixel form.",
+    prompt: "Convert this photo into a bright 16-bit pixel-art video-game scene: visible square pixels, a cheerful limited palette and simplified features. Keep the person's clothes and what they are doing — riding a bike, holding a drink — and set them in a sunny pixel-art world built on their location, like a colourful seaside town with flowers. Add a small game HUD: a PLAYER 1 label with three hearts in the top corner. Keep the person's likeness recognisable in pixel form.",
     badge: "✨ Pixel Art",
     faq: [
       { q: "How do I turn my photo into pixel art with AI?", a: "Upload a clear photo on this page and click Generate. The AI converts it into a retro 8-bit pixel-art avatar in seconds." },

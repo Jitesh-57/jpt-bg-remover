@@ -104,6 +104,21 @@ function c(value: string, label: string, phrase: string): AppChoice {
   return { value, label, phrase };
 }
 
+/**
+ * The same select with a different default: an existing choice moved to the
+ * front, or a new one put there.
+ *
+ * For an app whose example shows something other than the shared list's first
+ * choice — the beard filter's example is a short boxed beard, not stubble —
+ * so that a visitor who changes nothing gets what the example promised.
+ */
+function withDefault(o: AppOption, first: AppChoice | string): AppOption {
+  const rest = o.choices ?? [];
+  const pick = typeof first === "string" ? rest.find((x) => x.value === first) : first;
+  if (!pick) throw new Error(`${o.id} has no choice "${String(first)}"`);
+  return { ...o, choices: [pick, ...rest.filter((x) => x.value !== pick.value)] };
+}
+
 function text(id: string, label: string, placeholder: string, template: string, hint?: string): AppOption {
   return { id, label, kind: "text", placeholder, template, hint };
 }
@@ -303,25 +318,27 @@ function ageAppearance(n: number): string {
 /**
  * What a person of that age is wearing, and where they are.
  *
- * Ageing a face and leaving everything else alone produces a wrinkled adult
- * in the same outfit in the same doorway — recognisably a retouch rather than
- * a photograph of someone at that age. A one-year-old is not standing at a
- * wedding reception in a lehenga; a schoolchild is in school clothes
- * somewhere a schoolchild would be.
+ * An adult stays in their own photo. The ageing apps' examples keep the
+ * sweater, the pose and the garden and let only the face and hair show the
+ * years, and that is the result the page promises.
  *
- * Deliberately says "as someone of their culture would dress" rather than
- * naming garments: the right clothes for a 70-year-old depend entirely on who
- * she is, and a hard-coded answer would dress everyone the same way.
+ * A child does not: a one-year-old is not standing at a wedding reception in
+ * a lehenga; a schoolchild is in school clothes somewhere a schoolchild would
+ * be. Deliberately says "as someone of their culture would dress" rather than
+ * naming garments, so a hard-coded answer does not dress everyone alike.
  */
 function ageStaging(n: number): string {
+  if (n >= 18) {
+    return (
+      `Keep the rest of the photograph as it is — the same clothes, pose, framing, ` +
+      `background and lighting — and let only the person show the years: their face, ` +
+      `skin, hair and build.`
+    );
+  }
   const setting =
     n <= 3 ? "held or seated as an infant is, in a home or nursery setting, in baby clothes"
     : n <= 12 ? "dressed and groomed as a child of that age, somewhere a child would be — a home, a garden, a school"
-    : n <= 17 ? "dressed as a teenager of that age, in a setting that suits one"
-    : n <= 24 ? "dressed as a young adult of that age, in a casual everyday setting"
-    : n <= 44 ? "dressed as an adult of that age would dress day to day, in an ordinary everyday setting"
-    : n <= 64 ? "dressed as someone of that age would dress, in a calm domestic or everyday setting"
-    : "dressed as an older person of that age would dress, in a calm domestic setting";
+    : "dressed as a teenager of that age, in a setting that suits one";
 
   return (
     `Re-stage the whole photograph for that age: the person should be ${setting}, ` +
@@ -866,7 +883,7 @@ const SPLASH_TARGET: AppOption = {
 const OUTFIT_TEXT = text(
   "outfit", "Describe the outfit",
   "e.g. a cream linen suit, open collar",
-  "Dress them in this specifically: {value}. Match the drape, fit and fabric behaviour to their pose and to the light already in the photo."
+  "Dress them in this specifically: {value}. Match the drape, fit and fabric behaviour to their pose and to the light of the scene."
 );
 
 const HEADLINE_TEXT = text(
@@ -901,17 +918,17 @@ const BY_SLUG: Record<string, AppOption[]> = {
   "age-progression":      [AGE],
   "age-progression-tool": [AGE],
   "old-filter":           [OLDER_SLIDER],
-  "ai-time-machine":      [DECADE],
-  "baby-face-filter":     [YOUNGER_AGE],
-  "long-hair-filter":     [HAIR_LENGTH],
-  "bangs-filter":         [BANGS],
-  "beard-filter":         [BEARD],
+  "ai-time-machine":      [withDefault(DECADE, "1920s")],
+  "baby-face-filter":     [withDefault(YOUNGER_AGE, "child")],
+  "long-hair-filter":     [withDefault(HAIR_LENGTH, "midback")],
+  "bangs-filter":         [withDefault(BANGS, "curtain")],
+  "beard-filter":         [withDefault(BEARD, "short")],
   "eyebrow-filter":       [BROWS],
   "add-glasses-to-photo": [GLASSES],
-  "piercing-filter":      [PIERCING],
-  "hairstyle-changer":    [HAIRSTYLE],
-  "hair-color-changer":   [HAIR_COLOUR],
-  "eye-color-changer":    [EYE_COLOUR],
+  "piercing-filter":      [withDefault(PIERCING, "nose")],
+  "hairstyle-changer":    [withDefault(HAIRSTYLE, c("fresh", "Fresh cut", "Give them a fresh, modern, flattering haircut that suits their face shape and hair texture — a short textured cut with tapered sides for short hair, soft face-framing layers for long hair."))],
+  "hair-color-changer":   [withDefault(HAIR_COLOUR, "auburn")],
+  "eye-color-changer":    [withDefault(EYE_COLOUR, "green")],
   "face-expression-changer": [EXPRESSION],
   "recolor-image":        [RECOLOUR_TARGET],
   "color-splash":         [SPLASH_TARGET],
@@ -942,26 +959,32 @@ const BY_SLUG: Record<string, AppOption[]> = {
   "smile-filter":       [SMILE],
 
   // ── Collectibles ────────────────────────────────────────────────────────
-  "3d-figurine":             [FIGURE_PACKAGING],
+  "3d-figurine":             [withDefault(FIGURE_PACKAGING, c("basebox", "Base & box", "Show the figure standing on a round clear display base on a desk, with its printed collector's box standing behind it, photographed as a product shot."))],
   "lego-minifigure":         [FIGURE_PACKAGING],
   "funko-pop-figure":        [FIGURE_PACKAGING],
-  "funko-figure-maker":      [FIGURE_PACKAGING],
+  "funko-figure-maker":      [withDefault(FIGURE_PACKAGING, c("diorama", "Themed base", "Show the figure on a round base dressed as a small themed diorama of what they are doing in the photo, with no packaging, photographed as a product shot."))],
   "action-figure-generator": [FIGURE_PACKAGING],
   "barbie-box":              [FIGURE_PACKAGING],
 
   // ── Eras ────────────────────────────────────────────────────────────────
   "90s-yearbook-photo":    [YEARBOOK_BACKDROP],
-  "ai-yearbook-generator": [YEARBOOK_BACKDROP],
+  "ai-yearbook-generator": [withDefault(YEARBOOK_BACKDROP, "mottled")],
   "1980s-photo-trend":     [EIGHTIES_LOOK],
   "polaroid-photo":       [POLAROID_FRAME],
 
   // ── Tattoos ─────────────────────────────────────────────────────────────
-  "ai-tattoo-generator":  [TATTOO_STYLE, TATTOO_PLACEMENT],
-  "birth-flower-tattoo":  [sel("month", "Birth month", MONTH_FLOWERS), TATTOO_PLACEMENT],
+  "ai-tattoo-generator":  [
+    withDefault(TATTOO_STYLE, "realism"),
+    withDefault(TATTOO_PLACEMENT, c("visible", "Arms & neck", "Place them on skin that shows in the photo: full sleeves on both forearms and a piece on the side of the neck.")),
+  ],
+  "birth-flower-tattoo":  [
+    sel("month", "Birth month", MONTH_FLOWERS),
+    withDefault(TATTOO_PLACEMENT, c("visible", "Where it shows", "Place it on skin that shows in the photo — the upper back or the side of the neck if visible, otherwise the inner forearm.")),
+  ],
 
   // ── Babies ──────────────────────────────────────────────────────────────
-  "ai-baby-predictor": [BABY_STAGE],
-  "baby-photoshoot":   [BABY_STAGE, LIGHTING],
+  "ai-baby-predictor": [withDefault(BABY_STAGE, c("1y", "About 1 year", "Show the child at about one year old."))],
+  "baby-photoshoot":   [withDefault(BABY_STAGE, c("asis", "As in photo", "Keep the child at the age they are in the photo.")), LIGHTING],
 
   // ── Restoration ─────────────────────────────────────────────────────────
   "colorize-photo":           [RESTORE_COLOUR],
@@ -1017,8 +1040,8 @@ const BY_SLUG: Record<string, AppOption[]> = {
   "ai-avatar-generator":    [PFP_BACKDROP, PFP_CROP],
 
   // ── Hair and teeth ──────────────────────────────────────────────────────
-  "blonde-hair-filter": [BLONDE_SHADE],
-  "curly-hair-filter":  [CURL_TYPE],
+  "blonde-hair-filter": [withDefault(BLONDE_SHADE, "ash")],
+  "curly-hair-filter":  [withDefault(CURL_TYPE, "curls")],
   "braces-filter":      [BRACES_TYPE],
   // An inversion is one operation with one outcome; a "strength" control over
   // it would be a lie.
@@ -1069,7 +1092,6 @@ const TEXT_ONLY_SLUGS = new Set<string>([
   "logo-maker",
   "gaming-logo-maker",
   "icon-generator",
-  "linkedin-banner-maker",
 ]);
 
 /** True when this app generates from a text description alone — no photo upload. */
