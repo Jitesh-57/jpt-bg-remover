@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CreativeApp } from "@/lib/creative-apps";
 import {
-  TABS, presetsFor, buildPrompt, ASPECT_RATIOS, MODELS, defaultRatioFor,
+  TABS, presetsFor, buildPrompt, ASPECT_RATIOS, MODELS, defaultRatioFor, defaultModelFor,
   type PresetTab, type Preset, type AspectRatio,
 } from "@/lib/app-presets";
 import { CREDIT_COST } from "@/lib/plans";
@@ -40,7 +40,7 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
   const [tab, setTab] = useState<PresetTab>("solo");
   const [preset, setPreset] = useState<Preset | null>(null);
   const [custom, setCustom] = useState("");
-  const [model, setModel] = useState<string>(MODELS[0].id);
+  const [model, setModel] = useState<string>(() => defaultModelFor(app));
   const [ratio, setRatio] = useState<AspectRatio>(() => defaultRatioFor(app.slug));
 
   /*
@@ -271,7 +271,7 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...payload,
-          prompt: buildPrompt(app, tab, preset, custom, optionPhrases(options, optValues)),
+          prompt: buildPrompt(app, tab, preset, custom, optionPhrases(options, optValues), model),
           slug: app.slug,
           model,
           aspectRatio: ratio,

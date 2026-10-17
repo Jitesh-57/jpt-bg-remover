@@ -431,6 +431,27 @@ export function photographOutputDirective(): string {
 }
 
 /**
+ * How the photo is introduced to OpenAI's models, on the apps that rebuild the pose.
+ *
+ * GPT's edit endpoints treat the upload as a picture to modify and hold on to
+ * whatever they are told to keep — so "keep the same face" kept the face as
+ * photographed, selfie tilt and phone angle included, on an upright body. fal
+ * exposes no fidelity setting for these endpoints, so the only lever is what
+ * the photo is said to be: a reference for who the person is. Nano Banana
+ * re-poses the head without it, and does not get it.
+ */
+const REFERENCE =
+  "The attached photo is a reference for who this person is — their face, features, " +
+  "skin tone, hair and build — not a picture to edit. Do not reuse any part of it as " +
+  "it is, the face included: create a new image of the same person from scratch, with " +
+  "their head, neck and body posed, angled and lit together for the new scene, so the " +
+  "face is redrawn at the new angle rather than carried over from the photo.";
+
+export function referenceDirective(): string {
+  return REFERENCE;
+}
+
+/**
  * Removes an app's own "must look like a real photograph" sentence.
  *
  * Nearly every one of the 200 app prompts ends with a variant of it, written

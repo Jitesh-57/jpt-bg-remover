@@ -25,12 +25,14 @@ export type { FalModel };
  * the BYOK GPT Image 1 endpoint. Mapping it to the current default GPT model
  * upgrades all of them at once instead of stranding them on a name.
  *
- * ChatGPT (GPT Image 2.5 Flare, 2K) is the default: a request that names no
- * model, or one this build does not know, gets it. A GPT model that cannot
- * serve a request still drops to Nano Banana Pro (see withModelFallback and
+ * ChatGPT is GPT Image 2.5 Sunburst, 2K: OpenAI's top image model on fal,
+ * built for premium work and fine detail, at the cost of a slower render than
+ * Flare. A request that names no model, or one this build does not know, gets
+ * it. If Sunburst cannot serve a request the cascade moves to Flare and GPT
+ * Image 2, and then to Nano Banana Pro (see withModelFallback and
  * editImageGptFirst), so the default can never dead-end a visitor.
  */
-export const DEFAULT_GPT_MODEL: FalModel = "gpt-image-2.5-flare";
+export const DEFAULT_GPT_MODEL: FalModel = "gpt-image-2.5-sunburst";
 
 export function resolveModel(requested?: string): FalModel {
   if (!requested || requested === "gpt-image") return DEFAULT_GPT_MODEL;
