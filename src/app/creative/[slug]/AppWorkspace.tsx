@@ -84,6 +84,33 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
   const fileRef = useRef<HTMLInputElement>(null);
   /** The before/after panel — brought on screen when a generation starts on a phone. */
   const viewerRef = useRef<HTMLDivElement>(null);
+  /** The upload box and the Generate button — kept on screen together once a photo is chosen. */
+  const uploadBoxRef = useRef<HTMLDivElement>(null);
+  const actionRef = useRef<HTMLButtonElement>(null);
+
+  /*
+    After a photo is chosen on a phone: the photo at the top of the screen and
+    the Generate button in view below it.
+
+    The page used to stay where it was, so the photo sat under the heading and
+    breadcrumbs and the one button that mattered next was below the fold. The
+    upload box goes just under the sticky header; if the rail is too tall for
+    both to fit, the button wins and the top of the photo tucks under instead.
+  */
+  const revealUpload = useCallback(() => {
+    if (typeof window === "undefined" || !window.matchMedia("(max-width: 980px)").matches) return;
+    const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Twice: once for React to render the preview, once for the browser to lay it out.
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      const box = uploadBoxRef.current, btn = actionRef.current;
+      if (!box || !btn) return;
+      const HEADER = 56 + 10; // the sticky site header (NavBar) and a little air
+      const boxTop = box.getBoundingClientRect().top + window.scrollY - HEADER;
+      // The line under the button ("2 credits per generation") comes into view with it.
+      const btnBottom = btn.getBoundingClientRect().bottom + window.scrollY + 44 - window.innerHeight;
+      window.scrollTo({ top: Math.max(0, boxTop, btnBottom), behavior: smooth ? "smooth" : "auto" });
+    }));
+  }, []);
   const presets = useMemo(() => presetsFor(app, tab), [app, tab]);
 
   useEffect(() => {
@@ -157,9 +184,10 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
     const url = await prepareDataUrl(await readFile(file));
     setOriginal(url);
     setResult(null);
+    revealUpload();
     // Keep it if they end up signing in from here.
     void savePendingContext({ image: url, tool: `creative:${app.slug}` });
-  }, [app.slug]);
+  }, [app.slug, revealUpload]);
 
   const signIn = async () => {
     await beginGoogleSignIn();
@@ -322,6 +350,7 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
         {/* Upload — text-only apps never take a photo, so there's nothing to drop here. */}
         {!textOnly && (
         <div
+          ref={uploadBoxRef}
           onDragOver={(e) => e.preventDefault()}
           onDrop={(e) => { e.preventDefault(); const f = e.dataTransfer.files?.[0]; if (f) void onFile(f); }}
           style={{
@@ -383,7 +412,7 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
             {samples.slice(0, 3).map((src, i) => (
               <button
                 key={i}
-                onClick={() => { setOriginal(src); setResult(null); setErr(null); }}
+                onClick={() => { setOriginal(src); setResult(null); setErr(null); revealUpload(); }}
                 aria-label={`Use sample photo ${i + 1}`}
                 style={{
                   width: 40, height: 40, borderRadius: 9, overflow: "hidden", padding: 0,
@@ -596,6 +625,7 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
           const off = loggedIn && !short && !canApply;
           return (
             <button
+              ref={actionRef}
               onClick={!loggedIn ? (trial ? () => openTrialSignIn(`app:${app.slug}`) : signIn) : short ? () => openPricing(app.h1) : apply}
               disabled={off}
               style={{
