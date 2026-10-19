@@ -24,10 +24,9 @@
  * though the key itself is correct. Quotes around the value and an
  * accidentally-included "Key " prefix are stripped for the same reason.
  */
-// fal documents this flag for Seedream. Disabling it is effective only when
-// the fal account has been explicitly authorized by fal.ai; otherwise fal
-// continues checking requests regardless of this value.
-const FAL_ENABLE_SAFETY_CHECKER = process.env.FAL_ENABLE_SAFETY_CHECKER !== "false";
+// Provider safety checking stays enabled by default. Disabling it only works
+// when fal.ai has explicitly authorized this account and does not bypass provider policy.
+const FAL_ENABLE_SAFETY_CHECKER = process.env.FAL_ENABLE_SAFETY_CHECKER === "false" ? false : true;
 
 const KEY = () =>
   (process.env.FAL_KEY || process.env.FAL_API_KEY || process.env.FAL_AI_KEY || process.env.FALAI_API_KEY ||
