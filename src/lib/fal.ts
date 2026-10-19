@@ -109,14 +109,37 @@ export async function falEndpointProbe(path: string): Promise<{ status: number; 
 
 export type FalModel =
   | "nano-banana"
+  | "seedream-v45"
   | "gpt-image-2.5-sunburst"
   | "gpt-image-2.5-flare"
   | "gpt-image-2"
   | "gpt-image-1-byok"
-  | "seedream-v45";
+  | "xai-grok-imagine-v2"
+  | "seedream-v5-pro"
+  | "seedream-v5-lite"
+  | "flux-lora-fill"
+  | "qwen-image-edit-plus"
+  | "qwen-image-edit-2511-multiple-angles"
+  | "flux-2-pro"
+  | "flux-3-edit"
+  | "qwen-image-3-edit"
+  | "gemini-25-flash-image-edit"
+  | "qwen-image-2.1-edit"
+  | "ideogram-v4-image-to-image"
+  | "topaz-upscale"
+  | "seedvr-upscale"
+  | "recraft-upscale-creative"
+  | "ideogram-upscale"
+  | "recraft-upscale-crisp"
+  | "recraft-v4-style"
+  | "recraft-v4-1"
+  | "krea-v2-medium"
+  | "flux-pro-kontext"
+  | "krea-v2-large"
+  | "ideogram-v4";
 
 /** Which input shape an endpoint expects. */
-type Family = "nano" | "gpt" | "seedream";
+type Family = "nano" | "gpt" | "seedream" | "flux" | "qwen" | "upscale";
 
 /**
  * Which spelling of image_size the endpoint validates against.
@@ -139,58 +162,35 @@ interface ModelSpec {
 }
 
 const MODEL_SPECS: Record<FalModel, ModelSpec> = {
-  // Nano Banana Pro (Gemini 3 Pro Image). The original fal-ai/nano-banana
-  // (Gemini 2.5 Flash Image) is kept only as a last-resort address below.
-  "nano-banana": {
-    edit: "fal-ai/nano-banana-pro/edit",
-    generate: "fal-ai/nano-banana-pro",
-    family: "nano",
-    label: "Nano Banana Pro",
-    sizeStyle: "named",
-  },
-  // ByteDance Seedream 4.5: strong multi-image editing and high-resolution
-  // output. Takes image_urls like nano-banana, but sizes by image_size.
-  "seedream-v45": {
-    edit: "fal-ai/bytedance/seedream/v4.5/edit",
-    generate: "fal-ai/bytedance/seedream/v4.5/text-to-image",
-    family: "seedream",
-    label: "Seedream 4.5",
-    sizeStyle: "named",
-  },
-  // "Editing built for the tightest control, edits scoped precisely to the
-  // instruction, with subject and composition preserved." Extra fidelity on
-  // intricate detail, in exchange for a longer render.
-  "gpt-image-2.5-sunburst": {
-    edit: "openai/gpt-image-2.5/sunburst/edit",
-    generate: "openai/gpt-image-2.5/sunburst/text-to-image",
-    family: "gpt",
-    label: "GPT Image 2.5 Sunburst",
-    sizeStyle: "2k",
-  },
-  // OpenAI's default for most applications: fast, high-quality, natural
-  // lighting and rich textures.
-  "gpt-image-2.5-flare": {
-    edit: "openai/gpt-image-2.5/flare/edit",
-    generate: "openai/gpt-image-2.5/flare/text-to-image",
-    family: "gpt",
-    label: "GPT Image 2.5 Flare",
-    sizeStyle: "2k",
-  },
-  "gpt-image-2": {
-    edit: "openai/gpt-image-2/edit",
-    generate: "openai/gpt-image-2",
-    family: "gpt",
-    label: "GPT Image 2",
-    sizeStyle: "2k",
-  },
-  "gpt-image-1-byok": {
-    edit: "fal-ai/gpt-image-1/edit-image/byok",
-    generate: "fal-ai/gpt-image-1/text-to-image/byok",
-    family: "gpt",
-    // The BYOK wrapper hands the value to OpenAI, which wants pixels.
-    label: "GPT Image 1 (BYOK)",
-    sizeStyle: "pixels",
-  },
+  "nano-banana": { edit: "fal-ai/nano-banana-pro/edit", generate: "fal-ai/nano-banana-pro", family: "nano", label: "Nano Banana Pro", sizeStyle: "named" },
+  "seedream-v45": { edit: "fal-ai/bytedance/seedream/v4.5/edit", generate: "fal-ai/bytedance/seedream/v4.5/text-to-image", family: "seedream", label: "Seedream 4.5", sizeStyle: "named" },
+  "gpt-image-2.5-sunburst": { edit: "openai/gpt-image-2.5/sunburst/edit", generate: "openai/gpt-image-2.5/sunburst/text-to-image", family: "gpt", label: "GPT Image 2.5 Sunburst", sizeStyle: "2k" },
+  "gpt-image-2.5-flare": { edit: "openai/gpt-image-2.5/flare/edit", generate: "openai/gpt-image-2.5/flare/text-to-image", family: "gpt", label: "GPT Image 2.5 Flare", sizeStyle: "2k" },
+  "gpt-image-2": { edit: "openai/gpt-image-2/edit", generate: "openai/gpt-image-2", family: "gpt", label: "GPT Image 2", sizeStyle: "2k" },
+  "gpt-image-1-byok": { edit: "fal-ai/gpt-image-1/edit-image/byok", generate: "fal-ai/gpt-image-1/text-to-image/byok", family: "gpt", label: "GPT Image 1 (BYOK)", sizeStyle: "pixels" },
+  "xai-grok-imagine-v2": { edit: "xai/grok-imagine-image/v2.0/edit", generate: "xai/grok-imagine-image/v2.0/text-to-image", family: "gpt", label: "Grok Imagine Image 2.0", sizeStyle: "named" },
+  "seedream-v5-pro": { edit: "bytedance/seedream/v5/pro/edit", generate: "bytedance/seedream/v5/pro/text-to-image", family: "seedream", label: "Seedream v5 Pro", sizeStyle: "named" },
+  "seedream-v5-lite": { edit: "fal-ai/bytedance/seedream/v5/lite/edit", generate: "fal-ai/bytedance/seedream/v5/lite/text-to-image", family: "seedream", label: "Seedream v5 Lite", sizeStyle: "named" },
+  "flux-lora-fill": { edit: "fal-ai/flux-lora-fill", generate: "fal-ai/flux-lora-fill", family: "flux", label: "FLUX LoRA Fill", sizeStyle: "named" },
+  "qwen-image-edit-plus": { edit: "fal-ai/qwen-image-edit-plus", generate: "fal-ai/qwen-image-edit-plus", family: "qwen", label: "Qwen Image Edit Plus", sizeStyle: "named" },
+  "qwen-image-edit-2511-multiple-angles": { edit: "fal-ai/qwen-image-edit-2511-multiple-angles", generate: "fal-ai/qwen-image-edit-2511-multiple-angles", family: "qwen", label: "Qwen Multiple Angles", sizeStyle: "named" },
+  "flux-2-pro": { edit: "fal-ai/flux-2-pro/edit", generate: "fal-ai/flux-2-pro", family: "flux", label: "FLUX 2 Pro", sizeStyle: "named" },
+  "flux-3-edit": { edit: "blackforestlabs/flux-3/edit-image", generate: "blackforestlabs/flux-3/text-to-image", family: "flux", label: "FLUX 3", sizeStyle: "named" },
+  "qwen-image-3-edit": { edit: "alibaba/qwen-image-3/edit", generate: "alibaba/qwen-image-3/text-to-image", family: "qwen", label: "Qwen Image 3", sizeStyle: "named" },
+  "gemini-25-flash-image-edit": { edit: "fal-ai/gemini-25-flash-image/edit", generate: "fal-ai/nano-banana", family: "nano", label: "Gemini 2.5 Flash Image", sizeStyle: "named" },
+  "qwen-image-2.1-edit": { edit: "alibaba/qwen-image-2.1/edit", generate: "alibaba/qwen-image-2.1/text-to-image", family: "qwen", label: "Qwen Image 2.1", sizeStyle: "named" },
+  "ideogram-v4-image-to-image": { edit: "ideogram/v4/image-to-image", generate: "ideogram/v4", family: "gpt", label: "Ideogram v4 Image-to-Image", sizeStyle: "named" },
+  "topaz-upscale": { edit: "fal-ai/topaz/upscale/image", generate: "fal-ai/topaz/upscale/image", family: "upscale", label: "Topaz Upscale", sizeStyle: "named" },
+  "seedvr-upscale": { edit: "fal-ai/seedvr/upscale/image", generate: "fal-ai/seedvr/upscale/image", family: "upscale", label: "SeedVR Upscale", sizeStyle: "named" },
+  "recraft-upscale-creative": { edit: "fal-ai/recraft/upscale/creative", generate: "fal-ai/recraft/upscale/creative", family: "upscale", label: "Recraft Creative Upscale", sizeStyle: "named" },
+  "ideogram-upscale": { edit: "fal-ai/ideogram/upscale", generate: "fal-ai/ideogram/upscale", family: "upscale", label: "Ideogram Upscale", sizeStyle: "named" },
+  "recraft-upscale-crisp": { edit: "fal-ai/recraft/upscale/crisp", generate: "fal-ai/recraft/upscale/crisp", family: "upscale", label: "Recraft Crisp Upscale", sizeStyle: "named" },
+  "recraft-v4-style": { edit: "recraft/v4/style/text-to-image", generate: "recraft/v4/style/text-to-image", family: "flux", label: "Recraft v4 Style", sizeStyle: "named" },
+  "recraft-v4-1": { edit: "fal-ai/recraft/v4.1/text-to-image", generate: "fal-ai/recraft/v4.1/text-to-image", family: "flux", label: "Recraft v4.1", sizeStyle: "named" },
+  "krea-v2-medium": { edit: "krea/v2/medium/text-to-image", generate: "krea/v2/medium/text-to-image", family: "flux", label: "Krea v2 Medium", sizeStyle: "named" },
+  "flux-pro-kontext": { edit: "fal-ai/flux-pro/kontext/text-to-image", generate: "fal-ai/flux-pro/kontext/text-to-image", family: "flux", label: "FLUX Pro Kontext", sizeStyle: "named" },
+  "krea-v2-large": { edit: "krea/v2/large/text-to-image", generate: "krea/v2/large/text-to-image", family: "flux", label: "Krea v2 Large", sizeStyle: "named" },
+  "ideogram-v4": { edit: "ideogram/v4", generate: "ideogram/v4", family: "gpt", label: "Ideogram v4", sizeStyle: "named" },
 };
 
 /**
@@ -208,41 +208,11 @@ const MODEL_SPECS: Record<FalModel, ModelSpec> = {
  * invented at runtime.
  */
 const PATH_VARIANTS: Partial<Record<FalModel, { edit: string[]; generate: string[] }>> = {
-  // Only if Pro's address ever 404s: the original Nano Banana rather than a
-  // failed generation. runQueued logs it, so a downgrade is never silent.
-  "nano-banana": {
-    edit: ["fal-ai/nano-banana-pro/edit", "fal-ai/nano-banana/edit"],
-    generate: ["fal-ai/nano-banana-pro", "fal-ai/nano-banana"],
-  },
-  // fal lists Seedream both with and without the "fal-ai/" owner prefix.
-  "seedream-v45": {
-    edit: ["fal-ai/bytedance/seedream/v4.5/edit", "bytedance/seedream/v4.5/edit"],
-    generate: ["fal-ai/bytedance/seedream/v4.5/text-to-image", "bytedance/seedream/v4.5/text-to-image"],
-  },
-  "gpt-image-2.5-sunburst": {
-    edit: [
-      "fal-ai/gpt-image-2.5/sunburst/edit",
-      "openai/gpt-image-2.5/sunburst/edit-image",
-      "openai/gpt-image-2.5/sunburst/image-to-image",
-    ],
-    generate: ["fal-ai/gpt-image-2.5/sunburst/text-to-image"],
-  },
-  "gpt-image-2.5-flare": {
-    edit: [
-      "fal-ai/gpt-image-2.5/flare/edit",
-      "openai/gpt-image-2.5/flare/edit-image",
-      "openai/gpt-image-2.5/flare/image-to-image",
-    ],
-    generate: ["fal-ai/gpt-image-2.5/flare/text-to-image"],
-  },
-  "gpt-image-2": {
-    edit: [
-      "fal-ai/gpt-image-2/edit",
-      "openai/gpt-image-2/edit-image",
-      "openai/gpt-image-2/image-to-image",
-    ],
-    generate: ["fal-ai/gpt-image-2"],
-  },
+  "nano-banana": { edit: ["fal-ai/nano-banana-pro/edit", "fal-ai/nano-banana/edit"], generate: ["fal-ai/nano-banana-pro", "fal-ai/nano-banana"] },
+  "seedream-v45": { edit: ["fal-ai/bytedance/seedream/v4.5/edit", "bytedance/seedream/v4.5/edit"], generate: ["fal-ai/bytedance/seedream/v4.5/text-to-image", "bytedance/seedream/v4.5/text-to-image"] },
+  "gpt-image-2.5-sunburst": { edit: ["openai/gpt-image-2.5/sunburst/edit", "fal-ai/gpt-image-2.5/sunburst/edit"], generate: ["openai/gpt-image-2.5/sunburst/text-to-image", "fal-ai/gpt-image-2.5/sunburst/text-to-image"] },
+  "gpt-image-2.5-flare": { edit: ["openai/gpt-image-2.5/flare/edit", "fal-ai/gpt-image-2.5/flare/edit"], generate: ["openai/gpt-image-2.5/flare/text-to-image", "fal-ai/gpt-image-2.5/flare/text-to-image"] },
+  "gpt-image-2": { edit: ["openai/gpt-image-2/edit", "fal-ai/gpt-image-2/edit"], generate: ["openai/gpt-image-2", "fal-ai/gpt-image-2"] },
 };
 
 /** The configured path first, then the alternatives worth trying on a 404. */
@@ -771,28 +741,18 @@ export async function falEditImage(
   const imageUrl = await toFalImageUrl(src);
   assertAspectRatio(aspectRatio);
   const endpoint = falEndpoint(model, "edit");
-
-  // The two families name this differently: nano-banana takes aspect_ratio,
-  // the GPT models take image_size. Omitted means "keep the source framing".
-  const input =
-    falModelSpec(model).family === "nano"
-      ? { prompt, image_urls: [imageUrl], num_images: 1, output_format: "png", resolution: NANO_RESOLUTION,
-          ...(aspectRatio ? { aspect_ratio: aspectRatio } : {}) }
-      : falModelSpec(model).family === "seedream"
-      ? { prompt, image_urls: [await uploadImageToFalStorage(imageUrl)], enable_safety_checker: FAL_ENABLE_SAFETY_CHECKER }
-      : { prompt, image_urls: [imageUrl], num_images: 1, quality: "high",
-          image_size: imageSizeFor(falModelSpec(model).sizeStyle, aspectRatio) };
-
-  const result = await runQueued(endpoint, input, budgetMs, {
-    // The framing and quality fields are the optional part of the request.
-    // If an endpoint does not recognise one of them it answers 422, and a
-    // rejected *option* is a poor reason to lose the generation — so the
-    // retry drops to prompt and image alone. See runQueued.
-    minimalInput: falModelSpec(model).family === "seedream"
-      ? { prompt, image_urls: [await uploadImageToFalStorage(imageUrl)], enable_safety_checker: FAL_ENABLE_SAFETY_CHECKER }
-      : { prompt, image_urls: [imageUrl], num_images: 1 },
-    paths: falPathVariants(model, "edit"),
-  });
+  const family = falModelSpec(model).family;
+  const input = family === "nano"
+    ? { prompt, image_urls: [imageUrl], num_images: 1, output_format: "png", resolution: NANO_RESOLUTION, ...(aspectRatio ? { aspect_ratio: aspectRatio } : {}) }
+    : family === "seedream"
+    ? { prompt, image_urls: [await uploadImageToFalStorage(imageUrl)], enable_safety_checker: FAL_ENABLE_SAFETY_CHECKER }
+    : family === "upscale"
+    ? { image_url: imageUrl }
+    : { prompt, image_urls: [imageUrl], num_images: 1, quality: "high", image_size: imageSizeFor(falModelSpec(model).sizeStyle, aspectRatio) };
+  const minimalInput = family === "seedream"
+    ? { prompt, image_urls: [await uploadImageToFalStorage(imageUrl)], enable_safety_checker: FAL_ENABLE_SAFETY_CHECKER }
+    : family === "upscale" ? { image_url: imageUrl } : { prompt, image_urls: [imageUrl], num_images: 1 };
+  const result = await runQueued(endpoint, input, budgetMs, { minimalInput, paths: falPathVariants(model, "edit") });
   return urlToDataUrl(firstImageUrl(result));
 }
 
@@ -844,22 +804,13 @@ export async function falGenerateImage(
 ): Promise<string> {
   assertAspectRatio(aspectRatio);
   const endpoint = falEndpoint(model, "generate");
-
-  const input =
-    falModelSpec(model).family === "nano"
-      ? { prompt, num_images: 1, output_format: "png", resolution: NANO_RESOLUTION,
-          ...(aspectRatio ? { aspect_ratio: aspectRatio } : {}) }
-      : falModelSpec(model).family === "seedream"
-      // Seedream's text-to-image endpoint also documents prompt as the only
-      // required input. Let fal choose its native output size.
-      ? { prompt, enable_safety_checker: FAL_ENABLE_SAFETY_CHECKER }
-      : { prompt, num_images: 1, quality: "high",
-          image_size: imageSizeFor(falModelSpec(model).sizeStyle, aspectRatio) };
-
-  const result = await runQueued(endpoint, input, budgetMs, {
-    minimalInput: { prompt, num_images: 1 },
-    paths: falPathVariants(model, "generate"),
-  });
+  const family = falModelSpec(model).family;
+  const input = family === "nano"
+    ? { prompt, num_images: 1, output_format: "png", resolution: NANO_RESOLUTION, ...(aspectRatio ? { aspect_ratio: aspectRatio } : {}) }
+    : family === "seedream"
+    ? { prompt, enable_safety_checker: FAL_ENABLE_SAFETY_CHECKER }
+    : { prompt, num_images: 1, quality: "high", image_size: imageSizeFor(falModelSpec(model).sizeStyle, aspectRatio) };
+  const result = await runQueued(endpoint, input, budgetMs, { minimalInput: { prompt, num_images: 1 }, paths: falPathVariants(model, "generate") });
   return urlToDataUrl(firstImageUrl(result));
 }
 
