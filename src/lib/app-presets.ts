@@ -284,9 +284,33 @@ export function defaultRatioFor(slug: string): AspectRatio {
 // The first entry is the default in every picker and API (MODELS[0]): ChatGPT.
 // The AI apps are the exception and open on defaultModelFor(app).
 export const MODELS = [
-  { id: "gpt-image",   label: "ChatGPT",     hint: "OpenAI's top model, GPT Image 2.5 Sunburst, in 2K — rich light and fine detail, and the best at text in images" },
-  { id: "nano-banana", label: "Nano Banana Pro", hint: "Google's best image model, in 2K — sharpest detail, and best at keeping your face exactly as it is" },
-  { id: "seedream-v45", label: "Seedream 4.5", hint: "ByteDance Seedream 4.5 — advanced multi-image editing and high-resolution results" },
+
+
+// The registry includes model families for editing, generation, and upscaling.
+// UI availability is not proof of provider permission or a verified request schema.
+  { id: "nano-banana", label: "Nano Banana Pro", hint: "Nano Banana Pro endpoint; availability and provider input schema must be verified before enabling paid traffic" },
+  { id: "seedream-v45", label: "Seedream 4.5", hint: "Seedream 4.5 endpoint; availability and provider input schema must be verified before enabling paid traffic" },
+  { id: "gpt-image-2.5-sunburst", label: "GPT Image 2.5 Sunburst", hint: "GPT Image 2.5 Sunburst endpoint; availability and provider input schema must be verified before enabling paid traffic" },
+  { id: "gpt-image-2.5-flare", label: "GPT Image 2.5 Flare", hint: "GPT Image 2.5 Flare endpoint; availability and provider input schema must be verified before enabling paid traffic" },
+  { id: "gpt-image-2", label: "GPT Image 2", hint: "GPT Image 2 endpoint; availability and provider input schema must be verified before enabling paid traffic" },
+  { id: "xai-grok-imagine-v2", label: "Grok Imagine Image 2.0", hint: "Grok Imagine Image 2.0 endpoint; availability and provider input schema must be verified before enabling paid traffic" },
+  { id: "seedream-v5-pro", label: "Seedream v5 Pro", hint: "Seedream v5 Pro endpoint; availability and provider input schema must be verified before enabling paid traffic" },
+  { id: "seedream-v5-lite", label: "Seedream v5 Lite", hint: "Seedream v5 Lite endpoint; availability and provider input schema must be verified before enabling paid traffic" },
+  { id: "flux-lora-fill", label: "FLUX LoRA Fill", hint: "FLUX LoRA Fill endpoint; availability and provider input schema must be verified before enabling paid traffic" },
+  { id: "qwen-image-edit-plus", label: "Qwen Image Edit Plus", hint: "Qwen Image Edit Plus endpoint; availability and provider input schema must be verified before enabling paid traffic" },
+  { id: "qwen-image-edit-2511-multiple-angles", label: "Qwen Multiple Angles", hint: "Qwen Multiple Angles endpoint; availability and provider input schema must be verified before enabling paid traffic" },
+  { id: "flux-2-pro", label: "FLUX 2 Pro", hint: "FLUX 2 Pro endpoint; availability and provider input schema must be verified before enabling paid traffic" },
+  { id: "flux-3-edit", label: "FLUX 3", hint: "FLUX 3 endpoint; availability and provider input schema must be verified before enabling paid traffic" },
+  { id: "qwen-image-3-edit", label: "Qwen Image 3", hint: "Qwen Image 3 endpoint; availability and provider input schema must be verified before enabling paid traffic" },
+  { id: "gemini-25-flash-image-edit", label: "Gemini 2.5 Flash Image", hint: "Gemini 2.5 Flash Image endpoint; availability and provider input schema must be verified before enabling paid traffic" },
+  { id: "qwen-image-2.1-edit", label: "Qwen Image 2.1", hint: "Qwen Image 2.1 endpoint; availability and provider input schema must be verified before enabling paid traffic" },
+  { id: "ideogram-v4-image-to-image", label: "Ideogram v4 Image-to-Image", hint: "Ideogram v4 Image-to-Image endpoint; availability and provider input schema must be verified before enabling paid traffic" },
+  { id: "topaz-upscale", label: "Topaz Upscale", hint: "Topaz Upscale endpoint; availability and provider input schema must be verified before enabling paid traffic" },
+  { id: "seedvr-upscale", label: "SeedVR Upscale", hint: "SeedVR Upscale endpoint; availability and provider input schema must be verified before enabling paid traffic" },
+  { id: "recraft-upscale-creative", label: "Recraft Creative Upscale", hint: "Recraft Creative Upscale endpoint; availability and provider input schema must be verified before enabling paid traffic" },
+  { id: "ideogram-upscale", label: "Ideogram Upscale", hint: "Ideogram Upscale endpoint; availability and provider input schema must be verified before enabling paid traffic" },
+  { id: "recraft-upscale-crisp", label: "Recraft Crisp Upscale", hint: "Recraft Crisp Upscale endpoint; availability and provider input schema must be verified before enabling paid traffic" },
+  { id: "ideogram-v4", label: "Ideogram v4", hint: "Ideogram v4 endpoint; availability and provider input schema must be verified before enabling paid traffic" },
 ] as const;
 
 /** True for the ChatGPT family, by picker id ("gpt-image") or endpoint id ("gpt-…"). */
