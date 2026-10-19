@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CreativeApp } from "@/lib/creative-apps";
 import {
-  TABS, presetsFor, buildPrompt, ASPECT_RATIOS, MODELS, defaultRatioFor, defaultModelFor,
+  TABS, presetsFor, buildPrompt, ASPECT_RATIOS, MODELS, IMAGE_EDIT_MODELS, TEXT_TO_IMAGE_MODELS, defaultRatioFor, defaultModelFor,
   type PresetTab, type Preset, type AspectRatio,
 } from "@/lib/app-presets";
 import { CREDIT_COST } from "@/lib/plans";
@@ -63,6 +63,8 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
     ready to type into.
   */
   const textOnly = isTextOnlyApp(app.slug);
+  const availableModels = textOnly ? TEXT_TO_IMAGE_MODELS : IMAGE_EDIT_MODELS;
+  useEffect(() => { if (!availableModels.some((m) => m.id === model)) setModel(availableModels[0].id); }, [availableModels, model]);
   const primaryOpt = useMemo(() => primaryTextOption(options), [options]);
   const primaryInputRef = useRef<HTMLInputElement>(null);
   const missingPrimary = textOnly && !(optValues[primaryOpt?.id ?? ""] || "").trim();
@@ -628,7 +630,7 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
           <div>
             <label style={ctlLabel} htmlFor="model">Model</label>
             <select id="model" value={model} onChange={(e) => setModel(e.target.value)} style={select}>
-              {MODELS.map((m) => <option key={m.id} value={m.id}>{m.label}</option>)}
+              {availableModels.map((m) => <option key={m.id} value={m.id}>{m.label}</option>)}
             </select>
           </div>
           <div>
