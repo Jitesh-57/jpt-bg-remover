@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CreativeApp } from "@/lib/creative-apps";
 import {
-  TABS, presetsFor, buildPrompt, ASPECT_RATIOS, MODELS, IMAGE_EDIT_MODELS, TEXT_TO_IMAGE_MODELS, defaultRatioFor, defaultModelFor,
+  TABS, presetsFor, buildPrompt, ASPECT_RATIOS, IMAGE_EDIT_MODELS, TEXT_TO_IMAGE_MODELS, defaultRatioFor, defaultModelFor,
   type PresetTab, type Preset, type AspectRatio,
 } from "@/lib/app-presets";
 import { CREDIT_COST } from "@/lib/plans";
