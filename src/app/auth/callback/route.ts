@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
-import { claimSignupTrial, isFreshSignup, rememberCountry } from "@/lib/free-trial.server";
-import { linkVisitor, recordAcquisition } from "@/lib/acquisition.server";
+import { finishSignIn } from "@/lib/auth-finish.server";
 
 export const runtime = "nodejs";
 
@@ -64,42 +63,7 @@ export async function GET(request: NextRequest) {
   }
 
   const { data: { user } } = await supabase.auth.getUser();
-  if (user) {
-    const { data: existing } = await supabase
-      .from("profiles")
-      .select("id")
-      .eq("id", user.id)
-      .single();
-    if (!existing) {
-      await supabase.from("profiles").insert({
-        id: user.id,
-        email: user.email,
-        name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split("@")[0],
-        picture: user.user_metadata?.avatar_url,
-        // No free AI credits on signup. The pricing is explicit that AI has no
-        // free tier, and the gate is balance-based, so granting 10 here handed
-        // every new account five free generations billed to the fal balance.
-        // The free on-device tools need no credits and are unaffected.
-        credits: 0,
-      });
-    } else {
-      await supabase.from("profiles").update({
-        email: user.email,
-        picture: user.user_metadata?.avatar_url,
-      }).eq("id", user.id);
-    }
-    // A new account from a country with a live free trial gets its one-time credits.
-    // Where a new account came from (first touch, location, device), and this
-    // browser's earlier anonymous activity, now that we know whose it is.
-    const [granted] = await Promise.all([
-      claimSignupTrial(user, request),
-      rememberCountry(user.id, request),
-      isFreshSignup(user) ? recordAcquisition(user, request) : Promise.resolve(),
-      linkVisitor(user.id, request),
-    ]);
-    // Read once by the dashboard to say "you got N free credits".
-    if (granted > 0) response.cookies.set("jpt_trial", String(granted), { path: "/", maxAge: 600, httpOnly: false, sameSite: "lax" });
-  }
+  if (user) await finishSignIn(supabase, user, request, response);
 
   return response;
 }

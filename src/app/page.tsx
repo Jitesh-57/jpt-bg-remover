@@ -16,7 +16,7 @@ const BASE = "https://www.sjpt.io";
 */
 const HOME_TITLE = "PixelShine — Your Own AI Creative Studio";
 const HOME_DESCRIPTION =
-  "Create more, edit less. Bring your visual ideas to life with PixelShine AI — 40+ AI photo apps and free creative tools in one place.";
+  "Create more, edit less. Bring your visual ideas to life with PixelShine AI — 200+ AI photo apps and free creative tools in one place.";
 
 async function generateMetadataBase(): Promise<Metadata> {
   const config = await getPageConfig("home");

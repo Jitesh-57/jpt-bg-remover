@@ -8,9 +8,9 @@ import CommandPalette from "./CommandPalette";
 import UserMenu from "./UserMenu";
 import Icon, { type IconName } from "./Icon";
 import { DashboardUserProvider, type DashboardUser } from "./DashboardUser";
-import { beginGoogleSignIn } from "@/lib/auth-return";
 import { openPricing } from "@/lib/pricing-modal";
 import BrandLogo from "@/app/_components/BrandLogo";
+import GuestWall from "./GuestWall";
 
 interface NavItem { label: string; href: string; icon: IconName; badge?: string }
 
@@ -167,27 +167,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   if (auth.status === "checking") return <ShellSkeleton />;
 
   if (auth.status === "signed-out") {
-    return (
-      <div style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24, position: "relative", overflow: "hidden" }}>
-        <div className="jpt-a-glow" aria-hidden style={{ position: "absolute", width: 620, height: 620, borderRadius: "50%", background: "radial-gradient(circle, var(--accent-soft) 0%, transparent 65%)", top: "50%", left: "50%", marginTop: -310, marginLeft: -310 }} />
-        <div className="jpt-a-up" style={{ position: "relative", textAlign: "center", maxWidth: 400, background: "var(--bg-elevated)", border: "1px solid var(--border)", borderRadius: 22, padding: "36px 30px", boxShadow: "var(--shadow-lg)" }}>
-          <div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}><Brand /></div>
-          <h1 style={{ fontSize: 22, fontWeight: 900, margin: "0 0 10px", letterSpacing: "-0.02em" }}>Sign in to your studio</h1>
-          <p style={{ fontSize: 14.5, color: "var(--text-muted)", lineHeight: 1.6, margin: "0 0 24px" }}>
-            Create images, run 200+ AI apps and keep every result in one place.
-          </p>
-          <button
-            onClick={() => beginGoogleSignIn(pathname || "/app")}
-            style={{ width: "100%", padding: "13px 28px", borderRadius: 12, border: "none", background: "var(--grad-strong)", color: "#fff", fontWeight: 800, fontSize: 15, fontFamily: "inherit", cursor: "pointer", boxShadow: "var(--glow)" }}
-          >
-            Continue with Google
-          </button>
-          <Link href="/" style={{ display: "inline-flex", alignItems: "center", gap: 6, marginTop: 18, fontSize: 13, color: "var(--text-faint)", textDecoration: "none" }}>
-            <Icon name="globe" size={14} /> Back to Pixel Shine
-          </Link>
-        </div>
-      </div>
-    );
+    return <GuestWall pathname={pathname || "/app"} brand={<Brand />} />;
   }
 
   const { user } = auth;
@@ -281,7 +261,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         <div style={{ position: "fixed", left: 16, right: 16, bottom: 24, zIndex: 1200, display: "flex", justifyContent: "center", pointerEvents: "none" }}>
           <div role="status" className="jpt-a-pop" onClick={() => setTrialToast(0)}
             style={{ pointerEvents: "auto", background: "var(--grad-strong)", color: "#fff", fontWeight: 800, fontSize: 14.5, padding: "13px 20px", borderRadius: 14, boxShadow: "var(--glow)", cursor: "pointer", textAlign: "center" }}>
-            🎁 Welcome! You got {trialToast} free credits. Try your first AI creation.
+            🎁 Free trial: you got {trialToast} free credits. Try your first AI creation.
           </div>
         </div>
       )}

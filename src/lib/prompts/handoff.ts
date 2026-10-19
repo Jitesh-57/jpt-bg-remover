@@ -28,11 +28,14 @@ export interface Handoff {
   needsPhoto?: boolean;
   /** Where it came from, for analytics only. */
   source?: string;
+  /** The model and ratio picked before handing off (the home hero has both). */
+  model?: string;
+  ratio?: string;
 }
 
-export async function sendToCreate({ prompt, image, reference, needsPhoto }: Handoff): Promise<void> {
+export async function sendToCreate({ prompt, image, reference, needsPhoto, model, ratio }: Handoff): Promise<void> {
   try {
-    sessionStorage.setItem(CREATE_PROMPT_KEY, JSON.stringify({ prompt: prompt.trim(), needsPhoto: !!needsPhoto, reference: reference ?? null }));
+    sessionStorage.setItem(CREATE_PROMPT_KEY, JSON.stringify({ prompt: prompt.trim(), needsPhoto: !!needsPhoto, reference: reference ?? null, model, ratio }));
   } catch { /* private mode: Create opens without the prompt */ }
   if (image) await savePendingContext({ image, tool: CREATE_PHOTO_TOOL, autoRun: false });
   window.location.href = CREATE_HREF;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { PACKS, type Pack } from "@/lib/plans";
+import { PLAY_PACKS, type Pack } from "@/lib/plans";
 import { PLAY_BILLING_METHOD, playProductId } from "@/lib/play-billing";
 import { trackEvent } from "@/lib/analytics";
 
@@ -76,9 +76,9 @@ export async function connectPlay(): Promise<PlayStore | null> {
   try {
     const service = await w.getDigitalGoodsService(PLAY_BILLING_METHOD);
     if (!service) return null;
-    const details = await service.getDetails(PACKS.map(playProductId));
+    const details = await service.getDetails(PLAY_PACKS.map(playProductId));
     const prices: Record<string, PlayPrice> = {};
-    for (const p of PACKS) {
+    for (const p of PLAY_PACKS) {
       const d = details.find((x) => x.itemId === playProductId(p));
       if (!d) continue;
       const amount = Number(d.price.value);

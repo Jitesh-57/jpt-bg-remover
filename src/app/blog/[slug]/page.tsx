@@ -136,7 +136,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       "@type": "Organization",
       name: "Pixel Shine",
       url: "https://www.sjpt.io",
-      logo: { "@type": "ImageObject", url: "https://www.sjpt.io/logo.png" },
+      logo: { "@type": "ImageObject", url: "https://www.sjpt.io/icon.png" },
     },
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
     url,

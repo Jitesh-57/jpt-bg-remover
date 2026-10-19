@@ -10,6 +10,8 @@ import PricingModalHost from "./_components/PricingModalHost";
 import Analytics from "./_components/Analytics";
 import SupportChat from "./_components/SupportChat";
 import AuthReturn from "./_components/AuthReturn";
+import SignupWelcome from "./_components/SignupWelcome";
+import OneTap from "./_components/OneTap";
 import PageGallery from "./_components/PageGallery";
 import SiteEdits from "./_components/SiteEdits";
 import { readEdits } from "@/lib/page-edits.server";
@@ -28,33 +30,33 @@ const BASE = "https://www.sjpt.io";
 // LCP hero image starts downloading sooner.
 const SUPA_ORIGIN = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://lwworujvfttxkrjfrgav.supabase.co";
 const LOGO_URL = `${SUPA_ORIGIN}/storage/v1/object/public/landing/logo.png`;
-// The favicon needs the square mark, not the wide lockup — a 3:1 image shrunk
-// into a 32px box is an unreadable sliver.
-const MARK_URL = `${SUPA_ORIGIN}/storage/v1/object/public/landing/logo-mark.png`;
+// The favicon is the square ✦ mark, served from /public. It used to point at
+// landing/logo-mark.png in storage, which no longer exists, so every tab and
+// search result showed a blank globe.
 
 export const metadata: Metadata = seoMeta({
   title: {
     default: "PixelShine — Your Own AI Creative Studio",
     template: "%s | Pixel Shine",
   },
-  description: "Create more, edit less. Bring your visual ideas to life with PixelShine AI — 40+ AI photo apps and free creative tools in one place.",
+  description: "Create more, edit less. Bring your visual ideas to life with PixelShine AI — 200+ AI photo apps and free creative tools in one place.",
   keywords: ["ai image editor free", "remove background free", "image upscaler free", "ai photo editor online", "background remover free"],
   metadataBase: new URL(BASE),
-  icons: { icon: MARK_URL, shortcut: MARK_URL, apple: MARK_URL },
+  icons: { icon: "/icon.png", shortcut: "/favicon.ico", apple: "/apple-icon.png" },
   // No canonical here — each page sets its own. A layout-level canonical
   // would incorrectly point every subpage at the homepage.
   openGraph: {
     type: "website",
     siteName: "Pixel Shine",
     title: "PixelShine — Your Own AI Creative Studio",
-    description: "Create more, edit less. Bring your visual ideas to life with PixelShine AI — 40+ AI photo apps and free creative tools in one place.",
+    description: "Create more, edit less. Bring your visual ideas to life with PixelShine AI — 200+ AI photo apps and free creative tools in one place.",
     url: BASE,
     images: [{ url: LOGO_URL }],
   },
   twitter: {
     card: "summary_large_image",
     title: "PixelShine — Your Own AI Creative Studio",
-    description: "Create more, edit less. Bring your visual ideas to life with PixelShine AI — 40+ AI photo apps and free creative tools in one place.",
+    description: "Create more, edit less. Bring your visual ideas to life with PixelShine AI — 200+ AI photo apps and free creative tools in one place.",
     images: [LOGO_URL],
   },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
@@ -173,6 +175,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           {/* Returns the user to the page they signed in from, wherever the
               OAuth round-trip happened to drop them. */}
           <AuthReturn />
+          {/* Counts a new signup once it exists, and announces its free credits. */}
+          <SignupWelcome />
+          {/* Google One Tap; off until NEXT_PUBLIC_GOOGLE_CLIENT_ID is set. */}
+          <OneTap />
           {/* Copy and image changes from the visual page editor. */}
           <SiteEdits initial={edits} />
         </LanguageProvider>

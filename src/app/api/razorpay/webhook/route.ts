@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { createAdminSupabase } from "@/lib/auth";
-import { MONTHLY_BY_ID, inrPaise } from "@/lib/plans";
+import { PACK_BY_ID, inrPaise } from "@/lib/plans";
 import { applyCharge, type SubscriptionRow } from "@/lib/subscriptions.server";
 
 export const runtime = "nodejs";
@@ -45,7 +45,10 @@ async function findOrAdopt(remote: RzpSubscription): Promise<SubscriptionRow | n
   if (data) return data;
 
   const notes = (Array.isArray(remote.notes) ? {} : remote.notes || {}) as Record<string, string>;
-  const plan = MONTHLY_BY_ID[notes.plan || ""];
+  // Any monthly plan ever sold, not only today's: a subscription started on a
+  // plan that has since been replaced still renews on it.
+  const found = PACK_BY_ID[notes.plan || ""];
+  const plan = found?.monthly ? found : undefined;
   if (!plan || !notes.userId) return null;
   const { data: made, error } = await db.from("subscriptions").insert({
     user_id: notes.userId,

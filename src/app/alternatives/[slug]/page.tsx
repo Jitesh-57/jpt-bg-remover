@@ -41,7 +41,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     "@context": "https://schema.org", "@type": "SoftwareApplication",
     name: `Pixel Shine ${ct.tool.label}`, applicationCategory: "MultimediaApplication", operatingSystem: "Web",
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, url,
-    aggregateRating: { "@type": "AggregateRating", ratingValue: "4.8", ratingCount: "1200" },
+    // No aggregateRating: there are no collected reviews behind one, and made-up
+    // ratings in structured data risk a Google manual action.
   };
   const faqLd = {
     "@context": "https://schema.org", "@type": "FAQPage",
