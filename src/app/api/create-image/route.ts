@@ -46,19 +46,9 @@ export async function POST(req: NextRequest) {
   if (prompt.length > MAX_PROMPT) {
     return NextResponse.json({ error: `That description is too long — keep it under ${MAX_PROMPT} characters.` }, { status: 400 });
   }
-  // Auto-select Seedream for non-explicit mature/editorial requests where it is a better fit.
-  // This is model selection only: provider content checks remain authoritative and are never bypassed.
-  // Model choice only: fal's own moderation/policy remains authoritative.
-  // Seedream supports enable_safety_checker; disabling it is effective only
-  // after fal has authorized this account for that capability.
-  const matureEditorialRequest =
-    /\b(adult|mature|boudoir|lingerie|sensual|intimate fashion|implied nudity|artistic nude|nude|nudity|nsfw|topless|erotic|romantic couple|fashion editorial)\b/i.test(prompt) &&
-    !/\b(minor|underage|child|teen|schoolgirl|schoolboy)\b/i.test(prompt);
-  const allowedModels = image || reference ? EDIT_MODEL_IDS : GENERATE_MODEL_IDS;
-  const requestedModel = typeof body.model === "string" && allowedModels.has(body.model) ? body.model : (image || reference ? IMAGE_EDIT_MODELS[0].id : TEXT_TO_IMAGE_MODELS[0].id);
-  const model = matureEditorialRequest && (requestedModel === "nano-banana" || requestedModel === "gpt-image")
-    ? "seedream-v45"
-    : requestedModel;
+  // Respect the explicit model selection. Provider safety policies remain authoritative;
+  // never retry or switch endpoints to evade a model's content restrictions.
+  const model = requestedModel;
   const aspectRatio = typeof body.aspectRatio === "string" && RATIOS.has(body.aspectRatio) ? body.aspectRatio : "1:1";
   const isImage = (v: unknown): v is string => typeof v === "string" && (/^https:\/\//.test(v) || /^data:image\/(png|jpeg|webp);base64,/.test(v));
   const image = isImage(body.image) ? body.image : null;
