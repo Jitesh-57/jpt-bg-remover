@@ -743,16 +743,19 @@ export async function falEditImage(
   assertAspectRatio(aspectRatio);
   const endpoint = falEndpoint(model, "edit");
   const family = falModelSpec(model).family;
-  const input = family === "nano"
-    ? { prompt, image_urls: [imageUrl], num_images: 1, output_format: "png", resolution: NANO_RESOLUTION, ...(aspectRatio ? { aspect_ratio: aspectRatio } : {}) }
-    : family === "seedream"
-    ? { prompt, image_urls: [await uploadImageToFalStorage(imageUrl)], enable_safety_checker: FAL_ENABLE_SAFETY_CHECKER }
-    : family === "upscale"
-    ? { image_url: imageUrl }
-    : { prompt, image_urls: [imageUrl], num_images: 1, quality: "high", image_size: imageSizeFor(falModelSpec(model).sizeStyle, aspectRatio) };
+  if (family === "upscale") {
+    const result = await runQueued(endpoint, { image_url: imageUrl }, budgetMs);
+    return urlToDataUrl(firstImageUrl(result));
+  }
+  const input =
+    family === "nano"
+      ? { prompt, image_urls: [imageUrl], num_images: 1, output_format: "png", resolution: NANO_RESOLUTION, ...(aspectRatio ? { aspect_ratio: aspectRatio } : {}) }
+      : family === "seedream"
+      ? { prompt, image_urls: [await uploadImageToFalStorage(imageUrl)], enable_safety_checker: FAL_ENABLE_SAFETY_CHECKER }
+      : { prompt, image_urls: [imageUrl], num_images: 1, quality: "high", image_size: imageSizeFor(falModelSpec(model).sizeStyle, aspectRatio) };
   const minimalInput = family === "seedream"
     ? { prompt, image_urls: [await uploadImageToFalStorage(imageUrl)], enable_safety_checker: FAL_ENABLE_SAFETY_CHECKER }
-    : family === "upscale" ? { image_url: imageUrl } : { prompt, image_urls: [imageUrl], num_images: 1 };
+    : { prompt, image_urls: [imageUrl], num_images: 1 };
   const result = await runQueued(endpoint, input, budgetMs, { minimalInput, paths: falPathVariants(model, "edit") });
   return urlToDataUrl(firstImageUrl(result));
 }
@@ -804,9 +807,11 @@ export async function falGenerateImage(
   budgetMs?: number
 ): Promise<string> {
   assertAspectRatio(aspectRatio);
+  if (falModelSpec(model).family === "upscale") {
+    throw new Error(`Model ${model} is an upscaler and cannot generate from text.`);
+  }
   const endpoint = falEndpoint(model, "generate");
   const family = falModelSpec(model).family;
-  if (family === "upscale") throw new Error(`Model ${model} is an upscaler and cannot generate from text.`);
   const input =
     family === "nano"
       ? { prompt, num_images: 1, output_format: "png", resolution: NANO_RESOLUTION, ...(aspectRatio ? { aspect_ratio: aspectRatio } : {}) }
