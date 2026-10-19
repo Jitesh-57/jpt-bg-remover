@@ -2,17 +2,21 @@
 
 import { useRef, useState } from "react";
 import { sendToCreate } from "@/lib/prompts/handoff";
-import { MODELS, ASPECT_RATIOS } from "@/lib/app-presets";
+import { IMAGE_EDIT_MODELS, TEXT_TO_IMAGE_MODELS, ASPECT_RATIOS } from "@/lib/app-presets";
 import { trackEvent } from "@/lib/analytics";
 
 /**
  * The homepage's product demo: the same upload + "describe an edit" bar the
  * editor uses, so the first thing a visitor touches is the real product. It
  * stashes the image and prompt and hands off to the editor.
+ *
+ * The model is one dropdown offering what the studio will run for this
+ * input, as it does: text-to-image models until a photo is added, then the
+ * editing ones.
  */
 export default function HomeHero() {
   const [prompt, setPrompt] = useState("");
-  const [model, setModel] = useState<string>(MODELS[0].id);
+  const [model, setModel] = useState<string>(TEXT_TO_IMAGE_MODELS[0].id);
   const [ratio, setRatio] = useState<string>("1:1");
   const [file, setFile] = useState<{ url: string; name: string } | null>(null);
   const [drag, setDrag] = useState(false);
@@ -26,14 +30,17 @@ export default function HomeHero() {
       r.readAsDataURL(f);
     });
 
+  const models = file ? IMAGE_EDIT_MODELS : TEXT_TO_IMAGE_MODELS;
+  const current = models.some((m) => m.id === model) ? model : models[0].id;
+
   const onFile = async (f: File) => {
     if (!f.type.startsWith("image/")) return;
     setFile({ url: await read(f), name: f.name });
   };
 
   const go = async () => {
-    trackEvent("home_hero_start", { hasImage: !!file, hasPrompt: !!prompt.trim(), model, ratio });
-    await sendToCreate({ prompt: prompt.trim(), image: file?.url, source: "home-hero", model, ratio });
+    trackEvent("home_hero_start", { hasImage: !!file, hasPrompt: !!prompt.trim(), model: current, ratio });
+    await sendToCreate({ prompt: prompt.trim(), image: file?.url, source: "home-hero", model: current, ratio });
   };
 
   const chip = (on: boolean): React.CSSProperties => ({
@@ -95,10 +102,24 @@ export default function HomeHero() {
       </div>
 
       <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginTop: 10, paddingTop: 10, borderTop: "1px solid var(--border)" }}>
-        {MODELS.map((m) => (
-          <button key={m.id} onClick={() => setModel(m.id)} style={chip(model === m.id)} title={m.hint}>{m.label}</button>
-        ))}
-        <span style={{ width: 1, height: 20, background: "var(--border)", margin: "0 2px" }} />
+        <label style={{ position: "relative", display: "inline-flex", alignItems: "center", gap: 6, minWidth: 0, maxWidth: "100%", padding: "0 0 0 13px", borderRadius: 999, background: "var(--surface-2)", border: "1px solid var(--border-strong)", cursor: "pointer" }}>
+          <span style={{ fontSize: 11.5, fontWeight: 700, color: "var(--text-faint)", whiteSpace: "nowrap" }}>Model</span>
+          <select
+            value={current}
+            onChange={(e) => setModel(e.target.value)}
+            aria-label="Model"
+            style={{ appearance: "none", WebkitAppearance: "none", minWidth: 0, maxWidth: "100%", padding: "8px 32px 8px 0", background: "transparent", border: "none", outline: "none", color: "var(--text)", fontSize: 13, fontWeight: 700, fontFamily: "inherit", cursor: "pointer", textOverflow: "ellipsis" }}
+          >
+            <optgroup label={file ? "Edit your photo" : "Create from text"}>
+              {models.map((m) => <option key={m.id} value={m.id}>{m.label}</option>)}
+            </optgroup>
+            {!file && <option disabled value="">Upload a photo for {IMAGE_EDIT_MODELS.length} editing models</option>}
+          </select>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden
+            style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", color: "var(--text-faint)", pointerEvents: "none" }}>
+            <path d="m6 9 6 6 6-6" />
+          </svg>
+        </label>
         {ASPECT_RATIOS.slice(0, 4).map((r) => (
           <button key={r} onClick={() => setRatio(r)} style={chip(ratio === r)}>{r}</button>
         ))}

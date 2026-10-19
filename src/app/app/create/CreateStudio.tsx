@@ -36,14 +36,16 @@ export default function CreateStudio({ inspirations }: { inspirations: FeedItem[
   const textRef = useRef<HTMLTextAreaElement>(null);
   const photoInput = useRef<HTMLInputElement>(null);
   const refInput = useRef<HTMLInputElement>(null);
+  const wantedModel = useRef<string | null>(null);
 
   useEffect(() => onCreditsChanged(setCredits), []);
   useEffect(() => {
     const h = takeCreatePrompt();
     if (h) {
       setPrompt(h.prompt.slice(0, MAX_PROMPT)); setNeedsPhoto(!!h.needsPhoto); setReference(h.reference || null);
-      // What was picked in the home hero, when it is still on offer here.
-      if (h.model && MODELS.some((m) => m.id === h.model)) setModel(h.model);
+      // What was picked in the home hero, when it is still on offer here. Kept
+      // until it is, since the photo it was picked for arrives a moment later.
+      if (h.model && MODELS.some((m) => m.id === h.model)) { wantedModel.current = h.model; setModel(h.model); }
       if (h.ratio && (ASPECT_RATIOS as readonly string[]).includes(h.ratio)) setRatio(h.ratio as AspectRatio);
     }
     void takeCreatePhoto().then((img) => { if (img) setPhoto(img); });
@@ -110,7 +112,15 @@ export default function CreateStudio({ inspirations }: { inspirations: FeedItem[
   };
 
   const availableModels = photo || reference ? IMAGE_EDIT_MODELS : TEXT_TO_IMAGE_MODELS;
-  useEffect(() => { if (!availableModels.some((m) => m.id === model)) setModel(availableModels[0].id); }, [availableModels, model]);
+  useEffect(() => {
+    const wanted = wantedModel.current;
+    if (wanted && availableModels.some((m) => m.id === wanted)) {
+      wantedModel.current = null;
+      if (model !== wanted) setModel(wanted);
+      return;
+    }
+    if (!availableModels.some((m) => m.id === model)) setModel(availableModels[0].id);
+  }, [availableModels, model]);
 
   const controls = (
     <>
