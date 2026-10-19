@@ -167,7 +167,7 @@ const MODEL_SPECS: Record<FalModel, ModelSpec> = {
   "gpt-image-2.5-sunburst": { edit: "openai/gpt-image-2.5/sunburst/edit", generate: "openai/gpt-image-2.5/sunburst/text-to-image", family: "gpt", label: "GPT Image 2.5 Sunburst", sizeStyle: "2k" },
   "gpt-image-2.5-flare": { edit: "openai/gpt-image-2.5/flare/edit", generate: "openai/gpt-image-2.5/flare/text-to-image", family: "gpt", label: "GPT Image 2.5 Flare", sizeStyle: "2k" },
   "gpt-image-2": { edit: "openai/gpt-image-2/edit", generate: "openai/gpt-image-2", family: "gpt", label: "GPT Image 2", sizeStyle: "2k" },
-  "gpt-image-1-byok": { edit: "fal-ai/gpt-image-1/edit-image/byok", generate: "fal-ai/gpt-image-1/text-to-image/byok", family: "gpt", label: "GPT Image 1 (BYOK)", sizeStyle: "pixels" },
+  "gpt-image-1-byok": { edit: "fal-ai/gpt-image-1/edit-image/byok", generate: "fal-ai/gpt-image-1/text-to-image/byok", family: "gpt", label: "GPT Image 1 BYOK", sizeStyle: "pixels" },
   "xai-grok-imagine-v2": { edit: "xai/grok-imagine-image/v2.0/edit", generate: "xai/grok-imagine-image/v2.0/text-to-image", family: "gpt", label: "Grok Imagine Image 2.0", sizeStyle: "named" },
   "seedream-v5-pro": { edit: "bytedance/seedream/v5/pro/edit", generate: "bytedance/seedream/v5/pro/text-to-image", family: "seedream", label: "Seedream v5 Pro", sizeStyle: "named" },
   "seedream-v5-lite": { edit: "fal-ai/bytedance/seedream/v5/lite/edit", generate: "fal-ai/bytedance/seedream/v5/lite/text-to-image", family: "seedream", label: "Seedream v5 Lite", sizeStyle: "named" },
@@ -177,7 +177,7 @@ const MODEL_SPECS: Record<FalModel, ModelSpec> = {
   "flux-2-pro": { edit: "fal-ai/flux-2-pro/edit", generate: "fal-ai/flux-2-pro", family: "flux", label: "FLUX 2 Pro", sizeStyle: "named" },
   "flux-3-edit": { edit: "blackforestlabs/flux-3/edit-image", generate: "blackforestlabs/flux-3/text-to-image", family: "flux", label: "FLUX 3", sizeStyle: "named" },
   "qwen-image-3-edit": { edit: "alibaba/qwen-image-3/edit", generate: "alibaba/qwen-image-3/text-to-image", family: "qwen", label: "Qwen Image 3", sizeStyle: "named" },
-  "gemini-25-flash-image-edit": { edit: "fal-ai/gemini-25-flash-image/edit", generate: "fal-ai/nano-banana", family: "nano", label: "Gemini 2.5 Flash Image", sizeStyle: "named" },
+  "gemini-25-flash-image-edit": { edit: "fal-ai/gemini-25-flash-image/edit", generate: "fal-ai/gemini-25-flash-image", family: "nano", label: "Gemini 2.5 Flash Image", sizeStyle: "named" },
   "qwen-image-2.1-edit": { edit: "alibaba/qwen-image-2.1/edit", generate: "alibaba/qwen-image-2.1/text-to-image", family: "qwen", label: "Qwen Image 2.1", sizeStyle: "named" },
   "ideogram-v4-image-to-image": { edit: "ideogram/v4/image-to-image", generate: "ideogram/v4", family: "gpt", label: "Ideogram v4 Image-to-Image", sizeStyle: "named" },
   "topaz-upscale": { edit: "fal-ai/topaz/upscale/image", generate: "fal-ai/topaz/upscale/image", family: "upscale", label: "Topaz Upscale", sizeStyle: "named" },
@@ -805,6 +805,7 @@ export async function falGenerateImage(
   assertAspectRatio(aspectRatio);
   const endpoint = falEndpoint(model, "generate");
   const family = falModelSpec(model).family;
+  if (family === "upscale") throw new Error(`Model ${model} is an upscaler and cannot generate from text.`);
   const input = family === "nano"
     ? { prompt, num_images: 1, output_format: "png", resolution: NANO_RESOLUTION, ...(aspectRatio ? { aspect_ratio: aspectRatio } : {}) }
     : family === "seedream"
