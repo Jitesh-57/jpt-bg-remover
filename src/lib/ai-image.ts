@@ -41,7 +41,7 @@ export function resolveModel(requested?: string): FalModel {
 
 /** True for any of OpenAI's models, whichever one was picked. */
 function isGpt(m: FalModel): boolean {
-  return falModelSpec(m).family === "gpt";
+  return m === "gpt-image-2.5-sunburst" || m === "gpt-image-2.5-flare" || m === "gpt-image-2" || m === "gpt-image-1-byok";
 }
 
 /**
@@ -187,6 +187,9 @@ export async function editImage(
   opts?: { strict?: boolean; budgetMs?: number; raw?: boolean }
 ): Promise<string> {
   const m = resolveModel(model);
+  if (falModelSpec(m).family === "upscale" || m === "flux-2-pro-text" || m === "flux-3-text" || m === "nano-banana-text") {
+    throw new Error(`Model ${m} is not configured for image editing.`);
+  }
   /*
     raw: send the caller's prompt as written.
 
@@ -307,6 +310,7 @@ export function generateFromText(
   }
 ): Promise<string> {
   const m = resolveModel(opts?.model);
+  if (falModelSpec(m).family === "upscale") throw new Error(`Model ${m} is an upscaler and cannot generate from text.`);
   const aspect = opts?.aspect_ratio || "16:9";
   const run = () =>
     withModelFallback(m, (mm) =>
