@@ -6,13 +6,14 @@ import { recordGeneration } from "@/lib/ledger";
 import { storeImage } from "@/lib/store-image";
 import { CREDIT_COST } from "@/lib/plans";
 import { userMessage } from "@/lib/user-message";
-import { ASPECT_RATIOS, MODELS } from "@/lib/app-presets";
+import { ASPECT_RATIOS, IMAGE_EDIT_MODELS, TEXT_TO_IMAGE_MODELS } from "@/lib/app-presets";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
 
 const MAX_PROMPT = 4000;
-const MODEL_IDS = new Set<string>(MODELS.map((m) => m.id));
+const EDIT_MODEL_IDS = new Set<string>(IMAGE_EDIT_MODELS.map((m) => m.id));
+const GENERATE_MODEL_IDS = new Set<string>(TEXT_TO_IMAGE_MODELS.map((m) => m.id));
 const RATIOS = new Set<string>(ASPECT_RATIOS);
 
 const REFERENCE_AND_SUBJECT_NOTE =
@@ -53,7 +54,8 @@ export async function POST(req: NextRequest) {
   const matureEditorialRequest =
     /\b(adult|mature|boudoir|lingerie|sensual|intimate fashion|implied nudity|artistic nude|nude|nudity|nsfw|topless|erotic|romantic couple|fashion editorial)\b/i.test(prompt) &&
     !/\b(minor|underage|child|teen|schoolgirl|schoolboy)\b/i.test(prompt);
-  const requestedModel = typeof body.model === "string" && MODEL_IDS.has(body.model) ? body.model : MODELS[0].id;
+  const allowedModels = image || reference ? EDIT_MODEL_IDS : GENERATE_MODEL_IDS;
+  const requestedModel = typeof body.model === "string" && allowedModels.has(body.model) ? body.model : (image || reference ? IMAGE_EDIT_MODELS[0].id : TEXT_TO_IMAGE_MODELS[0].id);
   const model = matureEditorialRequest && (requestedModel === "nano-banana" || requestedModel === "gpt-image")
     ? "seedream-v45"
     : requestedModel;
