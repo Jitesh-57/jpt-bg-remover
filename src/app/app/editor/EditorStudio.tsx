@@ -5,7 +5,7 @@ import Icon from "../_components/Icon";
 import { useDashboardUser } from "../_components/DashboardUser";
 import { takeEditorHandoff } from "../_components/handoff";
 import { StudioPage, Dropdown, ImageDrop, GenerateButton, PreviewPanel, SessionStrip, ErrorNote, runGeneration, toSendable, labelStyle, actionBtn, type StudioResult } from "../_components/studio";
-import { ASPECT_RATIOS, MODELS } from "@/lib/app-presets";
+import { ASPECT_RATIOS, IMAGE_EDIT_MODELS } from "@/lib/app-presets";
 import { CREDIT_COST } from "@/lib/plans";
 import { onCreditsChanged } from "@/lib/credits";
 import { openPricing } from "@/lib/pricing-modal";
@@ -28,7 +28,7 @@ export default function EditorStudio() {
   const [credits, setCredits] = useState(user.credits);
   const [image, setImage] = useState<string | null>(null);
   const [prompt, setPrompt] = useState("");
-  const [model, setModel] = useState<string>(MODELS[0].id);
+  const [model, setModel] = useState<string>(IMAGE_EDIT_MODELS[0].id);
   const [ratio, setRatio] = useState<Ratio>("original");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -101,7 +101,7 @@ export default function EditorStudio() {
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-        <Dropdown label="Model" value={model} onChange={setModel} options={MODELS.map((m) => ({ value: m.id as string, label: m.label, hint: m.hint }))} />
+        <Dropdown label="Model" value={model} onChange={setModel} options={IMAGE_EDIT_MODELS.map((m) => ({ value: m.id as string, label: m.label, hint: m.hint }))} />
         <Dropdown<Ratio> label="Size" value={ratio} onChange={setRatio} options={[{ value: "original", label: "Keep original" }, ...ASPECT_RATIOS.map((r) => ({ value: r as Ratio, label: r }))]} />
       </div>
 
