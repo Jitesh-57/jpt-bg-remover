@@ -136,7 +136,9 @@ export type FalModel =
   | "krea-v2-medium"
   | "flux-pro-kontext"
   | "krea-v2-large"
-  | "ideogram-v4";
+  | "ideogram-v4"
+  | "flux-2-pro-text"
+  | "flux-3-text";
 
 /** Which input shape an endpoint expects. */
 type Family = "nano" | "gpt" | "seedream" | "flux" | "qwen" | "upscale";
@@ -191,6 +193,8 @@ const MODEL_SPECS: Record<FalModel, ModelSpec> = {
   "flux-pro-kontext": { edit: "fal-ai/flux-pro/kontext/text-to-image", generate: "fal-ai/flux-pro/kontext/text-to-image", family: "flux", label: "FLUX Pro Kontext", sizeStyle: "named" },
   "krea-v2-large": { edit: "krea/v2/large/text-to-image", generate: "krea/v2/large/text-to-image", family: "flux", label: "Krea v2 Large", sizeStyle: "named" },
   "ideogram-v4": { edit: "ideogram/v4", generate: "ideogram/v4", family: "gpt", label: "Ideogram v4", sizeStyle: "named" },
+  "flux-2-pro-text": { edit: "fal-ai/flux-2-pro", generate: "fal-ai/flux-2-pro", family: "flux", label: "FLUX 2 Pro Text", sizeStyle: "named" },
+  "flux-3-text": { edit: "blackforestlabs/flux-3/text-to-image", generate: "blackforestlabs/flux-3/text-to-image", family: "flux", label: "FLUX 3 Text", sizeStyle: "named" },
 };
 
 /**
