@@ -221,12 +221,26 @@ export function trackSignInClicked(method: string) {
   trackEvent("Sign_In_Clicked", { method });
 }
 
-/** Fire when a user signs up / first authenticates. */
-export function trackSignUp(method: string) {
+/**
+ * Fire once, when a new account has actually been created.
+ *
+ * This used to run when the Google button was pressed — before the sign-in
+ * had happened, and for returning users too — so GA's signups and the Google
+ * Ads signup conversion counted clicks. It now runs from SignupWelcome, on
+ * the first page load after the auth callback created the profile, or after
+ * an email signup that signed the person straight in.
+ */
+export function trackSignUpCompleted(method: string) {
+  trackEvent("sign_up", { method });
   trackEvent("Sign_In_Completed", { method, is_new_user: true });
   if (GOOGLE_ADS_ID && SIGNUP_LABEL) {
     gtagConversion(`${GOOGLE_ADS_ID}/${SIGNUP_LABEL}`);
   }
+}
+
+/** A returning user signed in. Not a signup, and not an Ads conversion. */
+export function trackSignInCompleted(method: string) {
+  trackEvent("Sign_In_Completed", { method, is_new_user: false });
 }
 
 /** Suggested addition: track a failed sign-in attempt (e.g. wrong password). */

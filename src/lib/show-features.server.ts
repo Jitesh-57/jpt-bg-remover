@@ -60,7 +60,7 @@ export function buildShowFeatures(apps: AppCardData[], feed: FeedItem[], picks: 
     { kind: "recreate", title: "Recreate", tagline: "Any photo's look, with your face", sub: "Copy a look onto yourself", href: "/app/recreate", icon: "copy", grad: ["#F97316", "#EF4444"], pics: [lookApp ? pic(lookApp) : feedPics[4] ?? exampleAt(5), pic(recreateApp)] },
     { kind: "headshot", title: "AI Headshot", tagline: "Studio portraits from one selfie", sub: "LinkedIn-ready in seconds", href: "/ai-headshot", icon: "community", grad: ["#10B981", "#0EA5E9"], pics: [pic(headshotMain ?? headshotApp)] },
     { kind: "batch", title: "Batch Editor", tagline: "One edit across every image", sub: "Up to 100 images at once", href: "/batch-editor", icon: "folder", grad: ["#F59E0B", "#EF4444"], pics: [6, 7, 8, 9, 10, 11].map(exampleAt) },
-    { kind: "apps", title: "Creative Apps", tagline: `${apps.length}+ one-tap looks, no prompt`, sub: "Pick a look, upload a photo", href: "/app/apps", icon: "apps", grad: ["#A855F7", "#EC4899"], pics: [12, 13, 14].map(exampleAt) },
+    { kind: "apps", title: "Creative Apps", tagline: `${apps.length}+ one-tap looks, no prompt`, sub: "Pick a look, upload a photo", href: "/creative", icon: "apps", grad: ["#A855F7", "#EC4899"], pics: [12, 13, 14].map(exampleAt) },
     { kind: "photo", title: "Photo Editor", tagline: "Crop, adjust and finish, free", sub: "Every free tool on one canvas", href: "/editor", icon: "tools", grad: ["#06B6D4", "#3B82F6"], pics: [exampleAt(15)] },
   ];
   return features;

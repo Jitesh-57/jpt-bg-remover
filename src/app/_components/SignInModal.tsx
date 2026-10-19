@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { beginGoogleSignIn } from "@/lib/auth-return";
+import { trackSignUpCompleted, trackSignInCompleted, trackSignInClicked } from "@/lib/analytics";
 import BrandLogo from "./BrandLogo";
 
 interface Props {
@@ -12,6 +13,8 @@ interface Props {
   onBeforeAuth?: () => void;
   // Where to return after Google OAuth. Defaults to the current path.
   nextPath?: string;
+  // Open with the email form showing, for a "Use email instead" button.
+  startWithEmail?: boolean;
 }
 
 const GRAD = "linear-gradient(120deg,var(--accent),var(--accent-2))";
@@ -21,23 +24,26 @@ const INPUT: React.CSSProperties = { border: "1.5px solid var(--border)", border
  * Clean, compact sign-in nudge. Google (redirect) + optional email login/signup.
  * Shared by the editor and batch editor so the sign-in step looks consistent.
  */
-export default function SignInModal({ onClose, reason = "default", onBeforeAuth, nextPath }: Props) {
-  const [showEmail, setShowEmail] = useState(false);
+export default function SignInModal({ onClose, reason = "default", onBeforeAuth, nextPath, startWithEmail = false }: Props) {
+  const [showEmail, setShowEmail] = useState(startWithEmail);
   const [mode, setMode] = useState<"login" | "signup">("signup");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  // Good news is not an error: "check your email" used to arrive in the red box.
+  const [notice, setNotice] = useState("");
   const [loading, setLoading] = useState(false);
 
   const google = async () => {
+    trackSignInClicked("google");
     onBeforeAuth?.();
     await beginGoogleSignIn(nextPath);
   };
 
   const emailAuth = async () => {
     if (!email.trim() || !password.trim()) { setError("Email and password required"); return; }
-    setLoading(true); setError("");
+    setLoading(true); setError(""); setNotice("");
     try {
       const url = mode === "signup" ? "/api/auth/signup" : "/api/auth/login";
       const body = mode === "signup"
@@ -49,7 +55,9 @@ export default function SignInModal({ onClose, reason = "default", onBeforeAuth,
         setError(res.status === 503 ? "Email sign-in isn't enabled — please use Google." : (data.error || "Authentication failed"));
         return;
       }
-      if (data.needsConfirmation) { setError("✅ Check your email for a confirmation link, then sign in."); return; }
+      if (data.needsConfirmation) { setNotice("Check your email for a confirmation link, then sign in here."); return; }
+      if (mode === "signup") trackSignUpCompleted("email");
+      else trackSignInCompleted("email");
       onBeforeAuth?.();
       window.location.reload();
     } catch { setError("Could not reach the server. Check your connection and try again."); }
@@ -58,7 +66,7 @@ export default function SignInModal({ onClose, reason = "default", onBeforeAuth,
 
   const title = reason === "unlimited" ? "Sign in to keep going" : "Sign in to continue";
   const sub = reason === "unlimited"
-    ? "You've used your 5 free edits. Create a free account to keep using every basic tool — no limits, no card."
+    ? "You've used your 2 free edits. Create a free account to keep using every basic tool — unlimited, no card."
     : "Create a free account to continue. It takes a second and keeps your work saved.";
 
   return (
@@ -103,6 +111,7 @@ export default function SignInModal({ onClose, reason = "default", onBeforeAuth,
             <input type="email" placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => e.key === "Enter" && emailAuth()} style={INPUT} />
             <input type="password" placeholder="Password (min 6 characters)" value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => e.key === "Enter" && emailAuth()} style={INPUT} />
             {error && <div style={{ background: "var(--danger-soft)", border: "1px solid var(--danger-soft)", borderRadius: 8, padding: "8px 12px", fontSize: 12.5, color: "#C0392B" }}>{error}</div>}
+            {notice && <div role="status" style={{ background: "var(--success-soft)", border: "1px solid var(--success-soft)", borderRadius: 8, padding: "8px 12px", fontSize: 12.5, color: "var(--success)", fontWeight: 600 }}>✓ {notice}</div>}
             <button onClick={emailAuth} disabled={loading} style={{ padding: "12px", borderRadius: 10, border: "none", background: loading ? "var(--text-faint)" : GRAD, color: "#fff", fontSize: 14.5, fontWeight: 800, cursor: loading ? "not-allowed" : "pointer" }}>
               {loading ? "Please wait…" : mode === "signup" ? "Create account — free" : "Sign in"}
             </button>

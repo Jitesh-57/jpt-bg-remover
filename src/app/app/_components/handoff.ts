@@ -6,7 +6,7 @@ import { CREATE_PROMPT_KEY, CREATE_PHOTO_TOOL } from "@/lib/prompts/handoff";
 export { CREATE_PROMPT_KEY };
 const EDITOR_TOOL = "app-editor";
 
-export interface CreateHandoff { prompt: string; needsPhoto?: boolean; reference?: string | null }
+export interface CreateHandoff { prompt: string; needsPhoto?: boolean; reference?: string | null; model?: string; ratio?: string }
 
 /**
  * Opens Create Image with a prompt filled in. sessionStorage, because prompts

@@ -190,11 +190,13 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
     setOriginal(url);
     setResult(null);
     revealUpload();
+    trackEvent("app_upload", { app: app.slug, source: "file" });
     // Keep it if they end up signing in from here.
     void savePendingContext({ image: url, tool: `creative:${app.slug}` });
   }, [app.slug, revealUpload]);
 
   const signIn = async () => {
+    trackEvent("app_signin_click", { app: app.slug, trial: false });
     await beginGoogleSignIn();
   };
 
@@ -218,6 +220,9 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
       setErr(`Fill in "${missing}" first — this app needs it to know what to do.`);
       return;
     }
+    // Every press of Generate that got this far, paid or not: the step between
+    // "has a photo" and "saw the paywall" in the funnel.
+    trackEvent("app_generate_attempt", { app: app.slug, model });
     // Short of credits: open the packs instead of spending a round-trip to be
     // told the same thing. The server still enforces it.
     if (credits !== null && needsCredits({ credits }, CREDIT_COST)) {
@@ -322,12 +327,15 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
         return;
       }
       if (!res.ok || !data.dataUrl) {
+        trackEvent("app_failed", { app: app.slug, model, status: res.status });
         setErr(userMessage(data.error, "That didn't work. Please try again."));
         return;
       }
       setResult(data.dataUrl);
       produced = true;
+      trackEvent("app_result", { app: app.slug, model });
     } catch {
+      trackEvent("app_failed", { app: app.slug, model, status: 0 });
       setErr("Could not reach the server. Check your connection and try again.");
     } finally {
       if (!produced) setResult(previous);
@@ -430,7 +438,7 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
             {samples.slice(0, 3).map((src, i) => (
               <button
                 key={i}
-                onClick={() => { setOriginal(src); setResult(null); setErr(null); revealUpload(); }}
+                onClick={() => { setOriginal(src); setResult(null); setErr(null); revealUpload(); trackEvent("app_upload", { app: app.slug, source: "sample" }); }}
                 aria-label={`Use sample photo ${i + 1}`}
                 style={{
                   width: 40, height: 40, borderRadius: 9, overflow: "hidden", padding: 0,
@@ -644,7 +652,7 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
           return (
             <button
               ref={actionRef}
-              onClick={!loggedIn ? (trial ? () => openTrialSignIn(`app:${app.slug}`) : signIn) : short ? () => openPricing(app.h1) : apply}
+              onClick={!loggedIn ? (trial ? () => { trackEvent("app_signin_click", { app: app.slug, trial: true }); openTrialSignIn(`app:${app.slug}`); } : signIn) : short ? () => openPricing(app.h1) : apply}
               disabled={off}
               style={{
                 width: "100%", padding: "15px", borderRadius: 13, border: "none",
@@ -812,6 +820,7 @@ export default function AppWorkspace({ app, presetImages = {}, samples = [] }: P
             <a
               href={result}
               download={`${app.slug}.png`}
+              onClick={() => trackEvent("app_download", { app: app.slug, model })}
               style={{ padding: "12px 22px", borderRadius: 12, background: "var(--grad-strong)", color: "#fff", fontWeight: 800, fontSize: 15, textDecoration: "none" }}
             >
               ⬇ Download

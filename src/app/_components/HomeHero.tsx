@@ -33,7 +33,7 @@ export default function HomeHero() {
 
   const go = async () => {
     trackEvent("home_hero_start", { hasImage: !!file, hasPrompt: !!prompt.trim(), model, ratio });
-    await sendToCreate({ prompt: prompt.trim(), image: file?.url, source: "home-hero" });
+    await sendToCreate({ prompt: prompt.trim(), image: file?.url, source: "home-hero", model, ratio });
   };
 
   const chip = (on: boolean): React.CSSProperties => ({

@@ -36,10 +36,10 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
     // Brand and the names people actually search for ("sjpt", "jpt ai") first, then the benefit.
     title: 'Pixel Shine (SJPT): Free AI Photo Editor & 4K Upscaler',
     meta_description:
-      'Free AI photo editor: upscale photos to 4K, remove backgrounds, make AI headshots and try 40+ one-tap photo styles. Free tools need no signup and add no watermark.',
-    og_title: 'Pixel Shine — Free AI Photo Editor & 40+ AI Photo Apps',
+      'Free AI photo editor: upscale photos to 4K, remove backgrounds, make AI headshots and try 200+ one-tap photo styles. Free tools add no watermark.',
+    og_title: 'Pixel Shine — Free AI Photo Editor & 200+ AI Photo Apps',
     og_description:
-      'Upscale, compress, crop, convert and restyle photos free online. Plus 40+ AI photo apps — saree portraits, 3D figurines, Ghibli, headshots and more.',
+      'Upscale, compress, crop, convert and restyle photos free online. Plus 200+ AI photo apps — saree portraits, 3D figurines, Ghibli, headshots and more.',
     og_image: '',
     keywords: 'ai photo editor, free ai photo editor, ai image editor online, ai photo app, ai headshot generator, ai background remover, image upscaler, free online photo tools',
     h1: 'Your Own AI Creative Studio',
@@ -47,15 +47,15 @@ export const DEFAULT_CONFIGS: Record<string, PageSEO> = {
       'Create, edit, transform, and reimagine your photos with PixelShine AI. From powerful AI apps to free creative tools, everything you need to turn your ideas into stunning visuals is in one place.',
     cta_text: 'Start Editing Free',
     features: [
-      { icon: '🎨', title: '40+ AI photo apps', desc: 'Saree portraits, 3D figurines, Ghibli style, retro Bollywood, pro headshots — one tap each, no prompt writing.' },
+      { icon: '🎨', title: '200+ AI photo apps', desc: 'Saree portraits, 3D figurines, Ghibli style, retro Bollywood, pro headshots — one tap each, no prompt writing.' },
       { icon: '🧰', title: 'A dozen free tools', desc: 'Compress, convert, crop, resize, rotate, blur, watermark and more — free and unlimited, with no account needed.' },
       { icon: '🔒', title: 'Your photos stay yours', desc: 'The browser tools never upload anything. Nothing you export carries a watermark, on any plan.' },
       { icon: '💎', title: 'Your choice of plan', desc: 'AI generations run on credits: a monthly plan from $5 you can cancel any time, or a one-time pack from $2 that never expires.' },
     ],
     faq: [
       { q: 'Is Pixel Shine free?', a: 'The free tools — compress, convert, crop, resize, rotate, blur, watermark, meme text, image to PDF, QR codes and normal upscaling — are free and unlimited with no account. The AI features use credits, bought once from $2.' },
-      { q: 'What are the AI photo apps?', a: 'Over 40 one-tap transformations: saree and couple portraits, 3D figurines, Ghibli and Pixar styles, retro Bollywood, professional headshots, passport photos, pet portraits, age progression and more. You upload a photo and the app applies a tuned prompt — you do not write one.' },
-      { q: 'Do I need to sign up?', a: 'Not for the browser tools. You only need an account to buy credits and use the AI features, so your credits and generations are saved to you.' },
+      { q: 'What are the AI photo apps?', a: 'Over 200 one-tap transformations: saree and couple portraits, 3D figurines, Ghibli and Pixar styles, retro Bollywood, professional headshots, passport photos, pet portraits, age progression and more. You upload a photo and the app applies a tuned prompt — you do not write one.' },
+      { q: 'Do I need to sign up?', a: 'Not to try the browser tools: your first edits need no account, and a free account makes them unlimited. The AI apps need an account, and new accounts get free credits for a first AI result. More AI generations are sold as packs and monthly plans, and everything you make is saved to your account.' },
       { q: 'Do you watermark my images?', a: 'No. Nothing exported from Pixel Shine carries a watermark, free or paid, at full resolution.' },
       { q: 'Do credits expire?', a: 'Credits from one-time add-on packs never expire. Monthly plans give a fresh set of credits each month instead, and unused monthly credits don\'t carry over. You can cancel a monthly plan any time in Settings.' },
       { q: 'Are my uploads private?', a: 'Images you edit with the free tools are never stored or shared. The AI features do send the image to a server to generate the result, and it is not shared with third parties.' },

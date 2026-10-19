@@ -3,7 +3,7 @@
 import { useEffect, useState, lazy, Suspense, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { createSupabaseClient } from "@/lib/supabase";
-import { trackSignUp, setAnalyticsUser, trackSignInClicked, trackSignInFailed, trackPaymentPopupTriggered } from "@/lib/analytics";
+import { trackSignUpCompleted, trackSignInCompleted, setAnalyticsUser, trackSignInClicked, trackSignInFailed, trackPaymentPopupTriggered } from "@/lib/analytics";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
 import { persistAuthContext } from "@/lib/pending-image";
@@ -254,7 +254,8 @@ export default function NavBar() {
   // Let the current page (e.g. the editor) persist its in-memory context
   // (uploaded image + active tool) so it survives the sign-in round-trip.
   const handleGoogleSignIn = async () => {
-    trackSignUp("google");
+    // A click, not a signup: the signup is counted when the account exists.
+    trackSignInClicked("google");
     // Stashes the upload, records the return path and navigates — see
     // lib/auth-return.ts for why the return path is kept in the browser too.
     await beginGoogleSignIn();
@@ -276,7 +277,8 @@ export default function NavBar() {
       const data = await res.json() as { ok?: boolean; error?: string; needsConfirmation?: boolean };
       if (!res.ok) { trackSignInFailed("email", data.error || "unknown"); setAuthError(data.error || "Authentication failed"); return; }
       if (data.needsConfirmation) { setAuthError("✅ Check your email and click the confirmation link, then sign in."); return; }
-      trackSignUp(mode === "signup" ? "email_signup" : "email_login");
+      if (mode === "signup") trackSignUpCompleted("email");
+      else trackSignInCompleted("email");
       // Email sign-in reloads the page too, so the upload needs the same stash.
       await persistAuthContext();
       // Reload the page they signed in from rather than sending them elsewhere.

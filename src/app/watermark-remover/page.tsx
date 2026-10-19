@@ -108,7 +108,8 @@ export default function Page() {
     "@context": "https://schema.org", "@type": "SoftwareApplication",
     name: "Best Free Watermark Remover", applicationCategory: "MultimediaApplication", operatingSystem: "Web",
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, url: URL,
-    aggregateRating: { "@type": "AggregateRating", ratingValue: "4.8", ratingCount: "1240" },
+    // No aggregateRating: there are no collected reviews behind one, and made-up
+    // ratings in structured data risk a Google manual action.
   };
   const faqLd = {
     "@context": "https://schema.org", "@type": "FAQPage",

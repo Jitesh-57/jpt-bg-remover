@@ -77,14 +77,8 @@ export default function Footer() {
             <p style={{ fontSize: 14, lineHeight: 1.7, color: "var(--text-muted)", margin: "0 0 20px", maxWidth: 260 }}>
               {t.footerTagline}
             </p>
-            <div style={{ display: "flex", gap: 12 }}>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter"
-                style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-faint)", textDecoration: "none", fontSize: 16 }}
-                onMouseEnter={e => (e.currentTarget.style.background = "var(--accent-border)")}
-                onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,255,255,0.06)")}>
-                𝕏
-              </a>
-            </div>
+            {/* The 𝕏 button linked to twitter.com itself, not to an account. Add it
+                back here with the real profile URL once there is one. */}
           </div>
 
           {/* AI Tools (paid mode) or Free Tools (free-only mode) */}

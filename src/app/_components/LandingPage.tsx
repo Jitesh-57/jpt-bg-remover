@@ -9,6 +9,7 @@ import FAQAccordion from './FAQAccordion'
 import { PageSEO } from '@/lib/page-config'
 import { PAGE_IMAGES, PAGE_BEFORE_AFTER } from '@/lib/landing-images'
 import { openInEditor } from '@/app/app/_components/handoff'
+import { savePendingContext } from '@/lib/pending-image'
 
 interface LandingPageProps {
   config: PageSEO
@@ -52,7 +53,7 @@ const PAGE_TOOL: Record<string, string> = {
 
 // Free, online tools — used for the "More free tools" cross-link hub.
 const FREE_TOOL_LINKS: { id: string; icon: string; title: string; href: string }[] = [
-  { id: 'upscale', icon: '🔍', title: 'Image Upscaler', href: '/' },
+  { id: 'upscale', icon: '🔍', title: 'Image Upscaler', href: '/upscale' },
   { id: 'compress-image', icon: '🗜️', title: 'Image Compressor', href: '/compress-image' },
   { id: 'convert-image', icon: '🔀', title: 'Image Converter', href: '/convert-image' },
   { id: 'crop-image', icon: '✂️', title: 'Crop Image', href: '/crop-image' },
@@ -498,10 +499,10 @@ export default function LandingPage({ config, toolHref, pageId, isHome, relatedV
       const dataUrl = await readFileAsDataUrl(file)
       // The AI editor lives in the dashboard now; the photo goes with it.
       if (pageId === 'ai-editor') return openInEditor(dataUrl)
-      try {
-        sessionStorage.setItem('jpt_pending_image', dataUrl)
-        sessionStorage.setItem('jpt_pending_tool', editorTool)
-      } catch {}
+      // IndexedDB, not sessionStorage: a phone photo as a data URL is past
+      // sessionStorage's ~5MB, and the quota error used to be swallowed — the
+      // editor then opened empty with no word of why.
+      await savePendingContext({ image: dataUrl, tool: editorTool })
       window.location.href = `/editor?tool=${editorTool}`
     } else {
       window.location.href = toolHref

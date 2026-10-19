@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { beginGoogleSignIn } from "@/lib/auth-return";
 import { buyPack } from "@/lib/checkout";
 import { publishCredits } from "@/lib/credits";
@@ -44,12 +44,29 @@ export function PlanTabs({ tab, onTab }: { tab: PlanTab; onTab: (t: PlanTab) => 
   );
 }
 
-function Price({ p, big }: { p: Pack; big?: boolean }) {
+/**
+ * Dollars first for visitors outside India.
+ *
+ * Checkout charges rupees either way (see lib/plans.ts), but "₹1,494" means
+ * little to someone in the US. Read after mount from the country cookie the
+ * middleware sets, so the server-rendered page and the first client render
+ * agree, and India — the default — never flickers.
+ */
+function useDollarsFirst(): boolean {
+  const [usd, setUsd] = useState(false);
+  useEffect(() => {
+    const m = document.cookie.match(/(?:^|; )jpt_country=([A-Z]{2})/);
+    setUsd(!!m && m[1] !== "IN");
+  }, []);
+  return usd;
+}
+
+function Price({ p, big, dollarsFirst }: { p: Pack; big?: boolean; dollarsFirst?: boolean }) {
   return (
     <span className="jpt-plan-price">
-      <span className={big ? "jpt-plan-amount big" : "jpt-plan-amount"}>₹{formatInr(p.inr)}</span>
+      <span className={big ? "jpt-plan-amount big" : "jpt-plan-amount"}>{dollarsFirst ? `$${p.usd}` : `₹${formatInr(p.inr)}`}</span>
       {p.monthly && <span className="jpt-plan-per">/mo</span>}
-      <span className="jpt-plan-usd">≈ ${p.usd}</span>
+      <span className="jpt-plan-usd">{dollarsFirst ? `charged as ₹${formatInr(p.inr)}` : `≈ $${p.usd}`}</span>
     </span>
   );
 }
@@ -64,6 +81,7 @@ export default function PlanPurchase({
   onSuccess?: (credits?: number) => void;
 }) {
   const [tab, setTab] = useState<PlanTab>(initialTab);
+  const dollarsFirst = useDollarsFirst();
   const list = tab === "monthly" ? MONTHLY_PLANS : PACKS;
   const defaultFor = (l: Pack[]) => (l.find((p) => p.popular) || l[0]).id;
   const [picked, setPicked] = useState<Record<PlanTab, string>>({ monthly: defaultFor(MONTHLY_PLANS), addons: defaultFor(PACKS) });
@@ -108,7 +126,7 @@ export default function PlanPurchase({
                 <span className="jpt-plan-name">{p.label}</span>
                 {p.badge && <span className="jpt-plan-badge">{p.badge}</span>}
               </div>
-              <Price p={p} big />
+              <Price p={p} big dollarsFirst={dollarsFirst} />
               <div className="jpt-plan-credits">
                 <strong>{p.credits} credits{p.monthly ? " every month" : ""}</strong>
                 <span>{p.generations} AI generations · ₹{inrPerCredit(p).toFixed(1)} per credit</span>
@@ -152,7 +170,7 @@ export default function PlanPurchase({
                 </span>
               </span>
               <span className="jpt-plan-row-price">
-                <Price p={p} />
+                <Price p={p} dollarsFirst={dollarsFirst} />
                 <span className="jpt-plan-unit">₹{inrPerCredit(p).toFixed(1)} per credit</span>
               </span>
             </button>

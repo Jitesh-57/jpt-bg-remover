@@ -16,7 +16,7 @@ import { trackEvent } from "@/lib/analytics";
 
 const SHARE_URL = "https://www.sjpt.io/?ref=share";
 const SHARE_TEXT =
-  "I just edited my photo for free at Pixel Shine — remove backgrounds, upscale, convert & more. No watermark, no sign-up. 🎨";
+  "I just edited my photo at Pixel Shine — remove backgrounds, upscale, convert & more. Free, no watermark. 🎨";
 const GRAD = "linear-gradient(120deg,var(--accent),var(--accent-2))";
 
 type Net = { key: string; label: string; icon: string; color: string; href: string };

@@ -40,7 +40,12 @@ export default function CreateStudio({ inspirations }: { inspirations: FeedItem[
   useEffect(() => onCreditsChanged(setCredits), []);
   useEffect(() => {
     const h = takeCreatePrompt();
-    if (h) { setPrompt(h.prompt.slice(0, MAX_PROMPT)); setNeedsPhoto(!!h.needsPhoto); setReference(h.reference || null); }
+    if (h) {
+      setPrompt(h.prompt.slice(0, MAX_PROMPT)); setNeedsPhoto(!!h.needsPhoto); setReference(h.reference || null);
+      // What was picked in the home hero, when it is still on offer here.
+      if (h.model && MODELS.some((m) => m.id === h.model)) setModel(h.model);
+      if (h.ratio && (ASPECT_RATIOS as readonly string[]).includes(h.ratio)) setRatio(h.ratio as AspectRatio);
+    }
     void takeCreatePhoto().then((img) => { if (img) setPhoto(img); });
     textRef.current?.focus();
   }, []);

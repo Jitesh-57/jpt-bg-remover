@@ -2,6 +2,7 @@
 
 import { useRef, useState, useCallback } from 'react'
 import { userMessage } from "@/lib/user-message";
+import { beginGoogleSignIn } from "@/lib/auth-return";
 
 type Status = 'idle' | 'processing' | 'done' | 'error' | 'auth-required' | 'upgrade-required'
 
@@ -129,9 +130,10 @@ export default function BgRemoverPage() {
             <div style={{ fontSize: 48, marginBottom: 16 }}>🔐</div>
             <h2 style={{ fontSize: 24, fontWeight: 800, color: 'var(--text)', margin: '0 0 12px' }}>Sign in to continue</h2>
             <p style={{ fontSize: 16, color: 'var(--text-muted)', margin: '0 0 24px' }}>AI background removal is available on paid plans. Sign in to continue.</p>
-            <a href="/auth/signin" style={{ display: 'inline-block', padding: '14px 32px', background: 'var(--accent)', color: '#fff', borderRadius: 12, fontWeight: 800, fontSize: 16, textDecoration: 'none' }}>
+            {/* There is no /auth/signin page; this link was a 404. */}
+            <button onClick={() => void beginGoogleSignIn()} style={{ display: 'inline-block', padding: '14px 32px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 12, fontWeight: 800, fontSize: 16, cursor: 'pointer', fontFamily: 'inherit' }}>
               Sign In
-            </a>
+            </button>
             <button onClick={reset} style={{ display: 'block', margin: '16px auto 0', background: 'none', border: 'none', color: 'var(--text-faint)', cursor: 'pointer', fontSize: 14 }}>
               ← Try another image
             </button>

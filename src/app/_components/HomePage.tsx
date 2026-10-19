@@ -111,7 +111,7 @@ export default function HomePage({
           </div>
           <HomeHero />
           <div style={{ display: "flex", flexWrap: "wrap", gap: "10px 22px", justifyContent: "center", fontSize: 13.5, color: "var(--text-muted)", fontWeight: 600, marginTop: 22 }}>
-            <span>✓ No sign-up for free tools</span>
+            <span>✓ Free tools, no card needed</span>
             <span>✓ Nothing to install</span>
             <span>✓ Cancel plans any time</span>
           </div>
@@ -158,7 +158,7 @@ export default function HomePage({
         {/* ── FREE TOOLS ───────────────────────────────────────────────────── */}
         <section style={{ padding: "80px 24px", background: "var(--surface)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
-            {sectionHead("Free tools", "Free, unlimited, private", "No limit, no account and no watermark — use them as often as you like.")}
+            {sectionHead("Free tools", "Free, unlimited, private", "Your first edits need no account, and a free account makes them unlimited. No watermark, ever.")}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(200px, 100%), 1fr))", gap: 12 }}>
               {FREE_TOOLS.map((t) => (
                 <Link key={t.href} href={t.href} className="jpt-hover" style={{ textDecoration: "none", display: "flex", gap: 13, alignItems: "center", background: "var(--surface-2)", border: "1px solid var(--border)", borderRadius: 14, padding: "14px 15px" }}>
