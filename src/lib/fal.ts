@@ -747,6 +747,9 @@ export async function falEditImage(
     const result = await runQueued(endpoint, { image_url: imageUrl }, budgetMs);
     return urlToDataUrl(firstImageUrl(result));
   }
+  // FLUX Fill and specialised edit endpoints use endpoint-specific fields.
+  // Start with prompt+image, and use endpoint-level errors to reveal schema
+  // mismatches instead of silently calling a different model.
   const input =
     family === "nano"
       ? { prompt, image_urls: [imageUrl], num_images: 1, output_format: "png", resolution: NANO_RESOLUTION, ...(aspectRatio ? { aspect_ratio: aspectRatio } : {}) }
