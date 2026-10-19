@@ -8,9 +8,13 @@ import { CREDIT_COST } from "@/lib/plans";
 import { onCreditsChanged } from "@/lib/credits";
 import { openPricing } from "@/lib/pricing-modal";
 import { parseJsonResponse } from "@/lib/upload-prep";
+import { IMAGE_EDIT_MODELS } from "@/lib/app-presets";
+import ModelMenu from "@/app/_components/ModelMenu";
 
 const STAGES = ["Studying the reference…", "Matching pose and lighting…", "Placing you in the scene…", "Finishing the details…"];
 const MAX_NOTE = 1500;
+/** What "ChatGPT" resolved to when Recreate had no picker, so the default result is unchanged. */
+const DEFAULT_MODEL = "gpt-image-2.5-sunburst";
 
 type Slot = "reference" | "person";
 
@@ -43,6 +47,7 @@ export default function RecreateStudio() {
   const [link, setLink] = useState("");
   const [loadingLink, setLoadingLink] = useState(false);
   const [note, setNote] = useState("");
+  const [model, setModel] = useState<string>(DEFAULT_MODEL);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
@@ -95,7 +100,7 @@ export default function RecreateStudio() {
       const [r, p] = await Promise.all([toSendable(reference), toSendable(person)]);
       const out = await runGeneration(
         "/api/recreate",
-        { reference: r.imageUrl || r.dataUrl, person: p.imageUrl || p.dataUrl, prompt: note.trim() },
+        { reference: r.imageUrl || r.dataUrl, person: p.imageUrl || p.dataUrl, prompt: note.trim(), model },
         { returnTo: "/app/recreate", reason: "Recreate", onCredits: setCredits }
       );
       if (out.error) { setErr(out.error); return; }
@@ -166,11 +171,8 @@ export default function RecreateStudio() {
         <div style={{ fontSize: 11.5, color: "var(--text-faint)", marginTop: 6 }}>Tip: you can also drop or paste images into this box.</div>
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 12px", borderRadius: 11, background: "var(--surface)", border: "1px solid var(--border)", fontSize: 13 }}>
-        <span style={{ ...labelStyle, margin: 0 }}>Model</span>
-        <span style={{ fontWeight: 800 }}>ChatGPT</span>
-        <span style={{ color: "var(--text-faint)", fontSize: 12 }}>· best at matching a reference</span>
-      </div>
+      {/* Recreate always sends two images, so every editing model fits. */}
+      <ModelMenu variant="field" models={IMAGE_EDIT_MODELS} value={model} onChange={setModel} />
 
       <div style={{ marginTop: "auto", display: "flex", flexDirection: "column", gap: 10 }}>
         <ErrorNote text={err} />
