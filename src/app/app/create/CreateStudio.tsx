@@ -5,7 +5,7 @@ import Icon from "../_components/Icon";
 import { useDashboardUser } from "../_components/DashboardUser";
 import { takeCreatePrompt, takeCreatePhoto } from "../_components/handoff";
 import { StudioPage, Dropdown, GenerateButton, PreviewPanel, SessionStrip, ErrorNote, runGeneration, toSendable, acceptImageFile, labelStyle, actionBtn, type StudioResult } from "../_components/studio";
-import { ASPECT_RATIOS, MODELS, type AspectRatio } from "@/lib/app-presets";
+import { ASPECT_RATIOS, MODELS, IMAGE_EDIT_MODELS, TEXT_TO_IMAGE_MODELS, type AspectRatio } from "@/lib/app-presets";
 import { CREDIT_COST } from "@/lib/plans";
 import { onCreditsChanged } from "@/lib/credits";
 import { openPricing } from "@/lib/pricing-modal";
@@ -23,7 +23,7 @@ export default function CreateStudio({ inspirations }: { inspirations: FeedItem[
   const [credits, setCredits] = useState(user.credits);
   const [prompt, setPrompt] = useState("");
   const [ratio, setRatio] = useState<AspectRatio>("1:1");
-  const [model, setModel] = useState<string>(MODELS[0].id);
+  const [model, setModel] = useState<string>(TEXT_TO_IMAGE_MODELS[0].id);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [results, setResults] = useState<StudioResult[]>([]);
@@ -109,6 +109,9 @@ export default function CreateStudio({ inspirations }: { inspirations: FeedItem[
     try { await navigator.clipboard.writeText(current.prompt); setCopied(true); setTimeout(() => setCopied(false), 1500); } catch {}
   };
 
+  const availableModels = photo || reference ? IMAGE_EDIT_MODELS : TEXT_TO_IMAGE_MODELS;
+  useEffect(() => { if (!availableModels.some((m) => m.id === model)) setModel(availableModels[0].id); }, [availableModels, model]);
+
   const controls = (
     <>
       <div>
@@ -167,7 +170,7 @@ export default function CreateStudio({ inspirations }: { inspirations: FeedItem[
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
         <Dropdown label="Aspect ratio" value={ratio} onChange={setRatio} options={ASPECT_RATIOS.map((r) => ({ value: r, label: RATIO_LABEL[r] }))} />
-        <Dropdown label="Model" value={model} onChange={setModel} options={MODELS.map((m) => ({ value: m.id as string, label: m.label, hint: m.hint }))} />
+        <Dropdown label="Model" value={model} onChange={setModel} options={availableModels.map((m) => ({ value: m.id as string, label: m.label, hint: m.hint }))} />
       </div>
 
       <div style={{ marginTop: "auto", display: "flex", flexDirection: "column", gap: 10 }}>
