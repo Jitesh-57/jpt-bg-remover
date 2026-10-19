@@ -58,6 +58,12 @@ const GLYPHS: Record<string, React.ReactNode> = {
     <path d="M12 3l1.7 4L18 8.7l-4.3 1.7L12 15l-1.7-4.3L6 8.7 10.3 7z" />
     <path d="M18 14l.9 2 2 .9-2 .9-.9 2-.9-2-2-.9 2-.9z" />
   </>),
+  // Text to image: a picture appearing out of a sparkle.
+  create: (<>
+    <rect x="3" y="7" width="13.5" height="13.5" rx="2.5" />
+    <path d="M3 17l3.8-3.2 3 2.4 2.4-1.9 4.3 3.7" />
+    <path d="M18.5 2.5l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z" />
+  </>),
   "generate-bg": (<>
     <rect x="3" y="4" width="18" height="16" rx="2" />
     <circle cx="8" cy="9" r="1.6" />
@@ -159,6 +165,8 @@ export function iconKeyForHref(href: string): string {
     "/editor": "editor",
     "/batch-editor": "batch",
     "/ai-editor": "ai-edit",
+    "/app/editor": "ai-edit",
+    "/app/create": "create",
     "/remove-bg": "remove-bg",
     "/ai-headshot": "headshot",
     "/editor?tool=generate-bg": "generate-bg",
@@ -191,7 +199,7 @@ const PALETTE: [string, string][] = [
 const TONE: Record<string, number> = {
   upscale: 0, "upscale-ai": 4, compress: 2, convert: 3, crop: 1, resize: 5, rotate: 4, blur: 3,
   qr: 5, watermark: 1, meme: 0, pdf: 2, tiktok: 3, eraser: 4, scrub: 2, editor: 1, batch: 0, "ai-edit": 4,
-  "remove-bg": 1, headshot: 2, "generate-bg": 0, apps: 3, generations: 5, adjust: 2, stickers: 3,
+  "remove-bg": 1, headshot: 2, "generate-bg": 0, create: 3, apps: 3, generations: 5, adjust: 2, stickers: 3,
   dashboard: 1, tools: 0, blog: 2, prompts: 4, video: 3, pricing: 5,
 };
 
