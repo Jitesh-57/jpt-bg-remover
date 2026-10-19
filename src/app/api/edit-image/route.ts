@@ -5,13 +5,13 @@ import { recordGeneration } from "@/lib/ledger";
 import { storeImage } from "@/lib/store-image";
 import { CREDIT_COST } from "@/lib/plans";
 import { userMessage } from "@/lib/user-message";
-import { ASPECT_RATIOS, MODELS } from "@/lib/app-presets";
+import { ASPECT_RATIOS, IMAGE_EDIT_MODELS } from "@/lib/app-presets";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
 
 const MAX_PROMPT = 2000;
-const MODEL_IDS = new Set<string>(MODELS.map((m) => m.id));
+const MODEL_IDS = new Set<string>(IMAGE_EDIT_MODELS.map((m) => m.id));
 const RATIOS = new Set<string>(ASPECT_RATIOS);
 
 /** The dashboard's AI Image Editor: one photo plus an instruction. Saved to My Creations. */
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
   }
   if (!prompt) return NextResponse.json({ error: "Describe the edit you want." }, { status: 400 });
   if (prompt.length > MAX_PROMPT) return NextResponse.json({ error: `Keep the description under ${MAX_PROMPT} characters.` }, { status: 400 });
-  const model = typeof body.model === "string" && MODEL_IDS.has(body.model) ? body.model : MODELS[0].id;
+  const model = typeof body.model === "string" && MODEL_IDS.has(body.model) ? body.model : IMAGE_EDIT_MODELS[0].id;
   const aspectRatio = typeof body.aspectRatio === "string" && RATIOS.has(body.aspectRatio) ? body.aspectRatio : undefined;
 
   const blocked = await checkEntitlement(session!, "ai", "ai-edit");
