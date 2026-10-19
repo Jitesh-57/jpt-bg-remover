@@ -331,7 +331,6 @@ export const UPSCALE_MODELS = [
   { id: "recraft-upscale-crisp", label: "Recraft Crisp Upscale", hint: "Image upscaling" },
 ] as const;
 
-/** All model options for backward compatibility with existing pages. */
 export const IMAGE_EDIT_MODELS = [
   { id: "seedream-v45", label: "Seedream 4.5", hint: "Image editing" },
   { id: "xai-grok-imagine-v2", label: "Grok Imagine Image 2.0", hint: "Image editing" },
