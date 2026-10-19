@@ -843,6 +843,21 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   .jpt-gen-ghost { filter: blur(12px) brightness(.55); } .jpt-gen-spark { display: none; }
 }
 
+/* ── AI Tools menu (MegaMenu): each space as a tiny bento tile ──────────────── */
+.jpt-menu-tile { position: relative; display: block; flex-shrink: 0; width: 96px; height: 68px; overflow: hidden; border-radius: 13px; isolation: isolate;
+  border: 1px solid rgba(255,255,255,.1);
+  background:
+    radial-gradient(110% 80% at 100% 0%, color-mix(in srgb, var(--g1) 58%, transparent), transparent 62%),
+    radial-gradient(90% 70% at 0% 100%, color-mix(in srgb, var(--g2) 40%, transparent), transparent 60%),
+    linear-gradient(160deg, #15151d, #0b0b10);
+  box-shadow: 0 8px 18px -10px rgba(0,0,0,.7); transition: border-color .2s ease; }
+/* Laid out at twice the size and scaled down, so the window chrome, bubbles and labels keep the card's proportions. */
+.jpt-menu-stage { position: absolute; left: 9px; top: 10px; width: 156px; height: 100px; transform: scale(.5); transform-origin: 0 0; perspective: 700px; }
+.jpt-menu-stage > * { transform: rotateX(8deg) rotateY(-10deg); transform-origin: 50% 60%; transition: transform .5s var(--ease, ease); }
+.jpt-menu-space:hover .jpt-menu-tile { border-color: rgba(255,255,255,.22); }
+.jpt-menu-space:hover .jpt-menu-stage > * { transform: rotateX(2deg) rotateY(-3deg) translateY(-3px); }
+.jpt-menu-space:hover .jpt-mock-scan, .jpt-menu-space:hover .jpt-mock-wipe, .jpt-menu-space:hover .jpt-mock-handle { animation-duration: 2.2s; }
+
 /* ── Homepage AI tools bento (HomeToolsBento): a mini editor in every tile ─── */
 .jpt-bento { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: 270px; grid-auto-flow: dense; gap: 14px; }
 .jpt-bento-hero { grid-column: span 2; grid-row: span 2; }

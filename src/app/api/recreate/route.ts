@@ -5,11 +5,14 @@ import { recordGeneration } from "@/lib/ledger";
 import { storeImage } from "@/lib/store-image";
 import { CREDIT_COST } from "@/lib/plans";
 import { userMessage } from "@/lib/user-message";
+import { IMAGE_EDIT_MODELS } from "@/lib/app-presets";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
 
 const MAX_NOTE = 1500;
+// Two images go in, so any editing model can take it. Unknown ids keep the old default.
+const MODEL_IDS = new Set<string>(IMAGE_EDIT_MODELS.map((m) => m.id));
 
 function buildPrompt(note: string): string {
   return [
@@ -22,17 +25,21 @@ function buildPrompt(note: string): string {
   ].filter(Boolean).join(" ");
 }
 
-/** Recreate a reference photo with the user's own face. Costs the same as any AI generation. */
+/**
+ * Recreate a reference photo with the user's own face, on the model picked
+ * (ChatGPT by default). Costs the same as any AI generation.
+ */
 export async function POST(req: NextRequest) {
   const { session, error } = await checkAuth(req);
   if (error) return error;
 
-  let body: { reference?: unknown; person?: unknown; prompt?: unknown };
+  let body: { reference?: unknown; person?: unknown; prompt?: unknown; model?: unknown };
   try { body = await req.json(); } catch { return NextResponse.json({ error: "Something went wrong sending your request. Please try again." }, { status: 400 }); }
 
   const reference = typeof body.reference === "string" ? body.reference : "";
   const person = typeof body.person === "string" ? body.person : "";
   const note = typeof body.prompt === "string" ? body.prompt.trim().slice(0, MAX_NOTE) : "";
+  const model = typeof body.model === "string" && MODEL_IDS.has(body.model) ? body.model : "gpt-image";
   const valid = (s: string) => /^https:\/\//.test(s) || /^data:image\/(png|jpeg|webp);base64,/.test(s);
   if (!valid(reference)) return NextResponse.json({ error: "Add a reference image first — upload one or paste a link." }, { status: 400 });
   if (!valid(person)) return NextResponse.json({ error: "Add your photo so the result shows you." }, { status: 400 });
@@ -43,7 +50,7 @@ export async function POST(req: NextRequest) {
   const prompt = buildPrompt(note);
   const startedAt = Date.now();
   try {
-    const { dataUrl, engine } = await editWithImages([reference, person], prompt, "gpt-image");
+    const { dataUrl, engine } = await editWithImages([reference, person], prompt, model);
     const [resultUrl, sourceUrl] = await Promise.all([
       storeImage(dataUrl, "recreate-result", session!.userId),
       person.startsWith("http") ? Promise.resolve(person) : storeImage(person, "recreate-source", session!.userId),
