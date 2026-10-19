@@ -210,9 +210,6 @@ const MODEL_SPECS: Record<FalModel, ModelSpec> = {
 const PATH_VARIANTS: Partial<Record<FalModel, { edit: string[]; generate: string[] }>> = {
   "nano-banana": { edit: ["fal-ai/nano-banana-pro/edit", "fal-ai/nano-banana/edit"], generate: ["fal-ai/nano-banana-pro", "fal-ai/nano-banana"] },
   "seedream-v45": { edit: ["fal-ai/bytedance/seedream/v4.5/edit", "bytedance/seedream/v4.5/edit"], generate: ["fal-ai/bytedance/seedream/v4.5/text-to-image", "bytedance/seedream/v4.5/text-to-image"] },
-  "gpt-image-2.5-sunburst": { edit: ["openai/gpt-image-2.5/sunburst/edit", "fal-ai/gpt-image-2.5/sunburst/edit"], generate: ["openai/gpt-image-2.5/sunburst/text-to-image", "fal-ai/gpt-image-2.5/sunburst/text-to-image"] },
-  "gpt-image-2.5-flare": { edit: ["openai/gpt-image-2.5/flare/edit", "fal-ai/gpt-image-2.5/flare/edit"], generate: ["openai/gpt-image-2.5/flare/text-to-image", "fal-ai/gpt-image-2.5/flare/text-to-image"] },
-  "gpt-image-2": { edit: ["openai/gpt-image-2/edit", "fal-ai/gpt-image-2/edit"], generate: ["openai/gpt-image-2", "fal-ai/gpt-image-2"] },
 };
 
 /** The configured path first, then the alternatives worth trying on a 404. */
