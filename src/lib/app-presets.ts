@@ -332,6 +332,54 @@ export const UPSCALE_MODELS = [
 ] as const;
 
 /** All model options for backward compatibility with existing pages. */
+export const IMAGE_EDIT_MODELS = [
+  { id: "seedream-v45", label: "Seedream 4.5", hint: "Image editing" },
+  { id: "xai-grok-imagine-v2", label: "Grok Imagine Image 2.0", hint: "Image editing" },
+  { id: "gpt-image-2.5-sunburst", label: "GPT Image 2.5 Sunburst", hint: "Image editing" },
+  { id: "gpt-image-2", label: "GPT Image 2", hint: "Image editing" },
+  { id: "seedream-v5-pro", label: "Seedream v5 Pro", hint: "Image editing" },
+  { id: "seedream-v5-lite", label: "Seedream v5 Lite", hint: "Image editing" },
+  { id: "flux-lora-fill", label: "FLUX LoRA Fill", hint: "Image editing" },
+  { id: "gpt-image-2.5-flare", label: "GPT Image 2.5 Flare", hint: "Image editing" },
+  { id: "qwen-image-edit-plus", label: "Qwen Image Edit Plus", hint: "Image editing" },
+  { id: "qwen-image-edit-2511-multiple-angles", label: "Qwen Multiple Angles", hint: "Image editing" },
+  { id: "flux-2-pro", label: "FLUX 2 Pro", hint: "Image editing" },
+  { id: "flux-3-edit", label: "FLUX 3", hint: "Image editing" },
+  { id: "qwen-image-3-edit", label: "Qwen Image 3", hint: "Image editing" },
+  { id: "gemini-25-flash-image-edit", label: "Gemini 2.5 Flash Image", hint: "Image editing" },
+  { id: "qwen-image-2.1-edit", label: "Qwen Image 2.1", hint: "Image editing" },
+  { id: "ideogram-v4-image-to-image", label: "Ideogram v4 Image-to-Image", hint: "Image editing" },
+] as const;
+
+export const TEXT_TO_IMAGE_MODELS = [
+  { id: "seedream-v45", label: "Seedream 4.5", hint: "Image editing" },
+  { id: "gpt-image-2.5-sunburst", label: "GPT Image 2.5 Sunburst", hint: "Image editing" },
+  { id: "gpt-image-2.5-flare", label: "GPT Image 2.5 Flare", hint: "Image editing" },
+  { id: "gpt-image-2", label: "GPT Image 2", hint: "Image editing" },
+  { id: "seedream-v5-pro", label: "Seedream v5 Pro", hint: "Image editing" },
+  { id: "xai-grok-imagine-v2", label: "Grok Imagine Image 2.0", hint: "Image editing" },
+  { id: "flux-3-text", label: "FLUX 3 Text", hint: "Text-to-image generation" },
+  { id: "qwen-image-3-edit", label: "Qwen Image 3", hint: "Image editing" },
+  { id: "flux-2-pro-text", label: "FLUX 2 Pro Text", hint: "Text-to-image generation" },
+  { id: "krea-v2-medium", label: "Krea v2 Medium", hint: "Text-to-image generation" },
+  { id: "recraft-v4-style", label: "Recraft v4 Style", hint: "Text-to-image generation" },
+  { id: "flux-pro-kontext", label: "FLUX Pro Kontext", hint: "Text-to-image generation" },
+  { id: "recraft-v4-1", label: "Recraft v4.1", hint: "Text-to-image generation" },
+  { id: "krea-v2-large", label: "Krea v2 Large", hint: "Text-to-image generation" },
+  { id: "qwen-image-2.1-edit", label: "Qwen Image 2.1", hint: "Image editing" },
+  { id: "ideogram-v4", label: "Ideogram v4", hint: "Text-to-image generation" },
+  { id: "nano-banana-text", label: "Nano Banana", hint: "Text-to-image generation" },
+  { id: "seedream-v5-lite", label: "Seedream v5 Lite", hint: "Image editing" },
+] as const;
+
+export const UPSCALE_MODELS = [
+  { id: "topaz-upscale", label: "Topaz Upscale", hint: "Image upscaling" },
+  { id: "seedvr-upscale", label: "SeedVR Upscale", hint: "Image upscaling" },
+  { id: "recraft-upscale-creative", label: "Recraft Creative Upscale", hint: "Image upscaling" },
+  { id: "ideogram-upscale", label: "Ideogram Upscale", hint: "Image upscaling" },
+  { id: "recraft-upscale-crisp", label: "Recraft Crisp Upscale", hint: "Image upscaling" },
+] as const;
+
 export const MODELS = [
   { id: "seedream-v45", label: "Seedream 4.5", hint: "Image editing" },
   { id: "xai-grok-imagine-v2", label: "Grok Imagine Image 2.0", hint: "Image editing" },
