@@ -52,7 +52,8 @@ export interface TrialAttempt {
 }
 
 const LOG_PATH = "overrides/trial-log.json";
-const LOG_KEEP = 40;
+/** How many checks the log keeps, newest first: enough for /admin/trials' date filters to reach back weeks. */
+export const TRIAL_LOG_KEEP = 400;
 
 /** "jitesh@gmail.com" → "ji…@gmail.com": enough to recognise a test account, not to harvest one. */
 function mask(email: string): string {
@@ -83,7 +84,7 @@ async function logAttempt(a: TrialAttempt): Promise<void> {
     await fetch(url, {
       method: "POST",
       headers: { ...auth, "Content-Type": "application/json", "x-upsert": "true", "Cache-Control": "no-store" },
-      body: JSON.stringify([a, ...list].slice(0, LOG_KEEP)),
+      body: JSON.stringify([a, ...list].slice(0, TRIAL_LOG_KEEP)),
     });
   } catch { /* best effort */ }
 }

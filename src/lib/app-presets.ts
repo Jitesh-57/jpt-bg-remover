@@ -285,6 +285,8 @@ export function defaultRatioFor(slug: string): AspectRatio {
 // The AI apps are the exception and open on defaultModelFor(app).
 export const IMAGE_EDIT_MODELS = [
   { id: "seedream-v45", label: "Seedream 4.5", hint: "Image editing" },
+  // defaultModelFor() opens the photo apps on this one: it re-poses a tilted head with the body.
+  { id: "nano-banana", label: "Nano Banana Pro", hint: "Image editing" },
   { id: "xai-grok-imagine-v2", label: "Grok Imagine Image 2.0", hint: "Image editing" },
   { id: "gpt-image-2.5-sunburst", label: "GPT Image 2.5 Sunburst", hint: "Image editing" },
   { id: "gpt-image-2", label: "GPT Image 2", hint: "Image editing" },
@@ -333,6 +335,7 @@ export const UPSCALE_MODELS = [
 
 export const MODELS = [
   { id: "seedream-v45", label: "Seedream 4.5", hint: "Image editing" },
+  { id: "nano-banana", label: "Nano Banana Pro", hint: "Image editing" },
   { id: "xai-grok-imagine-v2", label: "Grok Imagine Image 2.0", hint: "Image editing" },
   { id: "gpt-image-2.5-sunburst", label: "GPT Image 2.5 Sunburst", hint: "Image editing" },
   { id: "gpt-image-2", label: "GPT Image 2", hint: "Image editing" },

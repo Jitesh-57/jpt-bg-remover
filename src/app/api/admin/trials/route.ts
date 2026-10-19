@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminSupabase } from "@/lib/auth";
 import { requireAdmin } from "@/lib/admin-token";
-import { readTrialLog } from "@/lib/free-trial.server";
+import { readTrialLog, TRIAL_LOG_KEEP } from "@/lib/free-trial.server";
 import { WORLDWIDE } from "@/lib/trial-batches";
 
 export const runtime = "nodejs";
@@ -11,7 +11,10 @@ export const dynamic = "force-dynamic";
  * /api/admin/trials — the country free-trial rules behind /admin/trials.
  *
  *   GET                                   rules + how many trials each country has given
- *   GET ?view=insights                    signups, buyers and revenue per country
+ *   GET ?view=insights                    signups, buyers and revenue per country, and per day
+ *     both take &from=&to= (ISO times; `to` exclusive, either may be left out) to
+ *     narrow everything dated to that period, and &tzo= (the browser's
+ *     getTimezoneOffset()) so days are the admin's own
  *   POST { country, credits, live }       add or change a country (takes effect on the next signup);
  *                                         country "XX" is the worldwide rule for every unlisted country
  *   POST { action: "stop-all" }           switch every country off at once, worldwide included
@@ -35,33 +38,69 @@ const SETUP = {
   fix: "Click \"Set up database\" (runs /api/admin/migrate), or paste supabase/migrations/20260923_free_trials.sql into the Supabase SQL editor.",
 };
 
+/** The period asked for, as epoch ms. Unset ends are open. */
+interface Period { from: number; to: number; all: boolean }
+
+function periodOf(req: NextRequest): Period {
+  const p = req.nextUrl.searchParams;
+  const f = Date.parse(p.get("from") || "");
+  const t = Date.parse(p.get("to") || "");
+  const from = Number.isFinite(f) ? f : -Infinity;
+  const to = Number.isFinite(t) ? t : Infinity;
+  return { from, to, all: from === -Infinity && to === Infinity };
+}
+
+/** Whether a timestamp falls in the period. Undated rows only count for "all time". */
+function within(at: string | null | undefined, p: Period): boolean {
+  if (p.all) return true;
+  const ms = Date.parse(at || "");
+  return ms >= p.from && ms < p.to;
+}
+
 export async function GET(req: NextRequest) {
   const denied = requireAdmin(req);
   if (denied) return denied;
   const db = createAdminSupabase();
-  if (req.nextUrl.searchParams.get("view") === "insights") return insights(db);
+  const period = periodOf(req);
+  if (req.nextUrl.searchParams.get("view") === "insights") {
+    const tzo = Math.max(-840, Math.min(840, Math.round(Number(req.nextUrl.searchParams.get("tzo")) || 0)));
+    return insights(db, period, tzo);
+  }
 
   const { data: rules, error } = await db.from("trial_countries").select("country, credits, live, updated_at").order("country") as { data: Rule[] | null; error: { message: string } | null };
   if (error) return NextResponse.json(missingTable(error.message) ? SETUP : { error: error.message }, { status: missingTable(error.message) ? 200 : 500 });
 
-  // Per-country totals, plus the latest few grants so a switch-on can be seen working.
+  // Per-country totals, all time and in the period, plus the period's grants so a switch-on can be seen working.
   const { data: grants } = await db.from("trial_grants").select("country, email, credits, granted_at").order("granted_at", { ascending: false }).limit(5000) as { data: { country: string; email: string | null; credits: number; granted_at: string }[] | null };
   const stats: Record<string, { users: number; credits: number }> = {};
+  const periodStats: Record<string, { users: number; credits: number }> = {};
+  const inPeriod: NonNullable<typeof grants> = [];
   for (const g of grants ?? []) {
     const s = (stats[g.country] ??= { users: 0, credits: 0 });
     s.users += 1;
     s.credits += g.credits;
+    if (!within(g.granted_at, period)) continue;
+    const ps = (periodStats[g.country] ??= { users: 0, credits: 0 });
+    ps.users += 1;
+    ps.credits += g.credits;
+    inPeriod.push(g);
   }
-  const recent = (grants ?? []).slice(0, 15).map((g) => ({ ...g, email: g.email ? g.email.replace(/^(.{2}).*(@.*)$/, "$1…$2") : null }));
+  const recent = inPeriod.slice(0, 300).map((g) => ({ ...g, email: g.email ? g.email.replace(/^(.{2}).*(@.*)$/, "$1…$2") : null }));
 
-  const log = await readTrialLog();
+  // The log only keeps the latest checks; say how far back it reaches so an empty period isn't misread.
+  const fullLog = await readTrialLog();
+  const log = fullLog.filter((l) => within(l.at, period));
+  const logOldest = fullLog.length ? fullLog[fullLog.length - 1].at : null;
   const warnings: string[] = [];
   if (!process.env.SUPABASE_SERVICE_ROLE_KEY) warnings.push("SUPABASE_SERVICE_ROLE_KEY is not set on this deployment, so no grant can be written.");
   const { error: gErr } = await db.from("trial_grants").select("user_id", { head: true, count: "exact" });
   if (gErr) warnings.push(`The trial_grants table can't be read: ${gErr.message}`);
 
   const worldwide = (rules ?? []).find((r) => r.country === WORLDWIDE) ?? null;
-  return NextResponse.json({ rules: (rules ?? []).filter((r) => r.country !== WORLDWIDE), worldwide, stats, recent, log, warnings });
+  return NextResponse.json({
+    rules: (rules ?? []).filter((r) => r.country !== WORLDWIDE), worldwide, stats, periodStats,
+    recent, recentTotal: inPeriod.length, log, logOldest, logFull: fullLog.length >= TRIAL_LOG_KEEP, logKeep: TRIAL_LOG_KEEP, warnings,
+  });
 }
 
 export async function POST(req: NextRequest) {
@@ -148,55 +187,105 @@ async function allRows<T>(db: Db, table: string, select: string, max = 50_000): 
   return { rows };
 }
 
-interface Row { country: string; signups: number; trials: number; buyers: number; trialBuyers: number; purchases: number; revenueInr: number }
+interface Row { country: string; signups: number; signupsPaid: number; trials: number; trialsPaid: number; buyers: number; purchases: number; revenueInr: number }
+interface Day { accounts: number; trials: number; purchases: number; revenueInr: number }
 
 /**
- * Per country: accounts, trials given, paying accounts, purchases and revenue.
+ * Per country: accounts, trials given, paying accounts, purchases and revenue,
+ * for the period; and the same by day, for the chart.
  *
  * A purchase counts for the country it was paid from; older purchases, made
  * before that was recorded, count for the buyer's signup country, then their
- * trial's country, else "unknown". An account's country is where it signed up.
+ * trial's country, else "unknown". An account's country is where it signed up,
+ * and it counts in the period it signed up in (its trial's date, for accounts
+ * older than the country record).
+ *
+ * Buyers, purchases and revenue are what was paid in the period. The two
+ * rates follow the period's own people instead, so they can't pass 100%:
+ * signupsPaid is the period's new accounts that have bought since, trialsPaid
+ * the period's trial users that have.
  */
-async function insights(db: Db) {
+async function insights(db: Db, period: Period, tzo: number) {
   const [uc, pc, pu, tg] = await Promise.all([
     allRows<{ user_id: string; signup_country: string; first_seen: string }>(db, "user_countries", "user_id, signup_country, first_seen"),
     allRows<{ purchase_id: number; country: string }>(db, "purchase_countries", "purchase_id, country"),
-    allRows<{ id: number; user_id: string; amount_paise: number }>(db, "purchases", "id, user_id, amount_paise"),
-    allRows<{ user_id: string | null; country: string }>(db, "trial_grants", "user_id, country"),
+    allRows<{ id: number; user_id: string; amount_paise: number; created_at: string }>(db, "purchases", "id, user_id, amount_paise, created_at"),
+    allRows<{ user_id: string | null; country: string; granted_at: string }>(db, "trial_grants", "user_id, country, granted_at"),
   ]);
   const needsSetup = !!(uc.error && missingTable(uc.error)) || !!(pc.error && missingTable(pc.error));
 
-  const home = new Map<string, string>();
-  for (const t of tg.rows) if (t.user_id) home.set(t.user_id, t.country);
-  for (const u of uc.rows) home.set(u.user_id, u.signup_country);
-  const trialUsers = new Set(tg.rows.map((t) => t.user_id).filter(Boolean) as string[]);
+  const home = new Map<string, { country: string; at: string }>();
+  for (const t of tg.rows) if (t.user_id) home.set(t.user_id, { country: t.country, at: t.granted_at });
+  for (const u of uc.rows) home.set(u.user_id, { country: u.signup_country, at: u.first_seen });
+  const everBought = new Set(pu.rows.map((p) => p.user_id));
   const paidFrom = new Map(pc.rows.map((p) => [p.purchase_id, p.country]));
 
-  const by = new Map<string, Row & { buyerSet: Set<string>; trialBuyerSet: Set<string> }>();
+  // The admin's own calendar day: tzo is minutes behind UTC, as the browser reports it.
+  const dayOf = (at: string) => {
+    const ms = Date.parse(at);
+    return Number.isFinite(ms) ? new Date(ms - tzo * 60_000).toISOString().slice(0, 10) : null;
+  };
+  const daily: Record<string, Day> = {};
+  const day = (at: string) => {
+    const k = dayOf(at);
+    return k ? (daily[k] ??= { accounts: 0, trials: 0, purchases: 0, revenueInr: 0 }) : null;
+  };
+
+  const by = new Map<string, Row & { buyerSet: Set<string> }>();
   const row = (c: string) => {
     let r = by.get(c);
-    if (!r) by.set(c, (r = { country: c, signups: 0, trials: 0, buyers: 0, trialBuyers: 0, purchases: 0, revenueInr: 0, buyerSet: new Set(), trialBuyerSet: new Set() }));
+    if (!r) by.set(c, (r = { country: c, signups: 0, signupsPaid: 0, trials: 0, trialsPaid: 0, buyers: 0, purchases: 0, revenueInr: 0, buyerSet: new Set() }));
     return r;
   };
-  home.forEach((c) => { row(c).signups += 1; });
-  for (const t of tg.rows) row(t.country).trials += 1;
+  let accounts = 0;
+  let accountsPaid = 0;
+  home.forEach((h, user) => {
+    if (!within(h.at, period)) return;
+    const r = row(h.country);
+    accounts += 1;
+    r.signups += 1;
+    if (everBought.has(user)) { accountsPaid += 1; r.signupsPaid += 1; }
+    const d = day(h.at);
+    if (d) d.accounts += 1;
+  });
+  let trials = 0;
+  let trialsPaid = 0;
+  for (const t of tg.rows) {
+    if (!within(t.granted_at, period)) continue;
+    const r = row(t.country);
+    trials += 1;
+    r.trials += 1;
+    if (t.user_id && everBought.has(t.user_id)) { trialsPaid += 1; r.trialsPaid += 1; }
+    const d = day(t.granted_at);
+    if (d) d.trials += 1;
+  }
+  let purchases = 0;
+  let paise = 0;
+  const buyers = new Set<string>();
   for (const p of pu.rows) {
-    const r = row(paidFrom.get(p.id) || home.get(p.user_id) || "??");
+    if (!within(p.created_at, period)) continue;
+    const r = row(paidFrom.get(p.id) || (p.user_id && home.get(p.user_id)?.country) || "??");
+    purchases += 1;
+    paise += p.amount_paise || 0;
     r.purchases += 1;
     r.revenueInr += (p.amount_paise || 0) / 100;
     r.buyerSet.add(p.user_id);
-    if (trialUsers.has(p.user_id)) r.trialBuyerSet.add(p.user_id);
+    buyers.add(p.user_id);
+    const d = day(p.created_at);
+    if (d) { d.purchases += 1; d.revenueInr += (p.amount_paise || 0) / 100; }
   }
+  for (const d of Object.values(daily)) d.revenueInr = Math.round(d.revenueInr);
 
-  const rows: Row[] = Array.from(by.values()).map(({ buyerSet, trialBuyerSet, ...r }) => ({
-    ...r, buyers: buyerSet.size, trialBuyers: trialBuyerSet.size, revenueInr: Math.round(r.revenueInr),
+  const rows: Row[] = Array.from(by.values()).map(({ buyerSet, ...r }) => ({
+    ...r, buyers: buyerSet.size, revenueInr: Math.round(r.revenueInr),
   })).sort((a, b) => b.revenueInr - a.revenueInr || b.buyers - a.buyers || b.signups - a.signups);
 
   const since = uc.rows.reduce<string | null>((m, u) => (!m || u.first_seen < m ? u.first_seen : m), null);
   return NextResponse.json({
     rows,
     since,
-    totals: { accountsWithCountry: home.size, purchases: pu.rows.length, revenueInr: Math.round(pu.rows.reduce((n, p) => n + (p.amount_paise || 0), 0) / 100) },
+    daily,
+    totals: { accountsWithCountry: accounts, accountsPaid, trials, trialsPaid, buyers: buyers.size, purchases, revenueInr: Math.round(paise / 100) },
     needsSetup,
     error: !needsSetup ? (uc.error || pc.error || pu.error || tg.error) : undefined,
   });

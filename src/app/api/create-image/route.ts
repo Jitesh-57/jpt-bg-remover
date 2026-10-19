@@ -46,6 +46,13 @@ export async function POST(req: NextRequest) {
   if (prompt.length > MAX_PROMPT) {
     return NextResponse.json({ error: `That description is too long — keep it under ${MAX_PROMPT} characters.` }, { status: 400 });
   }
+  // Read first: which models are allowed depends on whether there is a photo.
+  const isImage = (v: unknown): v is string => typeof v === "string" && (/^https:\/\//.test(v) || /^data:image\/(png|jpeg|webp);base64,/.test(v));
+  const image = isImage(body.image) ? body.image : null;
+  if (body.image && !image) return NextResponse.json({ error: "Your image couldn't be read. Try adding it again." }, { status: 400 });
+  // Passed to the image provider as-is and never fetched by this server.
+  const reference = isImage(body.reference) ? body.reference : null;
+  if (body.reference && !reference) return NextResponse.json({ error: "The reference image couldn't be read. Remove it and try again." }, { status: 400 });
   // Auto-select Seedream for non-explicit mature/editorial requests where it is a better fit.
   // This is model selection only: provider content checks remain authoritative and are never bypassed.
   // Model choice only: fal's own moderation/policy remains authoritative.
@@ -60,12 +67,6 @@ export async function POST(req: NextRequest) {
     ? "seedream-v45"
     : requestedModel;
   const aspectRatio = typeof body.aspectRatio === "string" && RATIOS.has(body.aspectRatio) ? body.aspectRatio : "1:1";
-  const isImage = (v: unknown): v is string => typeof v === "string" && (/^https:\/\//.test(v) || /^data:image\/(png|jpeg|webp);base64,/.test(v));
-  const image = isImage(body.image) ? body.image : null;
-  if (body.image && !image) return NextResponse.json({ error: "Your image couldn't be read. Try adding it again." }, { status: 400 });
-  // Passed to the image provider as-is and never fetched by this server.
-  const reference = isImage(body.reference) ? body.reference : null;
-  if (body.reference && !reference) return NextResponse.json({ error: "The reference image couldn't be read. Remove it and try again." }, { status: 400 });
 
   const blocked = await checkEntitlement(session!, "ai", "create-image");
   if (blocked) return blocked;
