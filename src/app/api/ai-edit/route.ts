@@ -3,6 +3,7 @@ import { checkAuth, checkEntitlement, withCredits, CREDIT_COST } from "@/lib/aut
 import { fileCreation, fileFailure, keepSource } from "@/lib/file-creation";
 import { editImage } from "@/lib/ai-image";
 import { userMessage } from "@/lib/user-message";
+import { IMAGE_EDIT_MODELS } from "@/lib/app-presets";
 
 export const runtime = "nodejs";
 // Nano Banana Pro at 2K can take well over a minute; matches the other image routes.
@@ -18,6 +19,8 @@ export async function POST(req: NextRequest) {
     model?: string;
   };
   const src = imageUrl || dataUrl;
+  const allowedModel = !model || IMAGE_EDIT_MODELS.some((m) => m.id === model);
+  if (!allowedModel) return NextResponse.json({ error: "Choose an image-editing model for this tool." }, { status: 400 });
   if (!src || !prompt) return NextResponse.json({ error: "Pick a photo and describe the edit you want, then try again." }, { status: 400 });
 
   const blocked = await checkEntitlement(session!, "ai", "ai-edit");
