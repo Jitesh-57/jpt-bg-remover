@@ -1,4 +1,4 @@
-import { PACKS, type Pack, type PlanId } from "@/lib/plans";
+import { PLAY_PACKS, type Pack, type PlanId } from "@/lib/plans";
 
 /**
  * play-billing.ts — what the Play Store apps sell, shared by client and server.
@@ -18,8 +18,9 @@ export const PLAY_BILLING_METHOD = "https://play.google.com/billing";
 /** Play Console product ID for a pack: credits_5, credits_20, credits_50. */
 export const playProductId = (p: Pack): string => `credits_${p.credits}`;
 
+/** The Play Store keeps its own pack list (PLAY_PACKS) until Play Console is updated. */
 export const PLAY_PRODUCTS: Record<string, PlanId> =
-  Object.fromEntries(PACKS.map((p) => [playProductId(p), p.id]));
+  Object.fromEntries(PLAY_PACKS.map((p) => [playProductId(p), p.id]));
 
 /**
  * Each Play Store app (one per tool) and its Android package name — the

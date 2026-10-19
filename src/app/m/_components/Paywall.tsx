@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { PACKS, CREDIT_COST, type Pack } from "@/lib/plans";
+import { PACKS, PLAY_PACKS, CREDIT_COST, type Pack } from "@/lib/plans";
 import { buyPack } from "@/lib/checkout";
 import { buyOnPlay, type PlayStore } from "@/lib/play-billing.client";
 import { trackEvent } from "@/lib/analytics";
@@ -86,7 +86,7 @@ export default function Paywall({ unit, signedIn, balance, prefill, next, play, 
   // Play's prices when buying through Play (only the packs set up there), else rupees.
   const offers: Offer[] = useMemo(() => {
     if (play?.store) {
-      return PACKS.flatMap((pack) => {
+      return PLAY_PACKS.flatMap((pack) => {
         const pr = play.store!.prices[pack.id];
         return pr ? [{ pack, amount: pr.amount, currency: pr.currency, label: pr.label }] : [];
       });

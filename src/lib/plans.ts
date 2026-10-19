@@ -28,9 +28,11 @@
  */
 
 export type PlanId =
-  | "addon5" | "addon15" | "addon25" | "addon35"
-  | "monthly20" | "monthly40" | "monthly100" | "monthly150"
-  // No longer sold; kept so old invoices still name what was bought.
+  | "addon6" | "addon18" | "addon40" | "addon90"
+  | "monthly24" | "monthly64" | "monthly100" | "monthly150"
+  // No longer sold on the site; kept so old invoices, orders and subscriptions
+  // still resolve, and because the Play Store still sells the addon* ones.
+  | "addon5" | "addon15" | "addon25" | "addon35" | "monthly20" | "monthly40"
   | "pack5" | "pack20" | "pack50";
 
 export type Pack = {
@@ -62,24 +64,49 @@ const pack = (
   generations: Math.floor(credits / CREDIT_COST),
 });
 
+/*
+  The ladder: the more you buy, the less each credit costs, and every pack is
+  an even number of credits, because a result costs CREDIT_COST = 2 — an odd
+  pack always left one credit nobody could spend.
+
+  It used to run the other way (Mini ₹33 a credit, Large ₹71), so the biggest
+  pack was the worst deal on the page that showed the per-credit price. No
+  rung goes below the cheapest rate already on sale (Studio, ₹13.8 a credit),
+  so the margin on a generation is never thinner than it was.
+*/
+
 /** One-time add-on packs. Credits never expire. */
 export const PACKS: Pack[] = [
-  pack("addon5",  166,  2,  5,  "Mini",   "A quick top-up for a couple of edits.", { popular: true, badge: "Best value" }),
+  pack("addon6",  166,  2,  6,  "Mini",   "Three AI results to try it out.", { popular: true, badge: "Start here" }),
+  pack("addon18", 415,  5,  18, "Small",  "Enough for a handful of looks."),
+  pack("addon40", 830,  10, 40, "Medium", "A full set of edits in one go."),
+  pack("addon90", 1660, 20, 90, "Large",  "The lowest price per credit for a one-time pack.", { badge: "Best value" }),
+];
+
+/** Monthly subscriptions. Credits refresh every renewal; cancel any time. */
+export const MONTHLY_PLANS: Pack[] = [
+  pack("monthly24",  415,  5,  24,  "Starter", "Try the AI tools every month.", { monthly: true }),
+  pack("monthly64",  996,  12, 64,  "Creator", "Regular edits for your feed.", { monthly: true }),
+  pack("monthly100", 1494, 18, 100, "Pro",     "Room for a full shoot every month.", { monthly: true, popular: true, badge: "Recommended" }),
+  pack("monthly150", 2075, 25, 150, "Studio",  "The lowest price per credit.", { monthly: true, badge: "Best value" }),
+];
+
+/**
+ * The packs the Google Play listing sells (credits_5 … credits_35 in Play
+ * Console). Play prices live in Play Console, not here, so the Android app
+ * keeps selling these until matching products are set up there.
+ */
+export const PLAY_PACKS: Pack[] = [
+  pack("addon5",  166,  2,  5,  "Mini",   "A quick top-up for a couple of edits.", { popular: true }),
   pack("addon15", 830,  10, 15, "Small",  "Enough for a handful of looks."),
   pack("addon25", 1660, 20, 25, "Medium", "A full set of edits in one go."),
   pack("addon35", 2490, 30, 35, "Large",  "The biggest one-time top-up."),
 ];
 
-/** Monthly subscriptions. Credits refresh every renewal; cancel any time. */
-export const MONTHLY_PLANS: Pack[] = [
-  pack("monthly20",  415,  5,  20,  "Starter", "Try the AI tools every month.", { monthly: true }),
-  pack("monthly40",  996,  12, 40,  "Creator", "Regular edits for your feed.", { monthly: true }),
-  pack("monthly100", 1494, 18, 100, "Pro",     "Room for a full shoot every month.", { monthly: true, popular: true, badge: "Recommended" }),
-  pack("monthly150", 2075, 25, 150, "Studio",  "The lowest price per credit.", { monthly: true, badge: "Best value" }),
-];
-
-/** What used to be sold. Not for sale; only looked up for old invoices. */
+/** What used to be sold. Not for sale; only looked up for old invoices, orders and subscriptions. */
 export const LEGACY_PACKS: Pack[] = [
+  pack("monthly20", 415, 5,  20, "Starter", "Previous Starter plan.", { monthly: true }),
+  pack("monthly40", 996, 12, 40, "Creator", "Previous Creator plan.", { monthly: true }),
   pack("pack5",  166, 2,  5,  "Starter", "Legacy pack."),
   pack("pack20", 415, 5,  20, "Creator", "Legacy pack."),
   pack("pack50", 830, 10, 50, "Studio",  "Legacy pack."),
@@ -95,7 +122,7 @@ export const MONTHLY_BY_ID: Record<string, Pack> =
 
 /** Anything ever sold, by id — for invoices and purchase history. */
 export const PACK_BY_ID: Record<string, Pack> =
-  Object.fromEntries([...PACKS, ...MONTHLY_PLANS, ...LEGACY_PACKS].map((p) => [p.id, p]));
+  Object.fromEntries([...PACKS, ...MONTHLY_PLANS, ...PLAY_PACKS, ...LEGACY_PACKS].map((p) => [p.id, p]));
 
 /** Razorpay works in paise (1/100 of a rupee). */
 export const inrPaise = (p: Pack): number => p.inr * 100;
