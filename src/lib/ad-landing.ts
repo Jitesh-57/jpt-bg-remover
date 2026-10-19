@@ -30,7 +30,7 @@ export const AD_LANDINGS: AdLanding[] = [
     highlight: "One Click",
     subhead: "Upload a photo and get a clean transparent PNG in seconds. Perfect for products, portraits, and e-commerce. No Photoshop, no skills needed.",
     cta: "Remove Background Free →",
-    bullets: ["AI-perfect hair & edge detection", "Transparent PNG, full resolution", "Free trial included, no card needed"],
+    bullets: ["AI-perfect hair & edge detection", "Transparent PNG, full resolution", "Free account, no card needed"],
     tool: "remove-bg",
   },
   {

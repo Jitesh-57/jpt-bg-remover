@@ -261,7 +261,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         <div style={{ position: "fixed", left: 16, right: 16, bottom: 24, zIndex: 1200, display: "flex", justifyContent: "center", pointerEvents: "none" }}>
           <div role="status" className="jpt-a-pop" onClick={() => setTrialToast(0)}
             style={{ pointerEvents: "auto", background: "var(--grad-strong)", color: "#fff", fontWeight: 800, fontSize: 14.5, padding: "13px 20px", borderRadius: 14, boxShadow: "var(--glow)", cursor: "pointer", textAlign: "center" }}>
-            🎁 Welcome! You got {trialToast} free credits. Try your first AI creation.
+            🎁 Free trial: you got {trialToast} free credits. Try your first AI creation.
           </div>
         </div>
       )}

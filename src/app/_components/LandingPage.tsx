@@ -265,7 +265,7 @@ const PAGE_SEO_CONTENT: Record<string, { heading: string; body: string }[]> = {
   ],
   headshot: [
     { heading: 'What is an AI headshot generator?', body: 'An AI headshot generator uses artificial intelligence to transform casual photos into professional-looking headshots. Pixel Shine analyses your photo and applies professional lighting, background removal, and image enhancement to produce corporate-quality portraits without a studio session.' },
-    { heading: 'Professional AI headshots for LinkedIn — free to try', body: 'LinkedIn profiles with professional headshots get 21× more profile views and 9× more connection requests. Pixel Shine generates LinkedIn-ready headshots in seconds — no photographer, no studio, no expensive session. Free credits included when you sign up.' },
+    { heading: 'Professional AI headshots for LinkedIn — in seconds', body: 'LinkedIn profiles with professional headshots get 21× more profile views and 9× more connection requests. Pixel Shine generates LinkedIn-ready headshots in seconds — no photographer, no studio, no expensive session.' },
     { heading: 'AI headshots for companies and teams', body: 'Get consistent, professional headshots for your entire team without booking a studio. Pixel Shine delivers uniform lighting and style across all photos — ideal for company websites, directories, and corporate materials. Process multiple team members quickly with batch uploads.' },
   ],
   'ai-editor': [

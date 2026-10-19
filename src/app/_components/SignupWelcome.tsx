@@ -63,7 +63,7 @@ export default function SignupWelcome() {
         onClick={() => setCredits(0)}
         style={{ pointerEvents: "auto", background: "var(--grad-strong)", color: "#fff", fontWeight: 800, fontSize: 14.5, padding: "13px 20px", borderRadius: 14, boxShadow: "var(--glow)", cursor: "pointer", textAlign: "center", maxWidth: 460 }}
       >
-        🎁 Welcome! You got {credits} free credits — {results === 1 ? "your first AI result is on us" : `${results} AI results on us`}. Hit Generate.
+        🎁 Free trial: you got {credits} free credits — {results === 1 ? "your first AI result is on us" : `${results} AI results on us`}. Hit Generate.
       </div>
     </div>
   );

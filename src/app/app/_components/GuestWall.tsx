@@ -66,7 +66,7 @@ export default function GuestWall({ pathname, brand }: { pathname: string; brand
         </h1>
         <p style={{ fontSize: 14.5, color: "var(--text-muted)", lineHeight: 1.6, margin: "0 0 22px" }}>
           {offer
-            ? <>New accounts get <strong style={{ color: "var(--text)" }}>{offer.credits} free credits</strong> — your first AI result is on us.</>
+            ? <><strong style={{ color: "var(--text)" }}>Free trial:</strong> new accounts get {offer.credits} free credits — your first AI result is on us.</>
             : "Create images, run 200+ AI apps and keep every result in one place."}
         </p>
 

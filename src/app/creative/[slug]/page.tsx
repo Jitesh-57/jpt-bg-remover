@@ -416,7 +416,7 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
               </ul>
 
               <p style={{ marginTop: 26, fontSize: 15, color: "var(--text-muted)" }}>
-                It&apos;s free to try and runs online — nothing to install. Explore the rest of our{" "}
+                It runs online — nothing to install. Explore the rest of our{" "}
                 <a href={CREATIVE_BASE} style={{ color: "var(--accent)", fontWeight: 700 }}>AI Creative Apps</a>, or open the full{" "}
                 <a href="/editor" style={{ color: "var(--accent)", fontWeight: 700 }}>AI photo editor</a> for more control.
               </p>
