@@ -806,12 +806,16 @@ export async function falGenerateImage(
   const endpoint = falEndpoint(model, "generate");
   const family = falModelSpec(model).family;
   if (family === "upscale") throw new Error(`Model ${model} is an upscaler and cannot generate from text.`);
-  const input = family === "nano"
-    ? { prompt, num_images: 1, output_format: "png", resolution: NANO_RESOLUTION, ...(aspectRatio ? { aspect_ratio: aspectRatio } : {}) }
-    : family === "seedream"
-    ? { prompt, enable_safety_checker: FAL_ENABLE_SAFETY_CHECKER }
-    : { prompt, num_images: 1, quality: "high", image_size: imageSizeFor(falModelSpec(model).sizeStyle, aspectRatio) };
-  const result = await runQueued(endpoint, input, budgetMs, { minimalInput: { prompt, num_images: 1 }, paths: falPathVariants(model, "generate") });
+  const input =
+    family === "nano"
+      ? { prompt, num_images: 1, output_format: "png", resolution: NANO_RESOLUTION, ...(aspectRatio ? { aspect_ratio: aspectRatio } : {}) }
+      : family === "seedream"
+      ? { prompt, enable_safety_checker: FAL_ENABLE_SAFETY_CHECKER }
+      : { prompt, num_images: 1, quality: "high", image_size: imageSizeFor(falModelSpec(model).sizeStyle, aspectRatio) };
+  const result = await runQueued(endpoint, input, budgetMs, {
+    minimalInput: { prompt, num_images: 1 },
+    paths: falPathVariants(model, "generate"),
+  });
   return urlToDataUrl(firstImageUrl(result));
 }
 
