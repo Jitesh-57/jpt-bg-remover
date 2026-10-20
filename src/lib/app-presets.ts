@@ -281,12 +281,10 @@ export function defaultRatioFor(slug: string): AspectRatio {
  * failing, and the substitution is logged with the endpoint that refused it —
  * so a model here can never dead-end a visitor.
  */
-// The first entry is the default in every picker and API (MODELS[0]): ChatGPT.
-// The AI apps are the exception and open on defaultModelFor(app).
+// The first entry is the default in every picker and API (MODELS[0]): Nano Banana Pro.
 export const IMAGE_EDIT_MODELS = [
-  { id: "seedream-v45", label: "Seedream 4.5", hint: "Image editing" },
-  // defaultModelFor() opens the photo apps on this one: it re-poses a tilted head with the body.
   { id: "nano-banana", label: "Nano Banana Pro", hint: "Image editing" },
+  { id: "seedream-v45", label: "Seedream 4.5", hint: "Image editing" },
   { id: "xai-grok-imagine-v2", label: "Grok Imagine Image 2.0", hint: "Image editing" },
   { id: "gpt-image-2.5-sunburst", label: "GPT Image 2.5 Sunburst", hint: "Image editing" },
   { id: "gpt-image-2", label: "GPT Image 2", hint: "Image editing" },
@@ -305,6 +303,7 @@ export const IMAGE_EDIT_MODELS = [
 ] as const;
 
 export const TEXT_TO_IMAGE_MODELS = [
+  { id: "nano-banana", label: "Nano Banana Pro", hint: "Text-to-image generation" },
   { id: "seedream-v45", label: "Seedream 4.5", hint: "Image editing" },
   { id: "gpt-image-2.5-sunburst", label: "GPT Image 2.5 Sunburst", hint: "Image editing" },
   { id: "gpt-image-2.5-flare", label: "GPT Image 2.5 Flare", hint: "Image editing" },
@@ -334,8 +333,8 @@ export const UPSCALE_MODELS = [
 ] as const;
 
 export const MODELS = [
-  { id: "seedream-v45", label: "Seedream 4.5", hint: "Image editing" },
   { id: "nano-banana", label: "Nano Banana Pro", hint: "Image editing" },
+  { id: "seedream-v45", label: "Seedream 4.5", hint: "Image editing" },
   { id: "xai-grok-imagine-v2", label: "Grok Imagine Image 2.0", hint: "Image editing" },
   { id: "gpt-image-2.5-sunburst", label: "GPT Image 2.5 Sunburst", hint: "Image editing" },
   { id: "gpt-image-2", label: "GPT Image 2", hint: "Image editing" },
@@ -373,18 +372,11 @@ function isGptModel(model?: string): boolean {
 }
 
 /**
- * The model an AI app opens with.
- *
- * Nano Banana Pro for apps whose result is a photograph of the person or the
- * product: on a tilted selfie it re-posed the head with the body where
- * ChatGPT kept the selfie's tilt on an upright body, and it holds a face and
- * a label most faithfully. ChatGPT for the drawn, designed and lettered ones —
- * anime, covers, thumbnails, logos — where its styles and text are the point.
- * The picker can still change either.
+ * The model an AI app opens with: Nano Banana Pro, the site-wide default, for
+ * every app. The picker can still change it.
  */
-export function defaultModelFor(app: { slug: string; cat?: string }): string {
-  const form = outputFormFor(app);
-  return form === "photograph" || form === "product" ? "nano-banana" : MODELS[0].id;
+export function defaultModelFor(_app: { slug: string; cat?: string }): string {
+  return MODELS[0].id;
 }
 
 /** Supabase bucket holding preset thumbnails, matched by name at runtime. */
