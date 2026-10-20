@@ -13,8 +13,8 @@ import ModelMenu from "@/app/_components/ModelMenu";
 
 const STAGES = ["Studying the reference…", "Matching pose and lighting…", "Placing you in the scene…", "Finishing the details…"];
 const MAX_NOTE = 1500;
-/** What "ChatGPT" resolved to when Recreate had no picker, so the default result is unchanged. */
-const DEFAULT_MODEL = "gpt-image-2.5-sunburst";
+/** Nano Banana Pro, the site-wide default; the picker can change it. */
+const DEFAULT_MODEL = IMAGE_EDIT_MODELS[0].id;
 
 type Slot = "reference" | "person";
 
