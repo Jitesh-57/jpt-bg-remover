@@ -23,7 +23,10 @@ const cache = new Map<string, { at: number; credits: number | null }>();
 
 export async function GET(req: NextRequest) {
   const headers = { "Cache-Control": "private, no-store" };
-  const signedIn = req.cookies.getAll().some((c) => /^sb-.*-auth-token/.test(c.name));
+  // The session cookie itself (or one of its ".0", ".1" chunks), with a value.
+  // Not "…-auth-token-code-verifier": a Google sign-in that was started and
+  // abandoned leaves that one behind, and it hid the offer from signed-out visitors.
+  const signedIn = req.cookies.getAll().some((c) => /^sb-.+-auth-token(\.\d+)?$/.test(c.name) && c.value !== "");
   const country = requestCountry(req);
   if (signedIn || !country) return NextResponse.json({ offer: null }, { headers });
 
