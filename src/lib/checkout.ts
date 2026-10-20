@@ -35,6 +35,15 @@ export interface CheckoutResult {
   credits?: number;
 }
 
+/*
+  Hides the phone-number field in Razorpay's checkout. Razorpay only honours
+  this once it has turned on "optional contact" for the merchant account (a
+  support request, not a dashboard setting); until then it ignores the flag
+  and keeps asking for the number, so this is safe to ship either way. Some
+  UPI and card flows, and recurring mandates, may still ask for it.
+*/
+const HIDE_CONTACT = { contact: true };
+
 async function loadRazorpay(): Promise<void> {
   if (window.Razorpay) return;
   await new Promise<void>((resolve, reject) => {
@@ -100,6 +109,7 @@ export async function buyPack(p: Pack, prefill?: { name?: string; email?: string
           }
         },
         prefill: { name: prefill?.name || "", email: prefill?.email || "" },
+        hidden: HIDE_CONTACT,
       });
 
       /*
@@ -176,6 +186,7 @@ export async function subscribe(p: Pack, prefill?: { name?: string; email?: stri
           }
         },
         prefill: { name: prefill?.name || "", email: prefill?.email || "" },
+        hidden: HIDE_CONTACT,
       });
 
       rzp.on?.("payment.failed", (resp) => {
