@@ -843,28 +843,18 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   .jpt-gen-ghost { filter: blur(12px) brightness(.55); } .jpt-gen-spark { display: none; }
 }
 
-/* ── Sign-up nudge (SignupNudge): shown a few seconds after a visitor lands ── */
-.jpt-nudge-backdrop { position: fixed; inset: 0; z-index: 9990; display: flex; align-items: center; justify-content: center; padding: 16px;
-  background: rgba(6,6,10,.62); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); animation: jptNudgeFade .35s ease both; }
-.jpt-nudge-split, .jpt-nudge-card, .jpt-nudge-corner { position: relative; color: var(--text); background: var(--bg-elevated, var(--surface));
-  border: 1px solid var(--border-strong); box-shadow: 0 30px 80px -20px rgba(0,0,0,.75); animation: jptNudgeIn .45s var(--ease, ease) both; }
-.jpt-nudge-split { display: grid; grid-template-columns: 330px minmax(0, 1fr); width: min(780px, 100%); border-radius: 22px; overflow: hidden; }
-.jpt-nudge-split-pic { position: relative; aspect-ratio: 3 / 4; background: #111; }
-.jpt-nudge-split-body { display: flex; flex-direction: column; gap: 10px; padding: 34px 32px 26px; justify-content: center; }
-.jpt-nudge-card { width: min(410px, 100%); border-radius: 22px; overflow: hidden; }
-.jpt-nudge-corner { position: fixed; z-index: 9990; right: 22px; bottom: calc(22px + env(safe-area-inset-bottom, 0px)); width: min(390px, calc(100vw - 32px));
+/* ── Sign-up nudge (SignupNudge): the corner card shown a few seconds after a visitor lands ── */
+.jpt-nudge-corner { color: var(--text); background: var(--bg-elevated, var(--surface));
+  border: 1px solid var(--border-strong); box-shadow: 0 30px 80px -20px rgba(0,0,0,.75); animation: jptNudgeIn .45s var(--ease, ease) both;
+  position: fixed; z-index: 9990; right: 22px; bottom: calc(22px + env(safe-area-inset-bottom, 0px)); width: min(390px, calc(100vw - 32px));
   display: flex; gap: 14px; align-items: center; padding: 14px; border-radius: 18px; }
 .jpt-nudge-x { position: absolute; z-index: 4; width: 30px; height: 30px; border-radius: 50%; border: none; background: var(--surface-2); color: var(--text-muted);
   font-size: 18px; line-height: 1; cursor: pointer; font-family: inherit; }
 .jpt-nudge-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border-radius: 999px; font-size: 11.5px; font-weight: 800;
   letter-spacing: .05em; text-transform: uppercase; color: var(--accent-strong, var(--accent)); background: var(--accent-soft); border: 1px solid var(--accent-border); align-self: flex-start; }
-.jpt-nudge-card .jpt-nudge-badge { align-self: center; }
 .jpt-nudge-google { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 14px; border-radius: 12px; border: none;
   background: var(--grad-strong); color: #fff; font-size: 15px; font-weight: 800; font-family: inherit; cursor: pointer; box-shadow: var(--glow); }
 .jpt-nudge-g { width: 22px; height: 22px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.jpt-nudge-link { background: none; border: none; padding: 2px; font-family: inherit; font-size: 13.5px; font-weight: 700; color: var(--text-muted); cursor: pointer; }
-.jpt-nudge-caption { position: absolute; left: 12px; bottom: 12px; z-index: 3; padding: 6px 11px; border-radius: 999px; font-size: 12px; font-weight: 700; color: #fff;
-  background: rgba(10,10,14,.68); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,.18); }
 /* A before|after creative wiping: each layer shows one half of the side-by-side image. */
 .jpt-nudge-wipe { position: relative; display: block; overflow: hidden; background: #111; }
 .jpt-nudge-half { position: absolute; top: 0; left: 0; width: 200%; max-width: none; height: 100%; object-fit: cover; object-position: center 22%; display: block; }
@@ -876,18 +866,12 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 .jpt-nudge-corner .jpt-nudge-knob { width: 18px; height: 18px; font-size: 8px; }
 @keyframes jptNudgeWipe { 0%, 100% { clip-path: inset(0 0 0 72%); } 50% { clip-path: inset(0 0 0 22%); } }
 @keyframes jptNudgeLine { 0%, 100% { left: 72%; } 50% { left: 22%; } }
-@keyframes jptNudgeFade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes jptNudgeIn { from { opacity: 0; transform: translateY(18px) scale(.97); } to { opacity: 1; transform: none; } }
 @media (max-width: 640px) {
-  .jpt-nudge-backdrop { align-items: flex-end; padding: 0; }
-  .jpt-nudge-split { grid-template-columns: 1fr; border-radius: 22px 22px 0 0; max-height: 92vh; overflow-y: auto; }
-  .jpt-nudge-split-pic { aspect-ratio: 16 / 10; }
-  .jpt-nudge-split-body { padding: 20px 20px calc(18px + env(safe-area-inset-bottom, 0px)); }
-  .jpt-nudge-card { border-radius: 22px 22px 0 0; }
   .jpt-nudge-corner { right: 12px; left: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); width: auto; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .jpt-nudge-backdrop, .jpt-nudge-split, .jpt-nudge-card, .jpt-nudge-corner { animation: none; }
+  .jpt-nudge-corner { animation: none; }
   .jpt-nudge-after { animation: none; clip-path: inset(0 0 0 50%); } .jpt-nudge-line { animation: none; left: 50%; }
 }
 
