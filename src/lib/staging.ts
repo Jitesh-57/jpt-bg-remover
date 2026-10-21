@@ -113,9 +113,13 @@ const OUTPUT_PHOTOGRAPH =
   OUTPUT_NO_LAYOUT;
 
 const PHOTOREAL =
-  "The result must look like a real photograph — natural skin texture, realistic " +
-  "lighting and shadows, believable anatomy and hands, correct perspective — not " +
-  "an illustration, painting, render or cartoon.";
+  "For photographic results, preserve authentic camera realism: natural skin texture " +
+  "and pores, fine facial detail, realistic eyes and teeth, believable hair strands, " +
+  "correct anatomy and hands, coherent perspective, physically plausible light and " +
+  "shadows, and a consistent level of sharpness across the face, neck and body. " +
+  "Avoid waxy or airbrushed skin, over-sharpened facial edges, artificial symmetry, " +
+  "oversized eyes, invented beauty marks, face-morphing, or the generic AI portrait " +
+  "look. The face must belong naturally to the scene rather than look pasted in.";
 
 /*
   PHOTOREAL's counterpart, for the apps whose whole point is that the result is
