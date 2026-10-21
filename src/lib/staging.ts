@@ -205,12 +205,15 @@ const DIRECTIVE: Record<StagingMode, string> = {
   exactly the line an oil-painting or mermaid-illustration app must not get.
 */
 const ART_RESTAGE =
-  "This is a complete re-creation of the picture in the style described above, not " +
-  "a filter over the photograph. Rebuild the whole picture around it: the clothing " +
-  "and accessories, the hairstyle, the background and setting, the pose, the framing " +
-  "and the light all belong to the new image. Keep only what the description above " +
-  "says to keep. " + REPOSE + " The person must look drawn as one figure in this " +
-  "scene, not like a face pasted on. " + LIKENESS;
+  "Re-create the reference image as cohesive artwork in the requested style. Follow " +
+  "the app's own preview/example for its defining visual language, subject styling, " +
+  "palette, scene and composition; the result should feel like that app's promised " +
+  "transformation, not a generic style filter. Rebuild clothing, accessories, hair, " +
+  "background, pose, framing and light only as required by the app prompt and selected " +
+  "options. Carry the same person's recognizable face shape, eye spacing, nose, mouth, " +
+  "skin tone, hairstyle and distinctive features into the art style, but render all " +
+  "parts consistently in that medium rather than pasting a photo-real face onto it. " +
+  "Honor selected framing and transformation strength. " + LIKENESS;
 
 /*
   The restage directive for the designed objects. "The result is still one
