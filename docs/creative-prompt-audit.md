@@ -3674,7 +3674,7 @@ Template: `The subject is: {value}.`
 
 ## Shared instructions updated for dev
 
-- `src/lib/staging.ts`: facial geometry/identity preservation, realistic facial detail and lighting, and coherent restaging/artwork instructions.
+- `src/lib/staging.ts`: facial geometry/identity preservation, realistic facial detail and lighting, coherent restaging/artwork instructions, and photoreal output handling for the Mermaid/Fairy/Vampire fantasy photo filters.
 
 - `src/lib/app-presets.ts`: the app-specific base prompt is prioritized; selected presets and all selected parameter phrases refine named attributes. Group prompts preserve each person's identity independently.
 
