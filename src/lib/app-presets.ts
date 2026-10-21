@@ -191,13 +191,17 @@ export function buildPrompt(
     if (preset) parts.push(preset.modifier);
   }
 
+  // Add parameter phrases before the shared quality contract. Each app's
+  // own example/brief remains the main creative target; selected controls
+  // refine only their named dimension (setting, lighting, framing, strength).
   parts.push(...extras);
 
   if (tab === "group") {
     parts.push(
-      "There are multiple people in the photo. Keep every person's own face, facial " +
-      "structure, identity and natural skin tone, and keep them in their existing " +
-      "positions relative to each other."
+      "There are multiple people in the source photo. Preserve every visible person's " +
+      "own identity and recognizable facial features independently; do not merge, " +
+      "duplicate, replace, or average faces. Keep the relationships and relative " +
+      "positions sensible for the requested composition."
     );
   }
 
