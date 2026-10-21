@@ -45,10 +45,15 @@
 export type StagingMode = "restage" | "restyle" | "subject" | "scene" | "minimal" | "product" | "space";
 
 const IDENTITY =
-  "Keep the person's identity exactly: the same face, bone structure, eye shape, " +
-  "nose, mouth, natural skin tone and ethnicity. It must be obviously the same " +
-  "person to someone who knows them. This is about who they are, not how the " +
-  "original photo framed or lit them.";
+  "Preserve the same real person's identity as the reference photo. Keep their " +
+  "recognizable facial geometry: face shape, forehead, cheekbones, jaw and chin, " +
+  "eye shape and spacing, eyebrows, nose, lips, ears, natural asymmetry, skin tone, " +
+  "age appearance and distinctive features. Do not substitute a generic attractive " +
+  "face, beautify or idealize the person, enlarge their eyes, reshape their nose or " +
+  "jaw, or apply plastic skin smoothing. Keep natural skin texture and realistic " +
+  "pores wherever the output is photographic. Change only features that the app's " +
+  "requested transformation explicitly requires. Match the face's lighting, colour " +
+  "and sharpness to the new scene instead of making it look pasted on.";
 
 /*
   Only for the modes that rebuild the pose.
