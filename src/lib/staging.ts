@@ -45,10 +45,15 @@
 export type StagingMode = "restage" | "restyle" | "subject" | "scene" | "minimal" | "product" | "space";
 
 const IDENTITY =
-  "Keep the person's identity exactly: the same face, bone structure, eye shape, " +
-  "nose, mouth, natural skin tone and ethnicity. It must be obviously the same " +
-  "person to someone who knows them. This is about who they are, not how the " +
-  "original photo framed or lit them.";
+  "Preserve the same real person's identity as the reference photo. Keep their " +
+  "recognizable facial geometry: face shape, forehead, cheekbones, jaw and chin, " +
+  "eye shape and spacing, eyebrows, nose, lips, ears, natural asymmetry, skin tone, " +
+  "age appearance and distinctive features. Do not substitute a generic attractive " +
+  "face, beautify or idealize the person, enlarge their eyes, reshape their nose or " +
+  "jaw, or apply plastic skin smoothing. Keep natural skin texture and realistic " +
+  "pores wherever the output is photographic. Change only features that the app's " +
+  "requested transformation explicitly requires. Match the face's lighting, colour " +
+  "and sharpness to the new scene instead of making it look pasted on.";
 
 /*
   Only for the modes that rebuild the pose.
@@ -108,9 +113,13 @@ const OUTPUT_PHOTOGRAPH =
   OUTPUT_NO_LAYOUT;
 
 const PHOTOREAL =
-  "The result must look like a real photograph — natural skin texture, realistic " +
-  "lighting and shadows, believable anatomy and hands, correct perspective — not " +
-  "an illustration, painting, render or cartoon.";
+  "For photographic results, preserve authentic camera realism: natural skin texture " +
+  "and pores, fine facial detail, realistic eyes and teeth, believable hair strands, " +
+  "correct anatomy and hands, coherent perspective, physically plausible light and " +
+  "shadows, and a consistent level of sharpness across the face, neck and body. " +
+  "Avoid waxy or airbrushed skin, over-sharpened facial edges, artificial symmetry, " +
+  "oversized eyes, invented beauty marks, face-morphing, or the generic AI portrait " +
+  "look. The face must belong naturally to the scene rather than look pasted in.";
 
 /*
   PHOTOREAL's counterpart, for the apps whose whole point is that the result is
@@ -196,12 +205,15 @@ const DIRECTIVE: Record<StagingMode, string> = {
   exactly the line an oil-painting or mermaid-illustration app must not get.
 */
 const ART_RESTAGE =
-  "This is a complete re-creation of the picture in the style described above, not " +
-  "a filter over the photograph. Rebuild the whole picture around it: the clothing " +
-  "and accessories, the hairstyle, the background and setting, the pose, the framing " +
-  "and the light all belong to the new image. Keep only what the description above " +
-  "says to keep. " + REPOSE + " The person must look drawn as one figure in this " +
-  "scene, not like a face pasted on. " + LIKENESS;
+  "Re-create the reference image as cohesive artwork in the requested style. Follow " +
+  "the app's own preview/example for its defining visual language, subject styling, " +
+  "palette, scene and composition; the result should feel like that app's promised " +
+  "transformation, not a generic style filter. Rebuild clothing, accessories, hair, " +
+  "background, pose, framing and light only as required by the app prompt and selected " +
+  "options. Carry the same person's recognizable face shape, eye spacing, nose, mouth, " +
+  "skin tone, hairstyle and distinctive features into the art style, but render all " +
+  "parts consistently in that medium rather than pasting a photo-real face onto it. " +
+  "Honor selected framing and transformation strength. " + LIKENESS;
 
 /*
   The restage directive for the designed objects. "The result is still one
@@ -291,7 +303,7 @@ const BY_SLUG: Record<string, StagingMode> = {
  * photograph.
  */
 const ARTWORK_SLUGS = new Set([
-  "ai-art-generator", "ai-avatar-generator", "ai-mermaid-filter", "ai-painter",
+  "ai-art-generator", "ai-avatar-generator", "ai-painter", "ai-character-generator", "ai-pokemon-generator",
   "ai-pokemon-generator", "ai-vtuber-maker", "ai-webtoon-generator", "anime-style",
   "caricature-maker", "cartoon-generator", "claymation-portrait", "coloring-page-generator",
   "comic-book-cover", "comic-generator", "discord-pfp-maker", "gaming-logo-maker",

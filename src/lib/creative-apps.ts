@@ -29,6 +29,28 @@ export interface CreativeApp {
   cat?: string;
 }
 
+/**
+ * App preview fidelity rules.
+ *
+ * Each creative app's base prompt defines the distinctive look users see in
+ * its own before/after preview. Keep that brief authoritative when composing
+ * prompts; shared identity and realism rules should improve execution without
+ * replacing the app's particular scene, styling, wardrobe or composition.
+ *
+ * These rules apply to all 42 curated apps as well as catalogue apps via
+ * app-presets.ts. App-specific prompts below remain the source of the look.
+ */
+export const CREATIVE_PROMPT_QUALITY_CONTRACT =
+  "Use the app-specific transformation described above as the primary visual target. " +
+  "Match its defining scene, styling, wardrobe, palette, composition and overall " +
+  "visual effect rather than producing a generic result. Preserve the reference " +
+  "person's recognizable identity and natural facial geometry; do not substitute " +
+  "a generic face or beautify them. For photoreal outputs keep natural skin texture, " +
+  "pores, believable eyes and hair, realistic anatomy, and coherent lighting. " +
+  "Apply selected controls only to their named attributes while retaining the " +
+  "app's defining look. For intentionally stylized artwork, preserve likeness " +
+  "within the requested medium instead of mixing a realistic face with a stylized scene.";
+
 export const CREATIVE_BASE = "/creative";
 
 /** The original hand-written apps. These win on a slug clash with the catalogue. */

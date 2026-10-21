@@ -11,6 +11,7 @@
  */
 
 import type { CreativeApp } from "@/lib/creative-apps";
+import { CREATIVE_PROMPT_QUALITY_CONTRACT } from "@/lib/creative-apps";
 
 export type PresetTab = "solo" | "group" | "custom";
 
@@ -182,22 +183,42 @@ export function buildPrompt(
   // picture to edit, wherever the pose is rebuilt — see referenceDirective().
   if (mode === "restage" && isGptModel(model)) parts.push(referenceDirective());
 
+  // Keep the per-app prompt as the visual north star: this is the brief
+  // that should produce the app's own before/after example. Presets and
+  // option phrases are constraints layered onto that brief, not replacements.
   if (tab === "custom" && customText.trim()) {
-    parts.push(customText.trim());
+    parts.push(
+      "Keep the app's defining transformation shown in its example preview, " +
+      "unless the custom instruction explicitly asks to replace that transformation. " +
+      customText.trim()
+    );
   } else {
-    // The app's own closing "must look like a real photograph" line goes; the
-    // canonical one is appended below, and two of them dilute each other.
+    // The app's own closing realism line is replaced by the canonical directive
+    // below; its scene, costume, style and composition instructions remain primary.
     parts.push(stripOwnPhotoreal(app.prompt));
-    if (preset) parts.push(preset.modifier);
+    if (preset) {
+      parts.push(
+        "Use this selected variation only to refine the relevant parts of the " +
+        "app's main transformation; do not discard or contradict its defining look: " +
+        preset.modifier
+      );
+    }
   }
 
-  parts.push(...extras);
+  // Multi-parameter controls (for example attire + background, or setting +
+  // lighting) each append their own scoped instruction. The combined prompt
+  // must honour every selected parameter while preserving the main app brief.
+  parts.push(...extras.map((phrase) =>
+    "Apply this selected app option to its named attribute without changing " +
+    "unrelated attributes or losing the app's defining preview style: " + phrase
+  ));
 
   if (tab === "group") {
     parts.push(
-      "There are multiple people in the photo. Keep every person's own face, facial " +
-      "structure, identity and natural skin tone, and keep them in their existing " +
-      "positions relative to each other."
+      "There are multiple people in the source photo. Preserve every visible person's " +
+      "own identity and recognizable facial features independently; do not merge, " +
+      "duplicate, replace, or average faces. Keep the relationships and relative " +
+      "positions sensible for the requested composition."
     );
   }
 
@@ -226,6 +247,10 @@ export function buildPrompt(
     else gets the strict form. See lib/staging.ts.
   */
   parts.push(outputDirective(outputFormFor(app)));
+
+  // Last in the prompt so the quality contract stays present for every model
+  // and every option combination, without replacing any app-specific target.
+  parts.push(CREATIVE_PROMPT_QUALITY_CONTRACT);
 
   return parts.join(" ");
 }

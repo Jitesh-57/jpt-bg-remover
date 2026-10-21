@@ -46,9 +46,9 @@ export type Row = [string, string, string, AppCat, string, string];
 // Identity preservation is the single thing users notice most, so it is appended
 // to every prompt that edits a photo of a person rather than trusted to each row.
 const KEEP_FACE =
-  "Preserve the person's facial features, bone structure, identity and natural skin tone exactly — change nothing about who they are.";
+  "Preserve the same person's recognizable identity from the uploaded reference: face shape, forehead, cheekbones, jawline, eye shape and spacing, eyebrows, nose, lips, natural asymmetry, age appearance, skin tone and distinctive features. Do not replace them with a generic AI face or beautify/idealize their features. Keep natural skin texture and pores; avoid waxy smoothing, exaggerated eyes, reshaped facial features and artificial symmetry. Change only what the app's requested transformation requires.";
 const PHOTOREAL =
-  "The result must read as a real photograph: natural skin texture, believable lighting and shadows, correct anatomy and hands. Not an illustration or a render, unless the style explicitly calls for one.";
+  "For photographic results, use realistic camera detail: natural skin texture and pores, believable eyes and hair strands, coherent lighting and shadows, correct anatomy and perspective, and matching sharpness across face, neck and body. Avoid waxy skin, over-retouching, distorted features, face-morphing and pasted-on faces. If the app intentionally creates artwork, render the requested medium consistently across the whole image instead of forcing photorealism.";
 
 const NON_PERSON: AppCat[] = ["product", "enhance", "remove", "background"];
 
