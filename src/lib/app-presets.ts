@@ -11,6 +11,7 @@
  */
 
 import type { CreativeApp } from "@/lib/creative-apps";
+import { CREATIVE_PROMPT_QUALITY_CONTRACT } from "@/lib/creative-apps";
 
 export type PresetTab = "solo" | "group" | "custom";
 
@@ -246,6 +247,10 @@ export function buildPrompt(
     else gets the strict form. See lib/staging.ts.
   */
   parts.push(outputDirective(outputFormFor(app)));
+
+  // Last in the prompt so the quality contract stays present for every model
+  // and every option combination, without replacing any app-specific target.
+  parts.push(CREATIVE_PROMPT_QUALITY_CONTRACT);
 
   return parts.join(" ");
 }
