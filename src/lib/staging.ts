@@ -303,7 +303,7 @@ const BY_SLUG: Record<string, StagingMode> = {
  * photograph.
  */
 const ARTWORK_SLUGS = new Set([
-  "ai-art-generator", "ai-avatar-generator", "ai-mermaid-filter", "ai-painter",
+  "ai-art-generator", "ai-avatar-generator", "ai-mermaid-filter", "ai-painter", "ai-fairy-filter", "ai-vampire", "ai-character-generator", "ai-pokemon-generator",
   "ai-pokemon-generator", "ai-vtuber-maker", "ai-webtoon-generator", "anime-style",
   "caricature-maker", "cartoon-generator", "claymation-portrait", "coloring-page-generator",
   "comic-book-cover", "comic-generator", "discord-pfp-maker", "gaming-logo-maker",
