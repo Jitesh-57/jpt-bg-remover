@@ -1,4 +1,4 @@
-import { seoJson, seoMeta } from "@/lib/seo/brand";
+import { SHARE_IMAGE, seoJson, seoMeta } from "@/lib/seo/brand";
 import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
@@ -37,29 +37,20 @@ const LOGO_URL = `${SUPA_ORIGIN}/storage/v1/object/public/landing/logo.png`;
 
 export const metadata: Metadata = seoMeta({
   title: {
-    default: "PixelShine — Your Own AI Creative Studio",
+    default: "PixelShine: Free AI Photo Editor & Image Generator",
     template: "%s | Pixel Shine",
   },
-  description: "Create more, edit less. Bring your visual ideas to life with PixelShine AI — 200+ AI photo apps and free creative tools in one place.",
+  description: "Edit photos by typing what you want, or turn a selfie into a headshot, Ghibli art and more with 200+ AI photo apps. Free tools, free account, no card.",
   keywords: ["ai image editor free", "remove background free", "image upscaler free", "ai photo editor online", "background remover free"],
   metadataBase: new URL(BASE),
   icons: { icon: "/icon.png", shortcut: "/favicon.ico", apple: "/apple-icon.png" },
   // No canonical here — each page sets its own. A layout-level canonical
   // would incorrectly point every subpage at the homepage.
-  openGraph: {
-    type: "website",
-    siteName: "Pixel Shine",
-    title: "PixelShine — Your Own AI Creative Studio",
-    description: "Create more, edit less. Bring your visual ideas to life with PixelShine AI — 200+ AI photo apps and free creative tools in one place.",
-    url: BASE,
-    images: [{ url: LOGO_URL }],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "PixelShine — Your Own AI Creative Studio",
-    description: "Create more, edit less. Bring your visual ideas to life with PixelShine AI — 200+ AI photo apps and free creative tools in one place.",
-    images: [LOGO_URL],
-  },
+  // What a page with no openGraph of its own inherits. No title, description
+  // or url here: they would be the homepage's on every such page. Left out,
+  // Next fills them from the page's own title and description.
+  openGraph: { type: "website", siteName: "Pixel Shine", images: [SHARE_IMAGE] },
+  twitter: { card: "summary_large_image", images: [SHARE_IMAGE] },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
   verification: { google: "oaUjZEOCATyjaE5OvAHr6gXTXGjt6wJnk436SYbf1O4" },
 });
@@ -82,22 +73,9 @@ const websiteSchema = {
   name: "Pixel Shine",
   alternateName: ["SJPT", "sjpt.io", "JPT AI"],
   url: BASE,
-  potentialAction: {
-    "@type": "SearchAction",
-    target: { "@type": "EntryPoint", urlTemplate: `${BASE}/blog?q={search_term_string}` },
-    "query-input": "required name=search_term_string",
-  },
-};
-
-const softwareSchema = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  name: "Pixel Shine — Free AI Image Editor",
-  applicationCategory: "MultimediaApplication",
-  operatingSystem: "Web",
-  offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: "Free browser tools with no sign-up, plus paid server-side AI features sold as one-time credit packs" },
-  url: BASE,
-  description: "Free AI image editor. Remove backgrounds, upscale photos to 4K, generate AI backgrounds, and edit images with text prompts.",
+  // No SearchAction: the blog has no ?q= search for it to point at. And no
+  // site-wide SoftwareApplication either: each tool and app page describes
+  // itself, and a second app block on every page contradicted those.
 };
 
 /*
@@ -140,7 +118,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(organizationSchema) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(websiteSchema) }} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(softwareSchema) }} />
       </head>
       <body style={{ margin: 0, padding: 0, fontFamily: "var(--font)" }}>
         {/* Google Tag Manager — deferred so it doesn't block first paint. */}

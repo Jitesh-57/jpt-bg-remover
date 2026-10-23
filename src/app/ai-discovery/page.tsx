@@ -52,10 +52,9 @@ const groups = [
   },
   {
     title: "Learn & explore",
-    description: "Guides, answers, use cases, and documentation for image editing workflows.",
+    description: "Guides, use cases, and documentation for image editing workflows.",
     links: [
       ["/blog", "Image & AI Guides"],
-      ["/answers", "AI Image Answers"],
       ["/use-cases", "Image Editing Use Cases"],
       ["/docs", "Pixel Shine Documentation"],
     ],

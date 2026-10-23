@@ -17,7 +17,6 @@ import { editedPosts } from "@/lib/blog-edits.server";
 import { VARIANTS, PARENT_META, type ParentTool } from "@/lib/landing-variants";
 import { CREATIVE_APPS, CREATIVE_BASE } from "@/lib/creative-apps";
 import { USE_CASES, ANSWER_PAGES } from "@/lib/growth-pages";
-import { QUERY_PAGES } from "@/lib/query-pages";
 import { CONVERSIONS } from "@/lib/conversions";
 import { COMPRESSIONS } from "@/lib/compressions";
 import { CROPS } from "@/lib/crops";
@@ -88,7 +87,6 @@ export function pagesUrls(): SitemapUrl[] {
     { url: `${BASE}/terms` },
     { url: `${BASE}/80s-ai-photo-prompts` },
     { url: `${BASE}/batch-editor` },
-    { url: `${BASE}/answers` },
     { url: `${BASE}/docs` },
     // The blog's topic hubs (lib/blog-topics): each links every post on its topic.
     { url: `${BASE}/guides` },
@@ -187,9 +185,7 @@ export function growthUrls(): SitemapUrl[] {
   return dated(dedupe([
     { url: `${BASE}/use-cases` },
     ...USE_CASES.map((p) => ({ url: `${BASE}/use-cases/${p.slug}` })),
-    { url: `${BASE}/ai` },
     ...ANSWER_PAGES.map((p) => ({ url: `${BASE}/ai/${p.slug}` })),
-    ...QUERY_PAGES.map((p) => ({ url: `${BASE}/answers/${p.slug}` })),
   ]));
 }
 

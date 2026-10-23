@@ -16,8 +16,8 @@ async function generateMetadataBase({ params }: { params: Promise<{ n: string }>
   const { n } = await params;
   const url = `https://www.sjpt.io/blog/page/${n}`;
   return {
-    title: { absolute: brandedTitle(`Image Upscaling Blog — Page ${n} | Pixel Shine`) },
-    description: `Tips, tutorials and guides for upscaling, enhancing and editing photos with AI — page ${n} of the Pixel Shine blog.`,
+    title: { absolute: brandedTitle(`AI Photo Editing Guides — Page ${n} | Pixel Shine`) },
+    description: `Guides to editing photos with AI: headshots, photo trends, restoring old photos and sharper pictures. Page ${n} of the Pixel Shine blog.`,
     alternates: { canonical: url },
     openGraph: { title: `Pixel Shine Blog — Page ${n}`, type: "website", url },
   };

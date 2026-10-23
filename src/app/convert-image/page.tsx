@@ -1,9 +1,10 @@
-import { seoJson, withSeoMeta } from "@/lib/seo/brand";
+import { withSeoMeta } from "@/lib/seo/brand";
 import { brandedTitle } from "@/lib/seo/title";
 import GuidesBlock from "@/app/_components/GuidesBlock";
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { getPageConfig } from '@/lib/page-config'
+import { toolShareImages } from '@/lib/landing-images'
 import LandingPage from '../_components/LandingPage'
 import { CONVERSIONS, buildContent } from '@/lib/conversions'
 
@@ -16,14 +17,14 @@ async function generateMetadataBase(): Promise<Metadata> {
     openGraph: {
       title: config.og_title || config.title,
       description: config.og_description || config.meta_description,
-      images: config.og_image ? [config.og_image] : [],
+      images: toolShareImages('convert-image', config.og_image),
       url: 'https://www.sjpt.io/convert-image',
     },
     twitter: {
       card: 'summary_large_image',
       title: config.og_title || config.title,
       description: config.og_description || config.meta_description,
-      images: config.og_image ? [config.og_image] : [],
+      images: toolShareImages('convert-image', config.og_image),
     },
     alternates: { canonical: 'https://www.sjpt.io/convert-image' },
   }
@@ -31,24 +32,10 @@ async function generateMetadataBase(): Promise<Metadata> {
 
 export default async function Page() {
   const config = await getPageConfig('convert-image')
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'SoftwareApplication',
-    name: config.h1,
-    description: config.meta_description,
-    applicationCategory: 'MultimediaApplication',
-    operatingSystem: 'Web',
-    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-    url: 'https://www.sjpt.io/convert-image',
-  }
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: seoJson(jsonLd) }}
-      />
-      <LandingPage guides={<GuidesBlock path="/convert-image" />} config={config} toolHref="/editor?tool=convert" pageId="convert-image" />
+      <LandingPage path="/convert-image" guides={<GuidesBlock path="/convert-image" />} config={config} toolHref="/editor?tool=convert" pageId="convert-image" />
 
       {/* Popular conversions — internal links to the per-format landing pages */}
       <section style={{ background: 'var(--surface)', padding: '56px 24px 72px' }}>

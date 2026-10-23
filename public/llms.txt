@@ -11,7 +11,7 @@
 - Image prompts: https://www.sjpt.io/prompts
 - Tutorials and guides: https://www.sjpt.io/blog
 - Use cases: https://www.sjpt.io/use-cases
-- Answers and AI guides: https://www.sjpt.io/answers
+- Guides: https://www.sjpt.io/guides
 - Documentation: https://www.sjpt.io/docs
 
 ## Discovery

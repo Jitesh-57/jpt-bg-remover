@@ -35,11 +35,11 @@ export default async function BlogIndex({ page }: { page: number }) {
             Blog
           </div>
           <h1 style={{ margin: "0 0 14px", fontSize: "clamp(28px, 4vw, 42px)", fontWeight: 900, color: "var(--text)", letterSpacing: "-0.8px", lineHeight: 1.15 }}>
-            Image Upscaling Tips & Tutorials
+            AI Photo Editing Guides &amp; Tutorials
           </h1>
           {page > 1 && <div style={{ fontSize: 14, fontWeight: 700, color: "var(--text-faint)", margin: "-4px 0 12px" }}>Page {page} of {pages}</div>}
           <p style={{ margin: 0, fontSize: 18, color: "var(--text-muted)", lineHeight: 1.6, maxWidth: 540, marginLeft: "auto", marginRight: "auto" }}>
-            Step-by-step guides on upscaling images, enhancing photo quality, fixing blurry pictures, and getting print-ready resolution — all free.
+            Step-by-step help with the things people actually do with photos: headshots, trends like Ghibli and action figures, restoring old pictures, clean backgrounds and sharper images.
           </p>
         </div>
 

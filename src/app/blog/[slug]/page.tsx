@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import BlogCover from "../_components/BlogCover";
-import { mainsFrom } from "@/lib/blog-images";
+import { blogCover, blogImageUrl, mainsFrom, type AppMains } from "@/lib/blog-images";
 import { readOverrides } from "@/lib/overrides";
 import { POSTS } from "../_data/posts";
 import { editedPost, editedPosts } from "@/lib/blog-edits.server";
@@ -14,14 +14,25 @@ import { blogIndexable, NOINDEX } from "@/lib/seo/index-policy";
 import { relatedSlugs } from "@/lib/blog-links";
 import { TOPIC_BY_SLUG, topicOf, topicHref } from "@/lib/blog-topics";
 
+/**
+ * The picture a shared link to this post shows, and its structured data names:
+ * the cover the page draws, unless that is only the guessed per-post URL,
+ * which may not exist (then the site's share image stands in).
+ */
+function coverImage(post: Parameters<typeof blogCover>[0], mains: AppMains): string | undefined {
+  const first = blogCover(post, mains).sources[0];
+  return first && first !== blogImageUrl(post.slug) ? first : undefined;
+}
+
 export async function generateStaticParams() {
   return POSTS.map((p) => ({ slug: p.slug }));
 }
 
 async function generateMetadataBase({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const post = await editedPost(slug);
+  const [post, overrides] = await Promise.all([editedPost(slug), readOverrides()]);
   if (!post) return {};
+  const image = coverImage(post, mainsFrom(overrides.pages));
   return {
     title: { absolute: fitTitle([post.metaTitle, stripBrand(post.metaTitle), post.title]) },
     description: post.metaDescription,
@@ -35,6 +46,7 @@ async function generateMetadataBase({ params }: { params: Promise<{ slug: string
       type: "article",
       publishedTime: post.date,
       siteName: "Pixel Shine",
+      ...(image ? { images: [image] } : {}),
     },
     twitter: {
       card: "summary_large_image",
@@ -130,7 +142,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     description: post.metaDescription,
     datePublished: post.date,
     dateModified: post.date,
-    image: post.image ? [post.image] : undefined,
+    image: (coverImage(post, mains) ?? post.image) || undefined,
     author: { "@type": "Organization", name: "Pixel Shine", url: "https://www.sjpt.io" },
     publisher: {
       "@type": "Organization",

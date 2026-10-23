@@ -8,36 +8,40 @@ import { PAID_FEATURES_ENABLED } from "@/lib/features";
 import BrandLogo from "./BrandLogo";
 import { BLOG_TOPICS, topicHref } from "@/lib/blog-topics";
 
+// Each link goes to the page search engines index for that job (see
+// docs/seo/keyword-map.md), not to the app screen behind it.
 const AI_TOOLS = [
-  { labelKey: "AI Upscale",         href: "/upscale" },
+  { labelKey: "AI Photo Editor",    href: "/ai-editor" },
+  { labelKey: "AI Headshot Generator", href: "/ai-headshot" },
   { labelKey: "Remove Background",  href: "/remove-bg" },
-  { labelKey: "AI Headshot",        href: "/ai-headshot" },
-  { labelKey: "AI Photo Editor",    href: "/app/editor" },
+  { labelKey: "Image Upscaler",     href: "/upscale" },
   { labelKey: "AI Image Generator", href: "/app/create" },
-  { labelKey: "Creative Apps",      href: "/creative" },
+  { labelKey: "All AI Photo Apps",  href: "/creative" },
 ];
 
-const ALL_TOOLS = [
-  { labelKey: "Image Editor",    href: "/editor" },
-  { labelKey: "Batch Editor",    href: "/batch-editor" },
-  { labelKey: "My Generations",  href: "/generations" },
+// The AI apps people search for most, linked from every page.
+const POPULAR_APPS = [
+  { labelKey: "Ghibli Style Photo",    href: "/creative/ghibli-style" },
+  { labelKey: "AI Action Figure",      href: "/creative/3d-figurine" },
+  { labelKey: "AI Saree Photoshoot",   href: "/creative/saree-photoshoot" },
+  { labelKey: "Professional Headshot", href: "/creative/professional-headshot" },
+  { labelKey: "Restore Old Photos",    href: "/creative/restore-old-photos" },
+  { labelKey: "AI Baby Photoshoot",    href: "/creative/baby-photoshoot" },
+  { labelKey: "Photo to Anime",        href: "/creative/anime-style" },
 ];
 
-// Free, in-browser tools — the SEO landing pages. Shown in free-only mode.
+// Free, in-browser tools, the photo editor first.
 const FREE_TOOLS = [
-  { labelKey: "Image Upscaler",   href: "/upscale" },
-  { labelKey: "Image Compressor", href: "/compress-image" },
-  { labelKey: "Image Converter",  href: "/convert-image" },
-  { labelKey: "Crop Image",       href: "/crop-image" },
+  { labelKey: "Free Photo Editor", href: "/editor" },
+  { labelKey: "Compress Image",   href: "/compress-image" },
   { labelKey: "Resize Image",     href: "/resize-image" },
-  { labelKey: "Rotate & Flip",    href: "/rotate-image" },
-  { labelKey: "QR Code Generator", href: "/qr-code-generator" },
+  { labelKey: "Crop Image",       href: "/crop-image" },
+  { labelKey: "Convert Image",    href: "/convert-image" },
   { labelKey: "Blur Image",       href: "/blur-image" },
   { labelKey: "Add Watermark",    href: "/watermark-image" },
-  { labelKey: "Meme Generator",   href: "/meme-generator" },
   { labelKey: "Image to PDF",     href: "/image-to-pdf" },
-  { labelKey: "TikTok Watermark Remover", href: "/tiktok-watermark-remover" },
-  { labelKey: "Metadata Remover", href: "/invisible-watermark-remover" },
+  { labelKey: "Meme Generator",   href: "/meme-generator" },
+  { labelKey: "All free tools",   href: "/tools" },
 ];
 
 const ALL_COMPANY = [
@@ -47,13 +51,10 @@ const ALL_COMPANY = [
   { labelKey: "80s AI Prompts", href: "/80s-ai-photo-prompts" },
   { labelKey: "Pricing", href: "/pricing" },
   { labelKey: "Blog",    href: "/blog" },
-  { labelKey: "AI Guide", href: "/answers" },
   { labelKey: "Contact", href: "mailto:patil.jitesh866@gmail.com" },
 ];
 
-// In free-only mode drop the paid links (My Generations, Pricing). The Blog
-// stays — it's kept as an upscale-only content hub.
-const TOOLS = PAID_FEATURES_ENABLED ? ALL_TOOLS : ALL_TOOLS.filter(l => l.href !== "/generations");
+// In free-only mode drop the paid links: the AI columns and Pricing.
 const COMPANY = PAID_FEATURES_ENABLED ? ALL_COMPANY : ALL_COMPANY.filter(l => l.href !== "/pricing");
 
 export default function Footer() {
@@ -81,35 +82,24 @@ export default function Footer() {
                 back here with the real profile URL once there is one. */}
           </div>
 
-          {/* AI Tools (paid mode) or Free Tools (free-only mode) */}
-          <div>
-            <div style={{ fontSize: 11, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 16 }}>{PAID_FEATURES_ENABLED ? t.footerAiTools : "Free Tools"}</div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {(PAID_FEATURES_ENABLED ? AI_TOOLS : FREE_TOOLS).map(l => (
-                <a key={l.href} href={l.href}
-                  style={{ fontSize: 14, color: "var(--text-muted)", textDecoration: "none", transition: "color 0.15s" }}
-                  onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")}
-                  onMouseLeave={e => (e.currentTarget.style.color = "var(--text-muted)")}>
-                  {l.labelKey}
-                </a>
-              ))}
+          {(PAID_FEATURES_ENABLED
+            ? [{ title: t.footerAiTools, links: AI_TOOLS }, { title: "Popular AI apps", links: POPULAR_APPS }, { title: "Free tools", links: FREE_TOOLS }]
+            : [{ title: "Free tools", links: FREE_TOOLS }]
+          ).map((col) => (
+            <div key={col.title}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 16 }}>{col.title}</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                {col.links.map(l => (
+                  <a key={l.href} href={l.href}
+                    style={{ fontSize: 14, color: "var(--text-muted)", textDecoration: "none", transition: "color 0.15s" }}
+                    onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")}
+                    onMouseLeave={e => (e.currentTarget.style.color = "var(--text-muted)")}>
+                    {l.labelKey}
+                  </a>
+                ))}
+              </div>
             </div>
-          </div>
-
-          {/* Tools */}
-          <div>
-            <div style={{ fontSize: 11, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 16 }}>{t.footerTools}</div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {TOOLS.map(l => (
-                <a key={l.href} href={l.href}
-                  style={{ fontSize: 14, color: "var(--text-muted)", textDecoration: "none", transition: "color 0.15s" }}
-                  onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")}
-                  onMouseLeave={e => (e.currentTarget.style.color = "var(--text-muted)")}>
-                  {l.labelKey}
-                </a>
-              ))}
-            </div>
-          </div>
+          ))}
 
           {/* Guides — the blog's topic hubs, linked sitewide so every post is two clicks from any page. */}
           <div>

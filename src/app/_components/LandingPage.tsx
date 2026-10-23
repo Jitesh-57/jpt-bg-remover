@@ -4,7 +4,8 @@ import { seoJson } from "@/lib/seo/brand";
 import { useRef, useState, useEffect, DragEvent } from 'react'
 import { useTrialOffer } from '@/lib/trial-offer'
 import PricingSection from '@/app/_components/PricingSection'
-import { PACKS, MONTHLY_PLANS, CREDIT_COST } from '@/lib/plans'
+import { CREDIT_COST } from '@/lib/plans'
+import { APP_OFFERS } from '@/lib/seo/offers'
 import FAQAccordion from './FAQAccordion'
 import { PageSEO } from '@/lib/page-config'
 import { PAGE_IMAGES, PAGE_BEFORE_AFTER } from '@/lib/landing-images'
@@ -32,9 +33,19 @@ interface LandingPageProps {
   relatedVariants?: { slug: string; h1: string; href: string }[]
   /** This page's own slug, so it can leave itself out of that list. */
   currentSlug?: string
+  /** This page's path ("/remove-bg/product-photos"): the URL its structured data names. */
+  path?: string
 }
 
 const SITE_BASE = 'https://www.sjpt.io'
+
+// What a use-case page sits under, for its breadcrumb (Home › Background Remover › …).
+const PARENT_CRUMB: Record<string, { name: string; href: string }> = {
+  'remove-bg': { name: 'Background Remover', href: '/remove-bg' },
+  upscale: { name: 'Image Upscaler', href: '/upscale' },
+  'ai-editor': { name: 'AI Photo Editor', href: '/ai-editor' },
+  headshot: { name: 'AI Headshot Generator', href: '/ai-headshot' },
+}
 
 // Map pageId → editor tool id (matches editor's Tool type)
 const PAGE_TOOL: Record<string, string> = {
@@ -194,29 +205,6 @@ const PAGE_USE_CASES: Record<string, { icon: string; title: string; stat?: strin
   ],
 }
 
-const PAGE_TESTIMONIALS: Record<string, { name: string; role: string; avatar: string; quote: string; stars: number }[]> = {
-  upscale: [
-    { name: 'Arjun Verma', role: 'E-commerce Seller', avatar: 'AV', quote: 'I had hundreds of old product photos taken on a phone. After upscaling, they look like professional studio shots. Sales improved noticeably.', stars: 5 },
-    { name: 'Meera Nair', role: 'Photographer', avatar: 'MN', quote: 'The AI preserves texture and detail in a way no other online tool does. Hair, fabric, skin — it all looks natural after upscaling.', stars: 5 },
-    { name: 'Kiran Shah', role: 'Graphic Designer', avatar: 'KS', quote: 'I use it to upscale AI-generated art before printing. 4× boost and the results are ready for A2 poster prints. Incredible.', stars: 5 },
-  ],
-  'remove-bg': [
-    { name: 'Priya Sharma', role: 'E-commerce Owner', avatar: 'PS', quote: 'I was spending 30 minutes per product photo in Photoshop. Now I process 40 images before morning coffee. My store looks completely professional.', stars: 5 },
-    { name: 'Rahul Mehta', role: 'Freelance Photographer', avatar: 'RM', quote: 'Background removal on hair and fine details is flawless. My clients can\'t tell the difference from a manual Photoshop cutout.', stars: 5 },
-    { name: 'Sneha Patel', role: 'Social Media Manager', avatar: 'SP', quote: 'Switched from remove.bg — same quality, but Pixel Shine has all the other tools too. No watermarks, instant results. Perfect.', stars: 5 },
-  ],
-  headshot: [
-    { name: 'Aditya Kumar', role: 'Software Engineer', avatar: 'AK', quote: 'Updated my LinkedIn with a Pixel Shine headshot. Got 3 recruiter messages in the same week. The photo looks completely professional.', stars: 5 },
-    { name: 'Nisha Gupta', role: 'Marketing Manager', avatar: 'NG', quote: 'Used it for our entire team\'s company page. Saved us a ₹30,000 studio session. Everyone looks consistent and polished.', stars: 5 },
-    { name: 'Vivek Joshi', role: 'Freelance Consultant', avatar: 'VJ', quote: 'I needed a quick headshot for a conference speaker profile. Done in 2 minutes, looked better than my old studio photo.', stars: 5 },
-  ],
-  'ai-editor': [
-    { name: 'Pooja Reddy', role: 'Content Creator', avatar: 'PR', quote: 'I just type what I want — "add a sunset background", "make it look cinematic" — and it\'s done. No Photoshop skills needed at all.', stars: 5 },
-    { name: 'Suresh Bhat', role: 'Digital Marketer', avatar: 'SB', quote: 'Changed 50 product backgrounds for a campaign in one afternoon. What used to take a design agency 3 days now takes me hours.', stars: 5 },
-    { name: 'Kavya Singh', role: 'Graphic Designer', avatar: 'KS', quote: 'Perfect for rapid prototyping. I try 10 different styles with AI prompts before committing to one direction. Massive time saver.', stars: 5 },
-  ],
-}
-
 const PAGE_COMPARISON: Record<string, { feature: string; jpt: boolean; alt1: boolean; alt2: boolean; alt1name: string; alt2name: string }[]> = {
   upscale: [
     { feature: '4× AI Upscaling', jpt: true, alt1: false, alt2: true, alt1name: 'Photoshop', alt2name: "Let's Enhance" },
@@ -369,7 +357,7 @@ const PAGE_VISUALS: Record<string, { before: string; after: string; label: strin
   },
 }
 
-export default function LandingPage({ config, toolHref, pageId, isHome, relatedVariants, currentSlug, guides }: LandingPageProps) {
+export default function LandingPage({ config, toolHref, pageId, isHome, relatedVariants, currentSlug, guides, path }: LandingPageProps) {
   // The signup trial, only where it is live for this visitor (lib/trial-offer).
   const trialOffer = useTrialOffer()
   // ── Structured data (rich results) ──────────────────────────────────────────
@@ -385,20 +373,25 @@ export default function LandingPage({ config, toolHref, pageId, isHome, relatedV
         })),
       }
     : null
-  // Breadcrumb schema → the Home › Tool trail under the search result title.
-  const crumbLink = FREE_TOOL_LINKS.find((l) => l.id === pageId)
-  const breadcrumbLd = !isHome && crumbLink
+  // This page's own URL: the one every block below names. A tool page passes
+  // its path; the free-tool links are the fallback for any that doesn't.
+  const pagePath = isHome ? '' : path ?? FREE_TOOL_LINKS.find((l) => l.id === pageId)?.href ?? ''
+  const pageUrl = `${SITE_BASE}${pagePath}`
+
+  // Breadcrumb schema → the Home › Tool (› Use case) trail under the search result title.
+  const parent = currentSlug ? PARENT_CRUMB[pageId] : undefined
+  const trail = [
+    { name: 'Home', href: '' },
+    ...(parent ? [parent] : []),
+    { name: config.h1 || config.title, href: pagePath },
+  ]
+  const breadcrumbLd = !isHome && pagePath
     ? {
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
-        itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_BASE },
-          { '@type': 'ListItem', position: 2, name: crumbLink.title, item: `${SITE_BASE}${crumbLink.href}` },
-        ],
+        itemListElement: trail.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: `${SITE_BASE}${c.href}` })),
       }
     : null
-
-  const pageUrl = isHome ? SITE_BASE : crumbLink ? `${SITE_BASE}${crumbLink.href}` : SITE_BASE
 
   // WebPage → tells crawlers what this URL is, matching the visible H1/subtitle.
   const webPageLd = {
@@ -409,8 +402,8 @@ export default function LandingPage({ config, toolHref, pageId, isHome, relatedV
     url: pageUrl,
   }
 
-  // SoftwareApplication + Offer → the free-tool signal, and the credit price
-  // for the AI features. Prices come from lib/plans.ts, never hardcoded.
+  // SoftwareApplication + Offer → free to start, and the credit price for the
+  // AI features (lib/seo/offers).
   const appLd = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
@@ -419,15 +412,7 @@ export default function LandingPage({ config, toolHref, pageId, isHome, relatedV
     url: pageUrl,
     applicationCategory: 'MultimediaApplication',
     operatingSystem: 'Web',
-    offers: {
-      '@type': 'AggregateOffer',
-      // INR: the packs are charged in rupees through Razorpay, so that is the
-      // currency the offer is actually made in.
-      priceCurrency: 'INR',
-      lowPrice: '0',
-      highPrice: String(Math.max(...PACKS.map((p) => p.inr), ...MONTHLY_PLANS.map((p) => p.inr))),
-      offerCount: String(PACKS.length + MONTHLY_PLANS.length + 1),
-    },
+    offers: APP_OFFERS,
   }
 
   // Two-tone H1: the last word gets a gradient fill (e.g. "Free Image Compressor").
@@ -878,35 +863,6 @@ export default function LandingPage({ config, toolHref, pageId, isHome, relatedV
                     <div style={{ display: 'inline-block', background: 'var(--accent-soft)', color: 'var(--accent)', fontSize: 11, fontWeight: 800, borderRadius: 20, padding: '3px 10px', marginBottom: 8 }}>📈 {u.stat}</div>
                   )}
                   <p style={{ margin: 0, fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.65 }}>{u.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ── Testimonials ─────────────────────────────────────────────────── */}
-      {PAGE_TESTIMONIALS[pageId] && (
-        <section style={{ padding: '80px 24px', background: 'linear-gradient(160deg, var(--surface-2) 0%, var(--accent-soft) 100%)' }}>
-          <div style={{ maxWidth: 1000, margin: '0 auto' }}>
-            <div style={{ textAlign: 'center', marginBottom: 48 }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>Testimonials</div>
-              <h2 style={{ fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', fontWeight: 900, color: 'var(--text)', margin: 0, letterSpacing: '-0.02em' }}>Loved by creators & businesses</h2>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
-              {PAGE_TESTIMONIALS[pageId].map(t => (
-                <div key={t.name} style={{ background: 'var(--surface)', borderRadius: 16, padding: '24px 22px', border: '1px solid var(--border)', boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}>
-                  <div style={{ display: 'flex', gap: 3, marginBottom: 14 }}>
-                    {Array.from({ length: t.stars }).map((_, i) => <span key={i} style={{ color: 'var(--warn)', fontSize: 16 }}>★</span>)}
-                  </div>
-                  <p style={{ margin: '0 0 18px', fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.7, fontStyle: 'italic' }}>&ldquo;{t.quote}&rdquo;</p>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'linear-gradient(135deg, var(--accent), var(--accent-2))', color: '#fff', fontSize: 14, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{t.avatar}</div>
-                    <div>
-                      <div style={{ fontSize: 14, fontWeight: 800, color: 'var(--text)' }}>{t.name}</div>
-                      <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{t.role}</div>
-                    </div>
-                  </div>
                 </div>
               ))}
             </div>

@@ -42,7 +42,7 @@ const SPACES: Space[] = [
 const FEATURES = [
   { label: "Remove Background", href: "/remove-bg" },
   { label: "Upscale Image", href: "/upscale" },
-  { label: "Prompt to Edit", href: "/app/editor" },
+  { label: "Prompt to Edit", href: "/ai-editor" },
   { label: "AI Image Generator", href: "/app/create" },
   { label: "Remove Watermark", href: "/watermark-remover" },
   { label: "Resize Image", href: "/resize-image" },

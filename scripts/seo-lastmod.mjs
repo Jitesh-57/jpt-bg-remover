@@ -43,7 +43,6 @@ const DATA = {
   "/creative": ["src/lib/creative-apps.ts", "src/lib/app-catalog.ts"],
   "/ai": ["src/lib/growth-pages.ts"],
   "/use-cases": ["src/lib/growth-pages.ts"],
-  "/answers": ["src/lib/query-pages.ts"],
   "/guides": ["src/lib/blog-topics.ts"],
 };
 

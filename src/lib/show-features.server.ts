@@ -39,9 +39,11 @@ export function buildShowFeatures(apps: AppCardData[], feed: FeedItem[], picks: 
   const headshotApp = firstApp(["professional-headshot", "linkedin-headshot", "ai-headshot-generator", "doctor-headshot-generator"]);
 
   /** An app's picture: its before|after main creative when published, else its result candidates. */
-  const pic = (a: AppCardData | null | undefined): Pic => (a?.main ? { srcs: [a.main.url], split: true } : { srcs: a?.sources ?? [] });
+  const pic = (a: AppCardData | null | undefined): Pic => (a?.main
+    ? { srcs: [a.main.url], split: true, alt: `${a.name}: a photo before and after` }
+    : { srcs: a?.sources ?? [], alt: a ? `A photo made with ${a.name}` : undefined });
   const textOnly = feed.filter((f) => !f.needsPhoto);
-  const feedPics = textOnly.slice(0, 12).map((f): Pic => ({ srcs: [f.image] }));
+  const feedPics = textOnly.slice(0, 12).map((f): Pic => ({ srcs: [f.image], alt: f.title }));
   // Create Image types real prompts over the images they made, people first:
   // a portrait sells "make me / my model" better than a still life.
   const PEOPLE = /\b(portrait|woman|women|man|men|girl|boy|model|fashion|selfie|headshot|person|lady|bride|couple|editorial|actress|actor)\b/i;
@@ -55,7 +57,7 @@ export function buildShowFeatures(apps: AppCardData[], feed: FeedItem[], picks: 
 
   const features: ShowFeature[] = [
     { kind: "studio", title: "AI Studio", tagline: "Say what you want, refine by chatting", sub: "Chat your edits into place", href: "/app/studio", icon: "sparkle", badge: "NEW", grad: ["#F97316", "#DB2777"], pics: [pic(portraitApp ?? headshotApp)] },
-    { kind: "create", title: "Create Image", tagline: "From a prompt to a finished shot", sub: "Describe it, get the image", href: "/app/create", icon: "create", grad: ["#7C3AED", "#DB2777"], pics: leads.length ? leads.map((f) => ({ srcs: [f.image] })) : [0, 1, 2, 3].map(exampleAt), captions: leads.length ? captions : undefined },
+    { kind: "create", title: "Create Image", tagline: "From a prompt to a finished shot", sub: "Describe it, get the image", href: "/app/create", icon: "create", grad: ["#7C3AED", "#DB2777"], pics: leads.length ? leads.map((f) => ({ srcs: [f.image], alt: `AI image made from the prompt "${f.title}"` })) : [0, 1, 2, 3].map(exampleAt), captions: leads.length ? captions : undefined },
     { kind: "editor", title: "AI Image Editor", tagline: "Edit any photo with a sentence", sub: "Describe the change, get the edit", href: "/app/editor", icon: "editor", grad: ["#0EA5E9", "#6366F1"], pics: [pic(editorApp)] },
     { kind: "recreate", title: "Recreate", tagline: "Any photo's look, with your face", sub: "Copy a look onto yourself", href: "/app/recreate", icon: "copy", grad: ["#F97316", "#EF4444"], pics: [lookApp ? pic(lookApp) : feedPics[4] ?? exampleAt(5), pic(recreateApp)] },
     { kind: "headshot", title: "AI Headshot", tagline: "Studio portraits from one selfie", sub: "LinkedIn-ready in seconds", href: "/ai-headshot", icon: "community", grad: ["#10B981", "#0EA5E9"], pics: [pic(headshotMain ?? headshotApp)] },
