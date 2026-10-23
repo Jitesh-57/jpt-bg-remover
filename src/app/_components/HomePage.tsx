@@ -20,9 +20,9 @@ import { TrialPill } from "@/app/_components/TrialOffer";
 
 /* The hero copy is set here rather than read from the page-SEO row, so an old
    admin override cannot put a retired headline back on the homepage. */
-const HERO_H1 = "Free AI Photo Editor & Image Generator";
+const HERO_H1 = "Your Own AI Creative Studio";
 const HERO_SUB =
-  "Your own AI creative studio. Type the change you want and watch it happen, turn a selfie into a headshot or a Ghibli portrait, or make a picture from a few words. The basic tools are free, and so is your account.";
+  "Create, edit, transform, and reimagine your photos with PixelShine AI. From powerful AI apps to free creative tools, everything you need to turn your ideas into stunning visuals is in one place.";
 import type { PageSEO } from "@/lib/page-config";
 
 const BASE = "https://www.sjpt.io";
@@ -81,7 +81,7 @@ export default function HomePage({
   };
   const webPageLd = {
     "@context": "https://schema.org", "@type": "WebPage",
-    name: HERO_H1, description: config.meta_description, url: BASE,
+    name: config.title, description: config.meta_description, url: BASE,
   };
 
   const sectionHead = (eyebrow: string, title: string, sub?: string) => (

@@ -37,10 +37,10 @@ const LOGO_URL = `${SUPA_ORIGIN}/storage/v1/object/public/landing/logo.png`;
 
 export const metadata: Metadata = seoMeta({
   title: {
-    default: "PixelShine: Free AI Photo Editor & Image Generator",
+    default: "PixelShine — Your Own AI Creative Studio",
     template: "%s | Pixel Shine",
   },
-  description: "Edit photos by typing what you want, or turn a selfie into a headshot, Ghibli art and more with 200+ AI photo apps. Free tools, free account, no card.",
+  description: "Create more, edit less. Bring your visual ideas to life with PixelShine AI — 200+ AI photo apps and free creative tools in one place.",
   keywords: ["ai image editor free", "remove background free", "image upscaler free", "ai photo editor online", "background remover free"],
   metadataBase: new URL(BASE),
   icons: { icon: "/icon.png", shortcut: "/favicon.ico", apple: "/apple-icon.png" },

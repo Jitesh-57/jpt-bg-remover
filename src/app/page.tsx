@@ -9,15 +9,14 @@ import { buildShowFeatures, CREATE_PICKS } from "@/lib/show-features.server";
 const BASE = "https://www.sjpt.io";
 
 /*
-  What Google and link previews show for the homepage: what people search for
-  (a free AI photo editor, an AI image generator), then the name. Set here
-  rather than read from the page-SEO row, like the hero copy, so an old admin
-  override cannot put a retired title or description back into search results
-  and shared links.
+  What Google and link previews show for the homepage: the home screen's
+  tagline. Set here rather than read from the page-SEO row, like the hero copy,
+  so an old admin override cannot put a retired title or description back into
+  search results and shared links. The page itself is unaffected.
 */
-const HOME_TITLE = "Free AI Photo Editor & Image Generator | PixelShine";
+const HOME_TITLE = "PixelShine — Your Own AI Creative Studio";
 const HOME_DESCRIPTION =
-  "Edit photos by typing what you want, or turn a selfie into a headshot, Ghibli art and more with 200+ AI photo apps. Free tools, free account, no card.";
+  "Create more, edit less. Bring your visual ideas to life with PixelShine AI — 200+ AI photo apps and free creative tools in one place.";
 
 async function generateMetadataBase(): Promise<Metadata> {
   const config = await getPageConfig("home");
