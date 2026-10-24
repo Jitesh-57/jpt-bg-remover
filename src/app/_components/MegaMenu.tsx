@@ -56,8 +56,8 @@ const POPULAR: { label: string; slug: string; pic: Pic }[] = [
   // Their previews, not the before|afters: those people already appear in the spaces above.
   { label: "Professional Headshot", slug: "professional-headshot", pic: preview("professional-headshot") },
   { label: "Baby Photoshoot", slug: "baby-photoshoot", pic: creative("baby-photoshoot") },
-  { label: "Outfit Generator", slug: "outfit-generator", pic: preview("outfit-generator") },
-  { label: "3D Figurine", slug: "3d-figurine", pic: creative("3d-figurine") },
+  { label: "AI Outfit Changer", slug: "outfit-generator", pic: preview("outfit-generator") },
+  { label: "AI Action Figure", slug: "3d-figurine", pic: creative("3d-figurine") },
 ];
 
 /** A space's tile: its homepage card's mock-up, in miniature (see .jpt-menu-tile). */

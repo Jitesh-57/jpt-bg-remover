@@ -27,32 +27,33 @@ row against real impressions and re-order the work.
 ## Clusters
 
 Status: **live** = page exists and is indexed; **hidden** = page exists but is
-noindex today; **new** = page to create. PR = where the work lands.
+noindex today; **new** = page to create. PR = where the work lands. An app
+with "own page" has its copy in `src/lib/app-pages/<slug>.ts`.
 
 ### AI photo apps (`/creative/*`) — the pages that lead to sign-ups
 
 | Cluster | Primary URL | Main phrase | Also covers | Questions to answer on the page | Status / PR |
 |---|---|---|---|---|---|
-| Ghibli | /creative/ghibli-style | ghibli ai, photo to ghibli (free online) | ghibli filter, ghibli art, ghibli photo generator / converter / maker, studio ghibli ai, ghibli style free | how to make a Ghibli photo; how to convert a photo to Ghibli style in ChatGPT or Gemini; best Ghibli prompt; Ghibli profile picture; couple / pet Ghibli | live, rewrite PR 2 |
-| Action figure | /creative/3d-figurine | ai action figure generator | 3d figurine from photo, action figure of myself, make yourself an action figure, ai action figure free | how to make an action figure of myself; can I get it as a box / blister pack; does it work for pets and groups | live (re-aim from "3D figurine"), PR 2 |
+| Ghibli | /creative/ghibli-style | ghibli ai, photo to ghibli (free online) | ghibli filter, ghibli art, ghibli photo generator / converter / maker, studio ghibli ai, ghibli style free | how to make a Ghibli photo; how to convert a photo to Ghibli style in ChatGPT or Gemini; best Ghibli prompt; Ghibli profile picture; couple / pet Ghibli | rewritten (own page), PR 2 |
+| Action figure | /creative/3d-figurine | ai action figure generator | 3d figurine from photo, action figure of myself, make yourself an action figure, ai action figure free | how to make an action figure of myself; can I get it as a box / blister pack; does it work for pets and groups | re-aimed to "AI Action Figure Generator", PR 2 |
 | Funko | /creative/funko-pop-figure | funko pop ai | funko pop ai generator, custom funko pop of yourself | how to make a Funko Pop of yourself | live, PR 2 batch 2 |
-| Saree | /creative/saree-photoshoot | ai saree photo, gemini saree trend | nano banana saree prompt, ai saree photo editor free, saree trend 2026, red saree ai photo | how to do the Gemini saree trend; best saree prompt; which looks are trending | live, rewrite PR 2 |
+| Saree | /creative/saree-photoshoot | ai saree photo, gemini saree trend | nano banana saree prompt, ai saree photo editor free, saree trend 2026, red saree ai photo | how to do the Gemini saree trend; best saree prompt; which looks are trending | rewritten (own page), PR 2 |
 | Retro Bollywood | /creative/retro-bollywood | retro bollywood ai photo | 90s bollywood saree trend, vintage bollywood photo | how to do the retro Bollywood trend | live, PR 2 batch 2 |
-| Headshot (one tap) | /creative/professional-headshot | professional headshot from selfie | headshot photo from selfie free, professional headshot online | how to turn a selfie into a headshot; what to wear; will it look like me | live, rewrite PR 2 |
-| Outfit | /creative/outfit-generator | ai outfit changer | try on clothes ai, change clothes ai, outfit generator (free online) | how to change clothes in a photo with AI; does it keep my face; can I pick the outfit | hidden → index after rewrite, PR 2 |
-| Baby photoshoot | /creative/baby-photoshoot | ai baby photoshoot | baby photoshoot ideas at home, ai baby photos free | how to do a baby photoshoot at home; is it safe for newborn photos | live, rewrite PR 2 |
+| Headshot (one tap) | /creative/professional-headshot | professional headshot from selfie | headshot photo from selfie free, professional headshot online | how to turn a selfie into a headshot; what to wear; will it look like me | rewritten (own page), PR 2 |
+| Outfit | /creative/outfit-generator | ai outfit changer | try on clothes ai, change clothes ai, outfit generator (free online) | how to change clothes in a photo with AI; does it keep my face; can I pick the outfit | own page, now indexed, PR 2 |
+| Baby photoshoot | /creative/baby-photoshoot | ai baby photoshoot | baby photoshoot ideas at home, ai baby photos free | how to do a baby photoshoot at home; is it safe for newborn photos | rewritten (own page), PR 2 |
 | Baby predictor | /creative/ai-baby-predictor | ai baby generator | what will our baby look like, ai baby generator for couples (free) | how does an AI baby generator work; is it accurate | live, PR 2 batch 2 |
-| Restore | /creative/restore-old-photos | restore old photos (free) | fix old photos, old photo restoration (online free), fix old photos with ai | how to restore old photos; can AI fix torn / faded photos; scan tips | live, rewrite PR 2 |
+| Restore | /creative/restore-old-photos | restore old photos (free) | fix old photos, old photo restoration (online free), fix old photos with ai | how to restore old photos; can AI fix torn / faded photos; scan tips | rewritten (own page), PR 2 |
 | Colorize | /creative/colorize-photo | colorize old photos | black and white to color, colorize old photo free | how to colorize old photos | hidden → batch 2 |
-| Cartoon | /creative/cartoon-generator | photo to cartoon | cartoon yourself, turn photo into cartoon (free) | how to turn a photo into a cartoon | hidden → index after rewrite, PR 2 |
-| Anime | /creative/anime-style | photo to anime | photo to anime converter free, anime yourself | how to convert a photo to anime | live, rewrite PR 2 |
+| Cartoon | /creative/cartoon-generator | photo to cartoon | cartoon yourself, turn photo into cartoon (free) | how to turn a photo into a cartoon | own page, now indexed, PR 2 |
+| Anime | /creative/anime-style | photo to anime | photo to anime converter free, anime yourself | how to convert a photo to anime | rewritten (own page), PR 2 |
 | Pixar | /creative/pixar-avatar | pixar style ai | 3d cartoon yourself, disney pixar filter | how to make a Pixar-style picture of yourself | live, PR 2 batch 2 |
-| Yearbook | /creative/90s-yearbook-photo | ai yearbook trend | 90s yearbook photos ai, yearbook photo trend tiktok | how to do the AI yearbook trend | live, rewrite PR 2 |
-| Polaroid | /creative/polaroid-photo | polaroid ai trend | ai polaroid photo, polaroid ai free | how to do the AI Polaroid trend | live, rewrite PR 2 |
-| Old Hollywood | /creative/old-hollywood-glamour | old hollywood photo | old hollywood photoshoot ai, vintage glamour portrait | how to get an Old Hollywood look | live, rewrite PR 2 |
-| Glow-up | /creative/glow-up-filter | ai glow up | glow up filter (free online), ai face glow up | how to use AI for a glow-up | live, rewrite PR 2 |
-| Couple | /creative/couple-photoshoot | ai couple photo | couple photoshoot ai, ai wedding photos, pre-wedding ai | how to make AI couple photos; best couple prompts | live, rewrite PR 2 |
-| Hairstyle | /creative/hairstyle-changer | ai hairstyle changer | try hairstyles on my face (free), hairstyle filter | how to try hairstyles on my face | hidden → index after rewrite, PR 2 |
+| Yearbook | /creative/90s-yearbook-photo | ai yearbook trend | 90s yearbook photos ai, yearbook photo trend tiktok | how to do the AI yearbook trend | rewritten (own page), PR 2 |
+| Polaroid | /creative/polaroid-photo | polaroid ai trend | ai polaroid photo, polaroid ai free | how to do the AI Polaroid trend | rewritten (own page), PR 2 |
+| Old Hollywood | /creative/old-hollywood-glamour | old hollywood photo | old hollywood photoshoot ai, vintage glamour portrait | how to get an Old Hollywood look | rewritten (own page), PR 2 |
+| Glow-up | /creative/glow-up-filter | ai glow up | glow up filter (free online), ai face glow up | how to use AI for a glow-up | rewritten (own page), PR 2 |
+| Couple | /creative/couple-photoshoot | ai couple photo | couple photoshoot ai, ai wedding photos, pre-wedding ai | how to make AI couple photos; best couple prompts | rewritten (own page), PR 2 |
+| Hairstyle | /creative/hairstyle-changer | ai hairstyle changer | try hairstyles on my face (free), hairstyle filter | how to try hairstyles on my face | own page, now indexed, PR 2 |
 
 Catalog twins of the pages above (ghibli-style-generator, photo-to-anime,
 pixar-filter, old-photo-restoration, action-figure-generator,

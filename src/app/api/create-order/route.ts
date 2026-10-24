@@ -5,12 +5,19 @@ import { PACKS, inrPaise } from "@/lib/plans";
 import { operatorDetail } from "@/lib/user-message";
 
 export const runtime = "nodejs";
+// Never cached: the GET below exists to wake this function, which a cached reply would not.
+export const dynamic = "force-dynamic";
 
 // Packs come from lib/plans.ts so price and credits are never defined twice.
 const PLANS: Record<string, { amountPaise: number; credits: number; planName: string }> =
   Object.fromEntries(
     PACKS.map((p) => [p.id, { amountPaise: inrPaise(p), credits: p.credits, planName: p.id }])
   );
+
+/** A no-op the pricing pop-up calls when it opens, so a click on Buy Now doesn't wait for a cold start. */
+export function GET() {
+  return new NextResponse(null, { status: 204 });
+}
 
 export async function POST(req: NextRequest) {
   const { session, error } = await checkAuth(req);

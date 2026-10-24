@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { hasAppPage } from "@/lib/app-pages/slugs";
 import { ALL as DATASET, allFacets } from "@/lib/prompts/data";
 import { PROMPTS as ORIGINALS } from "@/lib/prompt-library";
 import { CREATIVE_CONTENT } from "@/lib/creative-apps";
@@ -49,9 +50,9 @@ export function blogIndexable(post: { sections: { body: string }[] }): boolean {
 
 // ── Creative apps ─────────────────────────────────────────────────────────
 
-/** Only the apps with hand-written content; the catalog-generated ones are template text. */
+/** Only the apps with hand-written copy, or a page of their own; the catalog-generated ones are template text. */
 export function creativeIndexable(slug: string): boolean {
-  return !!CREATIVE_CONTENT[slug];
+  return !!CREATIVE_CONTENT[slug] || hasAppPage(slug);
 }
 
 // ── Prompts ───────────────────────────────────────────────────────────────
