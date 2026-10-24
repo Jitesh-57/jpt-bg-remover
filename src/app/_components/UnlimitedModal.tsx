@@ -22,6 +22,13 @@ interface Props {
   tab?: PlanTab;
 }
 
+/** The pop-up's heading. The navbar's Buy credits asks for "more AI credits", which reads wrong after "Credits needed for". */
+function title(reason?: string): string {
+  if (!reason) return "Unlock every AI tool";
+  if (reason === "more AI credits") return "Buy more AI credits";
+  return `Credits needed for ${reason}`;
+}
+
 export default function UnlimitedModal({ onClose, loggedIn, reason, prefillUser, onSuccess, tab }: Props) {
   // Escape closes, like every other dialog on the site.
   useEffect(() => {
@@ -57,7 +64,7 @@ export default function UnlimitedModal({ onClose, loggedIn, reason, prefillUser,
 
         {/* ── Right: the plans ───────────────────────────────────────────── */}
         <div className="jpt-pricing-main">
-          <h2 className="jpt-pricing-title">{reason ? `Credits needed for ${reason}` : "Unlock every AI tool"}</h2>
+          <h2 className="jpt-pricing-title">{title(reason)}</h2>
           <p className="jpt-pricing-sub">
             {CREDIT_COST} credits per AI generation · full resolution, no watermark · the free tools stay free.
           </p>

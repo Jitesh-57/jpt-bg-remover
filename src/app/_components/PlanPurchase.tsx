@@ -102,13 +102,13 @@ export default function PlanPurchase({
     }
   }
 
+  // One plain action for every plan and pack: the price is already on the
+  // selected row, and the line under the button says whether it renews.
   const label = (p: Pack) => !loggedIn
     ? "Sign in to continue"
     : busy === p.id
       ? "Opening checkout…"
-      : p.monthly
-        ? `Subscribe — ₹${formatInr(p.inr)}/month`
-        : `Get ${p.credits} credits — ₹${formatInr(p.inr)}`;
+      : "Buy Now";
 
   const statusBox = status && (
     <div className={`jpt-plan-status ${status.ok ? "ok" : "err"}`} role="status">{status.text}</div>
@@ -133,7 +133,7 @@ export default function PlanPurchase({
               </div>
               <p className="jpt-plan-blurb">{p.blurb}</p>
               <button type="button" className="jpt-plan-buy" disabled={busy !== null} onClick={() => buy(p)}>
-                {!loggedIn ? "Sign in to continue" : busy === p.id ? "Opening checkout…" : p.monthly ? "Subscribe" : "Buy credits"}
+                {label(p)}
               </button>
             </div>
           ))}
