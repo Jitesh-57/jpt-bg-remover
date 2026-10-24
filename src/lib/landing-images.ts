@@ -10,6 +10,12 @@ export function landingImg(file: string): string {
   return `${SUPA}/storage/v1/object/public/landing/${file}`;
 }
 
+/** What a shared link to a tool page shows: its own setting, else the hero's result. */
+export function toolShareImages(pageId: string, own?: string): string[] {
+  const img = own || PAGE_BEFORE_AFTER[pageId]?.after || PAGE_IMAGES[pageId];
+  return img ? [img] : [];
+}
+
 // Per-tool landing page showcase images, keyed by pageId.
 export const PAGE_IMAGES: Record<string, string> = {
   "remove-bg": landingImg("page-remove-bg.png"),

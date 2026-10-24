@@ -1,9 +1,10 @@
-import { seoJson, withSeoMeta } from "@/lib/seo/brand";
+import { withSeoMeta } from "@/lib/seo/brand";
 import { brandedTitle } from "@/lib/seo/title";
 import GuidesBlock from "@/app/_components/GuidesBlock";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import LandingPage from "@/app/_components/LandingPage";
+import { toolShareImages } from "@/lib/landing-images";
 import {
   getVariant,
   variantsFor,
@@ -29,7 +30,7 @@ async function generateMetadataBase({ params }: { params: Promise<{ slug: string
     description: v.metaDescription,
     keywords: v.keywords,
     alternates: { canonical: url },
-    openGraph: { title: v.h1, description: v.metaDescription, url },
+    openGraph: { title: v.h1, description: v.metaDescription, url, images: toolShareImages(PARENT_PAGE_ID[PARENT]) },
     twitter: { card: "summary_large_image", title: v.h1, description: v.metaDescription },
   };
 }
@@ -41,33 +42,10 @@ export default async function VariantPage({ params }: { params: Promise<{ slug: 
 
   const config = variantToConfig(v);
   const relatedVariants = variantsFor(PARENT).map((x) => ({ slug: x.slug, h1: x.h1, href: `${PARENT_META[PARENT].base}/${x.slug}` }));
-  const url = `${BASE}${PARENT_META[PARENT].base}/${slug}`;
-
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: v.h1,
-    description: v.metaDescription,
-    applicationCategory: "MultimediaApplication",
-    operatingSystem: "Web",
-    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-    url,
-  };
-  const faqLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: v.faq.map((f) => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
-  };
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(jsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(faqLd) }} />
-      <LandingPage guides={<GuidesBlock path={`/upscale/${slug}`} />} config={config} toolHref={PARENT_META[PARENT].toolHref} pageId={PARENT_PAGE_ID[PARENT]} relatedVariants={relatedVariants} currentSlug={slug} />
+      <LandingPage path={`/upscale/${slug}`} guides={<GuidesBlock path={`/upscale/${slug}`} />} config={config} toolHref={PARENT_META[PARENT].toolHref} pageId={PARENT_PAGE_ID[PARENT]} relatedVariants={relatedVariants} currentSlug={slug} />
     </>
   );
 }

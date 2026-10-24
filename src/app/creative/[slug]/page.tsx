@@ -17,6 +17,7 @@ import { creativeSources, localAfter, uploadedCreative } from "@/lib/app-creativ
 import { SHOW_PRESET_TABS } from "@/lib/workspace-config";
 import { applyOverride, creativeKey, readOverrides } from "@/lib/overrides";
 import { creativeIndexable, NOINDEX } from "@/lib/seo/index-policy";
+import { APP_OFFERS } from "@/lib/seo/offers";
 
 export const revalidate = 300;
 
@@ -35,6 +36,8 @@ async function generateMetadataBase({ params }: { params: Promise<{ slug: string
   const o = await readOverrides();
   const a = applyOverride(base, o.pages[creativeKey(slug)]);
   const url = `${BASE}${CREATIVE_BASE}/${slug}`;
+  // A shared link shows the app's own before and after, else its result.
+  const image = o.pages[creativeKey(slug)]?.main ? uploadedCreative(slug, "main") : localAfter(slug) ?? previewUrl(slug);
   return {
     title: { absolute: brandedTitle(a.title) },
     description: a.metaDescription,
@@ -42,8 +45,8 @@ async function generateMetadataBase({ params }: { params: Promise<{ slug: string
     alternates: { canonical: url },
     // Catalog-generated apps stay usable but out of the index (lib/seo/index-policy).
     ...(creativeIndexable(slug) ? {} : { robots: NOINDEX }),
-    openGraph: { title: a.h1, description: a.metaDescription, url },
-    twitter: { card: "summary_large_image", title: a.h1, description: a.metaDescription },
+    openGraph: { title: a.h1, description: a.metaDescription, url, images: [image] },
+    twitter: { card: "summary_large_image", title: a.h1, description: a.metaDescription, images: [image] },
   };
 }
 
@@ -128,7 +131,7 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
     description: a.metaDescription,
     applicationCategory: "MultimediaApplication",
     operatingSystem: "Web",
-    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    offers: APP_OFFERS,
     screenshot: localAfter(a.slug) ?? previewUrl(a.slug),
     image: localAfter(a.slug) ?? previewUrl(a.slug),
     url,
@@ -144,8 +147,8 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: BASE },
       { "@type": "ListItem", position: 2, name: "Creative Apps", item: `${BASE}${CREATIVE_BASE}` },
-      ...(catMeta ? [{ "@type": "ListItem", position: 3, name: catMeta.label, item: `${BASE}${CREATIVE_BASE}#${categoryAnchor(cat!)}` }] : []),
-      { "@type": "ListItem", position: catMeta ? 4 : 3, name: a.h1, item: url },
+      // Not the category: its link is a #section of the hub, not a page of its own.
+      { "@type": "ListItem", position: 3, name: a.h1, item: url },
     ],
   };
 

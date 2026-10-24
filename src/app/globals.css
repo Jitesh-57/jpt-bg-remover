@@ -304,8 +304,11 @@ a { color: inherit; }
    label so a long link can't blow the page out horizontally on phones. */
 .jpt-footer-grid {
   display: grid;
-  grid-template-columns: minmax(0,1.6fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);
-  gap: 36px;
+  grid-template-columns: minmax(0,1.4fr) repeat(5, minmax(0,1fr));
+  gap: 32px;
+}
+@media (max-width: 1080px) {
+  .jpt-footer-grid { grid-template-columns: repeat(3, minmax(0,1fr)); gap: 32px; }
 }
 @media (max-width: 760px) {
   .jpt-footer-grid { grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 30px; }
@@ -842,6 +845,18 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   .jpt-gen-ghost, .jpt-gen-aurora, .jpt-gen-sweep, .jpt-gen-spark, .jpt-gen-orbit, .jpt-gen-step { animation: none !important; }
   .jpt-gen-ghost { filter: blur(12px) brightness(.55); } .jpt-gen-spark { display: none; }
 }
+
+/* ── FAQ (FAQAccordion): native details, so every answer is in the HTML ─────── */
+.jpt-faq { border: 1.5px solid var(--border); border-radius: 14px; overflow: hidden; background: var(--surface-3); transition: box-shadow .2s, background .2s; }
+.jpt-faq[open] { background: var(--surface-2); box-shadow: 0 4px 20px var(--accent-soft); }
+.jpt-faq-q { list-style: none; cursor: pointer; padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.jpt-faq-q::-webkit-details-marker { display: none; }
+.jpt-faq-q:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.jpt-faq-icon { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  background: var(--surface-2); color: var(--accent); font-size: 18px; font-weight: 700; transition: all .2s; }
+.jpt-faq-icon::before { content: "+"; }
+.jpt-faq[open] .jpt-faq-icon { background: var(--accent); color: #fff; }
+.jpt-faq[open] .jpt-faq-icon::before { content: "−"; }
 
 /* ── Sign-up nudge (SignupNudge): the corner card shown a few seconds after a visitor lands ── */
 .jpt-nudge-corner { color: var(--text); background: var(--bg-elevated, var(--surface));

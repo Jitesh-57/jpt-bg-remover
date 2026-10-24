@@ -16,7 +16,8 @@ import Icon, { type IconName } from "./Icon";
  */
 
 /** One picture: candidate URLs, best first. `split` = a before|after image, drawn as its two halves. */
-export interface Pic { srcs: string[]; split?: boolean }
+/** A picture and its fallbacks. `alt` says what it shows, for people who can't see it and for image search. */
+export interface Pic { srcs: string[]; split?: boolean; alt?: string }
 
 export type MockKind = "studio" | "create" | "editor" | "recreate" | "headshot" | "batch" | "apps" | "photo";
 
@@ -45,7 +46,8 @@ function Img({ pic, half, style }: { pic?: Pic; half?: "before" | "after"; style
     : {};
   return (
     // eslint-disable-next-line @next/next/no-img-element
-    <img src={src} alt="" loading="lazy" referrerPolicy="no-referrer" onError={() => setI((n) => n + 1)}
+    // A before half is the same picture again, so it stays unannounced.
+    <img src={src} alt={half === "before" ? "" : pic?.alt ?? ""} loading="lazy" referrerPolicy="no-referrer" onError={() => setI((n) => n + 1)}
       style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block", ...halfStyle, ...style }} />
   );
 }

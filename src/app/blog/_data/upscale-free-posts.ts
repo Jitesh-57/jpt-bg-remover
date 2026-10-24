@@ -542,8 +542,8 @@ AI-based sharpening works differently. Because the model understands what real d
   {
     image: IMG(1438081),
     slug: "best-free-image-upscaler-no-watermark",
-    title: "The Best Free Image Upscaler With No Watermark (2025)",
-    metaTitle: "Best Free Image Upscaler No Watermark 2025 | Pixel Shine",
+    title: "The Best Free Image Upscaler With No Watermark",
+    metaTitle: "Best Free Image Upscaler, No Watermark | Pixel Shine",
     metaDescription:
       "Looking for a free image upscaler with no watermark? Here's what to look for in 2025 — unlimited use, 4×, no sign-up — and how to upscale clean.",
     excerpt:

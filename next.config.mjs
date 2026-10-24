@@ -11,6 +11,27 @@ const { hosts: imageHosts } = createRequire(import.meta.url)('./config/image-hos
 */
 const blogRedirects = createRequire(import.meta.url)('./config/redirects.json');
 
+/* Old URL → the page that owns its search now. */
+const retiredPages = {
+  '/ai': '/guides',
+  '/ai/ai-headshot-generator': '/ai-headshot',
+  '/ai/ai-image-editor': '/ai-editor',
+  '/ai/photo-editor': '/ai-editor',
+  '/ai/background-changer': '/creative/background-changer',
+  '/ai/photo-enhancer': '/upscale',
+  '/answers': '/guides',
+  '/answers/remove-background-from-photo': '/remove-bg',
+  '/answers/change-background-of-product-photo': '/remove-bg/product-photos',
+  '/answers/change-outfit-in-photo': '/creative/outfit-generator',
+  '/answers/edit-photo-with-text-prompt': '/ai-editor',
+  '/answers/enhance-blurry-photo': '/upscale',
+  '/answers/make-instagram-profile-picture': '/creative/instagram-pfp-maker',
+  '/answers/make-professional-headshot-from-selfie': '/creative/professional-headshot',
+  '/answers/make-youtube-thumbnail-from-photo': '/creative/youtube-thumbnail-generator',
+  '/answers/remove-object-from-photo': '/ai-editor/remove-object',
+  '/answers/restore-old-photo': '/creative/restore-old-photos',
+};
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   async redirects() {
@@ -20,6 +41,10 @@ const nextConfig = {
       { source: '/instagram-video-downloader', destination: '/', permanent: true },
       { source: '/youtube-video-downloader', destination: '/', permanent: true },
       ...Object.entries(blogRedirects).map(([source, destination]) => ({ source, destination, statusCode: 301 })),
+      // Thin ~200-word pages merged into the page that owns their search
+      // (docs/seo/keyword-map.md, "Retired"): two pages chasing one phrase
+      // made Google pick between them, and it ranked neither.
+      ...Object.entries(retiredPages).map(([source, destination]) => ({ source, destination, statusCode: 301 })),
       // /upscale is its own landing page again — the homepage now has its own
       // identity, so there is no duplicate to consolidate.
     ];

@@ -1,8 +1,9 @@
-import { seoJson, withSeoMeta } from "@/lib/seo/brand";
+import { withSeoMeta } from "@/lib/seo/brand";
 import { brandedTitle } from "@/lib/seo/title";
 import GuidesBlock from "@/app/_components/GuidesBlock";
 import { Metadata } from 'next'
 import { getPageConfig } from '@/lib/page-config'
+import { toolShareImages } from '@/lib/landing-images'
 import LandingPage from '../_components/LandingPage'
 import { variantsFor, PARENT_META } from '@/lib/landing-variants'
 
@@ -15,14 +16,14 @@ async function generateMetadataBase(): Promise<Metadata> {
     openGraph: {
       title: config.og_title || config.title,
       description: config.og_description || config.meta_description,
-      images: config.og_image ? [config.og_image] : [],
+      images: toolShareImages('ai-editor', config.og_image),
       url: 'https://www.sjpt.io/ai-editor',
     },
     twitter: {
       card: 'summary_large_image',
       title: config.og_title || config.title,
       description: config.og_description || config.meta_description,
-      images: config.og_image ? [config.og_image] : [],
+      images: toolShareImages('ai-editor', config.og_image),
     },
     alternates: { canonical: 'https://www.sjpt.io/ai-editor' },
   }
@@ -31,24 +32,10 @@ async function generateMetadataBase(): Promise<Metadata> {
 export default async function AIEditorPage() {
   const config = await getPageConfig('ai-editor')
   const relatedVariants = variantsFor('ai-editor').map(v => ({ slug: v.slug, h1: v.h1, href: `${PARENT_META['ai-editor'].base}/${v.slug}` }))
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'SoftwareApplication',
-    name: config.h1,
-    description: config.meta_description,
-    applicationCategory: 'MultimediaApplication',
-    operatingSystem: 'Web',
-    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-    url: 'https://www.sjpt.io/ai-editor',
-  }
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: seoJson(jsonLd) }}
-      />
-      <LandingPage guides={<GuidesBlock path="/ai-editor" />} config={config} toolHref="/editor" pageId="ai-editor" relatedVariants={relatedVariants} />
+      <LandingPage path="/ai-editor" guides={<GuidesBlock path="/ai-editor" />} config={config} toolHref="/editor" pageId="ai-editor" relatedVariants={relatedVariants} />
     </>
   )
 }
