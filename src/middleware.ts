@@ -35,10 +35,11 @@ function maybeCleanup() {
 
 // The single canonical host. The non-www .io apex 301-redirects here so Google
 // consolidates ranking signals onto one URL instead of splitting them across
-// duplicates. (The old sjpt.in domain has been retired and removed in Vercel,
-// so it no longer reaches this deployment.)
+// duplicates. The old sjpt.in domain is redirected path by path in
+// next.config.mjs, which runs first; it is listed here too so that nothing on
+// it can ever be served as a duplicate page.
 const CANONICAL_HOST = "www.sjpt.io";
-const REDIRECT_HOSTS = new Set(["sjpt.io"]);
+const REDIRECT_HOSTS = new Set(["sjpt.io", "sjpt.in", "www.sjpt.in"]);
 
 /*
   Served on whichever host asks for it, never redirected.
@@ -53,6 +54,14 @@ const REDIRECT_HOSTS = new Set(["sjpt.io"]);
   indexable page — there is no ranking signal here to consolidate.
 */
 const HOST_NEUTRAL = new Set(["/ads.txt"]);
+
+/*
+  Tools that were removed for good (free resolvers couldn't download videos
+  reliably). 410 tells Google to drop them; they used to 301 to the home page,
+  which doesn't do the job either, so Google read it as a soft 404.
+*/
+const GONE = new Set(["/instagram-video-downloader", "/youtube-video-downloader"]);
+const GONE_HTML = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta name="viewport" content="width=device-width,initial-scale=1"><title>This tool has been removed | PixelShine</title></head><body style="font-family:system-ui,sans-serif;max-width:560px;margin:80px auto;padding:0 20px;line-height:1.6"><h1>This tool has been removed</h1><p>The video downloader is no longer available.</p><p><a href="/tools">See the free photo tools</a> or <a href="/">go to the home page</a>.</p></body></html>`;
 
 // ── Visitor and source cookies ──────────────────────────────────────────────
 // Where a visitor came from is only knowable on the first page they open: the
@@ -108,6 +117,10 @@ export async function middleware(request: NextRequest) {
     url.protocol = "https:";
     url.port = "";
     return NextResponse.redirect(url, 301);
+  }
+
+  if (GONE.has(path)) {
+    return new NextResponse(GONE_HTML, { status: 410, headers: { "content-type": "text/html; charset=utf-8", "x-robots-tag": "noindex" } });
   }
 
   // Free-only mode: redirect the hidden paid/AI pages back to the home page.
