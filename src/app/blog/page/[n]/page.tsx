@@ -28,7 +28,9 @@ export default async function BlogPage({ params }: { params: Promise<{ n: string
   if (!/^\d{1,4}$/.test(n)) notFound();
   const page = Number(n);
   if (page <= 1) permanentRedirect("/blog");
-  if (page > (await blogPageCount())) notFound();
+  // The blog once ran to 26 pages and Google still has the later ones; now
+  // that it is shorter, send those to the start rather than a 404.
+  if (page > (await blogPageCount())) permanentRedirect("/blog");
   return <BlogIndex page={page} />;
 }
 

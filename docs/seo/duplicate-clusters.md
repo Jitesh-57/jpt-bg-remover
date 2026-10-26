@@ -1,4 +1,7 @@
-# Near-duplicate blog posts (not merged yet)
+# Near-duplicate blog posts
+
+**Update, 26 Oct 2026:** every post under 400 words now 301s to the strongest page on its topic: the keeper below where it has one, otherwise the closest strong post, matching tool page or app. Each decision is in `docs/seo/thin-posts.csv`. The groups below whose both sides are still over 400 words are not merged yet.
+
 
 Found on 2026-10-13. These posts answer the same search with a different slug, so they compete with each other. The three clusters in the SEO brief are already merged into one post each and 301-redirected (see `config/redirects.json`):
 - blurry/unblur → `fix-blurry-photo-online-free`;

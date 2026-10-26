@@ -3,6 +3,7 @@ import { editedPosts } from "@/lib/blog-edits.server";
 import BlogCover from "./BlogCover";
 import { mainsFrom } from "@/lib/blog-images";
 import { readOverrides } from "@/lib/overrides";
+import { blogIndexable } from "@/lib/seo/index-policy";
 
 // Badge fills sit under white text, so they use --accent-fill (dark enough for
 // white) rather than --accent (which is tuned to read as text on near-black).
@@ -15,14 +16,23 @@ const CATEGORY_COLORS: Record<string, string> = {
 /** Posts per page of the blog index. */
 export const PER_PAGE = 12;
 
-/** How many pages the blog index has right now (hidden posts don't count). */
+/*
+  Only the posts Google is asked to index. The index is the most-linked page
+  of the blog, and its first page once led entirely to short noindex posts,
+  passing every bit of that weight to pages Google was told to ignore.
+*/
+async function listedPosts() {
+  return (await editedPosts()).filter(blogIndexable);
+}
+
+/** How many pages the blog index has right now (hidden and noindex posts don't count). */
 export async function blogPageCount(): Promise<number> {
-  return Math.max(1, Math.ceil((await editedPosts()).length / PER_PAGE));
+  return Math.max(1, Math.ceil((await listedPosts()).length / PER_PAGE));
 }
 
 /** One page of the blog index: /blog is page 1, /blog/page/2 onwards the rest. */
 export default async function BlogIndex({ page }: { page: number }) {
-  const [overrides, all] = await Promise.all([readOverrides(), editedPosts()]);
+  const [overrides, all] = await Promise.all([readOverrides(), listedPosts()]);
   const mains = mainsFrom(overrides.pages);
   const pages = Math.max(1, Math.ceil(all.length / PER_PAGE));
   const POSTS = all.slice((page - 1) * PER_PAGE, page * PER_PAGE);

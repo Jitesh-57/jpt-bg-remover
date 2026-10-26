@@ -1,0 +1,188 @@
+slug,words,decision,target,why
+how-to-bulk-edit-photos,305,redirect,/batch-editor,its tool page
+how-to-compress-multiple-images-at-once,279,redirect,/compress-image,manual
+how-to-convert-multiple-images-at-once,287,redirect,/convert-image,manual
+how-to-resize-multiple-images-at-once,264,redirect,/resize-image,manual
+how-to-watermark-multiple-photos-at-once,274,redirect,/watermark-image,manual
+blur-face-in-photo-free,270,redirect,/blur-image,its tool page
+blur-image-online-without-uploading,233,redirect,/blur-image,its tool page
+blur-licence-plate-in-photo-free,220,redirect,/blur-image,its tool page
+blur-part-of-image-for-documentation-free,249,redirect,/blur-image,its tool page
+blur-sensitive-info-in-screenshot-free,272,redirect,/blur-image,its tool page
+pixelate-vs-blur-which-is-safer,294,redirect,/blur-image,its tool page
+compress-image-to-100kb-free,267,merge,/blog/how-to-compress-an-image-to-100kb,merge (duplicate group)
+compress-image-to-200kb-free,228,merge,/blog/how-to-compress-jpeg-to-200kb,merge (duplicate group)
+compress-images-for-website-speed-free,291,merge,/blog/how-to-optimize-images-for-website,merge (duplicate group)
+compress-photo-for-email-free,191,merge,/blog/how-to-compress-image-for-email,merge (duplicate group)
+compress-photo-for-whatsapp-free,193,merge,/blog/how-to-reduce-image-size-in-kb,merge (duplicate group)
+compress-png-without-losing-quality-free,199,merge,/blog/how-to-compress-png-without-losing-quality,merge (duplicate group)
+how-to-compress-a-png-file,318,redirect,/blog/how-to-compress-png-without-losing-quality,closest page (0.82)
+how-to-compress-an-image-to-500kb,281,redirect,/compress/compress-image-to-500kb,closest page (1.10)
+how-to-compress-an-image-to-50kb,300,redirect,/compress/compress-image-to-50kb,closest page (1.10)
+how-to-compress-images-for-a-website,317,merge,/blog/how-to-optimize-images-for-website,merge (duplicate group)
+how-to-reduce-jpeg-file-size,294,redirect,/compress-image,its tool page
+how-to-reduce-photo-size-for-whatsapp,391,redirect,/blog/how-to-reduce-image-size-in-kb,closest page (0.82)
+convert-jpg-to-png-free,180,merge,/blog/how-to-convert-jpg-to-png,merge (duplicate group)
+convert-png-to-jpg-free,192,merge,/blog/how-to-convert-png-to-jpg,merge (duplicate group)
+convert-png-to-webp-for-faster-site-free,230,redirect,/convert/png-to-webp,manual
+convert-webp-to-jpg-free,187,merge,/convert/webp-to-jpg,merge (duplicate group)
+convert-webp-to-png-free,176,merge,/blog/how-to-convert-webp-to-png,merge (duplicate group)
+how-to-convert-bmp-to-jpg,295,redirect,/convert/bmp-to-jpg,closest page (1.10)
+how-to-convert-gif-to-png,313,redirect,/convert/gif-to-png,closest page (1.10)
+how-to-convert-png-to-webp,389,redirect,/convert/png-to-webp,manual
+how-to-convert-tiff-to-jpg,309,redirect,/convert-image,manual
+how-to-convert-webp-to-jpg,299,redirect,/convert/webp-to-jpg,closest page (1.10)
+jpeg-vs-jpg-difference,319,redirect,/blog/png-vs-jpg-which-to-use,manual
+jpg-vs-png-vs-webp-which-to-use,257,merge,/blog/png-vs-jpg-which-to-use,merge (duplicate group)
+90s-yearbook-photo-ai,212,redirect,/creative/90s-yearbook-photo,closest page (1.00)
+ai-age-progression-photo,235,redirect,/creative/age-progression,closest page (1.00)
+ai-baby-predictor-fun,259,redirect,/creative/ai-baby-predictor,its tool page
+ai-baby-photoshoot-portrait,281,redirect,/creative/baby-photoshoot,closest page (1.00)
+change-photo-background-ai-scene,312,merge,/blog/change-photo-background-with-ai-free,merge (duplicate group)
+barbie-box-photo-ai,247,redirect,/creative/barbie-box,closest page (1.00)
+ai-christmas-photo-from-selfie,254,redirect,/creative/christmas-photo,its tool page
+ai-corporate-avatar-profile-icon,257,redirect,/creative/corporate-avatar,closest page (1.00)
+cyberpunk-avatar-photo-ai,238,redirect,/creative/cyberpunk-avatar,closest page (1.00)
+ghibli-style-photo-ai,239,redirect,/creative/ghibli-style,closest page (1.00)
+ai-graduation-photo-cap-and-gown,234,redirect,/creative/graduation-photo,closest page (1.00)
+ai-gym-transformation-preview,288,redirect,/creative/gym-transformation,closest page (1.00)
+lego-minifigure-photo-ai,207,redirect,/creative/lego-minifigure,closest page (1.00)
+ai-linkedin-banner-from-photo,245,redirect,/creative/linkedin-banner,closest page (1.00)
+old-money-aesthetic-photo-ai,227,redirect,/creative/old-money-aesthetic,closest page (1.00)
+ai-passport-photo-from-selfie,312,redirect,/creative/passport-photo,its tool page
+ai-pet-portrait-from-photo,277,redirect,/creative/pet-portrait,closest page (1.00)
+pixar-style-avatar-ai,238,redirect,/creative/pixar-avatar,its tool page
+turn-photo-into-polaroid-ai,294,redirect,/creative/polaroid-photo,its tool page
+ai-professional-headshot-from-selfie,283,merge,/blog/ai-professional-headshot-from-selfie-free,merge (duplicate group)
+renaissance-portrait-photo-ai,258,redirect,/creative/renaissance-portrait,closest page (1.00)
+restore-old-family-photos-with-ai,332,redirect,/creative/restore-old-photos,manual
+superhero-portrait-from-photo-ai,198,redirect,/creative/superhero-costume,manual
+tarot-card-portrait-ai,237,redirect,/creative/tarot-card-portrait,closest page (1.00)
+ai-wedding-invite-photo,245,redirect,/creative/wedding-invite-photo,closest page (1.00)
+y2k-aesthetic-photo-ai,232,redirect,/creative/y2k-aesthetic,closest page (1.00)
+circle-crop-profile-picture-free,197,merge,/blog/how-to-crop-a-photo-into-a-circle,merge (duplicate group)
+crop-image-for-facebook-cover-free,171,redirect,/crop-image,its tool page
+crop-image-for-instagram-free,179,redirect,/crop/instagram-post-size,manual
+crop-photo-for-linkedin-banner-free,201,redirect,/crop-image,manual
+crop-photo-to-square-free,213,merge,/crop/crop-image-to-square,merge (duplicate group)
+facebook-cover-photo-size-guide,325,redirect,/crop-image,its tool page
+how-to-crop-a-photo-to-4x6,323,redirect,/crop-image,its tool page
+how-to-crop-a-photo-to-a-square,291,redirect,/crop/crop-image-to-square,closest page (1.10)
+how-to-crop-a-screenshot,310,redirect,/crop-image,its tool page
+how-to-resize-an-image-for-instagram,378,redirect,/crop/instagram-post-size,manual
+linkedin-banner-size-guide,299,redirect,/crop-image,manual
+make-round-profile-picture-free,182,merge,/blog/how-to-crop-a-photo-into-a-circle,merge (duplicate group)
+free-photoshop-alternatives-online,366,redirect,/ai-editor,its tool page
+free-canva-background-remover-alternatives,320,redirect,/remove-bg,its tool page
+free-photoroom-alternatives,336,redirect,/remove-bg,its tool page
+how-to-remove-background-without-photoshop,362,merge,/blog/remove-background-from-image-online-free,merge (duplicate group)
+convert-image-to-pdf-free,181,merge,/blog/how-to-convert-image-to-pdf,merge (duplicate group)
+how-to-convert-jpg-to-pdf,294,redirect,/blog/how-to-convert-image-to-pdf,closest page (0.82)
+how-to-convert-png-to-pdf,281,redirect,/blog/how-to-convert-image-to-pdf,closest page (0.82)
+how-to-make-a-pdf-from-photos-on-iphone,293,redirect,/image-to-pdf,its tool page
+how-to-scan-a-document-with-your-phone,303,redirect,/image-to-pdf,its tool page
+how-to-turn-a-screenshot-into-a-pdf,285,redirect,/image-to-pdf,its tool page
+jpg-to-pdf-free,176,merge,/blog/how-to-convert-image-to-pdf,merge (duplicate group)
+how-to-add-a-caption-to-a-photo,296,redirect,/meme-generator,its tool page
+how-to-make-a-demotivational-poster,316,redirect,/meme-generator,its tool page
+how-to-make-a-meme-on-your-phone,303,redirect,/blog/how-to-make-a-meme,manual
+how-to-put-text-on-a-meme,298,redirect,/blog/how-to-make-a-meme,manual
+make-a-meme-free-no-app,189,merge,/blog/how-to-make-a-meme,merge (duplicate group)
+meme-font-guide-impact,333,redirect,/meme-generator,its tool page
+create-qr-code-for-website-free,314,redirect,/qr-code-generator,its tool page
+qr-code-error-correction-explained,315,redirect,/qr-code-generator,its tool page
+qr-code-for-business-card-free,287,redirect,/qr-code-generator,its tool page
+qr-code-for-restaurant-menu-free,312,redirect,/qr-code-generator,its tool page
+qr-code-for-wifi-password-free,287,redirect,/qr-code-generator,its tool page
+qr-code-svg-for-printing-free,245,redirect,/qr-code-generator,its tool page
+resize-image-for-email-signature-free,209,redirect,/resize-image,its tool page
+resize-image-for-passport-photo-free,264,redirect,/resize-image,its tool page
+resize-image-for-youtube-thumbnail-free,208,redirect,/crop/youtube-thumbnail-crop,closest page (0.77)
+resize-image-to-1080x1080-free,291,redirect,/resize-image,its tool page
+resize-image-without-losing-quality-free,314,redirect,/resize-image,its tool page
+resize-profile-picture-to-exact-size-free,225,redirect,/resize-image,its tool page
+flip-mirror-image-free,158,redirect,/blog/how-to-rotate-or-flip-an-image,manual
+how-to-fix-a-sideways-photo,296,redirect,/rotate-image,its tool page
+how-to-flip-an-image-vertically,279,redirect,/blog/how-to-rotate-or-flip-an-image,manual
+how-to-mirror-an-image,381,redirect,/blog/how-to-rotate-or-flip-an-image,manual
+how-to-rotate-a-photo-90-degrees,285,redirect,/blog/how-to-rotate-or-flip-an-image,manual
+how-to-rotate-a-picture-on-your-phone,312,redirect,/rotate-image,its tool page
+how-to-straighten-a-crooked-photo,315,redirect,/rotate-image,its tool page
+rotate-image-online-free,162,redirect,/blog/how-to-rotate-or-flip-an-image,closest page (1.15)
+download-tiktok-video-in-hd-no-watermark,335,redirect,/blog/download-tiktok-videos-without-a-watermark,closest page (0.95)
+how-to-download-a-tiktok-without-the-app,302,redirect,/blog/download-tiktok-videos-without-a-watermark,manual
+how-to-download-tiktok-sound,315,redirect,/tiktok-watermark-remover,manual
+how-to-download-tiktok-videos-on-pc,299,redirect,/blog/download-tiktok-videos-without-a-watermark,closest page (0.90)
+how-to-download-tiktok-videos-without-watermark,303,merge,/blog/download-tiktok-videos-without-a-watermark,merge (duplicate group)
+how-to-remove-tiktok-username-from-video,332,redirect,/tiktok-watermark-remover,manual
+how-to-save-tiktok-videos-to-camera-roll,294,redirect,/tiktok-watermark-remover,its tool page
+best-free-image-upscaler-no-watermark,295,redirect,/blog/free-image-upscaler-no-sign-up,closest page (1.15)
+best-free-photo-enhancer-no-app,259,merge,/blog/enhance-photo-free-no-download,merge (duplicate group)
+enhance-baby-newborn-photos,280,redirect,/upscale,its tool page
+enhance-black-and-white-photos-free,304,redirect,/upscale/old-photos,manual
+enhance-blurry-video-call-screenshot,278,redirect,/upscale,its tool page
+enhance-cctv-security-camera-image-free,340,redirect,/upscale,its tool page
+enhance-fashion-lookbook-photos,292,redirect,/upscale,its tool page
+enhance-passport-visa-photo-quality,282,redirect,/upscale,its tool page
+enhance-photos-free-no-app-download,226,merge,/blog/enhance-photo-free-no-download,merge (duplicate group)
+enhance-scanned-photos-free,339,redirect,/upscale/old-photos,manual
+enlarge-image-without-losing-quality-free,356,merge,/blog/how-to-enlarge-a-photo-without-losing-quality,merge (duplicate group)
+fix-low-light-concert-photos,279,redirect,/upscale,its tool page
+fix-whatsapp-blurry-photos,311,redirect,/blog/fix-blurry-photo-online-free,closest page (0.82)
+free-ai-upscaler-unlimited-no-limits,283,redirect,/upscale,its tool page
+free-alternative-to-lets-enhance,304,redirect,/upscale,its tool page
+free-alternative-to-topaz-gigapixel,314,redirect,/upscale,its tool page
+free-bulk-image-upscaler-batch,273,redirect,/upscale,its tool page
+free-image-upscaler-vs-paid,271,redirect,/upscale,its tool page
+free-online-photo-sharpener,264,redirect,/upscale,its tool page
+free-webp-image-upscaler,250,redirect,/upscale,its tool page
+how-to-enhance-a-zoomed-in-photo,337,redirect,/upscale,its tool page
+how-to-fix-a-blurry-photo,389,merge,/blog/fix-blurry-photo-online-free,merge (duplicate group)
+how-to-fix-pixelated-image-free,264,redirect,/upscale,its tool page
+how-to-get-hd-photos-free,248,redirect,/upscale,manual
+how-to-increase-image-resolution,370,merge,/blog/increase-image-resolution-free,merge (duplicate group)
+how-to-make-picture-higher-resolution-free,257,merge,/blog/increase-image-resolution-free,merge (duplicate group)
+how-to-upscale-a-product-photo,345,merge,/blog/enhance-product-images-free,merge (duplicate group)
+how-to-upscale-an-image-for-printing,377,merge,/blog/upscale-photo-for-printing-free,merge (duplicate group)
+how-to-upscale-anime-and-cartoon-images,369,merge,/blog/upscale-anime-image-free,merge (duplicate group)
+increase-photo-dpi-free-300dpi,297,redirect,/upscale,its tool page
+increase-photo-size-kb-mb-free,266,redirect,/upscale,its tool page
+is-ai-image-upscaling-free,263,redirect,/upscale,manual
+make-blurry-screenshot-clear,272,redirect,/upscale,its tool page
+make-blurry-text-in-image-clear-free,264,redirect,/upscale,its tool page
+make-old-photos-hd-free,287,redirect,/upscale/old-photos,manual
+upscale-ai-generated-images-free,253,redirect,/upscale,its tool page
+upscale-car-photos-for-listings,290,redirect,/upscale,manual
+upscale-digital-art-for-print,316,redirect,/upscale,its tool page
+upscale-drone-aerial-photos,293,redirect,/upscale,its tool page
+upscale-enhance-pet-photos,316,redirect,/upscale,its tool page
+upscale-food-photos-menu-delivery,332,redirect,/upscale,its tool page
+upscale-gaming-screenshots-4k,336,redirect,/upscale,its tool page
+upscale-image-for-facebook-cover-free,319,redirect,/upscale,its tool page
+upscale-image-for-tshirt-print-free,260,redirect,/upscale,its tool page
+upscale-image-free-without-photoshop,343,redirect,/upscale,its tool page
+upscale-image-on-phone-free,280,redirect,/upscale,its tool page
+upscale-image-to-1080p-full-hd-free,242,redirect,/upscale,its tool page
+upscale-image-to-8k-free,360,redirect,/upscale/4k,manual
+upscale-images-book-cover-kindle,288,redirect,/upscale,its tool page
+upscale-jpeg-without-losing-quality-free,294,merge,/blog/upscale-image-without-losing-quality-free,merge (duplicate group)
+upscale-landscape-nature-photos,282,redirect,/upscale,its tool page
+upscale-logo-without-losing-quality-free,273,redirect,/blog/upscale-image-without-losing-quality-free,closest page (0.90)
+upscale-photos-instagram-story-reels,307,redirect,/upscale,its tool page
+upscale-png-image-free,288,redirect,/upscale,its tool page
+upscale-profile-picture-for-linkedin,351,merge,/blog/upscale-profile-picture-linkedin-professional,merge (duplicate group)
+upscale-real-estate-listing-photos,331,merge,/blog/upscale-real-estate-photos-property-listings,merge (duplicate group)
+upscale-selfie-free,256,redirect,/upscale/profile-picture,manual
+upscale-tattoo-design-reference,283,redirect,/upscale,its tool page
+add-watermark-to-photos-free,204,merge,/blog/how-to-add-watermark-to-photos,merge (duplicate group)
+how-to-add-a-logo-watermark-to-photos,330,redirect,/blog/how-to-add-watermark-to-photos,closest page (0.82)
+how-to-add-a-transparent-watermark,321,redirect,/blog/how-to-add-watermark-to-photos,closest page (0.82)
+how-to-copyright-your-photos-with-a-watermark,352,redirect,/watermark-image,its tool page
+how-to-watermark-instagram-photos,311,redirect,/watermark-image,its tool page
+how-to-watermark-your-photography,304,redirect,/watermark-image,its tool page
+watermark-photos-in-bulk-free,202,redirect,/watermark-image,its tool page
+how-to-remove-a-date-stamp-from-a-photo,341,redirect,/watermark-remover,its tool page
+how-to-remove-a-watermark-from-a-picture-online,317,merge,/blog/how-to-remove-a-watermark-from-a-photo,merge (duplicate group)
+how-to-remove-a-watermark-from-a-screenshot,314,redirect,/blog/how-to-remove-a-watermark-from-a-photo,manual
+how-to-remove-a-watermark-from-ai-generated-images,320,redirect,/blog/how-to-remove-a-watermark-from-a-photo,manual
+how-to-remove-an-object-from-a-photo,317,merge,/blog/remove-object-from-photo-free,merge (duplicate group)
