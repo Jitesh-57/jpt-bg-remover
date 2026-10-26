@@ -21,6 +21,11 @@ export interface BlogTopic {
   /** A paragraph of the hub's own text, so it is a page and not just a list. */
   intro: string;
   tools: { href: string; label: string }[];
+  /**
+   * Where sitewide links (the footer) send people instead of the hub, while
+   * the hub has too few posts to be indexed (index-policy guideIndexable).
+   */
+  link?: string;
 }
 
 export const BLOG_TOPICS: BlogTopic[] = [
@@ -55,6 +60,9 @@ export const BLOG_TOPICS: BlogTopic[] = [
     description: "Guides to restoring, enhancing and upscaling old, faded and scanned family photos with AI.",
     intro: "Old prints fade, crack and lose detail, and a phone snapshot of a print loses more. These guides cover scanning properly, what AI restoration can and can't recover, and bringing black-and-white and damaged family photos back to a printable state.",
     tools: [{ href: "/upscale/old-photos", label: "Old Photo Upscaler" }, { href: "/creative/restore-old-photos", label: "Restore Old Photos" }],
+    // Two posts since the short ones were merged: the restore app's own page
+    // is the stronger destination for a sitewide link.
+    link: "/creative/restore-old-photos",
   },
   {
     slug: "resize-compress",

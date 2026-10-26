@@ -18,8 +18,8 @@ const pic = (slug: string) => SUPA
 const LEARN = [
   { label: "Blog", desc: "Guides, tips and tutorials", href: "/blog" },
   { label: "Docs", desc: "How Pixel Shine works", href: "/docs" },
-  { label: "Use cases", desc: "For shops, creators and teams", href: "/use-cases" },
-  { label: "Alternatives", desc: "How we compare", href: "/alternatives" },
+  { label: "Guides by topic", desc: "Every guide, grouped by task", href: "/guides" },
+  { label: "All AI apps", desc: "200+ one-tap photo apps", href: "/creative" },
   { label: "All free tools", desc: "Edit in your browser, free", href: "/tools" },
 ];
 
@@ -34,7 +34,7 @@ const PROMPTS = [
 const FEATURED = {
   kicker: "Featured",
   title: "Turn a selfie into a professional headshot with AI",
-  href: "/blog/ai-professional-headshot-from-selfie",
+  href: "/blog/ai-professional-headshot-from-selfie-free",
   slug: "professional-headshot",
 };
 

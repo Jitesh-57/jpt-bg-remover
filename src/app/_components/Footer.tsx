@@ -46,7 +46,6 @@ const FREE_TOOLS = [
 
 const ALL_COMPANY = [
   { labelKey: "All Tools", href: "/tools" },
-  { labelKey: "Alternatives", href: "/alternatives" },
   { labelKey: "Prompt Library", href: "/prompts" },
   { labelKey: "80s AI Prompts", href: "/80s-ai-photo-prompts" },
   { labelKey: "Pricing", href: "/pricing" },
@@ -105,7 +104,7 @@ export default function Footer() {
           <div>
             <div style={{ fontSize: 11, fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 16 }}>Guides</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {[...BLOG_TOPICS.map((t) => ({ href: topicHref(t), label: t.name })), { href: "/guides", label: "All guides" }].map(l => (
+              {[...BLOG_TOPICS.map((t) => ({ href: t.link ?? topicHref(t), label: t.name })), { href: "/guides", label: "All guides" }].map(l => (
                 <a key={l.href} href={l.href}
                   style={{ fontSize: 14, color: "var(--text-muted)", textDecoration: "none", transition: "color 0.15s" }}
                   onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")}

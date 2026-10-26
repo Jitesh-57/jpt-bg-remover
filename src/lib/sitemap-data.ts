@@ -16,18 +16,16 @@
 import { editedPosts } from "@/lib/blog-edits.server";
 import { VARIANTS, PARENT_META, type ParentTool } from "@/lib/landing-variants";
 import { CREATIVE_APPS, CREATIVE_BASE } from "@/lib/creative-apps";
-import { USE_CASES, ANSWER_PAGES } from "@/lib/growth-pages";
 import { CONVERSIONS } from "@/lib/conversions";
 import { COMPRESSIONS } from "@/lib/compressions";
 import { CROPS } from "@/lib/crops";
-import { ALTERNATIVES } from "@/lib/alternatives";
 import { PAID_FEATURES_ENABLED } from "@/lib/features";
 import { PROMPTS as LIBRARY_PROMPTS } from "@/lib/prompt-library";
 import { ALL as DATASET_PROMPTS, MODELS as PROMPT_MODELS, allFacets } from "@/lib/prompts/data";
 import { PACKS } from "@/lib/prompts/packs";
-import { BLOG_TOPICS, topicHref } from "@/lib/blog-topics";
+import { BLOG_TOPICS, topicHref, topicOf } from "@/lib/blog-topics";
 import LASTMOD from "@/lib/seo/lastmod.json";
-import { blogIndexable, creativeIndexable, facetIndexable, imagePromptIndexable, videoPromptIndexable } from "@/lib/seo/index-policy";
+import { blogIndexable, creativeIndexable, facetIndexable, guideIndexable, imagePromptIndexable, videoPromptIndexable } from "@/lib/seo/index-policy";
 
 export const BASE = "https://www.sjpt.io";
 
@@ -79,18 +77,21 @@ function variantsFor(parent: ParentTool): SitemapUrl[] {
 
 // ── pages ─────────────────────────────────────────────────────────────────
 
-export function pagesUrls(): SitemapUrl[] {
+/** Async: a topic hub is listed only while enough indexable posts sit on its topic. */
+export async function pagesUrls(): Promise<SitemapUrl[]> {
+  const posts = (await editedPosts()).filter(blogIndexable);
   const out: SitemapUrl[] = [
     { url: BASE },
     { url: `${BASE}/tools` },
     { url: `${BASE}/privacy` },
     { url: `${BASE}/terms` },
     { url: `${BASE}/80s-ai-photo-prompts` },
-    { url: `${BASE}/batch-editor` },
     { url: `${BASE}/docs` },
     // The blog's topic hubs (lib/blog-topics): each links every post on its topic.
     { url: `${BASE}/guides` },
-    ...BLOG_TOPICS.map((t) => ({ url: `${BASE}${topicHref(t)}` })),
+    ...BLOG_TOPICS
+      .filter((t) => guideIndexable(posts.filter((p) => topicOf(p) === t.slug).length))
+      .map((t) => ({ url: `${BASE}${topicHref(t)}` })),
   ];
   if (PAID_FEATURES_ENABLED) out.push({ url: `${BASE}/pricing` });
   return dated(dedupe(out));
@@ -114,8 +115,6 @@ export function toolsUrls(): SitemapUrl[] {
     { url: `${BASE}/tiktok-watermark-remover` },
     { url: `${BASE}/watermark-remover` },
     { url: `${BASE}/invisible-watermark-remover` },
-    { url: `${BASE}/alternatives` },
-    ...ALTERNATIVES.map((a) => ({ url: `${BASE}/alternatives/${a.slug}` })),
     ...CONVERSIONS.map((c) => ({ url: `${BASE}/convert/${c.slug}` })),
     ...COMPRESSIONS.map((c) => ({ url: `${BASE}/compress/${c.slug}` })),
     ...CROPS.map((c) => ({ url: `${BASE}/crop/${c.slug}` })),
@@ -181,12 +180,13 @@ export function videoPromptsUrls(): SitemapUrl[] {
 
 // ── creative ─────────────────────────────────────────────────────────────
 
+/*
+  The use-case and answer pages are noindex now (see the sections note in
+  lib/seo/index-policy), so this sitemap is empty. It still answers, with an
+  empty <urlset>, because Search Console may have it on file.
+*/
 export function growthUrls(): SitemapUrl[] {
-  return dated(dedupe([
-    { url: `${BASE}/use-cases` },
-    ...USE_CASES.map((p) => ({ url: `${BASE}/use-cases/${p.slug}` })),
-    ...ANSWER_PAGES.map((p) => ({ url: `${BASE}/ai/${p.slug}` })),
-  ]));
+  return [];
 }
 
 export function creativeUrls(): SitemapUrl[] {

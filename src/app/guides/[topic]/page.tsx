@@ -5,7 +5,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { editedPosts } from "@/lib/blog-edits.server";
 import { BLOG_TOPICS, TOPIC_BY_SLUG, topicOf, topicHref } from "@/lib/blog-topics";
-import { blogIndexable } from "@/lib/seo/index-policy";
+import { NOINDEX, blogIndexable, guideIndexable } from "@/lib/seo/index-policy";
 
 /**
  * /guides/{topic} — a topic hub: every blog post on one subject, linked from
@@ -26,11 +26,13 @@ async function generateMetadataBase({ params }: { params: Promise<{ topic: strin
   const t = TOPIC_BY_SLUG[topic];
   if (!t) return {};
   const url = `${BASE}${topicHref(t)}`;
+  const listed = (await editedPosts()).filter((p) => topicOf(p) === t.slug && blogIndexable(p)).length;
   return {
     title: { absolute: brandedTitle(`${t.title} | Pixel Shine`) },
     description: t.description,
     alternates: { canonical: url },
     openGraph: { title: t.title, description: t.description, url, type: "website", siteName: "Pixel Shine" },
+    ...(guideIndexable(listed) ? {} : { robots: NOINDEX }),
   };
 }
 

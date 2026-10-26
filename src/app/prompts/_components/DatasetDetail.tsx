@@ -185,7 +185,7 @@ export default function DatasetDetail({
         <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
           {[
             { label: "Upscale to 4K", href: "/upscale" },
-            { label: "Remove the background", href: "/creative/background-remover" },
+            { label: "Remove the background", href: "/remove-bg" },
             { label: "Crop for a platform", href: "/crop-image" },
             { label: "Compress before sharing", href: "/compress-image" },
             { label: "All AI apps", href: "/creative" },

@@ -32,14 +32,34 @@ const retiredPages = {
   '/answers/restore-old-photo': '/creative/restore-old-photos',
 };
 
+/*
+  The old domain. sjpt.in has a Change of Address to www.sjpt.io running in
+  Search Console, which only completes while every old URL answers with a
+  permanent redirect to its new home. Removing these (and the domain) in
+  September left sjpt.in answering Vercel 404s, throwing away its links and
+  history. The domain must be attached to this project in Vercel for any of
+  this to run.
+
+  One hop each: a path that has itself moved goes straight to where it lives
+  now, rather than to www.sjpt.io/<old path> and on from there. These come
+  first, because the first matching redirect wins.
+*/
+const OLD_HOST = { type: 'host', value: '(www\\.)?sjpt\\.in' };
+const oldDomain = [
+  ...Object.entries({ ...blogRedirects, ...retiredPages }).map(([source, destination]) => ({
+    source, has: [OLD_HOST], destination: `https://www.sjpt.io${destination}`, statusCode: 301,
+  })),
+  { source: '/:path*', has: [OLD_HOST], destination: 'https://www.sjpt.io/:path*', statusCode: 301 },
+];
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   async redirects() {
     return [
-      // Removed video tools (free resolvers couldn't reliably download).
-      // 301 to the home page so old sitemap/crawled URLs don't 404.
-      { source: '/instagram-video-downloader', destination: '/', permanent: true },
-      { source: '/youtube-video-downloader', destination: '/', permanent: true },
+      ...oldDomain,
+      // The removed video downloaders answer 410 Gone (src/middleware.ts):
+      // the home page doesn't download videos, so redirecting there was a
+      // soft 404.
       ...Object.entries(blogRedirects).map(([source, destination]) => ({ source, destination, statusCode: 301 })),
       // Thin ~200-word pages merged into the page that owns their search
       // (docs/seo/keyword-map.md, "Retired"): two pages chasing one phrase
