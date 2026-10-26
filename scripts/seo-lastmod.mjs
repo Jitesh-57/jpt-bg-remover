@@ -85,6 +85,20 @@ for (const file of pages(APP)) {
   if (dates.length) result[route === "/" ? "/" : route.replace(/\/$/, "")] = dates[dates.length - 1];
 }
 
+/*
+  Apps with a page of their own (src/lib/app-pages/<slug>.ts) change one at a
+  time, so each gets its own date rather than the shared /creative/[slug] one:
+  the newest of its copy and the template that renders it.
+*/
+const APP_PAGES_DIR = join(ROOT, "src", "lib", "app-pages");
+const NOT_PAGES = new Set(["index.ts", "types.ts", "slugs.ts", "facts.ts"]);
+for (const name of readdirSync(APP_PAGES_DIR)) {
+  if (!name.endsWith(".ts") || NOT_PAGES.has(name)) continue;
+  const files = [`src/lib/app-pages/${name}`, "src/app/creative/[slug]/page.tsx", "src/app/creative/[slug]/AppArticle.tsx"];
+  const dates = files.map(changed).filter(Boolean).sort();
+  if (dates.length) result[`/creative/${name.slice(0, -3)}`] = dates[dates.length - 1];
+}
+
 const sorted = Object.fromEntries(Object.entries(result).sort(([a], [b]) => a.localeCompare(b)));
 const json = JSON.stringify(sorted, null, 1) + "\n";
 

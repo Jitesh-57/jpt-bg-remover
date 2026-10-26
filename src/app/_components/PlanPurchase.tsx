@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { beginGoogleSignIn } from "@/lib/auth-return";
-import { buyPack } from "@/lib/checkout";
+import { buyPack, prepareCheckout } from "@/lib/checkout";
 import { publishCredits } from "@/lib/credits";
 import { CREDIT_COST, MONTHLY_PLANS, PACKS, formatInr, inrPerCredit, type Pack } from "@/lib/plans";
 
@@ -88,6 +88,10 @@ export default function PlanPurchase({
   const selected = list.find((p) => p.id === picked[tab]) || list[0];
   const [busy, setBusy] = useState<string | null>(null);
   const [status, setStatus] = useState<{ text: string; ok: boolean } | null>(null);
+
+  // The plans are on screen, so a click may be seconds away: have the payment
+  // window ready for it. Signed-out visitors sign in first, so they wait.
+  useEffect(() => { if (loggedIn) prepareCheckout(); }, [loggedIn]);
 
   async function buy(p: Pack) {
     if (!loggedIn) { await beginGoogleSignIn(); return; }

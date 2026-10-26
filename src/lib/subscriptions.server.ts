@@ -69,6 +69,10 @@ function monthAfter(from: Date): string {
   return d.toISOString();
 }
 
+// Plan ids never change once made (the key includes the price), so a warm
+// function remembers them and skips the database read on the next checkout.
+const PLAN_IDS = new Map<string, string>();
+
 /**
  * The Razorpay plan for a monthly pack, created the first time it is sold.
  *
@@ -76,8 +80,16 @@ function monthAfter(from: Date): string {
  * new Razorpay plan and existing subscribers stay on the one they agreed to.
  */
 export async function razorpayPlanId(rzp: Razorpay, plan: Pack): Promise<string> {
-  const db = createAdminSupabase();
   const key = `${plan.id}:${inrPaise(plan)}:INR`;
+  const cached = PLAN_IDS.get(key);
+  if (cached) return cached;
+  const id = await lookUpPlanId(rzp, plan, key);
+  PLAN_IDS.set(key, id);
+  return id;
+}
+
+async function lookUpPlanId(rzp: Razorpay, plan: Pack, key: string): Promise<string> {
+  const db = createAdminSupabase();
   const read = async () => {
     const { data, error } = await db.from("razorpay_plans").select("razorpay_plan_id").eq("key", key).maybeSingle() as
       { data: { razorpay_plan_id: string } | null; error: { message: string } | null };

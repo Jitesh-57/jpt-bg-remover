@@ -18,6 +18,8 @@ import { SHOW_PRESET_TABS } from "@/lib/workspace-config";
 import { applyOverride, creativeKey, readOverrides } from "@/lib/overrides";
 import { creativeIndexable, NOINDEX } from "@/lib/seo/index-policy";
 import { APP_OFFERS } from "@/lib/seo/offers";
+import { appPage, withAppPage } from "@/lib/app-pages";
+import AppArticle from "./AppArticle";
 
 export const revalidate = 300;
 
@@ -29,8 +31,10 @@ export function generateStaticParams() {
 
 async function generateMetadataBase({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const base = getCreativeApp(slug);
-  if (!base) return {};
+  const found = getCreativeApp(slug);
+  if (!found) return {};
+  // An app with its own page (lib/app-pages) takes its title and description from it.
+  const base = withAppPage(found, appPage(slug));
   // Copy edited in /admin wins over the copy in creative-apps.ts. It is stored
   // outside the repo precisely so a deploy cannot quietly revert it.
   const o = await readOverrides();
@@ -89,7 +93,10 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
   // page are the ones edited in /admin when there are any.
   const overrides = await readOverrides();
   const pageOverride = overrides.pages[creativeKey(slug)];
-  const a = applyOverride(found, pageOverride);
+  // An app with its own page (lib/app-pages) is written for itself; the rest
+  // get the category copy longContentFor() composes.
+  const ap = appPage(slug);
+  const a = applyOverride(withAppPage(found, ap), pageOverride);
   const showcase = pageOverride?.showcase ?? [];
   const mainImage = pageOverride?.main;
 
@@ -100,8 +107,10 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
   // Apps with a published before-and-after creative lead, so the row shows the
   // current pictures rather than old previews or placeholder artwork.
   const mainOf = (s: string) => overrides.pages[creativeKey(s)]?.main;
+  // Then apps search engines can reach: a link to a hidden page helps nobody find it.
   const candidates = relatedApps(a, 24);
-  const related = [...candidates.filter((r) => mainOf(r.slug)), ...candidates.filter((r) => !mainOf(r.slug))].slice(0, 6);
+  const rank = (r: { slug: string }) => (mainOf(r.slug) ? 0 : 2) + (creativeIndexable(r.slug) ? 0 : 1);
+  const related = [...candidates].sort((x, y) => rank(x) - rank(y)).slice(0, 6);
   const cat = categoryOf(a);
   const catMeta = cat ? CAT_META[cat] : null;
 
@@ -113,6 +122,8 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
   ]);
   const content = getCreativeContent(slug);
   const lc = longContentFor(a);
+  const faq = ap ? a.faq : lc.faq;
+  const steps = ap?.howTo ?? lc.howTo;
 
   // Hand-written copy wins where it exists; the composed copy fills the rest of
   // the page. Tips are merged rather than replaced so the 42 hand-written apps
@@ -139,7 +150,7 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
   const faqLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: lc.faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+    mainEntity: faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
   };
   const breadcrumbLd = {
     "@context": "https://schema.org",
@@ -290,16 +301,17 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
               </div>
               )}
               <figcaption style={{ fontSize: 12.5, color: "var(--text-faint)", marginTop: 12 }}>
-                {mainImage
+                {ap ? ap.exampleCaption
+                  : mainImage
                   ? <>Made with {a.h1} — the same thing your upload goes through.</>
                   : <>The right-hand image is this app&apos;s own prompt run over the photo on the left — the same thing your upload goes through.</>}
               </figcaption>
             </figure>
             </div>
 
-            <h2 style={{ fontSize: "clamp(1.6rem,3vw,2.2rem)", fontWeight: 900, color: "var(--text)", textAlign: "center", margin: "0 0 48px", letterSpacing: "-0.02em" }}>How to use {a.h1}</h2>
+            <h2 style={{ fontSize: "clamp(1.6rem,3vw,2.2rem)", fontWeight: 900, color: "var(--text)", textAlign: "center", margin: "0 0 48px", letterSpacing: "-0.02em" }}>{ap?.howToHeading ?? `How to use ${a.h1}`}</h2>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 28 }}>
-              {lc.howTo.map((step, i) => (
+              {steps.map((step, i) => (
                 <div key={step.t} style={{ textAlign: "center" }}>
                   <div style={{ width: 64, height: 64, background: "var(--surface)", border: "2px solid var(--accent-soft)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px", fontWeight: 900, color: "var(--accent)", fontSize: 20 }}>{`0${i + 1}`}</div>
                   <h3 style={{ fontSize: 16, fontWeight: 800, color: "var(--text)", margin: "0 0 8px" }}>{step.t}</h3>
@@ -353,6 +365,10 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
           </section>
         )}
 
+        {ap ? (
+          <AppArticle sections={ap.sections} />
+        ) : (
+        <>
         {/* Why use — composed per category, led by this app's own description */}
         <section style={{ padding: "76px 24px", background: "var(--bg)" }}>
           <div style={{ maxWidth: 1100, margin: "0 auto" }}>
@@ -427,11 +443,14 @@ export default async function CreativeAppPage({ params }: { params: Promise<{ sl
           </section>
         )}
 
+        </>
+        )}
+
         {/* FAQ */}
         <section style={{ padding: "72px 24px", background: "var(--surface)" }}>
           <div style={{ maxWidth: 720, margin: "0 auto" }}>
             <h2 style={{ fontSize: "clamp(1.6rem,3vw,2.2rem)", fontWeight: 900, color: "var(--text)", textAlign: "center", margin: "0 0 40px", letterSpacing: "-0.02em" }}>Frequently Asked Questions</h2>
-            <FAQAccordion faqs={lc.faq} />
+            <FAQAccordion faqs={faq} />
           </div>
         </section>
 

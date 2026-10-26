@@ -7,9 +7,10 @@
  *
  * Extracted rather than duplicated: this is the code that moves money, and
  * a payment flow copy-pasted into two places is two places a fix can miss.
- * Behaviour is unchanged from the original inline version in
- * src/app/pricing/page.tsx — same script-load, same create-order →
- * Razorpay → verify-payment sequence, same payment.failed handling.
+ * The create-order → Razorpay → verify-payment sequence and the
+ * payment.failed handling are those of the original inline version in
+ * src/app/pricing/page.tsx; the script now loads ahead of time
+ * (prepareCheckout) and alongside the order rather than before it.
  */
 
 import { trackBeginCheckout, trackPurchase, trackBuyButtonClicked, trackPaymentFailed } from "@/lib/analytics";
@@ -44,15 +45,55 @@ export interface CheckoutResult {
 */
 const HIDE_CONTACT = { contact: true };
 
-async function loadRazorpay(): Promise<void> {
-  if (window.Razorpay) return;
-  await new Promise<void>((resolve, reject) => {
+// One load shared by everyone who asks, so preparing early and clicking
+// early never fetch the script twice. A failed load is forgotten, so the next
+// click tries again.
+let razorpayLoad: Promise<void> | null = null;
+
+function loadRazorpay(): Promise<void> {
+  if (window.Razorpay) return Promise.resolve();
+  razorpayLoad ??= new Promise<void>((resolve, reject) => {
     const s = document.createElement("script");
     s.src = "https://checkout.razorpay.com/v1/checkout.js";
+    s.async = true;
     s.onload = () => resolve();
-    s.onerror = () => reject(new Error("The payment window could not load. Check your connection and try again."));
+    s.onerror = () => {
+      razorpayLoad = null;
+      s.remove();
+      reject(new Error("The payment window could not load. Check your connection and try again."));
+    };
     document.head.appendChild(s);
   });
+  return razorpayLoad;
+}
+
+let prepared = false;
+
+/**
+ * Gets checkout ready before anyone clicks Buy Now, so the payment window
+ * opens as soon as they do. Called when the plans are on screen (PlanPurchase).
+ *
+ * After a click, the wait used to be: download Razorpay's script, then create
+ * the order, then open Razorpay's window, each starting only when the last had
+ * finished. Now the connections to Razorpay are already open, its script is
+ * already loaded, and the two checkout functions are already awake; what is
+ * left is the order itself, and the script load runs alongside it if this
+ * hasn't finished yet.
+ */
+export function prepareCheckout(): void {
+  if (prepared || typeof window === "undefined") return;
+  prepared = true;
+  for (const href of ["https://checkout.razorpay.com", "https://api.razorpay.com"]) {
+    const link = document.createElement("link");
+    link.rel = "preconnect";
+    link.href = href;
+    link.crossOrigin = "anonymous";
+    document.head.appendChild(link);
+  }
+  loadRazorpay().catch(() => { /* tried again on the click */ });
+  for (const url of ["/api/create-order", "/api/subscriptions/create"]) {
+    fetch(url, { method: "GET", cache: "no-store" }).catch(() => { /* only a warm-up */ });
+  }
 }
 
 /** Buys one pack. Resolves once the flow is fully done (success, failure or cancel). */
@@ -62,11 +103,13 @@ export async function buyPack(p: Pack, prefill?: { name?: string; email?: string
   trackBeginCheckout(p.id, p.usd);
 
   try {
-    await loadRazorpay();
-
-    const orderRes = await fetch("/api/create-order", {
-      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ plan: p.id }),
-    });
+    // The script and the order load side by side, not one after the other.
+    const [, orderRes] = await Promise.all([
+      loadRazorpay(),
+      fetch("/api/create-order", {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ plan: p.id }),
+      }),
+    ]);
     const orderData = (await orderRes.json()) as { order_id?: string; amount?: number; currency?: string; error?: string };
 
     if (!orderRes.ok || !orderData.order_id) {
@@ -144,11 +187,13 @@ export async function subscribe(p: Pack, prefill?: { name?: string; email?: stri
   trackBeginCheckout(p.id, p.usd);
 
   try {
-    await loadRazorpay();
-
-    const res = await fetch("/api/subscriptions/create", {
-      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ plan: p.id }),
-    });
+    // The script and the subscription load side by side, not one after the other.
+    const [, res] = await Promise.all([
+      loadRazorpay(),
+      fetch("/api/subscriptions/create", {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ plan: p.id }),
+      }),
+    ]);
     const data = (await res.json()) as { subscription_id?: string; error?: string };
     if (!res.ok || !data.subscription_id) {
       trackPaymentFailed(p.id, data.error || "subscription_creation_failed");

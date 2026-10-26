@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
+import { waitUntil } from "@vercel/functions";
 import { checkAuth, createAdminSupabase } from "@/lib/auth";
 import { MONTHLY_BY_ID, inrPaise } from "@/lib/plans";
 import { operatorDetail } from "@/lib/user-message";
 import { SubscriptionsUnavailable, noteSubscriptionOrders, razorpayClient, razorpayPlanId } from "@/lib/subscriptions.server";
 
 export const runtime = "nodejs";
+// Never cached: the GET below exists to wake this function, which a cached reply would not.
+export const dynamic = "force-dynamic";
 
 const NOT_READY = "Monthly plans aren't available just yet. You have not been charged — a one-time pack works in the meantime.";
 
@@ -15,6 +18,11 @@ const NOT_READY = "Monthly plans aren't available just yet. You have not been ch
  * Someone may hold several plans at once, so an existing plan is no reason to
  * refuse another.
  */
+/** A no-op the pricing pop-up calls when it opens, so a click on Buy Now doesn't wait for a cold start. */
+export function GET() {
+  return new NextResponse(null, { status: 204 });
+}
+
 export async function POST(req: NextRequest) {
   const { session, error } = await checkAuth(req);
   if (error) return error;
@@ -61,14 +69,13 @@ export async function POST(req: NextRequest) {
     }
 
     // Razorpay raises the first month's invoice, and its order, with the
-    // subscription. Note the buyer on it now, so an order left unpaid is still
-    // identifiable; capped so the checkout never waits long on it.
-    await Promise.race([
-      noteSubscriptionOrders(rzp, {
-        user_id: session!.userId, plan: plan.id, credits_per_cycle: plan.credits, razorpay_subscription_id: sub.id,
-      }),
-      new Promise((r) => setTimeout(r, 2500)),
-    ]);
+    // subscription. Note the buyer on it, so an order left unpaid is still
+    // identifiable, after replying: the customer is waiting for the payment
+    // window, and this took up to 2.5 s of that wait. waitUntil keeps the
+    // function alive until it finishes.
+    waitUntil(noteSubscriptionOrders(rzp, {
+      user_id: session!.userId, plan: plan.id, credits_per_cycle: plan.credits, razorpay_subscription_id: sub.id,
+    }));
 
     return NextResponse.json({ subscription_id: sub.id, plan: plan.id, amount: inrPaise(plan), credits: plan.credits });
   } catch (e) {
