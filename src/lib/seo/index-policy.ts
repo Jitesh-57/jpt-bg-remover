@@ -31,7 +31,17 @@ export const INDEX_POLICY = {
   videoPromptsIndexed: 15,
   /** A prompt category page needs at least this many prompts to be indexed. */
   promptFacetMinItems: 10,
+  /** A blog topic hub (/guides/{topic}) needs at least this many indexable posts. */
+  guideMinPosts: 3,
 };
+
+/*
+  Whole sections kept out of the index (each has a layout setting NOINDEX, and
+  sitemap-data leaves them out): fine for visitors, little of their own to say.
+    /use-cases/*, /ai/*  — about 200 words each around a list of app links.
+    /alternatives/*      — one template with the competitor's name swapped in.
+    /batch-editor        — a tool screen, like /editor.
+*/
 
 /** The robots value for a page that stays live but out of the index. */
 export const NOINDEX: Metadata["robots"] = { index: false, follow: true };
@@ -46,6 +56,11 @@ export function blogWordCount(post: { sections: { body: string }[] }): number {
 
 export function blogIndexable(post: { sections: { body: string }[] }): boolean {
   return blogWordCount(post) >= INDEX_POLICY.blogMinWords;
+}
+
+/** A topic hub with only a post or two is a thin list, not a guide. */
+export function guideIndexable(indexablePosts: number): boolean {
+  return indexablePosts >= INDEX_POLICY.guideMinPosts;
 }
 
 // ── Creative apps ─────────────────────────────────────────────────────────

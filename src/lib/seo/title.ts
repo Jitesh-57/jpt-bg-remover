@@ -37,8 +37,12 @@ export function fitTitle(candidates: string[], max = TITLE_MAX): string {
  * The brand is never added to a title that already names it.
  */
 export function brandedTitle(main: string | undefined, max = TITLE_MAX): string {
-  const m = stripBrand(main ?? "");
+  const full = stripBrand(main ?? "");
+  // A listing's " — Page 2" survives every shortening: dropped with the
+  // qualifier, it left pages 2, 3, 4… of a listing all titled like page 1.
+  const page = full.match(/\s+—\s+Page \d+$/)?.[0] ?? "";
+  const m = page ? full.slice(0, -page.length) : full;
   const head = m.split(/\s+[—–|]\s+|\s+-\s+/)[0].trim();
   const brand = (t: string) => (/pixel shine/i.test(t) ? t : `${t} | ${BRAND_NAME}`);
-  return fitTitle([brand(m), m, brand(head), head], max);
+  return fitTitle([brand(m + page), m + page, brand(head + page), head + page], max);
 }

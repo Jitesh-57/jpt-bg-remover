@@ -94,7 +94,7 @@ const page: AppPage = {
         { t: "Share with relatives", d: "Relatives abroad often have never seen some photos clearly. Send the restored version in a family group." },
       ],
       after: [
-        "Curious how a restored face might look today? The [age progression](/creative/age-progression) app ages a face forward. For step-by-step advice, read our [guides to restoring old photos](/guides/restore-old-photos).",
+        "Curious how a restored face might look today? The [age progression](/creative/age-progression) app ages a face forward. For more on scanning and repairing prints, read our [guide to restoring old photos](/blog/ai-photo-restoration-free-online).",
       ],
     },
     {

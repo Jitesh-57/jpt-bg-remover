@@ -37,6 +37,13 @@ export function generateStaticParams() {
   ];
 }
 
+/* Titles more than one dataset prompt carries, by different people: their pages add the author, so no two pages share a title. */
+const SHARED_TITLES = (() => {
+  const seen = new Map<string, number>();
+  byMedia("image").forEach((r) => seen.set(r.title, (seen.get(r.title) ?? 0) + 1));
+  return new Set(Array.from(seen).filter(([, n]) => n > 1).map(([t]) => t));
+})();
+
 async function generateMetadataBase({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const url = `${BASE}/prompts/${slug}`;
@@ -44,8 +51,9 @@ async function generateMetadataBase({ params }: { params: Promise<{ slug: string
   const ds = getPrompt(slug);
   if (ds && ds.media === "image") {
     const description = ds.description || excerpt(ds, 155);
+    const name = SHARED_TITLES.has(ds.title) ? `${ds.title} by ${ds.author.name}` : ds.title;
     return {
-      title: { absolute: fitTitle([`${ds.title} — ${ds.model} Prompt | ${BRAND}`, `${ds.title} — ${ds.model} Prompt`, `${ds.title} AI Prompt`, ds.title]) },
+      title: { absolute: fitTitle([`${name} — ${ds.model} Prompt | ${BRAND}`, `${name} — ${ds.model} Prompt`, `${name} AI Prompt`, name]) },
       description,
       keywords: [ds.model, "ai prompt", ds.useCase, ...ds.styles, ...ds.subjects].filter(Boolean).join(", "),
       alternates: { canonical: url },
