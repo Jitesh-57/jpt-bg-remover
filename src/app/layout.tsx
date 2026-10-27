@@ -65,6 +65,8 @@ const organizationSchema = {
   logo: LOGO_URL,
   sameAs: ["https://twitter.com/jptai"],
   contactPoint: { "@type": "ContactPoint", email: "support@sjpt.io", contactType: "customer service" },
+  // "Who created this?": the name the owner gives on the site. More profiles go in sameAs as they exist.
+  founder: { "@type": "Person", name: "Jitesh" },
 };
 
 const websiteSchema = {

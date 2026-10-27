@@ -20,7 +20,7 @@ const TILES: { kind: MockKind; name: string; line: string; tag: string; size: "h
   { kind: "studio",   name: "AI Photo Studio",       line: "Chat your edits into place, step by step, keeping your face.", tag: "New",            size: "tall" },
   { kind: "headshot", name: "AI Headshot Generator", line: "LinkedIn-ready studio portraits from one selfie.",              tag: "Professional",   size: "small" },
   { kind: "recreate", name: "Copy Photo Style",      line: "Recreate any photo's look with your own face in it.",          tag: "Recreate",       size: "small" },
-  { kind: "editor",   name: "AI Photo Editor",       line: "Change anything in a photo by describing it in one sentence.", tag: "Before → after", size: "wide" },
+  { kind: "editor",   name: "AI Photo Editor",       line: "Our AI image editor lets you change anything in a photo by describing it in one sentence.", tag: "Before → after", size: "wide" },
   { kind: "apps",     name: "AI Photo Filters",      line: "200+ one-tap looks: Ghibli, vintage, saree and more.",         tag: "One tap",        size: "wide" },
   { kind: "batch",    name: "Bulk Photo Editor",     line: "Apply one edit to up to 100 images at once.",                  tag: "Free",           size: "wide" },
   { kind: "photo",    name: "Free Photo Editor",     line: "Crop, resize, adjust and compress, all in your browser.",      tag: "Free",           size: "wide" },

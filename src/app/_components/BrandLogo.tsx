@@ -18,7 +18,7 @@ export default function BrandLogo({
   dark?: boolean;
 }) {
   return (
-    <span aria-label="Pixel Shine" role="img" style={{ display: "inline-flex", alignItems: "center", gap: Math.round(height * 0.24), lineHeight: 1 }}>
+    <span aria-label="PixelShine" role="img" style={{ display: "inline-flex", alignItems: "center", gap: Math.round(height * 0.24), lineHeight: 1 }}>
       <span aria-hidden style={{ fontSize: Math.round(height * 0.62), fontWeight: 900, color: "var(--accent)", lineHeight: 1 }}>✦</span>
       {variant !== "mark" && (
         <span aria-hidden style={{ fontSize: Math.round(height * 0.54), fontWeight: 900, letterSpacing: "-0.03em", whiteSpace: "nowrap", lineHeight: 1 }}>

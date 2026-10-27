@@ -14,15 +14,46 @@ import { curateApps } from "@/lib/placements.server";
 import { creativeSources, mainSources } from "@/lib/app-creatives";
 import { landingImg } from "@/lib/landing-images";
 import { CREDIT_COST } from "@/lib/plans";
+import { HOME_DESCRIPTION, HOME_FAQ, HOME_TITLE, HOME_UPDATED, MONTHLY_FROM, PACK_FROM } from "@/lib/home-seo";
 import type { ShowFeature } from "@/app/app/_components/FeatureShowcase";
 import HomeToolsBento from "@/app/_components/HomeToolsBento";
 import { TrialPill } from "@/app/_components/TrialOffer";
 
 /* The hero copy is set here rather than read from the page-SEO row, so an old
-   admin override cannot put a retired headline back on the homepage. */
-const HERO_H1 = "Your Own AI Creative Studio";
+   admin override cannot put a retired headline back on the homepage. The
+   first paragraph answers "what is it" on its own, in the words people search
+   for: it is the passage search engines and AI answers quote. */
+const HERO_H1 = "PixelShine: Your Own AI Image Editor and Creative Studio";
+const HERO_ANSWER =
+  `PixelShine is an online AI image editor that runs in your browser, with nothing to install. You can describe a change in one sentence, chat your edits step by step, or tap one of 200+ AI photo apps for an instant look. Basic tools like crop, resize and compress are free. AI edits cost ${CREDIT_COST} credits each, and nothing is ever watermarked.`;
 const HERO_SUB =
-  "Create, edit, transform, and reimagine your photos with PixelShine AI. From powerful AI apps to free creative tools, everything you need to turn your ideas into stunning visuals is in one place.";
+  `Create more, edit less. Your first edits need no account, a free account makes the basic tools unlimited, and paid plans start from ${MONTHLY_FROM} a month. You can cancel any time, or buy a one-time pack from ${PACK_FROM} whose credits never expire.`;
+
+/* A real result from the AI Dress Photo Editor: the original and the edit side by side. */
+const DRESS_EXAMPLE = mainSources("dress-photo-editor")[0] ?? "";
+const DRESS_ALT =
+  "PixelShine AI Dress Photo Editor: on the left, the original photo of a woman in a blue sweatshirt, jeans and white sneakers in her bedroom; on the right, the same woman in a deep-red draped gown with a thigh slit, in a lit hotel lobby";
+
+const SUPPORT_EMAIL = "support@sjpt.io";
+
+/* "2026-10-27" → "27 October 2026". */
+const longDate = (iso: string) =>
+  new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
+
+/*
+  Something only the owner can supply: a real fact, a photo, a link. Shown on
+  the page on purpose, so it can't be missed or quietly invented; every one is
+  listed in the PR that added it. Remove each once it is filled in.
+*/
+function Todo({ children, block = false }: { children: React.ReactNode; block?: boolean }) {
+  const style: React.CSSProperties = {
+    border: "1.5px dashed #F59E0B", background: "rgba(245,158,11,0.10)", color: "var(--text)",
+    borderRadius: 8, padding: block ? "14px 16px" : "1px 6px", fontSize: block ? 14 : "0.92em", fontWeight: 600,
+  };
+  return block
+    ? <div style={{ ...style, display: "grid", placeItems: "center", textAlign: "center", minHeight: 160 }}>TODO (owner): {children}</div>
+    : <span style={style}>TODO (owner): {children}</span>;
+}
 import type { PageSEO } from "@/lib/page-config";
 
 const BASE = "https://www.sjpt.io";
@@ -53,15 +84,15 @@ const FREE_TOOLS = [
 
 const STEPS = [
   { n: "01", t: "Upload a photo",       d: "Drop any JPG, PNG or WebP. Your photo stays private, and your original is never changed.",           img: landingImg("home-step-1.png") },
-  { n: "02", t: "Pick a tool or a look", d: "Choose a free tool, describe an edit in plain words, or tap one of the 200+ AI apps for an instant style.",   img: landingImg("home-step-2.png") },
+  { n: "02", t: "Pick a tool or a look", d: "Choose a free tool, describe an edit in plain words to the AI image editor, or tap one of the 200+ AI photo apps for an instant style.", img: landingImg("home-step-2.png") },
   { n: "03", t: "Download in full res",  d: "Every export is full resolution with no watermark — free tools and AI results alike.",                    img: landingImg("home-step-3.png") },
 ];
 
 export default function HomePage({
-  config,
   placements,
   features,
 }: {
+  /** The page-SEO row. The homepage's words are set in code (HERO_*, lib/home-seo); page.tsx still reads its keywords and share image. */
   config: PageSEO;
   /** The dashboard's "Everything you can make" cards, built in page.tsx. */
   features?: ShowFeature[];
@@ -75,14 +106,29 @@ export default function HomePage({
   const apps = curateApps("home.apps", doc, defaultApps, CREATIVE_APPS);
   const showcase = curateApps("home.showcase", doc, defaultShowcase, CREATIVE_APPS);
 
+  // The FAQ is HOME_FAQ, set in code like the hero, so its visible text and this markup are one source.
   const faqLd = {
     "@context": "https://schema.org", "@type": "FAQPage",
-    mainEntity: config.faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+    mainEntity: HOME_FAQ.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
   };
   const webPageLd = {
     "@context": "https://schema.org", "@type": "WebPage",
-    name: config.title, description: config.meta_description, url: BASE,
+    name: HOME_TITLE, description: HOME_DESCRIPTION, url: BASE,
+    dateModified: HOME_UPDATED,
+    publisher: { "@type": "Organization", name: "PixelShine", url: BASE },
   };
+
+  // A section of running text: the same centred heading as the others, prose at reading width.
+  const prose = (id: string, eyebrow: string, title: string, children: React.ReactNode) => (
+    <section id={id} style={{ padding: "0 24px 80px" }}>
+      <div style={{ maxWidth: 760, margin: "0 auto" }}>
+        {sectionHead(eyebrow, title)}
+        <div className="jpt-home-prose" style={{ display: "flex", flexDirection: "column", gap: 14, fontSize: 16, color: "var(--text-muted)", lineHeight: 1.75, marginTop: -16 }}>
+          {children}
+        </div>
+      </div>
+    </section>
+  );
 
   const sectionHead = (eyebrow: string, title: string, sub?: string) => (
     <div style={{ textAlign: "center", maxWidth: 720, margin: "0 auto 40px" }}>
@@ -107,7 +153,8 @@ export default function HomePage({
               {HERO_H1.split(" ").slice(0, -2).join(" ")}{" "}
               <span className="jpt-grad-text">{HERO_H1.split(" ").slice(-2).join(" ")}</span>
             </h1>
-            <p className="jpt-lead" style={{ maxWidth: 700, margin: "0 auto 34px" }}>{HERO_SUB}</p>
+            <p className="jpt-lead" style={{ maxWidth: 760, margin: "0 auto 14px" }}>{HERO_ANSWER}</p>
+            <p style={{ maxWidth: 700, margin: "0 auto 34px", fontSize: 15.5, color: "var(--text-muted)", lineHeight: 1.65 }}>{HERO_SUB}</p>
           </div>
           <HomeHero />
           <div style={{ display: "flex", flexWrap: "wrap", gap: "10px 22px", justifyContent: "center", fontSize: 13.5, color: "var(--text-muted)", fontWeight: 600, marginTop: 22 }}>
@@ -140,15 +187,45 @@ export default function HomePage({
               ))}
             </div>
             <p style={{ textAlign: "center", fontSize: 12.5, color: "var(--text-faint)", marginTop: 12 }}>
-              Real results — each one is an ordinary photo run through that app&apos;s own prompt.
+              Real results from PixelShine: each one is an ordinary photo run through that app&apos;s own prompt.
             </p>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(340px, 100%), 1fr))", gap: 18, marginTop: 22 }}>
+              <figure style={{ margin: 0, background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 18, overflow: "hidden" }}>
+                {DRESS_EXAMPLE && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={DRESS_EXAMPLE} alt={DRESS_ALT} width={1400} height={933} loading="lazy" decoding="async" style={{ display: "block", width: "100%", height: "auto" }} />
+                )}
+                <figcaption style={{ padding: "12px 16px", fontSize: 13.5, color: "var(--text-muted)" }}>
+                  <Link href={`${CREATIVE_BASE}/dress-photo-editor`} style={{ color: "var(--text)", fontWeight: 700, textDecoration: "none" }}>AI Dress Photo Editor</Link>: one upload, one tap, no prompt written.
+                </figcaption>
+              </figure>
+              <figure style={{ margin: 0, background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 18, overflow: "hidden", display: "flex", flexDirection: "column" }}>
+                <div style={{ padding: 16, flex: 1, display: "grid" }}>
+                  <Todo block>a 1200×750 screenshot of PixelShine AI Photo Studio showing a step-by-step chat edit to a portrait, with alt text</Todo>
+                </div>
+                <figcaption style={{ padding: "12px 16px", fontSize: 13.5, color: "var(--text-muted)" }}>
+                  <span style={{ color: "var(--text)", fontWeight: 700 }}>AI Photo Studio</span>: describe each edit in a sentence and refine it step by step.
+                </figcaption>
+              </figure>
+            </div>
           </div>
         </section>
+
+        {/* ── WHAT IS AN AI IMAGE EDITOR ─────────────────────────────────── */}
+        {prose("ai-image-editor", "The basics", "What is an AI image editor?", <>
+          <p style={{ margin: 0 }}>
+            An AI image editor changes a photo based on what you describe or choose, instead of you making each change by hand. In PixelShine you can describe an edit in one sentence, refine a portrait step by step in a chat, or tap one of 200+ apps that already carry a tuned prompt. Basic edits like cropping, resizing and compressing are free and run in your browser. The AI features use credits.
+          </p>
+          <p style={{ margin: 0 }}>
+            To try it, open the <Link href="/ai-editor" style={{ color: "var(--accent)", fontWeight: 700 }}>AI photo editor</Link>, or pick one of the apps below.
+          </p>
+          <Todo>review the competitor pages and add only the missing topics that genuinely apply to PixelShine (e.g. supported file sizes, devices and browsers, commercial use rights, how it compares with editing by hand), each answered in two or three sentences of real product facts</Todo>
+        </>)}
 
         {/* ── PRO TOOLS ────────────────────────────────────────────────────── */}
         <section style={{ padding: "0 24px 88px" }}>
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
-            {sectionHead("Pro tools", "The AI tools, on credits", `Server-side AI at ${CREDIT_COST} credits a generation. Go monthly from $5 and cancel any time, or buy a pack once from $2 that never expires.`)}
+            {sectionHead("Pro tools", "What can the PixelShine AI image editor do?", `PixelShine's AI tools run server-side at ${CREDIT_COST} credits a generation. Go monthly from ${MONTHLY_FROM} and cancel any time, or buy a pack once from ${PACK_FROM} that never expires.`)}
             <TrialPill source="home-ai-tools" />
             {/* Search-intent names on photo tiles, each opening its new /app workspace. */}
             <HomeToolsBento features={features ?? []} />
@@ -158,7 +235,7 @@ export default function HomePage({
         {/* ── FREE TOOLS ───────────────────────────────────────────────────── */}
         <section style={{ padding: "80px 24px", background: "var(--surface)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
-            {sectionHead("Free tools", "Free, unlimited, private", "Your first edits need no account, and a free account makes them unlimited. No watermark, ever.")}
+            {sectionHead("Free tools", "Which photo editing tools are free?", "Your first edits need no account, and a free account makes them unlimited. No watermark, ever.")}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(200px, 100%), 1fr))", gap: 12 }}>
               {FREE_TOOLS.map((t) => (
                 <Link key={t.href} href={t.href} className="jpt-hover" style={{ textDecoration: "none", display: "flex", gap: 13, alignItems: "center", background: "var(--surface-2)", border: "1px solid var(--border)", borderRadius: 14, padding: "14px 15px" }}>
@@ -176,7 +253,7 @@ export default function HomePage({
         {/* ── AI APPS GALLERY ──────────────────────────────────────────────── */}
         <section style={{ padding: "80px 24px" }}>
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
-            {sectionHead("AI apps", "Turn one photo into any look", "Each app carries a tuned prompt, so you upload and tap. No prompt writing, no settings to learn.")}
+            {sectionHead("AI apps", "What are the PixelShine AI photo apps?", "Every PixelShine app carries a tuned prompt, so you just upload an image and tap Generate. There's no prompt writing, no settings to learn and no manual effort.")}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(250px, 100%), 1fr))", gap: 18 }}>
               {apps.map((a) => (
                 <Link key={a.slug} href={`${CREATIVE_BASE}/${a.slug}`} className="jpt-hover" draggable={false} style={{ textDecoration: "none", borderRadius: 18, overflow: "hidden", border: "1px solid var(--border)", background: "var(--surface)", display: "block" }}>
@@ -209,10 +286,22 @@ export default function HomePage({
           </div>
         </section>
 
+        {/* ── HOW WE BUILD AND TEST THE APPS ──────────────────────────────── */}
+        {prose("how-we-test", "Behind the apps", "How we build and test each AI photo app", <>
+          <p style={{ margin: 0 }}>Every one of our 200+ apps runs on its own tuned prompt, so you don&apos;t have to write one. Here&apos;s how we make them.</p>
+          <p style={{ margin: 0 }}>
+            We start with ordinary photos, not studio shots: <Todo>what kinds of test photos you use, e.g. phone selfies, group shots, low light, different skin tones and ages</Todo>. We run each prompt on that set and check <Todo>what you check, e.g. whether the face still looks like the same person, hands, background edges</Todo>.
+          </p>
+          <p style={{ margin: 0 }}>What we learned the hard way: <Todo>one or two real mistakes or fixes, e.g. an early headshot prompt that changed people&apos;s faces and how you corrected it</Todo>.</p>
+          <p style={{ margin: 0 }}>
+            An app goes live only when <Todo>your real release criteria</Todo>. The before/after examples on this page are unedited outputs from that process <Todo>confirm this is true, or describe any edits made</Todo>.
+          </p>
+        </>)}
+
         {/* ── HOW IT WORKS ─────────────────────────────────────────────────── */}
         <section style={{ padding: "0 24px 88px" }}>
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
-            {sectionHead("How it works", "Three steps, under a minute")}
+            {sectionHead("How it works", "How do you edit a photo with AI in PixelShine?")}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(280px, 100%), 1fr))", gap: 20 }}>
               {STEPS.map((st) => (
                 <div key={st.n} style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 18, overflow: "hidden" }}>
@@ -230,16 +319,49 @@ export default function HomePage({
           </div>
         </section>
 
+        {/* ── HOW PIXELSHINE IS MADE ─────────────────────────────────────── */}
+        {prose("how-its-made", "About the tools", "How PixelShine is made", <>
+          <p style={{ margin: 0 }}>
+            PixelShine is built by Jitesh, its founder <Todo>location and relevant background in photo editing or software</Todo>. The free tools (crop, resize, compress, rotate, convert and the rest) run in your browser. The AI tools run server-side on fal.ai, our AI processing partner, which runs image models such as Google&apos;s Nano Banana Pro. Each of the 200+ AI photo apps carries its own tuned prompt, so you upload a photo and tap Generate without writing a prompt yourself.
+          </p>
+          <p style={{ margin: 0 }}>
+            The before-and-after examples on this page are real results: each one is an ordinary photo run through that app&apos;s own prompt. <Todo>how you build and check a new app before release, e.g. how many test photos you try and what you look for</Todo>. Questions or problems? Email <a href={`mailto:${SUPPORT_EMAIL}`} style={{ color: "var(--accent)", fontWeight: 700 }}>{SUPPORT_EMAIL}</a>.
+          </p>
+        </>)}
+
         {/* ── PRICING (shared) ─────────────────────────────────────────────── */}
-        <PricingSection />
+        <p style={{ textAlign: "center", fontSize: 13, color: "var(--text-faint)", margin: "0 auto", padding: "0 24px 18px" }}>
+          This page was last updated on <time dateTime={HOME_UPDATED}>{longDate(HOME_UPDATED)}</time>.
+        </p>
+        <PricingSection title="How much does PixelShine cost?" freeLine="PixelShine's basic tools are free and unlimited." />
 
         {/* ── FAQ ──────────────────────────────────────────────────────────── */}
         <section style={{ padding: "0 24px 96px" }}>
           <div style={{ maxWidth: 760, margin: "0 auto" }}>
-            {sectionHead("FAQ", "Questions people ask")}
-            <FAQAccordion faqs={config.faq} />
+            {sectionHead("FAQ", "PixelShine questions people ask")}
+            <FAQAccordion faqs={HOME_FAQ} open />
           </div>
         </section>
+
+        {/* ── WHO MAKES PIXELSHINE ───────────────────────────────────────── */}
+        {prose("about", "Who we are", "Who makes PixelShine", <>
+          <p style={{ margin: 0 }}>
+            PixelShine is built by Jitesh, its founder <Todo>one or two real sentences on background, e.g. years building photo or AI products, location</Todo>. <Todo>name and role of the person responsible for the AI apps and prompts</Todo> reviews every app before it goes live.
+          </p>
+          <p style={{ margin: 0 }}>
+            <Todo>link to an About page</Todo> · Contact: <a href={`mailto:${SUPPORT_EMAIL}`} style={{ color: "var(--accent)", fontWeight: 700 }}>{SUPPORT_EMAIL}</a>
+          </p>
+        </>)}
+
+        {/* ── SOURCES AND POLICIES ───────────────────────────────────────── */}
+        {prose("sources", "Sources", "Sources and policies", <>
+          <ul style={{ margin: 0, paddingLeft: 20, display: "flex", flexDirection: "column", gap: 8 }}>
+            <li>AI models: the AI tools run on <a href="https://fal.ai" rel="noopener" target="_blank" style={{ color: "var(--accent)", fontWeight: 700 }}>fal.ai</a>, our AI processing partner, which runs image models such as Google&apos;s Nano Banana Pro.</li>
+            <li>How we handle uploads: <Link href="/privacy" style={{ color: "var(--accent)", fontWeight: 700 }}>PixelShine privacy policy</Link></li>
+            <li>Plans and credits: <Link href="/pricing" style={{ color: "var(--accent)", fontWeight: 700 }}>PixelShine pricing</Link></li>
+            <li>Terms of use, including refunds: <Link href="/terms" style={{ color: "var(--accent)", fontWeight: 700 }}>PixelShine terms</Link></li>
+          </ul>
+        </>)}
       </div>
     </>
   );

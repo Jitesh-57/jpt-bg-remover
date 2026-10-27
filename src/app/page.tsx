@@ -5,18 +5,9 @@ import HomePage from "./_components/HomePage";
 import { readPlacements } from "@/lib/placements.server";
 import { appCards, communityFeed, feedItemsByUid } from "@/lib/dashboard-feed.server";
 import { buildShowFeatures, CREATE_PICKS } from "@/lib/show-features.server";
+import { HOME_DESCRIPTION, HOME_TITLE } from "@/lib/home-seo";
 
 const BASE = "https://www.sjpt.io";
-
-/*
-  What Google and link previews show for the homepage: the home screen's
-  tagline. Set here rather than read from the page-SEO row, like the hero copy,
-  so an old admin override cannot put a retired title or description back into
-  search results and shared links. The page itself is unaffected.
-*/
-const HOME_TITLE = "PixelShine — Your Own AI Creative Studio";
-const HOME_DESCRIPTION =
-  "Create more, edit less. Bring your visual ideas to life with PixelShine AI — 200+ AI photo apps and free creative tools in one place.";
 
 async function generateMetadataBase(): Promise<Metadata> {
   const config = await getPageConfig("home");

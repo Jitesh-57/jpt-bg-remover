@@ -13,7 +13,13 @@ import { CREDIT_COST } from "@/lib/plans";
  * cards and checkout as /pricing and the pricing popup — so re-pricing a plan
  * updates every page that renders this.
  */
-export default function PricingSection({ toolName }: { toolName?: string }) {
+export default function PricingSection({ toolName, title, freeLine }: {
+  toolName?: string;
+  /** The section's H2, where a page wants its own (the homepage asks it as a question). */
+  title?: string;
+  /** The opening sentence about the free tools, in place of the default. */
+  freeLine?: string;
+}) {
   const [user, setUser] = useState<{ name?: string; email?: string } | null>(null);
 
   useEffect(() => {
@@ -33,10 +39,10 @@ export default function PricingSection({ toolName }: { toolName?: string }) {
             Pricing
           </div>
           <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 900, color: "var(--text)", margin: "0 0 14px", letterSpacing: "-0.02em" }}>
-            Monthly plans or one-time credits.
+            {title ?? "Monthly plans or one-time credits."}
           </h2>
           <p style={{ fontSize: 16.5, color: "var(--text-muted)", margin: "0 auto", maxWidth: 640, lineHeight: 1.65 }}>
-            {toolName ? `${toolName} and every other browser tool are free and unlimited.` : "The browser tools are free and unlimited."}{" "}
+            {freeLine ?? (toolName ? `${toolName} and every other browser tool are free and unlimited.` : "The browser tools are free and unlimited.")}{" "}
             Credits are only for the AI features — {CREDIT_COST} credits per generation. Go monthly for the lowest price per
             credit and cancel any time, or buy an add-on whose credits never expire.
           </p>

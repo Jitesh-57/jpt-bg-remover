@@ -190,7 +190,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 20, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
           <div style={{ fontSize: 13, color: "var(--text-muted)" }}>
-            © {new Date().getFullYear()} Pixel Shine. {t.footerRights}
+            © {new Date().getFullYear()} PixelShine. {t.footerRights}
           </div>
           <div style={{ display: "flex", gap: 24 }}>
             {[{ label: "Privacy Policy", href: "/privacy" }, { label: "Terms of Service", href: "/terms" }].map(l => (
