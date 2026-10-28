@@ -35,8 +35,10 @@
  *
  * Which one an app gets was checked against the example each app page shows:
  * the result someone gets should look like the "after" they were shown. That
- * is why the ageing apps keep the outfit and the room — their examples do —
- * and why an anime app keeps the café the person was sitting in.
+ * is why the old-age filter keeps the outfit and the room — its example does —
+ * and why an anime app keeps the café the person was sitting in. Age
+ * progression is the exception by choice: it makes a new photograph of the
+ * person at that age, so the same selfie with an older face is not a result.
  *
  * The editor's own prompt bar is `minimal` by definition: someone typing
  * "make the sky bluer" has not asked for new clothes.
@@ -261,10 +263,12 @@ const BY_SLUG: Record<string, StagingMode> = {
   // different shirt is a rejected passport photo.
   "passport-photo": "scene",
   "visa-photo": "scene",
+  // A new photograph of them at that age: clothes, hairstyle, setting and pose
+  // suit the age, and the head is set upright and toward the camera.
+  "age-progression": "restage",
+  "age-progression-tool": "restage",
   // One change, in the photo they took: the example keeps the room, the
   // clothes and the pose, and only the face and hair age — or the suit goes on.
-  "age-progression": "scene",
-  "age-progression-tool": "scene",
   "old-filter": "scene",
   "add-suit-to-photo": "scene",
   // Tattoos go onto the person in their own photo, not onto a white sheet.
