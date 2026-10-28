@@ -5,7 +5,8 @@ import { usePathname } from "next/navigation";
 import { beginGoogleSignIn } from "@/lib/auth-return";
 import { useTrialOffer } from "@/lib/trial-offer";
 import { trackEvent } from "@/lib/analytics";
-import SignupNudge from "./SignupNudge";
+import SignupNudge, { NUDGE_VARIANTS, type NudgeVariant } from "./SignupNudge";
+import SignInModal from "./SignInModal";
 
 /**
  * When the sign-up card (SignupNudge) shows: to signed-out visitors, five
@@ -14,10 +15,14 @@ import SignupNudge from "./SignupNudge";
  * admin, sign-in or payment pages, and never on top of another dialog.
  *
  * `?nudge=1` shows it after a second whatever the visit or the snooze, still
- * to signed-out visitors only, so it can be tested without clearing storage.
+ * to signed-out visitors only, so it can be tested without clearing storage;
+ * `?nudge=center` (or `split`, `card`, `corner`) does the same with that design.
  */
 
-const SKIP = /^\/(app|admin|auth|invoices|m|pricing|checkout|payment)(\/|$)/;
+/** The design visitors get (SignupNudge has the others). */
+const LIVE: NudgeVariant = "corner";
+
+const SKIP = /^\/(app|admin|auth|invoices|m|pricing|checkout|payment|nudge-preview)(\/|$)/;
 const DELAY_MS = 5000;
 const SNOOZE_MS = 3 * 24 * 60 * 60 * 1000;
 const SEEN = "jpt-nudge-seen"; // sessionStorage: shown this visit
@@ -35,6 +40,8 @@ export default function SignupNudgeHost() {
   const pathname = usePathname() || "/";
   const offer = useTrialOffer();
   const [open, setOpen] = useState(false);
+  const [variant, setVariant] = useState<NudgeVariant>(LIVE);
+  const [emailOpen, setEmailOpen] = useState(false);
   const skip = SKIP.test(pathname);
 
   // Signing in, here or on any page, ends the nudge for this browser.
@@ -45,9 +52,14 @@ export default function SignupNudgeHost() {
   }, []);
 
   useEffect(() => {
-    if (skip) return;
+    // Not inside a frame (the design preview shows the homepage in one).
+    if (skip || window.top !== window.self) return;
     let force = false;
-    try { force = new URLSearchParams(window.location.search).get("nudge") === "1"; } catch { /* no URL */ }
+    try {
+      const v = new URLSearchParams(window.location.search).get("nudge");
+      force = v === "1" || NUDGE_VARIANTS.includes(v as NudgeVariant);
+      if (force && v !== "1") setVariant(v as NudgeVariant);
+    } catch { /* no URL */ }
     if (!force) {
       if (read("local", DONE) || read("session", SEEN)) return;
       const closedAt = Number(read("local", SNOOZED) || 0);
@@ -70,7 +82,7 @@ export default function SignupNudgeHost() {
   }, [skip, pathname]);
 
   useEffect(() => {
-    if (open) trackEvent("signup_nudge_shown", { path: pathname, trial: !!offer });
+    if (open) trackEvent("signup_nudge_shown", { path: pathname, trial: !!offer, variant });
     // Once per showing, with the offer as it stood then.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
@@ -89,17 +101,28 @@ export default function SignupNudgeHost() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
+  // Back to this page after signing in, without the testing switch.
+  const here = () => {
+    const url = new URL(window.location.href);
+    url.searchParams.delete("nudge");
+    return url.pathname + url.search;
+  };
+
+  if (emailOpen) return <SignInModal startWithEmail nextPath={here()} onClose={() => setEmailOpen(false)} />;
   if (!open || skip) return null;
   return (
     <SignupNudge
+      variant={variant}
       offer={offer}
       onClose={close}
       onGoogle={() => {
-        trackEvent("signup_nudge_google", { path: pathname, trial: !!offer });
-        // Back to this page afterwards, without the testing switch.
-        const url = new URL(window.location.href);
-        url.searchParams.delete("nudge");
-        void beginGoogleSignIn(url.pathname + url.search);
+        trackEvent("signup_nudge_google", { path: pathname, trial: !!offer, variant });
+        void beginGoogleSignIn(here());
+      }}
+      onEmail={() => {
+        trackEvent("signup_nudge_email", { path: pathname, trial: !!offer, variant });
+        setOpen(false);
+        setEmailOpen(true);
       }}
     />
   );
