@@ -144,7 +144,7 @@ Go to **Create app**, then:
 
 - **App icon:** `play-icon-512.png`
 - **Feature graphic:** `feature-graphic-1024x500.png`
-- **Phone screenshots:** the six `screenshot-*.png` files, in order.
+- **Phone screenshots:** the five `screenshot-*.png` files, in order.
 - **Category:** Photography.
 - **Contact details:** support@sjpt.io; website https://www.sjpt.io
 
