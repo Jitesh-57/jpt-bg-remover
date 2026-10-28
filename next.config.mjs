@@ -54,6 +54,11 @@ const oldDomain = [
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Android's Digital Asset Links check for the Play Store apps
+  // (src/app/api/android/assetlinks/route.ts).
+  async rewrites() {
+    return [{ source: '/.well-known/assetlinks.json', destination: '/api/android/assetlinks' }];
+  },
   async redirects() {
     return [
       ...oldDomain,

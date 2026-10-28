@@ -35,7 +35,7 @@ import { usePlayStore, recoverPlayPurchases } from "@/lib/play-billing.client";
 type Example = { split: string | null; after: string[] };
 type Screen = "welcome" | "home" | "age" | "generating" | "result" | "photos" | "account" | "credits";
 type Session = { signedIn: boolean; credits: number | null; name?: string; email?: string; picture?: string };
-type Shot = { id: string; age: number; after: string; before?: string; at: number };
+type Shot = { id: string; age: number; after: string; before?: string; at: number; url?: string };
 
 const TOOL = "m-age-progression";
 /** This app's key in PLAY_APPS (lib/play-billing). */
@@ -45,6 +45,15 @@ const HISTORY = "jpt-m-age-history";
 /** Where in the app a Google sign-in started, so the round-trip lands back there. */
 const RETURN_TO = "jpt-m-age-return";
 const ACCEPT = "image/jpeg,image/jpg,image/png,image/webp";
+
+/** What a result can be reported for (Play's AI-generated content policy). */
+const REPORT_REASONS: [string, string][] = [
+  ["offensive", "Offensive or hateful"],
+  ["sexual", "Sexual or nude"],
+  ["violent", "Violent or disturbing"],
+  ["wrong", "Wrong or broken result"],
+  ["other", "Something else"],
+];
 
 const QUICK_AGES = [
   { age: 8, label: "Child" },
@@ -156,6 +165,10 @@ export default function AgeApp({ app, example }: { app: CreativeApp; example: Ex
   const [history, setHistory] = useState<Shot[]>([]);
   const [err, setErr] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
+  // The sheet over the screen: report a result, or ask for the account to be deleted.
+  const [sheet, setSheet] = useState<"report" | "delete" | null>(null);
+  const [reason, setReason] = useState(REPORT_REASONS[0][0]);
+  const [sending, setSending] = useState(false);
   // The screen the pack screen returns to when it closes.
   const [payFrom, setPayFrom] = useState<Screen>("home");
   const trial = useTrialOffer();
@@ -331,7 +344,7 @@ export default function AgeApp({ app, example }: { app: CreativeApp; example: Ex
         return;
       }
 
-      const shot: Shot = { id: `${Date.now()}`, age, after: data.dataUrl, before: payload.imageUrl, at: Date.now() };
+      const shot: Shot = { id: `${Date.now()}`, age, after: data.dataUrl, before: payload.imageUrl, at: Date.now(), url: data.resultUrl ?? undefined };
       setResult(shot);
       setScreen("result");
       // Kept on the device by URL (a data URL would fill localStorage in a few shots).
@@ -377,6 +390,31 @@ export default function AgeApp({ app, example }: { app: CreativeApp; example: Ex
     try { await fetch("/api/auth/google/logout", { method: "POST" }); } catch { /* ignore */ }
     try { const { createSupabaseClient } = await import("@/lib/supabase"); await createSupabaseClient().auth.signOut(); } catch { /* ignore */ }
     setSession({ signedIn: false, credits: null });
+  };
+
+  /** Posts the open sheet's request; closes it with a thank-you, or keeps it open with the error. */
+  const sendSheet = async () => {
+    const report = sheet === "report";
+    setSending(true);
+    try {
+      const res = await fetch(report ? "/api/report" : "/api/account/delete-request", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(report
+          ? { app: PLAY_APP, reason, age: result?.age, image: result?.url ?? result?.after }
+          : { source: PLAY_APP }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) { setToast(userMessage(data.error, "That didn't go through. Please try again.")); return; }
+      setSheet(null);
+      setToast(report
+        ? "Thanks for telling us. We review every report."
+        : "Request received. Your account and photos will be deleted within 30 days.");
+    } catch {
+      setToast("Could not reach the server. Check your connection and try again.");
+    } finally {
+      setSending(false);
+    }
   };
 
   const tab: "home" | "photos" | "account" = screen === "photos" ? "photos" : screen === "account" ? "account" : "home";
@@ -504,6 +542,7 @@ export default function AgeApp({ app, example }: { app: CreativeApp; example: Ex
             <button className="mapp-secondary" onClick={() => void save(result)}><Icon d={I.save} /> Save</button>
             <button className="mapp-secondary" onClick={() => void share(result)}><Icon d={I.share} /> Share</button>
           </div>
+          <button className="mapp-link mapp-report" onClick={() => { setReason(REPORT_REASONS[0][0]); setSheet("report"); }}>Report this image</button>
         </main>
         <footer className="mapp-cta">
           <button className="mapp-primary" onClick={() => setScreen("age")}>Try another age</button>
@@ -567,6 +606,7 @@ export default function AgeApp({ app, example }: { app: CreativeApp; example: Ex
               </div>
               <button className="mapp-primary" onClick={openPaywall}>Buy credits</button>
               <button className="mapp-link" onClick={() => void signOut()}>Sign out</button>
+              <button className="mapp-link mapp-link-danger" onClick={() => setSheet("delete")}>Delete account</button>
             </>
           ) : (
             <div className="mapp-card">
@@ -576,6 +616,7 @@ export default function AgeApp({ app, example }: { app: CreativeApp; example: Ex
             </div>
           )}
           <p className="mapp-fine">AI age progression is a fun, illustrative guess, not a prediction.</p>
+          <p className="mapp-fine"><a href="/privacy">Privacy policy</a> · <a href="/terms">Terms</a> · <a href="/delete-account">Delete account</a></p>
         </main>
       </>
     );
@@ -587,6 +628,35 @@ export default function AgeApp({ app, example }: { app: CreativeApp; example: Ex
         {pickers}
         <div className="mapp-screen">{body}</div>
         {toast && <div className="mapp-toast" role="status" onClick={() => setToast(null)}>{toast}</div>}
+        {sheet && (
+          <div className="mapp-sheet-back" onClick={() => { if (!sending) setSheet(null); }}>
+            <div className="mapp-sheet" role="dialog" aria-modal="true" aria-labelledby="mapp-sheet-title" onClick={(e) => e.stopPropagation()}>
+              {sheet === "report" ? (
+                <>
+                  <h2 id="mapp-sheet-title" className="mapp-sheet-title">Report this image</h2>
+                  <p className="mapp-sub">What&apos;s wrong with it? We review every report and remove results that break our rules.</p>
+                  <div className="mapp-reasons" role="radiogroup" aria-label="Reason">
+                    {REPORT_REASONS.map(([id, label]) => (
+                      <button key={id} role="radio" aria-checked={reason === id} className={`mapp-reason${reason === id ? " on" : ""}`} onClick={() => setReason(id)}>{label}</button>
+                    ))}
+                  </div>
+                  <button className="mapp-primary" disabled={sending} aria-busy={sending} onClick={() => void sendSheet()}>
+                    {sending ? <span className="mapp-spin" /> : "Send report"}
+                  </button>
+                </>
+              ) : (
+                <>
+                  <h2 id="mapp-sheet-title" className="mapp-sheet-title">Delete your account?</h2>
+                  <p className="mapp-sub">Your account, your photos and any unused credits will be permanently deleted within 30 days. This can&apos;t be undone, so save any photos you want to keep first.</p>
+                  <button className="mapp-primary mapp-danger" disabled={sending} aria-busy={sending} onClick={() => void sendSheet()}>
+                    {sending ? <span className="mapp-spin" /> : "Delete my account"}
+                  </button>
+                </>
+              )}
+              <button className="mapp-link" disabled={sending} onClick={() => setSheet(null)}>Cancel</button>
+            </div>
+          </div>
+        )}
         {showTabs && (
           <nav className="mapp-tabs" aria-label="App">
             <button className={tab === "home" ? "on" : ""} onClick={() => setScreen("home")}><Icon d={I.home} />Home</button>

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FF8A3D"/>
+      <stop offset="1" stop-color="#E11D74"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="42%" r="60%">
+      <stop offset="0" stop-color="#FF7A2F" stop-opacity=".30"/>
+      <stop offset="1" stop-color="#FF7A2F" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" fill="#0b0b10"/>
+  <rect width="512" height="512" fill="url(#glow)"/>
+  <g id="glyph" transform="translate(256 256) scale(.72) translate(-256 -256)">
+  <!-- hourglass: frame bars -->
+  <rect x="164" y="122" width="184" height="22" rx="11" fill="#F4F4F7"/>
+  <rect x="164" y="368" width="184" height="22" rx="11" fill="#F4F4F7"/>
+  <!-- glass outline -->
+  <path d="M182 144 H330 C330 204 282 232 270 256 C282 280 330 308 330 368 H182 C182 308 230 280 242 256 C230 232 182 204 182 144 Z"
+        fill="none" stroke="#F4F4F7" stroke-opacity=".9" stroke-width="12" stroke-linejoin="round"/>
+  <!-- sand: what's left on top, the pile below, the falling stream -->
+  <path d="M212 190 H300 C292 214 270 230 256 246 C242 230 220 214 212 190 Z" fill="url(#g)"/>
+  <path d="M196 356 C204 318 236 300 256 296 C276 300 308 318 316 356 Z" fill="url(#g)"/>
+  <rect x="252" y="250" width="8" height="52" rx="4" fill="url(#g)"/>
+  <!-- sparkle -->
+  <path d="M380 76 C384 100 392 108 416 112 C392 116 384 124 380 148 C376 124 368 116 344 112 C368 108 376 100 380 76 Z" fill="url(#g)"/>
+  </g>
+</svg>
