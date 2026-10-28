@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { trackEvent } from "@/lib/analytics";
+import { usePopup } from "@/lib/popups.client";
 
 /**
  * Post-download share prompt — the site's viral loop.
@@ -15,13 +16,12 @@ import { trackEvent } from "@/lib/analytics";
  */
 
 const SHARE_URL = "https://www.sjpt.io/?ref=share";
-const SHARE_TEXT =
-  "I just edited my photo at Pixel Shine — remove backgrounds, upscale, convert & more. Free, no watermark. 🎨";
 const GRAD = "linear-gradient(120deg,var(--accent),var(--accent-2))";
 
 type Net = { key: string; label: string; icon: string; color: string; href: string };
 
-const NETWORKS: Net[] = [
+/** The networks, for a share message (set in /admin/popups, "Share popup"). */
+const networks = (SHARE_TEXT: string): Net[] => [
   {
     key: "twitter",
     label: "X",
@@ -84,20 +84,24 @@ export default function SharePrompt({
 }) {
   const [copied, setCopied] = useState(false);
   const [canNativeShare, setCanNativeShare] = useState(false);
+  // Its words and on/off switch are in /admin/popups ("Share popup").
+  const p = usePopup("share");
+  const SHARE_TEXT = p.t("shareText");
 
   useEffect(() => {
     setCanNativeShare(typeof navigator !== "undefined" && typeof navigator.share === "function");
   }, []);
 
+  const showing = open && p.ready && p.enabled;
   useEffect(() => {
-    if (!open) return;
+    if (!showing) return;
     trackEvent("share_prompt_shown", { tool: tool || "editor" });
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [open, tool, onClose]);
+  }, [showing, tool, onClose]);
 
-  if (!open) return null;
+  if (!showing) return null;
 
   const openShare = (n: Net) => {
     trackEvent("share_clicked", { network: n.key, tool: tool || "editor" });
@@ -176,10 +180,10 @@ export default function SharePrompt({
 
         <div style={{ fontSize: 32, marginBottom: 6 }}>🎉</div>
         <h2 style={{ fontSize: 20, fontWeight: 900, color: "var(--text)", margin: "0 0 6px", letterSpacing: "-0.02em" }}>
-          Download started!
+          {p.t("title")}
         </h2>
         <p style={{ fontSize: 14.5, color: "var(--text-muted)", lineHeight: 1.6, margin: "0 0 20px" }}>
-          Loved it? Help a friend find Pixel Shine — it&apos;s free, no watermark, no sign-up.
+          {p.t("text")}
         </p>
 
         {canNativeShare && (
@@ -200,12 +204,12 @@ export default function SharePrompt({
               boxShadow: "0 8px 22px rgba(255,106,26,0.40)",
             }}
           >
-            Share ↗
+            {p.t("shareButton")}
           </button>
         )}
 
         <div style={{ display: "flex", justifyContent: "center", gap: 10, flexWrap: "wrap", marginBottom: 16 }}>
-          {NETWORKS.map((n) => (
+          {networks(SHARE_TEXT).map((n) => (
             <button
               key={n.key}
               onClick={() => openShare(n)}
@@ -250,7 +254,7 @@ export default function SharePrompt({
             gap: 8,
           }}
         >
-          {copied ? "✓ Link copied!" : "🔗 Copy link"}
+          {copied ? p.t("copied") : p.t("copyButton")}
         </button>
 
         <button
@@ -265,7 +269,7 @@ export default function SharePrompt({
             cursor: "pointer",
           }}
         >
-          No thanks
+          {p.t("close")}
         </button>
       </div>
     </div>

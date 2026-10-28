@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { trackSignUpCompleted } from "@/lib/analytics";
+import { usePopup } from "@/lib/popups.client";
 
 /**
  * The moment after signing up, on whatever page the person lands.
@@ -28,6 +29,8 @@ export default function SignupWelcome() {
   const pathname = usePathname() || "/";
   const [credits, setCredits] = useState(0);
   const ownToast = pathname.startsWith("/app") || pathname.startsWith("/m/");
+  // Its words and on/off switch are in /admin/popups ("Welcome message").
+  const p = usePopup("welcome");
 
   useEffect(() => {
     const method = takeCookie("jpt_signup");
@@ -53,8 +56,9 @@ export default function SignupWelcome() {
     return () => clearTimeout(t);
   }, [credits]);
 
-  if (!credits) return null;
+  if (!credits || !p.ready || !p.enabled) return null;
   const results = Math.max(1, Math.floor(credits / 2));
+  const vars = { credits, resultsText: results === 1 ? "your first AI result is on us" : `${results} AI results on us` };
   return (
     <div style={{ position: "fixed", left: 16, right: 16, bottom: "calc(24px + env(safe-area-inset-bottom, 0px))", zIndex: 1200, display: "flex", justifyContent: "center", pointerEvents: "none" }}>
       <div
@@ -63,7 +67,7 @@ export default function SignupWelcome() {
         onClick={() => setCredits(0)}
         style={{ pointerEvents: "auto", background: "var(--grad-strong)", color: "#fff", fontWeight: 800, fontSize: 14.5, padding: "13px 20px", borderRadius: 14, boxShadow: "var(--glow)", cursor: "pointer", textAlign: "center", maxWidth: 460 }}
       >
-        🎁 Free trial: you got {credits} free credits — {results === 1 ? "your first AI result is on us" : `${results} AI results on us`}. Hit Generate.
+        {p.t("text", vars)}
       </div>
     </div>
   );

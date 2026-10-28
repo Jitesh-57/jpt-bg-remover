@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useTrialOffer, countryName, openTrialSignIn, type TrialOffer } from "@/lib/trial-offer";
 import { TRIAL_PROVIDERS_LABEL } from "@/lib/trial-email";
+import { usePopup } from "@/lib/popups.client";
 
 /**
  * The signup free trial, told to the visitors who would actually get it.
@@ -38,13 +39,21 @@ const DISMISS_KEY = "jpt-trial-bar-dismissed";
 export function TrialBar() {
   const offer = useTrialOffer();
   const pathname = usePathname() || "/";
+  // Its words and on/off switch are in /admin/popups ("Free trial bar").
+  const p = usePopup("trial-bar");
   const [hidden, setHidden] = useState(true);
 
   useEffect(() => {
     try { setHidden(sessionStorage.getItem(DISMISS_KEY) === "1"); } catch { setHidden(false); }
   }, []);
 
-  if (!offer || hidden || NO_BAR.test(pathname)) return null;
+  if (!offer || hidden || NO_BAR.test(pathname) || !p.ready || !p.enabled) return null;
+
+  const vars = {
+    credits: offer.credits,
+    generationsText: `${offer.generations} AI generation${offer.generations === 1 ? "" : "s"}`,
+    country: countryName(offer.country),
+  };
 
   const dismiss = () => {
     setHidden(true);
@@ -56,11 +65,11 @@ export function TrialBar() {
       <div className="jpt-trial-bar-inner">
         <span className="jpt-trial-bar-icon"><GiftIcon size={15} /></span>
         <p className="jpt-trial-bar-text">
-          <strong>Your first AI generation is on us.</strong>
-          <span className="jpt-trial-bar-long"> Create a free account and get {offer.credits} credits, enough for {offer.generations} AI generation{offer.generations === 1 ? "" : "s"}. New accounts in {countryName(offer.country)}.</span>
+          <strong>{p.t("title", vars)}</strong>
+          <span className="jpt-trial-bar-long"> {p.t("text", vars)}</span>
         </p>
         <button type="button" className="jpt-trial-bar-cta" onClick={() => openTrialSignIn("bar")}>
-          Claim it <span aria-hidden>→</span>
+          {p.t("button", vars)} <span aria-hidden>→</span>
         </button>
         <button type="button" className="jpt-trial-bar-close" onClick={dismiss} aria-label="Dismiss offer">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" aria-hidden><path d="M6 6l12 12M18 6L6 18" /></svg>

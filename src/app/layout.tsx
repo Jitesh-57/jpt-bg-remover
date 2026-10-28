@@ -12,6 +12,7 @@ import SupportChat from "./_components/SupportChat";
 import AuthReturn from "./_components/AuthReturn";
 import SignupWelcome from "./_components/SignupWelcome";
 import SignupNudgeHost from "./_components/SignupNudgeHost";
+import CustomPopupHost from "./_components/CustomPopupHost";
 import OneTap from "./_components/OneTap";
 import PageGallery from "./_components/PageGallery";
 import SiteEdits from "./_components/SiteEdits";
@@ -157,6 +158,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           <SignupWelcome />
           {/* The sign-up card a signed-out visitor sees a few seconds after landing. */}
           <SignupNudgeHost />
+          {/* The pop-ups made in /admin/popups. */}
+          <CustomPopupHost />
           {/* Google One Tap; off until NEXT_PUBLIC_GOOGLE_CLIENT_ID is set. */}
           <OneTap />
           {/* Copy and image changes from the visual page editor. */}
