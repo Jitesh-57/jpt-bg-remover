@@ -859,10 +859,23 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 .jpt-faq[open] .jpt-faq-icon::before { content: "−"; }
 
 /* ── Sign-up nudge (SignupNudge): the corner card shown a few seconds after a visitor lands ── */
-.jpt-nudge-corner { color: var(--text); background: var(--bg-elevated, var(--surface));
-  border: 1px solid var(--border-strong); box-shadow: 0 30px 80px -20px rgba(0,0,0,.75); animation: jptNudgeIn .45s var(--ease, ease) both;
-  position: fixed; z-index: 9990; right: 22px; bottom: calc(22px + env(safe-area-inset-bottom, 0px)); width: min(390px, calc(100vw - 32px));
+.jpt-nudge-corner, .jpt-nudge-center, .jpt-nudge-split, .jpt-nudge-card { color: var(--text); background: var(--bg-elevated, var(--surface));
+  border: 1px solid var(--border-strong); box-shadow: 0 30px 80px -20px rgba(0,0,0,.75); animation: jptNudgeIn .45s var(--ease, ease) both; }
+.jpt-nudge-corner { position: fixed; z-index: 9990; right: 22px; bottom: calc(22px + env(safe-area-inset-bottom, 0px)); width: min(390px, calc(100vw - 32px));
   display: flex; gap: 14px; align-items: center; padding: 14px; border-radius: 18px; }
+/* The centred designs: one dialog in the middle of a dimmed page, on every screen size. */
+.jpt-nudge-backdrop { position: fixed; inset: 0; z-index: 9990; display: flex; align-items: center; justify-content: center; padding: 16px;
+  background: rgba(6,6,10,.62); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); animation: jptNudgeFade .35s ease both; }
+.jpt-nudge-center { position: relative; width: min(460px, 100%); display: flex; gap: 18px; align-items: center; padding: 18px; border-radius: 22px; }
+.jpt-nudge-split { position: relative; display: grid; grid-template-columns: 330px minmax(0, 1fr); width: min(780px, 100%); max-height: calc(100dvh - 32px);
+  overflow-y: auto; border-radius: 22px; }
+.jpt-nudge-split-pic { position: relative; aspect-ratio: 3 / 4; background: #111; }
+.jpt-nudge-split-body { display: flex; flex-direction: column; gap: 10px; padding: 34px 32px 26px; justify-content: center; }
+.jpt-nudge-card { position: relative; width: min(410px, 100%); max-height: calc(100dvh - 32px); overflow-y: auto; border-radius: 22px; }
+.jpt-nudge-card .jpt-nudge-badge { align-self: center; }
+.jpt-nudge-link { background: none; border: none; padding: 2px; font-family: inherit; font-size: 13.5px; font-weight: 700; color: var(--text-muted); cursor: pointer; }
+.jpt-nudge-caption { position: absolute; left: 12px; bottom: 12px; z-index: 3; padding: 6px 11px; border-radius: 999px; font-size: 12px; font-weight: 700; color: #fff;
+  background: rgba(10,10,14,.68); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,.18); }
 .jpt-nudge-x { position: absolute; z-index: 4; width: 30px; height: 30px; border-radius: 50%; border: none; background: var(--surface-2); color: var(--text-muted);
   font-size: 18px; line-height: 1; cursor: pointer; font-family: inherit; }
 .jpt-nudge-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border-radius: 999px; font-size: 11.5px; font-weight: 800;
@@ -882,11 +895,17 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 @keyframes jptNudgeWipe { 0%, 100% { clip-path: inset(0 0 0 72%); } 50% { clip-path: inset(0 0 0 22%); } }
 @keyframes jptNudgeLine { 0%, 100% { left: 72%; } 50% { left: 22%; } }
 @keyframes jptNudgeIn { from { opacity: 0; transform: translateY(18px) scale(.97); } to { opacity: 1; transform: none; } }
+@keyframes jptNudgeFade { from { opacity: 0; } to { opacity: 1; } }
 @media (max-width: 640px) {
   .jpt-nudge-corner { right: 12px; left: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); width: auto; }
+  .jpt-nudge-center { gap: 14px; padding: 14px; }
+  .jpt-nudge-center .jpt-nudge-wipe { width: 104px !important; height: 140px !important; }
+  .jpt-nudge-split { grid-template-columns: 1fr; }
+  .jpt-nudge-split-pic { aspect-ratio: 16 / 10; }
+  .jpt-nudge-split-body { padding: 20px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .jpt-nudge-corner { animation: none; }
+  .jpt-nudge-corner, .jpt-nudge-center, .jpt-nudge-split, .jpt-nudge-card, .jpt-nudge-backdrop { animation: none; }
   .jpt-nudge-after { animation: none; clip-path: inset(0 0 0 50%); } .jpt-nudge-line { animation: none; left: 50%; }
 }
 

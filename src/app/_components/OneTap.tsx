@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { createSupabaseClient } from "@/lib/supabase";
 import { trackSignInClicked } from "@/lib/analytics";
+import { usePopup } from "@/lib/popups.client";
 
 /**
  * Google One Tap: "Continue as <name>" in the corner, for visitors already
@@ -45,9 +46,11 @@ async function sha256Hex(text: string): Promise<string> {
 
 export default function OneTap() {
   const pathname = usePathname() || "/";
+  // Switched on and off in /admin/popups ("Google One Tap"); Google writes its words.
+  const p = usePopup("one-tap");
 
   useEffect(() => {
-    if (!CLIENT_ID || !SHOW_ON(pathname)) return;
+    if (!CLIENT_ID || !SHOW_ON(pathname) || !p.ready || !p.enabled) return;
     let cancelled = false;
     // Not the instant the page opens: give the page a moment to be read first.
     const timer = setTimeout(async () => {
@@ -88,7 +91,7 @@ export default function OneTap() {
       clearTimeout(timer);
       try { gis()?.cancel(); } catch { /* not loaded */ }
     };
-  }, [pathname]);
+  }, [pathname, p.ready, p.enabled]);
 
   return null;
 }

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { beginGoogleSignIn } from "@/lib/auth-return";
 import { trackSignUpCompleted, trackSignInCompleted, trackSignInClicked } from "@/lib/analytics";
+import { usePopup } from "@/lib/popups.client";
 import BrandLogo from "./BrandLogo";
 
 interface Props {
@@ -26,6 +27,7 @@ const INPUT: React.CSSProperties = { border: "1.5px solid var(--border)", border
  */
 export default function SignInModal({ onClose, reason = "default", onBeforeAuth, nextPath, startWithEmail = false }: Props) {
   const [showEmail, setShowEmail] = useState(startWithEmail);
+  const p = usePopup("sign-in");
   const [mode, setMode] = useState<"login" | "signup">("signup");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -64,10 +66,9 @@ export default function SignInModal({ onClose, reason = "default", onBeforeAuth,
     finally { setLoading(false); }
   };
 
-  const title = reason === "unlimited" ? "Sign in to keep going" : "Sign in to continue";
-  const sub = reason === "unlimited"
-    ? "You've used your 2 free edits. Create a free account to keep using every basic tool — unlimited, no card."
-    : "Create a free account to continue. It takes a second and keeps your work saved.";
+  // Its words are in /admin/popups ("Sign-in form"); it can't be switched off.
+  const title = reason === "unlimited" ? p.t("limitTitle") : p.t("title");
+  const sub = reason === "unlimited" ? p.t("limitText") : p.t("text");
 
   return (
     <div onClick={onClose} style={{ position: "fixed", inset: 0, zIndex: 9999, background: "rgba(15,23,42,0.6)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
@@ -82,7 +83,7 @@ export default function SignInModal({ onClose, reason = "default", onBeforeAuth,
         <p style={{ fontSize: 14, color: "var(--text-muted)", lineHeight: 1.55, margin: "0 0 20px" }}>{sub}</p>
 
         <ul style={{ listStyle: "none", margin: "0 0 22px", padding: 0, display: "flex", flexDirection: "column", gap: 9 }}>
-          {["Free basic image tools", "Your edits saved to your account", "No credit card required"].map((f) => (
+          {p.list("bullets").map((f) => (
             <li key={f} style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13.5, color: "var(--text-muted)", fontWeight: 600 }}>
               <span style={{ width: 18, height: 18, borderRadius: "50%", background: "var(--success-soft)", color: "var(--success)", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 900, flexShrink: 0 }}>✓</span>
               {f}

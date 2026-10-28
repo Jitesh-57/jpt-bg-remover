@@ -2,6 +2,8 @@
 
 import { useEffect } from "react";
 import { CREDIT_COST, ENTRY_PACK, formatInr } from "@/lib/plans";
+import { usePopup } from "@/lib/popups.client";
+import type { PopupText } from "@/lib/popups";
 import BeforeAfterWipe from "./BeforeAfterWipe";
 import PlanPurchase, { type PlanTab } from "./PlanPurchase";
 
@@ -23,13 +25,16 @@ interface Props {
 }
 
 /** The pop-up's heading. The navbar's Buy credits asks for "more AI credits", which reads wrong after "Credits needed for". */
-function title(reason?: string): string {
-  if (!reason) return "Unlock every AI tool";
-  if (reason === "more AI credits") return "Buy more AI credits";
-  return `Credits needed for ${reason}`;
+function title(p: PopupText, reason?: string): string {
+  if (!reason) return p.t("title");
+  if (reason === "more AI credits") return p.t("buyTitle");
+  return p.t("neededTitle", { reason });
 }
 
 export default function UnlimitedModal({ onClose, loggedIn, reason, prefillUser, onSuccess, tab }: Props) {
+  // Its words are in /admin/popups ("Pricing popup"); it can't be switched off.
+  const p = usePopup("pricing");
+  const cost = { cost: CREDIT_COST };
   // Escape closes, like every other dialog on the site.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
@@ -57,16 +62,16 @@ export default function UnlimitedModal({ onClose, loggedIn, reason, prefillUser,
             className="jpt-pricing-wipe"
           />
           <div className="jpt-pricing-caption">
-            <div className="jpt-pricing-caption-title">One selfie → a full styled shoot</div>
-            <div className="jpt-pricing-caption-sub">Made with Pixel Shine AI · {CREDIT_COST} credits</div>
+            <div className="jpt-pricing-caption-title">{p.t("caption", cost)}</div>
+            <div className="jpt-pricing-caption-sub">{p.t("captionSub", cost)}</div>
           </div>
         </aside>
 
         {/* ── Right: the plans ───────────────────────────────────────────── */}
         <div className="jpt-pricing-main">
-          <h2 className="jpt-pricing-title">{title(reason)}</h2>
+          <h2 className="jpt-pricing-title">{title(p, reason)}</h2>
           <p className="jpt-pricing-sub">
-            {CREDIT_COST} credits per AI generation · full resolution, no watermark · the free tools stay free.
+            {p.t("sub", cost)}
           </p>
           <PlanPurchase
             layout="list"
