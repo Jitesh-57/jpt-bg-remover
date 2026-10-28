@@ -1,0 +1,32 @@
+{
+  "packageId": "io.sjpt.ageprogression",
+  "host": "www.sjpt.io",
+  "name": "AI Age Progression",
+  "launcherName": "Age AI",
+  "display": "standalone",
+  "orientation": "portrait",
+  "themeColor": "#0B0B10",
+  "themeColorDark": "#0B0B10",
+  "navigationColor": "#0B0B10",
+  "navigationColorDark": "#0B0B10",
+  "navigationDividerColor": "#0B0B10",
+  "navigationDividerColorDark": "#0B0B10",
+  "backgroundColor": "#0B0B10",
+  "enableNotifications": false,
+  "enableSiteSettingsShortcut": false,
+  "startUrl": "/m/age-progression?src=play",
+  "iconUrl": "https://www.sjpt.io/m/age-progression/icon-512.png",
+  "maskableIconUrl": "https://www.sjpt.io/m/age-progression/icon-maskable-512.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": { "path": "./age-ai-upload-key.jks", "alias": "upload" },
+  "appVersionCode": 1,
+  "appVersion": "1.0.0",
+  "minSdkVersion": 24,
+  "fallbackType": "customtabs",
+  "features": { "playBilling": { "enabled": true } },
+  "shortcuts": [],
+  "generatorApp": "android/age-progression/build.mjs",
+  "fingerprints": [
+    { "name": "upload key", "value": "A0:34:A2:DE:9C:04:D0:28:B2:8C:18:43:FB:5D:18:DF:A4:49:95:E4:85:67:9C:A2:E0:E7:D2:3C:BE:04:B8:8C" }
+  ]
+}

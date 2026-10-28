@@ -14,7 +14,7 @@ export default function PrivacyPage() {
     <main style={{ fontFamily: "var(--font)", color: "var(--text)", background: "var(--surface)", minHeight: "100vh" }}>
       <div style={{ maxWidth: 780, margin: "0 auto", padding: "60px 24px 80px" }}>
         <h1 style={{ fontSize: 36, fontWeight: 900, marginBottom: 8 }}>Privacy Policy</h1>
-        <p style={{ color: "var(--text-muted)", fontSize: 14, marginBottom: 48 }}>Last updated: October 14, 2026</p>
+        <p style={{ color: "var(--text-muted)", fontSize: 14, marginBottom: 48 }}>Last updated: October 28, 2026</p>
 
         <Section title="1. Introduction">
           Pixel Shine (&quot;we&quot;, &quot;our&quot;, or &quot;us&quot;) operates the website{" "}
@@ -26,7 +26,7 @@ export default function PrivacyPage() {
           <br /><br />
           <b>Usage data:</b> We collect information about how you use our website and tools — the pages you visit, which features you use, how you found us (such as the referring website or campaign link), your approximate location (country and city) and type of device, the images you process and the prompts you write, and credit usage.
           <br /><br />
-          <b>Payment information:</b> Payments are processed by Razorpay. We do not store your card details. We receive a payment confirmation and your plan status.
+          <b>Payment information:</b> Payments on the website are processed by Razorpay. In our Android apps, purchases are made through Google Play, which processes the payment. We do not store your card details. We receive a payment confirmation and your plan status.
           <br /><br />
           <b>Images:</b> Images you upload, and the images you create from them, are used to perform the AI transformation you request and are kept with your account so we can run, support and improve the service. They are not used to train AI models, and are not sold or shared with anyone other than the partners that process them (see section 5).
         </Section>
@@ -54,14 +54,16 @@ export default function PrivacyPage() {
             <li><b>Supabase</b> — secure database and authentication</li>
             <li><b>fal.ai</b> — AI image processing</li>
             <li><b>Google Analytics</b> — measuring visits and how the site is used</li>
-            <li><b>Razorpay</b> — payment processing</li>
+            <li><b>Razorpay</b> — payment processing on the website</li>
+            <li><b>Google Play</b> — purchases in our Android apps</li>
             <li><b>Vercel</b> — hosting and infrastructure</li>
           </ul>
           Each of these services has their own Privacy Policy and we encourage you to review them.
         </Section>
 
         <Section title="6. Data Retention">
-          We retain your account data as long as your account is active. You may request deletion of your account and associated data at any time by contacting us. Uploaded and created images, and the prompts used with them, are kept with your account until you ask us to delete them or your account; images you create can also be deleted from My Creations at any time.
+          We retain your account data as long as your account is active. You may request deletion of your account and associated data at any time, in our apps or as described on our{" "}
+          <a href="/delete-account" style={{ color: "var(--accent)" }}>Delete your account</a> page. Uploaded and created images, and the prompts used with them, are kept with your account until you ask us to delete them or your account; images you create can also be deleted from My Creations at any time.
         </Section>
 
         <Section title="7. Your Rights">

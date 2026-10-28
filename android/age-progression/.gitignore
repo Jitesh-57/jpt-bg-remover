@@ -1,0 +1,6 @@
+# Generated on every build, and never committed: the signing key and its outputs.
+build/
+*.jks
+*.keystore
+*.aab
+*.apk

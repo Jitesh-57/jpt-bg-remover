@@ -199,3 +199,18 @@
 /* Paywall: a pending Play payment, and prices still loading from Play */
 .mapp-note { font-size: 14px; color: #FFD2B0; background: rgba(255,122,47,.10); border: 1px solid rgba(255,122,47,.3); border-radius: 12px; padding: 10px 12px; }
 .mapp-pay-wait { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 28px 0; font-size: 14px; color: rgba(255,255,255,.65); }
+
+/* Sheets: report a result, delete the account */
+.mapp-report { align-self: center; font-size: 13px; color: rgba(255,255,255,.45); }
+.mapp-link-danger { color: #ff9a9a; }
+.mapp-fine a { color: inherit; }
+.mapp-sheet-back { position: absolute; inset: 0; z-index: 30; display: flex; align-items: flex-end; background: rgba(4,4,8,.62); animation: mapp-fade .2s ease; }
+.mapp-sheet { width: 100%; display: flex; flex-direction: column; gap: 12px; padding: 22px 18px calc(16px + env(safe-area-inset-bottom, 0px));
+  border-radius: 22px 22px 0 0; background: #16161d; border-top: 1px solid rgba(255,255,255,.1); animation: mapp-rise .28s cubic-bezier(.2,.8,.2,1); }
+.mapp-sheet-title { font-size: 20px; font-weight: 700; letter-spacing: -.01em; margin: 0; }
+.mapp-reasons { display: flex; flex-direction: column; gap: 8px; }
+.mapp-reason { font: inherit; font-size: 15px; text-align: left; padding: 13px 14px; border-radius: 14px; cursor: pointer; color: #fff;
+  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); }
+.mapp-reason.on { color: #FFD2B0; background: rgba(255,122,47,.14); border-color: #FF8A3D; }
+.mapp-danger { background: #D92D3A; box-shadow: none; }
+@keyframes mapp-fade { from { opacity: 0; } to { opacity: 1; } }
