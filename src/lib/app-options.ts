@@ -316,19 +316,23 @@ function ageAppearance(n: number): string {
 }
 
 /**
- * What a person of that age is wearing, and where they are.
+ * What a person of that age is wearing, where they are, and how they face the camera.
  *
- * An adult stays in their own photo. The ageing apps' examples keep the
- * sweater, the pose and the garden and let only the face and hair show the
- * years, and that is the result the page promises.
+ * Age progression makes a new photograph of them at that age: the clothes,
+ * hairstyle, setting and pose belong to the age, and only the person carries
+ * over. Kept in their own photo, "you at 70" was the uploaded selfie with an
+ * older face — the same T-shirt, the same tilt, the same room — which reads as
+ * a filter, not as them at 70. The head is set upright and toward the camera,
+ * so a tilted or high-angle selfie doesn't pass its angle on to every age.
  *
- * A child does not: a one-year-old is not standing at a wedding reception in
- * a lehenga; a schoolchild is in school clothes somewhere a schoolchild would
- * be. Deliberately says "as someone of their culture would dress" rather than
+ * `keepPhoto` is the old-age filter's job instead: the same photograph with
+ * the years added, as its example shows.
+ *
+ * Deliberately says "as someone of their culture would dress" rather than
  * naming garments, so a hard-coded answer does not dress everyone alike.
  */
-function ageStaging(n: number): string {
-  if (n >= 18) {
+function ageStaging(n: number, keepPhoto: boolean): string {
+  if (keepPhoto && n >= 18) {
     return (
       `Keep the rest of the photograph as it is — the same clothes, pose, framing, ` +
       `background and lighting — and let only the person show the years: their face, ` +
@@ -338,14 +342,17 @@ function ageStaging(n: number): string {
   const setting =
     n <= 3 ? "held or seated as an infant is, in a home or nursery setting, in baby clothes"
     : n <= 12 ? "dressed and groomed as a child of that age, somewhere a child would be — a home, a garden, a school"
-    : "dressed as a teenager of that age, in a setting that suits one";
+    : n <= 17 ? "dressed as a teenager of that age, in a setting that suits one"
+    : "dressed in the clothes and style of someone of that age, somewhere a person of that age would naturally be photographed";
 
   return (
-    `Re-stage the whole photograph for that age: the person should be ${setting}, ` +
+    `Make a new photograph of them at that age, not an edit of this one: the person should be ${setting}, ` +
     `with a hairstyle, posture and expression that belong to someone of that age. ` +
     `Dress them as a person of their own culture and background would dress at that age — ` +
-    `do not keep the outfit, hairstyle, pose or background from the original photograph. ` +
-    `Light and frame it as an ordinary photograph taken of them at that age.`
+    `do not keep the outfit, hairstyle, pose, background or camera angle from the original photograph. ` +
+    `Frame it as an ordinary portrait taken of them at that age, from eye level, with the head upright ` +
+    `and level and the face toward the camera — straight on or a slight three-quarter turn — ` +
+    `even when the original photo is tilted or taken from above or below.`
   );
 }
 
@@ -360,11 +367,11 @@ function years(n: number): string {
  * instruction must not assume which. "Age this person to 8" is a contradiction
  * the model resolves by ignoring one half of it.
  */
-function agePhrase(n: number): string {
+function agePhrase(n: number, keepPhoto = false): string {
   return (
     `Show this exact person at ${years(n)} — not older, not younger. ` +
     `At this age they have ${ageAppearance(n)}. ` +
-    `${ageStaging(n)} ` +
+    `${ageStaging(n, keepPhoto)} ` +
     `Keep them unmistakably the same person: the same bone structure, eye shape, ` +
     `nose and mouth, changed only by age. Do not change their ethnicity, ` +
     `and do not substitute a different face.`
@@ -378,11 +385,11 @@ const AGE_SLIDER = num("age", "Age them to", {
   hint: "Drag anywhere from 1 to 100 — below their current age it de-ages instead.",
 });
 
-/** The same control, for the apps that only ever age upward. */
+/** The same control, for the apps that only ever age upward, in the photo as taken. */
 const OLDER_SLIDER = num("age", "Age them to", {
   min: 40, max: 100, initial: 75,
   format: years,
-  phraseFor: agePhrase,
+  phraseFor: (n) => agePhrase(n, true),
 });
 
 // ── Per-category defaults ───────────────────────────────────────────────────

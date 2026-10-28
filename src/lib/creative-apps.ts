@@ -582,7 +582,9 @@ export const CURATED_APPS: CreativeApp[] = [
     // Deliberately neutral about direction. The age control is a 1–100 slider,
     // so it de-ages as readily as it ages, and a base prompt that says
     // "greying hair" contradicts a target of eight.
-    prompt: "Show this person realistically at the age given, with skin texture, hair and facial structure appropriate to that exact age. Keep the identity clearly recognisable — this is a fun, illustrative guess, not a medical prediction.",
+    // A new photograph of them at that age, not this photo with the face aged:
+    // the age option dresses, sets and frames it (lib/app-options.ts).
+    prompt: "Make a new photograph of this person at the age given — a fresh portrait of them at that point in their life, not this photo with the face aged. Give them the skin texture, hair and facial structure of that exact age, with clothes, a hairstyle, a setting and a pose that suit it. Keep the identity clearly recognisable — this is a fun, illustrative guess, not a medical prediction.",
     badge: "✨ Age Progression",
     faq: [
       { q: "How accurate is the AI age progression?", a: "It's a stylised, illustrative guess based on common ageing patterns — fun to look at, not a scientific or medical prediction." },
