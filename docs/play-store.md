@@ -142,7 +142,7 @@ Go to **Create app**, then:
   > AI Age Progression is made by PixelShine (www.sjpt.io), the AI creative studio with 200+ photo apps.
   > Questions or feedback: support@sjpt.io
 
-- **App icon:** `play-icon-512.png`
+- **App icon:** `app-icon-512.png`
 - **Feature graphic:** `feature-graphic-1024x500.png`
 - **Phone screenshots:** the five `screenshot-*.png` files, in order.
 - **Category:** Photography.
