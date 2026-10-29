@@ -78,6 +78,8 @@ export default function SignupNudgeHost() {
       if (!alive) return;
       if (me?.authenticated) { write("local", DONE, "1"); return; }
       if (!me) return; // couldn't tell: say nothing
+      // One may have opened while we asked (a sign-in box from a tool, say).
+      if (popupOnScreen()) { timer = setTimeout(show, 3000); return; }
       write("session", SEEN, "1");
       setOpen(true);
     };
