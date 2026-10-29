@@ -23,6 +23,7 @@ const GROUPS: { label?: string; items: NavItem[] }[] = [
       { label: "Create Image", href: "/app/create", icon: "sparkle" },
       { label: "Recreate", href: "/app/recreate", icon: "copy" },
       { label: "Image Editor", href: "/app/editor", icon: "editor" },
+      { label: "Object Remover", href: "/app/object-remover", icon: "eraser", badge: "New" },
     ],
   },
   {
