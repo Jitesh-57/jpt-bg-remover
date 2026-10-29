@@ -13,7 +13,7 @@ import { prepareDataUrl, parseJsonResponse } from "@/lib/upload-prep";
 import { savePendingContext, loadPendingContext, clearPendingContext } from "@/lib/pending-image";
 import { userMessage } from "@/lib/user-message";
 import { trackEvent } from "@/lib/analytics";
-import GeneratingFx from "@/app/creative/[slug]/GeneratingFx";
+import GeneratingFx from "@/app/_components/GeneratingFx";
 import Paywall from "../_components/Paywall";
 import { usePlayStore, recoverPlayPurchases } from "@/lib/play-billing.client";
 

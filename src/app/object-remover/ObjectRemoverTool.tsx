@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import RemovalCompare from "@/app/_components/RemovalCompare";
+import GeneratingFx from "@/app/_components/GeneratingFx";
 import SignInModal from "@/app/_components/SignInModal";
 import { CREDIT_COST } from "@/lib/plans";
 import { publishCredits } from "@/lib/credits";
@@ -18,6 +19,10 @@ import { savePendingContext, loadPendingContext, clearPendingContext } from "@/l
  * every AI tool. The brush paints a black-and-white mask; Erase takes paint
  * back off. Several passes are fine: each one works on the last result.
  *
+ * Laid out like the AI apps: the tools in a panel on the left, the photo on
+ * the right (on a phone, the photo first). While the AI works, the photo
+ * shows the same generating animation as every other tool.
+ *
  * Signed out, the photo is kept through sign-in (pending-image), so nobody
  * uploads twice; with no credits, the packs open.
  */
@@ -26,17 +31,34 @@ const TOOL = "object-remover";
 const GRAD = "linear-gradient(120deg,var(--accent),var(--accent-2))";
 const MAX_SIDE = 3072;
 const TINT = "rgba(255,70,90,0.55)";
+const STEPS = ["Reading your photo…", "Finding what you brushed…", "Removing it…", "Rebuilding what was behind it…", "Adding the finishing touches…"];
 
 type Phase = "idle" | "edit" | "working" | "done";
 type Pt = { x: number; y: number };
+type Notice = { kind: "ok" | "warn" | "error"; text: string };
 
-const panel: React.CSSProperties = { background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 16, padding: 16 };
-const ghost: React.CSSProperties = { background: "var(--surface-2)", color: "var(--text)", border: "1px solid var(--border)", borderRadius: 11, padding: "11px 16px", fontSize: 14.5, fontWeight: 700, cursor: "pointer", width: "100%" };
-const primary: React.CSSProperties = { background: GRAD, color: "#fff", border: "none", borderRadius: 11, padding: "13px 18px", fontSize: 15.5, fontWeight: 800, cursor: "pointer", width: "100%", boxShadow: "0 8px 22px var(--accent-border)" };
+const side: React.CSSProperties = { background: "var(--bg-elevated)", border: "1px solid var(--border)", borderRadius: 20, padding: 18, display: "flex", flexDirection: "column", gap: 18, minWidth: 0 };
+const stage: React.CSSProperties = { position: "relative", background: "var(--bg-elevated)", border: "1px solid var(--border)", borderRadius: 20, padding: 14, minHeight: 460, display: "flex", alignItems: "center", justifyContent: "center", minWidth: 0 };
+const label: React.CSSProperties = { fontSize: 11.5, fontWeight: 700, color: "var(--text-faint)", textTransform: "uppercase", letterSpacing: "0.09em", margin: 0 };
+const ghost: React.CSSProperties = { background: "var(--surface)", color: "var(--text)", border: "1px solid var(--border)", borderRadius: 11, padding: "10px 14px", fontSize: 14, fontWeight: 700, fontFamily: "inherit", cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 7 };
+
+function primary(on: boolean): React.CSSProperties {
+  return {
+    width: "100%", padding: 14, borderRadius: 13, border: "none", fontFamily: "inherit", fontWeight: 800, fontSize: 15,
+    display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+    background: on ? "var(--grad-strong)" : "var(--surface-3)", color: on ? "#fff" : "var(--text-faint)",
+    cursor: on ? "pointer" : "not-allowed", boxShadow: on ? "var(--glow)" : "none", transition: "background .2s ease",
+  };
+}
 
 const ICON = {
   brush: "M9.5 14.5 4 20M14 4l6 6-8.5 8.5a3 3 0 0 1-4.2 0l-1.8-1.8a3 3 0 0 1 0-4.2z",
   erase: "M20 20H9l-5-5a2 2 0 0 1 0-2.8l8.2-8.2a2 2 0 0 1 2.8 0l5 5a2 2 0 0 1 0 2.8L13 19M7 10l7 7",
+  undo: "M9 14 4 9l5-5M4 9h10.5a5.5 5.5 0 0 1 0 11H11",
+  clear: "M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6",
+  upload: "M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3",
+  download: "M12 4v12M7 11l5 5 5-5M4 20h16",
+  tip: "M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z",
 };
 
 function Glyph({ d, size = 22 }: { d: string; size?: number }) {
@@ -45,6 +67,16 @@ function Glyph({ d, size = 22 }: { d: string; size?: number }) {
       <path d={d} />
     </svg>
   );
+}
+
+function Spark() {
+  return <span aria-hidden style={{ fontSize: 15 }}>✨</span>;
+}
+
+function NoticeLine({ notice }: { notice: Notice | null }) {
+  if (!notice) return null;
+  const color = notice.kind === "ok" ? "var(--success)" : notice.kind === "warn" ? "var(--warn)" : "var(--danger)";
+  return <p role="status" style={{ margin: 0, fontSize: 13.5, fontWeight: 600, color, lineHeight: 1.45 }}>{notice.kind === "ok" ? "✓ " : ""}{notice.text}</p>;
 }
 
 /** Read a file into a JPEG data URL no larger than MAX_SIDE on its long edge. */
@@ -72,7 +104,7 @@ export default function ObjectRemoverTool() {
   const [phase, setPhase] = useState<Phase>("idle");
   const [source, setSource] = useState<string | null>(null);   // what was uploaded
   const [history, setHistory] = useState<string[]>([]);       // each removal's result, newest last
-  const [message, setMessage] = useState<{ kind: "ok" | "warn" | "error"; text: string } | null>(null);
+  const [message, setMessage] = useState<Notice | null>(null);
   const [drag, setDrag] = useState(false);
   const [signIn, setSignIn] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -196,43 +228,64 @@ export default function ObjectRemoverTool() {
   const signInModal = signIn && (
     <SignInModal nextPath={typeof window !== "undefined" ? window.location.pathname : undefined} onClose={() => setSignIn(false)} />
   );
+  const footnote = <p style={{ margin: 0, fontSize: 12, color: "var(--text-faint)", textAlign: "center" }}>{CREDIT_COST} credits per removal · full resolution · no watermark</p>;
 
   // ── Upload ───────────────────────────────────────────────────────────────
   if (phase === "idle" || !source || !current) {
     return (
-      <div style={{ maxWidth: 620, margin: "0 auto" }}>
+      <div className="jpt-or">
+        <aside className="jpt-or-side" style={side}>
+          <p style={label}>How it works</p>
+          <ol style={{ margin: 0, padding: 0, listStyle: "none", display: "grid", gap: 14 }}>
+            {[
+              ["Upload a photo", "JPG, PNG or WebP."],
+              ["Brush over what to remove", "A person, an object, text — anything."],
+              ["Press Remove", "AI fills the gap from what's around it."],
+            ].map(([t, d], i) => (
+              <li key={t} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+                <span style={{ flex: "0 0 auto", width: 28, height: 28, borderRadius: 9, background: "var(--accent-soft)", color: "var(--accent-strong)", display: "inline-flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 13.5 }}>{i + 1}</span>
+                <span style={{ minWidth: 0 }}>
+                  <span style={{ display: "block", fontSize: 14, fontWeight: 800, color: "var(--text)" }}>{t}</span>
+                  <span style={{ display: "block", fontSize: 13, color: "var(--text-muted)", marginTop: 2 }}>{d}</span>
+                </span>
+              </li>
+            ))}
+          </ol>
+          <div style={{ marginTop: "auto", display: "grid", gap: 10 }}>
+            <button onClick={() => fileRef.current?.click()} className="jpt-sheen" style={primary(true)}><Glyph d={ICON.upload} size={18} /> Upload Image</button>
+            {footnote}
+          </div>
+        </aside>
         <label
+          className="jpt-or-stage"
           onDragOver={(e) => { e.preventDefault(); setDrag(true); }}
           onDragLeave={() => setDrag(false)}
           onDrop={(e) => { e.preventDefault(); setDrag(false); onFile(e.dataTransfer.files?.[0]); }}
-          style={{
-            display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center",
-            cursor: "pointer", borderRadius: 20, padding: "46px 24px",
-            border: `2px dashed ${drag ? "var(--accent)" : "var(--border-strong)"}`,
-            background: drag ? "var(--accent-soft)" : "var(--surface)", transition: "all .2s",
-          }}
+          style={{ ...stage, padding: "40px 20px", cursor: "pointer", flexDirection: "column", textAlign: "center", border: `1.5px dashed ${drag ? "var(--accent)" : "var(--border-strong)"}`, background: drag ? "var(--accent-soft)" : "var(--bg-elevated)", transition: "background .2s, border-color .2s" }}
         >
           {fileInput}
-          <span style={{ background: GRAD, color: "#fff", borderRadius: 12, padding: "14px 30px", fontSize: 16, fontWeight: 800, marginBottom: 14, boxShadow: "0 8px 22px var(--accent-border)" }}>Upload Image</span>
-          <span style={{ fontSize: 14, color: "var(--text-muted)" }}>or drop a JPG, PNG or WebP here</span>
-          <span style={{ fontSize: 12.5, color: "var(--text-faint)", marginTop: 12 }}>{CREDIT_COST} credits per removal · full resolution · no watermark</span>
+          <span style={{ width: 64, height: 64, borderRadius: 18, background: "var(--grad-strong)", display: "inline-flex", alignItems: "center", justifyContent: "center", color: "#fff", boxShadow: "var(--glow)" }}><Glyph d={ICON.upload} size={28} /></span>
+          <span style={{ fontSize: 20, fontWeight: 900, marginTop: 16, color: "var(--text)" }}>Drop your photo here</span>
+          <span style={{ fontSize: 14, color: "var(--text-muted)", marginTop: 6 }}>or <span style={{ color: "var(--accent)", fontWeight: 800 }}>choose a photo</span> · JPG, PNG or WebP</span>
+          {message && <span style={{ marginTop: 14 }}><NoticeLine notice={message} /></span>}
         </label>
-        {message && <p style={{ textAlign: "center", color: "var(--danger)", fontSize: 14, marginTop: 12 }}>{message.text}</p>}
       </div>
     );
   }
 
-  // ── Brush ────────────────────────────────────────────────────────────────
-  if (phase === "edit") {
+  // ── Brush (and the removal running over it) ────────────────────────────
+  if (phase === "edit" || phase === "working") {
     return (
       <>
         <BrushEditor
           image={current}
+          working={phase === "working"}
           notice={message && message.kind !== "ok" ? message : null}
           canCancel={history.length > 0}
           onCancel={() => { setMessage(null); setPhase("done"); }}
           onNewImage={() => fileRef.current?.click()}
           onApply={(mask) => remove(current, mask)}
+          footnote={footnote}
           fileInput={fileInput}
         />
         {signInModal}
@@ -241,31 +294,31 @@ export default function ObjectRemoverTool() {
   }
 
   // ── Result ───────────────────────────────────────────────────────────────
-  const working = phase === "working";
   const last = history[history.length - 1] ?? null;
   return (
-    <div style={{ display: "flex", flexWrap: "wrap", gap: 18, alignItems: "flex-start", maxWidth: 1040, margin: "0 auto", textAlign: "left" }}>
-      <div style={{ ...panel, flex: "1 1 520px", minWidth: 0, position: "relative" }}>
-        <RemovalCompare before={working ? current : source} after={working ? null : last} working={working} progress={null} afterAlt="Object removed" workingLabel="AI is removing it…" />
-      </div>
-      <div style={{ ...panel, flex: "1 1 280px", maxWidth: 420, display: "grid", gap: 14 }}>
-        <button onClick={() => void download()} disabled={!last || working} style={{ ...primary, opacity: !last || working ? 0.55 : 1, cursor: !last || working ? "default" : "pointer" }}>
-          {working ? "Removing…" : "Download Image"}
+    <div className="jpt-or">
+      <aside className="jpt-or-side" style={side}>
+        <NoticeLine notice={message} />
+        <button onClick={() => void download()} disabled={!last} className="jpt-sheen" style={primary(!!last)}>
+          <Glyph d={ICON.download} size={18} /> Download Image
         </button>
-        {message && !working && (
-          <div style={{ textAlign: "center", fontSize: 13.5, fontWeight: 600, color: message.kind === "ok" ? "var(--success)" : message.kind === "warn" ? "var(--warn)" : "var(--danger)" }}>
-            {message.kind === "ok" ? "✓ " : ""}{message.text}
-          </div>
-        )}
-        <div style={{ background: "var(--surface-2)", borderRadius: 12, padding: "12px 14px", textAlign: "center" }}>
-          <div style={{ fontSize: 13.5, color: "var(--text-muted)", marginBottom: 4 }}>Something else to remove, or a trace left?</div>
-          <button onClick={() => { setMessage(null); setPhase("edit"); }} disabled={working} style={{ background: "none", border: "none", color: "var(--accent)", fontSize: 15, fontWeight: 800, textDecoration: "underline", cursor: working ? "default" : "pointer", padding: 0 }}>
-            ✎ Brush &amp; remove more
+        <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 14, padding: 14, display: "grid", gap: 10 }}>
+          <span style={{ fontSize: 13.5, color: "var(--text-muted)" }}>Something else to remove, or a trace left?</span>
+          <button onClick={() => { setMessage(null); setPhase("edit"); }} style={{ ...ghost, border: "1px solid var(--accent-border)", color: "var(--accent-strong)" }}>
+            <Glyph d={ICON.brush} size={17} /> Brush &amp; remove more
           </button>
         </div>
-        <button onClick={undo} disabled={working || !history.length} style={{ ...ghost, opacity: working || !history.length ? 0.5 : 1 }}>Undo last removal</button>
-        <button onClick={() => fileRef.current?.click()} disabled={working} style={{ ...ghost, border: "1px solid var(--accent-border)" }}>Upload Next Image</button>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+          <button onClick={undo} disabled={!history.length} style={{ ...ghost, opacity: history.length ? 1 : 0.5 }}><Glyph d={ICON.undo} size={16} /> Undo</button>
+          <button onClick={() => fileRef.current?.click()} style={ghost}><Glyph d={ICON.upload} size={16} /> New photo</button>
+        </div>
+        <div style={{ marginTop: "auto" }}>{footnote}</div>
         {fileInput}
+      </aside>
+      <div className="jpt-or-stage" style={stage}>
+        <div style={{ width: "100%", maxWidth: 900 }}>
+          <RemovalCompare before={source} after={last} working={false} progress={null} afterAlt="Object removed" workingLabel="" />
+        </div>
       </div>
     </div>
   );
@@ -273,13 +326,16 @@ export default function ObjectRemoverTool() {
 
 // ── Brushing the mask ─────────────────────────────────────────────────────
 
-function BrushEditor({ image, notice, canCancel, onCancel, onNewImage, onApply, fileInput }: {
+function BrushEditor({ image, working, notice, canCancel, onCancel, onNewImage, onApply, footnote, fileInput }: {
   image: string;
-  notice: { kind: "ok" | "warn" | "error"; text: string } | null;
+  /** The removal is running: everything waits, and the photo shows the animation. */
+  working: boolean;
+  notice: Notice | null;
   canCancel: boolean;
   onCancel: () => void;
   onNewImage: () => void;
   onApply: (maskDataUrl: string) => void;
+  footnote: React.ReactNode;
   fileInput: React.ReactNode;
 }) {
   const viewRef = useRef<HTMLCanvasElement>(null);
@@ -291,6 +347,7 @@ function BrushEditor({ image, notice, canCancel, onCancel, onNewImage, onApply, 
   const [mode, setMode] = useState<"brush" | "erase">("brush");
   const [brush, setBrush] = useState(40); // diameter, per 1000 px of image width
   const [painted, setPainted] = useState(false);
+  const [steps, setSteps] = useState(0); // undo steps, so Undo enables and disables on time
   const [cursor, setCursor] = useState<Pt | null>(null); // brush outline, on-screen px
   const [preview, setPreview] = useState(false); // show the outline mid-canvas while resizing
   const [displayW, setDisplayW] = useState(0);
@@ -322,6 +379,7 @@ function BrushEditor({ image, notice, canCancel, onCancel, onNewImage, onApply, 
       m.width = img.naturalWidth; m.height = img.naturalHeight;
       maskRef.current = m;
       history.current = [];
+      setSteps(0);
       setPainted(false);
       const view = viewRef.current!;
       view.width = m.width; view.height = m.height;
@@ -342,6 +400,7 @@ function BrushEditor({ image, notice, canCancel, onCancel, onNewImage, onApply, 
   }, []);
 
   useEffect(() => () => { if (previewTimer.current) clearTimeout(previewTimer.current); }, []);
+  useEffect(() => { if (working) setCursor(null); }, [working]);
 
   const point = (e: React.PointerEvent<HTMLCanvasElement>): Pt => {
     const r = e.currentTarget.getBoundingClientRect();
@@ -378,15 +437,17 @@ function BrushEditor({ image, notice, canCancel, onCancel, onNewImage, onApply, 
   };
 
   const down = (e: React.PointerEvent<HTMLCanvasElement>) => {
-    const m = maskRef.current; if (!m) return;
+    const m = maskRef.current; if (!m || working) return;
     e.currentTarget.setPointerCapture(e.pointerId);
     history.current.push(m.getContext("2d")!.getImageData(0, 0, m.width, m.height));
     if (history.current.length > 20) history.current.shift();
+    setSteps(history.current.length);
     lastPt.current = null;
     track(e);
     stroke(point(e));
   };
   const move = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    if (working) return;
     track(e);
     if (lastPt.current) stroke(point(e));
   };
@@ -408,13 +469,14 @@ function BrushEditor({ image, notice, canCancel, onCancel, onNewImage, onApply, 
     const m = maskRef.current, prev = history.current.pop();
     if (!m || !prev) return;
     m.getContext("2d")!.putImageData(prev, 0, 0);
+    setSteps(history.current.length);
     setPainted(anyPaint());
     redraw();
   };
   const clear = () => {
     const m = maskRef.current; if (!m) return;
     m.getContext("2d")!.clearRect(0, 0, m.width, m.height);
-    history.current = []; setPainted(false); redraw();
+    history.current = []; setSteps(0); setPainted(false); redraw();
   };
   const apply = () => {
     const m = maskRef.current; if (!m) return;
@@ -427,51 +489,84 @@ function BrushEditor({ image, notice, canCancel, onCancel, onNewImage, onApply, 
   };
 
   const view = viewRef.current;
-  const ring = cursor ?? (preview && view ? { x: view.clientWidth / 2, y: view.clientHeight / 2 } : null);
-  const small: React.CSSProperties = { ...ghost, width: "auto", padding: "8px 14px" };
-  const modeBtn = (id: "brush" | "erase", label: string) => {
+  const ring = working ? null : cursor ?? (preview && view ? { x: view.clientWidth / 2, y: view.clientHeight / 2 } : null);
+  const canRemove = painted && !working;
+  const modeBtn = (id: "brush" | "erase", text: string) => {
     const on = mode === id;
     return (
-      <button key={id} role="radio" aria-checked={on} onClick={() => setMode(id)}
+      <button key={id} role="radio" aria-checked={on} onClick={() => setMode(id)} disabled={working}
         style={{
-          display: "flex", flexDirection: "column", alignItems: "center", gap: 4, minWidth: 74, padding: "9px 12px",
-          border: "none", borderRadius: 12, cursor: "pointer", fontFamily: "inherit", fontSize: 13.5, fontWeight: 800,
-          background: on ? GRAD : "transparent", color: on ? "#fff" : "var(--text-muted)",
+          flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 5, padding: "11px 8px",
+          border: "none", borderRadius: 11, cursor: working ? "default" : "pointer", fontFamily: "inherit", fontSize: 13.5, fontWeight: 800,
+          background: on ? GRAD : "transparent", color: on ? "#fff" : "var(--text-muted)", boxShadow: on ? "0 6px 16px var(--accent-border)" : "none",
+          transition: "background .15s, color .15s",
         }}>
-        <Glyph d={ICON[id]} />{label}
+        <Glyph d={ICON[id]} />{text}
       </button>
     );
   };
 
   return (
-    <div style={{ maxWidth: 1040, margin: "0 auto", textAlign: "left" }}>
-      <div style={{ ...panel, display: "flex", flexWrap: "wrap", alignItems: "center", gap: 18, marginBottom: 14 }}>
-        <div role="radiogroup" aria-label="Brush or erase" style={{ display: "inline-flex", gap: 4, padding: 4, borderRadius: 14, background: "var(--surface-2)", border: "1px solid var(--border)" }}>
-          {modeBtn("brush", "Brush")}
-          {modeBtn("erase", "Erase")}
+    <div className="jpt-or">
+      <aside className="jpt-or-side" style={{ ...side, opacity: working ? 0.75 : 1, transition: "opacity .2s" }}>
+        <div style={{ display: "grid", gap: 8 }}>
+          <p style={label}>Tool</p>
+          <div role="radiogroup" aria-label="Brush or erase" style={{ display: "flex", gap: 4, padding: 4, borderRadius: 14, background: "var(--surface)", border: "1px solid var(--border)" }}>
+            {modeBtn("brush", "Brush")}
+            {modeBtn("erase", "Erase")}
+          </div>
         </div>
-        <label style={{ display: "flex", flexDirection: "column", gap: 8, fontSize: 13.5, fontWeight: 700, color: "var(--text)", flex: "1 1 220px" }}>
-          Brush Size
-          <input type="range" min={8} max={200} value={brush} onChange={(e) => resize(Number(e.target.value))} style={{ width: "100%", accentColor: "var(--accent)" }} aria-label="Brush size" />
-        </label>
-        <div style={{ display: "flex", gap: 8, marginLeft: "auto" }}>
-          <button onClick={undo} disabled={!history.current.length} style={{ ...small, opacity: history.current.length ? 1 : 0.5 }}>Undo</button>
-          <button onClick={clear} disabled={!painted} style={{ ...small, opacity: painted ? 1 : 0.5 }}>Clear</button>
+
+        <div style={{ display: "grid", gap: 10 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <p style={label}>Brush size</p>
+            <span style={{ fontSize: 12.5, fontWeight: 800, color: "var(--text-muted)", fontVariantNumeric: "tabular-nums" }}>{brush}</span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <span aria-hidden style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--text-faint)", flex: "0 0 auto" }} />
+            <input type="range" min={8} max={200} value={brush} disabled={working} onChange={(e) => resize(Number(e.target.value))}
+              style={{ flex: 1, minWidth: 0, accentColor: "var(--accent)" }} aria-label="Brush size" />
+            <span aria-hidden style={{ width: 16, height: 16, borderRadius: "50%", background: "var(--text-faint)", flex: "0 0 auto" }} />
+          </div>
         </div>
-      </div>
-      <p style={{ fontSize: 14, color: "var(--text-muted)", margin: "0 0 12px", textAlign: "center" }}>
-        {mode === "brush" ? "Brush over what you want to remove — a little past its edges works best." : "Erase takes the brush off anything you don't want removed."}
-      </p>
-      {notice && (
-        <p style={{ color: notice.kind === "error" ? "var(--danger)" : "var(--warn)", fontSize: 14, margin: "0 0 12px", textAlign: "center" }}>{notice.text}</p>
-      )}
-      <div style={{ ...panel, padding: 10, textAlign: "center" }}>
-        <div style={{ position: "relative", display: "inline-block", maxWidth: "100%", lineHeight: 0 }}>
+
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+          <button onClick={undo} disabled={working || !steps} style={{ ...ghost, opacity: working || !steps ? 0.5 : 1 }}><Glyph d={ICON.undo} size={16} /> Undo</button>
+          <button onClick={clear} disabled={working || !painted} style={{ ...ghost, opacity: working || !painted ? 0.5 : 1 }}><Glyph d={ICON.clear} size={16} /> Clear</button>
+        </div>
+
+        <div style={{ display: "flex", gap: 10, alignItems: "flex-start", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 12, padding: "11px 12px", color: "var(--text-muted)", fontSize: 13, lineHeight: 1.5 }}>
+          <span style={{ color: "var(--accent)", flex: "0 0 auto", marginTop: 1 }}><Glyph d={ICON.tip} size={17} /></span>
+          <span>{mode === "brush"
+            ? "Brush over what you want to remove — a little past its edges, and its shadow too."
+            : "Erase takes the brush off anything you want to keep."}</span>
+        </div>
+
+        <NoticeLine notice={working ? null : notice} />
+
+        <div style={{ marginTop: "auto", display: "grid", gap: 10 }}>
+          <button onClick={apply} disabled={!canRemove} className={canRemove ? "jpt-sheen" : undefined} style={primary(canRemove)}>
+            {working
+              ? <><span className="jpt-spin" style={{ width: 15, height: 15, borderRadius: "50%", border: "2px solid rgba(255,255,255,.35)", borderTopColor: "#fff" }} /> Removing…</>
+              : <><Spark /> Remove · {CREDIT_COST} credits</>}
+          </button>
+          <div style={{ display: "grid", gridTemplateColumns: canCancel ? "1fr 1fr" : "1fr", gap: 8 }}>
+            {canCancel && <button onClick={onCancel} disabled={working} style={ghost}>Back to result</button>}
+            <button onClick={onNewImage} disabled={working} style={ghost}><Glyph d={ICON.upload} size={16} /> New photo</button>
+          </div>
+          {footnote}
+        </div>
+        {fileInput}
+      </aside>
+
+      <div className="jpt-or-stage" style={stage}>
+        <div style={{ position: "relative", display: "inline-block", maxWidth: "100%", lineHeight: 0, borderRadius: 12, overflow: "hidden" }}>
           <canvas
             ref={viewRef}
             onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up}
             onPointerLeave={(e) => { if (e.pointerType === "mouse" && !lastPt.current) setCursor(null); }}
-            style={{ maxWidth: "100%", maxHeight: "72vh", width: "auto", height: "auto", borderRadius: 8, cursor: "none", touchAction: "none", display: "block", opacity: loaded ? 1 : 0.4 }}
+            aria-label="Your photo: brush over what to remove"
+            style={{ maxWidth: "100%", maxHeight: "min(74vh, 780px)", width: "auto", height: "auto", cursor: working ? "progress" : "none", touchAction: "none", display: "block", opacity: loaded ? 1 : 0.4 }}
           />
           {ring && (
             // The brush outline: a white ring with a dark edge so it shows on any photo; dashed when erasing.
@@ -482,15 +577,8 @@ function BrushEditor({ image, notice, canCancel, onCancel, onNewImage, onApply, 
               background: mode === "erase" ? "rgba(255,255,255,0.12)" : "rgba(255,70,90,0.18)",
             }} />
           )}
+          {working && <GeneratingFx ghost={image} steps={STEPS} estimate="usually under a minute" />}
         </div>
-      </div>
-      <div style={{ display: "flex", gap: 10, justifyContent: "center", marginTop: 14, flexWrap: "wrap" }}>
-        <button onClick={apply} disabled={!painted} style={{ ...primary, width: "auto", padding: "13px 30px", opacity: painted ? 1 : 0.55, cursor: painted ? "pointer" : "default" }}>
-          ✨ Remove · {CREDIT_COST} credits
-        </button>
-        {canCancel && <button onClick={onCancel} style={{ ...ghost, width: "auto", padding: "13px 22px" }}>Back to result</button>}
-        <button onClick={onNewImage} style={{ ...ghost, width: "auto", padding: "13px 22px" }}>New image</button>
-        {fileInput}
       </div>
     </div>
   );

@@ -121,7 +121,7 @@ export default function EditorStudio() {
         busy={busy}
         result={current}
         stages={STAGES}
-        frameRatio={ratio === "original" ? "4 / 5" : ratio.replace(":", " / ")}
+        ghost={image}
         emptyTitle="Your edited image will appear here"
         emptySub="Upload a photo, describe the change, and press Generate."
         onRegenerate={image && prompt.trim() ? generate : undefined}

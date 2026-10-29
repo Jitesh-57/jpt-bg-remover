@@ -190,7 +190,7 @@ export default function RecreateStudio() {
         busy={busy}
         result={current}
         stages={STAGES}
-        frameRatio="4 / 5"
+        ghost={reference}
         emptyTitle="Recreate any photo with you in it"
         emptySub="Add a reference (upload or paste a Pinterest link) and your photo, then press Recreate."
         onRegenerate={reference && person ? generate : undefined}

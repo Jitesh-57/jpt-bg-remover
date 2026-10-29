@@ -70,7 +70,7 @@ export default function Page() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: seoJson(breadcrumbLd) }} />
 
       <section style={{ background: "linear-gradient(160deg,var(--surface-2) 0%,var(--surface) 60%)", padding: "48px 16px 52px" }}>
-        <div style={{ maxWidth: 1080, margin: "0 auto", textAlign: "center" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto", textAlign: "center" }}>
           <span style={{ display: "inline-block", fontSize: 12, fontWeight: 800, letterSpacing: ".08em", textTransform: "uppercase", color: "var(--accent-strong)", background: "var(--accent-soft)", border: "1px solid var(--accent-border)", borderRadius: 999, padding: "5px 12px" }}>
             AI tool · {CREDIT_COST} credits per removal
           </span>
