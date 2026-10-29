@@ -200,7 +200,6 @@ export default function CreateStudio({ inspirations }: { inspirations: FeedItem[
         busy={busy}
         result={current}
         stages={STAGES}
-        frameRatio={ratio.replace(":", " / ")}
         emptyTitle="Your image will appear here"
         emptySub="Write a prompt, or pick one of the ideas below."
         onRegenerate={prompt.trim() ? generate : undefined}

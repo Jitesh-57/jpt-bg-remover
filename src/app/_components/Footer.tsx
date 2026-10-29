@@ -15,6 +15,7 @@ const AI_TOOLS = [
   { labelKey: "AI Headshot Generator", href: "/ai-headshot" },
   { labelKey: "Remove Background",  href: "/remove-bg" },
   { labelKey: "Image Upscaler",     href: "/upscale" },
+  { labelKey: "Object Remover",     href: "/object-remover" },
   { labelKey: "AI Image Generator", href: "/app/create" },
   { labelKey: "All AI Photo Apps",  href: "/creative" },
 ];

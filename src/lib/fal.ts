@@ -804,6 +804,23 @@ export async function falRemoveBackground(src: string, budgetMs?: number): Promi
   return urlToDataUrl(firstImageUrl(result));
 }
 
+/**
+ * The object remover's model: Bria Eraser, which fills a masked area from what
+ * surrounds it. It takes a brushed mask, not a prompt, so nothing is added
+ * that wasn't asked for. FAL_OBJECT_REMOVER_MODEL swaps it without a deploy.
+ */
+const OBJECT_REMOVER_MODEL = normaliseEndpoint(process.env.FAL_OBJECT_REMOVER_MODEL || "fal-ai/bria/eraser");
+
+/**
+ * Removes whatever the mask marks (white on black, the photo's size) and fills
+ * the gap from its surroundings. Returns the result as a data URL.
+ */
+export async function falEraseObject(src: string, mask: string, budgetMs?: number): Promise<string> {
+  const [imageUrl, maskUrl] = await Promise.all([toFalImageUrl(src), toFalImageUrl(mask)]);
+  const result = await runQueued(OBJECT_REMOVER_MODEL, { image_url: imageUrl, mask_url: maskUrl, mask_type: "manual" }, budgetMs);
+  return urlToDataUrl(firstImageUrl(result));
+}
+
 /** Generates an image from a prompt alone. */
 export async function falGenerateImage(
   prompt: string,

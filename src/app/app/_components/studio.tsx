@@ -9,6 +9,7 @@ import { openPricing } from "@/lib/pricing-modal";
 import { beginGoogleSignIn } from "@/lib/auth-return";
 import { parseJsonResponse, prepareDataUrl } from "@/lib/upload-prep";
 import { userMessage } from "@/lib/user-message";
+import GeneratingFx from "@/app/_components/GeneratingFx";
 
 export const labelStyle: React.CSSProperties = {
   fontSize: 11.5, fontWeight: 700, color: "var(--text-faint)", textTransform: "uppercase", letterSpacing: "0.09em", margin: "0 0 8px", display: "block",
@@ -158,25 +159,18 @@ export function GenerateButton({ onClick, disabled, busy, label = "Generate" }: 
 
 export interface StudioResult { id: string; src: string; prompt: string }
 
-/** The right-hand panel: empty state, animated progress, or the result with its actions. Fills its column's height. */
-export function PreviewPanel({ busy, result, stages, emptyTitle, emptySub, frameRatio = "1 / 1", extraActions, onRegenerate }: {
+/** The right-hand panel: empty state, the generating animation, or the result with its actions. Fills its column's height. */
+export function PreviewPanel({ busy, result, stages, ghost, emptyTitle, emptySub, extraActions, onRegenerate }: {
   busy: boolean;
   result: StudioResult | null;
   stages: string[];
+  /** The photo being worked on, shown blurred under the animation. */
+  ghost?: string | null;
   emptyTitle: string;
   emptySub: string;
-  frameRatio?: string;
   extraActions?: React.ReactNode;
   onRegenerate?: () => void;
 }) {
-  const [stage, setStage] = useState(0);
-  useEffect(() => {
-    if (!busy) return;
-    setStage(0);
-    const t = setInterval(() => setStage((s) => Math.min(s + 1, stages.length - 1)), 6000);
-    return () => clearInterval(t);
-  }, [busy, stages.length]);
-
   return (
     <div style={{ flex: 1, position: "relative", background: "var(--bg-elevated)", border: "1px solid var(--border)", borderRadius: 20, padding: 18, minHeight: 460, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
       {!busy && !result && (
@@ -190,15 +184,7 @@ export function PreviewPanel({ busy, result, stages, emptyTitle, emptySub, frame
         </div>
       )}
 
-      {busy && (
-        <div style={{ width: "100%", maxWidth: 560, textAlign: "center" }}>
-          <div className="jpt-skel" style={{ aspectRatio: frameRatio, maxHeight: "60vh", margin: "0 auto", borderRadius: 16, display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <span className="jpt-spin" style={{ display: "inline-flex", color: "var(--accent)" }}><Icon name="sparkle" size={30} /></span>
-          </div>
-          <div key={stage} className="jpt-a-pop" style={{ marginTop: 14, fontSize: 13.5, fontWeight: 700, color: "var(--text-muted)" }}>{stages[stage]}</div>
-          <div style={{ fontSize: 12, color: "var(--text-faint)", marginTop: 4 }}>This usually takes 20–60 seconds. Keep this tab open.</div>
-        </div>
-      )}
+      {busy && <GeneratingFx ghost={ghost} steps={stages} estimate="usually 20–60s" />}
 
       {!busy && result && (
         <div key={result.id} className="jpt-a-up" style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}>

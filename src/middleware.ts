@@ -6,7 +6,7 @@ import { FIRST_TOUCH_COOKIE, LAST_TOUCH_COOKIE, TOUCH_KEYS, VISITOR_COOKIE, enco
 // In-memory rate limiter (per serverless instance — good enough for burst protection)
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 
-const AI_ROUTES = ["/api/remove-bg", "/api/ai-edit", "/api/generate-bg", "/api/upscale"];
+const AI_ROUTES = ["/api/remove-bg", "/api/ai-edit", "/api/generate-bg", "/api/upscale", "/api/object-remover"];
 const AI_LIMIT = 10;       // max 10 AI requests per window per IP
 const GLOBAL_LIMIT = 60;   // max 60 any-API requests per window per IP
 const WINDOW_MS = 60_000;  // 1 minute window

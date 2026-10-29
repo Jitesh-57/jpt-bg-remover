@@ -16,7 +16,7 @@ import {
 } from "@/lib/app-options";
 import { openPricing, needsCredits } from "@/lib/pricing-modal";
 import { trackEvent } from "@/lib/analytics";
-import GeneratingFx from "./GeneratingFx";
+import GeneratingFx from "@/app/_components/GeneratingFx";
 import { savePendingContext, loadPendingContext, clearPendingContext } from "@/lib/pending-image";
 import { beginGoogleSignIn } from "@/lib/auth-return";
 import { useTrialOffer, openTrialSignIn } from "@/lib/trial-offer";

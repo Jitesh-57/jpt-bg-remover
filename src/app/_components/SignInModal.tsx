@@ -72,7 +72,7 @@ export default function SignInModal({ onClose, reason = "default", onBeforeAuth,
 
   return (
     <div onClick={onClose} style={{ position: "fixed", inset: 0, zIndex: 9999, background: "rgba(15,23,42,0.6)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
-      <div onClick={(e) => e.stopPropagation()} style={{ position: "relative", width: "100%", maxWidth: 400, background: "var(--surface)", borderRadius: 20, boxShadow: "0 24px 70px rgba(0,0,0,0.35)", padding: "30px 28px 24px" }}>
+      <div role="dialog" aria-modal="true" aria-label="Sign in" onClick={(e) => e.stopPropagation()} style={{ position: "relative", width: "100%", maxWidth: 400, background: "var(--surface)", borderRadius: 20, boxShadow: "0 24px 70px rgba(0,0,0,0.35)", padding: "30px 28px 24px" }}>
         <button onClick={onClose} aria-label="Close" style={{ position: "absolute", top: 14, right: 14, width: 30, height: 30, borderRadius: "50%", border: "none", background: "var(--surface-2)", color: "var(--text-muted)", cursor: "pointer", fontSize: 17, lineHeight: 1 }}>×</button>
 
         <div style={{ display: "flex", alignItems: "center", marginBottom: 16 }}>

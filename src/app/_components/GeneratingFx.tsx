@@ -3,7 +3,9 @@
 import { useEffect, useState } from "react";
 
 /**
- * What the result pane shows while an image is being made.
+ * What the result pane shows while an image is being made: in the AI apps,
+ * and in every dashboard tool (Create, Recreate, the Editor, AI Studio, the
+ * Object Remover). It fills the nearest positioned box.
  *
  * The photo itself sits underneath as a dark, blurred ghost that slowly
  * sharpens, with an aurora glow, a light sweep and rising sparkles over it;
@@ -25,7 +27,14 @@ const SPARKS = [8, 19, 27, 36, 44, 52, 61, 69, 77, 85, 92, 14, 58, 73].map((left
   left, delay: (i * 0.37) % 3.2, dur: 2.6 + ((i * 0.53) % 1.8), size: 3 + (i % 3),
 }));
 
-export default function GeneratingFx({ ghost, name }: { ghost?: string | null; name: string }) {
+export default function GeneratingFx({ ghost, name = "", steps: own, estimate = "usually 15–40s" }: {
+  ghost?: string | null;
+  /** The app's name, for the default steps. */
+  name?: string;
+  /** The tool's own steps, one every 6 seconds; the last one stays. */
+  steps?: string[];
+  estimate?: string;
+}) {
   const [t, setT] = useState(0);
   useEffect(() => {
     const start = Date.now();
@@ -35,7 +44,7 @@ export default function GeneratingFx({ ghost, name }: { ghost?: string | null; n
 
   // ~63% at 20s, ~86% at 40s, never past 95 until the result arrives.
   const pct = Math.min(95, Math.round(100 * (1 - Math.exp(-t / 20))));
-  const steps = STEPS(name.replace(/\s+(filter|maker|generator|editor)$/i, ""));
+  const steps = own?.length ? own : STEPS(name.replace(/\s+(filter|maker|generator|editor)$/i, ""));
   const step = steps[Math.min(steps.length - 1, Math.floor(t / 6))];
   const R = 34, C = 2 * Math.PI * R;
 
@@ -67,7 +76,7 @@ export default function GeneratingFx({ ghost, name }: { ghost?: string | null; n
           <span className="jpt-gen-pct">{pct}%</span>
         </div>
         <div key={step} className="jpt-gen-step">{step}</div>
-        <div className="jpt-gen-time">{Math.floor(t)}s · usually 15–40s</div>
+        <div className="jpt-gen-time">{Math.floor(t)}s · {estimate}</div>
       </div>
     </div>
   );

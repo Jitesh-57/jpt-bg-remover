@@ -12,6 +12,7 @@ import { beginGoogleSignIn } from "@/lib/auth-return";
 import { parseJsonResponse } from "@/lib/upload-prep";
 import { userMessage } from "@/lib/user-message";
 import { trackEvent } from "@/lib/analytics";
+import GeneratingFx from "@/app/_components/GeneratingFx";
 
 /**
  * Pixel Shine AI Studio — describe the outcome, check what we understood,
@@ -157,7 +158,6 @@ export default function AIStudio() {
   const gate = useRef({ paid, allow });
   gate.current = { paid, allow };
   const askForCredits = () => { setUnlock(true); setPhase("idle"); openPricing("AI Studio smart reading"); };
-  const [stage, setStage] = useState(0);
   const [err, setErr] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -169,14 +169,6 @@ export default function AIStudio() {
   const shown = current >= 0 ? versions[current] : null;
   const shownSrc = shown?.src ?? original?.src ?? null;
   const history = useMemo(() => versions.slice(0, current + 1).map((v) => v.label), [versions, current]);
-
-  // Stages advance on a timer: honest "still working" feedback, never a fake percentage.
-  useEffect(() => {
-    if (phase !== "generating") return;
-    setStage(0);
-    const t = setInterval(() => setStage((s) => Math.min(s + 1, STAGES.length - 1)), 5000);
-    return () => clearInterval(t);
-  }, [phase]);
 
   /* Upload ------------------------------------------------------------- */
   const load = useCallback(async (src: string, name: string) => {
@@ -381,13 +373,7 @@ export default function AIStudio() {
                 </div>
               )}
 
-              {phase === "generating" && (
-                <div role="status" style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12, color: "#fff", textAlign: "center", padding: 20 }}>
-                  <span className="jpt-spin" style={{ width: 38, height: 38, borderRadius: "50%", border: "3px solid rgba(255,255,255,.25)", borderTopColor: "#fff" }} />
-                  <div key={stage} className="jpt-a-up" style={{ fontSize: 16, fontWeight: 800 }}>{STAGES[stage]}</div>
-                  <div style={{ fontSize: 12.5, opacity: 0.75 }}>Usually 10 to 40 seconds</div>
-                </div>
-              )}
+              {phase === "generating" && <GeneratingFx ghost={shownSrc} steps={STAGES} estimate="usually 10–40s" />}
 
               {original && (
                 <div style={{ position: "absolute", top: 12, left: 12, right: 12, display: "flex", justifyContent: "space-between", gap: 8, flexWrap: "wrap", pointerEvents: "none" }}>
