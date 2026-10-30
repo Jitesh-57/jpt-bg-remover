@@ -82,6 +82,7 @@ export default function AdminShell({ apps }: { apps: App[] }) {
           <a href="/admin/trials" style={{ ...tabBtn, textDecoration: "none" }}>🎁 Free trials</a>
           <a href="/admin/popups" style={{ ...tabBtn, textDecoration: "none" }}>💬 Popups</a>
           <a href="/admin/users" style={{ ...tabBtn, textDecoration: "none" }}>👥 Users & credits</a>
+          <a href="/admin/user-activity" style={{ ...tabBtn, textDecoration: "none" }}>🧭 User activity</a>
         </div>
 
         <label style={label}>Admin token</label>
