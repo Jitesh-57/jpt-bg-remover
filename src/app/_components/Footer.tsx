@@ -188,6 +188,16 @@ export default function Footer() {
           . Each prompt credits its original author.
         </div>
 
+        {/* Featured on directories (backlink badges) */}
+        <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap", marginBottom: 20 }}>
+          <a href="https://turbo0.com/item/pixelshine" target="_blank" rel="noopener noreferrer">
+            <img src="https://img.turbo0.com/badge-listed-light.svg" alt="Listed on Turbo0" style={{ height: 54, width: "auto" }} />
+          </a>
+          <a href="https://neeed.directory/products/pixelshine" target="_blank" rel="noopener">
+            <img src="https://neeed.directory/badges/neeed-badge-light.svg" alt="Featured on neeed.directory" width={139} height={38} />
+          </a>
+        </div>
+
         {/* Bottom bar */}
         <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 20, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
           <div style={{ fontSize: 13, color: "var(--text-muted)" }}>
