@@ -163,6 +163,7 @@ export default function UsersAdmin() {
                       <div style={{ minWidth: 0 }}>
                         <div style={{ fontSize: 16, fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis" }}>{open.profile.email}</div>
                         <div style={{ fontSize: 12.5, color: "var(--text-faint)", marginTop: 2 }}>{open.profile.name || "—"} · joined {date(open.profile.created_at)}{open.profile.plan !== "free" ? ` · ${open.profile.plan}` : ""}</div>
+                        <a href={`/admin/user-activity?id=${encodeURIComponent(open.profile.id)}`} style={{ ...chip, display: "inline-flex", alignItems: "center", gap: 6, marginTop: 10, padding: "7px 11px", textDecoration: "none", color: "var(--accent-strong)", borderColor: "var(--accent)" }}>🧭 Inspect User Activity ↗</a>
                       </div>
                       <button style={{ ...chip, padding: "4px 10px" }} onClick={() => setOpen(null)}>✕</button>
                     </div>
