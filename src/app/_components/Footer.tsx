@@ -196,6 +196,9 @@ export default function Footer() {
           <a href="https://neeed.directory/products/pixelshine" target="_blank" rel="noopener">
             <img src="https://neeed.directory/badges/neeed-badge-light.svg" alt="Featured on neeed.directory" width={139} height={38} />
           </a>
+          <a href="https://smollaunch.com" target="_blank" rel="noopener">
+            <img src="https://smollaunch.com/badges/featured.svg" alt="PixelShine — Featured on Smol Launch" loading="lazy" width={250} height={60} />
+          </a>
         </div>
 
         {/* Bottom bar */}
