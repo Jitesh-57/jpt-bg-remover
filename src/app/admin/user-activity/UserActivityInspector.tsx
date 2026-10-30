@@ -57,14 +57,28 @@ export default function UserActivityInspector() {
   const [error, setError] = useState("");
   const [tab, setTab] = useState<"generations" | "timeline" | "billing" | "events">("generations");
 
-  useEffect(() => { try { setToken(localStorage.getItem(TOKEN_KEY) || ""); } catch {} }, []);
-
   const loadId = useCallback(async (id: string, currentToken: string) => {
     const response = await fetch(`/api/admin/user-activity?token=${encodeURIComponent(currentToken)}&id=${encodeURIComponent(id)}`, { cache: "no-store" });
     const result = await response.json().catch(() => ({}));
     if (!response.ok || result.error) throw new Error(result.error || `Request failed (${response.status})`);
     setData(result as Payload);
   }, []);
+
+  // When opened from the Users & credits page, inspect the selected account
+  // immediately using the admin token already saved in this browser.
+  const initialId = searchParams.get("id") || "";
+  useEffect(() => {
+    let savedToken = "";
+    try { savedToken = localStorage.getItem(TOKEN_KEY) || ""; } catch {}
+    setToken(savedToken);
+    if (!initialId || !savedToken) return;
+    setLookup(initialId);
+    setLoading(true);
+    setError("");
+    void loadId(initialId, savedToken)
+      .catch((e) => setError(e instanceof Error ? e.message : "Could not load user activity."))
+      .finally(() => setLoading(false));
+  }, [initialId, loadId]);
 
   const search = async () => {
     const q = lookup.trim();
