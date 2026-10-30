@@ -172,7 +172,7 @@ export default function UserActivityInspector() {
           {!!data.storageFiles.length && <section style={card}><h2 style={{ fontSize: 15, margin: "0 0 10px" }}>Files in user's generations folder</h2>
             {data.storageFiles.map((file) => <div key={file.path} style={{ padding: "9px 0", borderTop: "1px solid var(--border)", display: "flex", gap: 12, justifyContent: "space-between", flexWrap: "wrap", fontSize: 12 }}>
               <span style={{ overflowWrap: "anywhere" }}>{file.name} · {bytes(file.metadata?.size)}</span>
-              {file.url ? <a href={file.url} download style={{ color: "var(--accent-strong)", fontWeight: 700 }}>Download ↧</a> : <span style={muted}>No signed URL</span>}
+              {file.url ? <a href={file.url} download style={{ color: "var(--accent-strong)", fontWeight: 700 }}>Download ↧</a> : <span style={muted}>Image unavailable</span>}
             </div>)}
           </section>}
         </section>}
@@ -223,7 +223,7 @@ export default function UserActivityInspector() {
             <Field name="Country / city" value={[data.acquisition?.country || data.countries?.signup_country, data.acquisition?.city].filter(Boolean).join(" / ")} />
             <Field name="Trial grant" value={data.trialGrant ? `${data.trialGrant.credits} credits · ${data.trialGrant.country} · ${dateTime(data.trialGrant.granted_at)}` : "—"} />
           </div>
-          <p style={{ ...muted, fontSize: 11, marginBottom: 0 }}>Image links are temporary signed URLs (valid for 1 hour). Results are capped at {data.limits.generations} generations and {data.limits.events} events.</p>
+          <p style={{ ...muted, fontSize: 11, marginBottom: 0 }}>Image links are persistent admin-protected URLs and remain available while the stored file and admin token remain valid. Results are capped at {data.limits.generations} generations and {data.limits.events} events.</p>
         </section>
       </>}
     </div>
