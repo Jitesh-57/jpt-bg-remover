@@ -205,6 +205,9 @@ export default function Footer() {
           <a href="https://openhunts.com" target="_blank" rel="noopener noreferrer" title="OpenHunts Club">
             <img src="https://cdn.openhunts.com/badges/club.webp" alt="OpenHunts Club Member" width={195} style={{ height: "auto" }} />
           </a>
+          <a href="https://twelve.tools" target="_blank">
+            <img src="https://twelve.tools/badge2-dark.svg" alt="Featured on Twelve Tools" width={148} height={40} />
+          </a>
         </div>
 
         {/* Bottom bar */}
