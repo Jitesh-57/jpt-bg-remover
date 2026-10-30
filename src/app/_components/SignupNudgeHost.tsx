@@ -13,10 +13,11 @@ import SignInModal from "./SignInModal";
 
 /**
  * When the sign-up popup (SignupNudge) shows: to signed-out visitors on every
- * page they open, a few seconds after it opens. Closed, it comes back once on
- * the same page (20 s later by default); closed again, it waits for the next
- * page. Only the visitor's session decides: logged in, never; logged out, yes,
- * even on a browser that has signed in before. Never inside the app,
+ * page they open, 5 s after they land. Closed, it comes back every 12 s on the
+ * same page until they sign up, and once they've closed it, later pages in the
+ * visit show it after 12 s rather than 5. Only the visitor's session decides:
+ * logged in, never; logged out, yes, even on a browser that has signed in
+ * before, so a returning user is asked straight away. Never inside the app,
  * admin, sign-in or payment pages, and never on top of another pop-up. The
  * delay, the comeback, the design and the on/off switch are set in /admin/popups.
  *
@@ -26,7 +27,15 @@ import SignInModal from "./SignInModal";
  */
 
 const SKIP = /^\/(app|admin|auth|invoices|m|pricing|checkout|payment)(\/|$)/;
+const CLOSED = "jpt-nudge-closed"; // sessionStorage: closed at least once this visit
 let firstPage = true; // the page the visitor landed on, before any in-site navigation
+
+function closedThisVisit(): boolean {
+  try { return sessionStorage.getItem(CLOSED) === "1"; } catch { return false; }
+}
+function markClosed() {
+  try { sessionStorage.setItem(CLOSED, "1"); } catch { /* private mode */ }
+}
 
 export default function SignupNudgeHost() {
   const pathname = usePathname() || "/";
@@ -38,7 +47,7 @@ export default function SignupNudgeHost() {
   const skip = SKIP.test(pathname);
   const design = forced ?? (p.t("design") as PopupDesign);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const comebacks = useRef(0); // times it may still come back on this page
+  const comebacks = useRef(0); // times it may still come back on this page (Infinity: until they sign up)
   const showLater = useRef<(seconds: number) => void>(() => {});
   const stop = () => { if (timer.current) clearTimeout(timer.current); timer.current = null; };
 
@@ -61,7 +70,8 @@ export default function SignupNudgeHost() {
     } catch { /* no URL */ }
     if (!force && !p.enabled) return;
     let alive = true;
-    comebacks.current = Math.max(0, Math.floor(Number(p.t("reshowTimes")) || 0));
+    const limit = Math.floor(Number(p.t("reshowTimes")) || 0);
+    comebacks.current = limit > 0 ? limit : Infinity;
     const show = async () => {
       // Another pop-up is up: wait for it, rather than stack on top of it.
       if (popupOnScreen()) { timer.current = setTimeout(show, 3000); return; }
@@ -74,10 +84,12 @@ export default function SignupNudgeHost() {
       setOpen(true);
     };
     showLater.current = (seconds) => { stop(); timer.current = setTimeout(show, Math.max(0, seconds) * 1000); };
-    // On the landing page, count from when it started opening, not from when this code ran.
+    // 5 s on arrival; once they've closed it this visit, a new page waits as long as a comeback.
+    const wait = force ? 1 : Number(p.t(closedThisVisit() ? "reshowSeconds" : "delay")) || 0;
+    // On the page they landed on, count from when it started opening, not from when this code ran.
     const loading = firstPage ? performance.now() / 1000 : 0;
     firstPage = false;
-    showLater.current((force ? 1 : Number(p.t("delay")) || 0) - loading);
+    showLater.current(wait - loading);
     return () => { alive = false; stop(); showLater.current = () => {}; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [skip, pathname, p.ready, p.enabled]);
@@ -88,8 +100,9 @@ export default function SignupNudgeHost() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
-  // Closed without signing up: back once more on this page, then not until the next one.
+  // Closed without signing up: back again on this page after reshowSeconds, until they sign up.
   const comeBack = () => {
+    markClosed();
     if (comebacks.current <= 0) return;
     comebacks.current -= 1;
     showLater.current(Number(p.t("reshowSeconds")) || 0);
