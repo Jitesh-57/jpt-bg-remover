@@ -84,14 +84,14 @@ export const BUILTIN_POPUPS: PopupDef[] = [
   {
     id: "signup",
     name: "Sign-up popup",
-    where: "Signed-out visitors on every page, a few seconds after it opens; if closed, it comes back once 12 s later. Not on the app, admin, sign-in, pricing or payment pages.",
+    where: "Signed-out visitors on every page, 5 seconds after it opens; if closed, it comes back once 20 s later. Not on the app, admin, sign-in, pricing or payment pages.",
     canTurnOff: true,
     previewable: true,
     tokens: { credits: "the free credits a new account gets", generations: "how many AI generations they cover" },
     fields: [
       { key: "design", label: "Design", kind: "select", default: "split", group: SHOWING, options: POPUP_DESIGNS },
       { key: "delay", label: "Show after (seconds)", kind: "number", default: "5", group: SHOWING },
-      { key: "reshowSeconds", label: "After it's closed, show again after (seconds)", kind: "number", default: "12", group: SHOWING },
+      { key: "reshowSeconds", label: "After it's closed, show again after (seconds)", kind: "number", default: "20", group: SHOWING },
       { key: "reshowTimes", label: "Times it comes back on the same page", kind: "number", default: "1", group: SHOWING },
       { key: "image", label: "Picture", kind: "image", default: creativeImage("outfit-generator"), group: PICTURE, help: "A before|after side-by-side picture wipes between the two halves." },
       { key: "caption", label: "Picture caption", kind: "text", default: "One selfie → an evening look", group: PICTURE },
