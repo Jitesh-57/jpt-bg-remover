@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { beginGoogleSignIn } from "@/lib/auth-return";
 import { useTrialOffer } from "@/lib/trial-offer";
@@ -12,22 +12,20 @@ import { popupOnScreen } from "./PopupView";
 import SignInModal from "./SignInModal";
 
 /**
- * When the sign-up popup (SignupNudge) shows: to signed-out visitors, a few
- * seconds after they land, once per visit. Closing it snoozes it for a few
- * days; signing in ends it on this browser for good. Never inside the app,
+ * When the sign-up popup (SignupNudge) shows: to signed-out visitors on every
+ * page they open, a few seconds after it opens. Closed, it comes back once on
+ * the same page (12 s later by default); closed again, it waits for the next
+ * page. Signing in ends it on this browser for good. Never inside the app,
  * admin, sign-in or payment pages, and never on top of another pop-up. The
- * delay, the snooze, the design and the on/off switch are set in /admin/popups.
+ * delay, the comeback, the design and the on/off switch are set in /admin/popups.
  *
- * `?nudge=1` shows it after a second whatever the visit, the snooze or the
- * switch, still to signed-out visitors only, so it can be tested without
+ * `?nudge=1` shows it after a second even with the switch off, still to
+ * signed-out visitors only, so it can be tested without
  * clearing storage; `?nudge=center` (or `split`, `card`, `corner`) does the
  * same in that design.
  */
 
 const SKIP = /^\/(app|admin|auth|invoices|m|pricing|checkout|payment)(\/|$)/;
-const DAY_MS = 24 * 60 * 60 * 1000;
-const SEEN = "jpt-nudge-seen"; // sessionStorage: shown this visit
-const SNOOZED = "jpt-nudge-snoozed"; // localStorage: when it was last closed
 const DONE = "jpt-nudge-done"; // localStorage: this browser has signed in
 
 function read(kind: "local" | "session", key: string): string | null {
@@ -46,10 +44,14 @@ export default function SignupNudgeHost() {
   const [emailOpen, setEmailOpen] = useState(false);
   const skip = SKIP.test(pathname);
   const design = forced ?? (p.t("design") as PopupDesign);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const comebacks = useRef(0); // times it may still come back on this page
+  const showLater = useRef<(seconds: number) => void>(() => {});
+  const stop = () => { if (timer.current) clearTimeout(timer.current); timer.current = null; };
 
   // Signing in, here or on any page, ends the popup for this browser.
   useEffect(() => {
-    const done = () => { write("local", DONE, "1"); setOpen(false); };
+    const done = () => { write("local", DONE, "1"); stop(); showLater.current = () => {}; setOpen(false); };
     window.addEventListener("jpt:signed-in", done);
     return () => window.removeEventListener("jpt:signed-in", done);
   }, []);
@@ -64,27 +66,23 @@ export default function SignupNudgeHost() {
       force = v === "1" || !!asDesign;
       if (asDesign) setForced(asDesign);
     } catch { /* no URL */ }
-    if (!force) {
-      if (!p.enabled || read("local", DONE) || read("session", SEEN)) return;
-      const closedAt = Number(read("local", SNOOZED) || 0);
-      if (closedAt && Date.now() - closedAt < Number(p.t("snoozeDays")) * DAY_MS) return;
-    }
+    if (!force && (!p.enabled || read("local", DONE))) return;
     let alive = true;
-    let timer: ReturnType<typeof setTimeout>;
+    comebacks.current = Math.max(0, Math.floor(Number(p.t("reshowTimes")) || 0));
     const show = async () => {
       // Another pop-up is up: wait for it, rather than stack on top of it.
-      if (popupOnScreen()) { timer = setTimeout(show, 3000); return; }
+      if (popupOnScreen()) { timer.current = setTimeout(show, 3000); return; }
       const me = await fetch("/api/auth/google/me", { cache: "no-store" }).then((r) => r.json()).catch(() => null) as { authenticated?: boolean } | null;
       if (!alive) return;
       if (me?.authenticated) { write("local", DONE, "1"); return; }
       if (!me) return; // couldn't tell: say nothing
       // One may have opened while we asked (a sign-in box from a tool, say).
-      if (popupOnScreen()) { timer = setTimeout(show, 3000); return; }
-      write("session", SEEN, "1");
+      if (popupOnScreen()) { timer.current = setTimeout(show, 3000); return; }
       setOpen(true);
     };
-    timer = setTimeout(show, force ? 1000 : Math.max(0, Number(p.t("delay")) || 0) * 1000);
-    return () => { alive = false; clearTimeout(timer); };
+    showLater.current = (seconds) => { stop(); timer.current = setTimeout(show, Math.max(0, seconds) * 1000); };
+    showLater.current(force ? 1 : Number(p.t("delay")) || 0);
+    return () => { alive = false; stop(); showLater.current = () => {}; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [skip, pathname, p.ready, p.enabled]);
 
@@ -94,10 +92,17 @@ export default function SignupNudgeHost() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
+  // Closed without signing up: back once more on this page, then not until the next one.
+  const comeBack = () => {
+    if (comebacks.current <= 0) return;
+    comebacks.current -= 1;
+    showLater.current(Number(p.t("reshowSeconds")) || 0);
+  };
+
   const close = () => {
     setOpen(false);
-    write("local", SNOOZED, String(Date.now()));
     trackEvent("signup_nudge_dismiss", { path: pathname, trial: !!offer, variant: design });
+    comeBack();
   };
 
   useEffect(() => {
@@ -115,7 +120,7 @@ export default function SignupNudgeHost() {
     return url.pathname + url.search;
   };
 
-  if (emailOpen) return <SignInModal startWithEmail nextPath={here()} onClose={() => setEmailOpen(false)} />;
+  if (emailOpen) return <SignInModal startWithEmail nextPath={here()} onClose={() => { setEmailOpen(false); comeBack(); }} />;
   if (!open || skip) return null;
   return (
     <SignupNudge
