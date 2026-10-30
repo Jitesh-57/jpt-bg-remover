@@ -199,6 +199,9 @@ export default function Footer() {
           <a href="https://smollaunch.com" target="_blank" rel="noopener">
             <img src="https://smollaunch.com/badges/featured.svg" alt="PixelShine — Featured on Smol Launch" loading="lazy" width={250} height={60} />
           </a>
+          <a href="https://ufind.best/products/pixelshine" target="_blank" rel="noopener">
+            <img src="https://ufind.best/badges/ufind-best-badge-light.svg" alt="Featured on ufind.best" width={150} />
+          </a>
         </div>
 
         {/* Bottom bar */}
