@@ -5,7 +5,6 @@ import { createAdminSupabase } from "@/lib/auth";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const IMAGE_TTL_SECONDS = 60 * 60;
 
 function storageObjectFromUrl(value: unknown) {
   if (typeof value !== "string") return null;
@@ -27,14 +26,11 @@ function storageObjectFromUrl(value: unknown) {
   }
 }
 
-async function imageLink(db: ReturnType<typeof createAdminSupabase>, value: unknown) {
+async function imageLink(value: unknown, token: string) {
   if (typeof value !== "string" || !value) return null;
   const object = storageObjectFromUrl(value);
   if (!object) return value;
-  const { data } = await db.storage.from(object.bucket).createSignedUrl(object.path, IMAGE_TTL_SECONDS);
-  if (data?.signedUrl) return data.signedUrl;
-  // Public source images remain viewable if signing is unavailable.
-  return value;
+  return `/api/admin/user-activity/image?token=${encodeURIComponent(token)}&bucket=${encodeURIComponent(object.bucket)}&path=${encodeURIComponent(object.path)}`;
 }
 
 export async function GET(req: NextRequest) {
@@ -42,6 +38,7 @@ export async function GET(req: NextRequest) {
   if (denied) return denied;
 
   const userId = (req.nextUrl.searchParams.get("id") || "").trim();
+  const token = req.nextUrl.searchParams.get("token") || "";
   if (!/^[0-9a-f-]{36}$/i.test(userId)) {
     return NextResponse.json({ error: "Provide a valid user UUID in ?id=." }, { status: 400 });
   }
@@ -82,9 +79,9 @@ export async function GET(req: NextRequest) {
   const generations = generationsResult.data ?? [];
   const images = await Promise.all(generations.map(async (generation) => ({
     ...generation,
-    source_url: await imageLink(db, generation.source_url),
-    result_url: await imageLink(db, generation.result_url),
-    image_url: await imageLink(db, generation.image_url),
+    source_url: await imageLink(generation.source_url, token),
+    result_url: await imageLink(generation.result_url, token),
+    image_url: await imageLink(generation.image_url, token),
   })));
 
   // Also list files stored under the user's UID in the generations bucket.
@@ -94,8 +91,8 @@ export async function GET(req: NextRequest) {
   });
   const files = await Promise.all((generatedFiles ?? []).map(async (file) => {
     const path = `${userId}/${file.name}`;
-    const { data } = await db.storage.from("generations").createSignedUrl(path, IMAGE_TTL_SECONDS);
-    return { bucket: "generations", path, name: file.name, created_at: file.created_at, metadata: file.metadata, url: data?.signedUrl ?? null };
+    const url = `/api/admin/user-activity/image?token=${encodeURIComponent(token)}&bucket=generations&path=${encodeURIComponent(path)}`;
+    return { bucket: "generations", path, name: file.name, created_at: file.created_at, metadata: file.metadata, url };
   }));
 
   // Add signed links for any original source stored in a different bucket.
@@ -107,8 +104,8 @@ export async function GET(req: NextRequest) {
     }
   }
   const linkedObjects = await Promise.all(Array.from(sourceObjects.values()).map(async (object) => {
-    const { data } = await db.storage.from(object.bucket).createSignedUrl(object.path, IMAGE_TTL_SECONDS);
-    return { ...object, url: data?.signedUrl ?? null };
+    const url = `/api/admin/user-activity/image?token=${encodeURIComponent(token)}&bucket=${encodeURIComponent(object.bucket)}&path=${encodeURIComponent(object.path)}`;
+    return { ...object, url };
   }));
 
   const auth = {
@@ -150,7 +147,7 @@ export async function GET(req: NextRequest) {
     storageFiles: files,
     linkedStorageObjects: linkedObjects,
     timeline,
-    limits: { generations: 200, events: 500, creditLedger: 200, purchases: 100, signedUrlTtlSeconds: IMAGE_TTL_SECONDS },
+    limits: { generations: 200, events: 500, creditLedger: 200, purchases: 100 },
   }, {
     headers: { "Cache-Control": "private, no-store, max-age=0" },
   });
