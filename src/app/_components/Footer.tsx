@@ -202,6 +202,9 @@ export default function Footer() {
           <a href="https://ufind.best/products/pixelshine" target="_blank" rel="noopener">
             <img src="https://ufind.best/badges/ufind-best-badge-light.svg" alt="Featured on ufind.best" width={150} />
           </a>
+          <a href="https://openhunts.com" target="_blank" rel="noopener noreferrer" title="OpenHunts Club">
+            <img src="https://cdn.openhunts.com/badges/club.webp" alt="OpenHunts Club Member" width={195} style={{ height: "auto" }} />
+          </a>
         </div>
 
         {/* Bottom bar */}
